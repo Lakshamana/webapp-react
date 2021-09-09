@@ -1,15 +1,16 @@
+// @ts-nocheck
 import { useCallback, useEffect, useState } from 'react'
-const videoJS = require('video.js');
+import videoJS from 'video.js'
+import 'video.js/dist/video-js.css'
+import 'videojs-mux'
+import 'videojs-youtube'
+
 require('videojs-contrib-quality-levels')
 require('videojs-http-source-selector')
 require('videojs-overlay')
 
 require('@silvermine/videojs-chromecast')
 require('videojs-vtt-thumbnails')
-
-import 'videojs-mux'
-import 'videojs-youtube'
-
 
 const defaultConfig = {
   playbackRates: [0.5, 1, 1.5, 2],

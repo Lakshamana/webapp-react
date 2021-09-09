@@ -2641,6 +2641,14 @@
     "@sentry/types" "6.12.0"
     tslib "^1.9.3"
 
+"@silvermine/videojs-chromecast@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@silvermine/videojs-chromecast/-/videojs-chromecast-1.3.2.tgz#e5cf2891727ee0cc176ce65962935af07052d426"
+  integrity sha512-xwx/900ErD50tzrq4YlbeVB1QkyuRmJSHb7UWGe6QNWr6Z6mERBPKsh7AX40zKNRaI3ryPyH6dSb9vIz5OI8Jg==
+  dependencies:
+    class.extend "0.9.1"
+    webcomponents.js "git+https://git@github.com/webcomponents/webcomponentsjs.git#v0.7.24"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.2.tgz#858f5c4b48d80778fde4b9d541f27edc0d56488b"
@@ -3184,10 +3192,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/videojs@^5.16.2":
-  version "5.16.2"
-  resolved "https://registry.yarnpkg.com/@types/videojs/-/videojs-5.16.2.tgz#36c0f4f7005a492aa9980bee2e0c6591baa146f3"
-  integrity sha1-NsD09wBaSSqpmAvuLgxlkbqhRvM=
+"@types/video.js@7.3.3":
+  version "7.3.3"
+  resolved "https://registry.yarnpkg.com/@types/video.js/-/video.js-7.3.3.tgz#b6870d954473dfd694e10b55a90c0f3be8522da3"
+  integrity sha512-yAb46+4A0dKFxOQRVLoLyfC/S/BmHLE10MxPXt/t88+7R4GWLHosHelVtYpKBRykjptdkqfQXNRXoQzDeKm6MA==
 
 "@types/warning@^3.0.0":
   version "3.0.0"
@@ -4753,6 +4761,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+class.extend@0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/class.extend/-/class.extend-0.9.1.tgz#b4ee417c693740a44a92a6d64f1c9540641b097a"
+  integrity sha1-tO5BfGk3QKRKkqbWTxyVQGQbCXo=
 
 clean-css@^4.2.3:
   version "4.2.3"
@@ -13722,6 +13735,10 @@ web-vitals@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-1.1.2.tgz#06535308168986096239aa84716e68b4c6ae6d1c"
   integrity sha512-PFMKIY+bRSXlMxVAQ+m2aw9c/ioUYfDgrYot0YUa+/xa0sakubWhSDyxAKwzymvXVdF4CZI71g06W+mqhzu6ig==
+
+"webcomponents.js@git+https://git@github.com/webcomponents/webcomponentsjs.git#v0.7.24":
+  version "0.7.24"
+  resolved "git+https://git@github.com/webcomponents/webcomponentsjs.git#8a2e40557b177e2cca0def2553f84c8269c8f93e"
 
 webidl-conversions@^5.0.0:
   version "5.0.0"

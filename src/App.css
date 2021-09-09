@@ -28,6 +28,21 @@
   color: #61dafb;
 }
 
+.video-js .vjs-big-play-button {
+  position: absolute;
+  border-radius: 100%;
+  width: 2.5em;
+  height: 2.5em;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+  top: 0.5em
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
