@@ -3,8 +3,6 @@ import { space, layout, SpaceProps, LayoutProps } from "styled-system";
 
 interface SpaceLayoutProps extends SpaceProps, LayoutProps {}
 
-export const Icon = styled.img``;
-
 export const Reaction = styled.div<SpaceLayoutProps>`
   ${space}
   ${layout}
@@ -12,4 +10,6 @@ export const Reaction = styled.div<SpaceLayoutProps>`
   border-radius: 5px;
   background-color: #444444;
   color: white;
+  cursor: pointer;
+  align-items: center;
 `;
