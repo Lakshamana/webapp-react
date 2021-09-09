@@ -1,9 +1,10 @@
-import React from "react";
-import { Container, Text } from "components";
+import { Container, Text, Popover } from "components";
+import { Plus, Smile } from "react-feather";
 
 import { Props } from "./types";
 
-import { Icon, Reaction } from "./styles";
+import { availableReactions } from "./settings";
+import { Reaction } from "./styles";
 
 const ReactionBar = ({
   reactions = [],
@@ -14,8 +15,14 @@ const ReactionBar = ({
     <Container>
       <Container>
         {reactions.map(reaction => (
-          <Reaction p={1} mr={1} minWidth={50} height={25}>
-            <Text kind="regular">{reaction.value}</Text>
+          <Reaction
+            key={`${reaction.value}-reaction`}
+            p={1}
+            mr={1}
+            minWidth={50}
+            minHeight={32}
+          >
+            <div>{reaction.value}</div>
             <Text kind="regular" ml={2}>
               {reaction.count}
             </Text>
@@ -23,14 +30,33 @@ const ReactionBar = ({
         ))}
       </Container>
       <Container>
-        <Reaction onClick={() => {}}>
-          <Icon src="plus-icon" />
-          <Icon src="add-icon" />
+        <Reaction>
+          <Popover
+            trigger={
+              <button>
+                <Reaction p={1} mr={1} minWidth={50} minHeight={32}>
+                  <Plus size={20} />
+                  <Smile size={20} />
+                </Reaction>
+              </button>
+            }
+          >
+            <Container flexWrap="wrap">
+              {availableReactions.map(reaction => (
+                <Reaction key={`${reaction.value}-popover`} p={1} m={1}>
+                  {reaction.value}
+                </Reaction>
+              ))}
+            </Container>
+          </Popover>
         </Reaction>
       </Container>
     </Container>
     <Container ml={2}>
-      <Text kind="regular">{`${totalReactions} ${reactionsTitle}`}</Text>
+      <Text
+        kind="regular"
+        fontWeight={500}
+      >{`${totalReactions} ${reactionsTitle}`}</Text>
     </Container>
   </Container>
 );

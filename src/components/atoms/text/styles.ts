@@ -1,22 +1,22 @@
 import styled from "styled-components";
-import { fontSize, space } from "styled-system";
+import { typography, space } from "styled-system";
 
 export const HeadlineText = styled.h2`
-  ${fontSize}
+  ${typography}
   ${space}
 `;
 
 export const TitleText = styled.h3`
-  ${fontSize}
+  ${typography}
   ${space}
 `;
 
 export const SubheadingText = styled.h4`
-  ${fontSize}
+  ${typography}
   ${space}
 `;
 
 export const RegularText = styled.p`
-  ${fontSize}
+  ${typography}
   ${space}
 `;
