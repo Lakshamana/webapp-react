@@ -1,6 +1,6 @@
-import { FontSizeProps, SpaceProps } from "styled-system";
+import { TypographyProps, SpaceProps } from "styled-system";
 
-export interface Props extends FontSizeProps, SpaceProps {
+export interface Props extends TypographyProps, SpaceProps {
   children: string;
   kind?: string;
 }
