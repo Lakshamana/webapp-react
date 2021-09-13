@@ -30,6 +30,7 @@ const Avatar = ({ size = "large", src = "" }: Props): ReactElement => {
       width: getSize(),
       sizeImage: getSizeImage(),
     }),
+    // eslint-disable-next-line
     [size]
   );
 

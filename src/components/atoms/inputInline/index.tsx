@@ -5,7 +5,7 @@ import { Props } from "./types";
 import { Input, InputMask } from "./styles";
 
 const InputInline = ({ mask, ...props }: Props) => {
-  const ref = React.useRef(null);
+  const ref: any = React.useRef(null);
 
   React.useEffect((): any => {
     if (props.focus) ref?.current?.focus();

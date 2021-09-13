@@ -12,7 +12,7 @@ const commonStyles = `
   }
 `;
 
-export const Input = styled.input`
+export const Input: any = styled.input`
   ${layout}
   ${space}
   ${fontSize}
@@ -24,7 +24,7 @@ export const Input = styled.input`
     theme.name === "studio" && "background-color: transparent;"} */
 `;
 
-export const InputMask = styled(InputMasked)`
+export const InputMask: any = styled(InputMasked)`
   ${layout}
   ${space}
   ${commonStyles}
