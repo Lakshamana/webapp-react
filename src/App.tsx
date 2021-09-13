@@ -1,7 +1,7 @@
+import React from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import "./styles/index.css";
-import "./App.css";
 
 const App = () => {
   return (
