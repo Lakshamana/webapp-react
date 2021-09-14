@@ -1,7 +1,7 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Main, Image } from "./style";
 
-import { Props } from "./types";
+import { Props, defaultProps } from "./types";
 
 const objWithImage: any = {
   small: 38,
@@ -14,7 +14,7 @@ const objImage: any = {
   large: 20,
 };
 
-const Avatar = ({ size = "large", src = "" }: Props): ReactElement => {
+const Avatar = ({ size = "", src }: Props) => {
   const getSizeImage = (): any => {
     if (src === "") return objImage[size];
     return objWithImage[size];
@@ -45,4 +45,6 @@ const Avatar = ({ size = "large", src = "" }: Props): ReactElement => {
   );
 };
 
-export default Avatar;
+Avatar.defaultProps = defaultProps;
+
+export { Avatar };

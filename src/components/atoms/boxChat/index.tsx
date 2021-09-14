@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement } from "react";
 import {
   MainContainer,
   BoxContainer,
@@ -6,12 +6,12 @@ import {
   DateText,
   NameUserText,
   MessageText,
-} from './style'
+} from "./style";
 
-import { Props } from './types'
+import { Props, defaultProps } from "./types";
 
-const BoxChar = ({
-  isOwnUser = false,
+const BoxChat = ({
+  isOwnUser,
   username,
   message,
   date,
@@ -22,13 +22,15 @@ const BoxChar = ({
         <DateText>{date}</DateText>
       </DateContainer>
       <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>
-        <NameUserText color={isOwnUser ? '#fff' : '#444'}>
+        <NameUserText color={isOwnUser ? "#fff" : "#444"}>
           {username}
         </NameUserText>
-        <MessageText color={isOwnUser ? '#fff' : '#444'}>{message}</MessageText>
+        <MessageText color={isOwnUser ? "#fff" : "#444"}>{message}</MessageText>
       </BoxContainer>
     </MainContainer>
-  )
-}
+  );
+};
 
-export default BoxChar
+BoxChat.defaultProps = defaultProps;
+
+export { BoxChat };
