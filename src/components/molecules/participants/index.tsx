@@ -1,8 +1,7 @@
-import React from "react";
 import { Container } from "components";
 
 import { getParticipants } from "./utils";
-import { Props, TypeParticipant } from "./types";
+import { Props, TypeParticipant, defaultProps } from "./types";
 import { Participant, Button } from "./styles";
 
 const Participants = ({ participants, totalParticipants }: Props) => (
@@ -18,14 +17,18 @@ const Participants = ({ participants, totalParticipants }: Props) => (
         />
       ))}
     </Container>
-    {totalParticipants > 3 && (
+    {totalParticipants > 3 ? (
       <Container ml={3}>
         <Button p={1} minWidth="50px" onClick={() => {}}>
           + {totalParticipants}
         </Button>
       </Container>
+    ) : (
+      <></>
     )}
   </Container>
 );
+
+Participants.defaultProps = defaultProps;
 
 export { Participants };
