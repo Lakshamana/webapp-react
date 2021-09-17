@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "react-feather";
+import { ChevronDown } from "react-feather";
 import { Text, Container, Popover } from "components";
 import { Props, defaultProps } from "./types";
 import { CustomContainer, ChannelIcon, IconContainer } from "./styles";
