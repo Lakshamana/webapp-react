@@ -5,3 +5,4 @@ export * from "./videoLivestream";
 export * from "./videoOnDemand";
 export * from "./channelSelector";
 export * from "./tab";
+export * from './footer';
