@@ -8,4 +8,4 @@ const Container = (props: Props) => (
 
 Container.defaultProps = defaultProps;
 
-export { Container };
+export { Container, StyleContainer };
