@@ -3,13 +3,13 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverBody,
-  PopoverArrow
+  PopoverArrow,
 } from "@chakra-ui/react";
 
 import { Props, defaultProps } from "./types";
 
-const Popover = ({ children, trigger, background }: Props) => (
-  <ChakraPopover>
+const Popover = ({ children, trigger, background, props }: Props) => (
+  <ChakraPopover {...props}>
     <PopoverTrigger>{trigger}</PopoverTrigger>
     <PopoverContent bg={background}>
       <PopoverArrow />

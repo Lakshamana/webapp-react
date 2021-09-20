@@ -12,7 +12,13 @@ const Tab = ({ link, children, selected, onSelect, ...props }: Props) => (
       flexDirection="column"
       {...props}
     >
-      <Text style={{ textTransform: "uppercase" }}>{children}</Text>
+      <Text
+        style={{ textTransform: "uppercase" }}
+        fontWeight={selected ? "700" : "400"}
+        color="white"
+      >
+        {children}
+      </Text>
       <Circle width={[8]} height={[8]} {...{ selected }} />
     </Container>
   </Link>
