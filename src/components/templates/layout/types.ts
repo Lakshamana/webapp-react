@@ -1,9 +1,7 @@
 import { LayoutProps, SpaceProps, FlexboxProps } from "styled-system";
 
 export interface Props extends FlexboxProps, LayoutProps, SpaceProps {
-  children: JSX.Element | JSX.Element[];
-  onClick?: any;
-  backgroundColor?: string;
+  children: any;
 }
 
 export const defaultProps = {
