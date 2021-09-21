@@ -10,7 +10,7 @@ export const BoxFooter: any = styled.div`
     bottom: 0;
 
     @media screen and (max-width: 640px) {
-        height: 315px;
+        height: 315 px;
     }
 `;
 
@@ -38,10 +38,11 @@ export const TextFooter: any = styled.div`
 
     @media screen and (max-width: 640px) {
         width: 100%;
-        padding-top: 40px;
-        border-top: 2px solid #666666;
+        padding-top: 50px;
+        border-top: 1px solid #666666;
         border-radius: 1px;
         color: #E1E1E1;
+        font-size: 12px;
     }
 
 `;
