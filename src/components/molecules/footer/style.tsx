@@ -10,7 +10,7 @@ export const BoxFooter: any = styled.div`
     bottom: 0;
 
     @media screen and (max-width: 640px) {
-        height: 315 px;
+        height: 315px;
     }
 `;
 
