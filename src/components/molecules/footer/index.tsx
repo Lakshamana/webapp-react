@@ -1,16 +1,17 @@
 import React, { ReactElement } from 'react';
-import { Text } from '../../atoms/text/index';
-import { BoxFooter, FooterItems, LogoFooter, TextFooter } from "./style";
+import { Text } from 'components/atoms';
+import { Logo } from 'components/atoms'
+import { BoxFooter, FooterItems, TextFooter } from "./style";
 import { Props, defaultProps } from "./types";
 
 
-const Footer = ({ image, text }: Props): ReactElement => {
+const Footer = ({ text }: Props): ReactElement => {
     return (
         <BoxFooter>
             <FooterItems>
-                <LogoFooter mb={2} mt={2} width='200px' height='59px' src={image ? image : ''} />
+                <Logo width={161} height={44} />
                 <TextFooter>
-                    <Text fontSize={1}>{text}</Text>
+                    <Text>{text}</Text>
                 </TextFooter>
             </FooterItems>
         </BoxFooter>
