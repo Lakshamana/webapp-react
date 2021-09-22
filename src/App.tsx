@@ -1,10 +1,13 @@
 import React from "react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { BreakpointProvider } from "services/hooks";
 import { AppRouter } from "router";
 
 const App = () => (
   <ChakraProvider>
-    <AppRouter />
+    <BreakpointProvider>
+      <AppRouter />
+    </BreakpointProvider>
   </ChakraProvider>
 );
 

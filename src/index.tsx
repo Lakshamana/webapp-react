@@ -1,6 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./App"
+import { Provider } from 'components/templates'
 import reportWebVitals from "./reportWebVitals"
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
@@ -17,7 +18,9 @@ Sentry.init({
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+    <Provider>
+  		<App />
+    </Provider>
 	</React.StrictMode>,
 	document.getElementById("root")
 )

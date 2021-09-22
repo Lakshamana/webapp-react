@@ -41,4 +41,4 @@ Provider.propTypes = {
   children: PropTypes.node,
 }
 
-export default Provider
+export { Provider }
