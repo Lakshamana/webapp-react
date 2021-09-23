@@ -1,4 +1,4 @@
-import { api } from 'services/api/config'
+// import { api } from 'services/api/config'
 import { saveData, getData } from 'services/storage'
 
 export const saveLoginData = async ({ user, userData, token }: any) => {

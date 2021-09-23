@@ -1,10 +1,17 @@
 import create from 'zustand'
 import { saveData } from 'services/storage'
 
-export const useFanHeroStore = create((set) => ({
-  userData: null,
-  setUserData: (userData: any) => {
-    saveData('@FanHero:userData', userData)
-    return set({ userData })
-  }
-}))
+interface UserState {
+  userData: Object | null,
+  setUserData: (userData: Object) => void
+}
+
+export const useFanHeroStore = create<UserState>(
+  (set) => ({
+    userData: null,
+    setUserData: (userData: any) => {
+      saveData('@FanHero:userData', userData)
+      return set({ userData })
+    }
+  })
+)
