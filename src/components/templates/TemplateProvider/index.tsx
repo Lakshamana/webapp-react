@@ -24,7 +24,7 @@ const customTheme = extendTheme({
   breakpoints,
 })
 
-const Provider = ({ children }: any ) => (
+const TemplateProvider = ({ children }: any ) => (
   <ChakraProvider theme={customTheme}>
     <BreakpointProvider>
       <Global
@@ -37,8 +37,8 @@ const Provider = ({ children }: any ) => (
   </ChakraProvider>
 )
 
-Provider.propTypes = {
+TemplateProvider.propTypes = {
   children: PropTypes.node,
 }
 
-export { Provider }
+export { TemplateProvider }
