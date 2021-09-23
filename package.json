@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.11",
     "@chakra-ui/react": "^1.6.7",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
@@ -19,6 +20,7 @@
     "@types/video.js": "7.3.3",
     "@videojs/themes": "^1.0.1",
     "framer-motion": "^4",
+    "graphql": "^15.5.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
@@ -43,7 +45,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "graphql:generate": "npx graphql-codegen --config codegen.yml -r dotenv/config",
+    "graphql:generate:watch": "yarn graphql:generate --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -64,6 +68,10 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/typescript": "2.2.2",
+    "@graphql-codegen/typescript-operations": "2.1.4",
+    "@graphql-codegen/typescript-react-apollo": "3.1.4",
     "@types/react-router-dom": "^5.1.8",
     "@types/styled-components": "^5.1.13",
     "@types/styled-system": "^5.1.13",
