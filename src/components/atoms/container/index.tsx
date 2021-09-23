@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Props, defaultProps } from "./types";
 
 import { StyleContainer } from "./styles";
@@ -10,4 +8,4 @@ const Container = (props: Props) => (
 
 Container.defaultProps = defaultProps;
 
-export { Container };
+export { Container, StyleContainer };
