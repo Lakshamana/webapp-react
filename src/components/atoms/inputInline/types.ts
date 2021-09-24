@@ -1,4 +1,6 @@
-export interface Props {
+import { LayoutProps, SpaceProps, FontSizeProps } from "styled-system";
+
+export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
   value?: String;
   onChange: Function;
   placeholder?: String;
@@ -6,8 +8,5 @@ export interface Props {
   type?: String;
   hasBorder?: Boolean;
   focus?: Boolean;
-}
-
-export interface PropsStyle {
-  hasBorder?: Boolean;
+  background?: string;
 }
