@@ -4,3 +4,4 @@ export * from "./icon";
 export * from "./avatar";
 export * from "./boxChat";
 export * from "./logo";
+export * from "./inputInline";
