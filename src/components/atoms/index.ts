@@ -5,3 +5,5 @@ export * from "./avatar";
 export * from "./boxChat";
 export * from "./logo";
 export * from "./inputInline";
+export * from "./button";
+export * from "./channelCards";

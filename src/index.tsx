@@ -1,23 +1,36 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import {
+	ApolloClient,
+	ApolloProvider,
+	InMemoryCache
+} from "@apollo/client";
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
+
+const client = new ApolloClient({
+	uri: `https://${process.env.REACT_APP_API_ENDPOINT}/graphql`,
+	cache: new InMemoryCache(),
+	credentials: "include",
+	resolvers: {}
+});
+
 Sentry.init({
-	dsn: process.env.SENTRY_DNS,
+	dsn: process.env.REACT_APP_SENTRY_DSN,
 	integrations: [new Integrations.BrowserTracing()],
 	autoSessionTracking: true,
 	debug: true,
-	// We recommend adjusting this value in production, or using tracesSampler
-	// for finer control
 	tracesSampleRate: 1.0
 })
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<ApolloProvider client={client}>
+			<App />
+		</ApolloProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 )
