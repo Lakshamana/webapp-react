@@ -1,10 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { Props } from "./types";
 import { Input, InputMask } from "./styles";
 
-const InputInline = ({ mask, ...props }: Props) => {
+const InputInline = ({ mask, background, ...props }: Props) => {
   const ref: any = React.useRef(null);
 
   React.useEffect((): any => {
@@ -19,7 +18,7 @@ const InputInline = ({ mask, ...props }: Props) => {
       maskPlaceholder={props.placeholder}
     />
   ) : (
-    <Input ref={ref} {...props} />
+    <Input {...{ ...props, ref, background }} />
   );
 };
 

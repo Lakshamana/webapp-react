@@ -1,36 +1,38 @@
 import styled from "styled-components";
-import { layout, space, fontSize } from "styled-system";
+import {
+  layout,
+  space,
+  fontSize,
+  LayoutProps,
+  SpaceProps,
+  FontSizeProps,
+} from "styled-system";
 import InputMasked from "react-input-mask";
-import { PropsStyle } from "./types";
 
 const commonStyles = `
-  width: 98%;
-  border: none;
-  background-color: #fff;
   &:focus {
     outline: none;
   }
 `;
 
-export const Input: any = styled.input`
+interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
+  background?: string;
+}
+
+export const Input: any = styled.input<PropsStyle>`
   ${layout}
   ${space}
   ${fontSize}
   ${commonStyles}
+  background-color: ${({ background }) => background};
+  color: white;
   border-radius: 4px;
-  /* color: ${({ theme }) => theme.colors.text[theme.mode]}; */
-  ${(props: PropsStyle) =>
-    props.hasBorder && "border: 1px solid #f2f2f2;"}/* ${({ theme }) =>
-    theme.name === "studio" && "background-color: transparent;"} */
+  width: 100%;
 `;
 
-export const InputMask: any = styled(InputMasked)`
+export const InputMask: any = styled(InputMasked)<PropsStyle>`
   ${layout}
   ${space}
   ${commonStyles}
   ${fontSize}
-  /* color: ${({ theme }) => theme.colors.text[theme.mode]}; */
-  ${(props: PropsStyle) =>
-    props.hasBorder && "border: 1px solid #f2f2f2;"} /* ${({ theme }) =>
-    theme.name === "studio" && "background-color: transparent;"} */
 `;
