@@ -1,26 +1,51 @@
 import styled from "styled-components";
 import { typography, space, color } from "styled-system";
 
-export const HeadlineText = styled.h2`
+interface TextProps {
+  ellipsis?: boolean;
+}
+
+export const HeadlineText = styled.h2<TextProps>`
+  ${typography}
+  ${space}
+  ${color}
+  ${({ ellipsis }) =>
+    ellipsis &&
+    `
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  `}
+`;
+
+export const TitleText = styled.h3<TextProps>`
   ${typography}
   ${space}
   ${color}
 `;
 
-export const TitleText = styled.h3`
+export const SubheadingText = styled.h4<TextProps>`
   ${typography}
   ${space}
   ${color}
+  ${({ ellipsis }) =>
+    ellipsis &&
+    `
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  `}
 `;
 
-export const SubheadingText = styled.h4`
+export const RegularText = styled.p<TextProps>`
   ${typography}
   ${space}
   ${color}
-`;
-
-export const RegularText = styled.p`
-  ${typography}
-  ${space}
-  ${color}
+  ${({ ellipsis }) =>
+    ellipsis &&
+    `
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  `}
 `;

@@ -1,14 +1,21 @@
 import { useState, memo } from "react";
-import { Container, ChannelSelector, Tab, Logo } from "components";
+import { Container, Logo } from "components";
+import { Tabs, UserInfo, ChannelSelector } from "./atoms";
 
-import { menuTabs } from "./settings";
-import { Props, defaultProps } from "./types";
+import { CHANNELS } from "./settings";
+import { Props, Channel, defaultProps } from "./types";
 
 const HeaderComponent = (props: Props) => {
   const theme = { black: "#000" };
   const background = theme.black;
 
   const [selected, setSelected] = useState();
+  const [channels, setChannels] = useState<Array<Channel>>(CHANNELS);
+
+  const handleChannelSearch = (value: any) =>
+    setChannels(CHANNELS.filter((channel) => channel.name.includes(value)));
+
+  const handleChannelSelect = (value: any) => setSelected(value);
 
   return (
     <Container
@@ -20,24 +27,26 @@ const HeaderComponent = (props: Props) => {
     >
       <Logo mx={3} />
       <Container mx={2}>
-        <ChannelSelector />
+        <ChannelSelector
+          onSelect={handleChannelSelect}
+          onSearch={handleChannelSearch}
+          {...{ channels, selected }}
+        />
       </Container>
       <Container>
-        {menuTabs.map((tab: any) => (
-          <Tab
-            mx={2}
-            key={tab.id}
-            link={tab.link}
-            selected={selected === tab.label}
-            onSelect={() => setSelected(tab.label)}
-          >
-            {tab.label}
-          </Tab>
-        ))}
+        <Tabs {...{ selected, setSelected }} />
       </Container>
       <Container mx={2}>
         <div style={{ background: "white", width: "150px" }}>SEARCH</div>
       </Container>
+      <UserInfo
+        user={{
+          name: "Jorge Hidalgo",
+          id: "11-user",
+          avatar:
+            "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg",
+        }}
+      />
     </Container>
   );
 };

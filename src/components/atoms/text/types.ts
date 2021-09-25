@@ -5,6 +5,7 @@ export interface Props extends TypographyProps, SpaceProps {
   kind?: string;
   style?: React.CSSProperties;
   color?: string;
+  ellipsis?: boolean;
 }
 
 export const defaultProps = {
