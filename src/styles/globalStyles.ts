@@ -109,6 +109,11 @@ i {
   outline: 0;
 }
 
+.chakra-popover__content {
+  box-shadow: none !important;
+  border: none !important;
+}
+
 #app {
   height: 100%;
 }
