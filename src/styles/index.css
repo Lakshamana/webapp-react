@@ -47,3 +47,7 @@ i {
   box-shadow: none !important;
   border: none !important;
 }
+
+.chakra-popover__body {
+  padding: 0 !important;
+}
