@@ -23,4 +23,12 @@ export interface PropsTabs {
   setSelected: any;
 }
 
+export interface PropsSearch {
+  open: boolean;
+  onSearch: any;
+  onOpen: any;
+  onClose: any;
+  search: string;
+}
+
 export const defaultProps = {};
