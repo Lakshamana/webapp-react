@@ -1,7 +1,7 @@
 import { ChevronDown } from "react-feather";
 import { Container, Text } from "components";
-import { PropsSelectedChannel } from "../types";
-import { ChannelIcon, IconContainer } from "../styles";
+import { PropsSelectedChannel } from "../../types";
+import { ChannelIcon, IconContainer } from "../../styles";
 
 const SelectedChannel = ({ selected, open }: PropsSelectedChannel) => (
   <Container alignItems="center">

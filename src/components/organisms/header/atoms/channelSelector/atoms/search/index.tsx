@@ -1,7 +1,7 @@
 import { Search as SearchIcon } from "react-feather";
 import { Container, InputInline } from "components";
-import { PropsSearch } from "../types";
-import { SearchContainer } from "../styles";
+import { PropsSearch } from "../../types";
+import { SearchContainer } from "./styles";
 
 const Search = ({ search, onChange }: PropsSearch) => (
   <SearchContainer

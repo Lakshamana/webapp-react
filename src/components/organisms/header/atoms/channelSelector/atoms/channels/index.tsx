@@ -1,12 +1,12 @@
 import { Check } from "react-feather";
 import { Container, Text } from "components";
-import { PropsChannels } from "../types";
-import { ChannelIcon, ChannelItem, ChannelList } from "../styles";
+import { PropsChannels } from "../../types";
+import { ChannelIcon, ChannelItem, ChannelList } from "./styles";
 
 const Channels = ({ channels, selected, onSelect }: PropsChannels) => (
   <Container flexDirection="column" width={1}>
     <ChannelList>
-      {channels?.map((channel) => (
+      {channels?.map((channel: any) => (
         <ChannelItem key={channel.id} py={2} onClick={() => onSelect(channel)}>
           <Container alignItems="center">
             <Container width="30px" justifyContent="center">
