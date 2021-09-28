@@ -7,3 +7,4 @@ export * from "./logo";
 export * from "./inputInline";
 export * from "./button";
 export * from "./channelCards";
+export * from "./vote";
