@@ -14,3 +14,22 @@ export const CircleImage = styled.img<LayoutProps>`
   ${layout}
   border-radius: 50%;
 `;
+
+export const OptionsList = styled.ul`
+  ${layout}
+  width: 100%;
+  li:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+`;
+
+export const Option = styled.li<SpaceProps>`
+  ${space}
+  cursor: pointer;
+  user-select: none;
+  :hover {
+    background: #0660f9;
+  }
+`;
