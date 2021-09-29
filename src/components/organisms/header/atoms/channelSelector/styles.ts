@@ -10,12 +10,9 @@ interface TypeSpaceProps extends SpaceProps, LayoutProps {}
 
 export const CustomContainer = styled(StyleContainer)`
   display: flex;
-  alignitems: center;
+  align-items: center;
   border-left: 1px solid #444444;
   border-right: 1px solid #444444;
-  .chakra-popover__body {
-    padding: 0;
-  }
 `;
 
 export const ChannelIcon = styled.img<TypeSpaceProps>`
@@ -46,7 +43,7 @@ export const ChannelList = styled.ul`
   }
 `;
 
-export const ChannelItem = styled.li<TypeSpaceProps>`
+export const ChannelItem = styled.li<SpaceProps>`
   ${space}
   cursor: pointer;
   user-select: none;

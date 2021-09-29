@@ -7,6 +7,7 @@ import { Circle } from "./styles";
 const Tab = ({ link, children, selected, onSelect, ...props }: Props) => (
   <Link to={link}>
     <Container
+      position="relative"
       onClick={onSelect}
       alignItems="center"
       flexDirection="column"
