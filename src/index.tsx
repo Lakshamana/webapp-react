@@ -6,6 +6,7 @@ import {
 	InMemoryCache
 } from "@apollo/client";
 import App from "./App"
+import { TemplateProvider } from 'components/templates'
 import reportWebVitals from "./reportWebVitals"
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
@@ -28,9 +29,11 @@ Sentry.init({
 
 ReactDOM.render(
 	<React.StrictMode>
-		<ApolloProvider client={client}>
-			<App />
-		</ApolloProvider>
+    <TemplateProvider>
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </TemplateProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 )

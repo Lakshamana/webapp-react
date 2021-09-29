@@ -17,6 +17,6 @@
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/services/hooks/use-breakpoint.js"],
   "exclude": ["node_modules"]
 }
