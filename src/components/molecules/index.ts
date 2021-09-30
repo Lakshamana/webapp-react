@@ -6,3 +6,4 @@ export * from "./videoLivestream";
 export * from "./videoOnDemand";
 export * from "./tab";
 export * from './footer';
+export * from './cardsScroller';
