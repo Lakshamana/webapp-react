@@ -1,0 +1,39 @@
+.swiper-button-prev,
+.swiper-button-next {
+    height: 100% !important;
+    width: 50px !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+    color: white !important;
+}
+
+.swiper-button-prev {
+  background: linear-gradient(to left, transparent, black 90%, black 100%);
+}
+
+.swiper-button-next {
+  background: linear-gradient(to right, transparent, black 90%, black 100%);
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 18px !important;
+  font-weight: bold;
+}
+
+.swiper-button-prev,
+.swiper-container-rtl .swiper-button-next {
+  left: -5px !important;
+}
+
+.swiper-button-next,
+.swiper-container-rtl .swiper-button-prev {
+  right: -5px !important;
+}
+
+.linear-gradient {
+  width: 100px;
+  position: absolute;
+  right: 0;
+  height: 100%;
+}
