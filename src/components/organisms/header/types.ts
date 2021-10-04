@@ -12,6 +12,12 @@ export type Channel = {
   url: string;
 };
 
+export type Tab = {
+  label: string;
+  id: string;
+  url: string;
+};
+
 export type ContentResults = {
   text: string;
   id: string;
@@ -28,8 +34,9 @@ export interface PropsUserInfo {
 }
 
 export interface PropsTabs {
-  selected: Channel | undefined;
+  selected: Tab | undefined;
   setSelected: any;
+  data: Array<Tab>;
 }
 
 export interface PropsSearchBar {
@@ -78,8 +85,7 @@ export interface PropsMenuIcon extends SpaceProps {
 
 export interface PropsSideMenu {
   open: boolean;
-  setOpen: any;
-  data: any;
+  data: Array<Tab>;
 }
 
 export const defaultProps = {};

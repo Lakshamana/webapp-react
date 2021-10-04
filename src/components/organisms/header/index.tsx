@@ -13,6 +13,7 @@ import {
   CHANNELS,
   DEFAULT_USER,
   SEARCH_VALUES,
+  MENUTABS,
   initialState,
 } from "./settings";
 import { Channel, defaultProps, SearchResults } from "./types";
@@ -63,6 +64,7 @@ const HeaderComponent = () => {
             {...{ channels }}
           />
           <Tabs
+            data={MENUTABS}
             selected={state.selected}
             setSelected={(value: any) => dispatch({ type: "selected", value })}
           />
@@ -74,7 +76,7 @@ const HeaderComponent = () => {
 
   return (
     <>
-      <SideMenu open={state.openMenu} setOpen={handleOpenMenu} data={[]} />
+      <SideMenu open={state.openMenu} data={MENUTABS} />
       <Container
         height={[70, 70, 70, 100]}
         width={1}

@@ -1,11 +1,11 @@
 import { Channel } from "./types";
 
 export const MENUTABS = [
-  { id: "home", label: "home", link: "/" },
-  { id: "live", label: "live", link: "/" },
-  { id: "feed", label: "feed", link: "/" },
-  { id: "collections", label: "collections", link: "/" },
-  { id: "list", label: "my list", link: "/" },
+  { id: "home", label: "home", url: "/" },
+  { id: "live", label: "live", url: "/" },
+  { id: "feed", label: "feed", url: "/" },
+  { id: "collections", label: "collections", url: "/" },
+  { id: "list", label: "my list", url: "/" },
 ];
 
 export const CHANNELS: Array<Channel> = [
