@@ -1,6 +1,5 @@
 export interface Props {
   name?: String;
-  fontAwesome?: Boolean;
   size?: String;
   children?: any;
 }
