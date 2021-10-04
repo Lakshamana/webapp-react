@@ -17,17 +17,17 @@ const SearchBar = ({
 }: PropsSearchBar) => {
   const triggerRef = useRef<any>();
 
-  const handleClickOutside = (event: any) => {
-    if (
-      open &&
-      triggerRef?.current &&
-      !triggerRef?.current.contains(event.target)
-    ) {
-      onClose();
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        open &&
+        triggerRef?.current &&
+        !triggerRef?.current.contains(event.target)
+      ) {
+        onClose();
+      }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
