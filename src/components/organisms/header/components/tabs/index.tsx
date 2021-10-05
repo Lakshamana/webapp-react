@@ -1,9 +1,10 @@
-import { Tab, Container } from "components";
+import { Tab } from "components";
 
+import { TabContainer } from "./styles";
 import { PropsTabs } from "../../types";
 
 const Tabs = ({ selected, setSelected, data }: PropsTabs) => (
-  <Container>
+  <TabContainer display="flex">
     {data.map((tab: any) => (
       <Tab
         mx={2}
@@ -15,7 +16,7 @@ const Tabs = ({ selected, setSelected, data }: PropsTabs) => (
         {tab.label}
       </Tab>
     ))}
-  </Container>
+  </TabContainer>
 );
 
 export { Tabs };
