@@ -63,11 +63,6 @@ const HeaderComponent = () => {
             selected={state.channel}
             {...{ channels }}
           />
-          <Tabs
-            data={MENUTABS}
-            selected={state.selected}
-            setSelected={(value: any) => dispatch({ type: "selected", value })}
-          />
         </Container>
       );
 
@@ -80,16 +75,39 @@ const HeaderComponent = () => {
       <Container
         height={[70, 70, 70, 100]}
         width={1}
+        px={3}
         alignItems="center"
         justifyContent="space-between"
         backgroundColor={colors.black}
       >
-        <Container alignItems="center" justifyContent="space-between" flex={1}>
-          <Container alignItems="center">
-            <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} ml={4} />
-            <Logo mx={4} />
-            {renderAccesibilitySection()}
+        <Container alignItems="center">
+          <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
+          <Logo mx={4} />
+          {!state.openSearch ? (
+            <ChannelSelector
+              onSelect={handleChannelSelect}
+              onSearch={handleChannelSearch}
+              selected={state.channel}
+              {...{ channels }}
+            />
+          ) : (
+            <></>
+          )}
+        </Container>
+        {!state.openSearch ? (
+          <Container ml={2} display={["none", "none", "flex"]}>
+            <Tabs
+              data={MENUTABS}
+              selected={state.selected}
+              setSelected={(value: any) =>
+                dispatch({ type: "selected", value })
+              }
+            />
           </Container>
+        ) : (
+          <></>
+        )}
+        <Container alignItems="center" flex={1}>
           <SearchBar
             data={searchValues}
             open={state.openSearch}
@@ -98,11 +116,6 @@ const HeaderComponent = () => {
             onSearch={handleSearch}
             search={state.search}
           />
-        </Container>
-        <Container
-          alignItems="center"
-          display={["none", "none", "none", "flex"]}
-        >
           <UserInfo user={DEFAULT_USER} />
         </Container>
       </Container>
