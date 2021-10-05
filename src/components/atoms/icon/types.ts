@@ -1,11 +1,10 @@
 export interface Props {
-  name?: String;
-  size?: String;
+  name?: string;
+  size?: string;
   children?: any;
 }
 
 export interface PropsStyle {
-  size?: String;
-  clickable?: Boolean;
-  url?: String;
+  size?: string;
+  clickable?: boolean;
 }

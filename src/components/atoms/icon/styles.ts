@@ -2,9 +2,19 @@ import styled from "styled-components";
 import { space } from "styled-system";
 import { PropsStyle } from "./types";
 
-export const IconContainer = styled.div`
+const sizeObj: any = {
+  small: "24px",
+  medium: "32px",
+  large: "48px",
+};
+
+const getSize = (size = "small"): any => {
+  return sizeObj[size];
+};
+
+export const IconContainer = styled.div<PropsStyle>`
   ${space}
-  cursor: ${(props: PropsStyle) => (props.clickable ? "pointer" : "auto")};
-  -webkit-mask: ${(props: PropsStyle) => `url(${props.url})`} no-repeat center;
-  mask: ${(props: PropsStyle) => `url(${props.url})`} no-repeat center;
+  ${({ clickable }: PropsStyle) => `${clickable && "cursor: pointer;"}`}
+  ${({ size }: PropsStyle) =>
+    `width: ${getSize(size)}; height: ${getSize(size)}`}
 `;

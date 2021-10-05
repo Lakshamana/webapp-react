@@ -7,23 +7,16 @@ import {
 
 export interface Props {
   children?: any;
-  label?: String | Number;
-  error?: String | Boolean;
-  bottomLabel?: String;
-  bottomLabelColor?: String;
-  required?: Boolean;
-  disabled?: Boolean;
+  label?: string | Number;
+  error?: string | boolean;
+  errorMessage?: string;
+  required?: boolean;
+  disabled?: boolean;
   maxLength?: Number;
-  totalChars?: Number;
-  bgColor?: String;
-  noPadding?: Boolean;
-  customIdent?: String;
-  full?: Boolean;
-  kind?: Kind;
-  hasBottomLine?: Boolean;
-  border?: String;
+  border?: string;
   width?: any;
   height?: any;
+  sendIcon?: boolean
 }
 
 export interface PropsStyle
@@ -31,17 +24,13 @@ export interface PropsStyle
     BorderProps,
     SpaceProps,
     FontSizeProps {
-  hasBottomLine?: Boolean;
-  error?: Boolean | any;
+  error?: boolean | any;
   theme?: any;
   onClick?: Function;
-  disabled?: Boolean;
-  bgColor?: String;
-  noPadding?: Boolean;
+  disabled?: boolean | undefined;
+  bgColor?: string;
+  noPadding?: boolean;
   customIdent?: any;
-  full?: Boolean;
-  center?: Boolean;
-  bottomLabelColor?: String;
+  full?: boolean;
+  center?: boolean;
 }
-
-type Kind = "default" | "box";

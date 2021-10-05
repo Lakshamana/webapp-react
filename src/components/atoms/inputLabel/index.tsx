@@ -3,7 +3,7 @@ import { space, fontSize } from "styled-system";
 
 import { PropsStyle } from "./types";
 
-export const Label = styled.div`
+const InputLabel = styled.div`
   ${space}
   ${fontSize}
   text-overflow: ellipsis;
@@ -13,4 +13,4 @@ export const Label = styled.div`
   ${({ disabled }: PropsStyle) => disabled && "opacity: 0.7;"}
 `;
 
-export default Label;
+export { InputLabel };

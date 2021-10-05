@@ -1,84 +1,50 @@
-import React, { useMemo } from "react";
+import React from "react";
 
-import InputLabel from "components/atoms/inputLabel";
+import { ReactComponent as ErrorIcon } from "assets/icons/inputError.svg";
+import { ReactComponent as SendIcon } from "assets/icons/send.svg";
 
-import {
-  Wrapper,
-  ChildrenWrapper,
-  BoxWrapper,
-  Label,
-  BottomLabel,
-  RequiredIndicator,
-} from "./styles";
+import { BoxWrapper, BoxWrapperError, LabelError, Box } from "./styles";
 
 import { Props } from "./types";
 import { defaultProps } from "./settings";
-
-const errorExists = (error: any | boolean, label: any) =>
-  (!!error && typeof error === "string") || !!label;
 
 const DefaultWrapper = ({
   children,
   label,
   error,
-  bottomLabel,
-  bottomLabelColor,
+  errorMessage,
   required,
   maxLength,
   disabled,
   width,
   height,
+  sendIcon,
   ...props
 }: Props): any => {
-  const hasErrorMessage = useMemo(
-    () => !!error && typeof error === "string",
-    [error]
-  );
-
   return (
-    <>
-      {label && (
-        <InputLabel
-          fontSize={[14, 14, 16]}
-          pb={1}
-          // error={!!error}
-          disabled={disabled}
-        >
-          {label || ""}
-          {required && <RequiredIndicator>*</RequiredIndicator>}
-        </InputLabel>
-      )}
-      <BoxWrapper width={width || "95%"} height={height || 35}>
+    <Box error={error}>
+      <BoxWrapper
+        width={width || "100%"}
+        minHeight={height || 56}
+        error={error}
+      >
         {children}
+        {error && <ErrorIcon />}
+        {sendIcon && <SendIcon />}
       </BoxWrapper>
-      {errorExists(error, bottomLabel) && (
-        <BottomLabel fontSize={12} bottomLabelColor={bottomLabelColor}>
-          <>{`${hasErrorMessage ? error : bottomLabel || ""}`}</>
-        </BottomLabel>
+      {error && (
+        <BoxWrapperError>
+          <LabelError>{errorMessage}</LabelError>
+        </BoxWrapperError>
       )}
-    </>
+    </Box>
   );
 };
 
-const InlineWrapper = ({ children, label, error, required, width }: Props) => (
-  <Wrapper py={1} width={width || "95%"}>
-    {(label || (!!error && typeof error === "string")) && (
-      <Label fontSize={[14, 14, 16]} pb={2} error={!!error}>
-        {`${`${label || ""} `}${!!error ? `(${error})` : ""}`}
-        {required && <RequiredIndicator>*</RequiredIndicator>}
-      </Label>
-    )}
-    <ChildrenWrapper>{children}</ChildrenWrapper>
-  </Wrapper>
+const InputWrapper = ({ children, ...props }: Props) => (
+  <DefaultWrapper {...props}>{children}</DefaultWrapper>
 );
-
-const InputWrapper = ({ children, kind, ...props }: Props) =>
-  kind === "box" ? (
-    <DefaultWrapper {...props}>{children}</DefaultWrapper>
-  ) : (
-    <InlineWrapper {...props}>{children}</InlineWrapper>
-  );
 
 InputWrapper.defaultProps = defaultProps;
 
-export default InputWrapper;
+export { InputWrapper };
