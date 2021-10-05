@@ -8,9 +8,6 @@ export * from "./inputInline";
 export * from "./button";
 export * from "./channelCards";
 export * from "./vote";
-<<<<<<< HEAD
 export * from "./inputWrapper";
 export * from "./inputLabel";
-=======
 export * from "./collectionPostCards";
->>>>>>> develop
