@@ -10,7 +10,7 @@ interface IconContainerProps {
 interface TypeSpaceProps extends SpaceProps, LayoutProps {}
 
 export const CustomContainer = styled(StyleContainer)`
-  display: flex;
+  ${layout}
   align-items: center;
   border-left: 1px solid ${colors.grey["800"]};
   border-right: 1px solid ${colors.grey["800"]};
