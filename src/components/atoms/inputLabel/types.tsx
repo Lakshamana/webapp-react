@@ -1,9 +1,9 @@
 import { FontSizeProps, SpaceProps } from "styled-system";
 
 export interface Props {
-  disabled: Boolean;
+  disabled: boolean;
 }
 
 export interface PropsStyle extends FontSizeProps, SpaceProps {
-  disabled?: Boolean;
+  disabled?: boolean;
 }
