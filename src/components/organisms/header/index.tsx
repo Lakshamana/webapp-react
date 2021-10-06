@@ -71,7 +71,7 @@ const HeaderComponent = () => {
 
   return (
     <>
-      <SideMenu open={state.openMenu} data={MENUTABS} />
+      <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
       <Container
         height={[70, 70, 70, 100]}
         width={1}
@@ -82,7 +82,7 @@ const HeaderComponent = () => {
       >
         <Container alignItems="center">
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
-          <Logo mx={4} />
+          <Logo mr={3} />
           {!state.openSearch ? (
             <ChannelSelector
               onSelect={handleChannelSelect}

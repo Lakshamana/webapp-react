@@ -27,7 +27,7 @@ const UserInfo = ({ user }: PropsUserInfo) => {
                   {user?.name || ""}
                 </Text>
               </Container>
-              <Container mx={2}>
+              <Container ml={2}>
                 <CircleImage width={50} height={50} src={user?.avatar} />
               </Container>
             </UserContainer>

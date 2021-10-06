@@ -86,6 +86,11 @@ export interface PropsMenuIcon extends SpaceProps {
 export interface PropsSideMenu {
   open: boolean;
   data: Array<Tab>;
+  user: User | undefined;
+}
+
+export interface PropsSideUserInfo {
+  user: User | undefined;
 }
 
 export const defaultProps = {};
