@@ -50,25 +50,6 @@ const HeaderComponent = () => {
     dispatch({ type: "openSearch", value: true });
   };
 
-  const renderAccesibilitySection = () => {
-    if (!state.openSearch)
-      return (
-        <Container
-          alignItems="center"
-          display={["none", "none", "none", "flex"]}
-        >
-          <ChannelSelector
-            onSelect={handleChannelSelect}
-            onSearch={handleChannelSearch}
-            selected={state.channel}
-            {...{ channels }}
-          />
-        </Container>
-      );
-
-    return <></>;
-  };
-
   return (
     <>
       <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
