@@ -1,28 +1,28 @@
 export const breakpoints = {
-  ssm: '320px',
-  sm: '425px',
-  md: '768px',
-  lg: '1024px',
-  xl: '1440px',
-}
+  ssm: "320px",
+  sm: "425px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1440px",
+};
 
 export const breakpointKeys = {
-  'mobile-small': 'ssm',
-  'mobile-large': 'sm',
-  tablet: 'md',
-  'desktop-small': 'lg',
-  desktop: 'xl',
-}
+  "mobile-small": "ssm",
+  "mobile-large": "sm",
+  tablet: "md",
+  "desktop-small": "lg",
+  desktop: "xl",
+};
 
 export const fonts = {
-  body: 'Montserrat Regular',
-  regular: 'Montserrat Regular',
-  medium: 'Montserrat Medium',
-  semiBold: 'Montserrat SemiBold',
-  bold: 'Montserrat Bold',
-  extraBold: 'Montserrat ExtraBold',
-  black: 'Montserrat Black',
-}
+  body: "Montserrat Regular",
+  regular: "Montserrat Regular",
+  medium: "Montserrat Medium",
+  semiBold: "Montserrat SemiBold",
+  bold: "Montserrat Bold",
+  extraBold: "Montserrat ExtraBold",
+  black: "Montserrat Black",
+};
 
 export const globalStyles = `
 @font-face {
@@ -109,11 +109,6 @@ i {
   outline: 0;
 }
 
-.chakra-popover__content {
-  box-shadow: none !important;
-  border: none !important;
-}
-
 #app {
   height: 100%;
 }
@@ -148,8 +143,8 @@ body::before {
 }
 
 table {
-  border-collapse: separate; 
-  border-spacing: 0 10px; 
+  border-collapse: separate;
+  border-spacing: 0 10px;
   margin-top: -10px; /* correct offset on first border spacing if desired */
 }
 
@@ -160,13 +155,13 @@ td {
 }
 td:first-child {
   border-left-style: solid;
-  border-top-left-radius: 10px; 
+  border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 td:last-child {
   border-right-style: solid;
-  border-bottom-right-radius: 10px; 
-  border-top-right-radius: 10px; 
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 ::-webkit-scrollbar {
@@ -196,4 +191,14 @@ td:last-child {
 input:-webkit-autofill {
   color: #20242A !important;
 }
-`
+
+.chakra-popover__content {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.chakra-popover__body {
+  padding: 0 !important;
+}
+
+`;

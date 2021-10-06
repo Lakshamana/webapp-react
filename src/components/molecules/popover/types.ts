@@ -1,6 +1,6 @@
 export interface Props {
   children: JSX.Element;
-  trigger: JSX.Element;
+  trigger?: JSX.Element;
   background?: string;
   props?: any;
 }
