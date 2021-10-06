@@ -1,14 +1,14 @@
 import { Tab, Container } from "components";
-import { MENUTABS } from "../../settings";
+
 import { PropsTabs } from "../../types";
 
-const Tabs = ({ selected, setSelected }: PropsTabs) => (
+const Tabs = ({ selected, setSelected, data }: PropsTabs) => (
   <Container>
-    {MENUTABS.map((tab: any) => (
+    {data.map((tab: any) => (
       <Tab
         mx={2}
         key={tab.id}
-        link={tab.link}
+        link={tab.url}
         selected={selected === tab.label}
         onSelect={() => setSelected(tab.label)}
       >

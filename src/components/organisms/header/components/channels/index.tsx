@@ -1,6 +1,7 @@
 import { Check } from "react-feather";
 import { Container, Text } from "components";
 import { PropsChannels } from "../../types";
+
 import { ChannelIcon, ChannelItem, ChannelList } from "./styles";
 
 const Channels = ({ channels, selected, onSelect }: PropsChannels) => (

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Container, Popover } from "components";
-import { Channels, Search, SelectedChannel } from "./atoms";
+import { Channels, ChannelSearch, ChannelSelected } from "..";
 
-import { Props, defaultProps } from "./types";
+import { PropsChannelSelector } from "../../types";
+import { defaultProps } from "./types";
 import { CustomContainer } from "./styles";
+import { colors } from "styles";
 
 const ChannelSelector = ({
   onSelect,
@@ -11,10 +13,7 @@ const ChannelSelector = ({
   channels,
   selected,
   ...props
-}: Props): any => {
-  const theme = { black: "#222222" };
-  const background = theme.black;
-
+}: PropsChannelSelector) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -36,15 +35,15 @@ const ChannelSelector = ({
           onOpen: () => setOpen(true),
           onClose: () => setOpen(false),
         }}
-        background={background}
+        background={colors.backgroundLayout}
         trigger={
           <button>
-            <SelectedChannel {...{ selected, open }} />
+            <ChannelSelected {...{ selected, open }} />
           </button>
         }
       >
         <Container flexDirection="column">
-          <Search {...{ search }} onChange={handleSearch} />
+          <ChannelSearch {...{ search }} onChange={handleSearch} />
           <Channels onSelect={handleSelect} {...{ channels, selected }} />
         </Container>
       </Popover>

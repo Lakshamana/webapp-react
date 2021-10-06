@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
 import { StyleContainer } from "components/atoms/container";
+import { colors } from "styles";
 
 interface IconContainerProps {
   open: boolean;
@@ -11,8 +12,8 @@ interface TypeSpaceProps extends SpaceProps, LayoutProps {}
 export const CustomContainer = styled(StyleContainer)`
   display: flex;
   align-items: center;
-  border-left: 1px solid #444444;
-  border-right: 1px solid #444444;
+  border-left: 1px solid ${colors.grey["800"]};
+  border-right: 1px solid ${colors.grey["800"]};
 `;
 
 export const ChannelIcon = styled.img<TypeSpaceProps>`
@@ -37,6 +38,7 @@ export const IconContainer = styled.div<IconContainerProps>`
 export const ChannelList = styled.ul`
   ${layout}
   width: 100%;
+
   li:last-child {
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
@@ -47,11 +49,12 @@ export const ChannelItem = styled.li<SpaceProps>`
   ${space}
   cursor: pointer;
   user-select: none;
+
   :hover {
-    background: #0660f9;
+    background: ${colors.blue["300"]};
   }
 `;
 
 export const SearchContainer = styled(StyleContainer)`
-  border-bottom: 1px solid #666666;
+  border-bottom: 1px solid ${colors.grey["700"]};
 `;

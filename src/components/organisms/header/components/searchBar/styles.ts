@@ -13,6 +13,14 @@ export const SearchContainer = styled(StyleContainer)<PropsContainer>`
   background-color: ${({ background = "none" }) => background};
 `;
 
+export const Section = styled(StyleContainer)`
+  cursor: pointer;
+  .chakra-popover__content,
+  .chakra-popover__body {
+    width: 100% !important;
+  }
+`;
+
 export const CustomContainer = styled(StyleContainer)<PropsContainer>`
   display: flex;
   align-items: center;

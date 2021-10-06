@@ -1,15 +1,16 @@
 import { ChevronDown } from "react-feather";
 import { Container, Text } from "components";
-import { PropsSelectedChannel } from "../../types";
-import { ChannelIcon, IconContainer } from "../../styles";
+import { PropsChannelSelected } from "../../types";
+import { ChannelIcon, IconContainer } from "./styles";
+import { colors } from "styles";
 
-const SelectedChannel = ({ selected, open }: PropsSelectedChannel) => (
+const ChannelSelected = ({ selected, open }: PropsChannelSelected) => (
   <Container alignItems="center">
     <Container alignItems="center" flexDirection="column" mr={2}>
-      <Text lineHeight={1} fontSize={14} color="white">
+      <Text lineHeight={1} fontSize={14} color={colors.white}>
         Select
       </Text>
-      <Text lineHeight={1} fontSize={14} color="white">
+      <Text lineHeight={1} fontSize={14} color={colors.white}>
         channel:
       </Text>
     </Container>
@@ -21,9 +22,9 @@ const SelectedChannel = ({ selected, open }: PropsSelectedChannel) => (
       <></>
     )}
     <IconContainer {...{ open }}>
-      <ChevronDown color="white" />
+      <ChevronDown color={colors.white} />
     </IconContainer>
   </Container>
 );
 
-export { SelectedChannel };
+export { ChannelSelected };

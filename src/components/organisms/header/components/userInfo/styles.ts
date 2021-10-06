@@ -24,12 +24,3 @@ export const OptionsList = styled.ul`
     border-bottom-left-radius: 8px;
   }
 `;
-
-export const Option = styled.li<SpaceProps>`
-  ${space}
-  cursor: pointer;
-  user-select: none;
-  :hover {
-    background: #0660f9;
-  }
-`;

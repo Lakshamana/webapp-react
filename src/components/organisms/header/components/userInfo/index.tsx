@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Power, Settings, User } from "react-feather";
 import { Container, Text, Popover } from "components";
-import { PopoverOption } from "./atoms";
+import { PopoverOption } from "..";
 
 import { PropsUserInfo } from "../../types";
 import { UserContainer, CircleImage, OptionsList } from "./styles";
+import { colors } from "styles";
 
 const UserInfo = ({ user }: PropsUserInfo) => {
-  const theme = { black: "#222222" };
-  const background = theme.black;
-
   const [open, setOpen] = useState(false);
 
   return (
@@ -19,12 +17,12 @@ const UserInfo = ({ user }: PropsUserInfo) => {
         onOpen: () => setOpen(true),
         onClose: () => setOpen(false),
       }}
-      background={background}
+      background={colors.backgroundLayout}
       trigger={
         <button>
           <UserContainer px={1}>
             <Container mx={2} maxWidth={["150px"]}>
-              <Text ellipsis color="#A4A4A4">
+              <Text ellipsis color={colors.white}>
                 {user?.name || ""}
               </Text>
             </Container>
@@ -40,17 +38,17 @@ const UserInfo = ({ user }: PropsUserInfo) => {
           <PopoverOption
             text="Editar Perfil"
             onClick={() => {}}
-            icon={<User color="white" width={18} height={18} />}
+            icon={<User color={colors.white} width={18} height={18} />}
           />
           <PopoverOption
             text="Ajustes"
             onClick={() => {}}
-            icon={<Settings color="white" width={18} height={18} />}
+            icon={<Settings color={colors.white} width={18} height={18} />}
           />
           <PopoverOption
             onClick={() => {}}
             text="Sair"
-            icon={<Power color="white" width={18} height={18} />}
+            icon={<Power color={colors.white} width={18} height={18} />}
           />
         </OptionsList>
       </Container>

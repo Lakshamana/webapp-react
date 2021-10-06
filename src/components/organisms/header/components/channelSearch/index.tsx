@@ -1,9 +1,10 @@
 import { Search as SearchIcon } from "react-feather";
 import { Container, InputInline } from "components";
-import { PropsSearch } from "../../types";
+import { PropsChannelSearch } from "../../types";
 import { SearchContainer } from "./styles";
+import { colors } from "styles";
 
-const Search = ({ search, onChange }: PropsSearch) => (
+const ChannelSearch = ({ search, onChange }: PropsChannelSearch) => (
   <SearchContainer
     display="flex"
     justifyContent="center"
@@ -14,15 +15,15 @@ const Search = ({ search, onChange }: PropsSearch) => (
     <Container width="85%">
       <InputInline
         placeholder="Search channel..."
-        background="#222222"
+        background={colors.backgroundLayout}
         value={search}
         {...{ onChange }}
       />
     </Container>
     <Container ml={2}>
-      <SearchIcon color="white" height={18} width={18} />
+      <SearchIcon color={colors.white} height={18} width={18} />
     </Container>
   </SearchContainer>
 );
 
-export { Search };
+export { ChannelSearch };

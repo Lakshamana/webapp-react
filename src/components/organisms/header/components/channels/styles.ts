@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
+import { colors } from "styles";
 
 interface TypeSpaceProps extends SpaceProps, LayoutProps {}
 
@@ -23,6 +24,6 @@ export const ChannelItem = styled.li<TypeSpaceProps>`
   cursor: pointer;
   user-select: none;
   :hover {
-    background: #0660f9;
+    background: ${colors.blue["300"]};
   }
 `;
