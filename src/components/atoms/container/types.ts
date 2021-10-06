@@ -10,7 +10,7 @@ export interface Props
     LayoutProps,
     SpaceProps,
     PositionProps {
-  children: JSX.Element | JSX.Element[];
+  children: any;
   onClick?: any;
   backgroundColor?: string;
 }
@@ -18,5 +18,4 @@ export interface Props
 export const defaultProps = {
   display: "flex",
   alignItems: "flex-start",
-  padding: 0,
 };
