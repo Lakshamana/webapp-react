@@ -16,10 +16,7 @@ const Input = ({
   return (
     <InputWrapper error={error} errorMessage={errorMessage} sendIcon={sendIcon}>
       <InputInline
-        onChange={onChange}
-        value={value}
-        type={type}
-        error={error}
+        {...{ onChange, value, type, error, placeholder }}
         placeholder={placeholder}
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {
