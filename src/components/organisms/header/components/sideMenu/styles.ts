@@ -14,7 +14,7 @@ export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
   ${({ open }) =>
     open
       ? css`
-          width: 500px;
+          width: 300px;
           transition: ease-in 0.25s;
         `
       : `
@@ -32,10 +32,10 @@ export const ScrollContainer = styled(StyleContainer)`
     display: block;
   }
   @media (min-width: 64em) and (max-width: 80em) {
-    a:nth-child(n + 1):nth-child(-n + 4) {
+    a:nth-child(n + 1):nth-child(-n + 5) {
       display: none;
     }
-    a:nth-child(n + 5):nth-child(-n + 10) {
+    a:nth-child(n + 6):nth-child(-n + 10) {
       display: block;
     }
   }
@@ -44,4 +44,8 @@ export const ScrollContainer = styled(StyleContainer)`
       display: none;
     }
   }
+`;
+
+export const ExitContainer = styled(StyleContainer)`
+  cursor: pointer;
 `;
