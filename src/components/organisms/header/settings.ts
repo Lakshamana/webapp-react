@@ -6,6 +6,9 @@ export const MENUTABS = [
   { id: "feed", label: "feed", url: "/" },
   { id: "collections", label: "collections", url: "/" },
   { id: "list", label: "my list", url: "/" },
+  { id: "settings", label: "settings", url: "/" },
+  { id: "tools", label: "tools", url: "/" },
+  { id: "example 1", label: "example", url: "/" },
 ];
 
 export const CHANNELS: Array<Channel> = [

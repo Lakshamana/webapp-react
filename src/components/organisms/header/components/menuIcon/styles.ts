@@ -9,8 +9,6 @@ interface PropsContainer extends LayoutProps {
 export const Parent = styled.div<PropsContainer>`
   ${layout}
   cursor: pointer;
-  transform: translate(-50%, -50%);
-  position: absolute;
   :before,
   :after,
   div {

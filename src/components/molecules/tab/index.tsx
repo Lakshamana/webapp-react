@@ -14,7 +14,7 @@ const Tab = ({ link, children, selected, onSelect, ...props }: Props) => (
       {...props}
     >
       <Text
-        style={{ textTransform: "uppercase" }}
+        style={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
         fontWeight={selected ? "700" : "400"}
         color="white"
       >

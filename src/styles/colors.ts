@@ -17,7 +17,6 @@ export const colors = {
   textMedium: "#9E9F9D",
   textDark: "#20242A",
   grey: {
-    a: "#A4A4A4",
     "100": "#FAFAFA",
     "200": "#E2E9E9",
     "300": "#C4D3D4",
