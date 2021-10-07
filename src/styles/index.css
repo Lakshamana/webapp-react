@@ -42,12 +42,3 @@ i {
   margin: 0;
   outline: 0;
 }
-
-.chakra-popover__content {
-  box-shadow: none !important;
-  border: none !important;
-}
-
-.chakra-popover__body {
-  padding: 0 !important;
-}

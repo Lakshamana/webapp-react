@@ -9,6 +9,7 @@ export const Circle = styled.div<CircleLayout>`
   ${space}
   ${layout}
   display: flex;
-  background-color: ${({ selected }) => selected && "#0660F9"};
+  background-color: ${({ selected, theme }) =>
+    selected && theme.colors.blue["300"]};
   border-radius: 50%;
 `;
