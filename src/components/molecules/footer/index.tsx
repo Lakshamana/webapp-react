@@ -9,12 +9,11 @@ const Footer = ({ text }: Props) => (
     display="flex"
     width={1}
     px={3}
-    py={[4, 0]}
     alignItems="center"
     backgroundColor={colors.black}
     flexDirection={["column", "row"]}
     justifyContent={["center", "space-between"]}
-    height={["315px", "100px"]}
+    minHeight={["250px", "100px"]}
   >
     <Logo py={[3, 0]} width={161} height={44} />
     <TextFooter>
