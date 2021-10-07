@@ -9,3 +9,4 @@ export * from "./button";
 export * from "./channelCards";
 export * from "./vote";
 export * from "./collectionPostCards";
+export * from "./videoPostCards";
