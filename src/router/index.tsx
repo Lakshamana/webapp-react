@@ -7,7 +7,9 @@ const Router = () => {
 
   return (
     <>
-      <ClientRoutes isAccesible={{ dashboard: true, login: true }} />
+      <ClientRoutes
+        isAccesible={{ dashboard: true, login: true, user: true }}
+      />
     </>
   );
 };
