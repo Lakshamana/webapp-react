@@ -1,4 +1,4 @@
-export interface videoPostProps {
+export interface VideoPostProps {
     postTitle?: string;
     postUrl?: string;
     coverImage?: string;
