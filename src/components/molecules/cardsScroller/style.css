@@ -8,11 +8,11 @@
 
 .swiper-button-prev,
 .swiper-button-next {
-    height: 100% !important;
-    width: 50px !important;
-    top: 0 !important;
-    margin-top: 0 !important;
-    color: white !important;
+  height: 100% !important;
+  width: 50px !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  color: white !important;
 }
 
 .swiper-button-prev {

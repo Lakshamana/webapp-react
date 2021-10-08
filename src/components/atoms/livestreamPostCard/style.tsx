@@ -10,6 +10,11 @@ export const PostContent: any = styled.div`
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+
+    @media screen and (max-width: 640px) {
+        width: 250px;
+        height: 150px;
+    }
 `;
 
 export const ExclusiveBlocked: any = styled.div`
@@ -20,6 +25,13 @@ export const ExclusiveBlocked: any = styled.div`
     top: 75px;
     margin: 0 auto;
     background-color: #035EFB;
+
+    @media screen and (max-width: 640px) {
+        width: 50px;
+        height: 49px;
+        top: 50px;
+    }
+
 `;
 
 export const GeolockedBlocked: any = styled.div`
@@ -31,4 +43,10 @@ export const GeolockedBlocked: any = styled.div`
     margin: 0 auto;
     background-color: #035EFB;
     pointer-events: none;
+
+    @media screen and (max-width: 640px) {
+        width: 50px;
+        height: 49px;
+        top: 50px;
+    }
 `;
