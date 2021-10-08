@@ -1,13 +1,14 @@
 import { BrowserRouter } from "react-router-dom";
 
 import { ClientRoutes } from "./routes";
+import { permission } from "./permission";
 
 const Router = () => {
   // Is Accesible is an object that must be updated here
 
   return (
     <>
-      <ClientRoutes isAccesible={{ dashboard: true, login: true }} />
+      <ClientRoutes isAccesible={permission} />
     </>
   );
 };
