@@ -8,6 +8,8 @@ export * from "./inputInline";
 export * from "./button";
 export * from "./channelCards";
 export * from "./vote";
+export * from "./inputWrapper";
+export * from "./inputLabel";
 export * from "./videoPostCards";
 export * from "./livestreamPostCard";
 export * from "./collectionPostCards";
