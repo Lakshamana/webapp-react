@@ -1,12 +1,15 @@
 import { LayoutProps, SpaceProps, FontSizeProps } from "styled-system";
 
 export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
-  value?: String;
-  onChange: Function;
-  placeholder?: String;
+  value?: string;
+  onChange: any;
+  placeholder?: string;
   mask?: any;
-  type?: String;
-  hasBorder?: Boolean;
-  focus?: Boolean;
+  type?: string;
+  hasBorder?: boolean;
+  focus?: boolean;
   background?: string;
+  error?: boolean;
+  errorMessage?: string;
+  onKeyDown?: any;
 }
