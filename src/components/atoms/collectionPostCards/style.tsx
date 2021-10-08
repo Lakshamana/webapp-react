@@ -10,6 +10,11 @@ export const PostContent: any = styled.div`
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+
+    @media screen and (max-width: 640px) {
+        width: 240px;
+        height: 140px;
+    }
 `;
 
 export const ExclusiveBlocked: any = styled.div`
