@@ -6,10 +6,6 @@
   padding: 0 1.3rem !important;
 }
 
-.swiper-wrapper {
-  will-change: contents, transform;
-}
-
 .swiper-button-prev,
 .swiper-button-next {
   height: 100% !important;

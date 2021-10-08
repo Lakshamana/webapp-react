@@ -9,4 +9,5 @@ export * from "./tab";
 export * from './footer';
 export * from './cardsScroller';
 export * from './livestreamScroller';
+export * from './onDemandScroller';
 export * from "./input";
