@@ -3,12 +3,13 @@ import { Content } from './style';
 import './style.css';
 import { PostsProps } from './types';
 import { Swiper } from 'swiper/react';
-import SwiperCore, { Navigation, Autoplay } from 'swiper';
-import 'swiper/swiper-bundle.css';
+import SwiperCore, { Navigation } from 'swiper';
+import 'swiper/swiper-bundle.min.css';
 
-SwiperCore.use([Navigation, Autoplay])
+SwiperCore.use([Navigation])
 
-const CardsScroller: React.FC<PostsProps>= ({ posts } ) => {
+const CardsScroller = ({ children }: PostsProps) => {
+
   const navigationPrevRef = React.useRef<HTMLDivElement>(null)
   const navigationNextRef = React.useRef<HTMLDivElement>(null)
 
@@ -54,16 +55,16 @@ const CardsScroller: React.FC<PostsProps>= ({ posts } ) => {
   }
 
   return (
-    <>
+    <React.Fragment>
       <Content>
         <Swiper {...Params}>
-            {posts}
-          <div ref={navigationPrevRef} />
-          <div ref={navigationNextRef} />
+          {children}
         </Swiper>
+        <div ref={navigationPrevRef} />
+        <div ref={navigationNextRef} />
       </Content>
-    </>
-  );
+    </React.Fragment>
+  )
 }
 
 
