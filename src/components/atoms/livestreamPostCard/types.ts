@@ -1,4 +1,4 @@
-export interface VideoPostProps {
+export interface LivePostProps {
     postTitle?: string;
     postUrl?: string;
     coverImage?: string;
@@ -9,6 +9,6 @@ export interface VideoPostProps {
 }
 
 export const defaultProps = {
-    isExclusive: false,
+    isExclusive: true,
     isGeolocked: false,
 }

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-export const Content: any = styled.section`
-    width: 100% !important;
+export const Content: any = styled.div`
+    width: 100vw;
     height: auto;
+    position: relative;
 `;

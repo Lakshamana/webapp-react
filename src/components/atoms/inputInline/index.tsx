@@ -3,7 +3,16 @@ import React from "react";
 import { Props } from "./types";
 import { Input, InputMask } from "./styles";
 
-const InputInline = ({ mask, background, ...props }: Props) => {
+const InputInline = ({
+  mask,
+  onChange,
+  background = '',
+  placeholder = "placeholder",
+  error = false,
+  errorMessage = "",
+  onKeyDown = () => {},
+  ...props
+}: Props) => {
   const ref: any = React.useRef(null);
 
   React.useEffect((): any => {
@@ -11,14 +20,9 @@ const InputInline = ({ mask, background, ...props }: Props) => {
   }, [props.focus]);
 
   return mask ? (
-    <InputMask
-      ref={ref}
-      {...props}
-      mask={mask}
-      maskPlaceholder={props.placeholder}
-    />
+    <InputMask ref={ref} {...props} mask={mask} maskPlaceholder={placeholder} />
   ) : (
-    <Input {...{ ...props, ref, background }} />
+    <Input {...{ ...props, ref, error, placeholder, onChange, onKeyDown}}  />
   );
 };
 

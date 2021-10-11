@@ -16,7 +16,7 @@ const commonStyles = `
 `;
 
 interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
-  background?: string;
+  error?: string;
 }
 
 export const Input: any = styled.input<PropsStyle>`
@@ -24,10 +24,17 @@ export const Input: any = styled.input<PropsStyle>`
   ${space}
   ${fontSize}
   ${commonStyles}
-  background-color: ${({ background }) => background};
-  color: white;
+  background-color: ${({ error }) => (error ? "#FFF2F2;" : "#FAFAFA;")};
+  color: #000;
   border-radius: 4px;
   width: 100%;
+  padding-left: 16px;
+  font-size: 16px;
+  width: 100%;
+
+  &::placeholder {
+    color: #666666;
+  }
 `;
 
 export const InputMask: any = styled(InputMasked)<PropsStyle>`
