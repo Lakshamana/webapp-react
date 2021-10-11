@@ -1,12 +1,15 @@
-import { Header, Container, Footer } from "components";
+import { Header, Footer } from "components";
+import { ChildContainer, LayoutContainer } from "./styles";
 import { Props, defaultProps } from "./types";
 
-const Layout = ({ children }: Props) => (
-  <Container flexDirection="column" width={1} minHeight="100vh">
+const Layout = ({ children, ...props }: Props) => (
+  <LayoutContainer flexDirection="column">
     <Header />
-    <Container height="100%">{children}</Container>
+    <ChildContainer {...props} width={1}>
+      {children}
+    </ChildContainer>
     <Footer />
-  </Container>
+  </LayoutContainer>
 );
 
 Layout.defaultProps = defaultProps;
