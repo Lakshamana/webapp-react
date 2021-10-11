@@ -1,4 +1,4 @@
-import { Props } from "./types";
+import { Props, defaultProps } from "./types";
 import { Container } from './style'
 
 
@@ -9,5 +9,7 @@ const CardContainer = ({ children, ...props }: Props) => {
         </Container>
     );
 };
+
+CardContainer.defaultProps = defaultProps
 
 export { CardContainer };
