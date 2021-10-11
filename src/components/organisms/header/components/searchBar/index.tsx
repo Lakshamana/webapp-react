@@ -48,7 +48,7 @@ const SearchBar = ({
             px={3}
             flex={1}
             background={colors.backgroundLayout}
-            height={["100px"]}
+            height={["70px", "70px", "70px", "100px"]}
             ref={triggerRef}
             {...{ open }}
           >
