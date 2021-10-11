@@ -3,8 +3,8 @@ import styled from 'styled-components'
 export const PostContent: any = styled.div`
     display: flex;
     position: relative;
-    width: 258px;
-    height: 154px;
+    width: 295px;
+    height: 160px;
     border-radius: 4px;
     ${({ coverImage }: any) => `background: ${coverImage};`}
     background-position: center;

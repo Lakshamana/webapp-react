@@ -1,11 +1,14 @@
 import { Channel } from "./types";
 
 export const MENUTABS = [
-  { id: "home", label: "home", link: "/" },
-  { id: "live", label: "live", link: "/" },
-  { id: "feed", label: "feed", link: "/" },
-  { id: "collections", label: "collections", link: "/" },
-  { id: "list", label: "my list", link: "/" },
+  { id: "home", label: "home", url: "/" },
+  { id: "live", label: "live", url: "/" },
+  { id: "feed", label: "feed", url: "/" },
+  { id: "collections", label: "collections", url: "/" },
+  { id: "list", label: "my list", url: "/" },
+  { id: "settings", label: "settings", url: "/" },
+  { id: "tools", label: "tools", url: "/" },
+  { id: "example 1", label: "example", url: "/" },
 ];
 
 export const CHANNELS: Array<Channel> = [
@@ -20,3 +23,37 @@ export const CHANNELS: Array<Channel> = [
     url: "https://www.logodesign.net/logo/abstract-cuboid-building-4519ld.png",
   },
 ];
+
+export const DEFAULT_USER = {
+  name: "Jorge Hidalgo",
+  id: "11-user",
+  avatar:
+    "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg",
+};
+
+export const SEARCH_VALUES = [
+  {
+    label: "Channels",
+    id: "0-data",
+    children: [
+      { text: "Channel name 1", id: "1" },
+      { text: "Channel name 2", id: "2" },
+    ],
+  },
+  {
+    label: "Content",
+    id: "1-data",
+    children: [
+      { text: "Content title 1 (Channel name)", id: "11" },
+      { text: "Content title 2 (Channel name)", id: "2" },
+    ],
+  },
+];
+
+export const initialState: any = {
+  search: "",
+  selected: "",
+  openMenu: false,
+  openSearch: false,
+  channel: "",
+};

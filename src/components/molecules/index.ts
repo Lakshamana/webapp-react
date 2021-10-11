@@ -1,3 +1,4 @@
+export * from "./comment";
 export * from "./participants";
 export * from "./popover";
 export * from "./postDetails";
@@ -7,3 +8,7 @@ export * from "./videoOnDemand";
 export * from "./tab";
 export * from './footer';
 export * from './cardsScroller';
+export * from './livestreamScroller';
+export * from './onDemandScroller';
+export * from './collectionScroller';
+export * from "./input";

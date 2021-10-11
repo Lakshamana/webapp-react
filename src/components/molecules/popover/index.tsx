@@ -9,7 +9,7 @@ import { Props, defaultProps } from "./types";
 
 const Popover = ({ children, trigger, background, props }: Props) => (
   <ChakraPopover {...props}>
-    <PopoverTrigger>{trigger}</PopoverTrigger>
+    {trigger && <PopoverTrigger>{trigger}</PopoverTrigger>}
     <PopoverContent bg={background}>
       <PopoverBody>{children}</PopoverBody>
     </PopoverContent>
