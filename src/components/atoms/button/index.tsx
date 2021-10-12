@@ -9,7 +9,9 @@ const Button = ({ label, type, ...props }: ButtonProps) => {
             case 'reset':
                 return <BoxButton variant="secondary"  borderRadius={4} {...props}>{label}</BoxButton>
             case 'billboard':
-                return <BoxButton  borderRadius={6} {...props}>{label}</BoxButton>
+                return <BoxButton borderRadius={6} {...props}>{label}</BoxButton>
+            case 'disabled':
+                return <BoxButton variant="grey" borderRadius={4} {...props}>{label}</BoxButton>
             default:
                 return <BoxButton variant="primary" {...props}>{label}</BoxButton>
         }
