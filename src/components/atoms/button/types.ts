@@ -1,9 +1,10 @@
 import { ColorProps, SpaceProps, LayoutProps, TypographyProps, BorderProps, VariantArgs } from 'styled-system';
 
 export interface ButtonProps extends SpaceProps, LayoutProps, TypographyProps, VariantArgs, BorderProps, ColorProps {
-  label: string;
+  label: String;
   style?: React.CSSProperties;
-  type: ButtonType;
+  type?: ButtonType;
+  iconName?: String;
 }
 
 export const defaultProps = {
