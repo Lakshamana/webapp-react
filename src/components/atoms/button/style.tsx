@@ -9,7 +9,8 @@ export const BoxButton: any = styled.button`
     font-weight: 500;
     text-transform: none;
     cursor: pointer;
-    border-radius: 4px;           
+    border-radius: 4px;    
+    gap: 15px;       
 
     ${space}
     ${layout}
