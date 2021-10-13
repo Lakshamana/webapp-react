@@ -1,11 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { BillboardWrapper, Billboard, BillboardItems, HeroImageWrapper, HeroImg, Info, InfoContent, Title, Description, Actions } from './style'
-import './style.css'
-import { BillboardItemsArr, BillboardItemActions } from './types'
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Autoplay, Pagination, EffectFade, SwiperOptions } from 'swiper';
-import 'swiper/swiper-bundle.min.css';
-import { Button } from 'components';
+import { useEffect, useState } from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
+import { Button } from "components"
+import { Params } from "./settings"
+import { getItems, getActions } from "./utils"
+import { Props, BillboardItemActions, BillboardItem } from "./types"
+import {
+	BillboardWrapper,
+	Billboard,
+	BillboardItems,
+	HeroImageWrapper,
+	HeroImg,
+	Info,
+	InfoContent,
+	Title,
+	Description,
+	Actions
+} from "./style"
+import "./style.css"
+import "swiper/swiper-bundle.min.css"
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
