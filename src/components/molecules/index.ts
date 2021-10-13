@@ -14,3 +14,4 @@ export * from "./onDemandScroller";
 export * from "./collectionScroller";
 export * from "./input";
 export * from "./externalFooter"
+export * from "./externalHeader"
