@@ -1,7 +1,7 @@
 import { Box, Flex, Spacer } from "@chakra-ui/react"
 import { pxToRem } from "styles/metrics";
 import { theme } from "styles/theme"
-import { Vote } from "components/atoms";
+import { Vote, Text, FilterButton } from "components/atoms";
 import { Comment, PostDetails } from "components/molecules";
 
 const ComponentsUsage = () => {
@@ -27,12 +27,25 @@ const ComponentsUsage = () => {
         description={post.description}
       />
 
-      <Box mt={6}>
-        <Comment
-          userName="User name"
-          createdAt="2 min ago"
-          comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt"
-        />
+      <Box mt={6} paddingX={3} border="1px solid grey">
+        <Flex width={pxToRem(698)}>
+          <Flex>
+            <Text fontSize={pxToRem(28)} fontWeight={500}>
+              999K Comments
+            </Text>
+          </Flex>
+          <Spacer flex="1" />
+
+          <FilterButton onChange={(selected: string) => console.log('selected', selected)} />
+        </Flex>
+
+        <Box mt={6}>
+          <Comment
+            userName="User name"
+            createdAt="2 min ago"
+            comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt"
+          />
+        </Box>
       </Box>
     </Box>
   )
