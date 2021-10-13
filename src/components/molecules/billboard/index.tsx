@@ -23,6 +23,10 @@ import "swiper/swiper-bundle.min.css"
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
 const BillboardScroller = ({ items, actions }: Props) => {
+	const [size, setSize] = useState({
+		x: window.innerWidth,
+		y: window.innerHeight
+	})
 
     const getSize = () => {
         setSize({
