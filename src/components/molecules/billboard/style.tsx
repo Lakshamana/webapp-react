@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoints } from 'styles';
 
 export const BillboardWrapper: any = styled.div`
     position: relative;
@@ -8,7 +9,7 @@ export const BillboardWrapper: any = styled.div`
     min-height: 500px;
     max-height: 800px;
 
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: ${breakpoints.sm}) {
         height: 50vh;
     }
 `;
@@ -31,7 +32,7 @@ export const BillboardItems: any = styled.div`
         content: "";
         position: absolute;
         width: 100%;
-        bottom: 0;
+        bottom: 0px;
         height: 95px;
         z-index: 8;
       }
@@ -44,10 +45,10 @@ export const HeroImageWrapper: any = styled.div`
     &:after {
         content: "";
         position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
         background: linear-gradient(90deg, #0F0F0F 0%, rgba(15, 15, 15, 0) 50%), linear-gradient(359.29deg, #0F0F0F 0.7%, rgba(15, 15, 15, 0) 64.44%)
 `;
 
@@ -60,15 +61,15 @@ export const HeroImg: any = styled.img`
     &:after {
         display: block;
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 0px;
+        left: 0px;
         width: 100%;
         height: 100%;
         background-color: #0f0f0f;
         content: attr(alt);
       }
 
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: ${breakpoints.md}) {
         object-position: center center;
     }
 `;
@@ -78,18 +79,26 @@ export const Info: any = styled.div`
     position: absolute;
     top: 40%;
     bottom: 60%;
-    width: 65%;
     z-index: 10;
-    padding: 0 1.69rem;
+    padding: 0 64px;
     display: flex;
     align-items: center;
 
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: ${breakpoints.md}) {
         text-align: center;
         width: 100%;
-        display: flex;
+        padding: 0 45px;
         align-items: flex-end;
-        padding-bottom: 2.18rem;
+        padding-bottom: 34px;
+        height: 300px;
+    }
+
+    @media screen and (max-width: ${breakpoints.sm}) {
+        text-align: center;
+        padding: 0 45px;
+        width: 100%;
+        align-items: flex-end;
+        padding-bottom: 34px;
         height: 300px;
     }
 `;
@@ -101,44 +110,50 @@ export const InfoContent: any = styled.div`
 export const Title: any = styled.div`
     font-weight: bold;
     font-size: 120px;
-    line-height: 6.89rem;
-    margin: 0px 0px 1.9rem;
+    line-height: 110px;
+    margin: 0px 0px 30px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 
-    @media screen and (min-width: 640px) and (max-width: 768px) {
-        font-size: 2.3rem;
-        line-height: 2.5rem;
+    @media screen and (max-width: ${breakpoints.lg}) {
+        font-size: 90px;
+        line-height: 80px;
     }
 
-    @media screen and (max-width: 640px) {
-        font-size: 2.2rem;
-        line-height: 3.5rem;
-        margin: 0.7rem 0;
+    @media screen and (max-width: ${breakpoints.md}) {
+        font-size: 45px;
+        line-height: 40px;
+    }
+
+    @media screen and (max-width: ${breakpoints.sm}) {
+        font-size: 32px;;
+        line-height: 56px;
+        margin: 12px 0;
     }
 `;
 
 export const Description: any = styled.div`
-    font-size: 1.125rem;
-    line-height: 1.5rem;
+    font-size: 18px;
+    line-height: 24px;
     max-width: 605px;
-    margin-bottom: 1.22rem;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
 
-    @media screen and (min-width: 640px) and (max-width: 768px) {
-        font-size: 1rem;
-        line-height: 1.1875rem;
+    @media screen and (max-width: ${breakpoints.md}) {
+        font-size: 19px;
+        line-height: 25px;
+        max-width: 100%;
     }
 
-    @media screen and (max-width: 640px) {
-        font-size: 0.8rem;
-        line-height: 1rem;
-        margin-bottom: 1rem;
+    @media screen and (max-width: ${breakpoints.sm}) {
+        font-size: 16px;
+        line-height: 16px;
+        max-width: 100%;
+        margin-bottom: 16px;
         -webkit-line-clamp: 2;
     }
 `;
@@ -146,9 +161,15 @@ export const Description: any = styled.div`
 export const Actions: any = styled.div`
     display: flex;
     flex-wrap: wrap;
-    margin-top: 1.25rem;
+    margin-top: 18px;
 
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: ${breakpoints.md}) {
+        justify-content: center;
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    @media screen and (max-width: ${breakpoints.sm}) {
         display: grid;
         grid-template-columns: 1fr 1fr;
         justify-items: center;
