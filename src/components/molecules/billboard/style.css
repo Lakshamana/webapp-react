@@ -4,18 +4,18 @@
 }
 
 .pagination {
-    bottom: 1.25rem;
+    bottom: 16px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-    padding-bottom: 3.125rem;
+    padding-bottom: 64px;
 }
 
 .swiper-pagination-bullet {
     width: 80px;
     height: 5px;
-    padding: 0;
-    margin: 0 0.1125rem !important;
+    padding: 0px;
+    margin: 0 2px !important;
     background: #ffffff;
     border: 0;
     opacity: 0.64;
@@ -40,10 +40,21 @@
     padding: 0px !important;
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 768px) {
     .pagination {
-        padding-bottom: 0;
-        margin-bottom: -1.25rem;
+        padding-bottom: 16px;
+    }
+
+    .swiper-pagination-bullet {
+        width: 32px;
+        height: 4px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .pagination {
+        padding-bottom: 8px;
+        margin-bottom: -16px;
     }
 
     .swiper-pagination-bullet {
