@@ -60,18 +60,10 @@ const BillboardScroller = ({ items, actions }: Props) => {
         return (<SwiperSlide key={`Slide-${i}`} style={{ "width": "100%" }}>
             <BillboardItems>
                 <HeroImageWrapper>
-                    <HeroImg ClassName="swiper-lazy" src={size.x >= 640 ? item.banner : item.cover} />
-                </HeroImageWrapper>
-                <Info style={{ color: item.infoColor }}>
-                    <InfoContent>
-                        <Title>{item.title}</Title>
-                        <Description>{item.description}</Description>
-                        <Actions>
-                            {item.actions && renderActions(item.actions)}
-                        </Actions>
-                    </InfoContent>
-                </Info>
-            </BillboardItems>
+										src={size.x >= 640 ? items.banner : items.cover}
+								<Info style={{ color: items.infoColor }}>
+										<Title>{items.title}</Title>
+										<Description>{items.description}</Description>
         </SwiperSlide>)
     })
 
