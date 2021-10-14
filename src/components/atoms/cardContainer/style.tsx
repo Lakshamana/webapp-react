@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { Props } from "./types"
 import { space, layout, flexbox, position } from "styled-system";
+import { breakpoints } from 'styles';
 
 export const Container = styled.div<Props>`
 	${space}
@@ -14,4 +15,8 @@ export const Container = styled.div<Props>`
 	
 	/* TO DO: Add color variable for theme-dark or theme-light */
 	background-color: #222222;
+
+	@media screen and (max-width: ${breakpoints.sm}) { 
+		border-radius: 0;
+	}
 `
