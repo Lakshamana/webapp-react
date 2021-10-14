@@ -1,2 +1,2 @@
 export * from "./layout";
-export * from "./TemplateProvider";
+export * from "./templateProvider";
