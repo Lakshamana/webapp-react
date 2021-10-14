@@ -45,7 +45,7 @@ const UserInfo = ({ user }: PropsUserInfo) => {
             />
             <PopoverOption
               text={`${colorMode === 'dark' ? 'Desativar' : 'Ativar'} modo escuro`}
-              onClick={() => toggleColorMode()}
+              onClick={toggleColorMode}
               icon={
                 colorMode === 'dark'
                   ? <Sun color={colors.white} width={18} height={18} /> 
