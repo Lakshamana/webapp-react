@@ -1,67 +1,52 @@
 export const breakpoints = {
-  ssm: "320px",
-  sm: "425px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1440px",
-};
+	ssm: "320px",
+	sm: "425px",
+	md: "768px",
+	lg: "1024px",
+	xl: "1440px"
+}
 
 export const breakpointKeys = {
-  "mobile-small": "ssm",
-  "mobile-large": "sm",
-  tablet: "md",
-  "desktop-small": "lg",
-  desktop: "xl",
-};
+	"mobile-small": "ssm",
+	"mobile-large": "sm",
+	tablet: "md",
+	"desktop-small": "lg",
+	desktop: "xl"
+}
 
 export const fonts = {
-  body: "Montserrat Regular",
-  regular: "Montserrat Regular",
-  medium: "Montserrat Medium",
-  semiBold: "Montserrat SemiBold",
-  bold: "Montserrat Bold",
-  extraBold: "Montserrat ExtraBold",
-  black: "Montserrat Black",
-};
+	body: "Roboto Regular, sans-serif",
+	regular: "Roboto Regular, sans-serif",
+	medium: "Roboto Medium, sans-serif",
+	bold: "Roboto Bold, sans-serif",
+	black: "Roboto Black, sans-serif"
+}
 
 export const globalStyles = `
 @font-face {
-  font-family: 'Montserrat Regular';
+  font-family: 'Roboto Regular';
   font-style: normal;
   font-weight: 500;
-  src: url('/fonts/Montserrat-Regular.ttf') format('truetype');
+  src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap') format('truetype');
 }
 @font-face {
-  font-family: 'Montserrat Medium';
+  font-family: 'Roboto Medium';
   font-style: normal;
   font-weight: 500;
-  src: url('/fonts/Montserrat-Medium.ttf') format('truetype');
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap') format('truetype');
 }
 @font-face {
-  font-family: 'Montserrat SemiBold';
+  font-family: 'Roboto Bold';
   font-style: normal;
   font-weight: 500;
-  src: url('/fonts/Montserrat-SemiBold.ttf') format('truetype');
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap') format('truetype');
 }
 @font-face {
-  font-family: 'Montserrat Bold';
+  font-family: 'Roboto Black';
   font-style: normal;
   font-weight: 500;
-  src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap') format('truetype');
 }
-@font-face {
-  font-family: 'Montserrat ExtraBold';
-  font-style: normal;
-  font-weight: 500;
-  src: url('/fonts/Montserrat-ExtraBold.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Montserrat Black';
-  font-style: normal;
-  font-weight: 500;
-  src: url('/fonts/Montserrat-Black.ttf') format('truetype');
-}
-
 
 html {
   height: 100%;
@@ -213,4 +198,4 @@ input:-webkit-autofill {
   box-shadow: none !important;
 }
 
-`;
+`

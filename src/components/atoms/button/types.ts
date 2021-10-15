@@ -1,14 +1,29 @@
-import { ColorProps, SpaceProps, LayoutProps, TypographyProps, BorderProps, VariantArgs } from 'styled-system';
+import {
+	ColorProps,
+	SpaceProps,
+	LayoutProps,
+	TypographyProps,
+	BorderProps,
+	VariantArgs
+} from "styled-system"
 
-export interface ButtonProps extends SpaceProps, LayoutProps, TypographyProps, VariantArgs, BorderProps, ColorProps {
-  label: string;
-  style?: React.CSSProperties;
-  type?: ButtonType;
-  iconName?: string;
+
+type ButtonType = "submit" | "reset" | "billboard" | "disabled"
+
+export interface ButtonProps
+	extends SpaceProps,
+		LayoutProps,
+		TypographyProps,
+		VariantArgs,
+		BorderProps,
+		ColorProps {
+	label: string
+	style?: React.CSSProperties
+	type: ButtonType
+  iconName?: string
+	onClick?: Function
 }
 
 export const defaultProps = {
-  label: ''
-};
-
-type ButtonType = 'submit' | 'reset' | 'billboard' | 'disabled'
+	type: "submit"
+}

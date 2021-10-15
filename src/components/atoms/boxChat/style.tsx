@@ -15,7 +15,6 @@ export const DateContainer: any = styled.div`
 `;
 
 export const DateText: any = styled.div`
-  font-family: Helvetica Neue;
   color: #e1e1e1;
   font-size: 12px;
   font-weight: 300;
@@ -31,14 +30,12 @@ export const BoxContainer: any = styled.div`
 `;
 export const NameUserText: any = styled.span`
   ${color}
-  font-family: Helvetica Neue;
   font-weight: bold;
   font-size: 12px;
 `;
 
 export const MessageText: any = styled.span`
   ${color}
-  font-family: Helvetica Neue;
   font-size: 14px;
   font-weight: 300;
 `;
