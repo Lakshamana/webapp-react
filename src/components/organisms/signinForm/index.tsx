@@ -18,7 +18,6 @@ const SigninForm = () => {
                 onChange={() => { }}
                 error={false}
                 placeholder={'Password'}
-                secretIcon
                 onEnterPress={() => alert("enter")}
             />
             <Button width={1} paddingLeft={105} paddingRight={105} marginTop={20} type={'submit'} label={'Login'} onClick={() => history.push('/dashboard')}></Button>
