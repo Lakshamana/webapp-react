@@ -8,7 +8,8 @@ export const BoxButton: any = styled.button`
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 6px;           
+    border-radius: 4px;    
+    gap: 15px;             
 
     ${space}
     ${layout}
