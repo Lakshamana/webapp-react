@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, RadioGroup, Text, Layout } from "components";
+import { Container, RadioGroup, Text, MainLayout } from "components";
 
 import { options, RADIO_LANGUAGES } from "./settings";
 import { MenuOption } from "./types";
@@ -16,7 +16,7 @@ const User = () => {
   };
 
   return (
-    <Layout p={4} backgroundColor={colors.backgroundLayout}>
+    <MainLayout p={4} backgroundColor={colors.backgroundLayout}>
       <Container
         flexDirection={["column", "column", "column", "row"]}
         width={1}
@@ -68,7 +68,7 @@ const User = () => {
           </Container>
         </Container>
       </Container>
-    </Layout>
+    </MainLayout>
   );
 };
 
