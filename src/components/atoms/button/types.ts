@@ -7,6 +7,7 @@ import {
 	VariantArgs
 } from "styled-system"
 
+
 type ButtonType = "submit" | "reset" | "billboard" | "disabled"
 
 export interface ButtonProps
@@ -19,6 +20,7 @@ export interface ButtonProps
 	label: string
 	style?: React.CSSProperties
 	type: ButtonType
+  iconName?: string
 	onClick?: Function
 }
 
