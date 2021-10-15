@@ -16,11 +16,12 @@ export interface BillboardItemActions extends ButtonProps {
     icon?: string,
     label: string,
     route?: string,
+    textColor?: string
 }
 
 export interface Props {
-    items: Array<BillboardItem>,
-    actions: Array<BillboardItemActions>
+    items?: Array<BillboardItem>,
+    actions?: Array<BillboardItemActions>
 }
 
 
