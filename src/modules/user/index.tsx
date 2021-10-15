@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Container, RadioGroup, Text, Layout } from "components";
+import { Container, Text, Layout } from "components";
+import { FormSettings, FormProfile, FormBilling } from "./components";
 
-import { options, RADIO_LANGUAGES } from "./settings";
+import { options } from "./settings";
 import { MenuOption } from "./types";
-import { OptionContainer } from "./styles";
+
 import { colors } from "styles";
+import { OptionContainer } from "./styles";
 
 const User = () => {
   const [selected, setSelected] = useState<MenuOption>(options[0]);
@@ -15,12 +17,26 @@ const User = () => {
     setSelected(option);
   };
 
+  const renderContent = () => {
+    switch (selected.id) {
+      case "settings":
+        return <FormSettings />;
+      case "profile":
+        return <FormProfile />;
+      case "billing":
+        return <FormBilling />;
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <Layout p={4} backgroundColor={colors.backgroundLayout}>
       <Container
         flexDirection={["column", "column", "column", "row"]}
         width={1}
         height="100%"
+        alignItems="stretch"
       >
         <Container
           flexDirection="column"
@@ -53,19 +69,10 @@ const User = () => {
           py={4}
           px={5}
         >
-          <Text style={{ textTransform: "uppercase" }} color={colors.white}>
-            Delete Account
-          </Text>
-
-          <Container>
-            <RadioGroup
-              size="sm"
-              name="language"
-              title="Language"
-              radios={RADIO_LANGUAGES}
-              onChange={(radio: any) => console.log(radio)}
-            />
-          </Container>
+          {renderContent()}
+          {renderContent()}
+          {renderContent()}
+          {renderContent()}
         </Container>
       </Container>
     </Layout>
