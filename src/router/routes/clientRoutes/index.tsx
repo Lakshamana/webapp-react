@@ -2,7 +2,7 @@ import { Switch } from "react-router-dom";
 
 import { ClientRoute } from "../../components";
 
-import { Dashboard, Login, LiveChat, User } from "modules";
+import { DashboardPage, LoginPage, LiveChat, User } from "modules";
 
 const ClientRoutes = ({ isAccesible }: any) => (
   <Switch>
@@ -10,21 +10,21 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.livechat}
       path="/livechat"
       component={LiveChat}
-      fallback={Login}
+      fallback={LoginPage}
     />
     <ClientRoute
       isAccesible={isAccesible?.dashboard}
       path="/dashboard"
-      component={Dashboard}
-      fallback={Login}
+      component={DashboardPage}
+      fallback={LoginPage}
     />
     <ClientRoute
       isAccesible={isAccesible?.user}
       path="/user"
       component={User}
-      fallback={Login}
+      fallback={LoginPage}
     />
-    <ClientRoute isAccesible={isAccesible?.login} path="/" component={Login} />
+    <ClientRoute isAccesible={isAccesible?.login} path="/" component={LoginPage} />
   </Switch>
 );
 
