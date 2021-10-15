@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Text, Layout } from "components";
+import { Container, Text, MainLayout } from "components";
 import { FormSettings, FormProfile, FormBilling } from "./components";
 
 import { options } from "./settings";
@@ -31,7 +31,7 @@ const User = () => {
   };
 
   return (
-    <Layout p={4} backgroundColor={colors.backgroundLayout}>
+    <MainLayout p={4} backgroundColor={colors.backgroundLayout}>
       <Container
         flexDirection={["column", "column", "column", "row"]}
         width={1}
@@ -75,7 +75,7 @@ const User = () => {
           {renderContent()}
         </Container>
       </Container>
-    </Layout>
+    </MainLayout>
   );
 };
 

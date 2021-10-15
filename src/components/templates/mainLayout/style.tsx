@@ -3,7 +3,7 @@ import { StyleContainer } from "components";
 
 export const ChildContainer = styled(StyleContainer)`
   display: block;
-  min-height: calc(100vh - 70px - 100px);
+  min-height: calc(100vh - 100px - 100px);
 `;
 
 export const LayoutContainer = styled(StyleContainer)`

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Power, Settings, User } from "react-feather";
+import { Power, Settings, User, Sun, Moon } from "react-feather";
+import { useColorMode } from "@chakra-ui/color-mode";
 import { Container, Text, Popover } from "components";
 import { PopoverOption } from "..";
 
@@ -9,6 +10,7 @@ import { colors } from "styles";
 
 const UserInfo = ({ user }: PropsUserInfo) => {
   const [open, setOpen] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <Container display={["none", "none", "none", "flex"]}>
@@ -40,6 +42,15 @@ const UserInfo = ({ user }: PropsUserInfo) => {
               text="Editar Perfil"
               onClick={() => {}}
               icon={<User color={colors.white} width={18} height={18} />}
+            />
+            <PopoverOption
+              text={`${colorMode === 'dark' ? 'Desativar' : 'Ativar'} modo escuro`}
+              onClick={toggleColorMode}
+              icon={
+                colorMode === 'dark'
+                  ? <Sun color={colors.white} width={18} height={18} /> 
+                  : <Moon color={colors.white} width={18} height={18} />
+              }
             />
             <PopoverOption
               text="Ajustes"

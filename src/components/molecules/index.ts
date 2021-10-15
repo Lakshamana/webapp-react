@@ -7,11 +7,12 @@ export * from "./reactionBar";
 export * from "./videoLivestream";
 export * from "./videoOnDemand";
 export * from "./tab";
-export * from "./footer";
 export * from "./cardsScroller";
 export * from "./livestreamScroller";
 export * from "./onDemandScroller";
 export * from "./collectionScroller";
 export * from "./input";
+export * from "./billboard"
 export * from "./externalFooter"
 export * from "./externalHeader"
+export * from "./internalFooter"
