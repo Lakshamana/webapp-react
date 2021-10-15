@@ -64,7 +64,7 @@ export const globalStyles = `
 
 
 html {
-  height: -webkit-fill-available;
+  height: 100%;
 }
 
 body {
@@ -109,7 +109,7 @@ i {
   outline: 0;
 }
 
-#app {
+#root {
   height: 100%;
 }
 body::before {
@@ -199,6 +199,18 @@ input:-webkit-autofill {
 
 .chakra-popover__body {
   padding: 0 !important;
+}
+
+.chakra-radio-group {
+  display: flex;
+}
+
+.chakra-radio {
+  cursor: pointer;
+}
+
+.chakra-checkbox__control, .chakra-radio__control {
+  box-shadow: none !important;
 }
 
 `;

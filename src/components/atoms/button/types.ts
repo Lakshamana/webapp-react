@@ -10,4 +10,4 @@ export const defaultProps = {
   label: ''
 };
 
-type ButtonType = 'submit' | 'reset' | 'billboard';
+type ButtonType = 'submit' | 'reset' | 'billboard' | 'disabled'

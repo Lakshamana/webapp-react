@@ -2,9 +2,8 @@ import { Switch } from "react-router-dom";
 
 import { ClientRoute } from "../../components";
 
-import { Dashboard, Login, LiveChat } from "modules";
+import { Dashboard, Login, LiveChat, User } from "modules";
 
-// Examples
 const ClientRoutes = ({ isAccesible }: any) => (
   <Switch>
     <ClientRoute
@@ -17,6 +16,12 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.dashboard}
       path="/dashboard"
       component={Dashboard}
+      fallback={Login}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.user}
+      path="/user"
+      component={User}
       fallback={Login}
     />
     <ClientRoute isAccesible={isAccesible?.login} path="/" component={Login} />

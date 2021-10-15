@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export const BoxFooter: any = styled.div`
+export const BoxFooter = styled.div`
     width: 100%;
-    height: 100px;
+    height: 108px;
     background-color: black;
     display: flex;
     justify-content: center;
@@ -10,39 +10,38 @@ export const BoxFooter: any = styled.div`
     bottom: 0;
 
     @media screen and (max-width: 640px) {
-        height: 315px;
+        height: 210px;
     }
 `;
 
-export const FooterItems: any = styled.div`
+export const FooterItems = styled.div`
     width: 90%;
     height: 100%;
     display: grid;
-    grid-template-columns: 20% 60% 20%;
+    grid-template-columns: 70% 30%;
     align-items: center;
 
     @media screen and (max-width: 640px) {
-        display: grid;
-        grid-template-columns: 1fr;
+        display: flex;
         padding-bottom: 34px;
         padding-top: 40px;
-        justify-items: center;
+        flex-flow: column;
     }
 `;
 
-export const TextFooter: any = styled.div`
+export const TextFooter = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: left;
     color: white;
-    font-size: 16px;
+    font-size: 1rem;
 
     @media screen and (max-width: 640px) {
         width: 100%;
-        padding-top: 50px;
+        padding-top: 1.5rem;
         border-top: 1px solid #666666;
         border-radius: 1px;
-        color: #E1E1E1;
-        font-size: 12px;
+        justify-content: center;
+        order: 2;
     }
 
 `;
