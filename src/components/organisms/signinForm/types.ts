@@ -1,4 +1,4 @@
 export interface SigninProps {
-    username: String;
-    password: String;
+    username: string;
+    password: string;
 }
