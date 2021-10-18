@@ -1,52 +1,65 @@
 import styled from 'styled-components'
+import { LivePostProps } from './types';
 
-export const PostContent: any = styled.div`
+export const PostContent = styled.div <LivePostProps>`
     display: flex;
-    position: relative;
-    width: 360px;
-    height: 208px;
+    width: 295px;
+    height: 160px;
     border-radius: 4px;
-    ${({ coverImage }: any) => `background: ${coverImage};`}
+    ${(props: LivePostProps) => `background: url(${props.coverImage});`}
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-
-    @media screen and (max-width: 640px) {
-        width: 250px;
-        height: 150px;
+    
+    &:before {
+      content: "";
+      position: absolute;
+      width : 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: 4px;
+      ${(props: LivePostProps) => `-webkit-filter: ${props.isExclusive === true ? 'blur(4px);' : 'blur(0px);'} `}
+      z-index: 1;
     }
+    
+    @media screen and (max-width: 640px) {
+      width: 250px;
+      height: 150px;
+    }
+
 `;
 
 export const ExclusiveBlocked: any = styled.div`
-    width: 60px;
-    height: 59px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 51px;
+    height: 50px;
     border-radius: 50%;
-    position: inherit;
-    top: 75px;
-    margin: 0 auto;
+    margin: auto;
     background-color: #035EFB;
+    z-index: 2;
 
     @media screen and (max-width: 640px) {
-        width: 50px;
-        height: 49px;
-        top: 50px;
+        width: 41px;
+        height: 40px;
     }
 
 `;
 
 export const GeolockedBlocked: any = styled.div`
-    width: 60px;
-    height: 59px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 51px;
+    height: 50px;
     border-radius: 50%;
-    position: inherit;
-    top: 75px;
-    margin: 0 auto;
+    margin: auto;
     background-color: #035EFB;
     pointer-events: none;
 
     @media screen and (max-width: 640px) {
-        width: 50px;
-        height: 49px;
-        top: 50px;
+        width: 41px;
+        height: 40px;
     }
 `;
