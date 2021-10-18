@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { StyleContainer } from "components";
 
 export const ChildContainer = styled(StyleContainer)`
-  display: block;
-  min-height: calc(100vh - 100px - 100px);
+  min-height: 100vh;
 `;
 
 export const LayoutContainer = styled(StyleContainer)`
