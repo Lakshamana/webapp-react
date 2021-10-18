@@ -1,11 +1,22 @@
-import { Button } from "@chakra-ui/react";
-import { Container, Text, RadioGroup } from "components";
+import { useFormik } from "formik";
+import { Container, Button, Text, RadioGroup } from "components";
 import { RADIO_LANGUAGES } from "../../settings";
 
+import { initialValues, validationSchema } from "./settings";
 import { colors } from "styles";
 import { Line } from "../../styles";
 
 const FormSettings = () => {
+  const { values, setFieldValue } = useFormik({
+    initialValues: {
+      ...initialValues,
+    },
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: async () => {},
+  });
+
   return (
     <>
       <Container flexDirection="column" alignItems="center" mb={4}>
@@ -21,12 +32,13 @@ const FormSettings = () => {
           name="language"
           title="Language"
           radios={RADIO_LANGUAGES}
-          onChange={(radio: any) => console.log(radio)}
+          defaultValue={values.language}
+          onChange={({ value }: any) => setFieldValue("language", value)}
         />
       </Container>
 
       <Container mt={4}>
-        <Button colorScheme="blue">Delete Account</Button>
+        <Button type="submit" label="Delete Account" />
       </Container>
     </>
   );

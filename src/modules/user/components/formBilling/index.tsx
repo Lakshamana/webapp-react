@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Button, Stack } from "@chakra-ui/react";
-import { Container, Text, Input } from "components";
+import { Container, Text } from "components";
 
 import { tabs } from "./settings";
 import { colors } from "styles";
@@ -27,13 +26,18 @@ const FormBilling = () => {
 
   return (
     <>
-      <Container alignItems="center" mb={4}>
+      <Container alignItems="flex-start" mb={4}>
         {tabs.map((tab) => (
-          <TabContainer mr={3} onClick={() => handleSelected(tab.id)}>
+          <TabContainer
+            key={tab.id}
+            mr={3}
+            onClick={() => handleSelected(tab.id)}
+          >
             <Text
-              key={tab.id}
               style={{ textTransform: "uppercase" }}
               color={colors.white}
+              fontSize={[10, 12, 14]}
+              textAlign="center"
             >
               {tab.label}
             </Text>
