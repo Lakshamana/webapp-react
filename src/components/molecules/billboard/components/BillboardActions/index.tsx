@@ -25,7 +25,7 @@ const ActionsList = ({ actions }: Props) => {
 					key={`Button-${i}`}
 					backgroundColor={actions.bgColor}
 					borderColor={actions.borderColor}
-					// iconName={actions.icon}
+					iconName={actions.icon}
 					color={actions.textColor}
 					type='billboard'
 					label={actions.label}
