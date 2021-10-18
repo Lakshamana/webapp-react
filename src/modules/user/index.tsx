@@ -45,6 +45,7 @@ const User = () => {
           py={2}
           height="100%"
           width={1 / 4}
+          display={["none", "none", "flex"]}
         >
           {options.map((option) => (
             <OptionContainer
@@ -64,14 +65,11 @@ const User = () => {
         </Container>
         <Container
           backgroundColor={colors.grey["900"]}
-          width={3 / 4}
+          width={[1, 1, 3 / 4]}
           flexDirection="column"
-          py={4}
-          px={5}
+          py={[2, 2, 4]}
+          px={[2, 2, 5]}
         >
-          {renderContent()}
-          {renderContent()}
-          {renderContent()}
           {renderContent()}
         </Container>
       </Container>
