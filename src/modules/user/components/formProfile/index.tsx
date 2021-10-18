@@ -4,7 +4,7 @@ import { Container, Text, Button, Input } from "components";
 
 import { initialValues, validationSchema } from "./settings";
 import { colors } from "styles";
-import { Line } from "../../styles";
+import { Line, TabContainer } from "../../styles";
 
 const FormProfile = () => {
   const { values, setFieldValue } = useFormik({
@@ -19,12 +19,12 @@ const FormProfile = () => {
 
   return (
     <>
-      <Container flexDirection="column" alignItems="center" mb={4}>
+      <TabContainer mb={4}>
         <Text style={{ textTransform: "uppercase" }} color={colors.white}>
           Profile Settings
         </Text>
         <Line selected />
-      </Container>
+      </TabContainer>
 
       <Container flexDirection="column">
         <Input

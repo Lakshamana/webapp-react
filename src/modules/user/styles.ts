@@ -45,3 +45,11 @@ export const Column = styled.div<ColumnProps>`
   background: ${colors.grey["900"]};
   flex: 1;
 `;
+
+export const TabContainer = styled(StyleContainer)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+`;

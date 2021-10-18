@@ -3,8 +3,7 @@ import { Container, Text } from "components";
 
 import { tabs } from "./settings";
 import { colors } from "styles";
-import { TabContainer } from "./styles";
-import { Line } from "../../styles";
+import { Line, TabContainer } from "../../styles";
 
 const FormBilling = () => {
   const [selected, setSelected] = useState("credit-cards");
