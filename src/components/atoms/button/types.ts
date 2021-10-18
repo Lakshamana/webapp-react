@@ -19,7 +19,7 @@ export interface ButtonProps
 		ColorProps {
 	label: string
 	style?: React.CSSProperties
-	type: ButtonType
+	type?: ButtonType
   iconName?: string
 	onClick?: Function
 }
