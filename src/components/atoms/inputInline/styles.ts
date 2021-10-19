@@ -16,7 +16,9 @@ const commonStyles = `
 `;
 
 interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
-  error?: string;
+  background?: string;
+  color?: string;
+  placeholderColor?: string;
 }
 
 export const Input: any = styled.input<PropsStyle>`
@@ -24,8 +26,8 @@ export const Input: any = styled.input<PropsStyle>`
   ${space}
   ${fontSize}
   ${commonStyles}
-  background-color: ${({ error }) => (error ? "#FFF2F2;" : "#FAFAFA;")};
-  color: #000;
+  background-color: ${({ background }) => background};
+  color: ${({ color }) => color};
   border-radius: 4px;
   width: 100%;
   padding-left: 16px;
@@ -33,7 +35,7 @@ export const Input: any = styled.input<PropsStyle>`
   width: 100%;
 
   &::placeholder {
-    color: #666666;
+    color: ${({ placeholderColor }) => `${placeholderColor};`};
   }
 `;
 

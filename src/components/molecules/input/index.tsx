@@ -4,20 +4,31 @@ import { InputInline, InputWrapper } from "components/atoms";
 import { Props } from "./types";
 
 const Input = ({
-  onChange,
-  value,
-  type,
   placeholder,
+  value,
+  type = "text",
+  onChange,
+  onEnterPress = () => {},
   error,
   errorMessage,
-  sendIcon,
-  onEnterPress = () => {},
+  rightIcon = "",
 }: Props) => {
+  const [showPassword, setShowPassword] = useState(type !== "password");
+
   return (
-    <InputWrapper error={error} errorMessage={errorMessage} sendIcon={sendIcon}>
+    <InputWrapper
+      {...{ error, errorMessage, rightIcon, type }}
+      background="#444444"
+      color="white"
+      placeholderColor="#F2FFF8"
+      onChangeShowPassword={setShowPassword}
+    >
       <InputInline
-        {...{ onChange, value, type, error, placeholder }}
-        placeholder={placeholder}
+        {...{ onChange, value, error, placeholder }}
+        type={showPassword ? "text" : type}
+        background="#444444"
+        color="white"
+        placeholderColor="#F2FFF8"
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {
             onEnterPress();

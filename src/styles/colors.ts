@@ -64,3 +64,32 @@ export const colors = {
   primaryTransparent: "rgba(27, 18, 255, 0.85)",
   bgOverlay: "rgba(45, 43, 89, 0.2)",
 };
+
+//Esse comentário aqui é pra deixar salvo pra quando for transformar o input em dark ou light mode.
+
+// export const componentsColors = {
+//   light: {
+//     input: {
+//       background: "#fff",
+//       color: "#000",
+//       placeholderColor: "#666666",
+//     },
+//     select: {
+//       background: "",
+//       color: "#000",
+//       placeholderColor: "#ccc",
+//     },
+//   },
+//   dark: {
+//     input: {
+//       background: "#262626",
+//       color: "#fff",
+//       placeholderColor: "#6f6f6f",
+//     },
+//     select: {
+//       background: "#fff",
+//       color: "#262626",
+//       placeholderColor: "#6f6f6f",
+//     },
+//   },
+// };
