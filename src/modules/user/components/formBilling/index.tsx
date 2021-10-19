@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Text } from "components";
+import { Container, Button, Text } from "components";
 
 import { tabs } from "./settings";
 import { colors } from "styles";
@@ -13,6 +13,16 @@ const FormBilling = () => {
   const renderBillingForm = () => {
     switch (selected) {
       case "credit-cards":
+        return (
+          <Container flexDirection="column">
+            <Container mt={2}>
+              <Button type="submit" label="Add Card" />
+            </Container>
+            <Container mt={4}>
+              <Button type="submit" label="Add Account" />
+            </Container>
+          </Container>
+        );
         return;
       case "expiration":
         return;

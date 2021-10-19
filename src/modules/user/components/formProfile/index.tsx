@@ -26,7 +26,7 @@ const FormProfile = () => {
         <Line selected />
       </TabContainer>
 
-      <Container flexDirection="column">
+      <Container flexDirection="column" width={[1, 1, 1 / 2]}>
         <Input
           placeholder="Username"
           value={values.username}
