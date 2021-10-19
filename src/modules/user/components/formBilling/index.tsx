@@ -23,7 +23,6 @@ const FormBilling = () => {
             </Container>
           </Container>
         );
-        return;
       case "expiration":
         return;
       case "billing-address":
