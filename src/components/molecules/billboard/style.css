@@ -24,7 +24,7 @@
 }
 
 .swiper-pagination-bullet-active{
-    background: #0362fb;
+    background: #0660F9;
 }
 
 .swiper-container {
@@ -51,6 +51,6 @@
 
     .swiper-pagination-bullet {
         width: 26px;
-        height: 2.3px;
+        height: 2px;
     }
 }
