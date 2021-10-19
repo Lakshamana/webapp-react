@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { VideoPostProps } from "./types"
+import { breakpoints, colors } from 'styles'
 
 export const PostContent = styled.div<VideoPostProps>`
 	display: flex;
@@ -25,7 +26,7 @@ export const PostContent = styled.div<VideoPostProps>`
 		z-index: 1;
 	}
 
-	@media screen and (max-width: 640px) {
+	@media screen and (max-width: ${breakpoints.sm}) {
 		width: 250px;
 		height: 150px;
 	}
@@ -39,9 +40,9 @@ export const ExclusiveBlocked: any = styled.div`
 	height: 50px;
 	border-radius: 50%;
 	margin: auto;
-	background-color: #035efb;
+	background-color: ${colors.blue["300"]};
 
-	@media screen and (max-width: 640px) {
+	@media screen and (max-width: ${breakpoints.sm}) {
 		width: 41px;
 		height: 40px;
 	}
@@ -55,10 +56,10 @@ export const GeolockedBlocked: any = styled.div`
 	height: 50px;
 	border-radius: 50%;
 	margin: auto;
-	background-color: #035efb;
+	background-color: ${colors.blue["300"]};
 	pointer-events: none;
 
-	@media screen and (max-width: 640px) {
+	@media screen and (max-width: ${breakpoints.sm}) {
 		width: 41px;
 		height: 40px;
 	}
