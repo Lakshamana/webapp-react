@@ -56,8 +56,8 @@ export const HeroImg: any = styled.img`
 export const Info: any = styled.div`
     color: #fff;
     position: absolute;
-    top: 40%;
-    bottom: 60%;
+    top: 0;
+    bottom: 0;
     z-index: 10;
     padding: 0 64px;
     display: flex;
@@ -67,6 +67,8 @@ export const Info: any = styled.div`
         text-align: center;
         width: 100%;
         padding: 0 45px;
+        top: 180px;
+        bottom: 0;
         align-items: flex-end;
         padding-bottom: 34px;
         height: 300px;
@@ -75,6 +77,8 @@ export const Info: any = styled.div`
     @media screen and (max-width: ${breakpoints.sm}) {
         text-align: center;
         padding: 0 45px;
+        top: 180px;
+        bottom: 0;
         width: 100%;
         align-items: flex-end;
         padding-bottom: 34px;
@@ -89,7 +93,7 @@ export const InfoContent: any = styled.div`
 export const Title: any = styled.div`
     font-weight: bold;
     font-size: 98px;
-    line-height: 110px;
+    line-height: 121px;
     margin: 0px 0px 30px;
     display: -webkit-box;
     -webkit-line-clamp: 3;

@@ -4,7 +4,6 @@ import { breakpoints } from 'styles';
 export const BillboardWrapper: any = styled.div`
     position: relative;
     height: 90vh;
-    margin-top: -48px;
     width: 100vw;
     min-height: 500px;
     max-height: 800px;
