@@ -26,6 +26,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/video.js": "7.3.3",
     "@videojs/themes": "^1.0.1",
+    "formik": "^2.2.9",
     "fortawesome": "^0.0.1-security",
     "framer-motion": "^4",
     "graphql": "^15.5.3",
@@ -50,7 +51,7 @@
     "videojs-vtt-thumbnails": "^0.0.13",
     "videojs-youtube": "^2.4.1",
     "web-vitals": "^1.0.1",
-    "yup": "^0.29.3",
+    "yup": "^0.32.11",
     "zustand": "^3.5.10"
   },
   "scripts": {
