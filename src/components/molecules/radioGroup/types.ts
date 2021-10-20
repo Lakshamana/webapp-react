@@ -8,10 +8,12 @@ export interface RadioGroupProps extends SpaceProps, LayoutProps, FlexboxProps {
   name: string;
   color?: string;
   onChange?: any;
+  defaultValue?: string;
 }
 
 export const defaultProps = {
   flexDirection: "column",
   size: "sm",
+  defaultValue: "",
   onChange: () => {},
 };

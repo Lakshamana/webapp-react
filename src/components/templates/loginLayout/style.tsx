@@ -5,7 +5,7 @@ import { breakpoints } from "styles";
 
 export const ChildContainer = styled(StyleContainer)<Props>`
   display: flex;
-  min-height: calc(100vh - 108px - 100px);
+  min-height: auto;
   background: ${(props: Props) =>
       props.backgroundImage
         ? `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${props.backgroundImage})`

@@ -1,6 +1,6 @@
-import { ButtonProps, defaultProps } from './types';
-import { BoxButton } from './style';
-import { Icon } from '@iconify/react-with-api';
+import { ButtonProps, defaultProps } from "./types";
+import { BoxButton } from "./style";
+import { Icon } from "@iconify/react-with-api";
 
 const Button = ({ label, type, iconName, ...props }: ButtonProps) => {
     const getButtonStyle = () => {
@@ -14,16 +14,15 @@ const Button = ({ label, type, iconName, ...props }: ButtonProps) => {
                     <Icon width={20} icon={`mdi:${iconName}`}></Icon>
                     {label}
                 </BoxButton>
-                return <BoxButton borderRadius={6} {...props}>{label}</BoxButton>
             case 'disabled':
                 return <BoxButton variant="grey" borderRadius={4} {...props}>{label}</BoxButton>
             default:
                 return <BoxButton variant="primary" {...props}>{label}</BoxButton>
         }
-    }
-    return getButtonStyle();
+  }
+  return getButtonStyle();
 };
 
-Button.defaultProps = defaultProps
+Button.defaultProps = defaultProps;
 
-export { Button }
+export { Button };
