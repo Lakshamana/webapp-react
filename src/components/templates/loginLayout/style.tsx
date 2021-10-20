@@ -1,16 +1,16 @@
 import styled from "styled-components";
-import { Props } from "./types"
+import { Props } from "./types";
 import { StyleContainer } from "components";
-import { breakpoints } from 'styles';
+import { breakpoints } from "styles";
 
-export const ChildContainer = styled(StyleContainer) <Props>`
-    display: flex;
-    min-height: calc(100vh - 108px - 100px);
-    background: ${(props: Props) => (props.backgroundImage ? `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${props.backgroundImage})` : '')} center/cover fixed;
-
-    @media screen and (max-width: ${breakpoints.md}) {
-        min-height: auto;
-    }
+export const ChildContainer = styled(StyleContainer)<Props>`
+  display: flex;
+  min-height: auto;
+  background: ${(props: Props) =>
+      props.backgroundImage
+        ? `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${props.backgroundImage})`
+        : ""}
+    center/cover fixed;
 `;
 
 export const LayoutContainer = styled(StyleContainer)`

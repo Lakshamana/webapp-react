@@ -10,12 +10,13 @@ const RadioGroup = ({
   name,
   color,
   onChange,
+  defaultValue,
   ...props
 }: RadioGroupProps) => (
   <Container {...props}>
     {title ? <Text color={colors.white}>{title}</Text> : <></>}
     <Container mt={2}>
-      <RadioGroupComponent {...{ name }}>
+      <RadioGroupComponent {...{ name, defaultValue }}>
         {radios?.map((radio) => (
           <Radio
             key={radio.id}
