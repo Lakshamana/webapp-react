@@ -1,5 +1,5 @@
 export const abbreviateNumber = (value: number) => {
-    let suffixes = ["", "k", "m", "b", "t"];
+    const suffixes = ["", "k", "m", "b", "t"];
     let suffixNum = Math.floor(("" + value).length / 3);
     let shortValueToString: string;
     let shortValue = parseFloat(
