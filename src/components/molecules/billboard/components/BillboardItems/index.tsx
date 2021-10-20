@@ -1,7 +1,10 @@
 import { useEffect, useState, memo } from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
 import { MemoizedActionsList } from "../BillboardActions"
 import { getActions, getItems } from "../../utils"
 import { Props, BillboardItem } from "../../types"
+import { Params } from "../../settings"
 import {
 	BillboardItems,
 	HeroImageWrapper,
@@ -11,6 +14,10 @@ import {
 	Title,
 	Description
 } from "./style"
+import './style.css'
+import "swiper/swiper-bundle.min.css"
+
+SwiperCore.use([Autoplay, Pagination, EffectFade])
 
 const SwiperSlideList = ({ items, actions }: Props) => {
 	const [size, setSize] = useState({
@@ -28,25 +35,28 @@ const SwiperSlideList = ({ items, actions }: Props) => {
 	useEffect(() => (window.onresize = getSize), [])
 
 	return (
-		<>
+		<Swiper {...Params} style={{ position: "relative", height: "100%"}}>
 			{getItems(items).map((items: BillboardItem, i: number) => (
-				<BillboardItems key={`Slide-${i}`}>
-					<HeroImageWrapper>
-						<HeroImg
-							ClassName='swiper-lazy'
-							src={size.x >= 640 ? items.banner : items.cover}
-						/>
-					</HeroImageWrapper>
-					<Info style={{ color: items.infoColor }}>
-						<InfoContent>
-							<Title>{items.title}</Title>
-							<Description>{items.description}</Description>
-							<MemoizedActionsList actions={getActions(actions)} />
-						</InfoContent>
-					</Info>
-				</BillboardItems>
+				<SwiperSlide style={{ width: "100%" }} key={`Slide-${i}`} className='slider'>
+					<BillboardItems>
+						<HeroImageWrapper>
+							<HeroImg
+								ClassName='swiper-lazy'
+								src={size.x >= 640 ? items.banner : items.cover}
+							/>
+						</HeroImageWrapper>
+						<Info style={{ color: items.infoColor }}>
+							<InfoContent>
+								<Title>{items.title}</Title>
+								<Description>{items.description}</Description>
+								<MemoizedActionsList actions={getActions(actions)} />
+							</InfoContent>
+						</Info>
+					</BillboardItems>
+				</SwiperSlide>
 			))}
-		</>
+			<div className="swiper-pagination pagination" />
+		</Swiper>
 	)
 }
 
