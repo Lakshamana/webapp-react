@@ -1,3 +1,4 @@
+import { SpaceProps, LayoutProps } from "styled-system";
 export interface Props {
   title?: string;
   width?: string;
@@ -6,6 +7,5 @@ export interface Props {
   show?: boolean;
 }
 
-export interface StyledProps {
-  width?: string;
+export interface StyledProps extends SpaceProps, LayoutProps {
 }

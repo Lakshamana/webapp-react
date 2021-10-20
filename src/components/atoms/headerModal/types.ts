@@ -14,3 +14,7 @@ export interface PropsStyle
     BorderProps,
     SpaceProps,
     FontSizeProps {}
+
+export const defaultProps: Props = {
+  title: "",
+};

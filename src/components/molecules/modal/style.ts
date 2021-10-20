@@ -1,7 +1,9 @@
 import styled from "styled-components";
+import { space, layout } from "styled-system";
 import { StyledProps } from "./types";
 
-export const BackgroundModal = styled.div`
+export const BackgroundModal = styled.div<StyledProps>`
+  ${space}
   width: 100%;
   height: 100%;
   position: absolute;
@@ -11,12 +13,10 @@ export const BackgroundModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 400px;
 `;
 
 export const ModalMain = styled.div<StyledProps>`
-  width: ${({ width }) => `${width ? width : "40%"};`};
-  height: 400px;
+  ${layout}
   background: #222222;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;

@@ -1,14 +1,12 @@
 import React from "react";
 
 import { BoxWrapper, Title } from "./styles";
-
-import { Props } from "./types";
-import { defaultProps } from "./settings";
+import { Props, defaultProps } from "./types";
 
 const HeaderModal = ({ title }: Props): any => {
   return (
     <BoxWrapper>
-      <Title>{title}</Title>
+      <Title fontSize={["24px", "32px"]}>{title}</Title>
     </BoxWrapper>
   );
 };

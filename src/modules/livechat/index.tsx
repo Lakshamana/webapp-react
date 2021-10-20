@@ -9,7 +9,7 @@ const LiveChat = () => {
         flexDirection="column"
         width={["100%"]}
         minHeight={["100vh"]}
-        margin={["24px"]}
+        margin={["0px"]}
       >
         <Input onChange={() => {}} />
         <Input onChange={() => {}} rightIcon="check" />

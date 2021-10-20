@@ -19,7 +19,6 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${layout}
   ${border}
   background-color: ${({ background }) => background};
-  border-radius: "0px";
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -31,7 +30,7 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${({ error }) => error && `border: 1px solid red;`}
   svg {
     margin-right: 16px;
-    padding-right: 6px;
+    padding-right: 8px;
     padding-left: 8px;
     width: 32px;
   }

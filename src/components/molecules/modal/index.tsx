@@ -15,8 +15,12 @@ const Modal = ({
     <BackgroundModal
       onClick={() => onClose()}
       style={{ display: show ? "flex" : "none" }}
+      pb={["400px", "150px", "300px"]}
     >
-      <ModalMain width={width}>
+      <ModalMain
+        width={["60%", "50%", "60%"]}
+        height={["300px", "200px", "400px"]}
+      >
         <HeaderModal title={title} />
         <BodyModal>{children}</BodyModal>
       </ModalMain>
