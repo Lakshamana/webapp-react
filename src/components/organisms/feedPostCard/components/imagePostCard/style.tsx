@@ -7,6 +7,7 @@ export const ImageContent = styled.div`
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
+	cursor: pointer;
 `
 
 export const ExclusiveBlocked: any = styled.div`
