@@ -1,15 +1,23 @@
-import { ImagePost } from "../imagePostCard"
-import { MediaTypeProps } from "../../types"
+import { ImagePost, VideoPost, AudioPost } from '../../components'
+import { Props } from "../../types"
 
-const SetMediaType = ({ ...props }: MediaTypeProps) => {
+const SetMediaType = ({ ...props }: Props) => {
 	const GetMediaType = () => {
-		switch (props.mediaType) {
-			case "Image":
-				return (
-					<ImagePost coverImage='https://static2-sevilla.abc.es/Media/201308/12/breaking-bad-meta--644x362.jpg' />
-				)
+		switch (props.type) {
 			case "Blog":
 				return <></>
+			case "Image":
+				return (
+					<ImagePost {...props} />
+				)
+			case "Video":
+				return (
+					<VideoPost {...props}/>
+				)
+			case "Audio":
+				return (
+					<AudioPost {...props}/>
+				)
 			default:
 				return <></>
 		}
