@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { FeedPostCard } from 'components';
+import { FeedPostCard } from 'components/organisms';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -20,7 +20,7 @@ export const Component = Template.bind({});
 Component.args = {
   postTitle: 'Test title', 
   postDescription: 'Description',
-  CountMessages: 1500,
-  Date: '3 days ago', 
+  countMessages: 1500,
+  date: '3 days ago', 
   type: 'Image'
 };
