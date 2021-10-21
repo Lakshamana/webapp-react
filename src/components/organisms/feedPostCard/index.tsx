@@ -1,7 +1,7 @@
 import { MoreHorizontal } from "react-feather"
 import { Menu, MenuButton } from "@chakra-ui/react"
 import { Text, ReactionBar, Participants } from "components"
-import { SetMediaType } from "./components/mediaTypePostCard"
+import { SetMediaType } from "./components"
 import { Props, defaultProps } from "./types"
 import { abbreviateNumber } from "./utils"
 import { colors } from "styles"
@@ -20,13 +20,13 @@ const FeedPostCard = ({ ...props }: Props) => {
 	return (
 		<FeedContent>
 			<CardContent>
-				<SetMediaType mediaType={props.type} />
+				<SetMediaType {...props} />
 				<CardHeader>
 					<Text kind='headline' fontSize={22} fontWeight={"Bold"}>
 						{props.postTitle}
 					</Text>
 					<Date fontSize='12px' fontWeight={"Bold"} marginRight={3}>
-						{props.Date}
+						{props.date}
 					</Date>
 					<Menu>
 						<MenuButton>
@@ -49,7 +49,7 @@ const FeedPostCard = ({ ...props }: Props) => {
 						]}
 					/>
 					<CountMessage marginLeft={"auto"} fontSize={15}>
-						{abbreviateNumber(props.CountMessages)} messages
+						{abbreviateNumber(props.countMessages)} messages
 					</CountMessage>
 				</CardFooter>
 			</CardContent>
