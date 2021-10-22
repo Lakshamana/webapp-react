@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import { Props } from "./types"
 import { breakpoints } from 'styles';
 import { StyleContainer } from "components";

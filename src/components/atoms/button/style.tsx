@@ -1,19 +1,20 @@
 import styled from "styled-components";
+
 import { color, space, layout, typography, border, variant } from "styled-system";
 import { colors } from "styles";
 
 export const BoxButton: any = styled.button`
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    justify-content: center;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;    
-    gap: 15px;             
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  gap: 15px;
 
-    ${space}
-    ${layout}
+  ${space}
+  ${layout}
     ${typography}
     ${color}
     ${border}
@@ -50,6 +51,6 @@ export const BoxButton: any = styled.button`
 })}
 
     &:hover {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0 0);
-    }
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0 0);
+  }
 `;

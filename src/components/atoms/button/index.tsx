@@ -1,6 +1,6 @@
-import { ButtonProps, defaultProps } from './types';
-import { BoxButton } from './style';
-import { Icon } from '@iconify/react-with-api';
+import { ButtonProps, defaultProps } from "./types";
+import { BoxButton } from "./style";
+import { Icon } from "@iconify/react-with-api";
 
 const Button = ({ label, type, iconName, ...props }: ButtonProps) => {
     const getButtonStyle = () => {
@@ -21,10 +21,10 @@ const Button = ({ label, type, iconName, ...props }: ButtonProps) => {
             default:
                 return <BoxButton variant="primary" {...props}>{label}</BoxButton>
         }
-    }
-    return getButtonStyle();
+    };
+  return getButtonStyle();
 };
 
-Button.defaultProps = defaultProps
+Button.defaultProps = defaultProps;
 
-export { Button }
+export { Button };
