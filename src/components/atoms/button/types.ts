@@ -8,7 +8,7 @@ import {
 } from "styled-system"
 
 
-type ButtonType = "submit" | "reset" | "billboard" | "disabled"
+type ButtonType = "submit" | "reset" | "billboard" | "disabled" | "cancel"
 
 export interface ButtonProps
 	extends SpaceProps,
