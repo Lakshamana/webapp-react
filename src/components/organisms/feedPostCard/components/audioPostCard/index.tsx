@@ -22,7 +22,7 @@ const AudioPost = ({ ...props }: Props) => (
 			</VideoItemPlay>
 		</PlayContent>
 		<DetailsContent {...props}>
-			<Details>
+			<Details padding={2}>
 				<Text kind='title' fontSize={24} fontWeight={"Bold"}>
 					{props.audioTitle}
 				</Text>
@@ -30,8 +30,8 @@ const AudioPost = ({ ...props }: Props) => (
 			</Details>
 			{props.displayViews ? (
 				<>
-					<MediaLength>{props.mediaLength}</MediaLength>
-					<CountView>
+					<MediaLength padding={2}>{props.mediaLength}</MediaLength>
+					<CountView padding={2}>
 						<Icon width={16} icon='mdi:play'></Icon>
 						{abbreviateNumber(props.views)}
 					</CountView>

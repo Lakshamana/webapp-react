@@ -1,15 +1,16 @@
+import { SpaceProps, space } from "styled-system"
 import styled from "styled-components"
 import { colors, breakpoints } from "styles"
 
 export const AudioContent: any = styled.div`
-  display: flex;
+	display: flex;
 	position: relative;
 	width: 100%;
 	height: 160px;
 
-  @media screen and (max-width: ${breakpoints.md}) {
-    height: 128px;
-  }
+	@media screen and (max-width: ${breakpoints.md}) {
+		height: 128px;
+	}
 `
 
 export const PlayContent = styled.div`
@@ -23,9 +24,9 @@ export const PlayContent = styled.div`
 	cursor: pointer;
 	z-index: 1;
 
-  @media screen and (max-width: ${breakpoints.md}) {
-    width: 35%;
-  }
+	@media screen and (max-width: ${breakpoints.md}) {
+		width: 35%;
+	}
 `
 
 export const DetailsContent = styled.div`
@@ -43,7 +44,6 @@ export const DetailsContent = styled.div`
     width: 100%;
     height: 100%;
     background: inherit;
-    -webkit-filter: blur(3px);
     filter: blur(3px);
 
   @media screen and (max-width: ${breakpoints.md}) {
@@ -51,13 +51,13 @@ export const DetailsContent = styled.div`
   }
 `
 
-export const Details = styled.div`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 5;
-    padding: 10px;
-`;
+export const Details = styled.div<SpaceProps>`
+	${space}
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 5;
+`
 
 export const VideoItemPlay = styled.div`
 	display: flex;
@@ -79,23 +79,23 @@ export const VideoItemPlay = styled.div`
 	}
 `
 
-export const CountView = styled.div`
+export const CountView = styled.div<SpaceProps>`
+	${space}
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: absolute;
 	bottom: 0px;
-  right: 0px;
-	padding: 10px;
-  font-size: 12px;
+	right: 0px;
+	font-size: 12px;
 `
 
-export const MediaLength = styled.div`
+export const MediaLength = styled.div<SpaceProps>`
+	${space}
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
-	padding: 10px;
-  font-size: 12px;
+	font-size: 12px;
 `
 
 export const ExclusiveBlocked: any = styled.div`
