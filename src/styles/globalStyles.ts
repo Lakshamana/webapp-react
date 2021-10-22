@@ -1,26 +1,26 @@
 export const breakpoints = {
-	ssm: "320px",
-	sm: "425px",
-	md: "768px",
-	lg: "1024px",
-	xl: "1440px"
-}
+  ssm: "320px",
+  sm: "425px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1440px",
+};
 
 export const breakpointKeys = {
-	"mobile-small": "ssm",
-	"mobile-large": "sm",
-	tablet: "md",
-	"desktop-small": "lg",
-	desktop: "xl"
-}
+  "mobile-small": "ssm",
+  "mobile-large": "sm",
+  tablet: "md",
+  "desktop-small": "lg",
+  desktop: "xl",
+};
 
 export const fonts = {
-	body: "Roboto Regular, sans-serif",
-	regular: "Roboto Regular, sans-serif",
-	medium: "Roboto Medium, sans-serif",
-	bold: "Roboto Bold, sans-serif",
-	black: "Roboto Black, sans-serif"
-}
+  body: "Roboto Regular, sans-serif",
+  regular: "Roboto Regular, sans-serif",
+  medium: "Roboto Medium, sans-serif",
+  bold: "Roboto Bold, sans-serif",
+  black: "Roboto Black, sans-serif",
+};
 
 export const globalStyles = `
 @font-face {
@@ -127,28 +127,6 @@ body::before {
   }
 }
 
-table {
-  border-collapse: separate;
-  border-spacing: 0 10px;
-  margin-top: -10px; /* correct offset on first border spacing if desired */
-}
-
-td {
-  border: solid 1px;
-  border-style: solid none;
-  padding: 10px;
-}
-td:first-child {
-  border-left-style: solid;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-td:last-child {
-  border-right-style: solid;
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
 ::-webkit-scrollbar {
   width: 0.4rem;
 }
@@ -198,4 +176,5 @@ input:-webkit-autofill {
   box-shadow: none !important;
 }
 
-`
+
+`;
