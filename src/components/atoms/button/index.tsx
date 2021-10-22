@@ -2,7 +2,7 @@ import { ButtonProps, defaultProps } from "./types";
 import { BoxButton } from "./style";
 import { Icon } from "@iconify/react-with-api";
 
-const Button = ({ label, type, iconName, ...props }: ButtonProps) => {
+const Button = ({ label, type, iconName, children, ...props }: ButtonProps) => {
     const getButtonStyle = () => {
         switch (type) {
             case 'submit':
@@ -18,11 +18,17 @@ const Button = ({ label, type, iconName, ...props }: ButtonProps) => {
                 return <BoxButton variant="grey" borderRadius={4} {...props}>{label}</BoxButton>
             case 'cancel':
                 return <BoxButton variant="cancel" {...props}>{label}</BoxButton>
+            case "children":
+                return (
+                    <BoxButton variant="primary" borderRadius={4} {...props}>
+                        {children}
+                    </BoxButton>
+                );
             default:
                 return <BoxButton variant="primary" {...props}>{label}</BoxButton>
         }
     };
-  return getButtonStyle();
+    return getButtonStyle();
 };
 
 Button.defaultProps = defaultProps;
