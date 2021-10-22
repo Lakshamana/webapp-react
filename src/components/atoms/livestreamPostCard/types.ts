@@ -9,6 +9,6 @@ export interface LivePostProps {
 }
 
 export const defaultProps = {
-    isExclusive: true,
+    isExclusive: false,
     isGeolocked: false,
 }

@@ -15,38 +15,44 @@ export const breakpointKeys = {
 };
 
 export const fonts = {
-  body: "Roboto Regular, sans-serif",
-  regular: "Roboto Regular, sans-serif",
-  medium: "Roboto Medium, sans-serif",
-  bold: "Roboto Bold, sans-serif",
-  black: "Roboto Black, sans-serif",
+  light: "Helvetica Neue Light",
+  body: "Helvetica Neue",
+  regular: "Helvetica Neue",
+  medium: "Helvetica Neue",
+  bold: "Helvetica Neue Bold",
+  black: "Helvetica Neue Black",
 };
 
 export const globalStyles = `
+
 @font-face {
-  font-family: 'Roboto Regular';
+  font-family: 'Helvetica Neue Light';
   font-style: normal;
   font-weight: 500;
-  src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap') format('truetype');
+  src: local('Helvetica Neue Light'), url('./assets/fonts/HelveticaNeueUltraLight.ttf') format('truetype');
 }
+
 @font-face {
-  font-family: 'Roboto Medium';
+  font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 500;
-  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap') format('truetype');
+  src: local('Helvetica Neue'), url('./assets/fonts/HelveticaNeueMedium.ttf') format('truetype');
 }
+
 @font-face {
-  font-family: 'Roboto Bold';
+  font-family: 'Helvetica Neue Bold';
   font-style: normal;
-  font-weight: 500;
-  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap') format('truetype');
+  font-weight: 700;
+  src: local('Helvetica Neue Bold'), url('./assets/fonts/HelveticaNeueMedium.ttf') format('truetype');
 }
+
 @font-face {
-  font-family: 'Roboto Black';
+  font-family: 'Helvetica Neue Black';
   font-style: normal;
-  font-weight: 500;
-  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap') format('truetype');
+  font-weight: 900;
+  src: local('Helvetica Neue Black'), url('./assets/fonts/HelveticaNeueMedium.ttf') format('truetype');
 }
+
 
 html {
   height: 100%;
