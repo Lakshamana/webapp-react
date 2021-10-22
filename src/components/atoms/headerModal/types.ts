@@ -3,6 +3,7 @@ import {
   BorderProps,
   SpaceProps,
   FontSizeProps,
+  ColorProps,
 } from "styled-system";
 
 export interface Props {
@@ -13,7 +14,7 @@ export interface PropsStyle
   extends LayoutProps,
     BorderProps,
     SpaceProps,
-    FontSizeProps {}
+    FontSizeProps, ColorProps {}
 
 export const defaultProps: Props = {
   title: "",

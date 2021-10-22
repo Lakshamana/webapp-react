@@ -27,7 +27,8 @@ const Input = ({
         {...{ onChange, value, error, placeholder }}
         type={showPassword ? "text" : type}
         background="#444444"
-        color="white"
+        color="#fff"
+        autocomplete="off"
         placeholderColor="#F2FFF8"
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {

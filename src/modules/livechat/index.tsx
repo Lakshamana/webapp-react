@@ -11,7 +11,7 @@ const LiveChat = () => {
         minHeight={["100vh"]}
         margin={["0px"]}
       >
-        <Input onChange={() => {}} />
+        <Input onChange={() => {}} placeholder="Testing placeholder" />
         <Input onChange={() => {}} rightIcon="check" />
         <Input
           onChange={() => {}}
@@ -21,7 +21,7 @@ const LiveChat = () => {
         <Input onChange={() => {}} placeholder="Password" type="password" />
         <Input onChange={() => {}} error={true} errorMessage="Invalid value." />
 
-        <Modal title="Modal teste" onClose={() => {}} show={true}>
+        <Modal title="Modal teste" onClose={() => {}} show={false}>
           <span>modal body</span>
         </Modal>
       </Container>

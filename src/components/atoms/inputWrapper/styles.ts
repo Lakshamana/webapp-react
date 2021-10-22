@@ -32,7 +32,6 @@ export const BoxWrapper = styled.div<PropsStyle>`
     margin-right: 16px;
     padding-right: 8px;
     padding-left: 8px;
-    width: 32px;
   }
 `;
 

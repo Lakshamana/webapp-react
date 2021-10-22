@@ -6,7 +6,9 @@ import { Props, defaultProps } from "./types";
 const HeaderModal = ({ title }: Props): any => {
   return (
     <BoxWrapper>
-      <Title fontSize={["24px", "32px"]}>{title}</Title>
+      <Title fontSize={["24px", "32px"]} color="#fff">
+        {title}
+      </Title>
     </BoxWrapper>
   );
 };

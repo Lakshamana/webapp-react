@@ -15,4 +15,6 @@ export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
   background?: string;
   color?: string;
   placeholderColor?: string;
+
+  autocomplete?: string;
 }

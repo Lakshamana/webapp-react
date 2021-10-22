@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 
-import { ReactComponent as ErrorIcon } from "assets/icons/inputError.svg";
-import { ReactComponent as SendIcon } from "assets/icons/send.svg";
-import { ReactComponent as PasswordUnShowIcon } from "assets/icons/passwordUnshow.svg";
-// import { ReactComponent as PasswordShowIcon } from "assets/icons/password.svg";
-import { ReactComponent as CheckIcon } from "assets/icons/checkIcon.svg";
+import { Icon } from "@iconify/react";
 
 import { BoxWrapper, BoxWrapperError, LabelError, Box } from "./styles";
 
@@ -25,6 +21,7 @@ const InputWrapper = ({
   background = "",
   placeholderColor = "",
   rightIcon = "",
+  leftIcon = "",
   onChangeShowPassword = () => {},
   ...props
 }: Props): any => {
@@ -32,39 +29,75 @@ const InputWrapper = ({
 
   const renderRightIcon = () => {
     if (error) {
-      return <ErrorIcon />;
+      return (
+        <Icon
+          icon="eva:alert-circle-fill"
+          width="42"
+          height="42"
+          color="#d9534f"
+        />
+      );
     }
 
     if (type === "password") {
       //Waiting the other icon to put here (Iuri Design)
       return showPassword ? (
-        <PasswordUnShowIcon
+        <Icon
           style={{ cursor: "pointer" }}
+          icon="akar-icons:eye-open"
+          width="42"
+          height="42"
           onClick={() => {
             setShowPassword(!showPassword);
             onChangeShowPassword(!showPassword);
           }}
+          color="#aaa"
         />
       ) : (
-        <PasswordUnShowIcon
+        <Icon
+          icon="akar-icons:eye-slashed"
+          width="42"
+          height="42"
           style={{ cursor: "pointer" }}
           onClick={() => {
             setShowPassword(!showPassword);
             onChangeShowPassword(!showPassword);
           }}
+          color="#aaa"
         />
       );
     }
 
     switch (rightIcon) {
       case "send":
-        return <SendIcon />;
+        return (
+          <Icon
+            icon="fluent:send-28-filled"
+            width="42"
+            height="42"
+            color="#2984F5"
+          />
+        );
 
       case "check":
-        return <CheckIcon />;
+        return (
+          <Icon
+            icon="akar-icons:circle-check-fill"
+            width="42"
+            height="42"
+            color="#5cb85c"
+          />
+        );
 
       default:
         break;
+    }
+  };
+
+  const renderLeftIcon = () => {
+    switch (leftIcon) {
+      default:
+        return;
     }
   };
 
@@ -76,6 +109,7 @@ const InputWrapper = ({
         error={error}
         background={background}
       >
+        {renderLeftIcon()}
         {children}
         {renderRightIcon()}
       </BoxWrapper>

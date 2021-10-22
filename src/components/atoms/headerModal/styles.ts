@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { layout, space, fontSize } from "styled-system";
+import { layout, space, fontSize, color } from "styled-system";
 import { PropsStyle } from "./types";
 
 export const Title = styled.span<PropsStyle>`
+  ${color}
   ${fontSize}
   font-family: Helvetica Neue;
   font-style: normal;

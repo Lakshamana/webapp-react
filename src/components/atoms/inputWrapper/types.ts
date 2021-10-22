@@ -17,6 +17,7 @@ export interface Props {
   width?: any;
   height?: any;
   rightIcon?: "check" | "send" | string;
+  leftIcon?: string;
   type?: "" | "text" | "password" | string;
   background?: string;
   color?: string;
