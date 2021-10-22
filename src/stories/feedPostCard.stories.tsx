@@ -20,9 +20,9 @@ const Template: ComponentStory<typeof FeedPostCard> = (args) => (
 export const Component = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Component.args = {
-  postTitle: "Test title",
-  postDescription: "Description",
-  CountMessages: 1500,
-  Date: "3 days ago",
-  type: "Image",
+  postTitle: 'Test title', 
+  postDescription: 'Description',
+  countMessages: 1500,
+  date: '3 days ago', 
+  type: 'Image'
 };
