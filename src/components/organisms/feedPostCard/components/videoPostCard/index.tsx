@@ -17,11 +17,11 @@ const VideoPost = ({ ...props }: Props) => (
 		</VideoItemPlay>
 		{props.displayViews ? (
 			<>
-				<CountView>
+				<CountView padding={2}>
 					<Icon width={18} icon='mdi:play'></Icon>
 					{abbreviateNumber(props.views)}
 				</CountView>
-				<MediaLength>{props.mediaLength}</MediaLength>
+				<MediaLength padding={2}>{props.mediaLength}</MediaLength>
 			</>
 		) : (
 			""

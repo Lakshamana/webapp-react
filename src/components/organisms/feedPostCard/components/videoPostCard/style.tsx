@@ -1,3 +1,4 @@
+import { SpaceProps, space } from "styled-system"
 import styled from "styled-components"
 import { colors, breakpoints } from "styles"
 
@@ -32,24 +33,28 @@ export const VideoItemPlay = styled.div`
 	}
 `
 
-export const CountView = styled.div`
+export const CountView = styled.div<SpaceProps>`
+	${space}
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 14px;
 	position: absolute;
 	top: 0px;
-	padding: 4px;
 `
 
-export const MediaLength = styled.div`
+export const MediaLength = styled.div<SpaceProps>`
+	${space}
+
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
-	padding: 4px;
 `
 
-export const ExclusiveBlocked: any = styled.div`
+export const ExclusiveBlocked: any = styled.div<SpaceProps>`
+	${space}
+
 	width: 41px;
 	height: 40px;
 	border-radius: 50%;
@@ -57,7 +62,9 @@ export const ExclusiveBlocked: any = styled.div`
 	background-color: ${colors.blue["300"]};
 `
 
-export const GeolockedBlocked: any = styled.div`
+export const GeolockedBlocked: any = styled.div<SpaceProps>`
+	${space}
+
 	width: 41px;
 	height: 40px;
 	border-radius: 50%;
