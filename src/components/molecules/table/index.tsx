@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Text, Container, TableFooter } from "components";
 import { Table as TableComponent } from "@chakra-ui/react";
 
+import { colors } from "styles";
 import { TableProps, HeaderType, defaultProps } from "./types";
 import { Tr, Th, Td, Tbody, Thead } from "./styles";
 
@@ -9,7 +10,7 @@ const SimpleTable = ({
   columns,
   data,
   spacing,
-  defaultMessage,
+  defaultMessage = "",
   count,
   onChangePage,
   limit = 10,
@@ -41,8 +42,8 @@ const SimpleTable = ({
           ))}
         </Tbody>
       ) : (
-        <Container width={1} backgroundColor="#333333" {...spacing}>
-          <Text color="white">{defaultMessage || ""}</Text>
+        <Container width={1} backgroundColor={colors.grey["850"]} {...spacing}>
+          <Text color={colors.white}>{defaultMessage}</Text>
         </Container>
       )}
     </TableComponent>
