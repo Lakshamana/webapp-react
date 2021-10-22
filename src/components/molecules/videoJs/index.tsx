@@ -2,7 +2,8 @@ import React from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 
-// require('@silvermine/videojs-chromecast')(videojs);
+require('@silvermine/videojs-chromecast')(videojs);
+require('videojs-vtt-thumbnails');
 
 export const VideoJS = ( props: any ) => {
 
