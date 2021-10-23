@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { client } from "services/api/config";
 import { ApolloProvider } from "@apollo/client";
+import "./config/firebase";
 import "./translate";
 
 Sentry.init({
