@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import React, { ReactElement, useRef } from 'react'
 
 import VideoJS from "components/molecules/videoJs"
 
@@ -25,7 +25,7 @@ const VODWrapper = ({
   overlays, 
   muxConfig, 
   options 
-}: VODWrapperProps) => {
+}: VODWrapperProps): ReactElement => {
 
   const playerRef = useRef(null);
 
@@ -108,7 +108,7 @@ const VODWrapper = ({
   };
 
   return (
-    src && <VideoJS options={{...defaultOptions, ...options}} onReady={handlePlayerReady} />
+    src ? <VideoJS options={{...defaultOptions, ...options}} onReady={handlePlayerReady} /> : <></>
   );
 }
 

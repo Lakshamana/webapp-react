@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 
 require('@silvermine/videojs-chromecast')(videojs);
 require('videojs-vtt-thumbnails');
 
-export const VideoJS = ( props: any ) => {
+export const VideoJS = ( props: any ): ReactElement => {
 
   const videoRef = React.useRef(null);
   const playerRef: any = React.useRef(null);
