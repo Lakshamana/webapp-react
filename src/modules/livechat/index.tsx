@@ -1,8 +1,12 @@
 import { Container, MainLayout } from "components";
 
+import { useTranslation } from "react-i18next";
 import { Input, Modal } from "components/molecules";
 
+import i18next from "i18next";
+
 const LiveChat = () => {
+  const { t } = useTranslation();
   return (
     <MainLayout>
       <Container
@@ -24,6 +28,10 @@ const LiveChat = () => {
         <Modal title="Modal teste" onClose={() => {}} show={false}>
           <span>modal body</span>
         </Modal>
+        <span>{t("example")}</span>
+        <button onClick={() => i18next.changeLanguage("en")}>
+          Change language
+        </button>
       </Container>
     </MainLayout>
   );
