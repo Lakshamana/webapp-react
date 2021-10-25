@@ -20,7 +20,7 @@ const FeedPostCard = ({ ...props }: Props) => {
 	return (
 		<FeedContent>
 			<CardContent>
-				<SetMediaType {...props} />
+				{props.type === 'Poll' ? '' : <SetMediaType {...props} />}
 				<CardHeader>
 					<Text kind='headline' fontSize={22} fontWeight={"Bold"}>
 						{props.postTitle}
@@ -35,6 +35,7 @@ const FeedPostCard = ({ ...props }: Props) => {
 					</Menu>
 				</CardHeader>
 				<CardDescription fontSize={15}>{props.postDescription}</CardDescription>
+				{props.type === "Poll" ? <SetMediaType {...props} /> : ""}
 				<CardReactions>
 					<ReactionBar totalReactions={15} />
 				</CardReactions>
