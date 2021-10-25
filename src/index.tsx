@@ -5,7 +5,7 @@ import { TemplateProvider } from "components/templates";
 import reportWebVitals from "./reportWebVitals";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
-import { client } from "services/api/config";
+import { Client } from "services/api"
 import { ApolloProvider } from "@apollo/client";
 import "./config/firebase";
 import "./translate";
@@ -19,17 +19,14 @@ Sentry.init({
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <TemplateProvider>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
-    </TemplateProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+	<React.StrictMode>
+		<TemplateProvider>
+			<ApolloProvider client={Client}>
+				<App />
+			</ApolloProvider>
+		</TemplateProvider>
+	</React.StrictMode>,
+	document.getElementById("root")
+)
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ChakraProvider, useColorMode, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
 import { Global, css } from "@emotion/react";
 import {

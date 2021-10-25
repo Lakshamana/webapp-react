@@ -5,6 +5,9 @@ import { StyleContainer } from "components";
 export const BoxFooter = styled(StyleContainer)`
     height: 108px;
     background-color: black;
+    bottom: 0;
+    left: 0;
+    right: 0;
 
     @media screen and (max-width: ${breakpoints.md}) {
         height: 210px;
@@ -29,6 +32,7 @@ export const TextFooter = styled.div`
     justify-content: left;
     color: white;
     font-size: 1rem;
+    align-items: center;
 
     @media screen and (max-width: ${breakpoints.md}) {
         width: 100%;

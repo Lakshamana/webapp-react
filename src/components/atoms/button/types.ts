@@ -7,7 +7,7 @@ import {
   VariantArgs,
 } from "styled-system";
 
-type ButtonType = "submit" | "reset" | "billboard" | "disabled" | "children";
+type ButtonType = "submit" | "reset" | "billboard" | "disabled" | "cancel" | "children"
 
 export interface ButtonProps
   extends SpaceProps,
