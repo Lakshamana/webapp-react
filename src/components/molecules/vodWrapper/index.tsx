@@ -15,13 +15,13 @@ import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 
 import 'videojs-mux'
 
-const VODWrapper = () => {
+const VODWrapper = ({ src, title, subtitle, vttSrc, overlays, muxConfig, options }: any): any => {
   const playerRef = useRef(null);
 
-  const videoJsOptions = { // lookup the options in the docs for more options
+  const defaultOptions = { // lookup the options in the docs for more options1
     autoplay: true,
     controls: true,
-    muted: true,
+    muted: false,
     responsive: true,
     fill: true,
     fluid: true,
@@ -42,29 +42,28 @@ const VODWrapper = () => {
           displayCurrentQuality: true,
       },
       mux: {
-        // debug: true,
         data: {
           env_key:  'f79842543033c226c5d396a7d',
           viewer_user_id: 'viewer_user_id',
           video_id: 'video_id',
-          video_title: 'title',
+          video_title: title || 'title',
           video_series: 'series',
           player_name: 'Clappr-ContentVideo',
           player_init_time: Date.now(),
           video_stream_type: 'on-demand',
+          ...muxConfig,
         }
       },
       chromecast: {
-        addButtonToControlBar: false,
         appId: "10AE2759",
         metadata: {
-          title: "Title",
-          subtitle: "Subtitle"
+          title: title || "Title",
+          subtitle: subtitle || "Subtitle"
         }
       },
     },
     sources: [{
-      src: 'https://d2px8cfctghvms.cloudfront.net/5ed95110e04f4c0004b37ed3/ba77504d-2687-40f4-b75f-fdadaf1828a5/cmaf/5ed95110e04f4c0004b37ed3_5ed964dce04f4c000415fecf_6116d80199bea6002c59561a.m3u8',
+      src,
       type: 'application/x-mpegURL'
     }]
   }
@@ -72,48 +71,33 @@ const VODWrapper = () => {
   const handlePlayerReady = (player: any) => {
     playerRef.current = player;
 
-    // you can handle player events here
-    player?.on('waiting', () => {
-      console.log('player is waiting');
-    });
-
     player?.on('dispose', () => {
-      console.log('player will dispose');
-
       player.registerPlugin('qualityLevel', videoJsContribQualityLevels)
       player.registerPlugin('hlsQualitySelector', videoJsHlsQualitySelector)
       player.registerPlugin('overlay', overlay)
-
       player.registerPlugin('vttThumbnails', videoJsVttThumbnails)
-
-      console.log('--- REGISTER PLUGINS!')
     });
 
     player?.on('ready', () => {
-      console.log('--- PLAYER READY!')
-      
       player.chromecast();
 
       player.overlay({
-        overlays: [{
-          start: 1,
-          end: 15,
-          content: 'AAAAAAAAA',
-          align: 'center'
-        }]
+        overlays: [...(overlays || [])]
       })
 
-      player.vttThumbnails({
-        src: 'https://s3.amazonaws.com/ondemand-prod.destination/5ed95110e04f4c0004b37ed3/ba77504d-2687-40f4-b75f-fdadaf1828a5/thumbnails/80p.vtt',
-        showTimestamp: true,
-      })
+      if (vttSrc) {
+        player.vttThumbnails({
+          src: vttSrc,
+          showTimestamp: true,
+        })
+      }
 
-      console.log('PLAYER', player.activePlugins_)
+      console.log('PLAYER PLUGINS -', player.activePlugins_)
     })
   };
 
   return (
-    <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+    src && <VideoJS options={{...defaultOptions, ...options}} onReady={handlePlayerReady} />
   );
 }
 
