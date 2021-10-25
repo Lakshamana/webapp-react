@@ -18,16 +18,10 @@ export const VideoJS = ( props: any ) => {
       if (!videoElement) return;
 
       const player = videojs(videoElement, options, () => {
-        console.log("player is ready", player);
         onReady && onReady(player);
       });
 
       playerRef.current = player
-    } else {
-      // you can update player here [update player through props]
-      // const player = playerRef.current;
-      // player.autoplay(options.autoplay);
-      // player.src(options.sources);
     }
   }, [options]);
 
@@ -42,7 +36,7 @@ export const VideoJS = ( props: any ) => {
   }, []);
 
   return (
-    <div data-vjs-player style={{ width: '120vh', height: '50vh' }}>
+    <div data-vjs-player>
       <video ref={videoRef} className="video-js vjs-big-play-centered" />
     </div>
   );
