@@ -6,7 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { Client } from "services/api"
-import { ApolloProvider } from "@apollo/client"
+import { ApolloProvider } from "@apollo/client";
+import "./config/firebase";
 import "./translate";
 
 Sentry.init({
