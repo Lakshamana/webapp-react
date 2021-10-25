@@ -23,6 +23,13 @@ export const VideoJS = ( props: any ) => {
 
       playerRef.current = player
     }
+
+    if (playerRef.current) {
+      // you can update player here [update player through props]
+      // const player = playerRef.current;
+      // player.autoplay(options.autoplay);
+      // player.src(options.sources);
+    }
   }, [options]);
 
   // Dispose the Video.js player when the functional component unmounts
