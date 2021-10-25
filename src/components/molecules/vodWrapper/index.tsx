@@ -15,7 +15,18 @@ import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 
 import 'videojs-mux'
 
-const VODWrapper = ({ src, title, subtitle, vttSrc, overlays, muxConfig, options }: any): any => {
+import { VODWrapperProps } from './types'
+
+const VODWrapper = ({ 
+  src, 
+  title, 
+  subtitle, 
+  vttSrc, 
+  overlays, 
+  muxConfig, 
+  options 
+}: VODWrapperProps) => {
+
   const playerRef = useRef(null);
 
   const defaultOptions = { // lookup the options in the docs for more options1
