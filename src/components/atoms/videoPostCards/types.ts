@@ -1,4 +1,5 @@
 export interface VideoPostProps {
+    id: string;
     postTitle?: string;
     postUrl?: string;
     coverImage?: string;
