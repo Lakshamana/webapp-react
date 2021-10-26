@@ -7,7 +7,7 @@ export const PostContent = styled.div<VideoPostProps>`
 	width: 295px;
 	height: 160px;
 	border-radius: 4px;
-	${(props: VideoPostProps) => `background: url(${props.coverImage});`}
+	${(props: VideoPostProps) => `background: url('${props.coverImage}');`}
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
