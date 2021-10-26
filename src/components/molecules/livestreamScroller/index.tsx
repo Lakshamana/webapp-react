@@ -11,6 +11,7 @@ const LivestreamScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Li
     let slides = items?.map((post, i) => {
         return (<SwiperSlide key={`Slide-${i}`}>
             <LivestreamPostCard
+                id={post.id}
                 postTitle={post.postTitle}
                 postUrl={post.postUrl}
                 coverImage={post.coverImage}
@@ -33,4 +34,4 @@ const LivestreamScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Li
     </>)
 }
 
-export { LivestreamScroller } 
+export { LivestreamScroller }

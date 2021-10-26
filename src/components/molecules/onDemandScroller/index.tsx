@@ -11,6 +11,7 @@ const OnDemandScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Vide
     let slides = items?.map((post, i) => {
         return (<SwiperSlide key={`Slide-${i}`}>
             <VideoPostCard
+                id={post.id}
                 postTitle={post.postTitle}
                 postUrl={post.postUrl}
                 coverImage={post.coverImage}

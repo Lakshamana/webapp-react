@@ -11,6 +11,7 @@ const CollectionScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Co
     let slides = items?.map((post, i) => {
         return (<SwiperSlide key={`Slide-${i}`}>
             <CollectionPostCard
+                id={post.id}
                 collectionTitle={post.collectionTitle}
                 collectionUrl={post.collectionUrl}
                 coverImage={post.coverImage}
