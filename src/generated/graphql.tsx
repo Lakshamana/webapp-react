@@ -17,6 +17,8 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSONObject: any;
   VoidScalar: any;
@@ -28,7 +30,11 @@ export type Account = {
   display_name?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   first_name?: Maybe<Scalars['String']>;
+  /** Account groups */
+  groups?: Maybe<Array<GroupDto>>;
   last_name?: Maybe<Scalars['String']>;
+  /** Account roles */
+  roles?: Maybe<Array<RolesDto>>;
   status?: Maybe<Scalars['String']>;
   tenant_id?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
@@ -60,20 +66,6 @@ export type AccountSession = {
 export type Auth = {
   __typename?: 'Auth';
   accessToken: Scalars['String'];
-};
-
-export type Channel = {
-  __typename?: 'Channel';
-  _id: Scalars['String'];
-  banner: Scalars['String'];
-  created_at: Scalars['DateTime'];
-  description: Scalars['String'];
-  geofence: Scalars['String'];
-  logo: Scalars['String'];
-  name: Scalars['String'];
-  organization: Organization;
-  status: Scalars['String'];
-  thumbnail: Scalars['String'];
 };
 
 export type CreateAccountGdprLgpdInput = {
@@ -113,21 +105,28 @@ export type CreateChannelInput = {
   geofence?: Maybe<Scalars['String']>;
   logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  organization: Scalars['String'];
   status: Scalars['String'];
   thumbnail?: Maybe<Scalars['String']>;
 };
 
 export type CreateCustomFieldInput = {
   custom_fields: Array<Scalars['JSONObject']>;
-  organization_id: Scalars['String'];
+};
+
+export type CreateEmailTemplateDto = {
+  name: Scalars['String'];
+  organization?: Maybe<Scalars['ID']>;
+  template: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type CreateGroupDto = {
+  default: Scalars['Boolean'];
   /** Group description */
   description?: Maybe<Scalars['String']>;
   /** Group name */
   name: Scalars['String'];
+  public: Scalars['Boolean'];
   /** Group roles */
   roles: Array<Scalars['ID']>;
 };
@@ -135,17 +134,16 @@ export type CreateGroupDto = {
 export type CreateOrganizationInput = {
   bundle_id?: Maybe<Scalars['String']>;
   current_version?: Maybe<Scalars['String']>;
-  email_settings?: Maybe<Scalars['JSONObject']>;
-  icon?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
+  email_settings?: Maybe<Scalars['JSON']>;
   identifier?: Maybe<Scalars['String']>;
   itunes_id?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
   min_compat_version?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  one_signal_id?: Maybe<Scalars['String']>;
+  onesignal_id?: Maybe<Scalars['String']>;
   portal_url: Scalars['String'];
-  sessions_limit?: Maybe<Scalars['Float']>;
-  settings?: Maybe<Scalars['JSONObject']>;
+  sessions_limit?: Maybe<Scalars['JSON']>;
+  settings?: Maybe<Scalars['JSON']>;
   status?: Maybe<Scalars['String']>;
   web_url: Scalars['String'];
 };
@@ -170,9 +168,11 @@ export type CreateProfileInput = {
 };
 
 export type CreateRoleInput = {
+  default: Scalars['Boolean'];
   description: Scalars['String'];
   name: Scalars['String'];
   permissions: Array<Scalars['ID']>;
+  public: Scalars['Boolean'];
 };
 
 export type CreateSubjectInput = {
@@ -191,22 +191,68 @@ export type DeleteOneParams = {
   id: Scalars['String'];
 };
 
-export type FindAllChannelsQueryParamsDto = {
+export type EmailResponseEnvelopeDto = {
+  __typename?: 'EmailResponseEnvelopeDTO';
+  /** message sender */
+  from: Scalars['String'];
+  /** email what message will be delivered */
+  to: Scalars['String'];
+};
+
+export type EmailTemplate = {
+  __typename?: 'EmailTemplate';
+  _id: Scalars['ID'];
+  name: Scalars['String'];
+  organization: Scalars['ID'];
+  template: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type FilterFindAllChannelsInput = {
+  name__contains?: Maybe<Scalars['String']>;
+  name__exact?: Maybe<Scalars['String']>;
+  status__contains?: Maybe<Scalars['String']>;
+  status__exact?: Maybe<Scalars['String']>;
+};
+
+export type FilterFindAllOrganizationsInput = {
+  name__contains?: Maybe<Scalars['String']>;
   name__exact?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
-  status__contains?: Maybe<Scalars['String']>;
+  web_url__exact?: Maybe<Scalars['String']>;
+};
+
+export type FilterFindOneChannelInput = {
+  channelId: Scalars['String'];
+};
+
+export type FilterFindOneEmailTemplateDto = {
+  id: Scalars['ID'];
+};
+
+export type FilterFindOneOrganizationInput = {
+  organizationId: Scalars['String'];
+};
+
+export type FilterRemoveChannelInput = {
+  channelId: Scalars['String'];
+};
+
+export type FilterRemoveOrganizationInput = {
+  organizationId: Scalars['String'];
+};
+
+export type FilterUpdateChannelInput = {
+  channelId: Scalars['String'];
+};
+
+export type FilterUpdateOrganizationlInput = {
+  organizationId: Scalars['String'];
 };
 
 export type FindAllGroupsRequestDto = {
   name__contains?: Maybe<Scalars['String']>;
   name__exact?: Maybe<Scalars['String']>;
-};
-
-export type FindAllOrganizationsQueryParams = {
-  name__contains?: Maybe<Scalars['String']>;
-  name__exact?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  web_url__exact?: Maybe<Scalars['String']>;
 };
 
 export type FindAllQueryParamsDto = {
@@ -247,10 +293,12 @@ export type GroupDto = {
   __typename?: 'GroupDto';
   /** Id */
   _id: Scalars['String'];
+  default: Scalars['Boolean'];
   /** Group description */
   description: Scalars['String'];
   /** Group name */
   name: Scalars['String'];
+  public: Scalars['Boolean'];
   /** Group roles */
   roles: Array<RolesDto>;
 };
@@ -266,35 +314,40 @@ export type Mutation = {
   createAccountGdprLgpd: AccountGdprLgpd;
   createAccountSession: AccountSession;
   createAccountSocialSignIn: Account;
-  createChannel: Channel;
+  createChannel: ResponseChannelOutput;
   createCustomField: CustomField;
+  createEmailTemplate: EmailTemplate;
   createGroup: GroupDto;
-  createOrganization: Organization;
+  createOrganization: ResponseOrganizationOutput;
   createPermission: PermissionDto;
   createProfile: Profile;
   createRole: RolesDto;
   createSubject: SubjectDto;
+  forgetAccount: Scalars['VoidScalar'];
   refreshToken: Auth;
   removeAccount: Account;
   removeAccountGdprLgpd: AccountGdprLgpd;
   removeAccountSession: AccountSession;
-  removeChannel: Channel;
+  removeChannel: ResponseChannelOutput;
   removeCustomField: CustomField;
+  removeEmailTemplate: EmailTemplate;
   removeGroup: GroupDto;
-  removeOrganization: Organization;
+  removeOrganization: ResponseOrganizationOutput;
   removePermission: PermissionDto;
   removeProfile: Profile;
   removeRole: RolesDto;
   removeSubject: SubjectDto;
+  sendEmail: ResponseEmailSendedDto;
   signIn: Auth;
   signOut: Scalars['VoidScalar'];
   updateAccount: Account;
   updateAccountGdprLgpd: AccountGdprLgpd;
   updateAccountSession: AccountSession;
-  updateChannel: Channel;
+  updateChannel: ResponseChannelOutput;
   updateCustomField: CustomField;
+  updateEmailTemplate: EmailTemplate;
   updateGroup: GroupDto;
-  updateOrganization: Organization;
+  updateOrganization: ResponseOrganizationOutput;
   updatePermission: PermissionDto;
   updateProfile: Profile;
   updateRole: RolesDto;
@@ -332,13 +385,18 @@ export type MutationCreateCustomFieldArgs = {
 };
 
 
+export type MutationCreateEmailTemplateArgs = {
+  createEmailTemplateInput: CreateEmailTemplateDto;
+};
+
+
 export type MutationCreateGroupArgs = {
   createGroupInput: CreateGroupDto;
 };
 
 
 export type MutationCreateOrganizationArgs = {
-  CreateOrganizationDto: CreateOrganizationInput;
+  createOrganizationInput: CreateOrganizationInput;
 };
 
 
@@ -359,6 +417,11 @@ export type MutationCreateRoleArgs = {
 
 export type MutationCreateSubjectArgs = {
   createSubjectInput: CreateSubjectInput;
+};
+
+
+export type MutationForgetAccountArgs = {
+  DeleteOneParams: DeleteOneParams;
 };
 
 
@@ -383,12 +446,17 @@ export type MutationRemoveAccountSessionArgs = {
 
 
 export type MutationRemoveChannelArgs = {
-  id: Scalars['String'];
+  filterRemoveChannelInput: FilterRemoveChannelInput;
 };
 
 
 export type MutationRemoveCustomFieldArgs = {
   FindOneCustomFieldsDto: FindOneCustomFieldsDto;
+};
+
+
+export type MutationRemoveEmailTemplateArgs = {
+  filterFindOneEmailTemplateDTO: FilterFindOneEmailTemplateDto;
 };
 
 
@@ -398,7 +466,7 @@ export type MutationRemoveGroupArgs = {
 
 
 export type MutationRemoveOrganizationArgs = {
-  id: Scalars['String'];
+  filterRemoveOrganizationInput: FilterRemoveOrganizationInput;
 };
 
 
@@ -419,6 +487,11 @@ export type MutationRemoveRoleArgs = {
 
 export type MutationRemoveSubjectArgs = {
   findOneSubjectInput: FindOneSubjectInput;
+};
+
+
+export type MutationSendEmailArgs = {
+  SendEmailDTO: SendEmailDto;
 };
 
 
@@ -451,7 +524,7 @@ export type MutationUpdateAccountSessionArgs = {
 
 
 export type MutationUpdateChannelArgs = {
-  id: Scalars['String'];
+  filterUpdateChannelInput: FilterUpdateChannelInput;
   updateChannelInput: UpdateChannelInput;
 };
 
@@ -462,6 +535,12 @@ export type MutationUpdateCustomFieldArgs = {
 };
 
 
+export type MutationUpdateEmailTemplateArgs = {
+  filterFindOneEmailTemplateDTO: FilterFindOneEmailTemplateDto;
+  updateEmailTemplateInput: UpdateEmailTemplateDto;
+};
+
+
 export type MutationUpdateGroupArgs = {
   id: IdDto;
   updateGroupInput: UpdateGroupDto;
@@ -469,7 +548,7 @@ export type MutationUpdateGroupArgs = {
 
 
 export type MutationUpdateOrganizationArgs = {
-  id: Scalars['String'];
+  filterUpdateOrganizationlInput: FilterUpdateOrganizationlInput;
   updateOrganizationInput: UpdateOrganizationInput;
 };
 
@@ -495,27 +574,6 @@ export type MutationUpdateRoleArgs = {
 export type MutationUpdateSubjectArgs = {
   findOneSubjectInput: FindOneSubjectInput;
   updateSubjectInput: UpdateSubjectInput;
-};
-
-export type Organization = {
-  __typename?: 'Organization';
-  _id: Scalars['String'];
-  bundle_id?: Maybe<Scalars['String']>;
-  current_version?: Maybe<Scalars['String']>;
-  email_settings?: Maybe<Scalars['JSONObject']>;
-  icon?: Maybe<Scalars['String']>;
-  identifier?: Maybe<Scalars['String']>;
-  itunes_id?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
-  min_compat_version?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  one_signal_id?: Maybe<Scalars['String']>;
-  portal_url: Scalars['String'];
-  sessions_limit?: Maybe<Scalars['Float']>;
-  settings?: Maybe<Scalars['JSONObject']>;
-  status?: Maybe<Scalars['String']>;
-  tenant_id: Scalars['String'];
-  web_url: Scalars['String'];
 };
 
 export type PermissionDto = {
@@ -549,14 +607,16 @@ export type Query = {
   accountSessions: Array<AccountSession>;
   accounts: Array<Account>;
   accountsGdprLgpd: Array<AccountGdprLgpd>;
-  channel: Channel;
-  channels: Array<Channel>;
+  channel: ResponseChannelOutput;
+  channels: Array<ResponseChannelOutput>;
   customField: CustomField;
   customFields: Array<CustomField>;
+  emailTemplate: EmailTemplate;
+  emailTemplates: Array<EmailTemplate>;
   group: GroupDto;
   groups: Array<GroupDto>;
-  organization: Organization;
-  organizations: Array<Organization>;
+  organization: ResponseOrganizationOutput;
+  organizations: Array<ResponseOrganizationOutput>;
   permission: PermissionDto;
   permissions: Array<PermissionDto>;
   profile: Profile;
@@ -589,17 +649,22 @@ export type QueryAccountsArgs = {
 
 
 export type QueryChannelArgs = {
-  id: Scalars['String'];
+  filterFindOneChannelInput: FilterFindOneChannelInput;
 };
 
 
 export type QueryChannelsArgs = {
-  FindAllChannelsQueryParamsDto: FindAllChannelsQueryParamsDto;
+  filterFindAllChannelsInput: FilterFindAllChannelsInput;
 };
 
 
 export type QueryCustomFieldArgs = {
   FindOneCustomFieldsDto: FindOneCustomFieldsDto;
+};
+
+
+export type QueryEmailTemplateArgs = {
+  filterFindOneEmailTemplateDTO: FilterFindOneEmailTemplateDto;
 };
 
 
@@ -614,12 +679,12 @@ export type QueryGroupsArgs = {
 
 
 export type QueryOrganizationArgs = {
-  id: Scalars['String'];
+  filterFindOneOrganizationInput: FilterFindOneOrganizationInput;
 };
 
 
 export type QueryOrganizationsArgs = {
-  FindAllOrganizationsQueryParams: FindAllOrganizationsQueryParams;
+  filterFindAllOrganizationsInput: FilterFindAllOrganizationsInput;
 };
 
 
@@ -646,13 +711,77 @@ export type RefreshTokenInput = {
   accessToken: Scalars['String'];
 };
 
+export type ResponseChannelOutput = {
+  __typename?: 'ResponseChannelOutput';
+  _id: Scalars['ID'];
+  banner?: Maybe<Scalars['JSON']>;
+  description: Scalars['String'];
+  entitlements?: Maybe<Scalars['JSON']>;
+  geofence?: Maybe<Scalars['JSON']>;
+  logo?: Maybe<Scalars['JSON']>;
+  name: Scalars['String'];
+  organization: Scalars['ID'];
+  status: Scalars['String'];
+  thumbnail?: Maybe<Scalars['JSON']>;
+};
+
+export type ResponseEmailSendedDto = {
+  __typename?: 'ResponseEmailSendedDTO';
+  /** emails accepted this message */
+  accepted: Array<Scalars['String']>;
+  /** delivery message information */
+  envelope: EmailResponseEnvelopeDto;
+  /** time to envelope the message */
+  envelopeTime: Scalars['Float'];
+  /** the server message id */
+  messageId: Scalars['String'];
+  /** message size */
+  messageSize: Scalars['Float'];
+  /** time to send the message */
+  messageTime: Scalars['Float'];
+  /** email has declined the message */
+  rejected: Array<Scalars['String']>;
+  /** the SMTP server response when send the message */
+  response: Scalars['String'];
+};
+
+export type ResponseOrganizationOutput = {
+  __typename?: 'ResponseOrganizationOutput';
+  _id: Scalars['ID'];
+  bundle_id?: Maybe<Scalars['String']>;
+  current_version?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['String']>;
+  email_settings?: Maybe<Scalars['String']>;
+  identifier?: Maybe<Scalars['String']>;
+  itunes_id?: Maybe<Scalars['String']>;
+  min_compat_version?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  onesignal_id?: Maybe<Scalars['String']>;
+  portal_url?: Maybe<Scalars['String']>;
+  sessions_limit?: Maybe<Scalars['String']>;
+  settings?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  tenant_id?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Scalars['String']>;
+};
+
 export type RolesDto = {
   __typename?: 'RolesDto';
   /** Id */
   _id: Scalars['String'];
+  default: Scalars['Boolean'];
   description: Scalars['String'];
   name: Scalars['String'];
   permissions: Array<PermissionDto>;
+  public: Scalars['Boolean'];
+};
+
+export type SendEmailDto = {
+  context?: Maybe<Scalars['JSON']>;
+  from: Scalars['String'];
+  subject: Scalars['String'];
+  to: Scalars['String'];
+  type: Scalars['ID'];
 };
 
 export type SignInInput = {
@@ -685,7 +814,7 @@ export type UpdateAccountInput = {
   email?: Maybe<Scalars['String']>;
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  password: Scalars['String'];
   status?: Maybe<Status>;
   username?: Maybe<Scalars['String']>;
 };
@@ -711,11 +840,18 @@ export type UpdateCustomFieldInput = {
   custom_fields: Array<Scalars['JSONObject']>;
 };
 
+export type UpdateEmailTemplateDto = {
+  name: Scalars['String'];
+  template: Scalars['String'];
+};
+
 export type UpdateGroupDto = {
+  default?: Maybe<Scalars['Boolean']>;
   /** Group description */
   description?: Maybe<Scalars['String']>;
   /** Group name */
   name?: Maybe<Scalars['String']>;
+  public?: Maybe<Scalars['Boolean']>;
   /** Group roles */
   roles?: Maybe<Array<Scalars['ID']>>;
 };
@@ -723,17 +859,16 @@ export type UpdateGroupDto = {
 export type UpdateOrganizationInput = {
   bundle_id?: Maybe<Scalars['String']>;
   current_version?: Maybe<Scalars['String']>;
-  email_settings?: Maybe<Scalars['JSONObject']>;
-  icon?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
+  email_settings?: Maybe<Scalars['JSON']>;
   identifier?: Maybe<Scalars['String']>;
   itunes_id?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
   min_compat_version?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  one_signal_id?: Maybe<Scalars['String']>;
+  onesignal_id?: Maybe<Scalars['String']>;
   portal_url?: Maybe<Scalars['String']>;
-  sessions_limit?: Maybe<Scalars['Float']>;
-  settings?: Maybe<Scalars['JSONObject']>;
+  sessions_limit?: Maybe<Scalars['JSON']>;
+  settings?: Maybe<Scalars['JSON']>;
   status?: Maybe<Scalars['String']>;
   web_url?: Maybe<Scalars['String']>;
 };
@@ -757,9 +892,11 @@ export type UpdateProfileInput = {
 };
 
 export type UpdateRoleInput = {
+  default?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   permissions?: Maybe<Array<Scalars['ID']>>;
+  public?: Maybe<Scalars['Boolean']>;
 };
 
 export type UpdateSubjectInput = {

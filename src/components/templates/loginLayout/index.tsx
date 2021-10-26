@@ -5,7 +5,7 @@ import { Props, defaultProps } from "./types";
 const LoginLayout = ({ children, ...props }: Props) => (
   <LayoutContainer flexDirection="column">
     <ExternalHeader />
-    <ChildContainer justifyContent={'center'} {...props} width={1} backgroundImage={'https://image.fanherocdn.com/com.fanhero.5e7d2539b85308000497bc5a/photo/5e83c0db4d88ba002f3cd2c2/original'}>
+    <ChildContainer justifyContent={'center'} {...props} width={1} backgroundImage={'https://image.fanherocdn.com/1920x1080/com.fanhero.5c926da8e117d200047d500e/photo/6169b4c5afd43a002b33258d/original'}>
       {children}
     </ChildContainer>
     <ExternalFooter />
