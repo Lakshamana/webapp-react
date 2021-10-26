@@ -19,7 +19,7 @@ import "swiper/swiper-bundle.min.css"
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
-const SwiperSlideList = ({ items, actions }: Props) => {
+const SwiperSlideList = ({ items }: Props) => {
 	const [size, setSize] = useState({
 		x: window.innerWidth,
 		y: window.innerHeight
@@ -49,7 +49,7 @@ const SwiperSlideList = ({ items, actions }: Props) => {
 							<InfoContent>
 								<Title>{items.title}</Title>
 								<Description>{items.description}</Description>
-								<MemoizedActionsList actions={getActions(actions)} />
+								<MemoizedActionsList actions={getActions(items?.actions)} />
 							</InfoContent>
 						</Info>
 					</BillboardItems>

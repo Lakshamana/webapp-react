@@ -7,6 +7,7 @@ export interface BillboardItem {
     title: string
     description: string
     infoColor: string
+    actions?: Array<BillboardItemActions>
 }
 
 export interface BillboardItemActions extends ButtonProps {
@@ -21,7 +22,6 @@ export interface BillboardItemActions extends ButtonProps {
 
 export interface Props {
     items?: Array<BillboardItem>,
-    actions?: Array<BillboardItemActions>
 }
 
 
