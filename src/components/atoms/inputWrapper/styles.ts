@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { layout, border, space, fontSize } from "styled-system";
+import { layout, border, space } from "styled-system";
 import { PropsStyle } from "./types";
 
 const getStyleDisabled = (disabled: boolean | undefined) =>
