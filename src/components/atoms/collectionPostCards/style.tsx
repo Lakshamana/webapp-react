@@ -7,7 +7,7 @@ export const PostContent= styled.div <CollectionPostProps>`
 	width: 295px;
 	height: 160px;
 	border-radius: 4px;
-	${(props: CollectionPostProps) => `background: url(${props.coverImage});`}
+	${(props: CollectionPostProps) => `background: url('${props.coverImage}');`}
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
