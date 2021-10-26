@@ -29,7 +29,7 @@ const LanguageSelector = () => {
 
     return (
         <Menu>
-            <MenuButton padding={2} borderRadius={36} borderColor={'#666666'} borderWidth={1}>
+            <MenuButton padding={2} borderRadius={36} border={'1px solid #666666'}>
                 <MenuButtonSpan>
                     {selectedLanguage.flagIcon}
                     {selectedLanguage.locale}
