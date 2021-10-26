@@ -1,0 +1,59 @@
+[
+	{
+		"id": "123131sdasdas",
+		"banner": "https://d2ui6twqy19jn9.cloudfront.net/0x560/smart/filters:format(webp):quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/6102d966b489ef002bfa801d/original",
+		"cover": "https://d2ui6twqy19jn9.cloudfront.net/0x560/smart/filters:format(webp):quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/60fb0aaf1a2896002ac6cb01/original",
+		"delay": 10000,
+		"description": "This is my newest billboard",
+		"title": "New billboard",
+		"infoColor": "#ffffff",
+		"actions": [
+			{
+				"bgColor": "#ffffff",
+				"borderColor": "#000000",
+				"icon": "home",
+				"label": "testing",
+				"route": "",
+				"textColor": "#000000"
+			}
+		]
+	},
+	{
+		"id": "1erqwdasdas231323234234234231",
+		"banner": "https://d2ui6twqy19jn9.cloudfront.net/0x560/smart/filters:format(webp):quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/5fa5ca8bd742fb0039dc05d6/original",
+		"cover": "https://d2ui6twqy19jn9.cloudfront.net/0x560/smart/filters:format(webp):quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/5fa5ca8bd742fb0039dc05d6/original",
+		"delay": 10000,
+		"description": "<p>test</p>",
+		"title": "<p>test</p>",
+		"infoColor": "#ffffff",
+		"actions": [
+			{
+				"bgColor": "#ffffff",
+				"borderColor": "#000000",
+				"icon": "home",
+				"label": "testing",
+				"route": "",
+				"textColor": "#000000"
+			}
+		]
+	},
+	{
+		"id": "12313sfs1d8f9sd686868687",
+		"banner": "https://d2ui6twqy19jn9.cloudfront.net/0x560/smart/filters:format(webp):quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/5fa5ca8bd742fb0039dc05d6/original",
+		"cover": "https://d2ui6twqy19jn9.cloudfront.net/0x560/smart/filters:format(webp):quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/5fa5ca8bd742fb0039dc05d6/original",
+		"delay": 10000,
+		"description": "<p>test</p>",
+		"title": "<p>test</p>",
+		"infoColor": "#ffffff",
+		"actions": [
+			{
+				"bgColor": "green",
+				"borderColor": "pink",
+				"icon": "ab_testing",
+				"label": "testing another button",
+				"route": "",
+				"textColor": "yellow"
+			}
+		]
+	}
+]
