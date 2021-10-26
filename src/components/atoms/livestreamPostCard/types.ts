@@ -1,4 +1,5 @@
 export interface LivePostProps {
+    id: string,
     postTitle?: string;
     postUrl?: string;
     coverImage?: string;
