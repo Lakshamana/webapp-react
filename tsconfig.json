@@ -15,7 +15,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false
   },
   "include": ["**/*.ts", "**/*.tsx", "src/services/hooks/use-breakpoint.js"],
   "exclude": ["node_modules"]

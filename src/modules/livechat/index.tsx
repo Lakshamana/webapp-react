@@ -1,4 +1,5 @@
 import { Container, MainLayout } from "components";
+import { Breadcrumb } from "components/atoms";
 
 import { useTranslation } from "react-i18next";
 import { Input, Modal } from "components/molecules";
@@ -9,14 +10,16 @@ const LiveChat = () => {
   const { t } = useTranslation();
   return (
     <MainLayout>
-      <Container
-        flexDirection="column"
-        width={["100%"]}
-        minHeight={["100vh"]}
-        margin={["0px"]}
-      >
-        <Input onChange={() => {}} placeholder="Testing placeholder" />
-        <Input onChange={() => {}} rightIcon="check" />
+      <Container flexDirection="column" width={["100%"]} minHeight={["100vh"]}>
+        <Breadcrumb
+          options={[
+            { name: "Home", onClick: () => {}, isCurrentPage: false },
+            { name: "Live Events", onClick: () => {}, isCurrentPage: false },
+            { name: "Live chat", onClick: () => {}, isCurrentPage: true },
+          ]}
+        />
+        <Input onChange={() => {}} />
+        <Input onChange={() => {}} error={true} errorMessage="Invalid value." />
         <Input
           onChange={() => {}}
           rightIcon="send"

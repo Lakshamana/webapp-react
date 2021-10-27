@@ -1,5 +1,4 @@
-import { useHistory } from 'react-router-dom';
-import { Link } from '@chakra-ui/react';
+import { useHistory, Link } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
 import { Button, Input } from "components";
 
@@ -20,9 +19,9 @@ const SigninForm = () => {
                 placeholder={'Password'}
                 onEnterPress={() => alert("enter")}
             />
-            <Button width={1} paddingLeft={105} paddingRight={105} marginTop={20} type={'submit'} label={'Login'} onClick={() => history.push('/dashboard')}></Button>
+            <Button width={1} paddingLeft={105} paddingRight={105} marginTop={20} marginBottom={10} type={'submit'} label={'Login'} onClick={() => history.push('/dashboard')}></Button>
             {/* TO-DO: All text links has ACCENT color as default. */}
-            <Link marginTop={2} color={'blue'}>Forgot password?</Link>
+            <Link to="resetPassword">Forgot password?</Link>
         </Flex>
     );
 }
