@@ -16,7 +16,14 @@ export interface Props {
   border?: string;
   width?: any;
   height?: any;
-  sendIcon?: boolean
+  rightIcon?: "check" | "send" | string;
+  leftIcon?: string;
+  type?: "" | "text" | "password" | string;
+  background?: string;
+  color?: string;
+  placeholderColor?: string;
+
+  onChangeShowPassword?: Function;
 }
 
 export interface PropsStyle
@@ -25,7 +32,7 @@ export interface PropsStyle
     SpaceProps,
     FontSizeProps {
   error?: boolean | any;
-  theme?: any;
+  background?: any;
   onClick?: Function;
   disabled?: boolean | undefined;
   bgColor?: string;

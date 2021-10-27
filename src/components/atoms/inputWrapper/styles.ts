@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import { layout, border, space, fontSize } from "styled-system";
+import { layout, border, space } from "styled-system";
 import { PropsStyle } from "./types";
+
+// import { componentsColors } from "styles/colors";
 
 const getStyleDisabled = (disabled: boolean | undefined) =>
   disabled && "opacity: 0.7;";
@@ -16,8 +18,7 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${space}
   ${layout}
   ${border}
-  background-color: ${({ error }) => (error ? "#FFF2F2;" : "#FAFAFA;")};
-  border-radius: ${({ theme }) => "4px"};
+  background-color: ${({ background }) => background};
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -26,11 +27,11 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${({ onClick, disabled }: PropsStyle) =>
     !disabled && !!onClick && "cursor: pointer;"}
   ${({ disabled }: PropsStyle) => getStyleDisabled(disabled)}
-
+  ${({ error }) => error && `border: 1px solid red;`}
   svg {
+    margin-right: 16px;
     padding-right: 8px;
     padding-left: 8px;
-    width: 32px;
   }
 `;
 

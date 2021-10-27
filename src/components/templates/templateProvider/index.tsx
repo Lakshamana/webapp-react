@@ -21,15 +21,15 @@ const TemplateProvider = ({ children }: any) => {
   const config = {
     initialColorMode: "light",
     useSystemColorMode: false,
-  }
+  };
 
   const customTheme = extendTheme({
-    colors,
     ...theme,
     ...metrics,
     fonts,
     breakpoints,
     config,
+    colors,
   });
 
   return (
@@ -46,7 +46,7 @@ const TemplateProvider = ({ children }: any) => {
       </ChakraProvider>
     </ThemeProvider>
   );
-}
+};
 
 TemplateProvider.propTypes = {
   children: PropTypes.node,

@@ -13,10 +13,16 @@ const commonStyles = `
   &:focus {
     outline: none;
   }
+
+ 
+
+ 
 `;
 
 interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
-  error?: string;
+  background?: string;
+  color?: string;
+  placeholderColor?: string;
 }
 
 export const Input: any = styled.input<PropsStyle>`
@@ -24,16 +30,19 @@ export const Input: any = styled.input<PropsStyle>`
   ${space}
   ${fontSize}
   ${commonStyles}
-  background-color: ${({ error }) => (error ? "#FFF2F2;" : "#FAFAFA;")};
-  color: #000;
-  border-radius: 4px;
+  background-color: ${({ background = "#444444" }) =>
+    `${background}  !important;`};
+  color: ${({ color }) => color};
   width: 100%;
   padding-left: 16px;
   font-size: 16px;
   width: 100%;
 
+  -webkit-box-shadow: 0 0 0 50px #444 inset;
+  -webkit-text-fill-color: #fff;
+
   &::placeholder {
-    color: #666666;
+    color: ${({ placeholderColor }) => `${placeholderColor};`};
   }
 `;
 
