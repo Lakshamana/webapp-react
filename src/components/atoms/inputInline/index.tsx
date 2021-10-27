@@ -6,11 +6,13 @@ import { Input, InputMask } from "./styles";
 const InputInline = ({
   mask,
   onChange,
-  background = '',
-  placeholder = "placeholder",
+  placeholder = "",
   error = false,
   errorMessage = "",
   onKeyDown = () => {},
+  background = "",
+  color = "",
+  placeholderColor = "",
   ...props
 }: Props) => {
   const ref: any = React.useRef(null);
@@ -22,7 +24,19 @@ const InputInline = ({
   return mask ? (
     <InputMask ref={ref} {...props} mask={mask} maskPlaceholder={placeholder} />
   ) : (
-    <Input {...{ ...props, ref, error, placeholder, onChange, onKeyDown}}  />
+    <Input
+      {...{
+        ...props,
+        ref,
+        error,
+        placeholder,
+        onChange,
+        onKeyDown,
+        color,
+        placeholderColor,
+        background,
+      }}
+    />
   );
 };
 
