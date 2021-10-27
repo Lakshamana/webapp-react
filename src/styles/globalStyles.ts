@@ -182,13 +182,14 @@ input:-webkit-autofill {
   box-shadow: none !important;
 }
 
-.vjs-vtt-thumbnail-display {
-  width: 160px;
-  height: 90px;
-}
 
 .vjs-chromecast-button {
   display: block !important;
+}
+
+.vjs-chromecast-button .vjs-icon-placeholder {
+  width: 50% !important;
+  height: 50% !important;
 }
 
 `
