@@ -18,7 +18,7 @@ import {
 } from "./settings";
 import { Channel, defaultProps, SearchResults } from "./types";
 import { handleContentSearch, reducer } from "./utils";
-import { colors } from "styles";
+import { colors, sizes } from "styles";
 
 const HeaderComponent = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -54,7 +54,7 @@ const HeaderComponent = () => {
     <>
       <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
       <Container
-        height={[70, 70, 70, 100]}
+        height={[sizes.headerMobileHeight, sizes.headerMobileHeight, sizes.headerMobileHeight, sizes.headerDesktopHeight]}
         width={1}
         px={3}
         alignItems="center"
