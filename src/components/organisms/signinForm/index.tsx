@@ -19,7 +19,7 @@ const SigninForm = () => {
                 placeholder={'Password'}
                 onEnterPress={() => alert("enter")}
             />
-            <Button width={1} paddingLeft={105} paddingRight={105} marginTop={20} marginBottom={10} type={'submit'} label={'Login'} onClick={() => history.push('/dashboard')}></Button>
+            <Button width={1} paddingLeft={105} paddingRight={105} marginTop={20} marginBottom={10} type={'submit'} label={'Login'} onClick={() => history.push('/home')}></Button>
             {/* TO-DO: All text links has ACCENT color as default. */}
             <Link to="resetPassword">Forgot password?</Link>
         </Flex>
