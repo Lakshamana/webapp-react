@@ -1,6 +1,6 @@
 export interface Props {
   headerTitle: string
-  children?: any
+  children?: JSX.Element | JSX.Element[]
   columnGap: number
   rowGap: number
   xl: number
