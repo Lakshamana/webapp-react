@@ -25,6 +25,7 @@ const VODWrapper = ({
   vttSrc, 
   overlays, 
   muxConfig, 
+  skin,
   options 
 }: VODWrapperProps): ReactElement => {
 
@@ -61,7 +62,9 @@ const VODWrapper = ({
   };
 
   return (
-    src ? <VideoJS options={{...defaultOptions, ...options}} onReady={handlePlayerReady} /> : <></>
+    src
+      ? <VideoJS options={{...defaultOptions, ...options}} skin={skin} onReady={handlePlayerReady} />
+      : <></>
   );
 }
 
