@@ -18,3 +18,5 @@ export * from "./externalHeader";
 export * from "./internalFooter";
 export * from "./table";
 export * from "./tableFooter";
+export * from "./videoJs";
+export * from "./vodWrapper";
