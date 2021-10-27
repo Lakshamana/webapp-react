@@ -5,7 +5,7 @@ import { Props, defaultProps } from "./types";
 const MainLayout = ({ children, ...props }: Props) => (
   <LayoutContainer flexDirection="column">
     <Header />
-    <ChildContainer {...props} width={1}>
+    <ChildContainer pb={30} {...props} >
       {children}
     </ChildContainer>
     <InternalFooter />
