@@ -11,7 +11,7 @@ import { colors } from 'styles'
 const MyListPage = () => {
 	return (
 		<MainLayout>
-			<Container flexDirection={"column"} py={30} px={50} width={"100%"}>
+			<Container flexDirection={"column"} py={30} px={100} width={"100%"}>
 				<GridCards
 					headerTitle='My list'
 					rowGap={24}
@@ -23,7 +23,6 @@ const MyListPage = () => {
 					ssm={1}>
 					<CollectionPostCard
 						coverImage='https://portalfamosos.com.br/wp-content/uploads/2021/04/coldplay-high-power-novo-single-max-martin-destaque-portal-famosos.png'
-						isExclusive={false}
 						isGeolocked={true}
 					/>
 				</GridCards>
@@ -31,8 +30,7 @@ const MyListPage = () => {
 					orientation='horizontal'
 					height={2}
 					width={"100%"}
-					mt={4}
-					mb={4}
+					my={4}
 					color={`${colors.grey["800"]}`}
 				/>
 				<GridCards
@@ -46,8 +44,6 @@ const MyListPage = () => {
 					ssm={1}>
 					<VideoPostCard
 						coverImage='https://adnews.com.br/wp-content/uploads/2021/07/HBO-Max-desconto.jpg'
-						isExclusive={false}
-						isGeolocked={false}
 					/>
 				</GridCards>
 			</Container>
