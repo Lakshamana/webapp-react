@@ -16,5 +16,8 @@ export * from "./billboard";
 export * from "./externalFooter";
 export * from "./externalHeader";
 export * from "./internalFooter";
+export * from "./modal";
 export * from "./table";
 export * from "./tableFooter";
+export * from "./videoJs";
+export * from "./vodWrapper";

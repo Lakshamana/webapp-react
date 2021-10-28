@@ -5,6 +5,6 @@ export interface Props {
   placeholder?: string;
   error?: boolean;
   errorMessage?: string;
-  sendIcon?: boolean;
+  rightIcon?: "check" | "send" | string;
   onEnterPress?: Function | undefined;
 }

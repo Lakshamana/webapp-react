@@ -7,10 +7,9 @@ import {
   breakpointKeys,
 } from "./globalStyles";
 
-const theme = { 
-  dark: colors, 
-  light: colors, 
-  ...metrics
+const theme = {
+  colors,
+  ...metrics,
 };
 
 export {
