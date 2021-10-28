@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { ReactComponent as ErrorIcon } from "assets/icons/inputError.svg";
-import { ReactComponent as SendIcon } from "assets/icons/send.svg";
+import { Icon } from "@iconify/react";
 
 import { BoxWrapper, BoxWrapperError, LabelError, Box } from "./styles";
 
 import { Props } from "./types";
 import { defaultProps } from "./settings";
 
-const DefaultWrapper = ({
+const InputWrapper = ({
   children,
   label,
   error,
@@ -18,19 +17,101 @@ const DefaultWrapper = ({
   disabled,
   width,
   height,
-  sendIcon,
+  type = "",
+  background = "",
+  placeholderColor = "",
+  rightIcon = "",
+  leftIcon = "",
+  onChangeShowPassword = () => {},
   ...props
 }: Props): any => {
+  const [showPassword, setShowPassword] = useState(type !== "password");
+
+  const renderRightIcon = () => {
+    if (error) {
+      return (
+        <Icon
+          icon="eva:alert-circle-fill"
+          width="42"
+          height="42"
+          color="#d9534f"
+        />
+      );
+    }
+
+    if (type === "password") {
+      //Waiting the other icon to put here (Iuri Design)
+      return showPassword ? (
+        <Icon
+          style={{ cursor: "pointer" }}
+          icon="akar-icons:eye-open"
+          width="42"
+          height="42"
+          onClick={() => {
+            setShowPassword(!showPassword);
+            onChangeShowPassword(!showPassword);
+          }}
+          color="#aaa"
+        />
+      ) : (
+        <Icon
+          icon="akar-icons:eye-slashed"
+          width="42"
+          height="42"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setShowPassword(!showPassword);
+            onChangeShowPassword(!showPassword);
+          }}
+          color="#aaa"
+        />
+      );
+    }
+
+    switch (rightIcon) {
+      case "send":
+        return (
+          <Icon
+            icon="fluent:send-28-filled"
+            width="42"
+            height="42"
+            color="#2984F5"
+          />
+        );
+
+      case "check":
+        return (
+          <Icon
+            icon="akar-icons:circle-check-fill"
+            width="42"
+            height="42"
+            color="#5cb85c"
+          />
+        );
+
+      default:
+        break;
+    }
+  };
+
+  const renderLeftIcon = () => {
+    switch (leftIcon) {
+      default:
+        return;
+    }
+  };
+
   return (
     <Box error={error}>
       <BoxWrapper
         width={width || "100%"}
         minHeight={height || 56}
         error={error}
+        background={background}
       >
+        {renderLeftIcon()}
         {children}
-        {error && <ErrorIcon />}
-        {sendIcon && <SendIcon />}
+        {renderRightIcon()}
       </BoxWrapper>
       {error && (
         <BoxWrapperError>
@@ -40,10 +121,6 @@ const DefaultWrapper = ({
     </Box>
   );
 };
-
-const InputWrapper = ({ children, ...props }: Props) => (
-  <DefaultWrapper {...props}>{children}</DefaultWrapper>
-);
 
 InputWrapper.defaultProps = defaultProps;
 
