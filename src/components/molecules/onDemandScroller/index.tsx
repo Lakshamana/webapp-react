@@ -8,8 +8,8 @@ import { Link } from '@chakra-ui/react'
 
 const OnDemandScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: VideoScrollerProps) => {
 
-    let slides = items?.map((post, i) => {
-        return (<SwiperSlide key={`Slide-${i}`}>
+    let slides = items?.map(post => {
+        return (<SwiperSlide key={`slide-${post.id}-ondemand`}>
             <VideoPostCard
                 id={post.id}
                 postTitle={post.postTitle}
