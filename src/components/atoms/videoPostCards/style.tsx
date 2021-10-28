@@ -1,46 +1,32 @@
 import styled from "styled-components"
 import { VideoPostProps } from "./types"
-import { breakpoints, colors } from 'styles'
+import { breakpoints, colors } from "styles"
 
 export const PostContent = styled.div<VideoPostProps>`
 	display: flex;
-	width: 295px;
-	height: 160px;
+	width: auto;
+	padding-top: 56.25%;
+	height: auto;
 	position: relative;
 	border-radius: 4px;
-	${(props: VideoPostProps) => `background: url(${props.coverImage});`}
+	${(props: VideoPostProps) => `background: url('${props.coverImage}');`}
+	cursor: pointer;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
-
-	&:before {
-		content: "";
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		background: inherit;
-		border-radius: 4px;
-		${(props: VideoPostProps) =>
-			`-webkit-filter: ${
-				props.isExclusive === true ? "blur(4px);" : "blur(0px);"
-			} `}
-	}
-
-	@media screen and (max-width: ${breakpoints.sm}) {
-		width: 250px;
-		height: 150px;
-	}
 `
 
 export const ExclusiveBlocked: any = styled.div`
 	display: flex;
+	position: absolute;
 	align-items: center;
 	justify-content: center;
 	width: 51px;
 	height: 50px;
 	border-radius: 50%;
-	z-index: 1;
-	margin: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	background-color: ${colors.blue["300"]};
 
 	@media screen and (max-width: ${breakpoints.sm}) {
@@ -51,13 +37,15 @@ export const ExclusiveBlocked: any = styled.div`
 
 export const GeolockedBlocked: any = styled.div`
 	display: flex;
+	position: absolute;
 	align-items: center;
 	justify-content: center;
 	width: 51px;
 	height: 50px;
 	border-radius: 50%;
-	z-index: 1;
-	margin: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	background-color: ${colors.blue["300"]};
 	pointer-events: none;
 

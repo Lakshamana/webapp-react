@@ -18,7 +18,7 @@ import {
 } from "./settings";
 import { Channel, defaultProps, SearchResults } from "./types";
 import { handleContentSearch, reducer } from "./utils";
-import { colors } from "styles";
+import { colors, sizes } from "styles";
 
 const HeaderComponent = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -54,7 +54,7 @@ const HeaderComponent = () => {
     <>
       <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
       <Container
-        height={[70, 70, 70, 100]}
+        height={[sizes.headerMobileHeight, sizes.headerMobileHeight, sizes.headerMobileHeight, sizes.headerDesktopHeight]}
         width={1}
         px={3}
         alignItems="center"
@@ -76,7 +76,12 @@ const HeaderComponent = () => {
           )}
         </Container>
         {!state.openSearch ? (
-          <Container ml={2} display={["none", "none", "flex"]}>
+          <Container
+            flex={1}
+            ml={2}
+            alignItems="center"
+            display={["none", "none", "flex"]}
+          >
             <Tabs
               data={MENUTABS}
               selected={state.selected}
@@ -88,7 +93,7 @@ const HeaderComponent = () => {
         ) : (
           <></>
         )}
-        <Container alignItems="center" flex={1}>
+        <Container alignItems="center" flex={state.openSearch ? 1 : "none"}>
           <SearchBar
             data={searchValues}
             open={state.openSearch}

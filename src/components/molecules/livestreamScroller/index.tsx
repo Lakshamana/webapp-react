@@ -8,9 +8,10 @@ import { Link } from '@chakra-ui/react'
 
 const LivestreamScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: LiveScrollerProps) => {
 
-    let slides = items?.map((post, i) => {
-        return (<SwiperSlide key={`Slide-${i}`}>
+    let slides = items?.map(post => {
+        return (<SwiperSlide key={`slide-${post.id}-livestream`}>
             <LivestreamPostCard
+                id={post.id}
                 postTitle={post.postTitle}
                 postUrl={post.postUrl}
                 coverImage={post.coverImage}
@@ -33,4 +34,4 @@ const LivestreamScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Li
     </>)
 }
 
-export { LivestreamScroller } 
+export { LivestreamScroller }

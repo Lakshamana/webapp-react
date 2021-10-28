@@ -1,5 +1,6 @@
 import { colors } from "./colors";
 import * as metrics from "./metrics";
+import { sizes } from "./sizes";
 import {
   globalStyles,
   fonts,
@@ -7,10 +8,9 @@ import {
   breakpointKeys,
 } from "./globalStyles";
 
-const theme = { 
-  dark: colors, 
-  light: colors, 
-  ...metrics
+const theme = {
+  colors,
+  ...metrics,
 };
 
 export {
@@ -21,4 +21,5 @@ export {
   breakpoints,
   breakpointKeys,
   fonts,
+  sizes
 };

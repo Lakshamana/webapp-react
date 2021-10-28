@@ -55,5 +55,5 @@ export const initialState: any = {
   selected: "",
   openMenu: false,
   openSearch: false,
-  channel: "",
+  channel: CHANNELS[0],
 };

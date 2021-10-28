@@ -1,16 +1,16 @@
 import styled from "styled-components";
-import { breakpoints } from 'styles';
+import { breakpoints, sizes } from 'styles';
 import { StyleContainer } from "components";
 
 export const BoxFooter = styled(StyleContainer)`
-    height: 108px;
+    height: ${sizes.footerDesktopHeight};
     background-color: black;
     bottom: 0;
     left: 0;
     right: 0;
 
     @media screen and (max-width: ${breakpoints.md}) {
-        height: 210px;
+        height: ${sizes.footerMobileHeight};
     }
 `;
 
