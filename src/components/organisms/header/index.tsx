@@ -76,7 +76,12 @@ const HeaderComponent = () => {
           )}
         </Container>
         {!state.openSearch ? (
-          <Container ml={2} display={["none", "none", "flex"]}>
+          <Container
+            flex={1}
+            ml={2}
+            alignItems="center"
+            display={["none", "none", "flex"]}
+          >
             <Tabs
               data={MENUTABS}
               selected={state.selected}
@@ -88,7 +93,7 @@ const HeaderComponent = () => {
         ) : (
           <></>
         )}
-        <Container alignItems="center" flex={1}>
+        <Container alignItems="center" flex={state.openSearch ? 1 : "none"}>
           <SearchBar
             data={searchValues}
             open={state.openSearch}
