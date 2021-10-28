@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { StyleContainer } from "components";
-import { breakpoints } from 'styles';
+import { breakpoints, sizes } from 'styles';
 
 export const BoxHeader = styled(StyleContainer)`
-    height: 100px;
+    height: ${sizes.headerDesktopHeight};
     background-color: black;
     display: flex;
 
     @media screen and (max-width: ${breakpoints.md}) {
-        min-height: 72px;
+        min-height: ${sizes.headerMobileHeight};
     }
 `;
 

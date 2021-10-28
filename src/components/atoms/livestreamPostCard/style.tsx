@@ -10,7 +10,7 @@ export const PostContent = styled.div<LivePostProps>`
 	position: relative;
 	border-radius: 4px;
 	cursor: pointer;
-	${(props: LivePostProps) => `background: url(${props.coverImage});`}
+	${(props: LivePostProps) => `background: url('${props.coverImage}');`}
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;

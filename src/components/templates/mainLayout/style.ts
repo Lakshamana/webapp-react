@@ -1,14 +1,16 @@
-import styled from "styled-components";
-import { StyleContainer } from "components";
+import styled from "styled-components"
+import { StyleContainer } from "components"
 
 export const ChildContainer = styled(StyleContainer)`
-  min-height: 100vh;
-`;
+	display: flex;
+	height: auto;
+`
 
 export const LayoutContainer = styled(StyleContainer)`
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-`;
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: 100vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+`

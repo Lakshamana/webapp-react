@@ -8,9 +8,10 @@ import { Link } from '@chakra-ui/react'
 
 const CollectionScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: CollectionScrollerProps) => {
 
-    let slides = items?.map((post, i) => {
-        return (<SwiperSlide key={`Slide-${i}`}>
+    let slides = items?.map(post=> {
+        return (<SwiperSlide key={`slide-${post.id}-collection`}>
             <CollectionPostCard
+                id={post.id}
                 collectionTitle={post.collectionTitle}
                 collectionUrl={post.collectionUrl}
                 coverImage={post.coverImage}

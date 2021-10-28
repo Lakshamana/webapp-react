@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Button } from "components"
-import { Props, BillboardItemActions } from "../../types"
+import { BillboardItemActions } from "../../types"
 import { Actions } from "./style"
 
-const ActionsList = ({ actions }: Props) => {
+const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
 	const [size, setSize] = useState({
 		x: window.innerWidth,
 		y: window.innerHeight

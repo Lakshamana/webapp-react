@@ -1,5 +1,6 @@
 import { colors } from "./colors";
 import * as metrics from "./metrics";
+import { sizes } from "./sizes";
 import {
   globalStyles,
   fonts,
@@ -20,4 +21,5 @@ export {
   breakpoints,
   breakpointKeys,
   fonts,
+  sizes
 };

@@ -1,0 +1,18 @@
+[
+    {
+        "id": "123131768678678678678678678asdas",
+        "postTitle": "I am scheduling a live stream",
+        "isExclusive": true,
+        "isGeolocked": false,
+        "mediaLength": 1005,
+        "status": "SCHEDULED",
+        "coverImage": "https://d2ui6twqy19jn9.cloudfront.net/800x0/filters:format(webp):no_upscale():quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/5f88f896088a9a002e0b09f0/original"
+    },
+    {
+        "id": "12313132424asdasdad235346586789",
+        "isExclusive": false,
+        "isGeolocked": false,
+        "coverImage": "https://d2ui6twqy19jn9.cloudfront.net/800x0/filters:format(webp):no_upscale():quality(90)/com.fanhero.5c926da8e117d200047d500e/photo/607441dc404bd6002bfaf604/original",
+        "postTitle": "Ju - 2"
+    }
+]
