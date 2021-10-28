@@ -1,9 +1,9 @@
 import React from "react"
-import { Content } from "./style"
-import "./style.css"
-import { PostsProps } from "./types"
 import { Swiper } from "swiper/react"
 import SwiperCore, { Navigation, SwiperOptions } from "swiper"
+import { PostsProps } from "./types"
+import { Content } from "./style"
+import "./style.css"
 import "swiper/swiper-bundle.min.css"
 
 SwiperCore.use([Navigation])
