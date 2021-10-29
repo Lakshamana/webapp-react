@@ -10,6 +10,7 @@ import './twitch-tv.css'
 import './twitter.css'
 import './vsg.css'
 import './youtube.css'
+import './styles.css'
 
 require('@silvermine/videojs-chromecast')(videojs);
 require('videojs-vtt-thumbnails');
