@@ -11,7 +11,6 @@ import { RANDOM_ID } from "utils"
 SwiperCore.use([Navigation])
 
 const CardsScroller = ({ children, type }: PostsProps) => {
-
 	let randomId = `${type}-${RANDOM_ID()}`
 
 	SWIPPER_PARAMS["navigation"] = {
@@ -22,7 +21,7 @@ const CardsScroller = ({ children, type }: PostsProps) => {
 		<React.Fragment>
 			<Content>
 				<Swiper {...SWIPPER_PARAMS}>
-					{children}
+					<div className='swiper-wrapper'>{children}</div>
 				</Swiper>
 				<div className={`swiper-button-prev ${randomId}`} />
 				<div className={`swiper-button-next ${randomId}`} />
