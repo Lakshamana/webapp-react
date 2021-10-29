@@ -3,16 +3,15 @@
 }
 
 .pagination {
-    bottom: 16px;
+    bottom: 70px !important;
     left: 50% !important;
     transform: translateX(-50%);
     z-index: 10;
-    padding-bottom: 64px;
 }
 
 .swiper-pagination-bullet {
-    width: 80px;
-    height: 5px;
+    width: 105px;
+    height: 6px;
     padding: 0px;
     margin: 0 2px !important;
     background: #ffffff;
@@ -48,8 +47,7 @@
 
 @media screen and (max-width: 425px) {
     .pagination {
-        padding-bottom: 8px;
-        margin-bottom: -16px;
+        margin-bottom: -68px;
 
     }
 
