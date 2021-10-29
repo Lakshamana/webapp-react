@@ -2,7 +2,7 @@ import { useEffect, useState, memo } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
 import { MemoizedActionsList } from "../BillboardActions"
-import { getActions, getItems } from "../../utils"
+import { getActions, getItems } from "utils"
 import { Props, BillboardItem } from "../../types"
 import { Params } from "../../settings"
 import {

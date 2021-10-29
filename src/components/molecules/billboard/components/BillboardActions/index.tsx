@@ -29,9 +29,8 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
 					color={actions.textColor}
 					type='billboard'
 					label={actions.label}
-					width={size.x >= 768 ? 200 : 130}
-					height={size.x >= 768 ? 50 : 40}
-					marginTop={size.x >= 768 ? 25 : 15}
+					width={size.x >= 768 ? 267 : 145}
+					height={size.x >= 768 ? 54 : 40}
 					marginRight={size.x >= 768 ? 15 : 15}
 				/>
 			))}
