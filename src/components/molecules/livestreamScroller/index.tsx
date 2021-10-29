@@ -29,7 +29,7 @@ const LivestreamScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Li
                 <Text color={"#FFFFFF"} fontSize={"28px"} fontWeight={500} marginRight={"18px"} lineHeight={'34px'}>{sectionTitle || ''}</Text>
                 {hasMoreLink ? <Link color={"#0460FF"} fontSize={"20px"} fontWeight={400} textDecoration={'underline'} to={sectionUrl}>more</Link> : ''}
             </Header>
-            <CardsScroller children={slides} />
+            <CardsScroller children={slides} type='livestream' />
         </ContentScroller>
     </>)
 }
