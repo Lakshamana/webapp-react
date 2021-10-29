@@ -26,8 +26,8 @@ const OnDemandScroller = ({ items, sectionTitle, sectionUrl, hasMoreLink }: Vide
     return (<>
         <ContentScroller>
             <Header>
-                <Text color={"#FFFFFF"} fontSize={"22px"} fontWeight={500} marginRight={"18px"}>{sectionTitle || ''}</Text>
-                {hasMoreLink ? <Link color={"#0460FF"} fontSize={"16px"} fontWeight={400} textDecoration={"none"} to={sectionUrl}>mais</Link> : ''}
+                <Text color={"#FFFFFF"} fontSize={"28px"} fontWeight={500} marginRight={"18px"} lineHeight={'34px'}>{sectionTitle || ''}</Text>
+                {hasMoreLink ? <Link color={"#0460FF"} fontSize={"20px"} fontWeight={400} textDecoration={'underline'} to={sectionUrl}>more</Link> : ''}
             </Header>
             <CardsScroller children={slides} />
         </ContentScroller>
