@@ -1,5 +1,5 @@
 import { Center, Textarea, Button, Select } from '@chakra-ui/react'
-import { MainLayout, Container, VODWrapper } from "components";
+import { MainLayout, Container, VideoPlayer } from "components";
 import { useState } from 'react';
 
 const PlayerPage = () => {
@@ -66,7 +66,7 @@ const PlayerPage = () => {
         <Center flex="1" padding={5} border="0 solid red">
           <Center width={700} height={400} border="0 solid blue">
             {(config && config?.src) && (
-              <VODWrapper
+              <VideoPlayer
                 src={config?.src}
                 vttSrc={config?.vttSrc}
                 title={config?.title}

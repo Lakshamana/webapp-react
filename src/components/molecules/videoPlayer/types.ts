@@ -1,4 +1,4 @@
-export interface VODWrapperProps {
+export interface VideoPlayerProps {
   src: string; 
   title?: string | undefined;
   subtitle?: string | undefined;
