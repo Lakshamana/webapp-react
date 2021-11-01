@@ -29,5 +29,4 @@ const CardsScroller = ({ children, type }: PostsProps) => {
 		</React.Fragment>
 	)
 }
-
 export { CardsScroller }

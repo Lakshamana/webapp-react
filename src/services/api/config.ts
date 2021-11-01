@@ -1,12 +1,27 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client"
+import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client"
+import { setContext } from "@apollo/client/link/context"
 
-const API_URL = process.env.REACT_APP_API_DEV_URL
+const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL }  = process.env
+
+const httpLink = createHttpLink({
+	uri: `https://${REACT_APP_API_ENDPOINT}/graphql`
+})
+
+const authLink = setContext((_, { headers }) => {
+	const token = localStorage.getItem("token")
+	// return the headers to the context so httpLink can read them
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : "",
+			organization: REACT_APP_ORGANIZATION_URL
+		}
+	}
+})
 
 const Client = new ApolloClient({
-	uri: `https://${API_URL}/graphql`,
-	cache: new InMemoryCache(),
-	credentials: "include",
-	resolvers: {}
+	link: authLink.concat(httpLink),
+	cache: new InMemoryCache()
 })
 
 export { Client }

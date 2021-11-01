@@ -18,4 +18,6 @@ export * from "./modal";
 export * from "./table";
 export * from "./tableFooter";
 export * from "./videoJs";
+export * from "./gridCards";
 export * from "./videoPlayer";
+
