@@ -4,8 +4,6 @@ export * from "./radioGroup";
 export * from "./popover";
 export * from "./postDetails";
 export * from "./reactionBar";
-export * from "./videoLivestream";
-export * from "./videoOnDemand";
 export * from "./tab";
 export * from "./cardsScroller";
 export * from "./livestreamScroller";
@@ -22,3 +20,5 @@ export * from "./tableFooter";
 export * from "./videoJs";
 export * from "./vodWrapper";
 export * from "./gridCards";
+export * from "./videoPlayer";
+
