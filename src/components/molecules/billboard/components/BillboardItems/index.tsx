@@ -13,7 +13,8 @@ import {
 	Info,
 	InfoContent,
 	Title,
-	Description
+	Description,
+	ContentButtons
 } from "./style"
 import './style.css'
 import "swiper/swiper-bundle.min.css"
