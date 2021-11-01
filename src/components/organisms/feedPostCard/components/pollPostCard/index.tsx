@@ -25,7 +25,7 @@ const PollPost = ({ ...props }: Props) => (
 				alignItems={"center"}
 				gridGap={1}>
 				{props.winning ? (
-					<Icon width={14} icon='mdi:check' color={`${colors.blue["300"]}`} />
+					<Icon width={14} icon='mdi:check' color={colors.blue["300"]} />
 				) : (
 					""
 				)}
@@ -35,7 +35,7 @@ const PollPost = ({ ...props }: Props) => (
 		<PollStatus {...props}>
 			<Flex
 				fontSize={14}
-				color={`${colors.grey["700"]}`}
+				color={colors.grey["700"]}
 				alignItems={"center"}
 				gridGap={1}>
 				<Icon width={14} icon='mdi:check' />
@@ -46,11 +46,11 @@ const PollPost = ({ ...props }: Props) => (
 				height={4}
 				ml={2}
 				mr={2}
-				color={`${colors.grey["700"]}`}
+				color={colors.grey["700"]}
 			/>
 			<Flex
 				fontSize={14}
-				color={`${colors.grey["700"]}`}
+				color={colors.grey["700"]}
 				alignItems={"center"}
 				gridGap={1}>
 				<Icon width={14} icon='mdi:clock-time-four-outline' />
