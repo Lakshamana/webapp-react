@@ -52,7 +52,33 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 							<InfoContent>
 								<Title>{items.title}</Title>
 								<Description>{items.description}</Description>
-								<MemoizedActionsList actions={getActions(items?.actions)} />
+								{customButtons ? (
+									<MemoizedActionsList actions={getActions(items?.actions)} />
+								) : (
+									<ContentButtons>
+										<Button
+											backgroundColor={`${colors.blue["300"]}`}
+											borderColor={`${colors.blue["300"]}`}
+											iconName={"play"}
+											color={`${colors.white}`}
+											type='billboard'
+											label={"Watch Now"}
+											width={size.x >= 768 ? 267 : 145}
+											height={size.x >= 768 ? 54 : 40}
+											marginRight={size.x >= 768 ? 15 : 15}
+										/>
+										<Button
+											backgroundColor={`${colors.grey["800"]}`}
+											borderColor={`${colors.grey["800"]}`}
+											iconName={"plus-circle"}
+											color={`${colors.white}`}
+											type='billboard'
+											label={"My List"}
+											width={size.x >= 768 ? 267 : 145}
+											height={size.x >= 768 ? 54 : 40}
+										/>
+									</ContentButtons>
+								)}
 							</InfoContent>
 						</Info>
 					</BillboardItems>
