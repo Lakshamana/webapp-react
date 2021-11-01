@@ -2,10 +2,6 @@ import { SwiperOptions } from "swiper"
 
 export const SWIPPER_PARAMS: SwiperOptions = {
 	spaceBetween: 10,
-	navigation: {
-		prevEl: ".swiper-button-prev",
-		nextEl: ".swiper-button-next"
-	},
 	speed: 800,
 	setWrapperSize: true,
 	roundLengths: false,
@@ -17,6 +13,7 @@ export const SWIPPER_PARAMS: SwiperOptions = {
 	preventClicks: false,
 	freeModeMomentumBounce: false,
 	slidesOffsetAfter: 0,
+	loop: false,
 	breakpoints: {
 		1440: {
 			slidesPerView: 5
@@ -31,7 +28,7 @@ export const SWIPPER_PARAMS: SwiperOptions = {
 			slidesPerView: 2
 		},
 		320: {
-			slidesPerView: 1
+			slidesPerView: 2
 		}
 	}
 }

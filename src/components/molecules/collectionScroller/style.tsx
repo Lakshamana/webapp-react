@@ -4,8 +4,7 @@ export const Header: any = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-    padding-left: 20px;
-    align-items: baseline;
+    align-items: flex-start;
 `;
 
 export const ContentScroller: any = styled.div`

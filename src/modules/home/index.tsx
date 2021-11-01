@@ -7,13 +7,13 @@ import collectionsData from "./collections.json"
 import onDemandData from "./onDemand.json"
 
 const HomePage = () => (
-  <MainLayout>
+  <MainLayout backgroundColor='#0F0F0F'>
     <Container flexDirection={"column"} display={"flex"}>
       <BillboardScroller items={billboardData}></BillboardScroller>
-      <Flex pb={10} gridGap={10} flexDirection={"column"}>
-        <LivestreamScroller items={liveStreamsData} sectionTitle={'Ao vivo'}></LivestreamScroller>
-        <OnDemandScroller items={onDemandData} sectionTitle={'Destaques'}></OnDemandScroller>
-        <CollectionScroller items={collectionsData} sectionTitle={'Categorias'}></CollectionScroller>
+      <Flex pb={10} pl={65} gridGap={10} flexDirection={"column"}>
+        <LivestreamScroller items={liveStreamsData} sectionTitle={'Live'} hasMoreLink={true}></LivestreamScroller>
+        <OnDemandScroller items={onDemandData} sectionTitle={'Most Recents'} hasMoreLink={true}></OnDemandScroller>
+        <CollectionScroller items={collectionsData} sectionTitle={'Popular'} hasMoreLink={true}></CollectionScroller>
       </Flex>
     </Container>
   </MainLayout>

@@ -1,4 +1,4 @@
-export interface VODWrapperProps {
+export interface VideoPlayerProps {
   src: string; 
   title?: string | undefined;
   subtitle?: string | undefined;
@@ -6,4 +6,5 @@ export interface VODWrapperProps {
   overlays?: Array<Object> | undefined;
   muxConfig?: Object | undefined;
   options?: Object | undefined;
+  skin?: string | undefined;
 }
