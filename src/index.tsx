@@ -8,7 +8,7 @@ import { Integrations } from "@sentry/tracing";
 import { Client } from "services/api"
 import { ApolloProvider } from "@apollo/client";
 import "./config/firebase";
-import "./translate";
+import "./config/i18n";
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
