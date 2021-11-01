@@ -22,7 +22,7 @@ import "swiper/swiper-bundle.min.css"
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
-const SwiperSlideList = ({ items }: Props) => {
+const SwiperSlideList = ({ items, customButtons }: Props) => {
 	const [size, setSize] = useState({
 		x: window.innerWidth,
 		y: window.innerHeight
