@@ -15,18 +15,19 @@ import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 
 import 'videojs-mux'
 
-import { VODWrapperProps } from './types'
+import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
 
-const VODWrapper = ({ 
+const VideoPlayer = ({ 
   src, 
   title, 
   subtitle, 
   vttSrc, 
   overlays, 
   muxConfig, 
+  skin,
   options 
-}: VODWrapperProps): ReactElement => {
+}: VideoPlayerProps): ReactElement => {
 
   const playerRef = useRef(null);
 
@@ -61,8 +62,10 @@ const VODWrapper = ({
   };
 
   return (
-    src ? <VideoJS options={{...defaultOptions, ...options}} onReady={handlePlayerReady} /> : <></>
+    src
+      ? <VideoJS options={{...defaultOptions, ...options}} skin={skin} onReady={handlePlayerReady} />
+      : <></>
   );
 }
 
-export { VODWrapper }
+export { VideoPlayer }

@@ -1,16 +1,16 @@
 import { Box } from '@chakra-ui/react'
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { VODWrapper } from 'components';
+import { VideoPlayer } from 'components';
 
 export default {
-  title: 'WEBAPP/VODWrapper',
-  component: VODWrapper,
-} as ComponentMeta<typeof VODWrapper>;
+  title: 'WEBAPP/VideoPlayer',
+  component: VideoPlayer,
+} as ComponentMeta<typeof VideoPlayer>;
 
-const Template: ComponentStory<typeof VODWrapper> = (args) => 
+const Template: ComponentStory<typeof VideoPlayer> = (args) => 
   <Box width={800} height={600}>
-    <VODWrapper {...args} />
+    <VideoPlayer {...args} />
   </Box>;
 
 const muxConfig = {
