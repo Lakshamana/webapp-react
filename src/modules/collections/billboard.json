@@ -1,0 +1,20 @@
+[
+	{
+		"id": "123131sdasdas",
+		"banner": "https://ecdd.infnet.edu.br/wp-content/uploads/sites/7/2021/05/cadeira-diretor-filme.jpg",
+		"cover": "https://ecdd.infnet.edu.br/wp-content/uploads/sites/7/2021/05/cadeira-diretor-filme.jpg",
+		"delay": 10000,
+		"description": "Premise. In the distant future, following a plague, almost all of the human race have lost the sense of sight, so society has had to find new ways to interact, build, hunt, and survive.",
+		"title": "Collection Home Screen",
+		"infoColor": "#ffffff"
+	},
+	{
+		"id": "123131sdasdas",
+		"banner": "https://wallpapercrafter.com/desktop/62012-the-100-tv-shows.jpg",
+		"cover": "https://wallpapercrafter.com/desktop/62012-the-100-tv-shows.jpg",
+		"delay": 10000,
+		"description": "Premise. In the distant future, following a plague, almost all of the human race have lost the sense of sight, so society has had to find new ways to interact, build, hunt, and survive.",
+		"title": "Single Channel",
+		"infoColor": "#ffffff"
+	}
+]
