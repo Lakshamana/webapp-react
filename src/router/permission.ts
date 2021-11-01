@@ -4,5 +4,6 @@ export const permission = {
   login: true,
   livechat: true,
   mylist: true,
-  home: true
+  home: true,
+  tags: true
 };
