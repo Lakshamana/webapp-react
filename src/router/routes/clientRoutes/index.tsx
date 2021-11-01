@@ -38,7 +38,7 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.mylist}
       path="/mylist"
       component={MyListPage}
-      fallback={DashboardPage}
+      fallback={HomePage}
     />
     <ClientRoute isAccesible={isAccesible?.login} path="/" component={LoginPage} />
   </Switch>
