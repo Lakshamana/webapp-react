@@ -16,6 +16,7 @@ import {
 	Description,
 	ContentButtons
 } from "./style"
+import { colors } from 'styles'
 import './style.css'
 import "swiper/swiper-bundle.min.css"
 
