@@ -1,26 +1,73 @@
 import React from "react";
-import { Text } from "components/atoms";
+import { Container, Text } from "components/atoms";
 
-import { VideoRelatedMain, ImageContainer, InfoContainer } from "./style";
+import {
+  VideoRelatedMain,
+  ImageContainer,
+  Image,
+  InfoContainer,
+  Icon,
+} from "./style";
 import { Props } from "./types";
+import { Switch } from "@chakra-ui/react";
 
 const VideoRelated = ({
-  title = "",
-  description = "",
-  urlImage = "",
+  options = [],
+  onAutoplay = () => {},
+  onSelect = () => {},
+  initialAutoplayValue = false,
 }: Props) => {
   return (
-    <VideoRelatedMain height={[136]} width={[450]} flexDirection={["row"]}>
-      <ImageContainer></ImageContainer>
-      <InfoContainer justifyContent="center" alignItems="center">
-        <Text fontWeight="bold" fontSize={20}>
-          {title}
+    <Container display="flex" flexDirection="column" pl={24} pt={16}>
+      <Container display="flex" flexDirection="column" pl={16}>
+        <Text
+          fontSize={22}
+          fontWeight="bold"
+          fontFamily="Helvetica Neue"
+          mb="8px"
+        >
+          Videos related
         </Text>
-        <Text fontWeight="200" fontSize={14}>
-          {description}
-        </Text>
-      </InfoContainer>
-    </VideoRelatedMain>
+        <Container
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          mb="16px"
+        >
+          <Switch
+            onChange={(ev) => onAutoplay(ev)}
+            defaultChecked={initialAutoplayValue}
+          />
+          <Text fontSize={16} fontWeight="normal" ml={[24]}>
+            Autoplay next video
+          </Text>
+        </Container>
+      </Container>
+
+      {options.map((el, i) => (
+        <VideoRelatedMain
+          height={[160]}
+          width={[550]}
+          flexDirection={["row"]}
+          key={`videoRelated_key_${i}`}
+          onClick={() => onSelect(el)}
+        >
+          <ImageContainer>
+            <Image backgroundUrl={el.urlImage}>
+              <Icon icon="codicon:play-circle" />
+            </Image>
+          </ImageContainer>
+          <InfoContainer justifyContent="center" alignItems="center" p={[16]}>
+            <Text fontWeight="bold" fontSize={20}>
+              {el.title}
+            </Text>
+            <Text fontWeight="200" fontSize={14}>
+              {el.description}
+            </Text>
+          </InfoContainer>
+        </VideoRelatedMain>
+      ))}
+    </Container>
   );
 };
 
