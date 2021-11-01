@@ -912,7 +912,7 @@ export type CreateAccountMutationVariables = Exact<{
 export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename?: 'Account', _id: string, display_name?: Maybe<string>, email: string, first_name?: Maybe<string>, last_name?: Maybe<string>, status?: Maybe<string>, username?: Maybe<string> } };
 
 export type SigninMutationVariables = Exact<{
-  signInSignIn: SignInInput;
+  signIn: SignInInput;
 }>;
 
 
@@ -972,8 +972,8 @@ export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccount
 export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
 export const SigninDocument = gql`
-    mutation Signin($signInSignIn: SignInInput!) {
-  signIn(signIn: $signInSignIn) {
+    mutation Signin($signIn: SignInInput!) {
+  signIn(signIn: $signIn) {
     accessToken
   }
 }
@@ -999,7 +999,7 @@ export type SigninComponentProps = Omit<ApolloReactComponents.MutationComponentO
  * @example
  * const [signinMutation, { data, loading, error }] = useSigninMutation({
  *   variables: {
- *      signInSignIn: // value for 'signInSignIn'
+ *      signIn: // value for 'signIn'
  *   },
  * });
  */
