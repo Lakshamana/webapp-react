@@ -22,6 +22,7 @@ const MyListPage = () => {
 					sm={1}
 					ssm={1}>
 					<CollectionPostCard
+						id='656321515'
 						coverImage='https://portalfamosos.com.br/wp-content/uploads/2021/04/coldplay-high-power-novo-single-max-martin-destaque-portal-famosos.png'
 						isGeolocked={true}
 					/>
@@ -43,6 +44,7 @@ const MyListPage = () => {
 					sm={1}
 					ssm={1}>
 					<VideoPostCard
+						id='45645646464646'
 						coverImage='https://adnews.com.br/wp-content/uploads/2021/07/HBO-Max-desconto.jpg'
 					/>
 				</GridCards>
