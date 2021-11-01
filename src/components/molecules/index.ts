@@ -21,3 +21,4 @@ export * from "./table";
 export * from "./tableFooter";
 export * from "./videoJs";
 export * from "./vodWrapper";
+export * from "./videoRelated";
