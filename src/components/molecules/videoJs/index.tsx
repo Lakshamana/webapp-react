@@ -1,6 +1,17 @@
 import React, { ReactElement } from "react";
 import videojs from "video.js";
-import "video.js/dist/video-js.css";
+import "video.js/dist/video-js.css"
+
+import './facebook.css'
+import './magnified.css'
+import './rotten-tomatoes.css'
+import './sunrise.css'
+import './techskin.css'
+import './twitch-tv.css'
+import './twitter.css'
+import './vsg.css'
+import './youtube.css'
+import './styles.css'
 
 require('@silvermine/videojs-chromecast')(videojs);
 require('videojs-vtt-thumbnails');
@@ -42,9 +53,11 @@ export const VideoJS = ( props: any ): ReactElement => {
     };
   }, []);
 
+  const classes = `video-js ${props?.skin || 'vjs-default-skin'} vjs-big-play-centered`
+
   return (
     <div data-vjs-player>
-      <video ref={videoRef} className="video-js vjs-big-play-centered" />
+      <video ref={videoRef} className={classes} />
     </div>
   );
 }
