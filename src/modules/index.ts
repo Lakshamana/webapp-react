@@ -5,4 +5,4 @@ export * from "./livechat";
 export * from "./signup";
 export * from "./mylist";
 export * from "./player";
-
+export * from "./tags";
