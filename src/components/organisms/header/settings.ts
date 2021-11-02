@@ -1,7 +1,7 @@
 import { Channel } from "./types";
 
 export const MENUTABS = [
-  { id: "home", label: "home", url: "/" },
+  { id: "home", label: "home", url: "/home" },
   { id: "live", label: "live", url: "/" },
   { id: "feed", label: "feed", url: "/" },
   { id: "collections", label: "collections", url: "/collections" },
