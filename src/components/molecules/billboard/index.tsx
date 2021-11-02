@@ -2,11 +2,11 @@ import { MemoizedSwiperSlideList } from "./components/BillboardItems"
 import { Props } from "./types"
 import { BillboardWrapper, Billboard } from "./style"
 
-const BillboardScroller = ({ items }: Props) => {
+const BillboardScroller = ({ items, customButtons }: Props) => {
 	return (
 		<BillboardWrapper>
 			<Billboard>
-				<MemoizedSwiperSlideList items={items} />
+				<MemoizedSwiperSlideList items={items} customButtons={customButtons}/>
 			</Billboard>
 		</BillboardWrapper>
 	)

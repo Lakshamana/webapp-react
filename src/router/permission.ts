@@ -3,7 +3,8 @@ export const permission = {
   user: true,
   login: true,
   livechat: true,
-  mylist: true,
   home: true,
+  collections: true,
+  mylist: true,
   tags: true
 };

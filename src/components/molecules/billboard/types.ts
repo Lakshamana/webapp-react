@@ -22,6 +22,7 @@ export interface BillboardItemActions extends ButtonProps {
 
 export interface Props {
     items?: Array<BillboardItem>,
+    customButtons: boolean
 }
 
 

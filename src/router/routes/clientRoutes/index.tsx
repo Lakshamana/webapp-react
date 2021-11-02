@@ -1,7 +1,7 @@
 import { Switch } from "react-router-dom";
 
 import { ClientRoute } from "../../components";
-import { HomePage, LoginPage, LiveChat, User, SignupPage, PlayerPage, MyListPage, TagPage } from "modules";
+import { HomePage, LoginPage, LiveChat, User, SignupPage, CollectionsPage, PlayerPage, MyListPage, TagPage } from "modules";
 
 const ClientRoutes = ({ isAccesible }: any) => (
   <Switch>

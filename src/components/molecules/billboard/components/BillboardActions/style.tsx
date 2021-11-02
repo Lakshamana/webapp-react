@@ -4,9 +4,10 @@ import { breakpoints } from 'styles';
 export const Actions: any = styled.div`
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
 
     @media screen and (max-width: ${breakpoints.md}) {
-        justify-content: flex-start;
+        justify-content: center;
         margin-right: 5px;
         margin-left: 5px;
     }
