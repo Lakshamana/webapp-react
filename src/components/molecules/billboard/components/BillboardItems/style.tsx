@@ -63,12 +63,12 @@ export const Info: any = styled.div`
 	align-items: center;
 
 	@media screen and (max-width: ${breakpoints.md}) {
-		text-align: flex-start;
+		text-align: center;
 		width: 100%;
 		padding: 0 45px;
-		top: 180px;
+		top: 375px;
 		bottom: 0;
-		align-items: flex-end;
+		align-items: center;
 		padding-bottom: 34px;
 		height: 300px;
 	}
@@ -93,8 +93,8 @@ export const Title: any = styled.div`
 	font-weight: 700;
 	font-size: 115px;
 	line-height: 120px;
-    text-transform: uppercase;
-    max-width: 850px;
+  text-transform: uppercase;
+  max-width: 870px;
 	margin: 0px 0px 30px;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
@@ -104,12 +104,13 @@ export const Title: any = styled.div`
 	@media screen and (max-width: ${breakpoints.lg}) {
 		font-size: 90px;
 		line-height: 80px;
-        max-width: 500px;
+    max-width: 500px;
 	}
 
 	@media screen and (max-width: ${breakpoints.md}) {
 		font-size: 65px;
-        line-height: 50px;
+    line-height: 50px;
+		max-width: 100%;
 	}
 
 	@media screen and (max-width: ${breakpoints.sm}) {
@@ -132,7 +133,7 @@ export const Description: any = styled.div`
 	@media screen and (max-width: ${breakpoints.md}) {
 		font-size: 19px;
 		line-height: 25px;
-		max-width: 500px;
+		max-width: 100%;
 	}
 
 	@media screen and (max-width: ${breakpoints.sm}) {
@@ -141,5 +142,13 @@ export const Description: any = styled.div`
 		max-width: 100%;
 		margin-bottom: 16px;
 		-webkit-line-clamp: 2;
+	}
+`
+export const ContentButtons = styled.div`
+	display: flex;
+	justify-content: flex-start;
+
+	@media screen and (max-width: ${breakpoints.md}) {
+		justify-content: center;
 	}
 `

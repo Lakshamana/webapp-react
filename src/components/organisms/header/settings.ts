@@ -4,7 +4,7 @@ export const MENUTABS = [
   { id: "home", label: "home", url: "/" },
   { id: "live", label: "live", url: "/" },
   { id: "feed", label: "feed", url: "/" },
-  { id: "collections", label: "collections", url: "/" },
+  { id: "collections", label: "collections", url: "/collections" },
   { id: "list", label: "my list", url: "/mylist" },
   { id: "settings", label: "settings", url: "/" },
   { id: "tools", label: "tools", url: "/" },
