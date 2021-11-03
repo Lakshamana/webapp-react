@@ -1,10 +1,11 @@
 import React from "react"
+import { Link } from "@chakra-ui/react" 
+import { useTranslation } from "react-i18next"
 import { CardsScroller } from "components"
 import { CollectionList } from "./collectionItems"
+import { Text } from "components"
 import { CollectionScrollerProps } from "./types"
 import { Header, ContentScroller } from "./style"
-import { Text } from "components"
-import { Link } from "@chakra-ui/react"
 
 const CollectionScroller = ({
 	items,
@@ -12,6 +13,9 @@ const CollectionScroller = ({
 	sectionUrl,
 	hasMoreLink
 }: CollectionScrollerProps) => {
+
+	const { t } = useTranslation()
+
 	return (
 		<ContentScroller>
 			<Header>
@@ -30,7 +34,7 @@ const CollectionScroller = ({
 						fontWeight={400}
 						textDecoration={"underline"}
 						to={sectionUrl}>
-						more
+						{t("common.more")}
 					</Link>
 				) : (
 					""
