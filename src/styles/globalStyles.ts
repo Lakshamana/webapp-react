@@ -1,58 +1,43 @@
 export const breakpoints = {
-  ssm: "320px",
-  sm: "425px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1440px",
-};
+	ssm: "320px",
+	sm: "425px",
+	md: "768px",
+	lg: "1024px",
+	xl: "1440px"
+}
 
 export const breakpointKeys = {
-  "mobile-small": "ssm",
-  "mobile-large": "sm",
-  tablet: "md",
-  "desktop-small": "lg",
-  desktop: "xl",
-};
+	"mobile-small": "ssm",
+	"mobile-large": "sm",
+	tablet: "md",
+	"desktop-small": "lg",
+	desktop: "xl"
+}
 
 export const fonts = {
-  light: "Helvetica Neue Light",
-  body: "Helvetica Neue",
-  regular: "Helvetica Neue",
-  medium: "Helvetica Neue",
-  bold: "Helvetica Neue Bold",
-  black: "Helvetica Neue Black",
-};
+	light: "FreeSans Regular, sans-serif",
+	body: "FreeSans Regular, sans-serif",
+	regular: "FreeSans Regular, sans-serif",
+	medium: "FreeSans Regular, sans-serif",
+	bold: "FreeSans Bold, sans-serif",
+	black: "FreeSans Bold, sans-serif"
+}
 
 export const globalStyles = `
 
 @font-face {
-  font-family: 'Helvetica Neue Light';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Helvetica Neue Light'), url('./assets/fonts/HelveticaNeueUltraLight.ttf') format('truetype');
+  font-family: 'FreeSans Regular';
+  src: url('/fonts/FreeSans.ttf') format('truetype');
+       url('/fonts/FreeSans.woff') format('woff');
+       url('/fonts/FreeSans.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Helvetica Neue';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Helvetica Neue'), url('./assets/fonts/HelveticaNeueMedium.ttf') format('truetype');
+  font-family: 'FreeSans Bold, sans-serif';
+  src: url('/fonts/FreeSansBold.ttf') format('truetype');
+       url('/fonts/FreeSansBold.woff') format('woff');
+       url('/fonts/FreeSansBold.woff2') format('woff2');
 }
-
-@font-face {
-  font-family: 'Helvetica Neue Bold';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Helvetica Neue Bold'), url('./assets/fonts/HelveticaNeueMedium.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Helvetica Neue Black';
-  font-style: normal;
-  font-weight: 900;
-  src: local('Helvetica Neue Black'), url('./assets/fonts/HelveticaNeueMedium.ttf') format('truetype');
-}
-
 
 html {
   height: 100%;
