@@ -1,6 +1,7 @@
 import { useEffect, useState, memo } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
+import { useTranslation } from "react-i18next"
 import { Button } from "components"
 import { MemoizedActionsList } from "../BillboardActions"
 import { getActions, getItems } from "utils"
@@ -37,6 +38,8 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 
 	useEffect(() => (window.onresize = getSize), [])
 
+	const { t } = useTranslation()
+
 	return (
 		<Swiper {...Params} style={{ position: "relative", height: "100%"}}>
 			{getItems(items).map((items: BillboardItem, i: number) => (
@@ -62,7 +65,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 											iconName={"play"}
 											color={`${colors.white}`}
 											type='billboard'
-											label={"Watch Now"}
+											label={t("page.collection.watch_now")}
 											width={size.x >= 768 ? 267 : 145}
 											height={size.x >= 768 ? 54 : 40}
 											marginRight={size.x >= 768 ? 15 : 15}
@@ -73,7 +76,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 											iconName={"plus-circle"}
 											color={`${colors.white}`}
 											type='billboard'
-											label={"My List"}
+											label={t("page.collection.my_list")}
 											width={size.x >= 768 ? 267 : 145}
 											height={size.x >= 768 ? 54 : 40}
 										/>
