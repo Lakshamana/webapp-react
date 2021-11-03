@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { Power, Settings, User, Sun, Moon } from "react-feather";
-import { useColorMode } from "@chakra-ui/color-mode";
 import { Container, Text, Popover } from "components";
 import { PopoverOption } from "..";
 
 import { PropsUserInfo } from "../../types";
 import { UserContainer, CircleImage, OptionsList } from "./styles";
-import { colors } from "styles";
+import { useThemeStore } from "services/stores/theme";
 
 const UserInfo = ({ user }: PropsUserInfo) => {
   const [open, setOpen] = useState(false);
-  const { colorMode, toggleColorMode } = useColorMode()
+  const { colorMode, toggleColorMode } = useThemeStore()
 
   return (
     <Container display={["none", "none", "none", "flex"]}>
@@ -20,12 +19,12 @@ const UserInfo = ({ user }: PropsUserInfo) => {
           onOpen: () => setOpen(true),
           onClose: () => setOpen(false),
         }}
-        background={colors.backgroundLayout}
+        background="backgroundLayout"
         trigger={
           <button>
             <UserContainer px={1}>
               <Container mx={2} maxWidth={["150px"]}>
-                <Text ellipsis color={colors.white}>
+                <Text ellipsis color="white">
                   {user?.name || ""}
                 </Text>
               </Container>
@@ -41,26 +40,26 @@ const UserInfo = ({ user }: PropsUserInfo) => {
             <PopoverOption
               text="Editar Perfil"
               onClick={() => {}}
-              icon={<User color={colors.white} width={18} height={18} />}
+              icon={<User color="white" width={18} height={18} />}
             />
             <PopoverOption
               text={`${colorMode === 'dark' ? 'Desativar' : 'Ativar'} modo escuro`}
               onClick={toggleColorMode}
               icon={
                 colorMode === 'dark'
-                  ? <Sun color={colors.white} width={18} height={18} /> 
-                  : <Moon color={colors.white} width={18} height={18} />
+                  ? <Sun color="white" width={18} height={18} /> 
+                  : <Moon color="white" width={18} height={18} />
               }
             />
             <PopoverOption
               text="Ajustes"
               onClick={() => {}}
-              icon={<Settings color={colors.white} width={18} height={18} />}
+              icon={<Settings color="white" width={18} height={18} />}
             />
             <PopoverOption
               onClick={() => {}}
               text="Sair"
-              icon={<Power color={colors.white} width={18} height={18} />}
+              icon={<Power color="white" width={18} height={18} />}
             />
           </OptionsList>
         </Container>
