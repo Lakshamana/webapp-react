@@ -1,5 +1,6 @@
 import { MoreHorizontal } from "react-feather"
 import { Menu, MenuButton } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 import { Text, ReactionBar, Participants } from "components"
 import { SetMediaType } from "./components"
 import { Props, defaultProps } from "./types"
@@ -17,6 +18,7 @@ import {
 } from "./style"
 
 const FeedPostCard = ({ ...props }: Props) => {
+	const { t } = useTranslation()
 	return (
 		<FeedContent>
 			<CardContent>
@@ -50,7 +52,7 @@ const FeedPostCard = ({ ...props }: Props) => {
 						]}
 					/>
 					<CountMessage marginLeft={"auto"} fontSize={15}>
-						{abbreviateNumber(props.countMessages)} messages
+						{abbreviateNumber(props.countMessages)} {t("common.messages")}
 					</CountMessage>
 				</CardFooter>
 			</CardContent>
