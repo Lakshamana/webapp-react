@@ -43,7 +43,7 @@ const InputWrapper = ({
       //Waiting the other icon to put here (Iuri Design)
       return showPassword ? (
         <Icon
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: '#aaa' }}
           icon="akar-icons:eye-open"
           width="42"
           height="42"
@@ -51,19 +51,17 @@ const InputWrapper = ({
             setShowPassword(!showPassword);
             onChangeShowPassword(!showPassword);
           }}
-          color="#aaa"
         />
       ) : (
         <Icon
           icon="akar-icons:eye-slashed"
           width="42"
           height="42"
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: '#aaa' }}
           onClick={() => {
             setShowPassword(!showPassword);
             onChangeShowPassword(!showPassword);
           }}
-          color="#aaa"
         />
       );
     }
