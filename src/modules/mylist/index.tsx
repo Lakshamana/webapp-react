@@ -1,4 +1,5 @@
 import { Divider } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 import {
 	MainLayout,
 	Container,
@@ -9,11 +10,12 @@ import {
 import { colors } from 'styles'
 
 const MyListPage = () => {
+	const { t } = useTranslation()
 	return (
 		<MainLayout>
 			<Container flexDirection={"column"} py={30} px={100} width={"100%"}>
 				<GridCards
-					headerTitle='My list'
+					headerTitle={t("page.my_list.my_list")}
 					rowGap={24}
 					columnGap={16}
 					xl={4}
@@ -35,7 +37,7 @@ const MyListPage = () => {
 					color={`${colors.grey["800"]}`}
 				/>
 				<GridCards
-					headerTitle='Collection'
+					headerTitle={t("page.my_list.collection")}
 					rowGap={8}
 					columnGap={8}
 					xl={4}

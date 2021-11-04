@@ -1,8 +1,9 @@
 import React from "react"
 import { Link } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 import { CardsScroller } from "components"
-import { OndemandList } from "./ondemandItems"
 import { Text } from "components"
+import { OndemandList } from "./ondemandItems"
 import { VideoScrollerProps } from "./types"
 import { Header, ContentScroller } from "./styles"
 
@@ -12,6 +13,9 @@ const OnDemandScroller = ({
 	sectionUrl,
 	hasMoreLink
 }: VideoScrollerProps) => {
+
+	const { t } = useTranslation()
+
 	return (
 		<>
 			<ContentScroller>
@@ -31,7 +35,7 @@ const OnDemandScroller = ({
 							fontWeight={400}
 							textDecoration={"underline"}
 							to={sectionUrl}>
-							more
+							{t("common.more")}
 						</Link>
 					) : (
 						""
