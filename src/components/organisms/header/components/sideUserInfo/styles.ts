@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { layout, LayoutProps } from "styled-system";
 import { StyleContainer } from "components";
 import { colors } from "styles";
 
