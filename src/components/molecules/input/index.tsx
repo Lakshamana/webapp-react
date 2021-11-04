@@ -22,6 +22,7 @@ const Input = ({
       color="white"
       placeholderColor="#F2FFF8"
       onChangeShowPassword={setShowPassword}
+      onEnterPress={() => onEnterPress()}
     >
       <InputInline
         {...{ onChange, value, error, placeholder }}
