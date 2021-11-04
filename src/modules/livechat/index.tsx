@@ -63,7 +63,7 @@ const LiveChat = () => {
             }}
             onPressIcon={() => {}}
           />
-
+          
         </Container>
       </Container>
       <Container flexDirection={["column"]} ml={64} mb={32}>
@@ -79,3 +79,6 @@ const LiveChat = () => {
       </Container>
     </MainLayout>
   );
+};
+
+export { LiveChat };
