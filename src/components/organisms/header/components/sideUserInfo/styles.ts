@@ -14,3 +14,8 @@ export const SettingsContainer = styled(StyleContainer)`
   border-radius: 50%;
   background-color: ${colors.white};
 `;
+
+export const CircleImage = styled.img<LayoutProps>`
+  ${layout}
+  border-radius: 50%;
+`;
