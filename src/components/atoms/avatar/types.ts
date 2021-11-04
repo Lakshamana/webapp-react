@@ -1,8 +1,10 @@
 import { LayoutProps } from "styled-system";
 
 export interface Props {
-  src?: string;
+  icon?: string;
   size?: string;
+  colorIcon?: string;
+  backgroundAvatar?: string;
 }
 export interface AvatarSize {
   small?: number;
@@ -11,9 +13,12 @@ export interface AvatarSize {
   index?: string;
 }
 
-export interface PropsStyle extends LayoutProps {}
+export interface StyledProps extends LayoutProps {
+  background?: string;
+}
 
 export const defaultProps = {
   size: "large",
-  src: "",
+  icon: "ant-design:user-outlined",
+  colorIcon: "#000",
 };
