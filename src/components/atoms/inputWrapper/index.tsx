@@ -106,6 +106,7 @@ const InputWrapper = ({
         minHeight={height || 56}
         error={error}
         background={background}
+        borderRadius={4}
       >
         {renderLeftIcon()}
         {children}
