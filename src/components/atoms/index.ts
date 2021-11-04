@@ -21,4 +21,5 @@ export * from "./headerModal";
 export * from "./languageSelector"
 export * from "./breadcrumb"
 export * from "./checkbox";
+export * from "./toggleButton"
 
