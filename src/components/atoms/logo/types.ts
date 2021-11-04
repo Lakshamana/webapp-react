@@ -9,5 +9,4 @@ export interface Props extends FlexboxProps, LayoutProps, SpaceProps {
 export const defaultProps = {
   height: 38,
   width: 140,
-  mode: "light",
 };
