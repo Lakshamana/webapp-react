@@ -1,11 +1,23 @@
 import { ExternalFooter, ExternalHeader } from "components";
-import { ChildContainer, LayoutContainer } from "./style"
+import { ChildContainer, LayoutContainer } from "./style";
 import { Props, defaultProps } from "./types";
+import { defaultBackground } from "./settings";
 
-const LoginLayout = ({ children, ...props }: Props) => (
+const LoginLayout = ({
+  children,
+  backgroundImage = defaultBackground,
+  rightContent,
+  rightContentStyle = {},
+  mode,
+  ...props
+}: Props) => (
   <LayoutContainer flexDirection="column">
-    <ExternalHeader />
-    <ChildContainer justifyContent={'center'} {...props} width={1} backgroundImage={'https://image.fanherocdn.com/1920x1080/com.fanhero.5c926da8e117d200047d500e/photo/6169b4c5afd43a002b33258d/original'}>
+    <ExternalHeader {...{ mode, rightContent, rightContentStyle }} />
+    <ChildContainer
+      justifyContent={"center"}
+      width={1}
+      {...{ ...props, backgroundImage }}
+    >
       {children}
     </ChildContainer>
     <ExternalFooter />

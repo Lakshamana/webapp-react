@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
@@ -14,12 +13,15 @@ import {
 import { BreakpointProvider } from "services/hooks";
 import { AuthProvider } from "../authProvider";
 import { ThemeProvider } from "styled-components";
+import { useThemeStore } from "services/stores/theme";
 
 const breakpoints = createBreakpoints(themeBreakpoints);
 
 const TemplateProvider = ({ children }: any) => {
+  const { colorMode } = useThemeStore()
+
   const config = {
-    initialColorMode: "light",
+    initialColorMode: colorMode,
     useSystemColorMode: false,
   };
 
@@ -33,7 +35,7 @@ const TemplateProvider = ({ children }: any) => {
   });
 
   return (
-    <ThemeProvider theme={{ ...theme, ...(colors || {}) }}>
+    <ThemeProvider theme={{ ...theme, colorMode }}>
       <ChakraProvider theme={customTheme}>
         <BreakpointProvider>
           <Global

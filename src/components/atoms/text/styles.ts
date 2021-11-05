@@ -1,7 +1,14 @@
 import styled from "styled-components";
-import { typography, space, color } from "styled-system";
+import {
+  typography,
+  space,
+  color,
+  SpaceProps,
+  TypographyProps,
+  ColorProps,
+} from "styled-system";
 
-interface TextProps {
+interface TextProps extends SpaceProps, TypographyProps, ColorProps {
   ellipsis?: boolean;
 }
 

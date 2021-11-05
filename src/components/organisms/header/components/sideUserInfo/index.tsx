@@ -2,8 +2,7 @@ import { Settings } from "react-feather";
 import { Container, Text } from "components";
 
 import { PropsSideUserInfo } from "../../types";
-import { CircleImage } from "../userInfo/styles";
-import { UserContainer, SettingsContainer } from "./styles";
+import { UserContainer, CircleImage, SettingsContainer } from "./styles";
 import { colors } from "styles";
 
 const SideUserInfo = ({ user }: PropsSideUserInfo) => (

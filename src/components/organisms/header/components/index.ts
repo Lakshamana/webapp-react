@@ -8,5 +8,3 @@ export * from "./searchPopover";
 export * from "./sideMenu";
 export * from "./sideUserInfo";
 export * from "./tabs";
-export * from "./userInfo";
-export * from "./userPopover";

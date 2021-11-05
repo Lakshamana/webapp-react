@@ -1,4 +1,4 @@
-import { ImagePost, VideoPost, AudioPost } from '../../components'
+import { ImagePost, VideoPost, AudioPost, PollPost } from '../../components'
 import { Props } from "../../types"
 
 const SetMediaType = ({ ...props }: Props) => {
@@ -17,6 +17,10 @@ const SetMediaType = ({ ...props }: Props) => {
 			case "Audio":
 				return (
 					<AudioPost {...props}/>
+				)
+			case "Poll":
+				return (
+					<PollPost {...props}/>
 				)
 			default:
 				return <></>

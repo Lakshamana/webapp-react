@@ -1,4 +1,11 @@
-export interface Props {
+import {
+	LayoutProps,
+	SpaceProps,
+	TypographyProps,
+	FlexboxProps
+} from "styled-system"
+
+export interface Props extends SpaceProps, LayoutProps, TypographyProps, FlexboxProps {
 	postTitle: string
 	postDescription: string
 	date: string
@@ -12,8 +19,14 @@ export interface Props {
 	displayViews: boolean
 	audioTitle: string
 	audioArtist: string
-	isExclusive: boolean,
-	isGeolocked: boolean,
+	voteCount: number
+	timeRemaining: string
+	itemQuestion: string
+	percentage: string
+	winning: boolean
+	voted: boolean
+	isExclusive: boolean
+	isGeolocked: boolean
 }
 
 export const defaultProps = {

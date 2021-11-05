@@ -2,12 +2,19 @@ const PT_BR = {
 	translations: {
 		common: {
 			or: "ou",
-			terms: "Termos e Condições",
-			privacy: "Política de privacidade",
 			error: {
 				field_required: "Campo {{field_name}} é obrigatório",
 				field_must_match: "{{field_name}} deve ser igual"
-			}
+			},
+			more: "mais",
+			edit_profile: "Editar perfil",
+			settings: "Ajustes",
+			sign_out: "Sair",
+			enable: "Habilitar",
+			disable: "Desabilitar",
+			dark_mode: "modo escuro",
+			messages: "menssagens",
+			votes: "votos"
 		},
 		signin: {
 			title: "Acesse Fanhero agora",
@@ -46,6 +53,41 @@ const PT_BR = {
 				accept_terms: "Eu aceito todos os Termos e Condições",
 				confirm: "Confirmar",
 				back: "Voltar"
+			}
+		},
+		header: {
+			tabs: {
+				home: "Home",
+				live: "Live",
+				feed: "Feed",
+				collections: "Collections",
+				my_list: "My List",
+				settings: "Settings",
+				tools: "Tools",
+				example: "Example"
+			},
+			channel_selected: {
+				select: "Selecionar",
+				channel: "canal:"
+			},
+			channel_search: "Buscar canal..."
+		},
+		page: {
+			home: {
+				live: "Ao vivo",
+				most_recent: "Mais Recentes",
+				popular: "Popular"
+			},
+			collection: {
+				action: "Ação",
+				drama: "Drama",
+				family: "Família",
+				watch_now: "Assistir agora",
+				my_list: "Minha Lista"
+			},
+			my_list: {
+				my_list: "Minha Lista",
+				collection: "Coleção"
 			}
 		}
 	}

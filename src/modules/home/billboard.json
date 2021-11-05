@@ -11,7 +11,7 @@
 			{
 				"bgColor": "#0660F9",
 				"borderColor": "#000000",
-				"icon": "play-circle-outline",
+				"icon": "play",
 				"label": "Watch Now",
 				"route": "",
 				"textColor": "#FFFFFF"
@@ -19,7 +19,7 @@
 			{
 				"bgColor": "#ffffff",
 				"borderColor": "#000000",
-				"icon": "arrow-right-drop-circle",
+				"icon": "plus-circle",
 				"label": "My List",
 				"route": "",
 				"textColor": "#444444"
@@ -38,7 +38,7 @@
 			{
 				"bgColor": "#0660F9",
 				"borderColor": "#000000",
-				"icon": "play-circle-outline",
+				"icon": "play",
 				"label": "Watch Now",
 				"route": "",
 				"textColor": "#FFFFFF"
@@ -46,7 +46,7 @@
 			{
 				"bgColor": "#ffffff",
 				"borderColor": "#000000",
-				"icon": "arrow-right-drop-circle",
+				"icon": "plus-circle",
 				"label": "My List",
 				"route": "",
 				"textColor": "#444444"

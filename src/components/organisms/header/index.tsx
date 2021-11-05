@@ -1,9 +1,8 @@
 import { useState, memo, useReducer } from "react";
-import { Container, Logo } from "components";
+import { Container, Logo, UserInfo } from "components";
 import {
   Tabs,
   MenuIcon,
-  UserInfo,
   ChannelSelector,
   SearchBar,
   SideMenu,
@@ -54,7 +53,12 @@ const HeaderComponent = () => {
     <>
       <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
       <Container
-        height={[sizes.headerMobileHeight, sizes.headerMobileHeight, sizes.headerMobileHeight, sizes.headerDesktopHeight]}
+        height={[
+          sizes.headerMobileHeight,
+          sizes.headerMobileHeight,
+          sizes.headerMobileHeight,
+          sizes.headerDesktopHeight,
+        ]}
         width={1}
         px={3}
         alignItems="center"

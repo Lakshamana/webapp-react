@@ -2,12 +2,21 @@ const EN_US = {
 	translations: {
 		common: {
 			or: "or",
-			terms: "Terms and Conditions",
-			privacy: "Privacy and Policy",
 			error: {
 				field_required: "Campo {{field_name}} é obrigatório",
 				field_must_match: "{{field_name}} must match"
-			}
+			},
+			terms: "Terms and Conditions",
+			privacy: "Privacy and Policy",
+			more: "more",
+			edit_profile: "Edit profile",
+			settings: "Settings",
+			sign_out: "Sign out",
+			enable: "Enable",
+			disable: "Disable",
+			dark_mode: "dark mode",
+			messages: "messages",
+			votes: "votes"
 		},
 		signin: {
 			title: "Access Fanhero now",
@@ -29,7 +38,7 @@ const EN_US = {
 			label: {
 				email: "Email",
 				password: "Password",
-				confirm_email: "Confirm Email",
+				confirm_email: "Confirm Email"
 			},
 			registration: {
 				title: "Don't have an account yet?",
@@ -46,6 +55,41 @@ const EN_US = {
 				accept_terms: "I accept all Terms and Conditions.",
 				confirm: "Confirm",
 				back: "Back"
+			}
+		},
+		header: {
+			tabs: {
+				home: "Home",
+				live: "Live",
+				feed: "Feed",
+				collections: "Collections",
+				my_list: "My List",
+				settings: "Settings",
+				tools: "Tools",
+				example: "Example"
+			},
+			channel_selected: {
+				select: "Select",
+				channel: "channel:"
+			},
+			channel_search: "Search channel..."
+		},
+		page: {
+			home: {
+				live: "Live",
+				most_recent: "Most Recents",
+				popular: "Popular"
+			},
+			collection: {
+				action: "Action",
+				drama: "Drama",
+				family: "Family",
+				watch_now: "Watch Now",
+				my_list: "My List"
+			},
+			my_list: {
+				my_list: "My List",
+				collection: "Collection"
 			}
 		}
 	}
