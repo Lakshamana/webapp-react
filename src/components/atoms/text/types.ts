@@ -1,7 +1,7 @@
 import { TypographyProps, SpaceProps } from "styled-system";
 
 export interface Props extends TypographyProps, SpaceProps {
-  children: string;
+  children: any;
   kind?: string;
   style?: React.CSSProperties;
   color?: string;

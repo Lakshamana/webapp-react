@@ -6,4 +6,7 @@ export const permission = {
   home: true,
   collections: true,
   mylist: true,
+  tags: true,
+  account: true,
+  search: true
 };
