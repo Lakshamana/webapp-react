@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { layout, LayoutProps } from "styled-system";
 import { StyleContainer } from "components";
 import { colors } from "styles";
 
@@ -13,4 +13,9 @@ export const UserContainer = styled(StyleContainer)`
 export const SettingsContainer = styled(StyleContainer)`
   border-radius: 50%;
   background-color: ${colors.white};
+`;
+
+export const CircleImage = styled.img<LayoutProps>`
+  ${layout}
+  border-radius: 50%;
 `;

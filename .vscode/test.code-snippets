@@ -1,0 +1,28 @@
+{
+	"Test snippet": {
+		"prefix": "aut",
+		"description": "Template for tests",
+		"body": [
+		  "import { shallow } from \"setupTests\";",
+		  "import toJson from 'enzyme-to-json'",
+		  "import { ${1} } from \"../${index}\";",
+		  "",
+		  "const setup = () => {",
+		  "const props = {};",
+		  "",
+		  " return {",
+		  "   props,",
+		  "   wrapper: shallow(<${1} {...props} />)",
+		  " };",
+		  "};",
+		  "",
+		  "describe(\"${1} test suit -\", () => {",
+		  " it(\"${1} renders without crashing given the required props\", () => {",
+		  "   const { wrapper } = setup();",
+		  "   expect(wrapper.exists()).toBeTruthy();",
+		  "   expect(toJson(wrapper)).toMatchSnapshot()",
+		  " });",
+		  "});"
+		],
+	  }
+}

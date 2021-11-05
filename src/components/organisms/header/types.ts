@@ -29,10 +29,6 @@ export type SearchResults = {
   children: Array<ContentResults>;
 };
 
-export interface PropsUserInfo {
-  user: User | undefined;
-}
-
 export interface PropsTabs {
   selected: Tab | undefined;
   setSelected: any;
@@ -46,12 +42,6 @@ export interface PropsSearchBar {
   onClose: any;
   search: string;
   data: Array<SearchResults>;
-}
-
-export interface PropsPopoverOption {
-  icon: any;
-  text: string;
-  onClick: any;
 }
 
 export interface PropsChannels {

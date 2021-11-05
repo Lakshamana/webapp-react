@@ -1,40 +1,25 @@
 import { Container, MainLayout } from "components";
-import { Breadcrumb } from "components/atoms";
+import { Input, VideoRelated } from "components/molecules";
+import { useState } from "react";
 
-import { useTranslation } from "react-i18next";
-import { Input, Modal } from "components/molecules";
-
-import i18next from "i18next";
+import { dataVideoRelated } from "./mock";
 
 const LiveChat = () => {
-  const { t } = useTranslation();
+  const [value, setValue] = useState("");
   return (
     <MainLayout>
       <Container flexDirection="column" width={["100%"]} minHeight={["100vh"]}>
-        <Breadcrumb
-          options={[
-            { name: "Home", onClick: () => {}, isCurrentPage: false },
-            { name: "Live Events", onClick: () => {}, isCurrentPage: false },
-            { name: "Live chat", onClick: () => {}, isCurrentPage: true },
-          ]}
-        />
-        <Input onChange={() => {}} />
-        <Input onChange={() => {}} error={true} errorMessage="Invalid value." />
         <Input
-          onChange={() => {}}
-          rightIcon="send"
-          onEnterPress={() => alert("enter")}
+          type="password"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
         />
-        <Input onChange={() => {}} placeholder="Password" type="password" />
-        <Input onChange={() => {}} error={true} errorMessage="Invalid value." />
-
-        <Modal title="Modal teste" onClose={() => {}} show={false}>
-          <span>modal body</span>
-        </Modal>
-        <span>{t("example")}</span>
-        <button onClick={() => i18next.changeLanguage("en")}>
-          Change language
-        </button>
+        {/* <VideoRelated
+          options={dataVideoRelated}
+          initialAutoplayValue={true}
+          onAutoplay={() => {}}
+          onSelect={() => {}}
+        /> */}
       </Container>
     </MainLayout>
   );

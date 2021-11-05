@@ -1,5 +1,6 @@
 import React from "react"
 import { Link } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 import { CardsScroller } from "components"
 import { Text } from "components"
 import { LivestreamList } from "./livestreamItems"
@@ -12,6 +13,8 @@ const LivestreamScroller = ({
 	sectionUrl,
 	hasMoreLink
 }: LiveScrollerProps) => {
+	const { t } = useTranslation()
+
 	return (
 		<>
 			<ContentScroller>
@@ -31,7 +34,7 @@ const LivestreamScroller = ({
 							fontWeight={400}
 							textDecoration={"underline"}
 							to={sectionUrl}>
-							more
+							{t("common.more")}
 						</Link>
 					) : (
 						""
