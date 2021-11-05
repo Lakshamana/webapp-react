@@ -6,4 +6,4 @@ export * from "./signup";
 export * from "./collections";
 export * from "./mylist";
 export * from "./player";
-
+export * from "./tags";
