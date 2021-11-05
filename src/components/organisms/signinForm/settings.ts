@@ -1,8 +1,7 @@
-import { SigninMutationVariables } from "generated/graphql"
 import * as Yup from "yup"
 import i18n from "config/i18n"
 
-export const initialValues: SigninMutationVariables = {
+export const initialValues = {
 	signIn: {
 		email: "",
 		password: ""
