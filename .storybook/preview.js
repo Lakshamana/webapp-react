@@ -9,9 +9,14 @@ import {
   theme,
   breakpoints as themeBreakpoints,
 } from "../src/styles";
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
+  viewport: {
+    viewports: INITIAL_VIEWPORTS
+  }
 }
 
 const breakpoints = createBreakpoints(themeBreakpoints);
