@@ -11,7 +11,7 @@ import {
 import { Text } from "components/atoms";
 import { Bar } from "./style";
 
-import { options, initialLivestream } from "./_mock";
+import { options, initialLivestream } from "./mock";
 
 const LiveChat = () => {
   const { t } = useTranslation();
@@ -29,16 +29,7 @@ const LiveChat = () => {
       >
         <Container flex={5}>
           {initialLivestream && initialLivestream?.src && (
-            <VideoPlayer
-              src={initialLivestream?.src}
-              vttSrc={initialLivestream?.vttSrc}
-              title={initialLivestream?.title}
-              subtitle={initialLivestream?.subtitle}
-              overlays={initialLivestream?.overlays}
-              muxConfig={initialLivestream?.muxConfig}
-              options={initialLivestream?.options}
-              skin={"facebook-skin"}
-            />
+            <VideoPlayer {...{ ...initialLivestream }} skin={"facebook-skin"} />
           )}
         </Container>
         <Container flex={2} flexDirection={["column"]}>
@@ -63,7 +54,6 @@ const LiveChat = () => {
             }}
             onPressIcon={() => {}}
           />
-          
         </Container>
       </Container>
       <Container flexDirection={["column"]} ml={64} mb={32}>

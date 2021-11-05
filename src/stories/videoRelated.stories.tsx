@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { VideoRelated } from "components/molecules";
-import { dataVideoRelated } from "modules/livechat/_mock";
+import { dataVideoRelated } from "modules/livechat/mock";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
