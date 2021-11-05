@@ -5,9 +5,9 @@ import { RadioContainer } from "./styles";
 import { RadioProps } from "./types";
 
 const Radio = ({ children, spacing, font, ...props }: RadioProps) => (
-  <RadioContainer {...{ ...spacing, ...font }}>
+  <RadioContainer {...{ ...spacing }}>
     <RadioComponent {...props}>
-      <Container>{children}</Container>
+      <Container {...font}>{children}</Container>
     </RadioComponent>
   </RadioContainer>
 );

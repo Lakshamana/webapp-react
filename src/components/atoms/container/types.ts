@@ -3,13 +3,15 @@ import {
   SpaceProps,
   FlexboxProps,
   PositionProps,
+  TypographyProps,
 } from "styled-system";
 
 export interface Props
   extends FlexboxProps,
     LayoutProps,
     SpaceProps,
-    PositionProps {
+    PositionProps,
+    TypographyProps {
   children: any;
   onClick?: any;
   backgroundColor?: string;

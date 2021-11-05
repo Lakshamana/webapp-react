@@ -1,11 +1,17 @@
 import styled from "styled-components";
 import { space, layout, SpaceProps, LayoutProps } from "styled-system";
+import { colors } from "styles";
 
-export const UserContainer = styled.div<SpaceProps>`
+interface UserContainerProps extends SpaceProps {
+  delimited: boolean;
+}
+
+export const UserContainer = styled.div<UserContainerProps>`
   ${space}
   display: flex;
   align-items: center;
-  border-left: 1px solid #666666;
+  border-left: ${({ delimited }) =>
+    delimited ? `1px solid ${colors.grey["700"]}` : "none"};
   user-select: none;
   cursor: pointer;
 `;

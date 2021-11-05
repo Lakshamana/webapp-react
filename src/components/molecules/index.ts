@@ -21,5 +21,6 @@ export * from "./videoJs";
 export * from "./videoRelated";
 export * from "./gridCards";
 export * from "./videoPlayer";
+export * from "./userInfo";
 export * from "./playlistPostCard";
 
