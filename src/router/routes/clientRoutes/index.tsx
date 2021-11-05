@@ -11,6 +11,7 @@ import {
   CollectionsPage,
   PlayerPage,
   MyListPage,
+  TagPage,
 } from "modules";
 
 const ClientRoutes = ({ isAccesible }: any) => (
@@ -54,6 +55,12 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.account}
       path="/account"
       component={Account}
+      fallback={HomePage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.tags}
+      path="/tags"
+      component={TagPage}
       fallback={HomePage}
     />
     <ClientRoute

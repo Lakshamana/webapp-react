@@ -1,23 +1,56 @@
-import styled from "styled-components";
+import styled from "styled-components"
+import { ChannelsProps } from "./types"
+import { breakpoints, colors } from "styles"
 
-export const ChannelsContent: any = styled.div`
-position: relative;
-    width: 320px;
-    height: 170px;
-    margin-left: 80px;
-    border-radius: 4px;
-    ${({ image }: any) => `background: ${image};`}
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-`;
+export const ChannelsContent = styled.div<ChannelsProps>`
+	display: flex;
+	width: auto;
+	padding-top: 56.25%;
+	height: auto;
+	position: relative;
+	border-radius: 4px;
+	${(props: ChannelsProps) => `background: url('${props.image}');`}
+	cursor: pointer;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+`
 
-export const ChannelBlocked: any = styled.div`
-    width: 51px;
-    height: 50px;
-    border-radius: 50%;
-    position: inherit;
-    top: 60px;
-    margin: 0 auto;
-    background-color: #035EFB;
-`;
+export const ExclusiveBlocked: any = styled.div`
+	display: flex;
+	position: absolute;
+	align-items: center;
+	justify-content: center;
+	width: 51px;
+	height: 50px;
+	border-radius: 50%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: ${colors.blue["300"]};
+
+	@media screen and (max-width: ${breakpoints.sm}) {
+		width: 41px;
+		height: 40px;
+	}
+`
+
+export const GeolockedBlocked: any = styled.div`
+	display: flex;
+	position: absolute;
+	align-items: center;
+	justify-content: center;
+	width: 51px;
+	height: 50px;
+	border-radius: 50%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: ${colors.blue["300"]};
+	pointer-events: none;
+
+	@media screen and (max-width: ${breakpoints.sm}) {
+		width: 41px;
+		height: 40px;
+	}
+`
