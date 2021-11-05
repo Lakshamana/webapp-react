@@ -8,4 +8,5 @@ export const permission = {
   mylist: true,
   tags: true,
   account: true,
+  search: true
 };
