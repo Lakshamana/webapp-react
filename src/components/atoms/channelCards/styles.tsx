@@ -4,7 +4,6 @@ import { breakpoints, colors } from "styles";
 import { layout } from "styled-system";
 
 export const ChannelsContent = styled.div<StyledProps>`
- 
   display: flex;
   width: 100%;
   padding-top: 56.25%;
@@ -16,7 +15,7 @@ export const ChannelsContent = styled.div<StyledProps>`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-   ${layout}
+  ${layout}
 `;
 
 export const ExclusiveBlocked: any = styled.div`
@@ -30,7 +29,7 @@ export const ExclusiveBlocked: any = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: ${colors.blue["300"]};
+  background-color: ${({ theme }) => theme.colors.blue["300"]};
 
   @media screen and (max-width: ${breakpoints.sm}) {
     width: 41px;
@@ -49,7 +48,7 @@ export const GeolockedBlocked: any = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: ${colors.blue["300"]};
+  background-color: ${({ theme }) => theme.colors.blue["300"]};
   pointer-events: none;
 
   @media screen and (max-width: ${breakpoints.sm}) {
