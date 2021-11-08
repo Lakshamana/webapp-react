@@ -47,7 +47,6 @@ body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
   width: 100%;
-  overflow: hidden;
 }
 
 h1,

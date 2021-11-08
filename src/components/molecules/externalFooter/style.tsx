@@ -8,6 +8,7 @@ export const BoxFooter = styled(StyleContainer)`
     bottom: 0;
     left: 0;
     right: 0;
+    position: absolute;
 
     @media screen and (max-width: ${breakpoints.md}) {
         height: ${sizes.footerMobileHeight};

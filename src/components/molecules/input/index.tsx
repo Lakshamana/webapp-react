@@ -4,6 +4,7 @@ import { InputInline, InputWrapper } from "components/atoms";
 import { Props } from "./types";
 
 const Input = ({
+  name,
   placeholder,
   value,
   type = "text",
@@ -17,7 +18,7 @@ const Input = ({
 
   return (
     <InputWrapper
-      {...{ error, errorMessage, rightIcon, type }}
+      {...{ error, errorMessage, rightIcon, type, name }}
       background="#444444"
       color="white"
       placeholderColor="#F2FFF8"
@@ -26,6 +27,7 @@ const Input = ({
     >
       <InputInline
         {...{ onChange, value, error, placeholder }}
+        name={name}
         type={showPassword ? "text" : type}
         background="#444444"
         color="#fff"

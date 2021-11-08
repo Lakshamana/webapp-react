@@ -11,6 +11,7 @@ export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
   error?: boolean;
   errorMessage?: string;
   onKeyDown?: any;
+  name?: string;
 
   background?: string;
   color?: string;

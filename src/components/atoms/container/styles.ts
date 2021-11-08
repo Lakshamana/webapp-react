@@ -6,6 +6,7 @@ import {
   color,
   position,
   typography,
+  grid,
 } from "styled-system";
 
 import { Props } from "./types";
@@ -17,4 +18,5 @@ export const StyleContainer = styled.div<Props>`
   ${flexbox}
   ${position}
   ${typography}
+  ${grid}
 `;
