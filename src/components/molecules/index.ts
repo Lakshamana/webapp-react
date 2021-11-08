@@ -23,4 +23,4 @@ export * from "./gridCards";
 export * from "./videoPlayer";
 export * from "./userInfo";
 export * from "./playlistPostCard";
-
+export * from "./channelList";
