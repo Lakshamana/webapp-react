@@ -1,6 +1,5 @@
 export * from "./home";
 export * from "./login";
-export * from "./user";
 export * from "./livechat";
 export * from "./signup";
 export * from "./collections";
@@ -10,3 +9,4 @@ export * from "./search";
 export * from "./tags";
 export * from "./account";
 export * from "./channelList";
+export * from "./feed";

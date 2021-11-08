@@ -13,7 +13,7 @@ export const FeedContent = styled.div`
 export const CardContent: any = styled.div`
     position: relative;
     background-color: ${colors.cardBackground};
-    margin: 0 auto;
+    margin: 22px auto;
     max-width: 746px;
 `;
 

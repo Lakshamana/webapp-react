@@ -3,6 +3,7 @@ export interface Props {
   username: string;
   message: string;
   isOwnUser?: boolean;
+  avatarUrl?: string;
 }
 
 export const defaultProps = {

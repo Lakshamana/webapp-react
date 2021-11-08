@@ -23,6 +23,7 @@ const InputWrapper = ({
   rightIcon = "",
   leftIcon = "",
   onChangeShowPassword = () => {},
+  onEnterPress = () => {},
   ...props
 }: Props): any => {
   const [showPassword, setShowPassword] = useState(type !== "password");
@@ -74,6 +75,8 @@ const InputWrapper = ({
             width="42"
             height="42"
             color="#2984F5"
+            style={{ cursor: "pointer" }}
+            onClick={() => onEnterPress()}
           />
         );
 
@@ -106,6 +109,7 @@ const InputWrapper = ({
         minHeight={height || 56}
         error={error}
         background={background}
+        borderRadius={4}
       >
         {renderLeftIcon()}
         {children}
