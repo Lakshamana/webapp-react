@@ -5,7 +5,6 @@ import {
   HomePage,
   LoginPage,
   LiveChat,
-  User,
   SignupPage,
   Account,
   CollectionsPage,
@@ -27,12 +26,6 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.home}
       path="/home"
       component={HomePage}
-      fallback={LoginPage}
-    />
-    <ClientRoute
-      isAccesible={isAccesible?.user}
-      path="/user"
-      component={User}
       fallback={LoginPage}
     />
     <ClientRoute
