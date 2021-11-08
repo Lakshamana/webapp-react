@@ -4,6 +4,7 @@ import {
   FlexboxProps,
   PositionProps,
   TypographyProps,
+  GridProps,
 } from "styled-system";
 
 export interface Props
@@ -11,7 +12,8 @@ export interface Props
     LayoutProps,
     SpaceProps,
     PositionProps,
-    TypographyProps {
+    TypographyProps,
+    GridProps {
   children: any;
   onClick?: any;
   backgroundColor?: string;

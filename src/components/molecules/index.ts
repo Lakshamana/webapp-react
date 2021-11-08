@@ -26,4 +26,4 @@ export * from "./livechatHeader";
 export * from "./livechatFooter";
 export * from "./userInfo";
 export * from "./playlistPostCard";
-
+export * from "./channelList";
