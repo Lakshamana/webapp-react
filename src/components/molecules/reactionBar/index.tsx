@@ -1,5 +1,5 @@
 import { Container, Text, Popover } from "components";
-import { Plus, Smile } from "react-feather";
+import { Icon } from "@iconify/react-with-api";
 
 import { Props } from "./types";
 
@@ -9,12 +9,12 @@ import { Reaction } from "./styles";
 const ReactionBar = ({
   reactions = [],
   totalReactions,
-  reactionsTitle
+  reactionsTitle,
 }: Props) => (
   <Container alignItems="center">
     <Container>
       <Container>
-        {reactions.map(reaction => (
+        {reactions.map((reaction) => (
           <Reaction
             key={`${reaction.value}-reaction`}
             p={1}
@@ -35,14 +35,18 @@ const ReactionBar = ({
             trigger={
               <button>
                 <Reaction p={1} mr={1} minWidth={50} minHeight={32}>
-                  <Plus size={20} />
-                  <Smile size={20} />
+                  <Icon width={20} height={20} icon="mdi:plus" />
+                  <Icon
+                    width={20}
+                    height={20}
+                    icon="mdi:emoticon-happy-outline"
+                  />
                 </Reaction>
               </button>
             }
           >
             <Container flexWrap="wrap">
-              {availableReactions.map(reaction => (
+              {availableReactions.map((reaction) => (
                 <Reaction key={`${reaction.value}-popover`} p={1} m={1}>
                   {reaction.value}
                 </Reaction>
