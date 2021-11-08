@@ -27,3 +27,4 @@ export * from "./livechatFooter";
 export * from "./userInfo";
 export * from "./playlistPostCard";
 export * from "./channelList";
+export * from "./videoPlaylist";
