@@ -1,22 +1,14 @@
 import { useState } from "react";
 import { Container, MainLayout } from "components";
 
-import { useTranslation } from "react-i18next";
-import {
-  VideoPlayer,
-  LivechatHeader,
-  LivechatFooter,
-  ChatBody,
-} from "components/molecules";
+import { VideoPlayer } from "components/molecules";
 import { Text } from "components/atoms";
 import { Bar } from "./style";
 
 import { options, initialLivestream } from "./mock";
+import { Livechat } from "components/molecules/livechat";
 
 const LiveChat = () => {
-  const { t } = useTranslation();
-
-  const [value, setValue] = useState("");
   const [optionsState, setOptionsState] = useState(options);
 
   return (
@@ -33,26 +25,10 @@ const LiveChat = () => {
           )}
         </Container>
         <Container flex={2} flexDirection={["column"]}>
-          <LivechatHeader title="Live chat" />
-          <ChatBody options={optionsState} />
-          <LivechatFooter
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onEnter={() => {
-              //implements here chat integration live
-              setOptionsState([
-                ...optionsState,
-                {
-                  iconUrl: "",
-                  date: "01/01/2001",
-                  username: "Yuri Mustifaga",
-                  message: value,
-                  isOwnUser: true,
-                },
-              ]);
-              setValue("");
-            }}
-            onPressIcon={() => {}}
+          <Livechat
+            dataChat={optionsState}
+            onChangeChat={(e) => setOptionsState(e)}
+            title="Livechat"
           />
         </Container>
       </Container>

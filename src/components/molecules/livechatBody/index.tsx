@@ -4,7 +4,7 @@ import { Props } from "./types";
 
 import { BoxChat } from "components/atoms";
 
-const ChatBody = ({ options = [] }: Props) => {
+const LivechatBody = ({ options = [] }: Props) => {
   return (
     <MainChatBody maxHeight={["55vh"]}>
       {options.map((e) => (
@@ -20,4 +20,4 @@ const ChatBody = ({ options = [] }: Props) => {
   );
 };
 
-export { ChatBody };
+export { LivechatBody };

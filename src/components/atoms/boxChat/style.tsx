@@ -20,7 +20,8 @@ export const MainContainer: any = styled.div`
   ${flexbox}
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  height: 285px;
 `;
 
 export const DateContainer: any = styled.div`
