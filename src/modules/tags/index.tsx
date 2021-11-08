@@ -9,7 +9,7 @@ import { colors } from 'styles'
 
 const TagPage = () => {
 	return (
-		<MainLayout>
+		<MainLayout backgroundColor='#0F0F0F'>
 			<Container flexDirection={"column"} py={32} px={[4, 32, 32, 64]} width={"100%"}>
 				<GridCards
 					headerTitle='Tags'
