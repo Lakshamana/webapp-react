@@ -1,6 +1,6 @@
+import { Icon } from "@iconify/react-with-api";
 import { useEffect, useRef } from "react";
 import { Container, Popover, InputInline } from "components";
-import { Search as SearchIcon, X } from "react-feather";
 import { SearchPopover } from "..";
 
 import { PropsSearchBar } from "../../types";
@@ -53,7 +53,7 @@ const SearchBar = ({
             {...{ open }}
           >
             <Container mr={2}>
-              <SearchIcon color={colors.white} height={15} width={15} />
+              <Icon width={20} height={20} icon="bx:bx-search" color="white" />
             </Container>
 
             <InputInline
@@ -64,7 +64,7 @@ const SearchBar = ({
               onChange={onSearch}
             />
             <Container ml={2} onClick={onClose}>
-              <X color={colors.white} height={15} width={15} />
+              <Icon width={20} height={20} icon="bi:x" color="white" />
             </Container>
           </CustomContainer>
         }
@@ -74,7 +74,7 @@ const SearchBar = ({
         </Container>
       </Popover>
       <SearchContainer px={3} onClick={onOpen} {...{ open }}>
-        <SearchIcon color={colors.white} height={20} width={20} />
+        <Icon width={20} height={20} icon="bx:bx-search" color="white" />
       </SearchContainer>
     </Section>
   );
