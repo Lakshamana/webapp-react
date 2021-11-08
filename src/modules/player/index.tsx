@@ -68,6 +68,7 @@ const PlayerPage = () => {
             {(config && config?.src) && (
               <VideoPlayer
                 src={config?.src}
+                isLiveStream={true}
                 vttSrc={config?.vttSrc}
                 title={config?.title}
                 subtitle={config?.subtitle}
