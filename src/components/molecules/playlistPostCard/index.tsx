@@ -19,7 +19,7 @@ const PlaylistPostCard = ({ videos }: PlaylistPostCardProps) => {
         <Wrapper onClick={() => history.push(`/video/${id}`)}>
           <VideoThumb image={image_url}>
             <Icon 
-              icon="ant-design:play-circle-outlined"
+              icon="ant-design:play-circle-twotone"
               width="34px"
               color="white"
             />
