@@ -1,8 +1,9 @@
 import styled from "styled-components"
-import { Flex, Center } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
+import { pxToRem } from "styles/metrics"
 
 export const List: any = styled(Flex)`
   width: 500px;
   flex-direction: column;
-  padding: 12px;
+  padding: ${pxToRem(12)};
 `
