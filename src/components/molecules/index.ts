@@ -21,6 +21,9 @@ export * from "./videoJs";
 export * from "./videoRelated";
 export * from "./gridCards";
 export * from "./videoPlayer";
+export * from "./chatBody";
+export * from "./livechatHeader";
+export * from "./livechatFooter";
 export * from "./userInfo";
 export * from "./playlistPostCard";
 
