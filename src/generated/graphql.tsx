@@ -905,11 +905,18 @@ export type UpdateSubjectInput = {
 };
 
 export type CreateAccountMutationVariables = Exact<{
-  createAccountCreateAccountInput: CreateAccountInput;
+  createAccount: CreateAccountInput;
 }>;
 
 
-export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename?: 'Account', _id: string, display_name?: Maybe<string>, email: string, first_name?: Maybe<string>, last_name?: Maybe<string>, status?: Maybe<string>, username?: Maybe<string> } };
+export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename: 'Account', _id: string, display_name?: Maybe<string>, email: string, first_name?: Maybe<string>, last_name?: Maybe<string>, status?: Maybe<string>, tenant_id?: Maybe<string>, username?: Maybe<string> } };
+
+export type CreateAccountGdprLgpdMutationVariables = Exact<{
+  createAccountGdprLgpd: CreateAccountGdprLgpdInput;
+}>;
+
+
+export type CreateAccountGdprLgpdMutation = { __typename?: 'Mutation', createAccountGdprLgpd: { __typename: 'AccountGdprLgpd', _id: string, accepted: boolean, accepted_at: any, ip: string, account: { __typename?: 'Account', _id: string } } };
 
 export type SigninMutationVariables = Exact<{
   signIn: SignInInput;
@@ -927,15 +934,17 @@ export type SignOutMutation = { __typename?: 'Mutation', signOut: any };
 
 
 export const CreateAccountDocument = gql`
-    mutation CreateAccount($createAccountCreateAccountInput: CreateAccountInput!) {
-  createAccount(createAccountInput: $createAccountCreateAccountInput) {
+    mutation CreateAccount($createAccount: CreateAccountInput!) {
+  createAccount(createAccountInput: $createAccount) {
     _id
     display_name
     email
     first_name
     last_name
     status
+    tenant_id
     username
+    __typename
   }
 }
     `;
@@ -960,7 +969,7 @@ export type CreateAccountComponentProps = Omit<ApolloReactComponents.MutationCom
  * @example
  * const [createAccountMutation, { data, loading, error }] = useCreateAccountMutation({
  *   variables: {
- *      createAccountCreateAccountInput: // value for 'createAccountCreateAccountInput'
+ *      createAccount: // value for 'createAccount'
  *   },
  * });
  */
@@ -971,6 +980,52 @@ export function useCreateAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
 export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
+export const CreateAccountGdprLgpdDocument = gql`
+    mutation CreateAccountGdprLgpd($createAccountGdprLgpd: CreateAccountGdprLgpdInput!) {
+  createAccountGdprLgpd(createAccountGdprLgpdInput: $createAccountGdprLgpd) {
+    _id
+    accepted
+    accepted_at
+    account {
+      _id
+    }
+    ip
+    __typename
+  }
+}
+    `;
+export type CreateAccountGdprLgpdMutationFn = Apollo.MutationFunction<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>;
+export type CreateAccountGdprLgpdComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>, 'mutation'>;
+
+    export const CreateAccountGdprLgpdComponent = (props: CreateAccountGdprLgpdComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables> mutation={CreateAccountGdprLgpdDocument} {...props} />
+    );
+    
+
+/**
+ * __useCreateAccountGdprLgpdMutation__
+ *
+ * To run a mutation, you first call `useCreateAccountGdprLgpdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAccountGdprLgpdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAccountGdprLgpdMutation, { data, loading, error }] = useCreateAccountGdprLgpdMutation({
+ *   variables: {
+ *      createAccountGdprLgpd: // value for 'createAccountGdprLgpd'
+ *   },
+ * });
+ */
+export function useCreateAccountGdprLgpdMutation(baseOptions?: Apollo.MutationHookOptions<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>(CreateAccountGdprLgpdDocument, options);
+      }
+export type CreateAccountGdprLgpdMutationHookResult = ReturnType<typeof useCreateAccountGdprLgpdMutation>;
+export type CreateAccountGdprLgpdMutationResult = Apollo.MutationResult<CreateAccountGdprLgpdMutation>;
+export type CreateAccountGdprLgpdMutationOptions = Apollo.BaseMutationOptions<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>;
 export const SigninDocument = gql`
     mutation Signin($signIn: SignInInput!) {
   signIn(signIn: $signIn) {

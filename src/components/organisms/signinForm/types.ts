@@ -1,4 +1,4 @@
-export interface SigninProps {
-    username: string;
-    password: string;
+export interface Props {
+	errors?: any
+	handleFormSubmit: (formData: any) => void
 }
