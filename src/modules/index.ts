@@ -8,3 +8,4 @@ export * from "./player";
 export * from "./search";
 export * from "./tags";
 export * from "./account";
+export * from "./feed";

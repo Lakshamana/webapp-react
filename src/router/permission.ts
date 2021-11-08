@@ -8,4 +8,5 @@ export const permission = {
   tags: true,
   account: true,
   search: true,
+  feed: true
 };
