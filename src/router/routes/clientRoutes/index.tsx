@@ -13,6 +13,7 @@ import {
   MyListPage,
   TagPage,
   SearchPage,
+  ChannelList,
 } from "modules";
 
 const ClientRoutes = ({ isAccesible }: any) => (
@@ -69,6 +70,11 @@ const ClientRoutes = ({ isAccesible }: any) => (
       path="/search"
       component={SearchPage}
       fallback={HomePage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.channelList}
+      path="/channelList"
+      component={ChannelList}
     />
     <ClientRoute
       isAccesible={isAccesible?.login}
