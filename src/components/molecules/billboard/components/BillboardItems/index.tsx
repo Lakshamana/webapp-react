@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
 import { useTranslation } from "react-i18next"
 import { Button } from "components"
-import { MemoizedActionsList } from "../BillboardActions"
+import { ActionsList } from "../BillboardActions"
 import { getActions, getItems } from "utils"
 import { Props, BillboardItem } from "../../types"
 import { Params } from "../../settings"
@@ -56,7 +56,9 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 								<Title>{items.title}</Title>
 								<Description>{items.description}</Description>
 								{customButtons ? (
-									<MemoizedActionsList actions={getActions(items?.actions)} />
+									<ContentButtons>
+										<ActionsList actions={getActions(items?.actions)} />
+									</ContentButtons>
 								) : (
 									<ContentButtons>
 										<Button
@@ -66,9 +68,10 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 											color={`${colors.white}`}
 											type='billboard'
 											label={t("page.collection.watch_now")}
-											width={size.x >= 768 ? 267 : 145}
-											height={size.x >= 768 ? 54 : 40}
-											marginRight={size.x >= 768 ? 15 : 15}
+											width={size.x <= 768 ? 146 : 267}
+											height={size.x <= 768 ? 40 : 54}
+											marginRight={size.x > 320 ? 15 : ""}
+											marginBottom={size.x <= 320 ? 10 : ""}
 										/>
 										<Button
 											backgroundColor={`${colors.grey["800"]}`}
@@ -77,8 +80,10 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 											color={`${colors.white}`}
 											type='billboard'
 											label={t("page.collection.my_list")}
-											width={size.x >= 768 ? 267 : 145}
-											height={size.x >= 768 ? 54 : 40}
+											width={size.x <= 768 ? 146 : 267}
+											height={size.x <= 768 ? 40 : 54}
+											marginRight={size.x > 320 ? 15 : ""}
+											marginBottom={size.x <= 320 ? 10 : ""}
 										/>
 									</ContentButtons>
 								)}
