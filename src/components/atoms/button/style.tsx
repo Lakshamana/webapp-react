@@ -11,7 +11,7 @@ export const BoxButton: any = styled.button`
   font-weight: bold;
   cursor: pointer;
   border-radius: 4px;
-  gap: 15px;
+  grid-gap: 15px;
 
   ${space}
   ${layout}
