@@ -29,15 +29,14 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
 					color={actions.textColor}
 					type='billboard'
 					label={actions.label}
-					width={size.x >= 768 ? 267 : 145}
-					height={size.x >= 768 ? 54 : 40}
-					marginRight={size.x >= 768 ? 15 : 15}
+					width={size.x <= 768 ? 146 : 267}
+					height={size.x <= 768 ? 40 : 54}
+					marginRight={size.x > 320 ? 15 : ''}
+					marginBottom={size.x <= 378 ? 10 : ''}
 				/>
 			))}
 		</Actions>
 	)
 }
 
-const MemoizedActionsList = React.memo(ActionsList);
-
-export { MemoizedActionsList }
+export { ActionsList }
