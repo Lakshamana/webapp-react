@@ -5,6 +5,7 @@ export interface LivePostProps {
     coverImage?: string;
     mediaLength?: number;
     views?: number;
+    isLive: boolean;
     isExclusive?: boolean;
     isGeolocked?: boolean;
 }
