@@ -1,16 +1,11 @@
 import styled from 'styled-components';
-import { breakpoints } from 'styles';
 
 export const BillboardWrapper: any = styled.div`
     position: relative;
     height: 977px;
-    width: 100vw;
+    width: 100%;
     min-height: 500px;
     max-height: 800px;
-
-    @media screen and (max-width: ${breakpoints.sm}) {
-        height: 50vh;
-    }
 `;
 
 export const Billboard: any = styled.div`
