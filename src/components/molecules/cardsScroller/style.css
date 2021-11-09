@@ -39,6 +39,12 @@
   right: 65px !important;
 }
 
+@media screen and (max-width: 768px) {
+  .swiper-button-next {
+    right: 35px !important;
+  }
+}
+
 .linear-gradient {
   width: 100px;
   position: absolute;
