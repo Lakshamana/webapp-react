@@ -20,12 +20,13 @@ const PollPost = ({ ...props }: Props) => {
 			<PollItem {...props} padding={2} marginBottom={2}>
 				<ProgressBar {...props} />
 				<PollItemText>
-					<Text kind='headline'>{props.itemQuestion}</Text>
+					<Text kind='headline' color={colors.white}>{props.itemQuestion}</Text>
 				</PollItemText>
 				<Flex
 					width={"15%"}
 					justifyContent={"flex-end"}
 					alignItems={"center"}
+					color={colors.white}
 					gridGap={1}>
 					{props.winning ? (
 						<Icon width={14} icon='mdi:check' color={colors.blue["300"]} />
