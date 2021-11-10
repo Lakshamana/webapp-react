@@ -1,25 +1,18 @@
 import styled from "styled-components";
 import { StyleContainer } from "components";
-import { colors, breakpoints, sizes } from "styles";
+import { breakpoints, sizes } from "styles";
 
 interface BoxHeaderProps {
   mode?: string;
 }
 
-export const BoxHeader = styled(StyleContainer)<BoxHeaderProps>`
+export const BoxHeader = styled(StyleContainer) <BoxHeaderProps>`
   height: ${sizes.headerDesktopHeight};
   display: flex;
-  ${({ mode }) =>
-    mode === "light"
-      ? `
-background-color: ${colors.white};
-border-bottom: 1px solid ${colors.grey["200"]};
-`
-      : `
-  background-color: ${colors.black};
-  `}
+  background-color: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
+
   @media screen and (max-width: ${breakpoints.md}) {
-    min-height: ${sizes.headerMobileHeight};
+    height: ${sizes.headerMobileHeight};
   }
 `;
 
