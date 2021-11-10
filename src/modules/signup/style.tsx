@@ -1,12 +1,11 @@
 import styled from "styled-components"
-import { space, layout } from "styled-system"
+import { StyleContainer } from "components"
+import { Props } from "./types"
 
-export const Container = styled.div`
-	height: 100%;
+export const Container = styled(StyleContainer)<Props>`
 	display: flex;
 	background: transparent;
 	justify-content: center;
 	align-items: center;
-	${space}
-	${layout}
 `
+
