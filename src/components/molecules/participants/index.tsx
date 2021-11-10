@@ -9,7 +9,7 @@ const Participants = ({ participants, totalParticipants }: Props) => (
     <Container>
       {getParticipants(participants).map((participant: TypeParticipant) => (
         <Participant
-          width="30px"
+          width="35px"
           height="30px"
           mr={-2}
           key={participant.id}
