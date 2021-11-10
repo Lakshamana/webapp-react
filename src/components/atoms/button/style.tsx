@@ -23,17 +23,17 @@ export const BoxButton: any = styled.button`
     variants: {
         primary: {
             color: 'white',
-            bg: colors.primary,
+            bg: `${({ theme }) => theme.colors.brand.primary[theme.colorMode]}`,
             textTransform: 'uppercase'
         },
         secondary: {
             color: 'white',
-            bg: '#17641e',
+            bg: `${({ theme }) => theme.colors.brand.secondary[theme.colorMode]}`,
             textTransform: 'uppercase'
         },
         accent: {
             color: 'white',
-            bg: '#e8a326',
+            bg: `${({ theme }) => theme.colors.brand.accent[theme.colorMode]}`,
             textTransform: 'uppercase'
         },
         grey: {
