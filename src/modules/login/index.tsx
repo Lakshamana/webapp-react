@@ -35,8 +35,8 @@ const LoginPage = () => {
 
   return (
     <LoginLayout>
-      <Container>
-        <CardContainer paddingX={[30, 60]} paddingY={[10, 40]} width={[1, sizes.loginCardWidth]}>
+      <Container width={1} paddingY={[0, 40]}>
+        <CardContainer paddingX={[30, 60]} paddingY={[40, 40]} width={[1, sizes.loginCardWidth]}>
           <Text fontSize={24} textAlign={'center'} fontWeight={'bolder'} color={'white'}>{t('signin.title')}</Text>
           <Text fontSize={16} paddingTop={10} textAlign={'center'} color={'#A4A4A4'}>{t('signin.subtitle')}</Text>
           <Flex gridGap={7} marginY={30} justifyContent={'center'}>
@@ -49,7 +49,7 @@ const LoginPage = () => {
           <Box textAlign={'center'}>
             <Link style={{ 'textTransform': 'uppercase', 'fontWeight': 'bold' }} to="resetPassword">{t('signin.actions.forgot_password')}</Link>
           </Box>
-          <Flex marginTop={10} marginBottom={5} justifyContent={'center'}>
+          <Flex marginTop={10} marginBottom={5} justifyContent={'center'} flexWrap={'wrap'}>
             <Text color={'white'} paddingRight={1}>
               {t('signin.label.dont_have_account')}
             </Text>
@@ -57,7 +57,7 @@ const LoginPage = () => {
           </Flex>
         </CardContainer>
       </Container>
-    </LoginLayout >
+    </LoginLayout>
   )
 };
 
