@@ -10,7 +10,7 @@ import { colors } from 'styles'
 
 const SearchPage = () => {
 	return (
-		<MainLayout backgroundColor='#0F0F0F'>
+		<MainLayout>
 			<Container flexDirection={"column"} py={32} px={[2, 32, 32, 64]} width={"100%"}>
 				<GridCards
 					headerTitle='My list'

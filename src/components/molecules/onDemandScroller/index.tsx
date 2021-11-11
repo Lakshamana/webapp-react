@@ -1,4 +1,3 @@
-import React from "react"
 import { Link } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
 import { CardsScroller } from "components"
@@ -6,6 +5,8 @@ import { Text } from "components"
 import { OndemandList } from "./ondemandItems"
 import { VideoScrollerProps } from "./types"
 import { Header, ContentScroller } from "./styles"
+import { colors } from "styles"
+import { useThemeStore } from 'services/stores/theme'
 
 const OnDemandScroller = ({
 	items,
@@ -15,13 +16,14 @@ const OnDemandScroller = ({
 }: VideoScrollerProps) => {
 
 	const { t } = useTranslation()
+	const { colorMode } = useThemeStore();
 
 	return (
 		<>
 			<ContentScroller>
 				<Header>
 					<Text
-						color={"#FFFFFF"}
+						color={colors.generalText[colorMode]}
 						fontSize={"28px"}
 						fontWeight={500}
 						marginRight={"18px"}

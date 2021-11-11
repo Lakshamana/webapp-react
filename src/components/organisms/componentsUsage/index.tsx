@@ -12,7 +12,7 @@ const ComponentsUsage = () => {
 
   return (
     <Box color={theme.colors.textLight}>
-      <Box background={theme.colors.cardBackground} w={pxToRem(144)} mb={pxToRem(24)}>
+      <Box w={pxToRem(144)} mb={pxToRem(24)}>
         PX_TO_REM SAMPLE
       </Box>
 

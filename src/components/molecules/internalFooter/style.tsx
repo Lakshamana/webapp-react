@@ -5,7 +5,7 @@ import { sizes } from "styles"
 
 export const BoxFooter = styled(StyleContainer)`
     height: ${sizes.footerDesktopHeight};
-    background-color: black;
+    background-color: ${({ theme }) => theme.colors.footerBg[theme.colorMode]};
     bottom: 0;
     left: 0;
     right: 0;
@@ -31,7 +31,7 @@ export const FooterItems = styled(StyleContainer)`
 export const TextFooter = styled.div`
     display: flex;
     justify-content: left;
-    color: white;
+    color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
     font-size: 1rem;
     align-items: center;
 
@@ -42,6 +42,7 @@ export const TextFooter = styled.div`
         border-radius: 1px;
         justify-content: center;
         order: 2;
+        flex-wrap: wrap;
     }
 
 `;

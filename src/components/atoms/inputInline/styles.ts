@@ -13,10 +13,6 @@ const commonStyles = `
   &:focus {
     outline: none;
   }
-
- 
-
- 
 `;
 
 interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
@@ -30,19 +26,14 @@ export const Input: any = styled.input<PropsStyle>`
   ${space}
   ${fontSize}
   ${commonStyles}
-  background-color: ${({ background = "#444444" }) =>
-    `${background}  !important;`};
-  color: ${({ color }) => color};
   width: 100%;
   padding-left: 16px;
   font-size: 16px;
   width: 100%;
-
-  -webkit-box-shadow: 0 0 0 50px #444 inset;
-  -webkit-text-fill-color: #fff;
+  background-color: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
 
   &::placeholder {
-    color: ${({ placeholderColor }) => `${placeholderColor};`};
+    color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
   }
 `;
 

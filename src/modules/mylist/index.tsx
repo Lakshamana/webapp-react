@@ -12,7 +12,7 @@ import { colors } from 'styles'
 const MyListPage = () => {
 	const { t } = useTranslation()
 	return (
-		<MainLayout backgroundColor='#0F0F0F'>
+		<MainLayout>
 			<Container flexDirection={"column"} py={32} px={[4, 32, 32, 62]} width={"100%"}>
 				<GridCards
 					headerTitle={t("page.my_list.my_list")}

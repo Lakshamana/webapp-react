@@ -7,7 +7,7 @@ const i18nConfig = {
 	resources: translations,
 	fallbackLng: "en-US",
 	defaultNS: "translations",
-	debug: true,
+	debug: false,
 	interpolation: {
 		escapeValue: false
 	}

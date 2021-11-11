@@ -1,8 +1,7 @@
 import { LayoutProps, SpaceProps, FlexboxProps } from "styled-system";
 
 export interface Props extends FlexboxProps, LayoutProps, SpaceProps {
-  children: any;
-  backgroundColor?: string;
+  children: JSX.Element | JSX.Element[];
 }
 
 export const defaultProps = {

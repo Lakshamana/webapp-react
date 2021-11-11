@@ -1,15 +1,31 @@
+import { Center, Button } from "@chakra-ui/react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { VideoPlaylist } from "components/molecules";
+import { useThemeStore } from "services/stores/theme";
 
 export default {
   title: "WEBAPP/Video Playlist",
   component: VideoPlaylist,
 } as ComponentMeta<typeof VideoPlaylist>;
 
-const Template: ComponentStory<typeof VideoPlaylist> = (args) => (
-  <VideoPlaylist {...args} />
-);
+const Template: ComponentStory<typeof VideoPlaylist> = (args) => {
+  const { colorMode, toggleColorMode } = useThemeStore()
+  return (
+    <Center 
+      width="600px" 
+      bgColor={colorMode !== 'dark' ? 'white' : 'grey.800'} 
+      flexDir="column"
+    >
+      <Center my="20px">
+        <Button onClick={toggleColorMode}>
+          Toggle colorMode
+        </Button>
+      </Center>
+      <VideoPlaylist {...args} />
+    </Center>
+  )
+}
 
 export const Component = Template.bind({});
 Component.args = {
