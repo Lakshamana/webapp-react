@@ -1,6 +1,7 @@
 import { MoreHorizontal } from "react-feather"
 import { Menu, MenuButton } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
+import { useThemeStore } from "services/stores/theme"
 import { Text, ReactionBar, Participants } from "components"
 import { SetMediaType } from "./components"
 import { Props, defaultProps } from "./types"
@@ -19,12 +20,14 @@ import {
 
 const FeedPostCard = ({ ...props }: Props) => {
 	const { t } = useTranslation()
+	const { colorMode } = useThemeStore()
+
 	return (
 		<FeedContent>
 			<CardContent>
 				{props.type === 'Poll' ? '' : <SetMediaType {...props} />}
 				<CardHeader>
-					<Text kind='headline' fontSize={22} fontWeight={"Bold"} color={colors.white}>
+					<Text kind='headline' fontSize={22} fontWeight={"Bold"} color={colors.generalText[colorMode]}>
 						{props.postTitle}
 					</Text>
 					<Date fontSize='12px' fontWeight={"Bold"} marginRight={3}>
