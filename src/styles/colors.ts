@@ -41,6 +41,10 @@ export const colors = {
     light: '#666666',
     dark: '#F2FFF8',
   },
+  billboardText: {
+    light: '#444444',
+    dark: '#ffffff'
+  },
   white: '#FFFFFF',
   black: '#000000',
   background: '#313740',
