@@ -1,14 +1,15 @@
 import styled from "styled-components"
 import { Flex, Center } from "@chakra-ui/react"
+import { pxToRem } from "styles/metrics"
 
 export const List: any = styled(Flex)`
-  width: 500px;
+  width: ${pxToRem(500)};
   flex-direction: column;
 `
 
 export const Wrapper: any = styled(Flex)`
   flex: 1;
-  padding: 12px;
+  padding: ${pxToRem(12)};
   border-radius: 3px;
   cursor: pointer;
 
@@ -35,12 +36,12 @@ export const VideoThumb: any = styled(Center)`
 export const InfoBox: any = styled(Flex)`
   flex: 1;
   flex-direction: column;
-  padding: 0 12px;
+  padding: 0 ${pxToRem(12)};
 `
 
 export const Title: any = styled(Flex)`
   color: ${({ theme }) => theme.colorMode !== 'dark' ? 'black' : 'white'};
-  font-size: 20px;
+  font-size: ${pxToRem(20)};
   font-weight: 600;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -51,7 +52,7 @@ export const Title: any = styled(Flex)`
 
 export const Subtitle: any = styled(Flex)`
   color: ${({ theme }) => theme.colorMode !== 'dark' ? 'black' : 'white'};
-  font-size: 14px;
+  font-size: ${pxToRem(14)};
   font-weight: 300;
   display: -webkit-box;
   -webkit-line-clamp: 3;
