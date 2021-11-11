@@ -65,5 +65,5 @@ export const CardFooter: any = styled.div`
 export const CountMessage: any = styled.span`
     ${typography}
     ${space}
-    color: ${colors.white};
+    color:  ${({ theme }) => theme.colors.generalText[theme.colorMode]};
 `;
