@@ -55,4 +55,4 @@ jobs:
         
       # Invalidate CF Cache
       - name: Deploy app build to S3 bucket
-        run: aws cloudfront create-invalidation --distribution-id E3KSK8GVXWDTRE --paths /\*
+        run: aws cloudfront create-invalidation --distribution-id ETE9BA8TW8BE7 --paths /\*
