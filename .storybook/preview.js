@@ -10,6 +10,7 @@ import {
   breakpoints as themeBreakpoints,
 } from "../src/styles";
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import { useThemeStore } from '../src/services/stores/theme'
 
 
 export const parameters = {
@@ -35,12 +36,15 @@ const customTheme = extendTheme({
   colors,
 });
 
-const withChakra = (StoryFn) => (
-  <ThemeProvider theme={{ ...theme }}>
-    <ChakraProvider theme={customTheme}>
-      <StoryFn />
-    </ChakraProvider>
-  </ThemeProvider>
-)
+const withChakra = (StoryFn) => {
+  const { colorMode } = useThemeStore()
+  return (
+    <ThemeProvider theme={{ ...theme, colorMode }}>
+      <ChakraProvider theme={customTheme}>
+        <StoryFn />
+      </ChakraProvider>
+    </ThemeProvider>
+  )
+}
 
 export const decorators = [withChakra]
