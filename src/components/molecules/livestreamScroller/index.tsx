@@ -6,6 +6,8 @@ import { Text } from "components"
 import { LivestreamList } from "./livestreamItems"
 import { LiveScrollerProps } from "./types"
 import { Header, ContentScroller } from "./style"
+import { colors } from "styles"
+import { useThemeStore } from 'services/stores/theme'
 
 const LivestreamScroller = ({
 	items,
@@ -13,14 +15,15 @@ const LivestreamScroller = ({
 	sectionUrl,
 	hasMoreLink
 }: LiveScrollerProps) => {
-	const { t } = useTranslation()
+	const { t } = useTranslation();
+	const { colorMode } = useThemeStore();
 
 	return (
 		<>
 			<ContentScroller>
 				<Header>
 					<Text
-						color={"#FFFFFF"}
+						color={colors.generalText[colorMode]}
 						fontSize={"28px"}
 						fontWeight={500}
 						marginRight={"18px"}

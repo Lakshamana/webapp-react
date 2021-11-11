@@ -31,9 +31,10 @@ const ClientRoutes = ({ isAccesible }: any) => (
       fallback={LoginPage}
     />
     <ClientRoute
-      isAccesible={isAccesible?.user}
+      isAccesible={isAccesible?.signup}
       path="/signup"
       component={SignupPage}
+      fallback={LoginPage}
     />
     <ClientRoute
       isAccesible={true}

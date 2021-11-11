@@ -2,7 +2,7 @@ import { MainLayout, Container, FeedPostCard } from "components"
 
 const FeedPage = () => {
 	return (
-		<MainLayout backgroundColor='#0F0F0F'>
+		<MainLayout>
 			<Container flexDirection={"column"} width={"100%"}>
 				<FeedPostCard
 					postTitle='Teste title'
