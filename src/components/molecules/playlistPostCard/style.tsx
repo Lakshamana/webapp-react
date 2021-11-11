@@ -4,7 +4,6 @@ import { Flex, Center } from "@chakra-ui/react"
 export const List: any = styled(Flex)`
   width: 500px;
   flex-direction: column;
-  padding: 12px;
 `
 
 export const Wrapper: any = styled(Flex)`
@@ -18,7 +17,7 @@ export const Wrapper: any = styled(Flex)`
   }
 
   &:hover {
-    background-color: ${({theme}) => theme.colors?.grey[700]};
+    background-color: ${({theme}) => theme.colors?.grey[theme.colorMode !== 'dark' ? 650 : 700]};
 
     svg {
       display: block;
@@ -40,7 +39,7 @@ export const InfoBox: any = styled(Flex)`
 `
 
 export const Title: any = styled(Flex)`
-  color: white;
+  color: ${({ theme }) => theme.colorMode !== 'dark' ? 'black' : 'white'};
   font-size: 20px;
   font-weight: 600;
   text-overflow: ellipsis;
@@ -51,7 +50,7 @@ export const Title: any = styled(Flex)`
 `
 
 export const Subtitle: any = styled(Flex)`
-  color: white;
+  color: ${({ theme }) => theme.colorMode !== 'dark' ? 'black' : 'white'};
   font-size: 14px;
   font-weight: 300;
   display: -webkit-box;

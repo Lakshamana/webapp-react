@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react-with-api";
 import { useHistory } from 'react-router-dom';
-import { Center } from '@chakra-ui/react';
+import { useThemeStore } from "services/stores/theme";
 import {
   List,
   Wrapper,
@@ -13,6 +13,7 @@ import { PlaylistPostCardProps } from "./types";
 
 const PlaylistPostCard = ({ videos }: PlaylistPostCardProps) => {
   const history = useHistory();
+
   return (
     <List>
       {videos && videos.map(({ id, title, subtitle, image_url }) => (
