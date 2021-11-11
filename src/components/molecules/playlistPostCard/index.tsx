@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react-with-api";
 import { useHistory } from 'react-router-dom';
-import { useThemeStore } from "services/stores/theme";
 import {
   List,
   Wrapper,
