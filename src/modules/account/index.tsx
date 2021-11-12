@@ -12,10 +12,12 @@ import {
 } from "./components";
 
 import { colors } from "styles";
+import { useThemeStore } from "services/stores/theme";
 import { ACCOUNT_INFO, PAYMENT_METHODS, DEFAULT_USER } from "./settings";
 import { formatAccountInfo } from "./utils";
 
 const Account = () => {
+  const { colorMode, toggleColorMode } = useThemeStore();
   const accountInfo = useMemo(() => formatAccountInfo(ACCOUNT_INFO), []);
 
   return (
@@ -23,7 +25,11 @@ const Account = () => {
       backgroundImage=""
       mode="light"
       rightContent={() => (
-        <UserInfo delimited={false} mode="dark" user={DEFAULT_USER} />
+        <UserInfo
+          delimited={false}
+          user={DEFAULT_USER}
+          {...{ colorMode, toggleColorMode }}
+        />
       )}
       rightContentStyle={{
         display: ["none", "none", "flex"],
