@@ -6,6 +6,14 @@ export const colors = {
     secondary: "#2B3038",
     secondaryLight: "#DBEEF0",
   },
+  headerBg: {
+    light: "#ffffff",
+    dark: "#000000",
+  },
+  burgerMenu: {
+    light: "#000",
+    dark: "#fff",
+  },
   white: "#FFFFFF",
   black: "#000000",
   background: "#313740",
@@ -16,6 +24,10 @@ export const colors = {
   textLight: "#EBE9E1",
   textMedium: "#9E9F9D",
   textDark: "#20242A",
+  text: {
+    light: "#000",
+    dark: "#fff",
+  },
   grey: {
     "100": "#FAFAFA",
     "200": "#E2E9E9",
@@ -65,6 +77,30 @@ export const colors = {
   },
   primaryTransparent: "rgba(27, 18, 255, 0.85)",
   bgOverlay: "rgba(45, 43, 89, 0.2)",
+  headerTabText: {
+    light: "#444444",
+    dark: "#fff",
+  },
+  headerUserPopoverBg: {
+    light: "#E2E9E9",
+    dark: "#20242A",
+  },
+  headerUserPopoverIcon: {
+    light: "#000",
+    dark: "#fff",
+  },
+  headerUserPopoverText: {
+    light: "#000",
+    dark: "#fff",
+  },
+  headerUserText: {
+    light: "#444444",
+    dark: "#fff",
+  },
+  tabBg: {
+    light: "#0660F9",
+    dark: "#0660F9",
+  },
 };
 
 //Esse comentário aqui é pra deixar salvo pra quando for transformar o input em dark ou light mode.
