@@ -1,5 +1,5 @@
+import { Icon } from "@iconify/react-with-api";
 import { Link } from "react-router-dom";
-import { Power } from "react-feather";
 import { Container, Text } from "components";
 import { SideUserInfo } from "..";
 
@@ -8,11 +8,7 @@ import { SideContainer, ScrollContainer, ExitContainer } from "./styles";
 import { colors } from "styles";
 
 const SideMenu = ({ open, data, user }: PropsSideMenu) => (
-  <SideContainer
-    backgroundColor={colors.black}
-    display={["block", "block", "block", "none"]}
-    {...{ open }}
-  >
+  <SideContainer backgroundColor="black" display="block" {...{ open }}>
     <ScrollContainer
       flexDirection="column"
       display={open ? "flex" : "none"}
@@ -36,7 +32,13 @@ const SideMenu = ({ open, data, user }: PropsSideMenu) => (
           pl={3}
           py={3}
         >
-          <Power color={colors.grey["700"]} width={20} height={20} />
+          <Icon
+            width={20}
+            height={20}
+            icon="mdi:power"
+            color={colors.grey["700"]}
+          />
+
           <Text color={colors.grey["700"]} ml={2}>
             Sair
           </Text>

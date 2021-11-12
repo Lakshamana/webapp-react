@@ -8,6 +8,7 @@ import {
   SideMenu,
 } from "./components";
 
+import { useThemeStore } from "services/stores/theme";
 import {
   CHANNELS,
   DEFAULT_USER,
@@ -17,10 +18,12 @@ import {
 } from "./settings";
 import { Channel, defaultProps, SearchResults } from "./types";
 import { handleContentSearch, reducer } from "./utils";
-import { colors, sizes } from "styles";
+import { sizes } from "styles";
+import { HeaderContainer, LogoContainer } from "./styles";
 
 const HeaderComponent = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { colorMode, toggleColorMode } = useThemeStore();
 
   const [channels, setChannels] = useState<Array<Channel>>(CHANNELS);
   const [searchValues, setSearchValues] =
@@ -52,7 +55,7 @@ const HeaderComponent = () => {
   return (
     <>
       <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
-      <Container
+      <HeaderContainer
         height={[
           sizes.headerMobileHeight,
           sizes.headerMobileHeight,
@@ -60,20 +63,20 @@ const HeaderComponent = () => {
           sizes.headerDesktopHeight,
         ]}
         width={1}
-        px={3}
         alignItems="center"
         justifyContent="space-between"
-        backgroundColor={colors.black}
       >
         <Container alignItems="center">
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
-          <Logo mr={3} />
+          <LogoContainer>
+            <Logo {...{ colorMode }} />
+          </LogoContainer>
           {!state.openSearch ? (
             <ChannelSelector
               onSelect={handleChannelSelect}
               onSearch={handleChannelSearch}
               selected={state.channel}
-              {...{ channels }}
+              {...{ channels, colorMode }}
             />
           ) : (
             <></>
@@ -83,6 +86,7 @@ const HeaderComponent = () => {
           <Container
             flex={1}
             ml={2}
+            justifyContent="center"
             alignItems="center"
             display={["none", "none", "flex"]}
           >
@@ -92,6 +96,7 @@ const HeaderComponent = () => {
               setSelected={(value: any) =>
                 dispatch({ type: "selected", value })
               }
+              {...{ colorMode }}
             />
           </Container>
         ) : (
@@ -105,10 +110,11 @@ const HeaderComponent = () => {
             onClose={handleCloseSearch}
             onSearch={handleSearch}
             search={state.search}
+            {...{ colorMode }}
           />
-          <UserInfo user={DEFAULT_USER} />
+          <UserInfo user={DEFAULT_USER} {...{ colorMode, toggleColorMode }} />
         </Container>
-      </Container>
+      </HeaderContainer>
     </>
   );
 };

@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import { layout, LayoutProps } from "styled-system";
-import { colors } from "styles";
 
 interface PropsContainer extends LayoutProps {
   open: boolean;
@@ -12,7 +11,7 @@ export const Parent = styled.div<PropsContainer>`
   :before,
   :after,
   div {
-    background: ${colors.white};
+    background: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
     content: "";
     display: block;
     height: 4px;

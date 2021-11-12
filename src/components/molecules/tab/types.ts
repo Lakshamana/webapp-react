@@ -5,6 +5,7 @@ export interface Props extends SpaceProps {
   children: any;
   selected?: boolean;
   onSelect: any;
+  color: string;
 }
 
 export const defaultProps = {

@@ -3,7 +3,7 @@ import { LayoutProps, SpaceProps, FlexboxProps } from "styled-system";
 export interface Props extends FlexboxProps, LayoutProps, SpaceProps {
   height?: number;
   width?: number;
-  mode?: string;
+  colorMode?: string;
 }
 
 export const defaultProps = {

@@ -1,4 +1,4 @@
-import { Check } from "react-feather";
+import { Icon } from "@iconify/react-with-api";
 import { Container, Text } from "components";
 import { PropsChannels } from "../../types";
 
@@ -12,7 +12,7 @@ const Channels = ({ channels, selected, onSelect }: PropsChannels) => (
           <Container alignItems="center">
             <Container width="30px" justifyContent="center">
               {selected?.id === channel.id ? (
-                <Check color="white" width={15} height={15} />
+                <Icon width={15} height={15} icon="mdi:check" />
               ) : (
                 <></>
               )}

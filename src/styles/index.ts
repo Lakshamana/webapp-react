@@ -10,6 +10,7 @@ import {
 
 const theme = {
   colors,
+  sizes,
   ...metrics,
 };
 
@@ -21,5 +22,5 @@ export {
   breakpoints,
   breakpointKeys,
   fonts,
-  sizes
+  sizes,
 };
