@@ -11,7 +11,7 @@ export const Parent = styled.div<PropsContainer>`
   :before,
   :after,
   div {
-    background: ${({ theme }) => theme.colors.burgerMenu[theme.colorMode]};
+    background: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
     content: "";
     display: block;
     height: 4px;

@@ -11,6 +11,6 @@ export const Circle = styled.div<CircleLayout>`
   bottom: -13px;
   display: flex;
   background-color: ${({ selected, theme }) =>
-    selected && theme.colors.tabBg[theme.colors.colorMode]};
+    selected && theme.colors.brand.primary[theme.colors.colorMode]};
   border-radius: 50%;
 `;

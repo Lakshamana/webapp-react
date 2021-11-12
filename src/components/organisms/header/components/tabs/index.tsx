@@ -12,7 +12,7 @@ const Tabs = ({ selected, setSelected, data, colorMode }: PropsTabs) => (
         link={tab.url}
         selected={selected === tab.id}
         onSelect={() => setSelected(tab.label)}
-        color={colors.headerTabText[colorMode]}
+        color={colors.secondaryText[colorMode]}
         {...tab.style}
       >
         {tab.label}

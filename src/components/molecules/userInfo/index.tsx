@@ -33,7 +33,7 @@ const UserInfo = ({
           <button>
             <UserContainer px={1} {...{ delimited }}>
               <TextContainer maxWidth={["150px"]}>
-                <Text ellipsis color={colors.headerUserText[colorMode]}>
+                <Text ellipsis color={colors.secondaryText[colorMode]}>
                   {user?.name || ""}
                 </Text>
               </TextContainer>
@@ -47,7 +47,7 @@ const UserInfo = ({
         <Container flexDirection="column" width={1}>
           <OptionsList>
             <PopoverOption
-              color={colors.headerUserPopoverText[colorMode]}
+              color={colors.generalText[colorMode]}
               text="Editar Perfil"
               onClick={() => {}}
               icon={
@@ -55,12 +55,12 @@ const UserInfo = ({
                   width={18}
                   height={18}
                   icon="mdi:account"
-                  color={colors.headerUserPopoverIcon[colorMode]}
+                  color={colors.generalText[colorMode]}
                 />
               }
             />
             <PopoverOption
-              color={colors.headerUserPopoverText[colorMode]}
+              color={colors.generalText[colorMode]}
               text={`${
                 colorMode === "dark" ? "Desativar" : "Ativar"
               } modo escuro`}
@@ -71,33 +71,33 @@ const UserInfo = ({
                     width={18}
                     height={18}
                     icon="mdi:white-balance-sunny"
-                    color={colors.headerUserPopoverIcon[colorMode]}
+                    color={colors.generalText[colorMode]}
                   />
                 ) : (
                   <Icon
                     width={18}
                     height={18}
-                    color={colors.headerUserPopoverIcon[colorMode]}
+                    color={colors.generalText[colorMode]}
                     icon="mdi:moon-waning-crescent"
                   />
                 )
               }
             />
             <PopoverOption
-              color={colors.headerUserPopoverText[colorMode]}
+              color={colors.generalText[colorMode]}
               text="Ajustes"
               onClick={() => {}}
               icon={
                 <Icon
                   width={18}
                   height={18}
-                  color={colors.headerUserPopoverIcon[colorMode]}
+                  color={colors.generalText[colorMode]}
                   icon="mdi:cog-outline"
                 />
               }
             />
             <PopoverOption
-              color={colors.headerUserPopoverText[colorMode]}
+              color={colors.generalText[colorMode]}
               onClick={() => {}}
               text="Sair"
               icon={
@@ -105,7 +105,7 @@ const UserInfo = ({
                   width={18}
                   height={18}
                   icon="mdi:power"
-                  color={colors.headerUserPopoverIcon[colorMode]}
+                  color={colors.generalText[colorMode]}
                 />
               }
             />

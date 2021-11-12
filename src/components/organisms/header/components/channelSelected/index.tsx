@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react-with-api";
 import { useTranslation } from "react-i18next";
 import { Container, Text } from "components";
 import { PropsChannelSelected } from "../../types";
+import { colors } from "styles";
 import { ChannelIcon, IconContainer, TextContainer } from "./styles";
 
 const ChannelSelected = ({
@@ -13,10 +14,18 @@ const ChannelSelected = ({
   return (
     <Container alignItems="center">
       <TextContainer alignItems="flex-start" flexDirection="column" mr={2}>
-        <Text lineHeight={1} fontSize={14} color={`text.${colorMode}`}>
+        <Text
+          lineHeight={1}
+          fontSize={14}
+          color={colors.secondaryText[colorMode]}
+        >
           {t("header.channel_selected.select")}
         </Text>
-        <Text lineHeight={1} fontSize={14} color={`text.${colorMode}`}>
+        <Text
+          lineHeight={1}
+          fontSize={14}
+          color={colors.secondaryText[colorMode]}
+        >
           {t("header.channel_selected.channel")}
         </Text>
       </TextContainer>
@@ -32,7 +41,7 @@ const ChannelSelected = ({
           width={24}
           height={24}
           icon="mdi:chevron-down"
-          color={colorMode === "light" ? "#666666" : "white"}
+          color={colors.secondaryText[colorMode]}
         />
       </IconContainer>
     </Container>

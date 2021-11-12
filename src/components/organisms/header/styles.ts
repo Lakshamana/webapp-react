@@ -18,22 +18,22 @@ export const Circle = styled.div<CircleLayout>`
 
 export const HeaderContainer = styled(StyleContainer)`
   display: flex;
-  padding: 0 16px;
   background: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
+  padding: 0 ${({ theme }) => theme.sizes.paddingSm};
 
   @media screen and (min-width: ${breakpoints.md}) {
-    padding: 0 32px;
+    padding: 0 ${({ theme }) => theme.sizes.paddingMd};
   }
 
   @media screen and (min-width: ${breakpoints.lg}) {
-    padding: 0 65px;
+    padding: 0 ${({ theme }) => theme.sizes.paddingLg};
   }
 `;
 
 export const LogoContainer = styled.div`
-  padding: 0 16px;
+  padding: 0 ${({ theme }) => theme.sizes.paddingSm};
 
   @media screen and (min-width: ${breakpoints.xl}) {
-    padding: 0 32px;
+    padding: 0 ${({ theme }) => theme.sizes.paddingLg};
   }
 `;
