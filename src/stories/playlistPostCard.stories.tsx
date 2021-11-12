@@ -19,7 +19,7 @@ const Template: ComponentStory<typeof PlaylistPostCard> = (args) => {
           Toggle colorMode
         </Button>
       </Center>
-      <Center bgColor={colorMode !== 'dark' ? 'white' : 'grey.800'}>
+      <Center bgColor={colorMode !== 'dark' ? 'white' : 'black'}>
         <PlaylistPostCard {...args} />
       </Center>
     </Flex>
