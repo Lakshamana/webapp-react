@@ -6,6 +6,8 @@ export type User = {
   avatar: string;
 };
 
+type ColorMode = "dark" | "light";
+
 export type Channel = {
   name: string;
   id: string;
@@ -33,6 +35,7 @@ export interface PropsTabs {
   selected: Tab | undefined;
   setSelected: any;
   data: Array<Tab>;
+  colorMode: ColorMode;
 }
 
 export interface PropsSearchBar {
@@ -42,22 +45,26 @@ export interface PropsSearchBar {
   onClose: any;
   search: string;
   data: Array<SearchResults>;
+  colorMode: ColorMode;
 }
 
 export interface PropsChannels {
   channels: Array<Channel>;
   selected: Channel;
   onSelect: any;
+  colorMode: ColorMode;
 }
 
 export interface PropsChannelSearch {
   search: string;
   onChange: any;
+  colorMode: ColorMode;
 }
 
 export interface PropsChannelSelected {
   open: boolean;
   selected: Channel | null;
+  colorMode: ColorMode;
 }
 
 export interface PropsSearchPopover {
