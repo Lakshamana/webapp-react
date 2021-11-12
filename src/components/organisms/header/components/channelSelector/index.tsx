@@ -5,13 +5,13 @@ import { Channels, ChannelSearch, ChannelSelected } from "..";
 import { PropsChannelSelector } from "../../types";
 import { defaultProps } from "./types";
 import { CustomContainer } from "./styles";
-import { colors } from "styles";
 
 const ChannelSelector = ({
   onSelect,
   onSearch,
   channels,
   selected,
+  colorMode,
   ...props
 }: PropsChannelSelector) => {
   const [open, setOpen] = useState(false);
@@ -40,16 +40,19 @@ const ChannelSelector = ({
           onOpen: () => setOpen(true),
           onClose: () => setOpen(false),
         }}
-        background={colors.backgroundLayout}
+        background="backgroundLayout"
         trigger={
           <button>
-            <ChannelSelected {...{ selected, open }} />
+            <ChannelSelected {...{ selected, open, colorMode }} />
           </button>
         }
       >
         <Container flexDirection="column">
-          <ChannelSearch {...{ search }} onChange={handleSearch} />
-          <Channels onSelect={handleSelect} {...{ channels, selected }} />
+          <ChannelSearch {...{ search, colorMode }} onChange={handleSearch} />
+          <Channels
+            onSelect={handleSelect}
+            {...{ channels, selected, colorMode }}
+          />
         </Container>
       </Popover>
     </CustomContainer>

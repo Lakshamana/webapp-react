@@ -1,22 +1,22 @@
-import { MoreHorizontal } from "react-feather"
-import { Menu, MenuButton } from "@chakra-ui/react"
-import { useTranslation } from "react-i18next"
+import { Icon } from "@iconify/react-with-api";
+import { Menu, MenuButton } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { Text, ReactionBar, Participants } from "components";
+import { SetMediaType } from "./components";
 import { useThemeStore } from "services/stores/theme"
-import { Text, ReactionBar, Participants } from "components"
-import { SetMediaType } from "./components"
-import { Props, defaultProps } from "./types"
-import { abbreviateNumber } from "./utils"
-import { colors } from "styles"
+import { Props, defaultProps } from "./types";
+import { abbreviateNumber } from "./utils";
+import { colors } from "styles";
 import {
-	FeedContent,
-	CardContent,
-	CardHeader,
-	Date,
-	CardDescription,
-	CardReactions,
-	CardFooter,
-	CountMessage
-} from "./style"
+  FeedContent,
+  CardContent,
+  CardHeader,
+  Date,
+  CardDescription,
+  CardReactions,
+  CardFooter,
+  CountMessage,
+} from "./style";
 
 const FeedPostCard = ({ ...props }: Props) => {
 	const { t } = useTranslation()
@@ -63,6 +63,6 @@ const FeedPostCard = ({ ...props }: Props) => {
 	)
 }
 
-FeedPostCard.defaultProps = defaultProps
+FeedPostCard.defaultProps = defaultProps;
 
-export { FeedPostCard }
+export { FeedPostCard };

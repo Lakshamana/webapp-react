@@ -1,4 +1,4 @@
-import { Settings } from "react-feather";
+import { Icon } from "@iconify/react-with-api";
 import { Container, Text } from "components";
 
 import { PropsSideUserInfo } from "../../types";
@@ -24,7 +24,12 @@ const SideUserInfo = ({ user }: PropsSideUserInfo) => (
       </Container>
     </Container>
     <SettingsContainer mr={2} display="flex" alignItems="center" p={2}>
-      <Settings color={colors.blue["300"]} height={20} width={20} />
+      <Icon
+        width={20}
+        height={20}
+        icon="mdi:power"
+        color={colors.blue["300"]}
+      />
     </SettingsContainer>
   </UserContainer>
 );

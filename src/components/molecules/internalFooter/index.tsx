@@ -33,5 +33,5 @@ const InternalFooter = () => {
 		</BoxFooter>
 	)
 }
-
-export { InternalFooter }
+ 
+export { InternalFooter };

@@ -2,14 +2,36 @@ import { Channel } from "./types";
 import i18n from "config/i18n";
 
 export const MENUTABS = [
-  { id: "home", label: i18n.t("header.tabs.home"), url: "/home" },
-  { id: "live", label: i18n.t("header.tabs.live"), url: "/" },
-  { id: "feed", label: i18n.t("header.tabs.feed"), url: "/feed" },
-  { id: "collections", label: i18n.t("header.tabs.collections"), url: "/collections" },
-  { id: "list", label: i18n.t("header.tabs.my_list"), url: "/mylist" },
-  { id: "settings", label: i18n.t("header.tabs.settings"), url: "/" },
-  { id: "tools", label: i18n.t("header.tabs.tools"), url: "/" },
-  { id: "example 1", label: i18n.t("header.tabs.example"), url: "/" },
+  {
+    id: "home",
+    label: i18n.t("header.tabs.home"),
+    url: "/home",
+    style: { mx: "25px" },
+  },
+  {
+    id: "live",
+    label: i18n.t("header.tabs.live"),
+    url: "/",
+    style: { mx: "25px" },
+  },
+  {
+    id: "feed",
+    label: i18n.t("header.tabs.feed"),
+    url: "/feed",
+    style: { mx: "25px" },
+  },
+  {
+    id: "collections",
+    label: i18n.t("header.tabs.collections"),
+    url: "/collections",
+    style: { mx: "25px" },
+  },
+  {
+    id: "mylist",
+    label: i18n.t("header.tabs.my_list"),
+    url: "/mylist",
+    style: { ml: "25px" },
+  },
 ];
 
 export const CHANNELS: Array<Channel> = [

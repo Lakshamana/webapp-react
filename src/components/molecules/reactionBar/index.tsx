@@ -1,6 +1,7 @@
-import { Container, Text, Popover } from 'components'
-import { Plus, Smile } from 'react-feather'
+
 import { useThemeStore } from 'services/stores/theme'
+import { Container, Text, Popover } from "components";
+import { Icon } from "@iconify/react-with-api"; 
 
 import { Props } from './types'
 
@@ -40,8 +41,12 @@ const ReactionBar = ({
               trigger={
                 <button>
                   <Reaction p={1} mr={1} minWidth={50} minHeight={32}>
-                    <Plus size={20} />
-                    <Smile size={20} />
+                    <Icon width={20} height={20} icon="mdi:plus" />
+                    <Icon
+                      width={20}
+                      height={20}
+                      icon="mdi:emoticon-happy-outline"
+                    />
                   </Reaction>
                 </button>
               }

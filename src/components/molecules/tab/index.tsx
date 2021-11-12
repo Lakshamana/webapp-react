@@ -4,7 +4,14 @@ import { Container, Text } from "components";
 import { Props, defaultProps } from "./types";
 import { Circle } from "./styles";
 
-const Tab = ({ link, children, selected, onSelect, ...props }: Props) => (
+const Tab = ({
+  link,
+  children,
+  selected,
+  onSelect,
+  color,
+  ...props
+}: Props) => (
   <Link to={link}>
     <Container
       position="relative"
@@ -16,7 +23,7 @@ const Tab = ({ link, children, selected, onSelect, ...props }: Props) => (
       <Text
         style={{ textTransform: "uppercase", whiteSpace: "nowrap" }}
         fontWeight={selected ? "700" : "400"}
-        color="white"
+        {...{ color }}
       >
         {children}
       </Text>
