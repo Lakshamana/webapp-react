@@ -39,7 +39,7 @@ const customTheme = extendTheme({
 const withChakra = (StoryFn) => {
   const { colorMode } = useThemeStore()
   return (
-    <ThemeProvider theme={{ ...theme, colorMode }}>
+    <ThemeProvider theme={{ ...theme, colorMode, darkMode: colorMode === 'dark' }}>
       <ChakraProvider theme={customTheme}>
         <StoryFn />
       </ChakraProvider>
