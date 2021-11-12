@@ -12,8 +12,8 @@ export const Container = styled.div<Props>`
   box-shadow: ${({ removeShadow }) =>
     !!removeShadow ? "none" : "0px 4px 4px rgba(0, 0, 0, 0.25)"};
   border-radius: 8px;
-  /* TO DO: Add color variable for theme-dark or theme-light */
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
+  
   @media screen and (max-width: ${breakpoints.sm}) {
     border-radius: 0;
   }

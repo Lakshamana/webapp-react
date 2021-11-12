@@ -11,13 +11,13 @@ export const initialValues = {
 export const validationSchema = Yup.object().shape({
 	signIn: Yup.object().shape({
 		password: Yup.string().required(
-			i18n.t("signin.error.field_required", {
-				field_name: i18n.t("signin.label.email")
+			i18n.t("common.error.field_required", {
+				field_name: i18n.t("signin.label.password")
 			})
 		),
 		email: Yup.string().required(
-			i18n.t("signin.error.field_required", {
-				field_name: i18n.t("signin.label.password")
+			i18n.t("common.error.field_required", {
+				field_name: i18n.t("signin.label.email")
 			})
 		)
 	})

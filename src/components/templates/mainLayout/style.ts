@@ -1,16 +1,26 @@
 import styled from "styled-components"
 import { StyleContainer } from "components"
+import { breakpoints, sizes } from "styles"
 
 export const ChildContainer = styled(StyleContainer)`
 	display: flex;
-	height: auto;
+	height: max-content;
+	min-height: calc(
+		100vh - ${sizes.footerDesktopHeight} - ${sizes.headerDesktopHeight}
+	);
+
+	@media screen and (max-width: ${breakpoints.md}) {
+		min-height: calc(
+			100vh - ${sizes.footerMobileHeight} - ${sizes.headerMobileHeight}
+		);
+	}
 `
 
 export const LayoutContainer = styled(StyleContainer)`
-	position: relative;
 	display: flex;
 	width: 100%;
-	height: 100vh;
-	overflow-y: auto;
+	min-height: 100vh;
 	overflow-x: hidden;
+	position: relative;
+	background-color: ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
 `

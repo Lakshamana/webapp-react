@@ -21,7 +21,7 @@ const TemplateProvider = ({ children }: any) => {
   const { colorMode } = useThemeStore()
 
   const config = {
-    initialColorMode: colorMode,
+    initialColorMode: 'light',
     useSystemColorMode: false,
   };
 

@@ -10,7 +10,7 @@ import onDemandData from "./onDemand.json"
 const HomePage = () => {
 	const { t } = useTranslation()
   return (
-  <MainLayout backgroundColor='#0F0F0F'>
+  <MainLayout>
     <Container flexDirection={"column"} display={"flex"}>
       <BillboardScroller items={billboardData} customButtons={true}></BillboardScroller>
       <Flex pb={10} pl={[35, 65]} gridGap={10} flexDirection={"column"}>

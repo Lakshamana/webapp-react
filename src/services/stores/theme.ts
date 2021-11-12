@@ -12,7 +12,7 @@ type ThemeState = {
 };
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  colorMode: ColorMode.light,
+  colorMode: ColorMode.dark,
   setColorMode: (colorMode: ColorMode) => {
     return set({ colorMode });
   },

@@ -9,5 +9,6 @@ export const permission = {
   account: true,
   search: true,
   channelList: true,
-  feed: true
+  feed: true,
+  signup: true
 };

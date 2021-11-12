@@ -8,7 +8,7 @@ import collectionsData from "./collections.json"
 const CollectionsPage = () => {
 	const { t } = useTranslation()
 	return (
-		<MainLayout backgroundColor='#0F0F0F'>
+		<MainLayout>
 			<Container flexDirection={"column"} width={"100%"}>
 				<BillboardScroller
 					items={billboardData}
