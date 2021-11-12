@@ -27,3 +27,16 @@ export const reducer = (state: any, { type, value }: any) => {
   }
   return state;
 };
+
+export const getSelectedTab = (location: string) => {
+  const routes = {
+    "/home": "home",
+    "/live": "live",
+    "/feed": "feed",
+    "/collections": "collections",
+    "/mylist": "mylist",
+  };
+  if (location && routes[location]) return routes[location];
+
+  return "";
+};
