@@ -5,7 +5,7 @@ export const MENUTABS = [
   {
     id: "home",
     label: i18n.t("header.tabs.home"),
-    url: "/",
+    url: "/home",
     style: { mx: "25px" },
   },
   {
@@ -17,7 +17,7 @@ export const MENUTABS = [
   {
     id: "feed",
     label: i18n.t("header.tabs.feed"),
-    url: "/",
+    url: "/feed",
     style: { mx: "25px" },
   },
   {
@@ -32,6 +32,8 @@ export const MENUTABS = [
     url: "/mylist",
     style: { ml: "25px" },
   },
+  { id: "settings", label: i18n.t("header.tabs.settings"), url: "/" },
+  { id: "tools", label: i18n.t("header.tabs.tools"), url: "/" },
   // { id: "settings", label: i18n.t("header.tabs.settings"), url: "/" },
   // { id: "tools", label: i18n.t("header.tabs.tools"), url: "/" },
   // { id: "example 1", label: i18n.t("header.tabs.example"), url: "/" },

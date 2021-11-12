@@ -32,7 +32,9 @@ export interface Props extends SpaceProps, LayoutProps, TypographyProps, Flexbox
 export const defaultProps = {
 	isExclusive: false,
 	isGeolocked: false,
-	hasActivity: true
+	hasActivity: true,
+	displayViews: true,
+	winning: true
 }
 
 export interface MediaTypeProps {

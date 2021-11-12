@@ -5,7 +5,7 @@ import { BackgroundModal, ModalMain, BodyModal } from "./style";
 import { Props } from "./types";
 
 const Modal = ({
-  title,
+  title = "",
   width = "40%",
   onClose = () => {},
   show = false,
@@ -19,7 +19,7 @@ const Modal = ({
     >
       <ModalMain
         width={["60%", "50%", "60%"]}
-        height={["300px", "200px", "400px"]}
+        height={["300px", "400px", "400px"]}
       >
         <HeaderModal title={title} />
         <BodyModal>{children}</BodyModal>

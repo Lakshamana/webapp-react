@@ -1,4 +1,3 @@
 export interface RegistrationProps {
-    email: string;
-    password: string;
+    handleFormSubmit: (formData: any) => void
 }

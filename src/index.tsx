@@ -10,7 +10,6 @@ import "./config/firebase";
 import "./config/sentry";
 import "./config/i18n";
 
-
 ReactDOM.render(
 	<React.StrictMode>
 		<TemplateProvider>

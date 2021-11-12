@@ -1,33 +1,63 @@
 export const colors = {
-  primary: "#0660F9",
   brand: {
-    primary: "#0660F9",
-    primaryLight: "#EBE9E1",
-    secondary: "#2B3038",
-    secondaryLight: "#DBEEF0",
+    primary: {
+      light: "#0660F9",
+      dark: "#0660F9",
+    },
+    secondary: {
+      light: "#2B3038",
+      dark: "#2B3038",
+    },
+    accent: {
+      light: "#0660F9",
+      dark: "#0660F9",
+    },
+  },
+  generalText: {
+    light: "#000000",
+    dark: "#ffffff",
+  },
+  secondaryText: {
+    light: "#444444",
+    dark: "#fff",
+  },
+  bodyBg: {
+    light: "#F6F6F6",
+    dark: "#0F0F0F",
+  },
+  cardBg: {
+    light: "#ffffff",
+    dark: "#222222",
   },
   headerBg: {
     light: "#ffffff",
     dark: "#000000",
   },
-  burgerMenu: {
-    light: "#000",
-    dark: "#fff",
+  footerBg: {
+    light: "#ffffff",
+    dark: "#000000",
+  },
+  inputBg: {
+    light: "#ffffff",
+    dark: "#444444",
+  },
+  inputText: {
+    light: "#666666",
+    dark: "#F2FFF8",
+  },
+  headerUserPopoverBg: {
+    light: "#E2E9E9",
+    dark: "#20242A",
   },
   white: "#FFFFFF",
   black: "#000000",
   background: "#313740",
   backgroundLayout: "#20242A",
-  cardBackground: "#2B3038",
   componentBorder: "#E2E9E9",
   tabsBorder: "#C5C4BF",
   textLight: "#EBE9E1",
   textMedium: "#9E9F9D",
   textDark: "#20242A",
-  text: {
-    light: "#000",
-    dark: "#fff",
-  },
   grey: {
     "100": "#FAFAFA",
     "200": "#E2E9E9",
@@ -77,30 +107,6 @@ export const colors = {
   },
   primaryTransparent: "rgba(27, 18, 255, 0.85)",
   bgOverlay: "rgba(45, 43, 89, 0.2)",
-  headerTabText: {
-    light: "#444444",
-    dark: "#fff",
-  },
-  headerUserPopoverBg: {
-    light: "#E2E9E9",
-    dark: "#20242A",
-  },
-  headerUserPopoverIcon: {
-    light: "#000",
-    dark: "#fff",
-  },
-  headerUserPopoverText: {
-    light: "#000",
-    dark: "#fff",
-  },
-  headerUserText: {
-    light: "#444444",
-    dark: "#fff",
-  },
-  tabBg: {
-    light: "#0660F9",
-    dark: "#0660F9",
-  },
 };
 
 //Esse comentário aqui é pra deixar salvo pra quando for transformar o input em dark ou light mode.

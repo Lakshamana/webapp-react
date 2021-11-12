@@ -3,7 +3,7 @@ import { ToggleButtonProps } from "./types";
 
 const ToggleButton = ({ ...props }: ToggleButtonProps) => {
   return (
-    <SwitchStyled size="lg" {...props} />
+    <SwitchStyled size="md" {...props} />
   )
 }
 

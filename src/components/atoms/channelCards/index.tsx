@@ -1,25 +1,25 @@
-import { Icon } from "@iconify/react-with-api"
-import { ChannelsProps, defaultProps } from './types'
-import { ChannelsContent, ExclusiveBlocked, GeolockedBlocked } from './styles'
+import { Icon } from "@iconify/react-with-api";
+import { ChannelsProps, defaultProps } from "./types";
+import { ChannelsContent, ExclusiveBlocked, GeolockedBlocked } from "./styles";
 
 const ChannelCards = ({ ...props }: ChannelsProps) => {
-    return (
-        <ChannelsContent {...props}>
-			{props.isExclusive ? (
-				<ExclusiveBlocked>
-					<Icon width={20} icon={`mdi:lock`}></Icon>
-				</ExclusiveBlocked>
-			) : "" || props.isGeolocked ? (
-				<GeolockedBlocked>
-					<Icon width={20} icon={`mdi:lock`}></Icon>
-				</GeolockedBlocked>
-			) : (
-				""
-			)}
-		</ChannelsContent>
-    );
-}
+  return (
+    <ChannelsContent {...props}>
+      {props.isExclusive ? (
+        <ExclusiveBlocked>
+          <Icon width={20} icon={`mdi:lock`}></Icon>
+        </ExclusiveBlocked>
+      ) : "" || props.isGeolocked ? (
+        <GeolockedBlocked>
+          <Icon width={20} icon={`mdi:lock`}></Icon>
+        </GeolockedBlocked>
+      ) : (
+        ""
+      )}
+    </ChannelsContent>
+  );
+};
 
-ChannelCards.defaultProps = defaultProps
+ChannelCards.defaultProps = defaultProps;
 
-export { ChannelCards }
+export { ChannelCards };

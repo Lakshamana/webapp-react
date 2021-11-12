@@ -1,12 +1,11 @@
-import { Text, LoginLayout, CardContainer, SignupForm } from "components";
+import { LoginLayout, CardContainer, SignupForm } from "components";
 import { Container } from './style';
-import { Flex } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { sizes } from 'styles'
 
 const SignupPage = () => (
     <LoginLayout>
-        <Container>
-            <CardContainer paddingX={[40, 80]} paddingY={[20, 10]} maxWidth={550}>
+        <Container width={1} paddingY={[0, 40]}>
+            <CardContainer paddingX={[30, 60]} paddingY={[40, 40]} width={[1, sizes.loginCardWidth]} >
                 <SignupForm></SignupForm>
             </CardContainer>
         </Container>

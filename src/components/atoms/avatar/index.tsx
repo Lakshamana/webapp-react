@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
-import { Main, Image } from "./style";
+import { Main } from "./style";
 
+import { Icon } from "@iconify/react";
 import { Props, defaultProps } from "./types";
 
 const objWithImage: any = {
@@ -14,9 +15,14 @@ const objImage: any = {
   large: 20,
 };
 
-const Avatar = ({ size = "", src }: Props) => {
+const Avatar = ({
+  size = "large",
+  icon = "bx:bx-user",
+  colorIcon = "#000",
+  backgroundAvatar = "#e1e1e1",
+}: Props) => {
   const getSizeImage = (): any => {
-    if (src === "") return objImage[size];
+    if (icon === "") return objImage[size];
     return objWithImage[size];
   };
 
@@ -35,11 +41,16 @@ const Avatar = ({ size = "", src }: Props) => {
   );
 
   return (
-    <Main width={dimensionsProps.width} height={dimensionsProps.height}>
-      <Image
-        src={src === "" ? "/img/avatar.png" : src}
-        width={dimensionsProps.sizeImage}
+    <Main
+      width={dimensionsProps.width}
+      height={dimensionsProps.height}
+      background={backgroundAvatar}
+    >
+      <Icon
+        icon={icon === "" ? "bx:bx-user" : icon}
+        width={dimensionsProps.sizeImage - 24}
         height={dimensionsProps.sizeImage}
+        color={colorIcon}
       />
     </Main>
   );

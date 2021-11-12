@@ -8,4 +8,7 @@ export const permission = {
   tags: true,
   account: true,
   search: true,
+  channelList: true,
+  feed: true,
+  signup: true
 };

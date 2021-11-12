@@ -12,8 +12,8 @@ export const FeedContent = styled.div`
 
 export const CardContent: any = styled.div`
     position: relative;
-    background-color: ${colors.cardBackground};
-    margin: 0 auto;
+    background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
+    margin: 22px auto;
     max-width: 746px;
 `;
 
@@ -55,9 +55,9 @@ export const CardFooter: any = styled.div`
     display: flex;
     align-items: center;
     position: relative;
-    background-color: ${colors.cardBackground};
+    background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
     padding: 16px;
-    border-top: 2px solid ${colors.backgroundLayout};
+    border-top: 2px solid ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
 
     ${space}
 `;

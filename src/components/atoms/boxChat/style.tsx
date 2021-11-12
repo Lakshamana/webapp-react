@@ -1,13 +1,27 @@
 import styled from "styled-components";
-import { color, layout } from "styled-system";
+import { color, flexbox, layout } from "styled-system";
+
+export const BoxChatMain: any = styled.div`
+  ${flexbox}
+  ${layout}
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const AvatarContainer: any = styled.div`
+  height: 285px;
+  margin-right: 24px;
+`;
 
 export const MainContainer: any = styled.div`
   ${layout}
-  width: 80%;
-  border-radius: 30px;
+  ${flexbox}
   display: flex;
   flex-direction: column;
-  margin: 8px;
+  justify-content: flex-start;
+  height: 285px;
 `;
 
 export const DateContainer: any = styled.div`

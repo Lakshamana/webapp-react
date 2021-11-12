@@ -6,7 +6,7 @@ const Button = ({ label, type, iconName, children, ...props }: ButtonProps) => {
     const getButtonStyle = () => {
         switch (type) {
             case 'submit':
-                return <BoxButton variant="primary" borderRadius={4} {...props}>{label}</BoxButton>
+                return <BoxButton variant="primary" type={'submit'} borderRadius={4} {...props}>{label}</BoxButton>
             case 'reset':
                 return <BoxButton variant="secondary" borderRadius={4} {...props}>{label}</BoxButton>
             case 'billboard':

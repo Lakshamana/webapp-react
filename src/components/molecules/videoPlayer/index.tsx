@@ -21,6 +21,7 @@ import { getDefaultConfigs } from './settings'
 const VideoPlayer = ({ 
   src, 
   title, 
+  isLiveStream,
   subtitle, 
   vttSrc, 
   overlays, 
@@ -63,7 +64,15 @@ const VideoPlayer = ({
 
   return (
     src
-      ? <VideoJS options={{...defaultOptions, ...options}} skin={skin} onReady={handlePlayerReady} />
+      ? <VideoJS 
+          options={{
+            ...defaultOptions, 
+            ...(isLiveStream ? { playbackRates: undefined } : {}), 
+            ...options
+          }} 
+          skin={skin} 
+          onReady={handlePlayerReady} 
+        />
       : <></>
   );
 }

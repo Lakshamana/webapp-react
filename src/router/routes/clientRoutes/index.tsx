@@ -12,6 +12,8 @@ import {
   MyListPage,
   TagPage,
   SearchPage,
+  ChannelList,
+  FeedPage,
 } from "modules";
 
 const ClientRoutes = ({ isAccesible }: any) => (
@@ -29,9 +31,10 @@ const ClientRoutes = ({ isAccesible }: any) => (
       fallback={LoginPage}
     />
     <ClientRoute
-      isAccesible={isAccesible?.user}
+      isAccesible={isAccesible?.signup}
       path="/signup"
       component={SignupPage}
+      fallback={LoginPage}
     />
     <ClientRoute
       isAccesible={true}
@@ -61,6 +64,23 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.search}
       path="/search"
       component={SearchPage}
+      fallback={HomePage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.channelList}
+      path="/channelList"
+      component={ChannelList}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.feed}
+      path="/feed"
+      component={FeedPage}
+      fallback={HomePage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.tags}
+      path="/tags"
+      component={TagPage}
       fallback={HomePage}
     />
     <ClientRoute
