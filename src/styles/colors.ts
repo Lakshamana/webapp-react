@@ -26,7 +26,7 @@ export const colors = {
     dark: "#0F0F0F",
   },
   cardBg: {
-    light: "#ffffff",
+    light: "#F6F6F6",
     dark: "#222222",
   },
   headerBg: {
