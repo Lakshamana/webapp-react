@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react-with-api";
 import { Container, Text, Popover } from "components";
 import { PopoverOption } from "./components";
