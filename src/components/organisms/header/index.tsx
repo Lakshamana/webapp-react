@@ -1,4 +1,5 @@
 import { useState, memo, useReducer } from "react";
+import { useLocation } from "react-router-dom";
 import { Container, Logo, UserInfo } from "components";
 import {
   Tabs,
@@ -17,13 +18,17 @@ import {
   initialState,
 } from "./settings";
 import { Channel, defaultProps, SearchResults } from "./types";
-import { handleContentSearch, reducer } from "./utils";
+import { handleContentSearch, reducer, getSelectedTab } from "./utils";
 import { sizes } from "styles";
 import { HeaderContainer, LogoContainer } from "./styles";
 
 const HeaderComponent = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
   const { colorMode, toggleColorMode } = useThemeStore();
+  const { pathname } = useLocation();
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    selected: getSelectedTab(pathname),
+  });
 
   const [channels, setChannels] = useState<Array<Channel>>(CHANNELS);
   const [searchValues, setSearchValues] =
@@ -51,6 +56,8 @@ const HeaderComponent = () => {
   const handleOpenSearch = () => {
     dispatch({ type: "openSearch", value: true });
   };
+
+  console.log(state);
 
   return (
     <>
