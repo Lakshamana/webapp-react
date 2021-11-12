@@ -1,16 +1,11 @@
-import { Container } from "components";
 import { ReactComponent as FanheroLogo } from "./logo.svg";
-import { ReactComponent as FanheroLogoDark } from "./logo-dark.svg";
 import { Props, defaultProps } from "./types";
+import { LogoContainer } from "./styles";
 
-const Logo = ({ height, width, colorMode, ...props }: Props): any => (
-  <Container {...props}>
-    {colorMode === "light" ? (
-      <FanheroLogoDark {...{ height, width }} />
-    ) : (
-      <FanheroLogo {...{ height, width }} />
-    )}
-  </Container>
+const Logo = ({ height, width, ...props }: Props): any => (
+  <LogoContainer {...props}>
+    <FanheroLogo {...{ height, width }} />
+  </LogoContainer>
 );
 
 Logo.defaultProps = defaultProps;
