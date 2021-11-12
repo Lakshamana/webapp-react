@@ -1,20 +1,24 @@
-import { useState } from "react";
-import { Power, Settings, User, Sun, Moon } from "react-feather";
+import { useState, useMemo } from "react";
+import { Icon } from "@iconify/react-with-api";
 import { Container, Text, Popover } from "components";
 import { PopoverOption } from "./components";
 
 import { PropsUserInfo } from "./types";
-import { UserContainer, CircleImage, OptionsList } from "./styles";
-import { useThemeStore } from "services/stores/theme";
+import {
+  UserContainer,
+  CircleImage,
+  OptionsList,
+  TextContainer,
+} from "./styles";
 import { colors } from "styles";
 
 const UserInfo = ({
   user,
-  mode = "light",
   delimited = true,
+  colorMode,
+  toggleColorMode,
 }: PropsUserInfo) => {
   const [open, setOpen] = useState(false);
-  const { colorMode, toggleColorMode } = useThemeStore();
 
   return (
     <Container display={["none", "none", "none", "flex"]}>
@@ -24,19 +28,16 @@ const UserInfo = ({
           onOpen: () => setOpen(true),
           onClose: () => setOpen(false),
         }}
-        background="backgroundLayout"
+        background={colors.headerUserPopoverBg[colorMode]}
         trigger={
           <button>
             <UserContainer px={1} {...{ delimited }}>
-              <Container mx={2} maxWidth={["150px"]}>
-                <Text
-                  ellipsis
-                  color={mode === "dark" ? colors.grey["800"] : colors.white}
-                >
+              <TextContainer maxWidth={["150px"]}>
+                <Text ellipsis color={colors.headerUserText[colorMode]}>
                   {user?.name || ""}
                 </Text>
-              </Container>
-              <Container ml={2}>
+              </TextContainer>
+              <Container>
                 <CircleImage width={50} height={50} src={user?.avatar} />
               </Container>
             </UserContainer>
@@ -46,32 +47,67 @@ const UserInfo = ({
         <Container flexDirection="column" width={1}>
           <OptionsList>
             <PopoverOption
+              color={colors.headerUserPopoverText[colorMode]}
               text="Editar Perfil"
               onClick={() => {}}
-              icon={<User color="white" width={18} height={18} />}
+              icon={
+                <Icon
+                  width={18}
+                  height={18}
+                  icon="mdi:account"
+                  color={colors.headerUserPopoverIcon[colorMode]}
+                />
+              }
             />
             <PopoverOption
+              color={colors.headerUserPopoverText[colorMode]}
               text={`${
                 colorMode === "dark" ? "Desativar" : "Ativar"
               } modo escuro`}
               onClick={toggleColorMode}
               icon={
                 colorMode === "dark" ? (
-                  <Sun color={colors.white} width={18} height={18} />
+                  <Icon
+                    width={18}
+                    height={18}
+                    icon="mdi:white-balance-sunny"
+                    color={colors.headerUserPopoverIcon[colorMode]}
+                  />
                 ) : (
-                  <Moon color={colors.white} width={18} height={18} />
+                  <Icon
+                    width={18}
+                    height={18}
+                    color={colors.headerUserPopoverIcon[colorMode]}
+                    icon="mdi:moon-waning-crescent"
+                  />
                 )
               }
             />
             <PopoverOption
+              color={colors.headerUserPopoverText[colorMode]}
               text="Ajustes"
               onClick={() => {}}
-              icon={<Settings color="white" width={18} height={18} />}
+              icon={
+                <Icon
+                  width={18}
+                  height={18}
+                  color={colors.headerUserPopoverIcon[colorMode]}
+                  icon="mdi:cog-outline"
+                />
+              }
             />
             <PopoverOption
+              color={colors.headerUserPopoverText[colorMode]}
               onClick={() => {}}
               text="Sair"
-              icon={<Power color="white" width={18} height={18} />}
+              icon={
+                <Icon
+                  width={18}
+                  height={18}
+                  icon="mdi:power"
+                  color={colors.headerUserPopoverIcon[colorMode]}
+                />
+              }
             />
           </OptionsList>
         </Container>

@@ -2,6 +2,7 @@ export interface PropsPopoverOption {
   icon: any;
   text: string;
   onClick: any;
+  color: string;
 }
 
 export type User = {
@@ -13,5 +14,6 @@ export type User = {
 export interface PropsUserInfo {
   user: User | undefined;
   delimited?: boolean;
-  mode?: string;
+  colorMode: "light" | "dark";
+  toggleColorMode: any;
 }
