@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { StyleContainer } from "components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
 
 interface IconContainerProps {
@@ -24,4 +25,12 @@ export const IconContainer = styled.div<IconContainerProps>`
       : css`
           transition: ease-in 0.25s;
         `}
+`;
+
+export const TextContainer = styled(StyleContainer)`
+  display: none;
+
+  @media screen and (min-width: 1100px) {
+    display: flex;
+  }
 `;

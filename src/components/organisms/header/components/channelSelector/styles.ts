@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
 import { StyleContainer } from "components/atoms/container";
-import { colors } from "styles";
+import { colors, breakpoints } from "styles";
 
 interface IconContainerProps {
   open: boolean;
@@ -12,8 +12,11 @@ interface TypeSpaceProps extends SpaceProps, LayoutProps {}
 export const CustomContainer = styled(StyleContainer)`
   ${layout}
   align-items: center;
-  border-left: 1px solid ${colors.grey["800"]};
-  border-right: 1px solid ${colors.grey["800"]};
+  border-left: 1px solid ${({ theme }) => theme.colors.grey["800"]};
+  padding: 0 16px;
+  @media screen and (min-width: ${breakpoints.xl}) {
+    padding: 0 32px;
+  }
 `;
 
 export const ChannelIcon = styled.img<TypeSpaceProps>`
@@ -51,10 +54,10 @@ export const ChannelItem = styled.li<SpaceProps>`
   user-select: none;
 
   :hover {
-    background: ${colors.blue["300"]};
+    background: ${({ theme }) => theme.colors.blue["300"]};
   }
 `;
 
 export const SearchContainer = styled(StyleContainer)`
-  border-bottom: 1px solid ${colors.grey["700"]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey["700"]};
 `;

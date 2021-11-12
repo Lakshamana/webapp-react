@@ -5,7 +5,7 @@ import { PropsChannelSearch } from "../../types";
 import { SearchContainer } from "./styles";
 import { colors } from "styles";
 
-const ChannelSearch = ({ search, onChange }: PropsChannelSearch) => {
+const ChannelSearch = ({ search, onChange, colorMode }: PropsChannelSearch) => {
   const { t } = useTranslation();
   return (
     <SearchContainer
