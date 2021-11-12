@@ -27,16 +27,11 @@ export const MENUTABS = [
     style: { mx: "25px" },
   },
   {
-    id: "list",
+    id: "mylist",
     label: i18n.t("header.tabs.my_list"),
     url: "/mylist",
     style: { ml: "25px" },
   },
-  { id: "settings", label: i18n.t("header.tabs.settings"), url: "/" },
-  { id: "tools", label: i18n.t("header.tabs.tools"), url: "/" },
-  // { id: "settings", label: i18n.t("header.tabs.settings"), url: "/" },
-  // { id: "tools", label: i18n.t("header.tabs.tools"), url: "/" },
-  // { id: "example 1", label: i18n.t("header.tabs.example"), url: "/" },
 ];
 
 export const CHANNELS: Array<Channel> = [
