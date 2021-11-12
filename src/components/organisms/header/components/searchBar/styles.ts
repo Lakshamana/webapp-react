@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
-import { StyleContainer } from "components/atoms/container";
+import { StyleContainer } from "components";
+import { breakpoints } from "styles";
 
 interface PropsContainer {
   background?: string;
@@ -11,6 +12,10 @@ export const SearchContainer = styled(StyleContainer)<PropsContainer>`
   align-items: center;
   cursor: pointer;
   background-color: ${({ background = "none" }) => background};
+  padding: 0 16px;
+  @media screen and (min-width: ${breakpoints.xl}) {
+    padding: 0 32px;
+  }
 `;
 
 export const Section = styled(StyleContainer)`

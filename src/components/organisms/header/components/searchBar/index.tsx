@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Icon } from "@iconify/react-with-api";
 import { useEffect, useRef } from "react";
 import { Container, Popover, InputInline } from "components";
@@ -14,8 +15,26 @@ const SearchBar = ({
   onClose,
   search,
   onOpen,
+  colorMode,
 }: PropsSearchBar) => {
   const triggerRef = useRef<any>();
+  const colorSchema = useMemo(
+    () =>
+      colorMode === "light"
+        ? {
+            primary: "#000",
+            background: "white",
+            results: colors.background,
+            section: colors.backgroundLayout,
+          }
+        : {
+            primary: "#fff",
+            results: colors.background,
+            section: colors.backgroundLayout,
+            background: colors.backgroundLayout,
+          },
+    [colorMode]
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -36,7 +55,7 @@ const SearchBar = ({
   return (
     <Section display="flex" alignItems="center" flex={1}>
       <Popover
-        background={colors.backgroundLayout}
+        background={colorSchema.results}
         props={{
           isOpen: open,
           onOpen,
@@ -45,15 +64,20 @@ const SearchBar = ({
         }}
         trigger={
           <CustomContainer
-            px={3}
+            px={[3]}
             flex={1}
-            background={colors.backgroundLayout}
+            background={colorSchema.section}
             height={["70px", "70px", "70px", "100px"]}
             ref={triggerRef}
             {...{ open }}
           >
             <Container mr={2}>
-              <Icon width={20} height={20} icon="bx:bx-search" color="white" />
+              <Icon
+                width={20}
+                height={20}
+                icon="bx:bx-search"
+                color={colorSchema.primary}
+              />
             </Container>
 
             <InputInline
@@ -64,7 +88,12 @@ const SearchBar = ({
               onChange={onSearch}
             />
             <Container ml={2} onClick={onClose}>
-              <Icon width={20} height={20} icon="bi:x" color="white" />
+              <Icon
+                width={20}
+                height={20}
+                icon="bi:x"
+                color={colorSchema.primary}
+              />
             </Container>
           </CustomContainer>
         }
@@ -73,8 +102,13 @@ const SearchBar = ({
           <SearchPopover {...{ data }} />
         </Container>
       </Popover>
-      <SearchContainer px={3} onClick={onOpen} {...{ open }}>
-        <Icon width={20} height={20} icon="bx:bx-search" color="white" />
+      <SearchContainer px={[0, 0, 0, 3]} onClick={onOpen} {...{ open }}>
+        <Icon
+          width={20}
+          height={20}
+          icon="bx:bx-search"
+          color={colorSchema.primary}
+        />
       </SearchContainer>
     </Section>
   );
