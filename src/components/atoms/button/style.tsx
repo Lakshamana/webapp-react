@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 import { color, space, layout, typography, border, variant } from "styled-system";
-import { colors } from "styles";
 
 export const BoxButton: any = styled.button`
   display: flex;
@@ -15,25 +14,25 @@ export const BoxButton: any = styled.button`
 
   ${space}
   ${layout}
-    ${typography}
-    ${color}
-    ${border}
+  ${typography}
+  ${color}
+  ${border}
 
     ${variant({
     variants: {
         primary: {
             color: 'white',
-            bg: `${({ theme }) => theme.colors.brand.primary[theme.colorMode]}`,
+            bg: theme => `${theme.colors.brand.primary[theme.colorMode]}`,
             textTransform: 'uppercase'
         },
         secondary: {
             color: 'white',
-            bg: `${({ theme }) => theme.colors.brand.secondary[theme.colorMode]}`,
+            bg: theme => `${theme.colors.brand.secondary[theme.colorMode]}`,
             textTransform: 'uppercase'
         },
         accent: {
             color: 'white',
-            bg: `${({ theme }) => theme.colors.brand.accent[theme.colorMode]}`,
+            bg: theme => `${theme.colors.brand.accent[theme.colorMode]}`,
             textTransform: 'uppercase'
         },
         grey: {
