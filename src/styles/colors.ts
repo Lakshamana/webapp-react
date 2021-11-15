@@ -19,22 +19,22 @@ export const colors = {
   },
   secondaryText: {
     light: "#444444",
-    dark: "#fff",
+    dark: "#A4A4A4",
   },
   bodyBg: {
-    light: "#F6F6F6",
+    light: "#ffffff",
     dark: "#0F0F0F",
   },
   cardBg: {
-    light: "#ffffff",
+    light: "#F6F6F6",
     dark: "#222222",
   },
-  headerBg: {
+  headerBg: { 
     light: "#ffffff",
     dark: "#000000",
   },
   footerBg: {
-    light: "#ffffff",
+    light: "#FAFAFA",
     dark: "#000000",
   },
   inputBg: {
