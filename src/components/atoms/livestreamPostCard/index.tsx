@@ -1,6 +1,8 @@
 import { Icon } from "@iconify/react-with-api"
+import { Text } from "components"
 import { LivePostProps, defaultProps } from "./types"
-import { PostContent, ExclusiveBlocked, GeolockedBlocked } from "./style"
+import { colors } from 'styles'
+import { PostContent, ExclusiveBlocked, GeolockedBlocked, Live } from "./style"
 
 const LivestreamPostCard = ({ ...props }: LivePostProps) => {
 	return (
@@ -13,6 +15,18 @@ const LivestreamPostCard = ({ ...props }: LivePostProps) => {
 				<GeolockedBlocked>
 					<Icon width={20} icon={`mdi:lock`}></Icon>
 				</GeolockedBlocked>
+			) : (
+				""
+			)}
+			{props.isLive ? (
+				<Live>
+					<Text
+						kind='headline'
+						children={"Live"}
+						textAlign={"center"}
+						fontSize={12}
+						color={`${colors.white}`}></Text>
+				</Live>
 			) : (
 				""
 			)}

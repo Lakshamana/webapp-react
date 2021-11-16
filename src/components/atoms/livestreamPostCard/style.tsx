@@ -54,3 +54,17 @@ export const GeolockedBlocked: any = styled.div`
 		height: 40px;
 	}
 `
+
+export const Live: any = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 44px;
+	height: 20px;
+	background-color: ${colors.red["700"]};
+	border-radius: 2px;
+	position: absolute;
+	top: 8px;
+	left: 10px;
+	text-transform: uppercase;
+`

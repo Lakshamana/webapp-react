@@ -20,6 +20,7 @@ const LivestreamItems = ({ items }: LiveScrollerProps): JSX.Element => {
 							views={item.views}
 							isExclusive={item.isExclusive}
 							isGeolocked={item.isGeolocked}
+							isLive={item.isLive}
 						/>
 					</SwiperSlide>
 				)

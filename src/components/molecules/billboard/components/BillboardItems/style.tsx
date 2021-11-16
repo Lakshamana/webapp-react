@@ -62,11 +62,15 @@ export const Info: any = styled.div`
 	display: flex;
 	align-items: center;
 
+	@media screen and (max-width: ${breakpoints.lg}) {
+		padding: 0px 0px 0px 35px;
+	}
+
 	@media screen and (max-width: ${breakpoints.md}) {
 		text-align: center;
 		width: 100%;
-		padding: 0 45px;
-		top: 375px;
+		padding: 0px 25px 0px 25px;
+		top: 300px;
 		bottom: 0;
 		align-items: center;
 		padding-bottom: 34px;
@@ -75,13 +79,12 @@ export const Info: any = styled.div`
 
 	@media screen and (max-width: ${breakpoints.sm}) {
 		text-align: center;
-		padding: 0px 20px;
 		top: 180px;
 		bottom: 0;
 		width: 100%;
 		align-items: flex-end;
 		padding-bottom: 34px;
-		height: 300px;
+		height: 260px;
 	}
 `
 
@@ -109,13 +112,20 @@ export const Title: any = styled.div`
 
 	@media screen and (max-width: ${breakpoints.md}) {
 		font-size: 65px;
-    line-height: 50px;
+    line-height: 60px;
 		max-width: 100%;
 	}
 
 	@media screen and (max-width: ${breakpoints.sm}) {
 		font-size: 32px;
 		line-height: 56px;
+		margin: 12px 0;
+		max-width: 360px;
+	}
+
+	@media screen and (max-width: ${breakpoints.ssm}) {
+		font-size: 32px;
+		line-height: 30px;
 		margin: 12px 0;
 	}
 `
@@ -124,7 +134,7 @@ export const Description: any = styled.div`
 	font-size: 22px;
 	line-height: 26.25px;
 	max-width: 640px;
-    margin-bottom: 80px;
+  margin-bottom: 80px;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
@@ -134,21 +144,43 @@ export const Description: any = styled.div`
 		font-size: 19px;
 		line-height: 25px;
 		max-width: 100%;
+		margin-bottom: 40px;
 	}
 
 	@media screen and (max-width: ${breakpoints.sm}) {
 		font-size: 16px;
 		line-height: 16px;
-		max-width: 100%;
+		max-width: 360px;
 		margin-bottom: 16px;
 		-webkit-line-clamp: 2;
 	}
 `
-export const ContentButtons = styled.div`
+export const BoxButtons = styled.div`
 	display: flex;
 	justify-content: flex-start;
 
 	@media screen and (max-width: ${breakpoints.md}) {
 		justify-content: center;
 	}
+`
+export const ContentButton = styled.div`
+  width: 267px;
+  height: 54px;
+
+  &:first-child {
+    margin-right: 15px;
+  }
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    width: 146px;
+    height: 40px;
+  }
+
+  @media screen and (max-width: ${breakpoints.sm}) {
+    margin-bottom: 10px;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
 `
