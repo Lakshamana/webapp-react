@@ -155,11 +155,32 @@ export const Description: any = styled.div`
 		-webkit-line-clamp: 2;
 	}
 `
-export const ContentButtons = styled.div`
+export const BoxButtons = styled.div`
 	display: flex;
 	justify-content: flex-start;
 
 	@media screen and (max-width: ${breakpoints.md}) {
 		justify-content: center;
 	}
+`
+export const ContentButton = styled.div`
+  width: 267px;
+  height: 54px;
+
+  &:first-child {
+    margin-right: 15px;
+  }
+
+  @media screen and (max-width: ${breakpoints.md}) {
+    width: 146px;
+    height: 40px;
+  }
+
+  @media screen and (max-width: ${breakpoints.sm}) {
+    margin-bottom: 10px;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
 `
