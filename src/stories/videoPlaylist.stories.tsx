@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof VideoPlaylist> = (args) => {
   return (
     <Center 
       width="600px" 
-      bgColor={colorMode !== 'dark' ? 'white' : 'grey.800'} 
+      bgColor={colorMode !== 'dark' ? 'white' : 'black'} 
       flexDir="column"
     >
       <Center my="20px">

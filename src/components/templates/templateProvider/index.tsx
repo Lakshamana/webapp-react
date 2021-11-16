@@ -35,7 +35,7 @@ const TemplateProvider = ({ children }: any) => {
   });
 
   return (
-    <ThemeProvider theme={{ ...theme, colorMode }}>
+    <ThemeProvider theme={{ ...theme, colorMode, darkMode: colorMode === 'dark' }}>
       <ChakraProvider theme={customTheme}>
         <BreakpointProvider>
           <Global
