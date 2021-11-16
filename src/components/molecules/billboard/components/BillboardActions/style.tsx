@@ -36,7 +36,7 @@ export const ContentButton = styled.div`
     margin-bottom: 10px;
 
     &:first-child {
-      margin-right: 0px;
+      margin-right: 10px;
     }
   }
 `
