@@ -7,7 +7,7 @@ export type SignUpSteps = 'Register' | 'LGPD' | 'ConfirmEmail' | 'Custom'
 
 const SignupForm = () => {
 
-    const [activeStep, setActiveStep] = useState<SignUpSteps>('ConfirmEmail');
+    const [activeStep, setActiveStep] = useState<SignUpSteps>('Register');
 
     const [accountID, setAccountID] = useState('');
 
