@@ -2,30 +2,30 @@ import { ButtonProps, defaultProps } from "./types";
 import { BoxButton } from "./style";
 import { Icon } from "@iconify/react-with-api";
 
-const Button = ({ label, type, iconName, children, ...props }: ButtonProps) => {
+const Button = ({ ...props }: ButtonProps) => {
     const getButtonStyle = () => {
-        switch (type) {
+        switch (props.type) {
             case 'submit':
-                return <BoxButton variant="primary" type={'submit'} borderRadius={4} {...props}>{label}</BoxButton>
+                return <BoxButton variant="primary" type={'submit'} borderRadius={4} {...props}>{props.label}</BoxButton>
             case 'reset':
-                return <BoxButton variant="secondary" borderRadius={4} {...props}>{label}</BoxButton>
+                return <BoxButton variant="secondary" borderRadius={4} {...props}>{props.label}</BoxButton>
             case 'billboard':
                 return <BoxButton borderRadius={6} {...props}>
-                    <Icon width={20} icon={`mdi:${iconName}`}></Icon>
-                    {label}
+                    <Icon width={20} icon={`mdi:${props.iconName}`}></Icon>
+                    {props.label}
                 </BoxButton>
             case 'disabled':
-                return <BoxButton variant="grey" borderRadius={4} {...props}>{label}</BoxButton>
+                return <BoxButton type='submit' variant="grey" borderRadius={4} {...props}>{props.label}</BoxButton>
             case 'cancel':
-                return <BoxButton variant="cancel" {...props}>{label}</BoxButton>
+                return <BoxButton variant="cancel" {...props}>{props.label}</BoxButton>
             case "children":
                 return (
                     <BoxButton variant="primary" borderRadius={4} {...props}>
-                        {children}
+                        {props.children}
                     </BoxButton>
                 );
             default:
-                return <BoxButton variant="primary" {...props}>{label}</BoxButton>
+                return <BoxButton variant="primary" {...props}>{props.label}</BoxButton>
         }
     };
     return getButtonStyle();

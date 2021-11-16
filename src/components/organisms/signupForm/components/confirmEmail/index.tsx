@@ -1,24 +1,21 @@
 import { useHistory } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
-import { Input, Button, Text } from "components";
-import { ReactComponent as EmailImg } from "assets/icons/email.svg"
+import { Button, Text } from "components";
+import { colors, sizes } from 'styles';
+import { useThemeStore } from 'services/stores/theme';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmEmailForm = () => {
     const history = useHistory();
+    const { colorMode } = useThemeStore();
+    const { t } = useTranslation();
 
     return (
-        <Flex alignItems={'center'} marginY={30} flexDirection={'column'} gridGap={1}>
-            <EmailImg></EmailImg>
-            <Text fontSize={24} textAlign={'center'} fontWeight={'bolder'} color={'white'}>Email verification</Text>
-            <Text fontSize={16} padding={10} marginBottom={10} textAlign={'center'} color={'#A4A4A4'}>We sent you a one time password. Please enter code sent to your email address.</Text>
-            <Input
-                onChange={() => { }}
-                error={false}
-                placeholder={'Enter code'} 
-                onEnterPress={() => alert("enter")}
-            />
-            <Button width={1} paddingLeft={105} paddingRight={105} marginTop={20} type={'submit'} label={'Continue'} onClick={() => history.push('/dashboard')}></Button>
-            <Button width={1} paddingLeft={105} paddingRight={105} marginTop={10} type={'cancel'} label={'Resend Code'} onClick={() => history.push('/dashboard')}></Button>
+        <Flex alignItems={'center'} flexDirection={'column'} gridGap={5}>
+            <Text fontSize={24} textAlign={'center'} fontWeight={'bolder'} color={colors.generalText[colorMode]}>{t('signup.confirm_email.title')}</Text>
+            <Text fontSize={16} padding={10} textAlign={'center'} color={colors.secondaryText[colorMode]}>{t('signup.confirm_email.description')}</Text>
+            <Button width={[1, sizes.loginButtonWidth]} type={'submit'} label={t('signup.confirm_email.resend')}></Button>
+            <Button width={[1, sizes.loginButtonWidth]} type={'cancel'} label={t('common.close')} onClick={() => history.push('/login')}></Button>
         </Flex>
     );
 }
