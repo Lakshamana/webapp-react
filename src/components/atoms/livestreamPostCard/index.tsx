@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react-with-api"
 import { Text } from "components"
 import { LivePostProps, defaultProps } from "./types"
+import { colors } from 'styles'
 import { PostContent, ExclusiveBlocked, GeolockedBlocked, Live } from "./style"
 
 const LivestreamPostCard = ({ ...props }: LivePostProps) => {
@@ -23,7 +24,8 @@ const LivestreamPostCard = ({ ...props }: LivePostProps) => {
 						kind='headline'
 						children={"Live"}
 						textAlign={"center"}
-						fontSize={12}></Text>
+						fontSize={12}
+						color={`${colors.white}`}></Text>
 				</Live>
 			) : (
 				""
