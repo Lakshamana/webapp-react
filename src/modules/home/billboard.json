@@ -9,6 +9,7 @@
 		"infoColor": "#ffffff",
 		"actions": [
 			{
+				"id": "2342342",
 				"bgColor": "#0660F9",
 				"borderColor": "#000000",
 				"icon": "play",
@@ -17,6 +18,7 @@
 				"textColor": "#FFFFFF"
 			},
 			{
+				"id": "234ssssss2342",
 				"bgColor": "#ffffff",
 				"borderColor": "#000000",
 				"icon": "plus-circle",
@@ -27,7 +29,7 @@
 		]
 	},
 	{
-		"id": "123131sdasdas",
+		"id": "12ewewe3131sdasdas",
 		"banner": "https://www.planocritico.com/wp-content/uploads/2014/06/33-The-100-1-Temporada.jpg",
 		"cover": "https://www.planocritico.com/wp-content/uploads/2014/06/33-The-100-1-Temporada.jpg",
 		"delay": 10000,
@@ -36,6 +38,7 @@
 		"infoColor": "#ffffff",
 		"actions": [
 			{
+				"id": "2dsfsdfsdfsdfs342342",
 				"bgColor": "#0660F9",
 				"borderColor": "#000000",
 				"icon": "play",
@@ -44,6 +47,7 @@
 				"textColor": "#FFFFFF"
 			},
 			{
+				"id": "2342dsfdsgfgdfgdg342",
 				"bgColor": "#ffffff",
 				"borderColor": "#000000",
 				"icon": "plus-circle",
