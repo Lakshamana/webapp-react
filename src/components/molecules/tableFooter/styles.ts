@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SpaceProps, space, layout } from "styled-system";
+import { SpaceProps, space } from "styled-system";
 
 export const Wrapper = styled.div<SpaceProps>`
   ${space}
