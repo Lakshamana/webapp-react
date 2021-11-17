@@ -2,7 +2,7 @@
     width: 100% !important;
 }
 
-.pagination {
+.billboard-pagination {
     bottom: 70px !important;
     left: 50% !important;
     transform: translateX(-50%);
