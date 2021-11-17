@@ -1,22 +1,23 @@
-import { Container } from "components";
-import { SingleConfiguration } from "..";
+import { Container } from 'components'
+import { SingleConfiguration } from '..'
 
-import { ContentBlockProps } from "./types";
+import { ContentBlockProps } from './types'
 
 const ContentBlock = ({
   title,
   action,
   children,
   idented,
+  colorMode,
 }: ContentBlockProps) => (
-  <Container width={[1, 1, "32%"]} flexDirection="column" mb={3}>
+  <Container width={[1, 1, '32%']} flexDirection="column" mb={3}>
     <SingleConfiguration
-      fontStyle={{ fontWeight: "bold", marginLeft: [0, 0, "24px"] }}
+      fontStyle={{ fontWeight: 'bold', marginLeft: [0, 0, '24px'] }}
       text={title}
-      {...{ action, idented }}
+      {...{ action, idented, colorMode }}
     />
     {children}
   </Container>
-);
+)
 
-export { ContentBlock };
+export { ContentBlock }
