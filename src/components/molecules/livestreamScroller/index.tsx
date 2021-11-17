@@ -1,4 +1,3 @@
-import React from "react"
 import { Link } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
 import { CardsScroller } from "components"
@@ -6,7 +5,7 @@ import { Text } from "components"
 import { LivestreamList } from "./livestreamItems"
 import { LiveScrollerProps } from "./types"
 import { Header, ContentScroller } from "./style"
-import { colors } from "styles"
+import { colors, sizes } from "styles"
 import { useThemeStore } from 'services/stores/theme'
 
 const LivestreamScroller = ({
@@ -25,6 +24,7 @@ const LivestreamScroller = ({
 					<Text
 						color={colors.generalText[colorMode]}
 						fontSize={"28px"}
+						paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd, sizes.paddingLg, sizes.paddingLg]}
 						fontWeight={500}
 						marginRight={"18px"}
 						lineHeight={"34px"}>
