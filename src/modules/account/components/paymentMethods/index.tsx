@@ -1,15 +1,16 @@
-import { Container, Radio } from "components";
+import { Container, Radio } from 'components'
 
-import { colors } from "styles";
-import { PaymentMethodsProps } from "./settings";
-import { PaymentMethodType } from "../../types";
-import { ActionLink, Separator } from "../../styles";
+import { colors } from 'styles'
+import { PaymentMethodsProps } from './types'
+import { PaymentMethodType } from '../../types'
+import { ActionLink, Separator } from '../../styles'
 
 const PaymentMethods = ({
   data,
   onDelete,
   onUpdate,
   onSelect,
+  strings,
 }: PaymentMethodsProps) => (
   <Container flexDirection="column" mt={2}>
     {data?.map((method: PaymentMethodType, index: any) => (
@@ -38,7 +39,7 @@ const PaymentMethods = ({
                 fontWeight="bold"
                 onClick={() => onDelete(method)}
               >
-                DELETE
+                {strings.delete}
               </ActionLink>
             ) : (
               <></>
@@ -49,7 +50,7 @@ const PaymentMethods = ({
               onClick={() => onUpdate(method)}
               ml={2}
             >
-              UPDATE
+              {strings.update}
             </ActionLink>
           </Container>
           {!!index ? <></> : <Separator my={3} />}
@@ -57,6 +58,6 @@ const PaymentMethods = ({
       </>
     ))}
   </Container>
-);
+)
 
-export { PaymentMethods };
+export { PaymentMethods }
