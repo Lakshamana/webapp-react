@@ -48,7 +48,11 @@ const Account = () => {
         flexWrap="wrap"
         justifyContent="space-between"
       >
-        <Navbar onClick={() => {}} {...{ colorMode }} />
+        <Navbar
+          onClick={() => {}}
+          {...{ colorMode }}
+          text={t('page.account.back')}
+        />
         <ContentBlock
           title={t('page.account.account_info')}
           idented
