@@ -13,7 +13,7 @@ const HomePage = () => {
   <MainLayout>
     <Container flexDirection={"column"} display={"flex"}>
       <BillboardScroller items={billboardData} customButtons={true}></BillboardScroller>
-      <Flex pb={10} pl={[35, 65]} gridGap={10} flexDirection={"column"}>
+      <Flex gridGap={10} flexDirection={"column"}>
         <LivestreamScroller items={liveStreamsData} sectionTitle={t("page.home.live")} hasMoreLink={true}></LivestreamScroller>
         <OnDemandScroller items={onDemandData} sectionTitle={t("page.home.most_recent")} hasMoreLink={true}></OnDemandScroller>
         <CollectionScroller items={collectionsData} sectionTitle={t("page.home.popular")}hasMoreLink={true}></CollectionScroller>
