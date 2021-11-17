@@ -6,18 +6,17 @@ import { Actions, ContentButton } from './style'
 const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
   return (
     <Actions>
-      {actions?.map((actions: BillboardItemActions, i: number) => (
-        <ContentButton>
+      {actions?.map((action: BillboardItemActions) => (
+        <ContentButton key={`billboard-action-${action.id}`}>
           <Button
 						width={'100%'}
 						height={'100%'}
-            key={`Button-${i}`}
-            backgroundColor={actions.bgColor}
-            borderColor={actions.borderColor}
-            iconName={actions.icon}
-            color={actions.textColor}
+            backgroundColor={action.bgColor}
+            borderColor={action.borderColor}
+            iconName={action.icon}
+            color={action.textColor}
             type="billboard"
-            label={actions.label}
+            label={action.label}
           />
         </ContentButton>
       ))}
