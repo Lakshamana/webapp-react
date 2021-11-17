@@ -1,16 +1,13 @@
-import styled from "styled-components";
-import { StyleContainer } from "components/atoms";
+import styled from 'styled-components'
+import { StyleContainer } from 'components/atoms'
 
 interface RadioContainerProps {
-  color?: string;
+  color?: string
 }
 
 export const RadioContainer = styled(StyleContainer)<RadioContainerProps>`
   display: flex;
-  ${({ color }) =>
-    color
-      ? `span {
-    color: ${color}
-  }`
-      : ""}
-`;
+  span {
+    color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
+  }
+`
