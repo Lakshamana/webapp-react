@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { layout, color } from "styled-system";
+import { layout } from "styled-system";
 import { StyledProps } from "./types";
 
 export const Main: any = styled.div<StyledProps>`
