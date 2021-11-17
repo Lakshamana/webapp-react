@@ -57,8 +57,6 @@ const HeaderComponent = () => {
     dispatch({ type: "openSearch", value: true });
   };
 
-  console.log(state);
-
   return (
     <>
       <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
