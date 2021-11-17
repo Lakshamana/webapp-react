@@ -36,23 +36,23 @@
 
 @media screen and (max-width: 768px) {
     .pagination {
-        padding-bottom: 16px;
+        bottom: 30px !important;
     }
 
     .swiper-pagination-bullet {
-        width: 32px;
+        width: 60px;
         height: 4px;
     }
 }
 
 @media screen and (max-width: 425px) {
     .pagination {
-        margin-bottom: -68px;
+        margin-bottom: 5px;
 
     }
 
     .swiper-pagination-bullet {
-        width: 26px;
-        height: 2.3px;
+        width: 30px;
+        height: 2px;
     }
 }

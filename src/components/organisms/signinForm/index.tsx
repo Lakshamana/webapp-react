@@ -6,6 +6,7 @@ import { Props } from './types';
 import { validationSchema } from "./settings";
 import { useFormik } from 'formik';
 import { initialValues } from './settings';
+import { sizes } from 'styles';
 
 
 const SigninForm = ({handleFormSubmit} : Props) => {
@@ -47,7 +48,7 @@ const SigninForm = ({handleFormSubmit} : Props) => {
 				<Checkbox label={t('signin.label.save_as_default')}></Checkbox>
 			</Box>
 			{/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
-			<Button width={1} marginBottom={10} type={'submit'} label={t('signin.actions.login')} onClick={handleSubmit}></Button>
+			<Button width={[1, sizes.loginButtonWidth]} marginBottom={10} type={'submit'} label={t('signin.actions.login')} onClick={handleSubmit}></Button>
 		</Flex >
 	);
 }
