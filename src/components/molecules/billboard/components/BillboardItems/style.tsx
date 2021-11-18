@@ -18,17 +18,17 @@ export const BillboardItems: any = styled.div`
 `
 
 export const HeroImageWrapper: any = styled.div`
-  position: absolute;
-  inset: 0px;
+  	position: absolute;
+  	inset: 0px;
 
 	&:after {
-    content: "";
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    ${({ theme }) => `background: linear-gradient(90deg, ${theme.colors.bodyBg[theme.colorMode]} 0%, rgba(15, 15, 15, 0) 30%), linear-gradient(359.29deg, ${theme.colors.bodyBg[theme.colorMode]} 0.7%, rgba(15, 15, 15, 0) 50%`}
+    	content: "";
+    	position: absolute;
+    	left: 0px;
+    	right: 0px;
+    	top: 0px;
+    	bottom: 0px;
+    	${({ theme }) => `background: linear-gradient(90deg, ${theme.colors.bodyBg[theme.colorMode]} 0%, rgba(15, 15, 15, 0) 30%), linear-gradient(359.29deg, ${theme.colors.bodyBg[theme.colorMode]} 0.7%, rgba(15, 15, 15, 0) 50%)`};
 `
 
 export const HeroImg: any = styled.img`
