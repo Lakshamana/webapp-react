@@ -84,6 +84,7 @@ export interface PropsSideMenu {
   open: boolean;
   data: Array<Tab>;
   user: User | undefined;
+  colorMode: ColorMode;
 }
 
 export interface PropsSideUserInfo {

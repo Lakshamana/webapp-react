@@ -7,8 +7,8 @@ import { PropsSideMenu } from "../../types";
 import { SideContainer, ScrollContainer, ExitContainer } from "./styles";
 import { colors } from "styles";
 
-const SideMenu = ({ open, data, user }: PropsSideMenu) => (
-  <SideContainer backgroundColor="black" display="block" {...{ open }}>
+const SideMenu = ({ open, data, user, colorMode }: PropsSideMenu) => (
+  <SideContainer display="block" {...{ open }}>
     <ScrollContainer
       flexDirection="column"
       display={open ? "flex" : "none"}
@@ -18,7 +18,10 @@ const SideMenu = ({ open, data, user }: PropsSideMenu) => (
       {data?.map((item: any) => (
         <Link to={item.url} key={`Path-${item.id}`}>
           <Container width={1} pl={3} py={3}>
-            <Text style={{ textTransform: "uppercase" }} color={colors.white}>
+            <Text
+              style={{ textTransform: "uppercase" }}
+              color={colors.secondaryText[colorMode]}
+            >
               {item.label}
             </Text>
           </Container>
@@ -36,10 +39,10 @@ const SideMenu = ({ open, data, user }: PropsSideMenu) => (
             width={20}
             height={20}
             icon="mdi:power"
-            color={colors.grey["700"]}
+            color={colors.secondaryText[colorMode]}
           />
 
-          <Text color={colors.grey["700"]} ml={2}>
+          <Text color={colors.secondaryText[colorMode]} ml={2}>
             Sair
           </Text>
         </ExitContainer>

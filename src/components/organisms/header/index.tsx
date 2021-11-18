@@ -59,7 +59,12 @@ const HeaderComponent = () => {
 
   return (
     <>
-      <SideMenu open={state.openMenu} data={MENUTABS} user={DEFAULT_USER} />
+      <SideMenu
+        open={state.openMenu}
+        data={MENUTABS}
+        user={DEFAULT_USER}
+        {...{ colorMode }}
+      />
       <HeaderContainer
         height={[
           sizes.headerMobileHeight,
