@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { StyleContainer } from "components";
-import { breakpoints } from "styles";
+import styled from 'styled-components'
+import { StyleContainer } from 'components'
+import { breakpoints } from 'styles'
 
 export const HeaderContainer = styled(StyleContainer)`
   display: flex;
@@ -14,7 +14,11 @@ export const HeaderContainer = styled(StyleContainer)`
   @media screen and (min-width: ${breakpoints.lg}) {
     padding: 0 ${({ theme }) => theme.sizes.paddingLg};
   }
-`;
+
+  ${({ theme }) =>
+    theme.colorMode === 'light' &&
+    `border-bottom: 1px solid ${theme.colors.grey[200]}`}
+`
 
 export const LogoContainer = styled.div`
   padding: 0 ${({ theme }) => theme.sizes.paddingSm};
@@ -22,4 +26,4 @@ export const LogoContainer = styled.div`
   @media screen and (min-width: ${breakpoints.xl}) {
     padding: 0 ${({ theme }) => theme.sizes.paddingLg};
   }
-`;
+`
