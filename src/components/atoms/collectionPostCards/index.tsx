@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api"
+import { Icon } from "@iconify/react"
 import { CollectionPostProps, defaultProps } from "./types"
 import { PostContent, ExclusiveBlocked, GeolockedBlocked } from "./style"
 

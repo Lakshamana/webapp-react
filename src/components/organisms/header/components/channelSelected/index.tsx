@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { useTranslation } from "react-i18next";
 import { Container, Text } from "components";
 import { PropsChannelSelected } from "../../types";

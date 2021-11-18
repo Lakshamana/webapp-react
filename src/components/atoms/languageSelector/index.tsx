@@ -1,7 +1,7 @@
 import { LanguageSelectProps } from "./types";
 import { ReactComponent as BrazilIcon } from "assets/icons/flags/brazil.svg";
 import { ReactComponent as USAIcon } from "assets/icons/flags/usa.svg";
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { MenuButtonSpan } from "./style";
 import { useTranslation } from "react-i18next";

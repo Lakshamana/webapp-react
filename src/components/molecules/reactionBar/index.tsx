@@ -1,10 +1,8 @@
 
 import { useThemeStore } from 'services/stores/theme'
 import { Container, Text, Popover } from "components";
-import { Icon } from "@iconify/react-with-api"; 
-
+import { Icon } from "@iconify/react";
 import { Props } from './types'
-
 import { availableReactions } from './settings'
 import { Reaction } from './styles'
 import { colors } from 'styles'
