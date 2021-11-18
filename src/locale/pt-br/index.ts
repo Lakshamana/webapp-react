@@ -25,6 +25,7 @@ const PT_BR = {
       yes: 'Sim',
       no: 'Não',
       close: 'Fechar',
+      send: 'Enviar',
     },
     signin: {
       title: 'Acesse Fanhero agora',
@@ -83,6 +84,10 @@ const PT_BR = {
         cancel: 'Cancelar',
         back: 'Voltar',
       },
+    },
+    recoverPassword: {
+      title: 'Esqueceu a sua senha? Sem problemas!',
+      subtitle: "Nós vamos te enviar um e-mail com um link para resetar a sua senha.",
     },
     header: {
       tabs: {

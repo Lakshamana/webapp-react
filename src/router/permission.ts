@@ -10,5 +10,6 @@ export const permission = {
   search: true,
   channelList: true,
   feed: true,
-  signup: true
+  signup: true,
+  recoverPassword: true
 };
