@@ -21,6 +21,7 @@ export const VideoItemPlay = styled.div`
 	width: 62px;
 	height: 62px;
 	background: ${colors.whiteTransparent["300"]};
+	color: ${colors.white};
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -35,21 +36,22 @@ export const VideoItemPlay = styled.div`
 
 export const CountView = styled.div<SpaceProps>`
 	${space}
-
+	color: ${colors.white};
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 14px;
+	font-size: 12px;
 	position: absolute;
 	top: 0px;
 `
 
 export const MediaLength = styled.div<SpaceProps>`
 	${space}
-
+	color: ${colors.white};
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
+	font-size: 12px;
 `
 
 export const ExclusiveBlocked: any = styled.div<SpaceProps>`
