@@ -30,14 +30,13 @@ const Account = () => {
   const { colorMode } = useThemeStore()
   const accountInfo = useMemo(() => formatAccountInfo(ACCOUNT_INFO), [])
 
-  const { values, setFieldValue, handleSubmit, handleChange, errors } =
-    useFormik({
-      initialValues,
-      validationSchema,
-      validateOnChange: true,
-      validateOnBlur: false,
-      onSubmit: async () => {},
-    })
+  const { values, setFieldValue, handleSubmit } = useFormik({
+    initialValues,
+    validationSchema,
+    validateOnChange: true,
+    validateOnBlur: false,
+    onSubmit: async () => {},
+  })
 
   return (
     <MainLayout>
@@ -122,20 +121,38 @@ const Account = () => {
                 title={t('page.account.monthly_plan')}
                 subtitle="Flamengo - Campeonato Carioca"
                 value="$12.99/mo"
-                fontStyle={{ fontSize: 20 }}
-                fontValueStyle={{ fontSize: 20 }}
+                fontStyle={{
+                  fontSize: 20,
+                  color: colors.grey['900'],
+                }}
+                fontValueStyle={{
+                  fontSize: 20,
+                  color: colors.grey['900'],
+                }}
+                {...{ colorMode }}
               />
               <Subscription
                 title={t('page.account.next_billing')}
                 value="$12.99/mo on 08/12/21"
-                fontValueStyle={{ fontSize: 14, color: colors.grey['800'] }}
+                fontValueStyle={{
+                  fontSize: 14,
+                  color: colors.grey['800'],
+                }}
+                {...{ colorMode }}
               />
               <Subscription
                 title={t('page.account.last_billing')}
                 value="$12.99/mo on 08/12/21"
                 separator={false}
-                fontStyle={{ fontSize: 16, color: colors.grey['650'] }}
-                fontValueStyle={{ fontSize: 14, color: colors.grey['650'] }}
+                fontStyle={{
+                  fontSize: 16,
+                  color: colors.grey['650'],
+                }}
+                fontValueStyle={{
+                  fontSize: 14,
+                  color: colors.grey['650'],
+                }}
+                {...{ colorMode }}
               />
             </Container>
           </ConfigBox>
@@ -195,10 +212,13 @@ const Account = () => {
                 update: t('page.account.update'),
                 delete: t('page.account.delete'),
               }}
+              selected={values.paymentMethod}
               data={PAYMENT_METHODS}
               onDelete={() => {}}
               onUpdate={() => {}}
-              onSelect={() => {}}
+              onSelect={(value: string) =>
+                setFieldValue('paymentMethod', value)
+              }
             />
           </ConfigBox>
         </ContentBlock>
