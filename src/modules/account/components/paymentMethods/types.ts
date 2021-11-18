@@ -6,4 +6,5 @@ export interface PaymentMethodsProps {
   onUpdate: any
   onSelect: any
   strings: any
+  selected: string
 }
