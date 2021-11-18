@@ -1,5 +1,5 @@
 import { Container, Text, Popover } from "components";
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 
 import { Props } from "./types";
 
