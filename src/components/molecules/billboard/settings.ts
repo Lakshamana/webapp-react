@@ -12,7 +12,7 @@ export const Params: SwiperOptions = {
         disableOnInteraction: false
     },
     pagination: {
-        el: '.pagination',
+        el: '.billboard-pagination',
         clickable: true,
         bulletElement: 'button'
     },

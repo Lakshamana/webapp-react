@@ -1,18 +1,26 @@
-import { Icon } from "@iconify/react-with-api";
-import { Container, Text } from "components";
+import { Icon } from '@iconify/react-with-api'
+import { Container, Text } from 'components'
 
-import { NavbarProps } from "./types";
-import { BackTextBox } from "../../styles";
+import { colors } from 'styles'
+import { NavbarProps } from './types'
+import { BackTextBox, WrapperIcon } from '../../styles'
 
-const Navbar = ({ onClick }: NavbarProps) => (
+const Navbar = ({ onClick, colorMode, text }: NavbarProps) => (
   <Container width={1} alignItems="center" mt={2} mb={4}>
-    <div style={{ cursor: "pointer" }}>
-      <Icon icon="mdi:arrow-left" width={20} {...{ onClick }} />
-    </div>
+    <WrapperIcon>
+      <Icon
+        icon="mdi:arrow-left"
+        width={20}
+        color={colors.generalText[colorMode]}
+        {...{ onClick }}
+      />
+    </WrapperIcon>
     <BackTextBox ml={2} px={2}>
-      <Text fontWeight="bold">Back</Text>
+      <Text fontWeight="bold" color={colors.generalText[colorMode]}>
+        {text}
+      </Text>
     </BackTextBox>
   </Container>
-);
+)
 
-export { Navbar };
+export { Navbar }

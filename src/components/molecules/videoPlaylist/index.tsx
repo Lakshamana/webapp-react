@@ -25,7 +25,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
         </Text>
       </Flex>
       <Flex alignItems="center" paddingX={theme.pxToRem(12)}>
-        <ToggleButton isChecked={checked} onChange={() => setChecked(!checked)} />
+        <ToggleButton checked={!!checked} onChange={() => setChecked(!checked)} />
         <Text ml={theme.pxToRem(12)} color={colorMode !== 'dark' ? 'black' : 'white'}>
           Autoplay next video
         </Text>

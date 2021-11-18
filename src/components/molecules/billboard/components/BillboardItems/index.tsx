@@ -3,20 +3,21 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
 import { useTranslation } from "react-i18next"
 import { Button } from "components"
-import { MemoizedActionsList } from "../BillboardActions"
+import { ActionsList } from "../BillboardActions"
 import { getActions, getItems } from "utils"
 import { Props, BillboardItem } from "../../types"
 import { Params } from "../../settings"
 import {
-	BillboardItems,
-	HeroImageWrapper,
-	HeroImg,
-	Info,
-	InfoContent,
-	Title,
-	Description,
-	ContentButtons
-} from "./style"
+  BillboardItems,
+  HeroImageWrapper,
+  HeroImg,
+  Info,
+  InfoContent,
+  Title,
+  Description,
+  BoxButtons,
+  ContentButton
+} from './style'
 import { colors } from 'styles'
 import './style.css'
 import "swiper/swiper-bundle.min.css"
@@ -24,72 +25,77 @@ import "swiper/swiper-bundle.min.css"
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
 const SwiperSlideList = ({ items, customButtons }: Props) => {
-	const [size, setSize] = useState({
-		x: window.innerWidth,
-		y: window.innerHeight
-	})
+  const [size, setSize] = useState({
+    x: window.innerWidth,
+    y: window.innerHeight
+  })
 
-	const getSize = () => {
-		setSize({
-			x: window.innerWidth,
-			y: window.innerHeight
-		})
-	}
+  const getSize = () => {
+    setSize({
+      x: window.innerWidth,
+      y: window.innerHeight
+    })
+  }
 
-	useEffect(() => (window.onresize = getSize), [])
+  useEffect(() => (window.onresize = getSize), [])
 
-	const { t } = useTranslation()
+  const { t } = useTranslation()
 
-	return (
-		<Swiper {...Params} style={{ position: "relative", height: "100%"}}>
-			{getItems(items).map((items: BillboardItem, i: number) => (
-				<SwiperSlide style={{ width: "100%" }} key={`Slide-${i}`} className='slider'>
-					<BillboardItems>
-						<HeroImageWrapper>
-							<HeroImg
-								ClassName='swiper-lazy'
-								src={size.x >= 640 ? items.banner : items.cover}
-							/>
-						</HeroImageWrapper>
-						<Info style={{ color: items.infoColor }}>
-							<InfoContent>
-								<Title>{items.title}</Title>
-								<Description>{items.description}</Description>
-								{customButtons ? (
-									<MemoizedActionsList actions={getActions(items?.actions)} />
-								) : (
-									<ContentButtons>
-										<Button
-											backgroundColor={`${colors.blue["300"]}`}
-											borderColor={`${colors.blue["300"]}`}
-											iconName={"play"}
-											color={`${colors.white}`}
-											type='billboard'
-											label={t("page.collection.watch_now")}
-											width={size.x >= 768 ? 267 : 145}
-											height={size.x >= 768 ? 54 : 40}
-											marginRight={size.x >= 768 ? 15 : 15}
-										/>
-										<Button
-											backgroundColor={`${colors.grey["800"]}`}
-											borderColor={`${colors.grey["800"]}`}
-											iconName={"plus-circle"}
-											color={`${colors.white}`}
-											type='billboard'
-											label={t("page.collection.my_list")}
-											width={size.x >= 768 ? 267 : 145}
-											height={size.x >= 768 ? 54 : 40}
-										/>
-									</ContentButtons>
-								)}
-							</InfoContent>
-						</Info>
-					</BillboardItems>
-				</SwiperSlide>
-			))}
-			<div className="swiper-pagination pagination" />
-		</Swiper>
-	)
+  return (
+    <Swiper {...Params} style={{ position: "relative", height: "100%" }}>
+      {getItems(items).map((item: BillboardItem) => (
+        <SwiperSlide style={{ width: "100%" }} key={item.id} className='slider'>
+          <BillboardItems>
+            <HeroImageWrapper>
+              <HeroImg
+                ClassName='swiper-lazy'
+                src={size.x >= 640 ? item.banner : item.cover}
+              />
+            </HeroImageWrapper>
+            <Info style={{ color: item.infoColor }}>
+              <InfoContent>
+                <Title>{item.title}</Title>
+                <Description>{item.description}</Description>
+                {customButtons ? (
+                  <BoxButtons>
+                    <ActionsList actions={getActions(item?.actions)} />
+                  </BoxButtons>
+                ) : (
+                  <BoxButtons>
+                    <ContentButton>
+                      <Button
+                        backgroundColor={`${colors.blue['300']}`}
+                        borderColor={`${colors.blue['300']}`}
+                        iconName={'play'}
+                        color={`${colors.white}`}
+                        type="billboard"
+                        label={t('page.collection.watch_now')}
+                        width={'100%'}
+                        height={'100%'}
+                      />
+                    </ContentButton>
+                    <ContentButton>
+                      <Button
+                        backgroundColor={`${colors.grey['800']}`}
+                        borderColor={`${colors.grey['800']}`}
+                        iconName={'plus-circle'}
+                        color={`${colors.white}`}
+                        type="billboard"
+                        label={t('page.collection.my_list')}
+                        width={'100%'}
+                        height={'100%'}
+                      />
+                    </ContentButton>
+                  </BoxButtons>
+                )}
+              </InfoContent>
+            </Info>
+          </BillboardItems>
+        </SwiperSlide>
+      ))}
+      <div className="swiper-pagination billboard-pagination" />
+    </Swiper>
+  )
 }
 
 const MemoizedSwiperSlideList = memo(SwiperSlideList)

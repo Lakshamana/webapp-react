@@ -13,7 +13,7 @@ const CollectionsPage = () => {
 				<BillboardScroller
 					items={billboardData}
 					customButtons={false}></BillboardScroller>
-				<Flex pb={10} pl={65} gridGap={10} flexDirection={"column"}>
+				<Flex pb={10} pl={[35, 65]} gridGap={10} flexDirection={"column"}>
 					<CollectionScroller
 						items={collectionsData}
 						sectionTitle={t("page.collection.action")}
