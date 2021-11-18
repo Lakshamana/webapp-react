@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Text, ReactionBar, Participants } from "components";
@@ -8,14 +8,14 @@ import { Props, defaultProps } from "./types";
 import { abbreviateNumber } from "./utils";
 import { colors } from "styles";
 import {
-  FeedContent,
-  CardContent,
-  CardHeader,
-  Date,
-  CardDescription,
-  CardReactions,
-  CardFooter,
-  CountMessage,
+	FeedContent,
+	CardContent,
+	CardHeader,
+	Date,
+	CardDescription,
+	CardReactions,
+	CardFooter,
+	CountMessage,
 } from "./style";
 
 const FeedPostCard = ({ ...props }: Props) => {
@@ -35,14 +35,17 @@ const FeedPostCard = ({ ...props }: Props) => {
 					</Date>
 					<Menu>
 						<MenuButton>
-							<MoreHorizontal width={16} color={`${colors.grey["700"]}`} />
+							<Icon
+								icon="mdi:dots-horizontal"
+								color={`${colors.grey['700']}`}
+							/>
 						</MenuButton>
 					</Menu>
 				</CardHeader>
 				<CardDescription fontSize={15}>{props.postDescription}</CardDescription>
 				{props.type === "Poll" ? <SetMediaType {...props} /> : ""}
 				<CardReactions>
-					<ReactionBar totalReactions={15} reactionsTitle='Reactions'/>
+					<ReactionBar totalReactions={15} reactionsTitle='Reactions' />
 				</CardReactions>
 				<CardFooter>
 					<Participants
