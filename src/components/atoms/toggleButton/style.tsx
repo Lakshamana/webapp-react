@@ -18,8 +18,8 @@ export const SwitchStyled: any = styled(Switch)`
     box-shadow: 0px 1px 3px rgb(0 0 0 / 60%);
     background-color: ${({ theme, checked }) => 
       theme.darkMode
-        ? checked ? theme.colors.purple[100] : theme.colors.grey[650]
-        : checked ? theme.colors.blue[300] : theme.colors.grey[100]
+        ? checked ? theme.colors.blue[300] : theme.colors.grey[650]
+        : checked ? theme.colors.purple[100] : theme.colors.grey[100]
       } !important;
   }
 `;
