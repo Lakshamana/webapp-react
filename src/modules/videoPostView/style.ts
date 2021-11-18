@@ -15,3 +15,9 @@ export const Subtitle = styled(Text)`
   font-weight: 300;
   margin-top: ${pxToRem(20)};
 `;
+
+export const CommentCount = styled(Text)`
+  color: ${({ theme }) => theme.darkMode ? 'white' : 'black'};
+  font-size: ${pxToRem(28)};
+  font-weight: 500;
+`

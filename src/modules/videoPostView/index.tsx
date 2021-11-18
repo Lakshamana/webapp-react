@@ -1,80 +1,94 @@
 import { Flex, Box, Center } from '@chakra-ui/react'
-import { MainLayout, VideoPlayer, ReactionBar, VideoPlaylist } from "components"
+import {
+  MainLayout,
+  VideoPlayer,
+  ReactionBar,
+  VideoPlaylist,
+  Comment,
+  Avatar,
+  Input,
+  Participants
+} from "components"
 import { pxToRem } from 'styles/metrics'
-import { Title, Subtitle } from './style'
+import { kFormatter } from 'utils'
+import { Title, Subtitle, CommentCount } from './style'
+import { video } from './mock'
+import { useThemeStore } from 'services/stores/theme'
 
 const VideoPostViewPage = () => {
-
-  const muxConfig = {
-    env_key:  'f79842543033c226c5d396a7d',
-    viewer_user_id: 'viewer_user_id',
-    video_id: 'video_id',
-    video_title: 'title',
-    video_series: 'series',
-    player_name: 'Clappr-ContentVideo',
-    player_init_time: Date.now(),
-    video_stream_type: 'on-demand',
-  }
-
-  const videos = [
-    {
-      id: '421b47ffd946ca083b65cd668c6b17e6',
-      image_url: 'https://via.placeholder.com/200x112', 
-      title: 'Video title related to the video', 
-      subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
-    },
-    {
-      id: '421b47ffd946ca083b65cd668c6b17e6',
-      image_url: 'https://via.placeholder.com/200x112', 
-      title: 'Video title related to the video', 
-      subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
-    },
-    {
-      id: '421b47ffd946ca083b65cd668c6b17e6',
-      image_url: 'https://via.placeholder.com/200x112', 
-      title: 'Video title related to the video', 
-      subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'
-    }
-  ]
-
+  const { colorMode } = useThemeStore()
   return (
     <MainLayout>
+      
       <Center width="100%">
+      
         <Flex flexDir="column" width="1186px">
-          <VideoPlayer
-            src="https://d2px8cfctghvms.cloudfront.net/5ed95110e04f4c0004b37ed3/ba77504d-2687-40f4-b75f-fdadaf1828a5/cmaf/5ed95110e04f4c0004b37ed3_5ed964dce04f4c000415fecf_6116d80199bea6002c59561a.m3u8"
-            vttSrc="https://s3.amazonaws.com/ondemand-prod.destination/5ed95110e04f4c0004b37ed3/ba77504d-2687-40f4-b75f-fdadaf1828a5/thumbnails/80p.vtt"
-            title="Video Title"
-            subtitle="Video Subtitle"
-            options={{ autoplay: false }}
-            muxConfig={muxConfig}
-          />
+          <VideoPlayer {...video.playerPros} />
 
-          <Title>
-            Title lorem ipsum dolor sit amet consectetur elit sed do eiusmod tempor incididunt
-          </Title>
-          <Subtitle>
-            Ao saber que tem câncer, um professor passa a fabricar metanfetamina pelo futuro da família, mudando o destino de todos.
-          </Subtitle>
+          <Title>{video.title}</Title>
+          <Subtitle>{video.subtitle}</Subtitle>
 
-          <Box marginY={pxToRem(40)}>
-            <ReactionBar totalReactions={15} />
-          </Box>
-
-          <Flex flex={1}>
-            <Flex flex={1} bgColor="red">
-              aaaa
-            </Flex>
-            <Flex flex={1}>
-              
-              <VideoPlaylist
-                videos={videos}
-                autoplay={true}
-                title="Videos related"
-              />
-
-            </Flex>
+          <Flex marginY={pxToRem(40)}>
+            <ReactionBar totalReactions={video.totalReactions} />
+            <Flex flex={1} />
+            <Participants
+              totalParticipants={video.totalParticipants}
+              participants={video.participants}
+            />
           </Flex>
+
+          <Center 
+            flex={1} 
+            position="relative" 
+            width="100vw" 
+            height="100hw"
+            left="calc(-50vw + 50%)" 
+            bgColor={colorMode === 'dark' ? 'grey.900': 'grey.200'}
+          >
+            <Flex
+              width="1186px"
+              borderTop="1px solid"
+              borderColor={colorMode === 'dark' ? 'grey.800': 'grey.300'}
+              mt="-1px"
+            >
+              <Flex flex={1} flexDir="column" paddingTop={pxToRem(40)}>
+                <Flex>
+                  <CommentCount>
+                    {`${kFormatter(video.totalComments)} Comments`}
+                  </CommentCount>
+                </Flex>
+
+                <Flex marginTop={pxToRem(26)}>
+                  <Center marginRight={pxToRem(12)}>
+                    <Avatar />
+                  </Center>
+                  <Input
+                      onChange={() => { }}
+                      error={false}
+                      placeholder={'Add a comment…'}
+                      onEnterPress={() => alert("enter")}
+                  />
+                </Flex>
+
+                <Flex marginTop={pxToRem(75)}>
+                  {video?.comments.map((comment) => (
+                    <Comment
+                      userName={comment.userName}
+                      createdAt={comment.createdAt}
+                      comment={comment.comment}
+                    />
+                  ))}
+                </Flex>
+              </Flex>
+              <Flex flex={1} paddingTop={pxToRem(20)}>
+                <VideoPlaylist
+                  videos={video.relatedVideos}
+                  autoplay={true}
+                  title="Videos related"
+                />
+              </Flex>
+            </Flex>
+          </Center>
         </Flex>
       </Center>
     </MainLayout>
