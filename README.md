@@ -1,6 +1,8 @@
-# WIP
-# Web-app
+# Web-app (WIP)
+
 ## Access the project on: https://webapp-development.pages.dev/
+## Access Storybook on: https://storybook.fanhero.net/?path=/story/introduction--page
+
 ## FanHero's browser-based brand-app client
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
