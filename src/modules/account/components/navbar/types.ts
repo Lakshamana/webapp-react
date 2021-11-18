@@ -1,3 +1,5 @@
 export interface NavbarProps {
-  onClick: any;
+  onClick: any
+  colorMode: 'light' | 'dark'
+  text: string
 }

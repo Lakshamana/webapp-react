@@ -11,6 +11,7 @@ export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
   z-index: 1000;
   overflow: auto;
   height: calc(100% - 70px);
+  background-color: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
   ${({ open }) =>
     open
       ? css`

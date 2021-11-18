@@ -14,9 +14,9 @@ export const Parent = styled.div<PropsContainer>`
     background: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
     content: "";
     display: block;
-    height: 4px;
-    border-radius: 3px;
-    margin: 3px 0;
+    height: 3px;
+    border-radius: 10px;
+    margin: 5px 0;
     transition: 0.5s;
   }
   ${({ open }) =>
@@ -24,7 +24,7 @@ export const Parent = styled.div<PropsContainer>`
       ? css`
           :before {
             margin: 8px 0;
-            transform: translateY(12px) rotate(135deg);
+            transform: translateY(11px) rotate(135deg);
           }
           :after {
             margin: 8px 0;
