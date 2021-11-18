@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { Container, Text } from "components";
 import { PropsChannels } from "../../types";
 

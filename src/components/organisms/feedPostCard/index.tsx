@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Text, ReactionBar, Participants } from "components";

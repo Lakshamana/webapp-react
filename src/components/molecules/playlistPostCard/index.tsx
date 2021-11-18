@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { useHistory } from 'react-router-dom';
 import {
   List,

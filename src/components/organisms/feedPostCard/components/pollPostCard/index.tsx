@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api"
+import { Icon } from "@iconify/react"
 import { Divider, Flex } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
 import { Text } from "components"

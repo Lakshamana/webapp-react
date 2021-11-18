@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo } from "react";
 import { Container, Button } from "components";
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 
 import { getPages } from "./utils";
 import { TableFooterProps, defaultProps } from "./types";
