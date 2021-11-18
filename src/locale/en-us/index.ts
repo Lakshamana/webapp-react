@@ -25,6 +25,7 @@ const EN_US = {
       yes: 'Yes',
       no: 'No',
       close: 'Close',
+      send: 'Send',
     },
     signin: {
       title: 'Access Fanhero now',
@@ -82,6 +83,10 @@ const EN_US = {
         cancel: 'Cancel',
         back: 'Back',
       },
+    },
+    recoverPassword: {
+      title: 'Forgot your password? No problem!',
+      subtitle: "We'll send you an email with a link to reset your password.",
     },
     header: {
       tabs: {
