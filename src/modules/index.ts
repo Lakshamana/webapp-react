@@ -10,3 +10,4 @@ export * from "./tags";
 export * from "./account";
 export * from "./channelList";
 export * from "./feed";
+export * from "./recoverPassword";

@@ -12,12 +12,12 @@ import { sizes } from 'styles';
 const SigninForm = ({handleFormSubmit} : Props) => {
 	const { t } = useTranslation();
 
-	const { values, handleSubmit, handleChange, errors } = useFormik({
+	const { values, handleSubmit, handleChange, errors, dirty, isValid } = useFormik({
 		initialValues: {
 		  ...initialValues
 		},
 		validationSchema,
-		validateOnChange: false,
+		validateOnChange: true,
 		validateOnBlur: false,
 		onSubmit: async () => {
 		  handleFormSubmit({...values})
@@ -44,11 +44,11 @@ const SigninForm = ({handleFormSubmit} : Props) => {
 				errorMessage={errors.signIn?.password}
 				error={!!errors.signIn?.password}
 			/>
-			<Box w="100%" py={1}>
+			<Box w="100%" py={2}>
 				<Checkbox label={t('signin.label.save_as_default')}></Checkbox>
 			</Box>
 			{/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
-			<Button width={[1, sizes.loginButtonWidth]} marginBottom={10} type={'submit'} label={t('signin.actions.login')} onClick={handleSubmit}></Button>
+			<Button width={[1, sizes.loginButtonWidth]} mt={3} type={dirty && isValid ? 'submit' : 'disabled'} label={t('signin.actions.login')} onClick={handleSubmit}></Button>
 		</Flex >
 	);
 }
