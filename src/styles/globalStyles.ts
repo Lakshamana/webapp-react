@@ -1,9 +1,9 @@
 export const breakpoints = {
-	ssm: "320px",
-	sm: "425px",
-	md: "768px",
-	lg: "1024px",
-	xl: "1440px"
+  ssm: '320px',
+  sm: '639px',
+  md: '832px',
+  lg: '1024px',
+  xl: '1440px',
 }
 
 export const breakpointKeys = {

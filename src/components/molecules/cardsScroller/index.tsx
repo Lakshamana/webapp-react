@@ -1,14 +1,13 @@
 import React from "react"
-import { Swiper } from "swiper/react"
-import SwiperCore, { Navigation } from "swiper"
+import SwiperCore, { Navigation, Pagination } from "swiper"
 import { PostsProps } from "./types"
 import { SWIPPER_PARAMS } from "./settings"
+import { SwiperStyled } from "./style"
 import { Content } from "./style"
-import "./style.css"
 import "swiper/swiper-bundle.min.css"
 import { RANDOM_ID } from "utils"
 
-SwiperCore.use([Navigation])
+SwiperCore.use([Navigation, Pagination])
 
 const CardsScroller = ({ children, type }: PostsProps) => {
 	let randomId = `${type}-${RANDOM_ID()}`
@@ -17,14 +16,18 @@ const CardsScroller = ({ children, type }: PostsProps) => {
 		prevEl: `.swiper-button-prev.${randomId}`,
 		nextEl: `.swiper-button-next.${randomId}`
 	}
+
 	return (
 		<React.Fragment>
 			<Content>
-				<Swiper {...SWIPPER_PARAMS}>
-					<div className='swiper-wrapper'>{children}</div>
-				</Swiper>
-				<div className={`swiper-button-prev ${randomId}`} />
-				<div className={`swiper-button-next ${randomId}`} />
+				<SwiperStyled {...SWIPPER_PARAMS}>
+					<div className='swiper-wrapper'>
+						{children}
+					</div>
+					<div className="swiper-pagination-cards cards-scroller-pagination" />
+					<div className={`swiper-button-prev ${randomId}`} />
+					<div className={`swiper-button-next ${randomId}`} />
+				</SwiperStyled>
 			</Content>
 		</React.Fragment>
 	)

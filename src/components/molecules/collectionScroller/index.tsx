@@ -6,7 +6,7 @@ import { CollectionList } from "./collectionItems"
 import { Text } from "components"
 import { CollectionScrollerProps } from "./types"
 import { Header, ContentScroller } from "./style"
-import { colors } from "styles"
+import { colors, sizes } from "styles"
 import { useThemeStore } from "services/stores/theme"
 
 const CollectionScroller = ({
@@ -24,6 +24,7 @@ const CollectionScroller = ({
 				<Text
 					color={colors.generalText[colorMode]}
 					fontSize={"28px"}
+					paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd, sizes.paddingLg, sizes.paddingLg]}
 					fontWeight={500}
 					marginRight={"18px"}
 					lineHeight={"34px"}>

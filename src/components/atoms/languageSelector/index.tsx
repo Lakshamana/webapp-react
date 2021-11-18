@@ -13,8 +13,6 @@ const LanguageSelector = () => {
     i18n.changeLanguage(language.locale);
   }
 
-  console.log("i18n", i18n.language);
-
   const languageOptions: LanguageSelectProps[] = [
     { flagIcon: <BrazilIcon width={24} />, locale: "pt-BR", label: "PT" },
     { flagIcon: <USAIcon width={24} />, locale: "en-US", label: "EN" },
