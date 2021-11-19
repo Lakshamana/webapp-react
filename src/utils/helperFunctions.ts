@@ -13,3 +13,8 @@ export const getActions = (actions: any) => {
 
 	return actions
 }
+
+export const kFormatter = (num: number | bigint) => {
+	let formatter = Intl.NumberFormat('en', { notation: 'compact' })
+	return formatter.format(num)
+}

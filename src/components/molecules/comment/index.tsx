@@ -14,7 +14,7 @@ const Comment = ({
       <Text
         color={theme.colors.textLight}
         kind="title"
-        fontSize={pxToRem(28)}
+        fontSize={pxToRem(20)}
         fontWeight={600}
       >
         { userName }
