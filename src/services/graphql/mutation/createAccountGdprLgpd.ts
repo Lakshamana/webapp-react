@@ -7,7 +7,7 @@ export const MUTATION_CREATE_ACCOUNT_GDPR = gql`
 			accepted
 			accepted_at
 			account {
-				_id
+				id
 			}
 			ip
 			__typename
