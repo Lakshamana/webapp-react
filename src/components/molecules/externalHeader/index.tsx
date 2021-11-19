@@ -1,4 +1,5 @@
 import { Logo, LanguageSelector, Container } from "components";
+import { Box } from '@chakra-ui/layout';
 import { ExternalHeaderProps } from "./types";
 import { BoxHeader, HeaderItems } from "./style";
 
@@ -6,10 +7,12 @@ const ExternalHeader = ({
   rightContent,
   rightContentStyle,
 }: ExternalHeaderProps) => (
-  <BoxHeader display="flex" px={4} alignItems="center" justifyContent="center">
+  <BoxHeader display="flex" alignItems="center" justifyContent="center">
     <HeaderItems>
       <Logo marginRight={[3, 4]} py={20}></Logo>
-      <LanguageSelector></LanguageSelector>
+      <Box marginLeft={'auto'}>
+        <LanguageSelector></LanguageSelector>
+      </Box>
       <Container {...rightContentStyle}>
         {rightContent ? rightContent() : <></>}
       </Container>
