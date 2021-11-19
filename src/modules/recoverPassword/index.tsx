@@ -1,16 +1,31 @@
-import { Text, LoginLayout, CardContainer, Input, Button } from "components";
 import { useTranslation } from 'react-i18next'
+import { useMutation } from '@apollo/client';
 import { Flex } from '@chakra-ui/react';
 import { useFormik } from 'formik';
+import { Text, LoginLayout, CardContainer, Input, Button } from "components";
 import { Container } from './styles';
 import { sizes, colors } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
 import { validationSchema, initialValues } from "./settings";
+import { MUTATION_RESET_PASSWORD } from 'services/graphql/mutation/resetPassword';
 
 const RecoverPasswordPage = () => {
     const { t } = useTranslation();
 
     const { colorMode } = useThemeStore();
+
+    const [resetPassword] = useMutation(MUTATION_RESET_PASSWORD, {
+        onCompleted: async (result) => {
+            if (!result?.createAccount) {
+                alert('Failed to send reset password email, check your email!')
+                return
+            }
+        },
+        onError: (error) => {
+            // TO-DO ERROR COMPONENT
+            alert('Failed to send reset password email, check your email!')
+        }
+    });
 
     const { values, handleSubmit, handleChange, errors, dirty, isValid } = useFormik({
         initialValues: {
@@ -20,7 +35,11 @@ const RecoverPasswordPage = () => {
         validateOnChange: true,
         validateOnBlur: false,
         onSubmit: async () => {
-            console.log({ ...values }) 
+            resetPassword({
+                variables: {
+                    forgotPassword: { ...values }
+                }
+            })
         }
     });
 
