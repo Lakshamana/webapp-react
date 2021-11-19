@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { MUTATION_CREATE_ACCOUNT, MUTATION_CREATE_ACCOUNT_GDPR } from 'services/graphql';
 import { RegistrationForm, GDPRForm, ConfirmEmailForm, AdditionalInformationForm } from "./components";
 import { useMutation } from '@apollo/client';
+import { CreateAccountInput } from 'generated/graphql';
 
 export type SignUpSteps = 'Register' | 'LGPD' | 'ConfirmEmail' | 'Custom'
 
@@ -9,7 +10,7 @@ const SignupForm = () => {
 
     const [activeStep, setActiveStep] = useState<SignUpSteps>('Register');
 
-    const [accountID, setAccountID] = useState('');
+    const [createAccountData, setCreateAccountData] = useState<CreateAccountInput>();
 
     const [createAccount] = useMutation(MUTATION_CREATE_ACCOUNT, {
         onCompleted: async (result) => {
@@ -17,8 +18,14 @@ const SignupForm = () => {
                 alert('Failed to create account, check your data!')
                 return
             }
-            setAccountID(result.createAccount._id)
-            setActiveStep('LGPD')
+            createAccountGDPR({
+                variables: {
+                    createAccountGdprLgpd: {
+                        accepted: true,
+                        account: result.createAccount._id
+                    }
+                }
+            })
         },
         onError: (error) => {
             // TO-DO ERROR COMPONENT
@@ -41,19 +48,13 @@ const SignupForm = () => {
     });
 
     const handleRegistrationSubmit = (FormData) => {
-        createAccount({
-            variables: { ...FormData }
-        })
+        setCreateAccountData({ ...FormData })
+        setActiveStep('LGPD')
     }
 
     const handleGDPRSubmit = () => {
-        createAccountGDPR({
-            variables: {
-                createAccountGdprLgpd: {
-                    accepted: true,
-                    account: accountID
-                }
-            }
+        createAccount({
+            variables: { ...createAccountData }
         })
     }
 
