@@ -1,18 +1,24 @@
 import styled from "styled-components";
 import { StyleContainer } from "components";
-import { breakpoints, sizes } from "styles";
+import { breakpoints } from "styles";
 
 interface BoxHeaderProps {
   mode?: string;
 }
 
 export const BoxHeader = styled(StyleContainer) <BoxHeaderProps>`
-  height: ${sizes.headerDesktopHeight};
-  display: flex;
+  height: ${({ theme }) => theme.sizes.headerMobileHeight};
   background-color: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
 
-  @media screen and (max-width: ${breakpoints.md}) {
-    height: ${sizes.headerMobileHeight};
+  padding: 0 ${({ theme }) => theme.sizes.paddingSm};
+
+  @media screen and (min-width: ${breakpoints.md}) {
+    padding: 0 ${({ theme }) => theme.sizes.paddingMd};
+    height: ${({ theme }) => theme.sizes.headerDesktopHeight};
+  }
+
+  @media screen and (min-width: ${breakpoints.lg}) {
+    padding: 0 ${({ theme }) => theme.sizes.paddingLg};
   }
 `;
 
