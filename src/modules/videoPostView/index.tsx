@@ -1,4 +1,4 @@
-import { Flex, Box, Center } from '@chakra-ui/react'
+import { Flex, Center } from '@chakra-ui/react'
 import {
   MainLayout,
   VideoPlayer,
@@ -14,27 +14,30 @@ import { kFormatter } from 'utils'
 import { Title, Subtitle, CommentCount } from './style'
 import { video } from './mock'
 import { useThemeStore } from 'services/stores/theme'
+import { useBreakpoint } from 'services/hooks'
 
 const VideoPostViewPage = () => {
   const { colorMode } = useThemeStore()
+  const { isDesktop } = useBreakpoint()
+
   return (
     <MainLayout>
-      
       <Center width="100%">
-      
-        <Flex flexDir="column" width="1186px">
+        <Flex flexDir="column" width={pxToRem(1186)}>
           <VideoPlayer {...video.playerPros} />
 
-          <Title>{video.title}</Title>
-          <Subtitle>{video.subtitle}</Subtitle>
+          <Flex flexDir="column" paddingX={!isDesktop ? pxToRem(20) : 0}>
+            <Title>{video.title}</Title>
+            <Subtitle>{video.subtitle}</Subtitle>
 
-          <Flex marginY={pxToRem(40)}>
-            <ReactionBar totalReactions={video.totalReactions} />
-            <Flex flex={1} />
-            <Participants
-              totalParticipants={video.totalParticipants}
-              participants={video.participants}
-            />
+            <Flex marginY={pxToRem(40)}>
+              <ReactionBar totalReactions={video.totalReactions} />
+              <Flex flex={1} />
+              <Participants
+                totalParticipants={video.totalParticipants}
+                participants={video.participants}
+              />
+            </Flex>
           </Flex>
 
           <Center 
@@ -46,10 +49,12 @@ const VideoPostViewPage = () => {
             bgColor={colorMode === 'dark' ? 'grey.900': 'grey.200'}
           >
             <Flex
-              width="1186px"
+              width={pxToRem(1186)}
+              paddingX={!isDesktop ? pxToRem(20) : 0}
               borderTop="1px solid"
               borderColor={colorMode === 'dark' ? 'grey.800': 'grey.300'}
               mt="-1px"
+              flexDir={isDesktop ? 'row' : 'column'}
             >
               <Flex flex={1} flexDir="column" paddingTop={pxToRem(40)}>
                 <Flex>
@@ -80,6 +85,7 @@ const VideoPostViewPage = () => {
                   ))}
                 </Flex>
               </Flex>
+
               <Flex flex={1} paddingTop={pxToRem(20)}>
                 <VideoPlaylist
                   videos={video.relatedVideos}
