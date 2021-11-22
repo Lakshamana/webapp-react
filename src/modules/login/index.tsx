@@ -20,7 +20,7 @@ const LoginPage = () => {
         alert('Failed to login, check your email or password!')
         return
       }
-      await localStorage.setItem(AUTH_TOKEN, result.signIn.accessToken);
+      await localStorage.setItem(AUTH_TOKEN, result.signIn.token.accessToken);
       history.push('/home')
     },
     onError: (error) => {
