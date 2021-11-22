@@ -14,7 +14,7 @@ const Subscription = ({
   colorMode,
 }: SubscriptionProps) => (
   <>
-    <Container my={3} width={1} justifyContent="space-between">
+    <Container mt={3} width={1} justifyContent="space-between">
       <Container flexDirection="column">
         <Text
           {...{
@@ -24,16 +24,6 @@ const Subscription = ({
         >
           {title}
         </Text>
-        {subtitle ? (
-          <Text
-            color={colorMode === 'dark' ? colors.white : colors.grey['800']}
-            fontSize={14}
-          >
-            Flameng - Campeonato Carioca
-          </Text>
-        ) : (
-          <></>
-        )}
       </Container>
       <Text
         {...{
@@ -43,6 +33,18 @@ const Subscription = ({
       >
         {value}
       </Text>
+    </Container>
+    <Container mb={3}>
+      {subtitle ? (
+        <Text
+          color={colorMode === 'dark' ? colors.white : colors.grey['800']}
+          fontSize={14}
+        >
+          Flameng - Campeonato Carioca
+        </Text>
+      ) : (
+        <></>
+      )}
     </Container>
     {separator ? <Separator /> : <> </>}
   </>
