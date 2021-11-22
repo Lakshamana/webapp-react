@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { ChannelsProps, defaultProps } from "./types";
 import { ChannelsContent, ExclusiveBlocked, GeolockedBlocked } from "./styles";
 

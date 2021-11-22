@@ -1,16 +1,23 @@
 import styled from "styled-components";
-import { breakpoints, sizes } from 'styles';
+import { breakpoints } from 'styles';
 import { StyleContainer } from "components";
 
 export const BoxFooter = styled(StyleContainer)`
-    height: ${sizes.footerDesktopHeight};
+    height: ${({ theme }) => theme.sizes.footerMobileHeight};
     background-color: ${({ theme }) => theme.colors.footerBg[theme.colorMode]};
     bottom: 0;
     left: 0;
     right: 0;
 
-    @media screen and (max-width: ${breakpoints.md}) {
-        height: ${sizes.footerMobileHeight};
+    padding: 0 ${({ theme }) => theme.sizes.paddingSm};
+
+    @media screen and (min-width: ${breakpoints.md}) {
+        padding: 0 ${({ theme }) => theme.sizes.paddingMd};
+        height: ${({ theme }) => theme.sizes.footerDesktopHeight};
+    }
+
+    @media screen and (min-width: ${breakpoints.lg}) {
+        padding: 0 ${({ theme }) => theme.sizes.paddingLg};
     }
 `;
 

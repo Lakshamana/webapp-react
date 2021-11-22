@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api"
+import { Icon } from "@iconify/react"
 import { Text } from "components"
 import { Props } from "../../types"
 import { abbreviateNumber } from "../../utils"
@@ -13,6 +13,7 @@ import {
 	CountView,
 	MediaLength
 } from "./style"
+import { colors } from "styles"
 
 const AudioPost = ({ ...props }: Props) => (
 	<AudioContent {...props}>
@@ -23,10 +24,10 @@ const AudioPost = ({ ...props }: Props) => (
 		</PlayContent>
 		<DetailsContent {...props}>
 			<Details padding={2}>
-				<Text kind='title' fontSize={24} fontWeight={"Bold"}>
+				<Text kind='title' fontSize={24} fontWeight={"Bold"} color={colors.white}>
 					{props.audioTitle}
 				</Text>
-				<Text kind='headline'>{props.audioArtist}</Text>
+				<Text kind='headline' color={colors.white}>{props.audioArtist}</Text>
 			</Details>
 			{props.displayViews ? (
 				<>

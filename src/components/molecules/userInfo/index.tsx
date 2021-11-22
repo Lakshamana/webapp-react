@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Icon } from '@iconify/react-with-api'
+import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
+
 
 import { Container, Text, Popover } from 'components'
 import { PopoverOption } from './components'

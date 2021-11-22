@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Container, MainLayout } from "components";
 import { ChannelList } from "components/molecules";
 

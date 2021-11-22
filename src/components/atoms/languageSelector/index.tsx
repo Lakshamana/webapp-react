@@ -1,19 +1,21 @@
 import { LanguageSelectProps } from "./types";
 import { ReactComponent as BrazilIcon } from "assets/icons/flags/brazil.svg";
 import { ReactComponent as USAIcon } from "assets/icons/flags/usa.svg";
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { MenuButtonSpan } from "./style";
 import { useTranslation } from "react-i18next";
+import { useThemeStore } from 'services/stores/theme';
+import { colors } from 'styles';
+import { Container } from '../container';
 
-const LanguageSelector = () => {
+const LanguageSelector = ({ ...props }: LanguageSelectProps) => {
   const { i18n } = useTranslation();
+  const { colorMode } = useThemeStore();
 
-  function handleChangeLanguage(language: LanguageSelectProps) {
+  function handleChangeLanguage (language: LanguageSelectProps) {
     i18n.changeLanguage(language.locale);
   }
-
-  console.log("i18n", i18n.language);
 
   const languageOptions: LanguageSelectProps[] = [
     { flagIcon: <BrazilIcon width={24} />, locale: "pt-BR", label: "PT" },
@@ -27,38 +29,44 @@ const LanguageSelector = () => {
   )[0];
 
   return (
-    <Menu>
-      <MenuButton padding={2} borderRadius={36} border={"1px solid #666666"}>
-        <MenuButtonSpan>
-          {selectedLanguage.flagIcon}
-          {selectedLanguage.label}
-          <Icon width={18} height={18} icon="mdi:chevron-down" />
-        </MenuButtonSpan>
-      </MenuButton>
-      <MenuList
-        minWidth={"auto"}
-        bgColor={"#444444"}
-        border={"none"}
-        color={"white"}
-        padding={0}
-      >
-        {languageOptions.map((item, idx) => {
-          return (
-            <MenuItem
-              _focus={{ bg: "transparent" }}
-              paddingRight={8}
-              icon={item.flagIcon}
-              key={idx}
-              minH="48px"
-              fontWeight={500}
-              onClick={() => handleChangeLanguage(item)}
+    <Container {...props}>
+      <Menu>
+        {({ isOpen }) => (
+          <>
+            <MenuButton borderRadius={36}>
+              <MenuButtonSpan>
+                <Icon width={25} height={25} icon="mdi:web" color={isOpen ? colors.brand.primary[colorMode] : colors.generalText[colorMode]} />
+              </MenuButtonSpan>
+            </MenuButton>
+            <MenuList
+              minWidth={"auto"}
+              bgColor={colors.inputBg[colorMode]}
+              border={"none"}
+              color={"white"}
+              padding={0}
             >
-              <span>{item.label}</span>
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
+              {languageOptions.map((item, idx) => {
+                return (
+                  <MenuItem
+                    _focus={{ bg: "transparent" }}
+                    paddingRight={8}
+                    icon={item.flagIcon}
+                    key={idx}
+                    minH="48px"
+                    fontWeight={500}
+                    onClick={() => handleChangeLanguage(item)}
+                    isDisabled={selectedLanguage.locale === item.locale}
+                  >
+                    <span>{item.label}</span>
+                  </MenuItem>
+                );
+              }
+              )}
+            </MenuList>
+          </>
+        )}
+      </Menu>
+    </Container>
   );
 };
 

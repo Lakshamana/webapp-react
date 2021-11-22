@@ -5,7 +5,7 @@ import { Text } from "components"
 import { OndemandList } from "./ondemandItems"
 import { VideoScrollerProps } from "./types"
 import { Header, ContentScroller } from "./styles"
-import { colors } from "styles"
+import { colors, sizes } from "styles"
 import { useThemeStore } from 'services/stores/theme'
 
 const OnDemandScroller = ({
@@ -26,6 +26,7 @@ const OnDemandScroller = ({
 						color={colors.generalText[colorMode]}
 						fontSize={"28px"}
 						fontWeight={500}
+						paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd, sizes.paddingLg, sizes.paddingLg]}
 						marginRight={"18px"}
 						lineHeight={"34px"}>
 						{sectionTitle || ""}

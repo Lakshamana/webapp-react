@@ -1,7 +1,6 @@
 /* @ts-nocheck */
 
 import React, { useState, useEffect } from "react";
-import { Container } from "components";
 import { Spinner } from "@chakra-ui/react";
 import { getLoginSavedData } from "services/hooks";
 import { useFanHeroStore } from "services/stores";

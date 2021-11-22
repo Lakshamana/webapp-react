@@ -1,7 +1,7 @@
 import { VoteProps, defaultProps } from "./types";
 import { Flex } from "@chakra-ui/react";
 import { Text } from "components/atoms";
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 
 const Vote = ({ type, votes }: VoteProps) => (
   <Flex alignItems="center">

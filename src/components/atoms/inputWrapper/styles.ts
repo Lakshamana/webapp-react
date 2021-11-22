@@ -40,6 +40,7 @@ export const BoxWrapperError = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 3px;
 `
 
 export const LabelError = styled.label`

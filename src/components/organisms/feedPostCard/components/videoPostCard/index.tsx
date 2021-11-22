@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api"
+import { Icon } from "@iconify/react"
 import { Props } from "../../types"
 import { abbreviateNumber } from "../../utils"
 import {

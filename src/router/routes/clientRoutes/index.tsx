@@ -14,6 +14,8 @@ import {
   SearchPage,
   ChannelList,
   FeedPage,
+  RecoverPasswordPage,
+  VideoPostViewPage
 } from "modules";
 
 const ClientRoutes = ({ isAccesible }: any) => (
@@ -34,6 +36,12 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.signup}
       path="/signup"
       component={SignupPage}
+      fallback={LoginPage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.recoverPassword}
+      path="/recoverPassword"
+      component={RecoverPasswordPage}
       fallback={LoginPage}
     />
     <ClientRoute
@@ -82,6 +90,11 @@ const ClientRoutes = ({ isAccesible }: any) => (
       path="/tags"
       component={TagPage}
       fallback={HomePage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.login}
+      path="/video-post"
+      component={VideoPostViewPage}
     />
     <ClientRoute
       isAccesible={isAccesible?.login}

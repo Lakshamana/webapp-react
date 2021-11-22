@@ -19,7 +19,7 @@ export const validationSchema = Yup.object().shape({
         })
       )
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%&])(?=.{8,})/,
         i18n.t('common.error.password_error')
       ),
     email: Yup.string().required(

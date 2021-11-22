@@ -8,13 +8,13 @@ import { getActions, getItems } from "utils"
 import { Props, BillboardItem } from "../../types"
 import { Params } from "../../settings"
 import {
-	BillboardItems,
-	HeroImageWrapper,
-	HeroImg,
-	Info,
-	InfoContent,
-	Title,
-	Description,
+  BillboardItems,
+  HeroImageWrapper,
+  HeroImg,
+  Info,
+  InfoContent,
+  Title,
+  Description,
   BoxButtons,
   ContentButton
 } from './style'
@@ -25,40 +25,40 @@ import "swiper/swiper-bundle.min.css"
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
 const SwiperSlideList = ({ items, customButtons }: Props) => {
-	const [size, setSize] = useState({
-		x: window.innerWidth,
-		y: window.innerHeight
-	})
+  const [size, setSize] = useState({
+    x: window.innerWidth,
+    y: window.innerHeight
+  })
 
-	const getSize = () => {
-		setSize({
-			x: window.innerWidth,
-			y: window.innerHeight
-		})
-	}
+  const getSize = () => {
+    setSize({
+      x: window.innerWidth,
+      y: window.innerHeight
+    })
+  }
 
-	useEffect(() => (window.onresize = getSize), [])
+  useEffect(() => (window.onresize = getSize), [])
 
-	const { t } = useTranslation()
+  const { t } = useTranslation()
 
-	return (
-		<Swiper {...Params} style={{ position: "relative", height: "100%"}}>
-			{getItems(items).map((items: BillboardItem, i: number) => (
-				<SwiperSlide style={{ width: "100%" }} key={`Slide-${i}`} className='slider'>
-					<BillboardItems>
-						<HeroImageWrapper>
-							<HeroImg
-								ClassName='swiper-lazy'
-								src={size.x >= 640 ? items.banner : items.cover}
-							/>
-						</HeroImageWrapper>
-						<Info style={{ color: items.infoColor }}>
-							<InfoContent>
-								<Title>{items.title}</Title>
-								<Description>{items.description}</Description>
-								{customButtons ? (
+  return (
+    <Swiper {...Params} style={{ position: "relative", height: "100%" }}>
+      {getItems(items).map((item: BillboardItem) => (
+        <SwiperSlide style={{ width: "100%" }} key={item.id} className='slider'>
+          <BillboardItems>
+            <HeroImageWrapper>
+              <HeroImg
+                ClassName='swiper-lazy'
+                src={size.x >= 640 ? item.banner : item.cover}
+              />
+            </HeroImageWrapper>
+            <Info style={{ color: item.infoColor }}>
+              <InfoContent>
+                <Title>{item.title}</Title>
+                <Description>{item.description}</Description>
+                {customButtons ? (
                   <BoxButtons>
-                    <ActionsList actions={getActions(items?.actions)} />
+                    <ActionsList actions={getActions(item?.actions)} />
                   </BoxButtons>
                 ) : (
                   <BoxButtons>
@@ -93,7 +93,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
           </BillboardItems>
         </SwiperSlide>
       ))}
-      <div className="swiper-pagination pagination" />
+      <div className="swiper-pagination billboard-pagination" />
     </Swiper>
   )
 }

@@ -24,5 +24,17 @@ Component.args = {
   postDescription: 'Description',
   countMessages: 1500,
   date: '3 days ago', 
-  type: 'Image'
+  coverImage: 'https://observatoriodocinema.uol.com.br/wp-content/uploads/2021/08/the-100.jpg',
+  hasActivity: true,
+  mediaLength: '03:15',
+  views: 30,
+  displayViews: true,
+  audioTitle: 'Test title',
+  audioArtist: 'Artist',
+  voteCount: 20,
+  timeRemaining: '2 days',
+  itemQuestion: 'Question test',
+  percentage: '60%',
+  winning: true,
+  voted: true
 };

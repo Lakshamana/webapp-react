@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { StyledProps } from "./types";
-import { breakpoints, colors } from "styles";
+import { breakpoints } from "styles";
 import { layout } from "styled-system";
 
 export const ChannelsContent = styled.div<StyledProps>`

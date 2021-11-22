@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import { Container, Text } from "components";
 import { SideUserInfo } from "..";

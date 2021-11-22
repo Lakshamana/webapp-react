@@ -49,9 +49,9 @@ const LoginPage = () => {
           <SigninForm handleFormSubmit={handleFormSubmit}></SigninForm>
           {/* TO-DO FORGOT PASSWORD, CREATE ATOM FOR LINKS */}
           <Box textAlign={'center'}>
-            <Link style={{ 'textTransform': 'uppercase', 'fontWeight': 'bold' }} to="resetPassword">{t('signin.actions.forgot_password')}</Link>
+            <Link style={{ color:`${colors.generalText[colorMode]}`, 'textTransform': 'uppercase', 'fontWeight': 'bold' }} to="recoverPassword">{t('signin.actions.forgot_password')}</Link>
           </Box>
-          <Flex marginTop={10} marginBottom={5} justifyContent={'center'} flexWrap={'wrap'}>
+          <Flex justifyContent={'center'} flexWrap={'wrap'} mt={10}>
             <Text color={colors.generalText[colorMode]} paddingRight={1}>
               {t('signin.label.dont_have_account')}
             </Text>

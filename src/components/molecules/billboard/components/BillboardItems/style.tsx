@@ -18,17 +18,17 @@ export const BillboardItems: any = styled.div`
 `
 
 export const HeroImageWrapper: any = styled.div`
-    position: absolute;
-    inset: 0px;
+  	position: absolute;
+  	inset: 0px;
 
-    &:after {
-        content: "";
-        position: absolute;
-        left: 0px;
-        right: 0px;
-        top: 0px;
-        bottom: 0px;
-        background: linear-gradient(90deg, #0F0F0F 0%, rgba(15, 15, 15, 0) 50%), linear-gradient(359.29deg, #0F0F0F 0.7%, rgba(15, 15, 15, 0) 64.44%)
+	&:after {
+    	content: "";
+    	position: absolute;
+    	left: 0px;
+    	right: 0px;
+    	top: 0px;
+    	bottom: 0px;
+    	${({ theme }) => `background: linear-gradient(90deg, ${theme.colors.bodyBg[theme.colorMode]} 0%, rgba(15, 15, 15, 0) 30%), linear-gradient(359.29deg, ${theme.colors.bodyBg[theme.colorMode]} 0.7%, rgba(15, 15, 15, 0) 50%)`};
 `
 
 export const HeroImg: any = styled.img`
@@ -103,6 +103,7 @@ export const Title: any = styled.div`
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
+	color: ${({ theme }) => theme.colors.billboardText[theme.colorMode]};
 
 	@media screen and (max-width: ${breakpoints.lg}) {
 		font-size: 90px;
@@ -120,7 +121,6 @@ export const Title: any = styled.div`
 		font-size: 32px;
 		line-height: 56px;
 		margin: 12px 0;
-		max-width: 360px;
 	}
 
 	@media screen and (max-width: ${breakpoints.ssm}) {
@@ -139,6 +139,7 @@ export const Description: any = styled.div`
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
+	color: ${({ theme }) => theme.colors.billboardText[theme.colorMode]};
 
 	@media screen and (max-width: ${breakpoints.md}) {
 		font-size: 19px;
@@ -150,7 +151,6 @@ export const Description: any = styled.div`
 	@media screen and (max-width: ${breakpoints.sm}) {
 		font-size: 16px;
 		line-height: 16px;
-		max-width: 360px;
 		margin-bottom: 16px;
 		-webkit-line-clamp: 2;
 	}

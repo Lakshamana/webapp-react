@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Icon } from "@iconify/react-with-api";
+import { Icon } from "@iconify/react";
 import { useEffect, useRef } from "react";
 import { Container, Popover, InputInline } from "components";
 import { SearchPopover } from "..";

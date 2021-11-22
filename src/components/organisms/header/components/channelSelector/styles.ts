@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
 import { StyleContainer } from "components/atoms/container";
-import { colors, breakpoints } from "styles";
+import { breakpoints } from "styles";
 
 interface IconContainerProps {
   open: boolean;

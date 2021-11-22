@@ -24,18 +24,22 @@ export type Scalars = {
   VoidScalar: any;
 };
 
+export type AccessToken = {
+  __typename?: 'AccessToken';
+  accessToken: Scalars['String'];
+};
+
 export type Account = {
   __typename?: 'Account';
-  _id: Scalars['ID'];
   display_name?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   first_name?: Maybe<Scalars['String']>;
-  /** Account groups */
-  groups?: Maybe<Array<GroupDto>>;
+  /** Id */
+  id: Scalars['String'];
   last_name?: Maybe<Scalars['String']>;
-  /** Account roles */
-  roles?: Maybe<Array<RolesDto>>;
-  status?: Maybe<Scalars['String']>;
+  organization?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  status?: Maybe<AccountStatus>;
   tenant_id?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
 };
@@ -63,9 +67,16 @@ export type AccountSession = {
   refresh_token: Scalars['String'];
 };
 
-export type Auth = {
-  __typename?: 'Auth';
-  accessToken: Scalars['String'];
+export type AccountStatus = {
+  __typename?: 'AccountStatus';
+  active?: Maybe<Scalars['Boolean']>;
+  block_perm?: Maybe<Scalars['Boolean']>;
+  block_temp?: Maybe<Scalars['DateTime']>;
+  pending_activation?: Maybe<Scalars['Boolean']>;
+};
+
+export type BanAccountTemporary = {
+  banUntil: Scalars['DateTime'];
 };
 
 export type CreateAccountGdprLgpdInput = {
@@ -79,7 +90,6 @@ export type CreateAccountInput = {
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
   password: Scalars['String'];
-  status: Status;
   username?: Maybe<Scalars['String']>;
 };
 
@@ -99,18 +109,16 @@ export type CreateAccountSocialSignInDto = {
 };
 
 export type CreateChannelInput = {
-  banner?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   status: Scalars['String'];
-  thumbnail?: Maybe<Scalars['String']>;
 };
 
 export type CreateCustomFieldInput = {
-  custom_fields: Array<Scalars['JSONObject']>;
+  fields: Array<CustomFieldInput>;
 };
 
 export type CreateEmailTemplateDto = {
@@ -121,14 +129,13 @@ export type CreateEmailTemplateDto = {
 };
 
 export type CreateGroupDto = {
-  default: Scalars['Boolean'];
+  default?: Maybe<Scalars['Boolean']>;
   /** Group description */
   description?: Maybe<Scalars['String']>;
   /** Group name */
   name: Scalars['String'];
-  public: Scalars['Boolean'];
-  /** Group roles */
-  roles: Array<Scalars['ID']>;
+  public?: Maybe<Scalars['Boolean']>;
+  roles?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type CreateOrganizationInput = {
@@ -142,7 +149,6 @@ export type CreateOrganizationInput = {
   name: Scalars['String'];
   onesignal_id?: Maybe<Scalars['String']>;
   portal_url: Scalars['String'];
-  sessions_limit?: Maybe<Scalars['JSON']>;
   settings?: Maybe<Scalars['JSON']>;
   status?: Maybe<Scalars['String']>;
   web_url: Scalars['String'];
@@ -155,24 +161,12 @@ export type CreatePermissionInput = {
   subject: Scalars['ID'];
 };
 
-export type CreateProfileInput = {
-  account: Scalars['String'];
-  address: Scalars['String'];
-  avatar: Scalars['String'];
-  birthday: Scalars['DateTime'];
-  custom_fields: Scalars['JSONObject'];
-  gender: Scalars['String'];
-  locale: Scalars['String'];
-  organization: Scalars['String'];
-  phone: Scalars['String'];
-};
-
 export type CreateRoleInput = {
-  default: Scalars['Boolean'];
+  default?: Maybe<Scalars['Boolean']>;
   description: Scalars['String'];
   name: Scalars['String'];
   permissions: Array<Scalars['ID']>;
-  public: Scalars['Boolean'];
+  public?: Maybe<Scalars['Boolean']>;
 };
 
 export type CreateSubjectInput = {
@@ -180,12 +174,18 @@ export type CreateSubjectInput = {
   fields: Array<Scalars['String']>;
 };
 
-export type CustomField = {
-  __typename?: 'CustomField';
-  _id: Scalars['ID'];
-  custom_fields: Scalars['JSONObject'];
-  organization_id: Scalars['ID'];
+export type CustomFieldInput = {
+  name: Scalars['String'];
+  required: Scalars['Boolean'];
+  type: CustomFieldTypesEnum;
 };
+
+export enum CustomFieldTypesEnum {
+  Array = 'ARRAY',
+  Boolean = 'BOOLEAN',
+  Number = 'NUMBER',
+  String = 'STRING'
+}
 
 export type DeleteOneParams = {
   id: Scalars['String'];
@@ -197,6 +197,11 @@ export type EmailResponseEnvelopeDto = {
   from: Scalars['String'];
   /** email what message will be delivered */
   to: Scalars['String'];
+};
+
+export type EmailSent = {
+  __typename?: 'EmailSent';
+  sent: Scalars['Boolean'];
 };
 
 export type EmailTemplate = {
@@ -257,7 +262,7 @@ export type FindAllGroupsRequestDto = {
 
 export type FindAllQueryParamsDto = {
   email__exact?: Maybe<Scalars['String']>;
-  organization_id?: Maybe<Scalars['String']>;
+  organization?: Maybe<Scalars['String']>;
   tenant_id?: Maybe<Scalars['String']>;
 };
 
@@ -265,37 +270,21 @@ export type FindOneAccountSessionDto = {
   accountSessionId: Scalars['ID'];
 };
 
-export type FindOneCustomFieldsDto = {
-  organizationId: Scalars['String'];
-};
-
 export type FindOneParamsDto = {
   id: Scalars['ID'];
 };
 
-export type FindOnePermissionInput = {
-  permissionId: Scalars['ID'];
-};
-
-export type FindOneProfileDto = {
-  account_id: Scalars['String'];
-};
-
-export type FindOneRoleInput = {
-  roleId: Scalars['ID'];
-};
-
-export type FindOneSubjectInput = {
-  subjectId: Scalars['ID'];
+export type ForgotPassword = {
+  email: Scalars['String'];
 };
 
 export type GroupDto = {
   __typename?: 'GroupDto';
-  /** Id */
-  _id: Scalars['String'];
   default: Scalars['Boolean'];
   /** Group description */
   description: Scalars['String'];
+  /** Id */
+  id: Scalars['String'];
   /** Group name */
   name: Scalars['String'];
   public: Scalars['Boolean'];
@@ -303,33 +292,31 @@ export type GroupDto = {
   roles: Array<RolesDto>;
 };
 
-export type IdDto = {
-  /** Group name */
-  id: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
+  activeAccount: Account;
+  banAccountPerm: Account;
+  banAccountTemp: Account;
   createAccount: Account;
   createAccountGdprLgpd: AccountGdprLgpd;
   createAccountSession: AccountSession;
   createAccountSocialSignIn: Account;
   createChannel: ResponseChannelOutput;
-  createCustomField: CustomField;
+  createCustomField: ResponseCustomFieldsOutput;
   createEmailTemplate: EmailTemplate;
   createGroup: GroupDto;
   createOrganization: ResponseOrganizationOutput;
   createPermission: PermissionDto;
-  createProfile: Profile;
   createRole: RolesDto;
   createSubject: SubjectDto;
-  forgetAccount: Scalars['VoidScalar'];
-  refreshToken: Auth;
+  deactiveAccount: Account;
+  deleteCustomField: ResponseCustomFieldsOutput;
+  forgetAccount: Account;
+  refreshToken: RefreshSignIn;
   removeAccount: Account;
   removeAccountGdprLgpd: AccountGdprLgpd;
   removeAccountSession: AccountSession;
   removeChannel: ResponseChannelOutput;
-  removeCustomField: CustomField;
   removeEmailTemplate: EmailTemplate;
   removeGroup: GroupDto;
   removeOrganization: ResponseOrganizationOutput;
@@ -337,21 +324,41 @@ export type Mutation = {
   removeProfile: Profile;
   removeRole: RolesDto;
   removeSubject: SubjectDto;
+  resetPassword: EmailSent;
   sendEmail: ResponseEmailSendedDto;
-  signIn: Auth;
+  signIn: SingIn;
   signOut: Scalars['VoidScalar'];
+  unbanAccountPerm: Account;
+  unbanAccountTemp: Account;
   updateAccount: Account;
   updateAccountGdprLgpd: AccountGdprLgpd;
   updateAccountSession: AccountSession;
   updateChannel: ResponseChannelOutput;
-  updateCustomField: CustomField;
+  updateCustomField: ResponseCustomFieldsOutput;
   updateEmailTemplate: EmailTemplate;
   updateGroup: GroupDto;
   updateOrganization: ResponseOrganizationOutput;
+  updatePassword: PasswordChanged;
   updatePermission: PermissionDto;
   updateProfile: Profile;
   updateRole: RolesDto;
   updateSubject: SubjectDto;
+};
+
+
+export type MutationActiveAccountArgs = {
+  account: Scalars['String'];
+};
+
+
+export type MutationBanAccountPermArgs = {
+  account: Scalars['String'];
+};
+
+
+export type MutationBanAccountTempArgs = {
+  account: Scalars['String'];
+  input: BanAccountTemporary;
 };
 
 
@@ -381,7 +388,7 @@ export type MutationCreateChannelArgs = {
 
 
 export type MutationCreateCustomFieldArgs = {
-  createCustomFieldInput: CreateCustomFieldInput;
+  input: CreateCustomFieldInput;
 };
 
 
@@ -391,7 +398,7 @@ export type MutationCreateEmailTemplateArgs = {
 
 
 export type MutationCreateGroupArgs = {
-  createGroupInput: CreateGroupDto;
+  payload: CreateGroupDto;
 };
 
 
@@ -401,32 +408,32 @@ export type MutationCreateOrganizationArgs = {
 
 
 export type MutationCreatePermissionArgs = {
-  createPermissionInput: CreatePermissionInput;
-};
-
-
-export type MutationCreateProfileArgs = {
-  createProfileInput: CreateProfileInput;
+  payload: CreatePermissionInput;
 };
 
 
 export type MutationCreateRoleArgs = {
-  createRoleInput: CreateRoleInput;
+  payload: CreateRoleInput;
 };
 
 
 export type MutationCreateSubjectArgs = {
-  createSubjectInput: CreateSubjectInput;
+  payload: CreateSubjectInput;
+};
+
+
+export type MutationDeactiveAccountArgs = {
+  account: Scalars['String'];
+};
+
+
+export type MutationDeleteCustomFieldArgs = {
+  id: Scalars['String'];
 };
 
 
 export type MutationForgetAccountArgs = {
-  DeleteOneParams: DeleteOneParams;
-};
-
-
-export type MutationRefreshTokenArgs = {
-  refreshToken: RefreshTokenInput;
+  account: Scalars['String'];
 };
 
 
@@ -450,18 +457,13 @@ export type MutationRemoveChannelArgs = {
 };
 
 
-export type MutationRemoveCustomFieldArgs = {
-  FindOneCustomFieldsDto: FindOneCustomFieldsDto;
-};
-
-
 export type MutationRemoveEmailTemplateArgs = {
   filterFindOneEmailTemplateDTO: FilterFindOneEmailTemplateDto;
 };
 
 
 export type MutationRemoveGroupArgs = {
-  id: IdDto;
+  id: Scalars['ID'];
 };
 
 
@@ -471,22 +473,27 @@ export type MutationRemoveOrganizationArgs = {
 
 
 export type MutationRemovePermissionArgs = {
-  findOnePermissionInput: FindOnePermissionInput;
+  id: Scalars['ID'];
 };
 
 
 export type MutationRemoveProfileArgs = {
-  FindOneProfileDto: FindOneProfileDto;
+  account: Scalars['ID'];
 };
 
 
 export type MutationRemoveRoleArgs = {
-  findOneRoleInput: FindOneRoleInput;
+  id: Scalars['ID'];
 };
 
 
 export type MutationRemoveSubjectArgs = {
-  findOneSubjectInput: FindOneSubjectInput;
+  id: Scalars['ID'];
+};
+
+
+export type MutationResetPasswordArgs = {
+  forgotPassword: ForgotPassword;
 };
 
 
@@ -502,6 +509,16 @@ export type MutationSignInArgs = {
 
 export type MutationSignOutArgs = {
   signOut: RefreshTokenInput;
+};
+
+
+export type MutationUnbanAccountPermArgs = {
+  account: Scalars['String'];
+};
+
+
+export type MutationUnbanAccountTempArgs = {
+  account: Scalars['String'];
 };
 
 
@@ -530,7 +547,7 @@ export type MutationUpdateChannelArgs = {
 
 
 export type MutationUpdateCustomFieldArgs = {
-  FindOneCustomFieldsDto: FindOneCustomFieldsDto;
+  id: Scalars['String'];
   updateCustomFieldInput: UpdateCustomFieldInput;
 };
 
@@ -542,8 +559,8 @@ export type MutationUpdateEmailTemplateArgs = {
 
 
 export type MutationUpdateGroupArgs = {
-  id: IdDto;
-  updateGroupInput: UpdateGroupDto;
+  id: Scalars['ID'];
+  payload: UpdateGroupDto;
 };
 
 
@@ -553,50 +570,61 @@ export type MutationUpdateOrganizationArgs = {
 };
 
 
+export type MutationUpdatePasswordArgs = {
+  updatePassword: UpdatePassword;
+};
+
+
 export type MutationUpdatePermissionArgs = {
-  findOnePermissionInput: FindOnePermissionInput;
-  updatePermissionInput: UpdatePermissionInput;
+  id: Scalars['ID'];
+  payload: UpdatePermissionInput;
 };
 
 
 export type MutationUpdateProfileArgs = {
-  FindOneProfileDto: FindOneProfileDto;
-  updateProfileInput: UpdateProfileInput;
+  account: Scalars['ID'];
+  input: UpdateProfileInput;
 };
 
 
 export type MutationUpdateRoleArgs = {
-  findOneRoleInput: FindOneRoleInput;
-  updateRoleInput: UpdateRoleInput;
+  id: Scalars['ID'];
+  payload: UpdateRoleInput;
 };
 
 
 export type MutationUpdateSubjectArgs = {
-  findOneSubjectInput: FindOneSubjectInput;
-  updateSubjectInput: UpdateSubjectInput;
+  id: Scalars['ID'];
+  payload: UpdateSubjectInput;
+};
+
+export type PasswordChanged = {
+  __typename?: 'PasswordChanged';
+  success: Scalars['Boolean'];
 };
 
 export type PermissionDto = {
   __typename?: 'PermissionDto';
-  /** Id */
-  _id: Scalars['String'];
   actions: Array<Scalars['String']>;
   description: Scalars['String'];
+  /** Id */
+  id: Scalars['String'];
   name: Scalars['String'];
   subject: SubjectDto;
 };
 
 export type Profile = {
   __typename?: 'Profile';
-  _id: Scalars['ID'];
   account: Scalars['ID'];
-  address: Scalars['String'];
-  avatar: Scalars['String'];
+  address?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
   birthday: Scalars['DateTime'];
   custom_fields: Scalars['JSONObject'];
-  gender: Scalars['String'];
-  locale: Scalars['String'];
-  phone: Scalars['String'];
+  gender?: Maybe<Scalars['String']>;
+  /** Id */
+  id: Scalars['String'];
+  locale?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -609,8 +637,8 @@ export type Query = {
   accountsGdprLgpd: Array<AccountGdprLgpd>;
   channel: ResponseChannelOutput;
   channels: Array<ResponseChannelOutput>;
-  customField: CustomField;
-  customFields: Array<CustomField>;
+  customField: ResponseCustomFieldsOutput;
+  customFields: Array<ResponseCustomFieldsOutput>;
   emailTemplate: EmailTemplate;
   emailTemplates: Array<EmailTemplate>;
   group: GroupDto;
@@ -659,7 +687,7 @@ export type QueryChannelsArgs = {
 
 
 export type QueryCustomFieldArgs = {
-  FindOneCustomFieldsDto: FindOneCustomFieldsDto;
+  id: Scalars['String'];
 };
 
 
@@ -669,12 +697,12 @@ export type QueryEmailTemplateArgs = {
 
 
 export type QueryGroupArgs = {
-  id: IdDto;
+  id: Scalars['ID'];
 };
 
 
 export type QueryGroupsArgs = {
-  findParams: FindAllGroupsRequestDto;
+  filter?: Maybe<FindAllGroupsRequestDto>;
 };
 
 
@@ -689,22 +717,35 @@ export type QueryOrganizationsArgs = {
 
 
 export type QueryPermissionArgs = {
-  findOnePermissionInput: FindOnePermissionInput;
+  id: Scalars['ID'];
 };
 
 
 export type QueryProfileArgs = {
-  FindOneProfileDto: FindOneProfileDto;
+  account: Scalars['ID'];
 };
 
 
 export type QueryRoleArgs = {
-  findOneRoleInput: FindOneRoleInput;
+  id: Scalars['ID'];
 };
 
 
 export type QuerySubjectArgs = {
-  findOneSubjectInput: FindOneSubjectInput;
+  id: Scalars['ID'];
+};
+
+export type RefreshSignIn = {
+  __typename?: 'RefreshSignIn';
+  account: Account;
+  refreshToken: RefreshToken;
+};
+
+export type RefreshToken = {
+  __typename?: 'RefreshToken';
+  accessToken: Scalars['String'];
+  /** Id */
+  id: Scalars['String'];
 };
 
 export type RefreshTokenInput = {
@@ -713,16 +754,25 @@ export type RefreshTokenInput = {
 
 export type ResponseChannelOutput = {
   __typename?: 'ResponseChannelOutput';
-  _id: Scalars['ID'];
   banner?: Maybe<Scalars['JSON']>;
+  customization?: Maybe<Scalars['JSON']>;
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
   logo?: Maybe<Scalars['JSON']>;
   name: Scalars['String'];
   organization: Scalars['ID'];
   status: Scalars['String'];
   thumbnail?: Maybe<Scalars['JSON']>;
+};
+
+export type ResponseCustomFieldsOutput = {
+  __typename?: 'ResponseCustomFieldsOutput';
+  fields: Array<ResponseFieldOutput>;
+  /** Id */
+  id: Scalars['String'];
+  organization: Scalars['ID'];
 };
 
 export type ResponseEmailSendedDto = {
@@ -745,21 +795,29 @@ export type ResponseEmailSendedDto = {
   response: Scalars['String'];
 };
 
+export type ResponseFieldOutput = {
+  __typename?: 'ResponseFieldOutput';
+  /** Id */
+  id: Scalars['String'];
+  name: Scalars['String'];
+  required: Scalars['Boolean'];
+  type: CustomFieldTypesEnum;
+};
+
 export type ResponseOrganizationOutput = {
   __typename?: 'ResponseOrganizationOutput';
-  _id: Scalars['ID'];
   bundle_id?: Maybe<Scalars['String']>;
   current_version?: Maybe<Scalars['String']>;
-  customization?: Maybe<Scalars['String']>;
-  email_settings?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
+  email_settings?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
   identifier?: Maybe<Scalars['String']>;
   itunes_id?: Maybe<Scalars['String']>;
   min_compat_version?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   onesignal_id?: Maybe<Scalars['String']>;
   portal_url?: Maybe<Scalars['String']>;
-  sessions_limit?: Maybe<Scalars['String']>;
-  settings?: Maybe<Scalars['String']>;
+  settings?: Maybe<Scalars['JSON']>;
   status?: Maybe<Scalars['String']>;
   tenant_id?: Maybe<Scalars['String']>;
   web_url?: Maybe<Scalars['String']>;
@@ -767,10 +825,10 @@ export type ResponseOrganizationOutput = {
 
 export type RolesDto = {
   __typename?: 'RolesDto';
-  /** Id */
-  _id: Scalars['String'];
   default: Scalars['Boolean'];
   description: Scalars['String'];
+  /** Id */
+  id: Scalars['String'];
   name: Scalars['String'];
   permissions: Array<PermissionDto>;
   public: Scalars['Boolean'];
@@ -789,19 +847,18 @@ export type SignInInput = {
   password: Scalars['String'];
 };
 
-export type Status = {
-  active?: Maybe<Scalars['Boolean']>;
-  block_perm?: Maybe<Scalars['Boolean']>;
-  block_temp?: Maybe<Scalars['DateTime']>;
-  pending_activation?: Maybe<Scalars['Boolean']>;
+export type SingIn = {
+  __typename?: 'SingIn';
+  account: Account;
+  token: AccessToken;
 };
 
 export type SubjectDto = {
   __typename?: 'SubjectDto';
-  /** Id */
-  _id: Scalars['String'];
   entity: Scalars['String'];
   fields: Array<Scalars['String']>;
+  /** Id */
+  id: Scalars['String'];
 };
 
 export type UpdateAccountGdprLgpdInput = {
@@ -814,8 +871,6 @@ export type UpdateAccountInput = {
   email?: Maybe<Scalars['String']>;
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
-  password: Scalars['String'];
-  status?: Maybe<Status>;
   username?: Maybe<Scalars['String']>;
 };
 
@@ -826,18 +881,16 @@ export type UpdateAccountSessionInput = {
 };
 
 export type UpdateChannelInput = {
-  banner?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
-  thumbnail?: Maybe<Scalars['String']>;
 };
 
 export type UpdateCustomFieldInput = {
-  custom_fields: Array<Scalars['JSONObject']>;
+  fields: Array<CustomFieldInput>;
 };
 
 export type UpdateEmailTemplateDto = {
@@ -852,7 +905,6 @@ export type UpdateGroupDto = {
   /** Group name */
   name?: Maybe<Scalars['String']>;
   public?: Maybe<Scalars['Boolean']>;
-  /** Group roles */
   roles?: Maybe<Array<Scalars['ID']>>;
 };
 
@@ -867,10 +919,15 @@ export type UpdateOrganizationInput = {
   name?: Maybe<Scalars['String']>;
   onesignal_id?: Maybe<Scalars['String']>;
   portal_url?: Maybe<Scalars['String']>;
-  sessions_limit?: Maybe<Scalars['JSON']>;
   settings?: Maybe<Scalars['JSON']>;
   status?: Maybe<Scalars['String']>;
   web_url?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePassword = {
+  email: Scalars['String'];
+  oobCode: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type UpdatePermissionInput = {
@@ -880,14 +937,12 @@ export type UpdatePermissionInput = {
 };
 
 export type UpdateProfileInput = {
-  account?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
   locale?: Maybe<Scalars['String']>;
-  organization?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
 };
 
@@ -901,7 +956,7 @@ export type UpdateRoleInput = {
 
 export type UpdateSubjectInput = {
   entity?: Maybe<Scalars['String']>;
-  fields?: Maybe<Array<Scalars['String']>>;
+  fields: Array<Scalars['String']>;
 };
 
 export type CreateAccountMutationVariables = Exact<{
@@ -909,21 +964,21 @@ export type CreateAccountMutationVariables = Exact<{
 }>;
 
 
-export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename: 'Account', _id: string, display_name?: Maybe<string>, email: string, first_name?: Maybe<string>, last_name?: Maybe<string>, status?: Maybe<string>, tenant_id?: Maybe<string>, username?: Maybe<string> } };
+export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, tenant_id?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename?: 'AccountStatus', active?: Maybe<boolean>, block_perm?: Maybe<boolean>, block_temp?: Maybe<any>, pending_activation?: Maybe<boolean> }> } };
 
 export type CreateAccountGdprLgpdMutationVariables = Exact<{
   createAccountGdprLgpd: CreateAccountGdprLgpdInput;
 }>;
 
 
-export type CreateAccountGdprLgpdMutation = { __typename?: 'Mutation', createAccountGdprLgpd: { __typename: 'AccountGdprLgpd', _id: string, accepted: boolean, accepted_at: any, ip: string, account: { __typename?: 'Account', _id: string } } };
+export type CreateAccountGdprLgpdMutation = { __typename?: 'Mutation', createAccountGdprLgpd: { __typename: 'AccountGdprLgpd', _id: string, accepted: boolean, accepted_at: any, ip: string, account: { __typename?: 'Account', id: string } } };
 
 export type SigninMutationVariables = Exact<{
   signIn: SignInInput;
 }>;
 
 
-export type SigninMutation = { __typename?: 'Mutation', signIn: { __typename?: 'Auth', accessToken: string } };
+export type SigninMutation = { __typename?: 'Mutation', signIn: { __typename?: 'SingIn', token: { __typename?: 'AccessToken', accessToken: string }, account: { __typename?: 'Account', id: string } } };
 
 export type SignOutMutationVariables = Exact<{
   signOutSignOut: RefreshTokenInput;
@@ -936,12 +991,17 @@ export type SignOutMutation = { __typename?: 'Mutation', signOut: any };
 export const CreateAccountDocument = gql`
     mutation CreateAccount($createAccount: CreateAccountInput!) {
   createAccount(createAccountInput: $createAccount) {
-    _id
+    id
     display_name
     email
     first_name
     last_name
-    status
+    status {
+      active
+      block_perm
+      block_temp
+      pending_activation
+    }
     tenant_id
     username
     __typename
@@ -987,7 +1047,7 @@ export const CreateAccountGdprLgpdDocument = gql`
     accepted
     accepted_at
     account {
-      _id
+      id
     }
     ip
     __typename
@@ -1029,7 +1089,12 @@ export type CreateAccountGdprLgpdMutationOptions = Apollo.BaseMutationOptions<Cr
 export const SigninDocument = gql`
     mutation Signin($signIn: SignInInput!) {
   signIn(signIn: $signIn) {
-    accessToken
+    token {
+      accessToken
+    }
+    account {
+      id
+    }
   }
 }
     `;
