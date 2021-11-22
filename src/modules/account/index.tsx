@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@apollo/client'
 
 import { Container, Text, MainLayout, ToggleButton } from 'components'
 
@@ -11,51 +12,59 @@ import {
   ConfigBox,
   PaymentMethods,
   Subscription,
-  Navbar,
+  // Navbar,
 } from './components'
 
-import { colors } from 'styles'
+import { QUERY_PROFILE } from 'services/graphql'
+import { colors, sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
-import {
-  ACCOUNT_INFO,
-  PAYMENT_METHODS,
-  initialValues,
-  validationSchema,
-} from './settings'
+import { PAYMENT_METHODS, initialValues, validationSchema } from './settings'
 
 import { formatAccountInfo } from './utils'
 
 const Account = () => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const accountInfo = useMemo(() => formatAccountInfo(ACCOUNT_INFO), [])
 
-  const { values, setFieldValue, handleSubmit, handleChange, errors } =
-    useFormik({
-      initialValues,
-      validationSchema,
-      validateOnChange: true,
-      validateOnBlur: false,
-      onSubmit: async () => {},
-    })
+  const { data: profileData, loading: loadingProfile } = useQuery(
+    QUERY_PROFILE,
+    {
+      variables: {
+        account: '5f4faebf551755002e2c6e40',
+      },
+    }
+  )
+
+  const accountInfo = useMemo(
+    () => formatAccountInfo(profileData, t),
+    [profileData]
+  )
+
+  const { values, setFieldValue, handleSubmit } = useFormik({
+    initialValues,
+    validationSchema,
+    validateOnChange: true,
+    validateOnBlur: false,
+    onSubmit: async () => {},
+  })
 
   return (
     <MainLayout>
       <Container
         width={1}
-        my={2}
-        mx={4}
+        mt={4}
+        mx={[sizes.paddingSm, sizes.paddingMd, sizes.paddingLg]}
         flexWrap="wrap"
         justifyContent="space-between"
       >
-        <Navbar
+        {/*<Navbar
           onClick={() => {}}
           {...{ colorMode }}
           text={t('page.account.back')}
-        />
+        />*/}
         <ContentBlock
+          mb={3}
           title={t('page.account.account_info')}
-          idented
           {...{ colorMode }}
         >
           <ConfigBox>
@@ -94,7 +103,8 @@ const Account = () => {
         </ContentBlock>
 
         <ContentBlock
-          idented
+          mb={3}
+          mt={[3, 3, 3, 0]}
           title={t('page.account.billing_information')}
           action={{
             text: t('page.account.billing_history'),
@@ -114,6 +124,7 @@ const Account = () => {
                 fontWeight: 'bold',
                 underline: true,
                 fontSize: 14,
+                textAlign: 'end',
               }}
               {...{ colorMode }}
             />
@@ -122,20 +133,38 @@ const Account = () => {
                 title={t('page.account.monthly_plan')}
                 subtitle="Flamengo - Campeonato Carioca"
                 value="$12.99/mo"
-                fontStyle={{ fontSize: 20 }}
-                fontValueStyle={{ fontSize: 20 }}
+                fontStyle={{
+                  fontSize: 20,
+                  color: colors.grey['900'],
+                }}
+                fontValueStyle={{
+                  fontSize: 20,
+                  color: colors.grey['900'],
+                }}
+                {...{ colorMode }}
               />
               <Subscription
                 title={t('page.account.next_billing')}
                 value="$12.99/mo on 08/12/21"
-                fontValueStyle={{ fontSize: 14, color: colors.grey['800'] }}
+                fontValueStyle={{
+                  fontSize: 14,
+                  color: colors.grey['800'],
+                }}
+                {...{ colorMode }}
               />
               <Subscription
                 title={t('page.account.last_billing')}
                 value="$12.99/mo on 08/12/21"
                 separator={false}
-                fontStyle={{ fontSize: 16, color: colors.grey['650'] }}
-                fontValueStyle={{ fontSize: 14, color: colors.grey['650'] }}
+                fontStyle={{
+                  fontSize: 16,
+                  color: colors.grey['650'],
+                }}
+                fontValueStyle={{
+                  fontSize: 14,
+                  color: colors.grey['650'],
+                }}
+                {...{ colorMode }}
               />
             </Container>
           </ConfigBox>
@@ -164,7 +193,8 @@ const Account = () => {
         </ContentBlock>
 
         <ContentBlock
-          idented
+          mb={3}
+          mt={[3, 3, 3, 0]}
           title={t('page.account.payment_information')}
           action={{
             text: t('page.account.add_payment'),
@@ -195,10 +225,13 @@ const Account = () => {
                 update: t('page.account.update'),
                 delete: t('page.account.delete'),
               }}
+              selected={values.paymentMethod}
               data={PAYMENT_METHODS}
               onDelete={() => {}}
               onUpdate={() => {}}
-              onSelect={() => {}}
+              onSelect={(value: string) =>
+                setFieldValue('paymentMethod', value)
+              }
             />
           </ConfigBox>
         </ContentBlock>

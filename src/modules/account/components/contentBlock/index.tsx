@@ -7,14 +7,17 @@ const ContentBlock = ({
   title,
   action,
   children,
-  idented,
   colorMode,
+  ...props
 }: ContentBlockProps) => (
-  <Container width={[1, 1, '32%']} flexDirection="column" mb={3}>
+  <Container width={[1, 1, 1, '32%']} flexDirection="column" {...props}>
     <SingleConfiguration
-      fontStyle={{ fontWeight: 'bold', marginLeft: [0, 0, '24px'] }}
+      fontStyle={{
+        fontWeight: 'bold',
+        marginLeft: [0, 0, 0, '24px'],
+      }}
       text={title}
-      {...{ action, idented, colorMode }}
+      {...{ action: { ...action, textAlign: 'end' }, colorMode }}
     />
     {children}
   </Container>

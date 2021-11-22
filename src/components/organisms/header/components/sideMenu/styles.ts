@@ -1,8 +1,9 @@
-import styled, { css } from "styled-components";
-import { StyleContainer } from "components";
+import styled, { css } from 'styled-components'
+import { StyleContainer } from 'components'
+import { breakpoints } from 'styles'
 
 interface PropsSideContainer {
-  open: boolean;
+  open: boolean
 }
 
 export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
@@ -21,32 +22,29 @@ export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
       : `
       width: 0px;
       transition: ease-in 0.25s;`}
-  @media (min-width: 64em) {
+  @media (min-width: ${breakpoints.lg}) {
     top: 100px;
     height: calc(100% - 100px);
   }
-`;
+`
 
 export const ScrollContainer = styled(StyleContainer)`
   overflow: auto;
   a:nth-child(n + 1):nth-child(-n + 10) {
     display: block;
   }
-  @media (min-width: 64em) and (max-width: 80em) {
-    a:nth-child(n + 1):nth-child(-n + 5) {
+  @media (min-width: ${breakpoints.lg}) {
+    a:nth-child(n + 1):nth-child(-n + 4) {
       display: none;
     }
-    a:nth-child(n + 6):nth-child(-n + 10) {
-      display: block;
-    }
   }
-  @media (min-width: 80em) {
+  @media (min-width: 1350px) {
     a:nth-child(n + 1):nth-child(-n + 10) {
       display: none;
     }
   }
-`;
+`
 
 export const ExitContainer = styled(StyleContainer)`
   cursor: pointer;
-`;
+`
