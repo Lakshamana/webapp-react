@@ -1,22 +1,16 @@
 import * as Yup from 'yup'
-import i18n from 'config/i18n'
 import { PaymentMethodType } from './types'
 
 export const ACCOUNT_INFO = [
   {
-    label: 'Your Name',
     id: 'name',
-    value: 'Humberto Faria',
     onClick: () => {},
   },
-  { label: 'Username', id: 'username', value: '1berto', onClick: () => {} },
-  { label: 'Email', id: 'email', value: '1berto@gmail.com', onClick: () => {} },
-  { label: 'Password', value: '*****', id: 'password' },
+  { id: 'username', onClick: () => {} },
+  { id: 'email', onClick: () => {} },
+  { value: '*****', id: 'password' },
   {
-    label: 'Phone',
     id: 'phone',
-    value: '12345677890',
-    format: () => '(12 ) 3456 77890',
     onClick: () => {},
   },
 ]
