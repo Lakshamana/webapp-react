@@ -18,7 +18,7 @@ const AccountInformation = ({ data }: AccountInformationProps) => {
               style={{ lineHeight: '2.5rem' }}
             >
               <Label fontWeight="bold">{item.label}: </Label>
-              {`${item.format ? item.format(item.value) : item.value}`}
+              {item.value}
             </Text>
           </TextWrapper>
           <ActionLink
