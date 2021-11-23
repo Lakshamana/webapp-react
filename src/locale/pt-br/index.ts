@@ -3,8 +3,10 @@ const PT_BR = {
     common: {
       or: 'ou',
       error: {
+        generic_api_error: "Algo deu errado. Nós vamos consertar isso. Tente mais tarde.",
         field_required: 'Campo {{field_name}} é obrigatório',
         field_must_match: '{{field_name}} deve ser igual',
+        valid_email: 'Digite um email válido',
         accept_terms_and_conditions:
           'Você precisa aceitar os Termos e Condições',
         password_error:
@@ -26,6 +28,9 @@ const PT_BR = {
       no: 'Não',
       close: 'Fechar',
       send: 'Enviar',
+      enjoy_your_content: "Aproveite seu conteúdo",
+      retry: 'Tentar novamente',
+      access_your_account: 'Acesse a sua conta'
     },
     signin: {
       title: 'Acesse Fanhero agora',
@@ -87,7 +92,26 @@ const PT_BR = {
     },
     recoverPassword: {
       title: 'Esqueceu a sua senha? Sem problemas!',
-      subtitle: "Nós vamos te enviar um e-mail com um link para resetar a sua senha.",
+      subtitle: "Nós vamos te enviar um e-mail com o código para resetar a sua senha.",
+      sendCode: "Me envie o código",
+      label: {
+        code: "Código"
+      },
+      success: {
+        title: "Senha atualizada",
+        description: "Sua senha foi salva e sua conta foi atualizada com sucesso."
+      },
+      error: {
+        title: 'Algo deu errado!',
+        description: 'Vamos consertá-lo. Tente mais tarde.'
+      }
+    },
+    updatePassword: {
+      title: "Um código foi enviado para o seu email",
+      subtitle: "Por favor, use o código enviado e digite uma nova senha.",
+      label: {
+        updatePassword: "Redefinir senha"
+      }
     },
     header: {
       tabs: {
