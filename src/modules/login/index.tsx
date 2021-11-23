@@ -30,8 +30,10 @@ const LoginPage = () => {
         setError(t('common.error.generic_api_error'))
         return
       }
-      await localStorage.setItem(AUTH_TOKEN, result.signIn.accessToken)
-      await localStorage.setItem(USER_ACCOUNT, result.signIn.account.id)
+      
+      await localStorage.setItem(AUTH_TOKEN, result.signIn.token.accessToken);
+      await localStorage.setItem(USER_ACCOUNT, result.signIn.account.id);
+      
       history.push('/home')
     },
     onError: (error) => setError(`${error}`),

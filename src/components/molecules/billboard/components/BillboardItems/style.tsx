@@ -119,8 +119,8 @@ export const Title: any = styled.div`
 
 	@media screen and (max-width: ${breakpoints.sm}) {
 		font-size: 32px;
-		line-height: 56px;
-		margin: 12px 0;
+		line-height: 27px;
+		margin: 20px 0;
 	}
 
 	@media screen and (max-width: ${breakpoints.ssm}) {
@@ -150,8 +150,8 @@ export const Description: any = styled.div`
 
 	@media screen and (max-width: ${breakpoints.sm}) {
 		font-size: 16px;
-		line-height: 16px;
-		margin-bottom: 16px;
+		line-height: 23px;
+		margin-bottom: 25px;
 		-webkit-line-clamp: 2;
 	}
 `
