@@ -1,69 +1,71 @@
-import { useTranslation } from 'react-i18next'
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import { Flex } from '@chakra-ui/react';
-import { useFormik } from 'formik';
-import { Text, LoginLayout, CardContainer, Input, Button } from "components";
+import { LoginLayout, AlertCard } from "components";
 import { Container } from './styles';
-import { sizes, colors } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
-import { validationSchema, initialValues } from "./settings";
-import { MUTATION_RESET_PASSWORD } from 'services/graphql/mutation/resetPassword';
+import { RequestPasswordResetForm, UpdatePasswordForm } from "./components";
+import { ResetPasswordSteps } from './types';
+
+import { MUTATION_RESET_PASSWORD, MUTATION_UPDATE_PASSWORD } from 'services/graphql/mutation';
 
 const RecoverPasswordPage = () => {
     const { t } = useTranslation();
+    const [activeStep, setActiveStep] = useState<ResetPasswordSteps>('Request');
 
-    const { colorMode } = useThemeStore();
+    const [userEmail, setUserEmail] = useState<string>('');
+    const [requestPasswordError, setrequestPasswordError] = useState<string>('');
+    const [updatePasswordError, setupdatePasswordError] = useState<string>('');
 
     const [resetPassword] = useMutation(MUTATION_RESET_PASSWORD, {
         onCompleted: async (result) => {
-            if (!result?.createAccount) {
-                alert('Failed to send reset password email, check your email!')
-                return
-            }
+            if (result.resetPassword.sent) setActiveStep('Update')
+            else setrequestPasswordError(t('common.error.generic_api_error'))
         },
-        onError: (error) => {
-            // TO-DO ERROR COMPONENT
-            alert('Failed to send reset password email, check your email!')
-        }
+        onError: (error) => setrequestPasswordError(`${error}`)
+
     });
 
-    const { values, handleSubmit, handleChange, errors, dirty, isValid } = useFormik({
-        initialValues: {
-            ...initialValues
+    const [updatePassword] = useMutation(MUTATION_UPDATE_PASSWORD, {
+        onCompleted: async (result) => {
+            if (result.updatePassword.success) setActiveStep('Success');
         },
-        validationSchema,
-        validateOnChange: true,
-        validateOnBlur: false,
-        onSubmit: async () => {
-            resetPassword({
-                variables: {
-                    forgotPassword: { ...values }
-                }
-            })
-        }
+        onError: (error) => setupdatePasswordError(`${error}`)
     });
+
+    const handleRequestResetSubmit = (FormData) => {
+        setUserEmail(FormData.forgotPassword.email)
+        resetPassword({
+            variables: { ...FormData }
+        })
+    }
+
+    const handleUpdatePasswordSubmit = (FormData) => {
+        FormData.updatePassword['email'] = userEmail
+        updatePassword({
+            variables: { ...FormData }
+        })
+    }
+
+    const renderStep = () => {
+        switch (activeStep) {
+            case 'Request':
+                return <RequestPasswordResetForm handleFormSubmit={handleRequestResetSubmit} error={requestPasswordError} dispatchError={() => { setrequestPasswordError('') }}></RequestPasswordResetForm>;
+            case 'Update':
+                return <UpdatePasswordForm handleFormSubmit={handleUpdatePasswordSubmit} error={updatePasswordError} dispatchError={() => { setupdatePasswordError('') }}></UpdatePasswordForm>;
+            case 'Success':
+                return <AlertCard type={'success'} title={t('recoverPassword.success.title')} description={t('recoverPassword.success.description')} actionLabel={t('common.access_your_account')} toRoute={'login'}></AlertCard>;
+            case 'Error':
+                return <AlertCard type={'error'} title={t('recoverPassword.error.title')} description={t('recoverPassword.error.description')} actionLabel={t('common.retry')} toRoute={'recoverPassword'}></AlertCard>;
+            default:
+                return <RequestPasswordResetForm handleFormSubmit={handleRequestResetSubmit} error={requestPasswordError} dispatchError={() => { setrequestPasswordError('') }}></RequestPasswordResetForm>;
+        }
+    }
+
 
     return (
         <LoginLayout>
             <Container width={1} paddingY={[0, 40]}>
-                <CardContainer paddingX={[30, 60]} paddingY={[40, 40]} width={[1, sizes.loginCardWidth]}>
-                    <Text fontSize={24} textAlign={'center'} fontWeight={'bolder'} color={colors.generalText[colorMode]}>{t('recoverPassword.title')}</Text>
-                    <Text fontSize={16} paddingTop={10} textAlign={'center'} color={colors.secondaryText[colorMode]}>{t('recoverPassword.subtitle')}</Text>
-                    <Flex alignItems={'center'} marginY={30} flexDirection={'column'} gridGap={3}>
-                        <Input
-                            name="email"
-                            onChange={handleChange}
-                            type="text"
-                            value={values.email}
-                            placeholder={t('signin.label.email')}
-                            errorMessage={errors.email}
-                            error={!!errors.email}
-                        />
-                        {/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
-                        <Button width={[1, sizes.loginButtonWidth]} mt={3} type={dirty && isValid ? 'submit' : 'disabled'} label={t('common.send')} onClick={handleSubmit}></Button>
-                    </Flex >
-
-                </CardContainer>
+                {renderStep()}
             </Container>
         </LoginLayout>
     )
