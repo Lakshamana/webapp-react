@@ -81,7 +81,7 @@ const Account = () => {
               children={
                 <>
                   <ToggleButton
-                    isChecked={values.push}
+                    checked={values.push}
                     onChange={() => setFieldValue('push', !values.push)}
                   />
                 </>
