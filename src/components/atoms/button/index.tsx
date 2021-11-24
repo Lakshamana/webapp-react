@@ -18,9 +18,11 @@ const Button = ({ ...props }: ButtonProps) => {
                 return <BoxButton type='submit' variant="grey" borderRadius={4} {...props}>{props.label}</BoxButton>
             case 'cancel':
                 return <BoxButton variant="cancel" {...props}>{props.label}</BoxButton>
+            case 'outlined':
+                return <BoxButton variant="outlined" {...props}>{props.label}</BoxButton>
             case "children":
                 return (
-                    <BoxButton variant="primary" borderRadius={4} {...props}>
+                    <BoxButton variant="primary" textColor={'yellow'} borderRadius={4} {...props}>
                         {props.children}
                     </BoxButton>
                 );

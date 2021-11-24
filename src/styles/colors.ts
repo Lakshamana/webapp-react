@@ -53,6 +53,24 @@ export const colors = {
     light: "#E2E9E9",
     dark: "#20242A",
   },
+  alerts: {
+    success: {
+      default: '#33DA80',
+      bg: '#F2FFF8'
+    },
+    error: {
+      default: '#FF0000',
+      bg: '#FFF2F2'
+    },
+    warning: {
+      default: '#FFD601',
+      bg: '#FFFBD8'
+    },
+    info: {
+      default: '#0987d4',
+      bg: '#e2f8fe'
+    }
+  },
   white: "#FFFFFF",
   black: "#000000",
   background: "#313740",
