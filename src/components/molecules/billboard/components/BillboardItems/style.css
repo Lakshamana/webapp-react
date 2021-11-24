@@ -3,7 +3,7 @@
 }
 
 .billboard-pagination {
-    bottom: 70px !important;
+    bottom: 50px !important;
     left: 50% !important;
     transform: translateX(-50%);
     z-index: 10;

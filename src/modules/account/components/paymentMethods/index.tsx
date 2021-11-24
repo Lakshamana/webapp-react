@@ -7,6 +7,7 @@ import { ActionLink, Separator } from '../../styles'
 
 const PaymentMethods = ({
   data,
+  selected,
   onDelete,
   onUpdate,
   onSelect,
@@ -27,7 +28,8 @@ const PaymentMethods = ({
               color={colors.black}
               font={{ fontSize: 14 }}
               key={method.id}
-              name="defaultPaymentMethod"
+              onChange={() => onSelect(method.id)}
+              isChecked={selected === method.id}
             >
               {method.type} {method.number}
             </Radio>
