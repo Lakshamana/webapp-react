@@ -42,7 +42,7 @@ export const DEFAULT_USER = {
 
 export const initialValues = {
   push: false,
-  paymentMethod: '',
+  paymentMethod: '0',
 }
 
 export const validationSchema = Yup.object().shape({})
