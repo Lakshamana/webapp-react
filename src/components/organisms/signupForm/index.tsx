@@ -11,6 +11,7 @@ import {
   AdditionalInformationForm,
 } from './components'
 import { useMutation } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
 
@@ -24,12 +25,11 @@ const SignupForm = () => {
 
   const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL, {
     onCompleted: async (result) => {
-      if (!result.verifyMail.exist) setActiveStep('LGPD')
-      else setemailExistsError(t('signup.error.email_exists'))
+      if (result.verifyMail.exist)
+        setemailExistsError(t('signup.error.email_exists'))
     },
     onError: (error) => {
-      if (error.message === 'exception:ACCOUNT_NOT_FOUND')
-        setemailExistsError(`${t('signup.error.email_exists')}`)
+      if (error.message === 'exception:ACCOUNT_NOT_FOUND') setActiveStep('LGPD')
       else setemailExistsError(`${error.message}`)
     },
   })
