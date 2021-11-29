@@ -1,3 +1,5 @@
 export interface RegistrationProps {
-    handleFormSubmit: (formData: any) => void
+  handleFormSubmit: (formData: any) => void
+  dispatchError: () => void
+  error: string
 }

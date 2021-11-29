@@ -88,6 +88,9 @@ const EN_US = {
         cancel: 'Cancel',
         back: 'Back',
       },
+      error: {
+        email_exists: 'A user with this email address already exists.'
+      }
     },
     recoverPassword: {
       title: 'Forgot your password? No problem!',

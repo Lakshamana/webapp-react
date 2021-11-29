@@ -2,7 +2,9 @@ import styled from 'styled-components'
 import { Props } from './types'
 import { Alert } from '@chakra-ui/react'
 
-export const Container = styled.div<Props>``
+export const Container = styled.div<Props>`
+  width: 100%;
+`
 
 export const AlertStyled: any = styled(Alert)`
   border-radius: 4px;

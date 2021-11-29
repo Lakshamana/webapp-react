@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   MUTATION_CREATE_ACCOUNT,
   MUTATION_CREATE_ACCOUNT_GDPR,
+  MUTATION_VERIFY_MAIL,
 } from 'services/graphql'
 import {
   RegistrationForm,
@@ -9,50 +10,69 @@ import {
   ConfirmEmailForm,
   AdditionalInformationForm,
 } from './components'
+import { AlertComponent } from 'components'
 import { useMutation } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
 
 const SignupForm = () => {
+  const { t } = useTranslation()
   const [activeStep, setActiveStep] = useState<SignUpSteps>('Register')
+  const [emailExistsError, setemailExistsError] = useState('')
+  const [createAccountError, setCreateAccountError] = useState('')
 
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>()
 
-  const [createAccount] = useMutation(MUTATION_CREATE_ACCOUNT, {
+  const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL, {
     onCompleted: async (result) => {
-      createAccountGDPR({
-        variables: {
-          createAccountGdprLgpd: {
-            accepted: true,
-            account: result.createAccount.id,
-          },
-        },
-      })
+      if (result.verifyMail.exist)
+        setemailExistsError(t('signup.error.email_exists'))
     },
     onError: (error) => {
-      // TO-DO ERROR COMPONENT
-      alert('Failed to register, check your data!')
+      if (error.message === 'exception:ACCOUNT_NOT_FOUND') setActiveStep('LGPD')
+      else setemailExistsError(`${error.message}`)
+    },
+  })
+
+  const [createAccount] = useMutation(MUTATION_CREATE_ACCOUNT, {
+    onCompleted: async (result) => {
+      if (result.createAccount) {
+        createAccountGDPR({
+          variables: {
+            createAccountGdprLgpd: {
+              accepted: true,
+              account: result.createAccount.id,
+            },
+          },
+        })
+      }
+    },
+    onError: (error) => {
+      setCreateAccountError(`${error.message}`)
     },
   })
 
   const [createAccountGDPR] = useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
     onCompleted: async (result) => {
-      if (!result?.createAccount) {
-        alert('Failed to create account, check your data!')
-        return
-      }
-      setActiveStep('ConfirmEmail')
+      if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
     },
     onError: (error) => {
-      // TO-DO ERROR COMPONENT
-      alert('Failed to register, check your data!')
+      setCreateAccountError(`${error.message}`)
     },
   })
 
   const handleRegistrationSubmit = (FormData) => {
+    verifyMail({
+      variables: {
+        verifyMailInput: {
+          email: FormData.createAccount.email,
+        },
+      },
+    })
+
     setCreateAccountData({ ...FormData })
-    setActiveStep('LGPD')
   }
 
   const handleGDPRSubmit = () => {
@@ -67,6 +87,10 @@ const SignupForm = () => {
         return (
           <RegistrationForm
             handleFormSubmit={handleRegistrationSubmit}
+            error={emailExistsError}
+            dispatchError={() => {
+              setemailExistsError('')
+            }}
           ></RegistrationForm>
         )
       case 'LGPD':
@@ -81,16 +105,24 @@ const SignupForm = () => {
         )
       case 'ConfirmEmail':
         return <ConfirmEmailForm></ConfirmEmailForm>
-      default:
-        return (
-          <RegistrationForm
-            handleFormSubmit={handleRegistrationSubmit}
-          ></RegistrationForm>
-        )
     }
   }
 
-  return renderStep()
+  return (
+    <>
+      {!!createAccountError && (
+        <AlertComponent
+          marginY={20}
+          type={'error'}
+          description={createAccountError}
+          onClose={() => {
+            setCreateAccountError('')
+          }}
+        ></AlertComponent>
+      )}
+      {renderStep()}
+    </>
+  )
 }
 
 export { SignupForm }
