@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   MUTATION_CREATE_ACCOUNT,
   MUTATION_CREATE_ACCOUNT_GDPR,
+  MUTATION_VERIFY_MAIL,
 } from 'services/graphql'
 import {
   RegistrationForm,
@@ -14,10 +15,24 @@ import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
 
 const SignupForm = () => {
+  const { t } = useTranslation()
   const [activeStep, setActiveStep] = useState<SignUpSteps>('Register')
+  const [emailExistsError, setemailExistsError] = useState('')
 
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>()
+
+  const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL, {
+    onCompleted: async (result) => {
+      if (!result.verifyMail.exist) setActiveStep('LGPD')
+      else setemailExistsError(t('signup.error.email_exists'))
+    },
+    onError: (error) => {
+      if (error.message === 'exception:ACCOUNT_NOT_FOUND')
+        setemailExistsError(`${t('signup.error.email_exists')}`)
+      else setemailExistsError(`${error.message}`)
+    },
+  })
 
   const [createAccount] = useMutation(MUTATION_CREATE_ACCOUNT, {
     onCompleted: async (result) => {
@@ -51,6 +66,14 @@ const SignupForm = () => {
   })
 
   const handleRegistrationSubmit = (FormData) => {
+    verifyMail({
+      variables: {
+        verifyMailInput: {
+          email: FormData.createAccount.email,
+        },
+      },
+    })
+
     setCreateAccountData({ ...FormData })
     setActiveStep('LGPD')
   }
@@ -67,6 +90,10 @@ const SignupForm = () => {
         return (
           <RegistrationForm
             handleFormSubmit={handleRegistrationSubmit}
+            error={emailExistsError}
+            dispatchError={() => {
+              setemailExistsError('')
+            }}
           ></RegistrationForm>
         )
       case 'LGPD':
