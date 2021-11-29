@@ -89,6 +89,9 @@ const PT_BR = {
         cancel: 'Cancelar',
         back: 'Voltar',
       },
+      error: {
+        email_exists: 'O endereço de email já está em uso.'
+      }
     },
     recoverPassword: {
       title: 'Esqueceu a sua senha? Sem problemas!',
