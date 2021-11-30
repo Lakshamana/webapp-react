@@ -17,6 +17,7 @@ import {
   RecoverPasswordPage,
   VideoPostViewPage
 } from "modules";
+import { FormModule } from "modules/form";
 
 const ClientRoutes = ({ isAccesible }: any) => (
   <Switch>
@@ -95,6 +96,11 @@ const ClientRoutes = ({ isAccesible }: any) => (
       isAccesible={isAccesible?.login}
       path="/video-post"
       component={VideoPostViewPage}
+    />
+    <ClientRoute
+      isAccesible={isAccesible?.login}
+      path="/form"
+      component={FormModule}
     />
     <ClientRoute
       isAccesible={isAccesible?.login}
