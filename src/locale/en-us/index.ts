@@ -3,8 +3,10 @@ const EN_US = {
     common: {
       or: 'or',
       error: {
+        generic_api_error: "Something went wrong. We are going to fix it. Try again later.",
         field_required: 'Field {{field_name}} is required',
         field_must_match: '{{field_name}} must match',
+        valid_email: 'Must be a valid email',
         accept_terms_and_conditions:
           'You must accept the terms and conditions.',
         password_error:
@@ -26,6 +28,9 @@ const EN_US = {
       no: 'No',
       close: 'Close',
       send: 'Send',
+      enjoy_your_content: "Enjoy your content",
+      retry: 'Retry',
+      access_your_account: 'Access your acount'
     },
     signin: {
       title: 'Access Fanhero now',
@@ -83,10 +88,32 @@ const EN_US = {
         cancel: 'Cancel',
         back: 'Back',
       },
+      error: {
+        email_exists: 'A user with this email address already exists.'
+      }
     },
     recoverPassword: {
       title: 'Forgot your password? No problem!',
-      subtitle: "We'll send you an email with a link to reset your password.",
+      subtitle: "We'll send to your email a code to reset your password.",
+      sendCode: "Send me a code",
+      label: {
+        code: "Code"
+      },
+      success: {
+        title: "Password reset",
+        description: "Your password has been saved and your account has been updated successfully."
+      },
+      error: {
+        title: 'Something went wrong!',
+        description: 'We are going to fix it. Try again later.'
+      }
+    },
+    updatePassword: {
+      title: "A code has been emailed to you",
+      subtitle: "Please, use this code and input a new password",
+      label: {
+        updatePassword: "Update password"
+      }
     },
     header: {
       tabs: {

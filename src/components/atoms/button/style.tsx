@@ -41,6 +41,11 @@ export const BoxButton: any = styled.button`
             textTransform: 'uppercase',
             cursor: 'inherit'
         },
+        outlined: {
+            color: theme => `${theme.colors.brand.accent[theme.colorMode]}`,
+            bg: 'transparent',
+            textTransform: 'uppercase'
+        },
         cancel: {
             color: 'white',
             bg: 'transparent',
