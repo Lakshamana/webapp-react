@@ -15,6 +15,11 @@ export const ACCOUNT_INFO = [
   },
 ]
 
+export const LANGUAGES = [
+  { value: 'en-US', label: 'English' },
+  { value: 'pt-BR', label: 'Português' },
+]
+
 export const PAYMENT_METHODS: Array<PaymentMethodType> = [
   {
     type: 'Mastercard',

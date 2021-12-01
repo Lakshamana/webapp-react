@@ -3,7 +3,7 @@ import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@apollo/client'
 
-import { Container, Text, MainLayout, ToggleButton } from 'components'
+import { Container, Text, MainLayout, ToggleButton, Select } from 'components'
 
 import {
   ContentBlock,
@@ -18,12 +18,17 @@ import {
 import { QUERY_PROFILE } from 'services/graphql'
 import { colors, sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
-import { PAYMENT_METHODS, initialValues, validationSchema } from './settings'
+import {
+  PAYMENT_METHODS,
+  LANGUAGES,
+  initialValues,
+  validationSchema,
+} from './settings'
 
 import { formatAccountInfo } from './utils'
 
 const Account = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
 
   const { data: profileData, loading: loadingProfile } = useQuery(
@@ -47,6 +52,9 @@ const Account = () => {
     validateOnBlur: false,
     onSubmit: async () => {},
   })
+
+  const handleLanguageChange = (evt: any) =>
+    i18n.changeLanguage(evt.target.value)
 
   return (
     <MainLayout>
@@ -74,6 +82,7 @@ const Account = () => {
             <Text color={colors.generalText[colorMode]} mb={2}>
               {t('page.account.language_selection')}
             </Text>
+            <Select options={LANGUAGES} onChange={handleLanguageChange} />
           </ConfigBox>
           <ConfigBox>
             <SingleConfiguration
