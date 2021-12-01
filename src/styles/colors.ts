@@ -41,45 +41,53 @@ export const colors = {
     light: '#ffffff',
     dark: '#444444',
   },
+  selectBg: {
+    light: '#FFFFFF',
+    dark: '#444444',
+  },
+  selectText: {
+    light: '#00000',
+    dark: '#ffffff',
+  },
   inputText: {
     light: '#666666',
     dark: '#F2FFF8',
   },
   billboardText: {
     light: '#444444',
-    dark: '#ffffff'
+    dark: '#ffffff',
   },
-   headerUserPopoverBg: {
-    light: "#E2E9E9",
-    dark: "#20242A",
+  headerUserPopoverBg: {
+    light: '#E2E9E9',
+    dark: '#20242A',
   },
   alerts: {
     success: {
       default: '#33DA80',
-      bg: '#F2FFF8'
+      bg: '#F2FFF8',
     },
     error: {
       default: '#FF0000',
-      bg: '#FFF2F2'
+      bg: '#FFF2F2',
     },
     warning: {
       default: '#FFD601',
-      bg: '#FFFBD8'
+      bg: '#FFFBD8',
     },
     info: {
       default: '#0987d4',
-      bg: '#e2f8fe'
-    }
+      bg: '#e2f8fe',
+    },
   },
-  white: "#FFFFFF",
-  black: "#000000",
-  background: "#313740",
-  backgroundLayout: "#20242A",
-  componentBorder: "#E2E9E9",
-  tabsBorder: "#C5C4BF",
-  textLight: "#EBE9E1",
-  textMedium: "#9E9F9D",
-  textDark: "#20242A",
+  white: '#FFFFFF',
+  black: '#000000',
+  background: '#313740',
+  backgroundLayout: '#20242A',
+  componentBorder: '#E2E9E9',
+  tabsBorder: '#C5C4BF',
+  textLight: '#EBE9E1',
+  textMedium: '#9E9F9D',
+  textDark: '#20242A',
   grey: {
     '100': '#FAFAFA',
     '200': '#E2E9E9',
