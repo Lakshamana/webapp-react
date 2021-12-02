@@ -15,6 +15,7 @@ import {
   // Navbar,
 } from './components'
 
+import { USER_LOCALE } from 'config/constants'
 import { QUERY_PROFILE } from 'services/graphql'
 import { colors, sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
@@ -46,15 +47,22 @@ const Account = () => {
   )
 
   const { values, setFieldValue, handleSubmit } = useFormik({
-    initialValues,
+    initialValues: {
+      ...initialValues,
+      locale: localStorage.getItem(USER_LOCALE) || initialValues.locale,
+    },
     validationSchema,
     validateOnChange: true,
     validateOnBlur: false,
     onSubmit: async () => {},
   })
 
-  const handleLanguageChange = (evt: any) =>
-    i18n.changeLanguage(evt.target.value)
+  const handleLanguageChange = (evt: any) => {
+    const { value } = evt?.target
+    setFieldValue('locale', value)
+    localStorage.setItem(USER_LOCALE, value)
+    i18n.changeLanguage(value)
+  }
 
   return (
     <MainLayout>
@@ -82,7 +90,11 @@ const Account = () => {
             <Text color={colors.generalText[colorMode]} mb={2}>
               {t('page.account.language_selection')}
             </Text>
-            <Select options={LANGUAGES} onChange={handleLanguageChange} />
+            <Select
+              options={LANGUAGES}
+              value={values.locale}
+              onChange={handleLanguageChange}
+            />
           </ConfigBox>
           <ConfigBox>
             <SingleConfiguration
