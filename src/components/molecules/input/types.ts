@@ -1,6 +1,7 @@
 export interface Props {
   name?: string;
   onChange?: Function;
+  onBlur?: Function;
   value?: string;
   type?: string;
   placeholder?: string;
