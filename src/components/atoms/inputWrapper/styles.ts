@@ -11,7 +11,7 @@ export const Box = styled.div<PropsStyle>`
   width: 100%;
   display: flex;
   flex-direction: column;
-  height: ${({ error }) => (error ? '76px;' : '64px;')};
+  min-height: ${({ error }) => (error ? '76px;' : '64px;')};
 `
 
 export const BoxWrapper = styled.div<PropsStyle>`
