@@ -22,11 +22,13 @@ export const validationSchema = Yup.object().shape({
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%&])(?=.{8,})/,
         i18n.t('common.error.password_error')
       ),
-    email: Yup.string().required(
-      i18n.t('common.error.field_required', {
-        field_name: i18n.t('signup.label.email'),
-      })
-    ),
+    email: Yup.string()
+      .required(
+        i18n.t('common.error.field_required', {
+          field_name: i18n.t('signup.label.email'),
+        })
+      )
+      .email(i18n.t('common.error.valid_email')),
     confirm_email: Yup.string()
       .required(
         i18n.t('common.error.field_required', {

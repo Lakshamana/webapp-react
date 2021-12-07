@@ -15,6 +15,7 @@ const EN_US = {
       what_is_this: 'What is this?',
       more: 'more',
       terms: 'Terms and Conditions',
+      and: 'and',
       privacy: 'Privacy and Policy',
       edit_profile: 'Edit profile',
       settings: 'Settings',
@@ -30,7 +31,10 @@ const EN_US = {
       send: 'Send',
       enjoy_your_content: "Enjoy your content",
       retry: 'Retry',
-      access_your_account: 'Access your acount'
+      access_your_account: 'Access your acount',
+      back: 'Back',
+      cancel: 'Cancelar',
+      update: 'Update'
     },
     signin: {
       title: 'Access Fanhero now',
@@ -64,13 +68,18 @@ const EN_US = {
         citizen: 'Are you a citizen or resident of the European Union?',
       },
       confirm_age: {
-        title: 'Confirm you are over {{age}} to continue',
+        title: 'Are you {{age}} years or older?',
+      },
+      reconfirm_age: {
+        title: 'Did you enter it correctly?',
+        subtitle: "It looks like you aren't old enough to have a {{organization}} account. If you entered the wrong age in error, please update it now. Otherwise you will not be able to continue registration and no data entered will be stored.",
+        under_age: 'I am under {{age}}'
       },
       our_politics: {
         title: 'Our Politics',
         description:
           'We want you to know exactly how our app works and how we keep your details recorded. We take the protection of your data very seriously and have updated our Privacy Policy and Terms and Conditions.',
-        agree: 'I agree to the Terms and Conditions and Privacy Policy.',
+        agree: 'I agree to the',
         confirm_you_read:
           'Please confirm that you have read both before proceeding.',
       },

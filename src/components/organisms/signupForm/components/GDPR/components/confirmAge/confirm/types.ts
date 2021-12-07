@@ -1,5 +1,6 @@
 export interface ConfirmAgeProps {
 	handleFormSubmit: () => void,
+	handleAgeDecline: () => void,
 	gdprAge: string
 }
 

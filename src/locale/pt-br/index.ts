@@ -15,6 +15,7 @@ const PT_BR = {
       what_is_this: 'O que é isso?',
       more: 'mais',
       terms: 'Termos e Condições',
+      and: 'e',
       privacy: 'Política de Privacidade',
       edit_profile: 'Editar perfil',
       settings: 'Ajustes',
@@ -30,7 +31,10 @@ const PT_BR = {
       send: 'Enviar',
       enjoy_your_content: "Aproveite seu conteúdo",
       retry: 'Tentar novamente',
-      access_your_account: 'Acesse a sua conta'
+      access_your_account: 'Acesse a sua conta',
+      back: 'Voltar',
+      cancel: 'Cancelar',
+      update: 'Atualizar'
     },
     signin: {
       title: 'Acesse Fanhero agora',
@@ -66,12 +70,17 @@ const PT_BR = {
       confirm_age: {
         title: 'Confirme que você tem mais que {{age}} anos para continuar',
       },
+      reconfirm_age: {
+        title: 'Você digitou corretamente?',
+        subtitle: "Parece que você não tem idade suficiente para ter uma conta da {{organization}}. Se você inseriu a idade errada por engano, atualize-a agora. Caso contrário, você não poderá continuar o registro e nenhum dado inserido será armazenado.",
+        under_age: 'Tenho menos de {{age}} anos'
+      },
       our_politics: {
         title: 'Nossa Política',
         description:
           'Queremos que você saiba exatamente como nosso aplicativo funciona e como mantemos seus dados registrados. Levamos a proteção de seus dados muito a sério e atualizamos nossa Política de Privacidade e Termos e Condições.',
         agree:
-          'Eu concordo com os Termos e Condições e Política de Privacidade.',
+          'Eu concordo com os',
         confirm_you_read:
           'Por favor, confirme que você leu ambos antes de continuar.',
       },

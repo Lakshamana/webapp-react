@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
@@ -11,6 +11,7 @@ import {
   SocialSigninButton,
   SigninForm,
   AlertComponent,
+  Link,
 } from 'components'
 import { Container } from './styles'
 import { sizes, colors } from 'styles'
@@ -30,10 +31,10 @@ const LoginPage = () => {
         setError(t('common.error.generic_api_error'))
         return
       }
-      
-      await localStorage.setItem(AUTH_TOKEN, result.signIn.token.accessToken);
-      await localStorage.setItem(USER_ACCOUNT, result.signIn.account.id);
-      
+
+      await localStorage.setItem(AUTH_TOKEN, result.signIn.token.accessToken)
+      await localStorage.setItem(USER_ACCOUNT, result.signIn.account.id)
+
       history.push('/home')
     },
     onError: (error) => setError(`${error}`),
@@ -93,26 +94,20 @@ const LoginPage = () => {
             )}
           </>
           <SigninForm handleFormSubmit={handleFormSubmit}></SigninForm>
-          {/* TO-DO FORGOT PASSWORD, CREATE ATOM FOR LINKS */}
           <Box textAlign={'center'}>
             <Link
-              style={{
-                color: `${colors.generalText[colorMode]}`,
-                textTransform: 'uppercase',
-                fontWeight: 'bold',
-              }}
-              to="recoverPassword"
-            >
-              {t('signin.actions.forgot_password')}
-            </Link>
+              toRoute="/recoverPassword"
+              defaultColor
+              label={t('signin.actions.forgot_password')}
+              textTransform={'uppercase'}
+              fontWeight={'bolder'}
+            />
           </Box>
           <Flex justifyContent={'center'} flexWrap={'wrap'} mt={10}>
             <Text color={colors.generalText[colorMode]} paddingRight={1}>
               {t('signin.label.dont_have_account')}
             </Text>
-            <Link style={{ color: colors.brand.accent[colorMode] }} to="signup">
-              {t('signin.actions.signup_here')}
-            </Link>
+            <Link toRoute="/signup" label={t('signin.actions.signup_here')} />
           </Flex>
         </CardContainer>
       </Container>

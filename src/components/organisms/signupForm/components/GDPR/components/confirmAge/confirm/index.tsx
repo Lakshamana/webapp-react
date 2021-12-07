@@ -1,37 +1,30 @@
-import { Link } from 'components'
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { Button, Text } from 'components'
 import { ConfirmAgeProps } from './types'
-import { colors, sizes } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
+import { sizes } from 'styles'
 
-const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
+const Confirm = ({ handleFormSubmit, handleAgeDecline, gdprAge }: ConfirmAgeProps) => {
   const { t } = useTranslation()
-  const { colorMode } = useThemeStore()
 
   return (
-    <Flex alignItems={'center'} flexDirection={'column'} gridGap={3}>
+    <Flex alignItems={'center'} flexDirection={'column'} gridGap={5}>
       <Text
         fontSize={24}
+        marginBottom={30}
         textAlign={'center'}
         fontWeight={'bolder'}
-        color={colors.generalText[colorMode]}
+        color={'white'}
       >
-        {t('signup.GDPR.citizen')}
+        {t('signup.confirm_age.title', { age: gdprAge })}
       </Text>
-      <Link
-        label={t('common.what_is_this')}
-        externalLink="https://fanhero.com/gdpr/en/"
-      ></Link>
       <Button
         width={[1, sizes.loginButtonWidth]}
         paddingLeft={105}
         paddingRight={105}
-        marginTop={30}
         type={'submit'}
         label={t('common.yes')}
-        onClick={() => handleFormSubmit(true)}
+        onClick={handleFormSubmit}
       ></Button>
       <Button
         width={[1, sizes.loginButtonWidth]}
@@ -39,10 +32,10 @@ const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
         paddingRight={105}
         type={'cancel'}
         label={t('common.no')}
-        onClick={() => handleFormSubmit(false)}
+        onClick={() => handleAgeDecline()}
       ></Button>
     </Flex>
   )
 }
 
-export { ConfirmCitizenshipForm }
+export { Confirm }
