@@ -1,16 +1,17 @@
-import styled from "styled-components";
-import { StyleContainer } from "components/atoms";
+import styled from 'styled-components'
+import { Checkbox } from '@chakra-ui/react'
 
-interface CheckboxContainerProps {
-  color?: string;
-}
-
-export const CheckboxContainer = styled(StyleContainer)<CheckboxContainerProps>`
+export const CheckboxStyled = styled(Checkbox)`
   display: flex;
-  ${({ color }) =>
-    color
-      ? `span {
-    color: ${color}
-  }`
-      : ""}
-`;
+
+  .chakra-checkbox__control[data-checked] {
+    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+    border: none;
+  }
+
+  .chakra-checkbox__control[data-checked]:hover {
+    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+    opacity: 0.9;
+    border: none;
+  }
+`
