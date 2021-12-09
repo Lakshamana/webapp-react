@@ -1,21 +1,43 @@
 import { Link as RouterLink } from 'react-router-dom'
 import { LinkStyled } from './styles'
-import { LinkProps } from './types'
+import { Props } from './types'
+import { useThemeStore } from 'services/stores/theme'
+import { colors } from 'styles'
 
-const Link = ({ ...props }: LinkProps) => {
-  return (
-    <LinkStyled
-      href={props.externalLink}
-      {...props}
-      isExternal={props.externalLink}
-    >
-      {props.toRoute ? (
-        <RouterLink to={props.toRoute}>{props.label}</RouterLink>
-      ) : (
-        <>{props.label}</>
-      )}
-    </LinkStyled>
-  )
+const Link = ({ to, label, isExternal, defaultColor, ...props }: Props) => {
+  const { colorMode } = useThemeStore()
+
+  const renderRouterLink = () => {
+    return (
+      <div
+        style={{
+          color: defaultColor
+            ? colors.generalText[colorMode]
+            : colors.brand.accent[colorMode],
+        }}
+      >
+        <RouterLink to={to}>{label}</RouterLink>
+      </div>
+    )
+  }
+
+  const renderExternalink = () => {
+    return (
+      <LinkStyled
+        {...props}
+        href={to}
+        isExternal={isExternal}
+        color={
+          defaultColor
+            ? colors.generalText[colorMode]
+            : colors.brand.accent[colorMode]
+        }
+      >
+        {label}
+      </LinkStyled>
+    )
+  }
+  return isExternal ? renderExternalink() : renderRouterLink()
 }
 
 export { Link }
