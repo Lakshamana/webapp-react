@@ -12,7 +12,7 @@ import {
   ConfigBox,
   PaymentMethods,
   Subscription,
-  // Navbar,
+  Navbar,
 } from './components'
 
 import { USER_LOCALE } from 'config/constants'
@@ -68,23 +68,22 @@ const Account = () => {
     <MainLayout>
       <Container
         width={1}
-        mt={4}
+        mt={3}
         mx={[sizes.paddingSm, sizes.paddingMd, sizes.paddingLg]}
         flexWrap="wrap"
         justifyContent="space-between"
       >
-        {/*<Navbar
-          onClick={() => {}}
-          {...{ colorMode }}
-          text={t('page.account.back')}
-        />*/}
+        <Navbar {...{ colorMode }} text={t('page.account.back')} />
         <ContentBlock
           mb={3}
           title={t('page.account.account_info')}
           {...{ colorMode }}
         >
           <ConfigBox>
-            <AccountInformation data={accountInfo} />
+            <AccountInformation
+              data={accountInfo}
+              updateText={t('page.account.update')}
+            />
           </ConfigBox>
           <ConfigBox>
             <Text color={colors.generalText[colorMode]} mb={2}>
@@ -142,7 +141,7 @@ const Account = () => {
               action={{
                 text: t('page.account.manage_subscription'),
                 onClick: () => {},
-                fontWeight: 'bold',
+                fontWeight: 'normal',
                 underline: true,
                 fontSize: 14,
                 textAlign: 'end',
@@ -166,7 +165,7 @@ const Account = () => {
               />
               <Subscription
                 title={t('page.account.next_billing')}
-                value="$12.99/mo on 08/12/21"
+                value={`$12.99 ${t('page.account.on')} 08/12/21`}
                 fontValueStyle={{
                   fontSize: 14,
                   color: colors.grey['800'],
@@ -175,7 +174,7 @@ const Account = () => {
               />
               <Subscription
                 title={t('page.account.last_billing')}
-                value="$12.99/mo on 08/12/21"
+                value={`$12.99 ${t('page.account.on')} 08/12/21`}
                 separator={false}
                 fontStyle={{
                   fontSize: 16,
