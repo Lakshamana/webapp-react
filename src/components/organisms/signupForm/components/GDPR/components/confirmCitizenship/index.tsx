@@ -1,14 +1,17 @@
 import { Link } from 'components'
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { useThemeStore } from 'services/stores/theme'
+import { useFlags } from 'config/firebase/FlagsProvider'
 import { Button, Text } from 'components'
 import { ConfirmAgeProps } from './types'
 import { colors, sizes } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
+
 
 const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { ORGANIZATION } = useFlags()
 
   return (
     <Flex alignItems={'center'} flexDirection={'column'} gridGap={3}>
@@ -22,7 +25,8 @@ const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
       </Text>
       <Link
         label={t('common.what_is_this')}
-        externalLink="https://fanhero.com/gdpr/en/"
+        to={ORGANIZATION.GDPR_URL}
+        isExternal
       ></Link>
       <Button
         width={[1, sizes.loginButtonWidth]}

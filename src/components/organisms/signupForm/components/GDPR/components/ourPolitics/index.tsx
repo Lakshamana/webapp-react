@@ -5,12 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { Button, Text, Container, Checkbox, Link } from 'components'
 import { ConfirmAgeProps } from './types'
 import { useThemeStore } from 'services/stores/theme'
+import { useFlags } from 'config/firebase/FlagsProvider'
 import { colors, sizes } from 'styles'
 
 const OurPolitics = ({ handleFormSubmit }: ConfirmAgeProps) => {
   const history = useHistory()
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { ORGANIZATION } = useFlags()
 
   const [terms, setTerms] = useState(false)
 
@@ -20,14 +22,16 @@ const OurPolitics = ({ handleFormSubmit }: ConfirmAgeProps) => {
         {t('signup.our_politics.agree')}
         <Link
           paddingX={1}
-          externalLink={'https://fanhero.com/terms/en/'}
+          to={ORGANIZATION.TERMS_URL}
           label={t('common.terms')}
+          isExternal
         />
         {t('common.and')}
         <Link
           paddingX={1}
-          externalLink={'https://fanhero.com/privacy/en/'}
+          to={ORGANIZATION.PRIVACY_URL}
           label={t('common.privacy')}
+          isExternal
         />
       </>
     )
