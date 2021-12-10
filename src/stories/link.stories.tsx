@@ -19,4 +19,5 @@ Component.args = {
   to: 'https://develop.fanhero.tv/',
   isExternal: true,
   defaultColor: true,
+  children: <></>,
 }
