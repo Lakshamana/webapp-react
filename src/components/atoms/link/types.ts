@@ -1,9 +1,7 @@
-import { LinkProps as LinkPackageProps } from '@chakra-ui/react'
+import { LinkProps } from '@chakra-ui/react'
 
-export interface LinkProps extends LinkPackageProps {
-  label?: string
-  toRoute?: string
-  externalLink?: string
+export interface Props extends LinkProps {
+  label: string
+  to: string
   defaultColor?: boolean
-  children?: any
 }
