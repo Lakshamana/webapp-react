@@ -15,7 +15,7 @@ import {
   Navbar,
 } from './components'
 
-import { USER_LOCALE } from 'config/constants'
+import { USER_LOCALE, USER_ACCOUNT } from 'config/constants'
 import { QUERY_PROFILE } from 'services/graphql'
 import { colors, sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
@@ -32,21 +32,18 @@ const Account = () => {
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
 
-  const { data: profileData, loading: loadingProfile } = useQuery(
-    QUERY_PROFILE,
-    {
-      variables: {
-        account: '5f4faebf551755002e2c6e40',
-      },
-    }
-  )
+  const { data: profileData } = useQuery(QUERY_PROFILE, {
+    variables: {
+      account: localStorage.getItem(USER_ACCOUNT),
+    },
+  })
 
   const accountInfo = useMemo(
     () => formatAccountInfo(profileData, t),
-    [profileData]
+    [profileData, t]
   )
 
-  const { values, setFieldValue, handleSubmit } = useFormik({
+  const { values, setFieldValue } = useFormik({
     initialValues: {
       ...initialValues,
       locale: localStorage.getItem(USER_LOCALE) || initialValues.locale,
