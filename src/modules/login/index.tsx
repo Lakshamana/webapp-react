@@ -96,7 +96,7 @@ const LoginPage = () => {
           <SigninForm handleFormSubmit={handleFormSubmit}></SigninForm>
           <Box textAlign={'center'}>
             <Link
-              toRoute="/recoverPassword"
+              to={'/recoverPassword'}
               defaultColor
               label={t('signin.actions.forgot_password')}
               textTransform={'uppercase'}
@@ -107,7 +107,7 @@ const LoginPage = () => {
             <Text color={colors.generalText[colorMode]} paddingRight={1}>
               {t('signin.label.dont_have_account')}
             </Text>
-            <Link toRoute="/signup" label={t('signin.actions.signup_here')} />
+            <Link to={'/signup'} label={t('signin.actions.signup_here')} />
           </Flex>
         </CardContainer>
       </Container>

@@ -24,7 +24,7 @@ const SignupPage = () => {
             </Text>
             <Link
               label={t('signup.actions.signin_here')}
-              toRoute="/login"
+              to={'/login'}
             ></Link>
           </Flex>
         </CardContainer>

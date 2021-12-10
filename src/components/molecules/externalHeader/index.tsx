@@ -9,7 +9,7 @@ const ExternalHeader = ({
 }: ExternalHeaderProps) => (
   <BoxHeader display="flex" alignItems="center" justifyContent="center">
     <HeaderItems>
-      <Logo marginRight={[3, 4]} py={20}></Logo>
+      <Logo width={140} marginRight={[3, 4]} py={20}></Logo>
       <Box marginLeft={'auto'}>
         <LanguageSelector></LanguageSelector>
       </Box>
