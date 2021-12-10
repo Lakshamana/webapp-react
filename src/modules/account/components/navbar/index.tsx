@@ -7,7 +7,7 @@ import { BackTextBox, WrapperIcon } from '../../styles'
 const Navbar = ({ colorMode, text }: NavbarProps) => (
   <Container width={1} mt={2} alignItems="center" mb={4}>
     <WrapperIcon>
-      <Link toRoute="/home">
+      <Link to="/home">
         <Icon
           icon="mdi:arrow-left"
           width={20}
