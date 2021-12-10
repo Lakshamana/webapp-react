@@ -10,9 +10,11 @@ const Link = ({ ...props }: LinkProps) => {
       isExternal={props.externalLink}
     >
       {props.toRoute ? (
-        <RouterLink to={props.toRoute}>{props.label}</RouterLink>
+        <RouterLink to={props.toRoute}>
+          {props.label || props.children}
+        </RouterLink>
       ) : (
-        <>{props.label}</>
+        <>{props.label || props.children}</>
       )}
     </LinkStyled>
   )

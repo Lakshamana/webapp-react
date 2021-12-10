@@ -16,5 +16,6 @@ export const Component = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Component.args = {
   label: 'I am a link',
-  externalLink: 'https://develop.fanhero.tv/'
+  externalLink: 'https://develop.fanhero.tv/',
+  children: <></>,
 }
