@@ -33,7 +33,8 @@ const EN_US = {
       retry: 'Retry',
       access_your_account: 'Access your acount',
       back: 'Back',
-      cancel: 'Cancelar',
+      cancel: 'Cancel',
+      confirm: 'Confirm',
       update: 'Update'
     },
     signin: {

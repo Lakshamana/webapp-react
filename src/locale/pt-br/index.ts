@@ -34,6 +34,7 @@ const PT_BR = {
       access_your_account: 'Acesse a sua conta',
       back: 'Voltar',
       cancel: 'Cancelar',
+      confirm: 'Confirmar',
       update: 'Atualizar'
     },
     signin: {
