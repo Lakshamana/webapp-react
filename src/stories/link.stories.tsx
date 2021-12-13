@@ -18,5 +18,6 @@ Component.args = {
   label: 'I am a link',
   to: 'https://develop.fanhero.tv/',
   isExternal: true,
-  defaultColor: true
+  defaultColor: true,
+  children: <></>,
 }

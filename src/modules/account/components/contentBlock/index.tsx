@@ -14,10 +14,13 @@ const ContentBlock = ({
     <SingleConfiguration
       fontStyle={{
         fontWeight: 'bold',
-        marginLeft: [0, 0, 0, '24px'],
+        marginLeft: '24px',
       }}
       text={title}
-      {...{ action: { ...action, textAlign: 'end' }, colorMode }}
+      {...{
+        action: { ...action, textAlign: 'end', marginRight: '24px' },
+        colorMode,
+      }}
     />
     {children}
   </Container>

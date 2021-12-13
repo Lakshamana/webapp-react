@@ -8,4 +8,5 @@ export type Information = {
 
 export interface AccountInformationProps {
   data: Array<Information>
+  updateText: string
 }

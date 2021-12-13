@@ -1,7 +1,8 @@
 import { LinkProps } from '@chakra-ui/react'
 
 export interface Props extends LinkProps {
-  label: string
+  label?: string
   to: string
   defaultColor?: boolean
+  children?: any
 }
