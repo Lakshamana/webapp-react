@@ -13,12 +13,22 @@ const Template: ComponentStory<typeof AlertCard> = (args) => (
   <AlertCard {...args} />
 )
 
-export const Component = Template.bind({})
+export const Error = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Component.args = {
+Error.args = {
   title: 'Lorem ipsum dolor sit amet',
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   type: 'error',
+  actionLabel: 'Lorem ipsum'
+}
+
+export const Success = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Success.args = {
+  title: 'Lorem ipsum dolor sit amet',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  type: 'success',
   actionLabel: 'Lorem ipsum'
 }

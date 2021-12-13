@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom'
-import { LinkStyled } from './styles'
+import { LinkStyled, RouterLinkStyled } from './styles'
 import { Props } from './types'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
@@ -16,15 +16,17 @@ const Link = ({
 
   const renderRouterLink = () => {
     return (
-      <div
+      <RouterLinkStyled
         style={{
           color: defaultColor
             ? colors.generalText[colorMode]
             : colors.brand.accent[colorMode],
+          textTransform: props.textTransform,
+          fontWeight : props.fontWeight
         }}
       >
         <RouterLink to={to}>{label || children}</RouterLink>
-      </div>
+      </RouterLinkStyled>
     )
   }
 
