@@ -14,11 +14,38 @@ const Template: ComponentStory<typeof AlertComponent> = (args) => (
   <AlertComponent {...args} />
 )
 
-export const Component = Template.bind({})
+export const Error = Template.bind({})
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Component.args = {
+Error.args = {
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    'Ops! Something is wrong here!',
   type: 'error',
-  closeable: true,
+  closeable: true
+}
+
+export const Warning = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Warning.args = {
+  description:
+    'Warning! Consider yourself warned.',
+  type: 'warning',
+  closeable: true
+}
+
+export const Info = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Info.args = {
+  description:
+    'Hey, this is a info. Consider yourself informed.',
+  type: 'info',
+  closeable: true
+}
+
+export const Success = Template.bind({})
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Success.args = {
+  description:
+    'Do you believe it is really working?',
+  type: 'success',
+  closeable: true
 }
