@@ -3,7 +3,8 @@ const PT_BR = {
     common: {
       or: 'ou',
       error: {
-        generic_api_error: "Algo deu errado. Nós vamos consertar isso. Tente mais tarde.",
+        generic_api_error:
+          'Algo deu errado. Nós vamos consertar isso. Tente mais tarde.',
         field_required: 'Campo {{field_name}} é obrigatório',
         field_must_match: '{{field_name}} deve ser igual',
         valid_email: 'Digite um email válido',
@@ -29,7 +30,7 @@ const PT_BR = {
       no: 'Não',
       close: 'Fechar',
       send: 'Enviar',
-      enjoy_your_content: "Aproveite seu conteúdo",
+      enjoy_your_content: 'Aproveite seu conteúdo',
       retry: 'Tentar novamente',
       access_your_account: 'Acesse a sua conta',
       back: 'Voltar',
@@ -73,15 +74,15 @@ const PT_BR = {
       },
       reconfirm_age: {
         title: 'Você digitou corretamente?',
-        subtitle: "Parece que você não tem idade suficiente para ter uma conta da {{organization}}. Se você inseriu a idade errada por engano, atualize-a agora. Caso contrário, você não poderá continuar o registro e nenhum dado inserido será armazenado.",
-        under_age: 'Tenho menos de {{age}} anos'
+        subtitle:
+          'Parece que você não tem idade suficiente para ter uma conta da {{organization}}. Se você inseriu a idade errada por engano, atualize-a agora. Caso contrário, você não poderá continuar o registro e nenhum dado inserido será armazenado.',
+        under_age: 'Tenho menos de {{age}} anos',
       },
       our_politics: {
         title: 'Nossa Política',
         description:
           'Queremos que você saiba exatamente como nosso aplicativo funciona e como mantemos seus dados registrados. Levamos a proteção de seus dados muito a sério e atualizamos nossa Política de Privacidade e Termos e Condições.',
-        agree:
-          'Eu concordo com os',
+        agree: 'Eu concordo com os',
         confirm_you_read:
           'Por favor, confirme que você leu ambos antes de continuar.',
       },
@@ -100,31 +101,33 @@ const PT_BR = {
         back: 'Voltar',
       },
       error: {
-        email_exists: 'O endereço de email já está em uso.'
-      }
+        email_exists: 'O endereço de email já está em uso.',
+      },
     },
     recoverPassword: {
       title: 'Esqueceu a sua senha? Sem problemas!',
-      subtitle: "Nós vamos te enviar um e-mail com o código para resetar a sua senha.",
-      sendCode: "Me envie o código",
+      subtitle:
+        'Nós vamos te enviar um e-mail com o código para resetar a sua senha.',
+      sendCode: 'Me envie o código',
       label: {
-        code: "Código"
+        code: 'Código',
       },
       success: {
-        title: "Senha atualizada",
-        description: "Sua senha foi salva e sua conta foi atualizada com sucesso."
+        title: 'Senha atualizada',
+        description:
+          'Sua senha foi salva e sua conta foi atualizada com sucesso.',
       },
       error: {
         title: 'Algo deu errado!',
-        description: 'Vamos consertá-lo. Tente mais tarde.'
-      }
+        description: 'Vamos consertá-lo. Tente mais tarde.',
+      },
     },
     updatePassword: {
-      title: "Um código foi enviado para o seu email",
-      subtitle: "Por favor, use o código enviado e digite uma nova senha.",
+      title: 'Um código foi enviado para o seu email',
+      subtitle: 'Por favor, use o código enviado e digite uma nova senha.',
       label: {
-        updatePassword: "Redefinir senha"
-      }
+        updatePassword: 'Redefinir senha',
+      },
     },
     header: {
       tabs: {
@@ -169,32 +172,33 @@ const PT_BR = {
       },
       account: {
         push: 'Push',
-        back: 'Back',
-        cancel: 'CANCEL',
-        delete: 'DELETE',
-        update: 'UPDATE',
-        default: 'DEFAULT',
-        pause: 'PAUSE',
-        name: 'Your Name',
+        back: 'Voltar',
+        on: 'em',
+        cancel: 'CANCELAR',
+        delete: 'DELETAR',
+        update: 'ATUALIZAR',
+        default: 'PADRÃO',
+        pause: 'PAUSAR',
+        name: 'Nome',
         username: 'Username',
         email: 'Email',
-        password: 'Password',
-        phone: 'Phone',
-        account_info: 'Your Account Information',
-        language_selection: 'Language Selection',
-        delete_account: 'Delete Account',
-        billing_information: 'Your Billing Information',
-        billing_history: 'View Billing History',
-        your_subscription: 'Your Subscription',
-        manage_subscription: 'Manage Your Subscription',
-        monthly_plan: 'ABS Monthly Plan',
-        next_billing: 'Next Billing Date',
-        last_billing: 'Last Billing Date',
-        pause_subscription: 'Pause Subscription',
-        payment_information: 'Your Payment Information',
-        cancel_subscriptions: 'Cancel your subscriptions',
-        add_payment: 'Add Payment Method',
-        payment_method: 'Payment Method',
+        password: 'Senha',
+        phone: 'Telefone',
+        account_info: 'Informações da Conta',
+        language_selection: 'Seleção de Idioma',
+        delete_account: 'Deletar Conta',
+        billing_information: 'Informações de Compra',
+        billing_history: 'Ver Histórico de Compra',
+        your_subscription: 'Sua Assinatura',
+        manage_subscription: 'Gerencie Assinatura',
+        monthly_plan: 'Plano Mensal ABS',
+        next_billing: 'Próxima Data de Pagamento',
+        last_billing: 'Última Data de Faturamento',
+        pause_subscription: 'Pausar Assinatura',
+        payment_information: 'Suas Informações de Pagamento',
+        cancel_subscriptions: 'Cancelar Assinaturas',
+        add_payment: 'Adicionar Método de Pagamento',
+        payment_method: 'Método de Pagamento',
       },
     },
   },

@@ -4,7 +4,14 @@ import { Props } from './types'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 
-const Link = ({ to, label, isExternal, defaultColor, ...props }: Props) => {
+const Link = ({
+  to,
+  label,
+  isExternal,
+  defaultColor,
+  children,
+  ...props
+}: Props) => {
   const { colorMode } = useThemeStore()
 
   const renderRouterLink = () => {
@@ -18,7 +25,7 @@ const Link = ({ to, label, isExternal, defaultColor, ...props }: Props) => {
           fontWeight : props.fontWeight
         }}
       >
-        <RouterLink to={to}>{label}</RouterLink>
+        <RouterLink to={to}>{label || children}</RouterLink>
       </RouterLinkStyled>
     )
   }
