@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
