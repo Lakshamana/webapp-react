@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { Box, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { Button, Input, Checkbox } from 'components'
