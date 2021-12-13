@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { Button, Text } from 'components'
 import { Container, Header, Body } from './style'
