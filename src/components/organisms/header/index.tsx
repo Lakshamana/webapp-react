@@ -69,7 +69,7 @@ const HeaderComponent = () => {
         height={[
           sizes.headerMobileHeight,
           sizes.headerMobileHeight,
-          sizes.headerMobileHeight,
+          sizes.headerDesktopHeight,
           sizes.headerDesktopHeight,
         ]}
         width={1}
