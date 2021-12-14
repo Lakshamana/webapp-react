@@ -6,14 +6,14 @@ export const ChildContainer = styled(StyleContainer)`
 	display: flex;
 	height: max-content;
 	min-height: calc(
-		100vh - ${sizes.footerDesktopHeight} - ${sizes.headerDesktopHeight}
+		100vh - ${sizes.footerMobileHeight} - ${sizes.headerMobileHeight}
 	);
 
-	@media screen and (max-width: ${breakpoints.md}) {
+	@media screen and (min-width: ${breakpoints.md}) {
 		min-height: calc(
-			100vh - ${sizes.footerMobileHeight} - ${sizes.headerMobileHeight}
+			100vh - ${sizes.footerDesktopHeight} - ${sizes.headerDesktopHeight}
 		);
-	}
+	  }
 `
 
 export const LayoutContainer = styled(StyleContainer)`

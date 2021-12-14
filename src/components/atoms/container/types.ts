@@ -5,7 +5,7 @@ import {
   PositionProps,
   TypographyProps,
   GridProps,
-} from "styled-system";
+} from 'styled-system'
 
 export interface Props
   extends FlexboxProps,
@@ -14,12 +14,13 @@ export interface Props
     PositionProps,
     TypographyProps,
     GridProps {
-  children: any;
-  onClick?: any;
-  backgroundColor?: string;
+  children: any
+  onClick?: any
+  backgroundColor?: string
+  defaultPadding?: boolean
 }
 
 export const defaultProps = {
-  display: "flex",
-  alignItems: "flex-start",
-};
+  display: 'flex',
+  alignItems: 'flex-start'
+}

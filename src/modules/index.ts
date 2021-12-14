@@ -8,7 +8,7 @@ export * from "./player";
 export * from "./search";
 export * from "./tags";
 export * from "./account";
-export * from "./channelList";
+export * from "./channels";
 export * from "./feed";
 export * from "./recoverPassword";
 export * from "./videoPostView";

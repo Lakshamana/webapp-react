@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
 import { useFormik } from 'formik'
-import { Text, CardContainer, Input, Button, AlertComponent } from 'components'
+import { Text, Card, Input, Button, AlertComponent } from 'components'
 import { sizes, colors } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
 import { Props } from './types'
@@ -40,7 +40,7 @@ const RequestPasswordResetForm = ({
   })
 
   return (
-    <CardContainer
+    <Card
       paddingX={[30, 60]}
       paddingY={[40, 40]}
       width={[1, sizes.loginCardWidth]}
@@ -100,7 +100,7 @@ const RequestPasswordResetForm = ({
           onClick={() => history.push('/login')}
         ></Button>
       </Flex>
-    </CardContainer>
+    </Card>
   )
 }
 

@@ -1,11 +1,16 @@
-import { Props, defaultProps } from "./types";
+import { Props, defaultProps } from './types'
 
-import { StyleContainer } from "./styles";
+import { StyleContainer } from './styles'
 
 const Container = (props: Props) => (
-  <StyleContainer {...props}>{props.children}</StyleContainer>
-);
+  <StyleContainer
+    className={props.defaultPadding ? 'defaultPadding' : ''}
+    {...props}
+  >
+    {props.children}
+  </StyleContainer>
+)
 
-Container.defaultProps = defaultProps;
+Container.defaultProps = defaultProps
 
-export { Container, StyleContainer };
+export { Container, StyleContainer }

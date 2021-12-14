@@ -1,9 +1,9 @@
-import { CardContainer } from 'components'
+import { Card } from 'components'
 
 import { ConfigBoxProps } from './types'
 
 const ConfigBox = ({ children, removeMargin }: ConfigBoxProps) => (
-  <CardContainer
+  <Card
     width={1}
     paddingX={24}
     paddingY={24}
@@ -11,7 +11,7 @@ const ConfigBox = ({ children, removeMargin }: ConfigBoxProps) => (
     removeShadow
   >
     {children}
-  </CardContainer>
+  </Card>
 )
 
 export { ConfigBox }

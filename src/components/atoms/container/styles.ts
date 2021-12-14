@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 import {
   space,
   flexbox,
@@ -7,9 +7,11 @@ import {
   position,
   typography,
   grid,
-} from "styled-system";
+} from 'styled-system'
 
-import { Props } from "./types";
+import { breakpoints } from 'styles'
+
+import { Props } from './types'
 
 export const StyleContainer = styled.div<Props>`
   ${space}
@@ -19,4 +21,17 @@ export const StyleContainer = styled.div<Props>`
   ${position}
   ${typography}
   ${grid}
-`;
+  
+  .defaultPadding {
+    padding: 0 ${({ theme }) => theme.sizes.paddingSm};
+
+    @media screen and (min-width: ${breakpoints.md}) {
+      padding: 0 ${({ theme }) => theme.sizes.paddingMd};
+      height: ${({ theme }) => theme.sizes.footerDesktopHeight};
+    }
+
+    @media screen and (min-width: ${breakpoints.lg}) {
+      padding: 0 ${({ theme }) => theme.sizes.paddingLg};
+    }
+  }
+`
