@@ -68,7 +68,6 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                         borderColor={`${colors.blue['300']}`}
                         iconName={'play'}
                         color={`${colors.white}`}
-                        type="billboard"
                         label={t('page.collection.watch_now')}
                         width={'100%'}
                         height={'100%'}
@@ -80,7 +79,6 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                         borderColor={`${colors.grey['800']}`}
                         iconName={'plus-circle'}
                         color={`${colors.white}`}
-                        type="billboard"
                         label={t('page.collection.my_list')}
                         width={'100%'}
                         height={'100%'}

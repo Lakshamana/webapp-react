@@ -12,6 +12,7 @@ const RequestPasswordResetForm = ({
   handleFormSubmit,
   dispatchError,
   error,
+  isLoading
 }: Props) => {
   const { t } = useTranslation()
   const history = useHistory()
@@ -84,17 +85,17 @@ const RequestPasswordResetForm = ({
           errorMessage={errors.email}
           error={!!errors.email && touched.email}
         />
-        {/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
         <Button
-          width={[1, sizes.loginButtonWidth]}
+          width={[sizes.loginButtonWidth]}
           marginTop={2}
-          type={dirty && isValid ? 'submit' : 'disabled'}
+          isDisabled={!(dirty && isValid)}
           label={t('recoverPassword.sendCode')}
-          onClick={handleSubmit}
+          isLoading={isLoading}
+          onClick={() => handleSubmit()}
         ></Button>
         <Button
-          width={[1, sizes.loginButtonWidth]}
-          type={'cancel'}
+          width={[sizes.loginButtonWidth]}
+          variant='ghost'
           label={t('common.cancel')}
           onClick={() => history.push('/login')}
         ></Button>

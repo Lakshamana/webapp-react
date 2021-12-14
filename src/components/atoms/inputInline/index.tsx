@@ -6,6 +6,7 @@ import { Input, InputMask } from "./styles";
 const InputInline = ({
   mask,
   onChange,
+  onBlur,
   placeholder = "",
   error = false,
   errorMessage = "",
@@ -32,6 +33,7 @@ const InputInline = ({
         placeholder,
         onChange,
         onKeyDown,
+        onBlur,
         color,
         placeholderColor,
         background,

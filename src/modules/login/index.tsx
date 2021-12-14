@@ -25,7 +25,7 @@ const LoginPage = () => {
 
   const [error, setError] = useState('')
 
-  const [signIn] = useMutation(MUTATION_SIGNIN, {
+  const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
       if (!result?.signIn) {
         setError(t('common.error.generic_api_error'))
@@ -93,7 +93,7 @@ const LoginPage = () => {
               ></AlertComponent>
             )}
           </>
-          <SigninForm handleFormSubmit={handleFormSubmit}></SigninForm>
+          <SigninForm handleFormSubmit={handleFormSubmit} isLoading={loading}></SigninForm>
           <Box textAlign={'center'}>
             <Link
               to={'/recoverPassword'}

@@ -54,14 +54,14 @@ const ModalComponent = ({
 
               <ModalFooter display={'flex'} flexDirection={'column'}>
                 {actionButton && <Button
-                  width={[1, sizes.loginButtonWidth]}
+                  width={[sizes.loginButtonWidth]}
                   label={actionLabel || t('common.confirm')}
                   onClick={onConfirm}
                 />}
                 {cancelButton && <Button
-                  width={[1, sizes.loginButtonWidth]}
+                  width={[sizes.loginButtonWidth]}
                   marginTop={2}
-                  type={'outlined'}
+                  variant={'outline'}
                   label={cancelLabel || t('common.cancel')}
                   onClick={onClose}
                 />}
