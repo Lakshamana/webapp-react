@@ -1,38 +1,38 @@
-import { ButtonProps, defaultProps } from "./types";
-import { BoxButton } from "./style";
-import { Icon } from "@iconify/react";
+import { Icon } from '@iconify/react'
+import { ButtonStyled } from './style'
+import { Props } from './types'
 
-const Button = ({ ...props }: ButtonProps) => {
-    const getButtonStyle = () => {
-        switch (props.type) {
-            case 'submit':
-                return <BoxButton variant="primary" type={'submit'} borderRadius={4} {...props}>{props.label}</BoxButton>
-            case 'reset':
-                return <BoxButton variant="secondary" borderRadius={4} {...props}>{props.label}</BoxButton>
-            case 'billboard':
-                return <BoxButton borderRadius={6} {...props}>
-                    <Icon width={20} icon={`mdi:${props.iconName}`}></Icon>
-                    {props.label}
-                </BoxButton>
-            case 'disabled':
-                return <BoxButton type='submit' variant="grey" borderRadius={4} {...props}>{props.label}</BoxButton>
-            case 'cancel':
-                return <BoxButton variant="cancel" {...props}>{props.label}</BoxButton>
-            case 'outlined':
-                return <BoxButton variant="outlined" {...props}>{props.label}</BoxButton>
-            case "children":
-                return (
-                    <BoxButton variant="primary" textColor={'yellow'} borderRadius={4} {...props}>
-                        {props.children}
-                    </BoxButton>
-                );
-            default:
-                return <BoxButton variant="primary" {...props}>{props.label}</BoxButton>
-        }
-    };
-    return getButtonStyle();
-};
+const Button = ({
+  label,
+  fontSize,
+  children,
+  iconName,
+  size,
+  variant,
+  isLoading,
+  width,
+  isDisabled,
+  ...props
+}: Props) => {
+  return (
+    <ButtonStyled
+      {...(iconName ? { leftIcon: <Icon icon={`mdi:${iconName}`} /> } : {})}
+      {...(width ? { width: width } : { width: '100%' })}
+      {...props}
+      {...(variant === 'unstyled' ? {border: `2px solid ${props.borderColor}`} : {})}
+      size={size}
+      variant={variant || 'solid'}
+      borderRadius={props.borderRadius || '4px'}
+      textTransform={variant !== 'unstyled' ? 'uppercase' : ''}
+      color={props.color || 'white'}
+      isLoading={isLoading}
+      isDisabled={isDisabled}
+      className="ripple"
+    >
+      {label}
+      {children}
+    </ButtonStyled>
+  )
+}
 
-Button.defaultProps = defaultProps;
-
-export { Button };
+export { Button }
