@@ -987,6 +987,11 @@ export type CreateAccountGdprLgpdMutationVariables = Exact<{
 
 export type CreateAccountGdprLgpdMutation = { __typename?: 'Mutation', createAccountGdprLgpd: { __typename: 'AccountGdprLgpd', id: string, accepted: boolean, accepted_at: any, ip: string, account: { __typename?: 'Account', id: string } } };
 
+export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshSignIn', refreshToken: { __typename?: 'RefreshToken', accessToken: string } } };
+
 export type ResetPasswordMutationVariables = Exact<{
   forgotPassword: ForgotPassword;
 }>;
@@ -999,10 +1004,10 @@ export type SigninMutationVariables = Exact<{
 }>;
 
 
-export type SigninMutation = { __typename?: 'Mutation', signIn: { __typename?: 'SingIn', token: { __typename?: 'AccessToken', accessToken: string }, account: { __typename?: 'Account', id: string } } };
+export type SigninMutation = { __typename?: 'Mutation', signIn: { __typename?: 'SingIn', token: { __typename?: 'AccessToken', accessToken: string }, account: { __typename?: 'Account', id: string, email?: Maybe<string> } } };
 
 export type SignOutMutationVariables = Exact<{
-  signOutSignOut: RefreshTokenInput;
+  signOut: RefreshTokenInput;
 }>;
 
 
@@ -1022,12 +1027,19 @@ export type VerifyMailMutationVariables = Exact<{
 
 export type VerifyMailMutation = { __typename?: 'Mutation', verifyMail: { __typename?: 'VerifyMail', exist: boolean } };
 
+export type ChannelsQueryVariables = Exact<{
+  filter: FilterFindAllChannelsInput;
+}>;
+
+
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename?: 'ResponseChannelOutput', banner?: Maybe<any>, customization?: Maybe<any>, description: string, entitlements?: Maybe<any>, geofence?: Maybe<any>, id: string, logo?: Maybe<any>, name: string, organization: string, status: string, thumbnail?: Maybe<any> }> };
+
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', address?: Maybe<string>, avatar?: Maybe<string>, birthday: any, gender?: Maybe<string>, id: string, phone?: Maybe<string>, account: string, locale?: Maybe<string> } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatar?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> }, account: { __typename?: 'Account', username?: Maybe<string>, display_name?: Maybe<string>, email?: Maybe<string> } };
 
 
 export const CreateAccountDocument = gql`
@@ -1128,6 +1140,46 @@ export function useCreateAccountGdprLgpdMutation(baseOptions?: Apollo.MutationHo
 export type CreateAccountGdprLgpdMutationHookResult = ReturnType<typeof useCreateAccountGdprLgpdMutation>;
 export type CreateAccountGdprLgpdMutationResult = Apollo.MutationResult<CreateAccountGdprLgpdMutation>;
 export type CreateAccountGdprLgpdMutationOptions = Apollo.BaseMutationOptions<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>;
+export const RefreshTokenDocument = gql`
+    mutation RefreshToken {
+  refreshToken {
+    refreshToken {
+      accessToken
+    }
+  }
+}
+    `;
+export type RefreshTokenMutationFn = Apollo.MutationFunction<RefreshTokenMutation, RefreshTokenMutationVariables>;
+export type RefreshTokenComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RefreshTokenMutation, RefreshTokenMutationVariables>, 'mutation'>;
+
+    export const RefreshTokenComponent = (props: RefreshTokenComponentProps) => (
+      <ApolloReactComponents.Mutation<RefreshTokenMutation, RefreshTokenMutationVariables> mutation={RefreshTokenDocument} {...props} />
+    );
+    
+
+/**
+ * __useRefreshTokenMutation__
+ *
+ * To run a mutation, you first call `useRefreshTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshTokenMutation, { data, loading, error }] = useRefreshTokenMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRefreshTokenMutation(baseOptions?: Apollo.MutationHookOptions<RefreshTokenMutation, RefreshTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(RefreshTokenDocument, options);
+      }
+export type RefreshTokenMutationHookResult = ReturnType<typeof useRefreshTokenMutation>;
+export type RefreshTokenMutationResult = Apollo.MutationResult<RefreshTokenMutation>;
+export type RefreshTokenMutationOptions = Apollo.BaseMutationOptions<RefreshTokenMutation, RefreshTokenMutationVariables>;
 export const ResetPasswordDocument = gql`
     mutation ResetPassword($forgotPassword: ForgotPassword!) {
   resetPassword(forgotPassword: $forgotPassword) {
@@ -1175,6 +1227,7 @@ export const SigninDocument = gql`
     }
     account {
       id
+      email
     }
   }
 }
@@ -1212,8 +1265,8 @@ export type SigninMutationHookResult = ReturnType<typeof useSigninMutation>;
 export type SigninMutationResult = Apollo.MutationResult<SigninMutation>;
 export type SigninMutationOptions = Apollo.BaseMutationOptions<SigninMutation, SigninMutationVariables>;
 export const SignOutDocument = gql`
-    mutation SignOut($signOutSignOut: RefreshTokenInput!) {
-  signOut(signOut: $signOutSignOut)
+    mutation SignOut($signOut: RefreshTokenInput!) {
+  signOut(signOut: $signOut)
 }
     `;
 export type SignOutMutationFn = Apollo.MutationFunction<SignOutMutation, SignOutMutationVariables>;
@@ -1237,7 +1290,7 @@ export type SignOutComponentProps = Omit<ApolloReactComponents.MutationComponent
  * @example
  * const [signOutMutation, { data, loading, error }] = useSignOutMutation({
  *   variables: {
- *      signOutSignOut: // value for 'signOutSignOut'
+ *      signOut: // value for 'signOut'
  *   },
  * });
  */
@@ -1326,17 +1379,69 @@ export function useVerifyMailMutation(baseOptions?: Apollo.MutationHookOptions<V
 export type VerifyMailMutationHookResult = ReturnType<typeof useVerifyMailMutation>;
 export type VerifyMailMutationResult = Apollo.MutationResult<VerifyMailMutation>;
 export type VerifyMailMutationOptions = Apollo.BaseMutationOptions<VerifyMailMutation, VerifyMailMutationVariables>;
+export const ChannelsDocument = gql`
+    query Channels($filter: FilterFindAllChannelsInput!) {
+  channels(filterFindAllChannelsInput: $filter) {
+    banner
+    customization
+    description
+    entitlements
+    geofence
+    id
+    logo
+    name
+    organization
+    status
+    thumbnail
+  }
+}
+    `;
+export type ChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelsQuery, ChannelsQueryVariables>, 'query'> & ({ variables: ChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const ChannelsComponent = (props: ChannelsComponentProps) => (
+      <ApolloReactComponents.Query<ChannelsQuery, ChannelsQueryVariables> query={ChannelsDocument} {...props} />
+    );
+    
+
+/**
+ * __useChannelsQuery__
+ *
+ * To run a query within a React component, call `useChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChannelsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useChannelsQuery(baseOptions: Apollo.QueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+      }
+export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+        }
+export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
+export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
+export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
 export const ProfileDocument = gql`
     query Profile($account: ID!) {
   profile(account: $account) {
-    address
     avatar
-    birthday
-    gender
     id
     phone
-    account
     locale
+  }
+  account(FindOneParamsDto: {id: $account}) {
+    username
+    display_name
+    email
   }
 }
     `;
