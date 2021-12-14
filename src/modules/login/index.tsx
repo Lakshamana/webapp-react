@@ -7,7 +7,7 @@ import { MUTATION_SIGNIN } from 'services/graphql'
 import {
   Text,
   LoginLayout,
-  CardContainer,
+  Card,
   SocialSigninButton,
   SigninForm,
   AlertComponent,
@@ -49,7 +49,7 @@ const LoginPage = () => {
   return (
     <LoginLayout>
       <Container width={1} paddingY={[0, 40]}>
-        <CardContainer
+        <Card
           paddingX={[30, 60]}
           paddingY={[40, 40]}
           width={[1, sizes.loginCardWidth]}
@@ -109,7 +109,7 @@ const LoginPage = () => {
             </Text>
             <Link to={'/signup'} label={t('signin.actions.signup_here')} />
           </Flex>
-        </CardContainer>
+        </Card>
       </Container>
     </LoginLayout>
   )
