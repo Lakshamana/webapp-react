@@ -11,6 +11,7 @@ const UpdatePasswordForm = ({
   handleFormSubmit,
   dispatchError,
   error,
+  isLoading
 }: Props) => {
   const { t } = useTranslation()
 
@@ -31,7 +32,6 @@ const UpdatePasswordForm = ({
     },
     validationSchema,
     validateOnChange: true,
-    validateOnBlur: false,
     onSubmit: async () => {
       handleFormSubmit({ updatePassword: { ...values } })
     },
@@ -95,13 +95,13 @@ const UpdatePasswordForm = ({
           errorMessage={errors.password}
           error={!!errors.password && touched.password}
         />
-        {/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
         <Button
-          width={[1, sizes.loginButtonWidth]}
+          width={[sizes.loginButtonWidth]}
           mt={3}
-          type={dirty && isValid ? 'submit' : 'disabled'}
+          isDisabled={!(dirty && isValid)}
+          isLoading={isLoading}
           label={t('common.send')}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
         ></Button>
       </Flex>
     </CardContainer>
