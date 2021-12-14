@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from 'components'
 import { BillboardItemActions } from '../../types'
 import { Actions, ContentButton } from './style'
@@ -15,8 +14,9 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
             borderColor={action.borderColor}
             iconName={action.icon}
             color={action.textColor}
-            type="billboard"
+            variant={'unstyled'}
             label={action.label}
+            borderRadius={'6px'}
           />
         </ContentButton>
       ))}
