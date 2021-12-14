@@ -12,6 +12,10 @@ export const colors = {
       light: '#0660F9',
       dark: '#0660F9',
     },
+    indicator: {
+      light: '#0660F9',
+      dark: '#0660F9',
+    },
   },
   generalText: {
     light: '#000000',
