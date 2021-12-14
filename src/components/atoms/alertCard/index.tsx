@@ -31,11 +31,11 @@ const AlertCard = ({ ...props }: Props) => {
         <Text fontSize={20}>
           {props.description}
         </Text>
-        {/* TO-DO CREATE A BETTER BUTTON COMPONENT */}
         {props.actionLabel && (
           <Button
-            marginY={20}
-            type="outlined"
+            marginTop={10}
+            marginBottom={2}
+            variant={'ghost'}
             label={props.actionLabel}
             onClick={redirectTo}
           ></Button>
