@@ -19,18 +19,18 @@ const Confirm = ({ handleFormSubmit, handleAgeDecline, gdprAge }: ConfirmAgeProp
         {t('signup.confirm_age.title', { age: gdprAge })}
       </Text>
       <Button
-        width={[1, sizes.loginButtonWidth]}
+        width={[sizes.loginButtonWidth]}
         paddingLeft={105}
         paddingRight={105}
-        type={'submit'}
+        variant='solid'
         label={t('common.yes')}
         onClick={handleFormSubmit}
       ></Button>
       <Button
-        width={[1, sizes.loginButtonWidth]}
+        width={[sizes.loginButtonWidth]}
         paddingLeft={105}
         paddingRight={105}
-        type={'cancel'}
+        variant='ghost'
         label={t('common.no')}
         onClick={() => handleAgeDecline()}
       ></Button>

@@ -30,14 +30,14 @@ const Reconfirm = ({ handleFormSubmit, gdprAge }: ConfirmAgeProps) => {
         {t('signup.reconfirm_age.subtitle', { organization: 'Fanhero' })}
       </Text>
       <Button
-        width={[1, sizes.loginButtonWidth]}
+        width={[sizes.loginButtonWidth]}
         type={'submit'}
         label={t('common.update')}
         onClick={handleFormSubmit}
       ></Button>
       <Button
-        width={[1, sizes.loginButtonWidth]}
-        type={'cancel'}
+        width={[sizes.loginButtonWidth]}
+        variant='ghost'
         label={t('signup.reconfirm_age.under_age', { age: gdprAge })}
         onClick={() => history.push('/login')}
       ></Button>

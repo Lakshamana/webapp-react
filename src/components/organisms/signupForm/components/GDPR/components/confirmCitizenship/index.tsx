@@ -29,7 +29,7 @@ const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
         isExternal
       ></Link>
       <Button
-        width={[1, sizes.loginButtonWidth]}
+        width={[sizes.loginButtonWidth]}
         paddingLeft={105}
         paddingRight={105}
         marginTop={30}
@@ -38,10 +38,10 @@ const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
         onClick={() => handleFormSubmit(true)}
       ></Button>
       <Button
-        width={[1, sizes.loginButtonWidth]}
+        width={[sizes.loginButtonWidth]}
         paddingLeft={105}
         paddingRight={105}
-        type={'cancel'}
+        variant='ghost'
         label={t('common.no')}
         onClick={() => handleFormSubmit(false)}
       ></Button>
