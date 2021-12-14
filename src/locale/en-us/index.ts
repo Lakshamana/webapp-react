@@ -158,6 +158,9 @@ const EN_US = {
         most_recent: 'Most Recents',
         popular: 'Popular',
       },
+      channels: {
+        title: 'Channels'
+      },
       collection: {
         action: 'Action',
         drama: 'Drama',

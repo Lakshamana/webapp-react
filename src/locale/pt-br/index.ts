@@ -159,6 +159,9 @@ const PT_BR = {
         most_recent: 'Mais Recentes',
         popular: 'Popular',
       },
+      channels: {
+        title: 'Canais'
+      },
       collection: {
         action: 'Ação',
         drama: 'Drama',
