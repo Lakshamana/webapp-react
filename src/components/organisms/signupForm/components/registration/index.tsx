@@ -69,8 +69,8 @@ const RegistrationForm = ({
         {t('signup.registration.subtitle')}
       </Text>
       <Flex gridGap={7} marginY={5} justifyContent={'center'}>
-        <SocialSigninButton type={'facebook'}></SocialSigninButton>
-        <SocialSigninButton type={'google'}></SocialSigninButton>
+        <SocialSigninButton onClick={() => {}} kind={'google'}></SocialSigninButton>
+        <SocialSigninButton onClick={() => {}} kind={'facebook'}></SocialSigninButton>
       </Flex>
       <Text
         fontSize={16}
