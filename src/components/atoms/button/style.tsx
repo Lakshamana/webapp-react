@@ -8,7 +8,7 @@ export const ButtonStyled: any = styled(Button)<Props>`
   transition: background 0.4s;
   display: flex;
   align-items: center;
-
+  
   &:focus {
     box-shadow: none;
   }
@@ -22,9 +22,10 @@ export const ButtonStyled: any = styled(Button)<Props>`
     variants: {
       solid: {
         color: 'white',
+        boxShadow: '8px 8px 25px rgba(0, 0, 0, 0.15)',
         bg: (theme) => `${theme.colors.brand.primary[theme.colorMode]}`,
         '&:hover': {
-          opacity: '0.9',
+          opacity: '0.95',
           bg: (theme) => `${theme.colors.brand.primary[theme.colorMode]}`,
         },
         '&:disabled': {
@@ -42,14 +43,14 @@ export const ButtonStyled: any = styled(Button)<Props>`
         borderColor: (theme) =>
           `${theme.colors.brand.primary[theme.colorMode]}`,
         '&:hover': {
-          opacity: '0.9',
+          opacity: '0.95',
           background: 'none',
         },
         '&:disabled': {
           background: 'none',
           color: '#a4a4a4',
           borderColor: '#a4a4a4',
-          opacity: '0.9',
+          opacity: '0.95',
 
           '&:hover': {
             color: '#a4a4a4',
