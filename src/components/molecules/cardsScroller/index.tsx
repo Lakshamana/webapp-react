@@ -5,7 +5,7 @@ import { SWIPPER_PARAMS } from "./settings"
 import { SwiperStyled } from "./style"
 import { Content } from "./style"
 import "swiper/swiper-bundle.min.css"
-import { RANDOM_ID } from "utils"
+import { RANDOM_ID } from "helpers"
 
 SwiperCore.use([Navigation, Pagination])
 
