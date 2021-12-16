@@ -75,7 +75,7 @@ const VideoPostViewPage = () => {
                   />
                 </Flex>
 
-                <Flex marginTop={pxToRem(20)}>
+                <Flex marginTop={pxToRem(40)}>
                   {video?.comments.map((comment) => (
                     <Comment
                       userName={comment.userName}
