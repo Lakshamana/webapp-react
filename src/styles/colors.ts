@@ -83,12 +83,20 @@ export const colors = {
       bg: '#e2f8fe',
     },
   },
+  skeleton: {
+    initial: {
+      light: '#d8d3d3',
+      dark: '#212020',
+    },
+    end: {
+      light: '#F1EEEE',
+      dark: '#2F2D2D'
+    }
+  },
   white: '#FFFFFF',
   black: '#000000',
   background: '#313740',
   backgroundLayout: '#20242A',
-  componentBorder: '#E2E9E9',
-  tabsBorder: '#C5C4BF',
   textLight: '#EBE9E1',
   textMedium: '#9E9F9D',
   textDark: '#20242A',
