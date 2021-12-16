@@ -7,7 +7,6 @@ import { Props } from './types'
 
 const Skeleton = ({ children, numberOfCards, ...props }: Props) => {
   const { colorMode } = useThemeStore()
-  console.log(numberOfCards)
   return (
     <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
       {Array.from(Array(numberOfCards).keys()).map(() => {
