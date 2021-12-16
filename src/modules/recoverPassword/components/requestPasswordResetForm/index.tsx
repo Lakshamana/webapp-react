@@ -35,7 +35,7 @@ const RequestPasswordResetForm = ({
     validationSchema,
     validateOnChange: true,
     onSubmit: async () => {
-      handleFormSubmit({ forgotPassword: { ...values } })
+      handleFormSubmit({ payload: { ...values } })
     },
   })
 

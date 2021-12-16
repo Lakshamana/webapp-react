@@ -38,24 +38,24 @@ const SigninForm = ({ handleFormSubmit, isLoading }: Props) => {
       gridGap={3}
     >
       <Input
-        name="signIn.email"
+        name="payload.email"
         onChange={handleChange}
         onBlur={handleBlur}
         type="text"
-        value={values.signIn.email}
+        value={values.payload.email}
         placeholder={t('signin.label.email')}
-        errorMessage={errors.signIn?.email}
-        error={!!errors.signIn?.email && touched.signIn?.email}
+        errorMessage={errors.payload?.email}
+        error={!!errors.payload?.email && touched.payload?.email}
       />
       <Input
         name="signIn.password"
         type={'password'}
         onChange={handleChange}
         onBlur={handleBlur}
-        value={values.signIn.password}
+        value={values.payload.password}
         placeholder={t('signin.label.password')}
-        errorMessage={errors.signIn?.password}
-        error={!!errors.signIn?.password && touched.signIn?.password}
+        errorMessage={errors.payload?.password}
+        error={!!errors.payload?.password && touched.payload?.password}
       />
       <Box w="100%" py={2}>
         <Checkbox label={t('signin.label.save_as_default')}></Checkbox>

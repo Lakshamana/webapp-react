@@ -41,14 +41,14 @@ const RecoverPasswordPage = () => {
   )
 
   const handleRequestResetSubmit = (FormData) => {
-    setUserEmail(FormData.forgotPassword.email)
+    setUserEmail(FormData.payload.email)
     resetPassword({
       variables: { ...FormData },
     })
   }
 
   const handleUpdatePasswordSubmit = (FormData) => {
-    FormData.updatePassword['email'] = userEmail
+    FormData.payload['email'] = userEmail
     updatePassword({
       variables: { ...FormData },
     })
