@@ -1,7 +1,7 @@
-import { SpaceProps, LayoutProps } from "styled-system"
+import { ButtonProps } from '@chakra-ui/button'
 
-export interface SocialSigninButtonProps extends SpaceProps, LayoutProps {
-	type: ButtonType
+export interface SocialSigninButtonProps extends ButtonProps {
+  kind: ButtonType
 }
 
-type ButtonType = "facebook" | "google" | "apple" | "linkedin"
+type ButtonType = 'facebook' | 'google' | 'apple' | 'linkedin'
