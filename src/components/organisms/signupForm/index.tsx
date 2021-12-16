@@ -47,7 +47,7 @@ const SignupForm = () => {
         if (result.createAccount) {
           createAccountGDPR({
             variables: {
-              createAccountGdprLgpd: {
+              payload: {
                 accepted: true,
                 account: result.createAccount.id,
               },
@@ -74,7 +74,7 @@ const SignupForm = () => {
   const handleRegistrationSubmit = (FormData) => {
     verifyMail({
       variables: {
-        verifyMailInput: {
+        payload: {
           email: FormData.createAccount.email,
         },
       },

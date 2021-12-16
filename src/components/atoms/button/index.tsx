@@ -20,9 +20,10 @@ const Button = ({
       {...(width ? { width: width } : { width: '100%' })}
       {...props}
       {...(variant === 'unstyled' ? {border: `2px solid ${props.borderColor}`} : {})}
-      size={size}
+      {...(size ? { size: size } : { height: '56px' })}
+      fontSize={'16px'}
       variant={variant || 'solid'}
-      borderRadius={props.borderRadius || '4px'}
+      borderRadius={props.borderRadius || '6px'}
       textTransform={variant !== 'unstyled' ? 'uppercase' : ''}
       color={props.color || 'white'}
       isLoading={isLoading}

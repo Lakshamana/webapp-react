@@ -10,7 +10,7 @@ import {
   Participants
 } from "components"
 import { pxToRem } from 'styles/metrics'
-import { kFormatter } from 'utils'
+import { kFormatter } from 'helpers'
 import { Title, Subtitle, CommentCount } from './style'
 import { video } from './mock'
 import { useThemeStore } from 'services/stores/theme'

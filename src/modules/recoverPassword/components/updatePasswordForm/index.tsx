@@ -33,7 +33,7 @@ const UpdatePasswordForm = ({
     validationSchema,
     validateOnChange: true,
     onSubmit: async () => {
-      handleFormSubmit({ updatePassword: { ...values } })
+      handleFormSubmit({ payload: { ...values } })
     },
   })
 

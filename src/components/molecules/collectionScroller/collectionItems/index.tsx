@@ -3,7 +3,7 @@ import { CollectionPostCard } from "components"
 import { SwiperSlide } from "swiper/react"
 import { CollectionScrollerProps } from '../types'
 import { CollectionPostProps } from 'components/atoms/collectionPostCards/types';
-import { getItems } from 'utils'
+import { getItems } from 'helpers'
 
 const CollectionItems = ({ items }: CollectionScrollerProps): JSX.Element => {
 	return (
