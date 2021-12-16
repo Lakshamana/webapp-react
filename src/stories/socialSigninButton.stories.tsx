@@ -18,5 +18,5 @@ const Template: ComponentStory<typeof SocialSigninButton> = (args) => <SocialSig
 export const Component = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Component.args = {
-  type: 'apple'
+  kind: 'apple'
 };
