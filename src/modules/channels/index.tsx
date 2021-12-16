@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { SimpleGrid } from '@chakra-ui/react'
 import { QUERY_CHANNELS } from 'services/graphql'
 import { useThemeStore } from 'services/stores/theme'
-import { Container, MainLayout, Text, ChannelCard } from 'components'
+import { Container, MainLayout, Text, ChannelCard, Skeleton } from 'components'
 import { FilterFindAllChannelsInput, ChannelsQuery } from 'generated/graphql'
 import { colors } from 'styles'
 
@@ -29,7 +29,8 @@ const ChannelsPage = () => {
         >
           {t('page.channels.title')}
         </Text>
-        <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 4, 4, 5]} spacing={3}>
+        {loading && <Skeleton numberOfCards={5}></Skeleton>}
+        <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
           {/* TO-DO: Create function to build image URL with default url get by API */}
           {/* TO-DO: waiting for API to define kinf of channel */}
           {data?.channels.map((channel) => (
