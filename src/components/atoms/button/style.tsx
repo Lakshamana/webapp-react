@@ -8,7 +8,8 @@ export const ButtonStyled: any = styled(Button)<Props>`
   transition: background 0.4s;
   display: flex;
   align-items: center;
-  
+  text-transform: uppercase;
+
   &:focus {
     box-shadow: none;
   }
@@ -63,10 +64,26 @@ export const ButtonStyled: any = styled(Button)<Props>`
         '&:hover': {
           background: 'none',
         },
+        '&:disabled': {
+          '&:hover': {
+            opacity: '0.4',
+          },
+        },
       },
       link: {
         color: (theme) => `${theme.colors.brand.accent[theme.colorMode]}`,
         '&:disabled': {
+          '&:hover': {
+            opacity: '0.4',
+          },
+        },
+      },
+      unstyled: {
+        border: '2px',
+        borderStyle: 'solid',
+        textTransform: 'none',
+        '&:disabled': {
+          opacity: '0.9',
           '&:hover': {
             opacity: '0.5'
           },
