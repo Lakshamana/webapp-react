@@ -48,7 +48,7 @@ const SigninForm = ({ handleFormSubmit, isLoading }: Props) => {
         error={!!errors.payload?.email && touched.payload?.email}
       />
       <Input
-        name="signIn.password"
+        name="payload.password"
         type={'password'}
         onChange={handleChange}
         onBlur={handleBlur}
