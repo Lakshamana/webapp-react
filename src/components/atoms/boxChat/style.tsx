@@ -4,6 +4,7 @@ import { color, flexbox, layout } from "styled-system";
 export const BoxChatMain: any = styled.div`
   ${flexbox}
   ${layout}
+  ${color}
   padding: 16px;
   display: flex;
   flex-direction: row;
@@ -11,8 +12,7 @@ export const BoxChatMain: any = styled.div`
 `;
 
 export const AvatarContainer: any = styled.div`
-  height: 285px;
-  margin-right: 24px;
+
 `;
 
 export const MainContainer: any = styled.div`
@@ -21,7 +21,6 @@ export const MainContainer: any = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 285px;
 `;
 
 export const DateContainer: any = styled.div`
