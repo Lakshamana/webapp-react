@@ -47,12 +47,12 @@ const ModalComponent = ({
               >
                 {title}
               </ModalHeader>
-              {closeButton && <ModalCloseButton textColor={colors.generalText[colorMode]} />}
+              {closeButton && <ModalCloseButton autoFocus={false} _focus={{boxShadow: 'none'}} textColor={colors.generalText[colorMode]} />}
               <ModalBody paddingBottom={4} textColor={colors.secondaryText[colorMode]} size={'16px'} textAlign={'center'}>
                 {subtitle}
               </ModalBody>
 
-              <ModalFooter display={'flex'} flexDirection={'column'}>
+              <ModalFooter display={'flex'} flexDirection={'column'} paddingBottom={10}>
                 {actionButton && <Button
                   width={[sizes.loginButtonWidth]}
                   label={actionLabel || t('common.confirm')}
