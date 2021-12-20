@@ -15,6 +15,7 @@ const AlertComponent = ({ ...props }: Props) => {
             position="absolute"
             right="8px"
             top="8px"
+            _focus={{boxShadow: 'none'}}
             onClick={props.onClose}
           />
         )}

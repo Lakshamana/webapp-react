@@ -1,39 +1,19 @@
 import { Icon } from '@iconify/react'
 import { ButtonStyled } from './style'
-import { Props } from './types'
+import { Props, defaultProps } from './types'
 
-const Button = ({
-  label,
-  fontSize,
-  children,
-  iconName,
-  size,
-  variant,
-  isLoading,
-  width,
-  isDisabled,
-  ...props
-}: Props) => {
+const Button = ({ label, children, iconName, size, ...props }: Props) => {
   return (
     <ButtonStyled
-      {...(iconName ? { leftIcon: <Icon icon={`mdi:${iconName}`} /> } : {})}
-      {...(width ? { width: width } : { width: '100%' })}
       {...props}
-      {...(variant === 'unstyled' ? {border: `2px solid ${props.borderColor}`} : {})}
-      {...(size ? { size: size } : { height: '56px' })}
-      fontSize={'16px'}
-      variant={variant || 'solid'}
-      borderRadius={props.borderRadius || '6px'}
-      textTransform={variant !== 'unstyled' ? 'uppercase' : ''}
-      color={props.color || 'white'}
-      isLoading={isLoading}
-      isDisabled={isDisabled}
-      className="ripple"
+      {...(iconName ? { leftIcon: <Icon icon={`mdi:${iconName}`} /> } : {})}
+      {...(size ? { size } : { height: '56px' })}
     >
       {label}
       {children}
     </ButtonStyled>
   )
 }
+Button.defaultProps = defaultProps
 
 export { Button }
