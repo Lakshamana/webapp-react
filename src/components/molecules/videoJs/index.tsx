@@ -16,7 +16,7 @@ import './styles.css'
 require('@silvermine/videojs-chromecast')(videojs);
 require('videojs-vtt-thumbnails');
 
-export const VideoJS = ( props: any ): ReactElement => {
+export const VideoJS = (props: any): ReactElement => {
 
   const videoRef = React.useRef(null);
   const playerRef: any = React.useRef(null);
@@ -57,7 +57,9 @@ export const VideoJS = ( props: any ): ReactElement => {
 
   return (
     <div data-vjs-player>
-      <video ref={videoRef} className={classes} />
+      <video ref={videoRef} className={classes} style={{
+        borderRadius: 0
+      }} />
     </div>
   );
 }
