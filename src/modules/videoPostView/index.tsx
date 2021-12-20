@@ -75,12 +75,13 @@ const VideoPostViewPage = () => {
                   />
                 </Flex>
 
-                <Flex marginTop={pxToRem(75)}>
+                <Flex marginTop={pxToRem(40)}>
                   {video?.comments.map((comment) => (
                     <Comment
                       userName={comment.userName}
                       createdAt={comment.createdAt}
                       comment={comment.comment}
+                      answers={comment.answers}
                     />
                   ))}
                 </Flex>

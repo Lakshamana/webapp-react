@@ -6,12 +6,12 @@ import { Icon } from "@iconify/react";
 const Vote = ({ type, votes }: VoteProps) => (
   <Flex alignItems="center">
     {(type === "upvote" || !type) && (
-      <Icon width={20} height={20} icon="mdi:thumb-up-outline" />
+      <Icon width={18} height={18} icon="mdi:thumb-up-outline" />
     )}
     {type === "downvote" && (
-      <Icon width={20} height={20} icon="mdi:thumb-down-outline" />
+      <Icon width={18} height={18} icon="mdi:thumb-down-outline" />
     )}
-    <Text ml={2} mt={1}>
+    <Text ml={2} mt={1} fontSize={14} fontWeight={"bold"}>
       {votes}
     </Text>
   </Flex>

@@ -34,6 +34,18 @@ export const video = {
       userName: "User name",
       createdAt: "2 min ago",
       comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+      answers: [
+        {
+          userName: "User name",
+          createdAt: "2 min ago",
+          comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+        },
+        {
+          userName: "User name",
+          createdAt: "2 min ago",
+          comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+        }
+      ]
     }
   ],
   relatedVideos: [
