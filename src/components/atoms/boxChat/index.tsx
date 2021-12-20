@@ -27,7 +27,7 @@ const BoxChat = ({
         <AvatarContainer>
           <Avatar icon={avatarUrl} backgroundAvatar="#e1e1e1" colorIcon="#000" />
         </AvatarContainer>
-        <MainContainer width={["80%"]}>
+        <MainContainer>
           <DateContainer>
             <DateText>{date}</DateText>
             <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>

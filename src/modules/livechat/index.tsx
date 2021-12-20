@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Container, MainLayout } from "components";
+import { MainLayout } from "components";
 import { useThemeStore } from "services/stores/theme";
 
 import { Box, Grid } from "@chakra-ui/react"
-import { Flex, Center  } from '@chakra-ui/react'
+import { Flex, Center, GridItem } from '@chakra-ui/react'
 
 
 import { VideoPlayer } from "components/molecules";
@@ -24,33 +24,31 @@ const LiveChat = () => {
 
   return (
     <MainLayout>
-      <Grid templateColumns='auto auto' templateRows={{ base: '81vh auto', lg: 'auto auto'}} templateAreas={["video chat","title title"]}>
-        <Flex  area='video' bg='black'>
-          <Center w='100%'>            
+      <Grid w={'100%'} px={[0, 10]} templateColumns={['auto auto', '80% 20%', '70% 30%']} templateRows={['40vh auto', '50vh auto']} templateAreas={["video chat", "title title"]} justifyContent={'center'}>
+        <Flex area='video' bg={'black'}>
+          <Center w={'100%'}>
             {initialLivestream && initialLivestream?.src && (
               <VideoPlayer {...{ ...initialLivestream }} skin={"facebook-skin"} />
             )}
           </Center>
         </Flex >
-        <Box area='chat' style={{
-          // maxHeight: '70vh'
-        }}>
+        <Box area='chat'>
           <Livechat
             dataChat={optionsState}
             onChangeChat={(e) => setOptionsState(e)}
             title="Livechat"
           />
         </Box>
-        <Box area='title'>
+        <GridItem area='title' mt={10} colSpan={2}>
           <Text fontWeight={700} fontSize={36} {...colorLayout}>
             Quasar Supabase - 01 Configurando projeto
           </Text>
           <Text fontWeight={300} fontSize={16} {...colorLayout}>
-            Neste vídeo mostro uma estratégia interessante para padronizar as cores e estilos dos inputs da aplicação em um único arquivo. Excelente para utilizar em grandes projetos e dar mais escalabilidade e personalização à eles.
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
           </Text>
-        </Box>
+        </GridItem >
       </Grid  >
-    </MainLayout>
+    </MainLayout >
   );
 };
 
