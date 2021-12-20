@@ -2,8 +2,7 @@ import { useState } from "react";
 import { MainLayout } from "components";
 import { useThemeStore } from "services/stores/theme";
 
-import { Box, Grid } from "@chakra-ui/react"
-import { Flex, Center, GridItem } from '@chakra-ui/react'
+import { Box } from "@chakra-ui/react"
 
 
 import { VideoPlayer } from "components/molecules";
@@ -24,30 +23,39 @@ const LiveChat = () => {
 
   return (
     <MainLayout>
-      <Grid w={'100%'} px={[0, 10]} templateColumns={['auto auto', '80% 20%', '70% 30%']} templateRows={['40vh auto', '50vh auto']} templateAreas={["video chat", "title title"]} justifyContent={'center'}>
-        <Flex area='video' bg={'black'}>
-          <Center w={'100%'}>
+      <Box display="flex" flexDirection={'column'}>
+        <Box display="flex" flexDirection={{ ssm: 'column', lg: 'row' }} position={'relative'}>
+          <div style={{
+            position: 'absolute',
+            backgroundColor: 'red',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: 16,
+            padding: 20,
+            zIndex: 100,
+          }}>Ao Vivo</div>
+          <Box w={{ ssm: '100%', md: '70%', xl: '100%' }} my={{ ssm: '2', md: '0' }} h={{ ssm: '300px', lg: '40vh', xl: '80vh' }}>
             {initialLivestream && initialLivestream?.src && (
               <VideoPlayer {...{ ...initialLivestream }} skin={"facebook-skin"} />
             )}
-          </Center>
-        </Flex >
-        <Box area='chat'>
-          <Livechat
-            dataChat={optionsState}
-            onChangeChat={(e) => setOptionsState(e)}
-            title="Livechat"
-          />
+          </Box>
+          <Box w={{ ssm: '100%', md: '30%', xl: '30%' }} h={{ ssm: '60vh', lg: '40vh', xl: '80vh' }}>
+            <Livechat
+              dataChat={optionsState}
+              onChangeChat={(e) => setOptionsState(e)}
+              title="Livechat"
+            />
+          </Box>
         </Box>
-        <GridItem area='title' mt={10} colSpan={2}>
+        <Box px={{ ssm: '4', xl: '12' }} mt={10}>
           <Text fontWeight={700} fontSize={36} {...colorLayout}>
             Quasar Supabase - 01 Configurando projeto
           </Text>
           <Text fontWeight={300} fontSize={16} {...colorLayout}>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
           </Text>
-        </GridItem >
-      </Grid  >
+        </Box >
+      </Box>
     </MainLayout >
   );
 };
