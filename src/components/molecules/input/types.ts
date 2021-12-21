@@ -1,12 +1,13 @@
 export interface Props {
-  name?: string;
-  onChange?: Function;
-  onBlur?: Function;
-  value?: string;
-  type?: string;
-  placeholder?: string;
-  error?: boolean;
-  errorMessage?: string;
-  rightIcon?: "check" | "send" | string;
-  onEnterPress?: Function | undefined;
+  name?: string
+  onChange?: Function
+  onBlur?: Function
+  value?: string
+  type?: string
+  placeholder?: string
+  error?: boolean
+  errorMessage?: string
+  rightIcon?: 'check' | 'send' | string
+  onEnterPress?: Function | undefined
+  inverted?: boolean
 }

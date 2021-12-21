@@ -2,8 +2,6 @@ import styled from 'styled-components'
 import { layout, border, space } from 'styled-system'
 import { PropsStyle } from './types'
 
-// import { componentsColors } from "styles/colors";
-
 const getStyleDisabled = (disabled: boolean | undefined) =>
   disabled && 'opacity: 0.7;'
 
@@ -18,7 +16,13 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${space}
   ${layout}
   ${border}
-  ${({ background }) => `background-color: ${background};`}
+  ${({ theme, inverted }) => {
+    if (!inverted) {
+      return `background-color: ${theme.colors.inputBg[theme.colorMode]};`
+    }
+    const invertedColor = theme.colorMode === 'dark' ? 'light' : 'dark'
+    return `background-color: ${theme.colors.inputBg[invertedColor]};`
+  }}
   color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
   display: flex;
   flex-direction: row;
