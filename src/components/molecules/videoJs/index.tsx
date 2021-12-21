@@ -1,4 +1,6 @@
 import React, { ReactElement } from "react";
+import { Flex } from "@chakra-ui/react";
+import { VideoBadge } from "components/atoms";
 import videojs from "video.js";
 import "video.js/dist/video-js.css"
 
@@ -12,6 +14,7 @@ import './twitter.css'
 import './vsg.css'
 import './youtube.css'
 import './styles.css'
+import { Icon } from "@iconify/react";
 
 require('@silvermine/videojs-chromecast')(videojs);
 require('videojs-vtt-thumbnails');
@@ -56,10 +59,24 @@ export const VideoJS = (props: any): ReactElement => {
   const classes = `video-js ${props?.skin || 'vjs-default-skin'} vjs-big-play-centered`
 
   return (
-    <div data-vjs-player>
-      <video ref={videoRef} className={classes} style={{
-        borderRadius: 0
-      }} />
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      height: '100%'
+    }}>
+      <Flex position={'absolute'} right={0} zIndex={100} flexDirection={'column'}>
+        <VideoBadge kind={'social'}>
+          <Icon icon="bx:bxl-telegram" color="white" width="21" height="24" />
+        </VideoBadge>
+        <VideoBadge kind={'social-end'}>
+          <Icon icon="bx:bxs-share-alt" color="white" width="21" height="24" />
+        </VideoBadge>
+      </Flex>
+      <div data-vjs-player>
+        <video ref={videoRef} className={classes} style={{
+          borderRadius: 0
+        }} />
+      </div>
     </div>
   );
 }

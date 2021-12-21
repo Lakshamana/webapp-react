@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { MainLayout } from "components";
+import { Box, Flex } from "@chakra-ui/react"
 import { useThemeStore } from "services/stores/theme";
 
-import { Box } from "@chakra-ui/react"
-
-
 import { VideoPlayer } from "components/molecules";
-import { Text } from "components/atoms";
+import { Text, VideoBadge } from "components/atoms";
 import { Bar } from "./style";
 import { colors } from 'styles'
 
@@ -25,15 +23,10 @@ const LiveChat = () => {
     <MainLayout>
       <Box display="flex" flexDirection={'column'}>
         <Box display="flex" flexDirection={{ ssm: 'column', lg: 'row' }} position={'relative'}>
-          <div style={{
-            position: 'absolute',
-            backgroundColor: 'red',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 16,
-            padding: 20,
-            zIndex: 100,
-          }}>Ao Vivo</div>
+          <Flex position={'absolute'} zIndex={100} w={'146px'} mt={'16px'} ml={'16px'} justifyContent="space-between">
+            <VideoBadge kind={'live'}>LIVE</VideoBadge>
+            <VideoBadge>999k</VideoBadge>
+          </Flex>
           <Box w={'100%'} my={{ ssm: '2', md: '0' }} h={{ ssm: '300px', lg: '70vh', xl: '80vh' }}>
             {initialLivestream && initialLivestream?.src && (
               <VideoPlayer {...{ ...initialLivestream }} skin={"facebook-skin"} />
