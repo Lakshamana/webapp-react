@@ -4,7 +4,7 @@ import { Link } from 'components'
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'WEBAPP/Alert',
+  title: 'WEBAPP/Link',
   component: Link,
   viewMode: 'docs',
 } as ComponentMeta<typeof Link>
@@ -18,5 +18,6 @@ Component.args = {
   label: 'I am a link',
   to: 'https://develop.fanhero.tv/',
   isExternal: true,
-  defaultColor: true
+  defaultColor: true,
+  children: <></>
 }

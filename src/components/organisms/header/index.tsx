@@ -69,18 +69,17 @@ const HeaderComponent = () => {
         height={[
           sizes.headerMobileHeight,
           sizes.headerMobileHeight,
-          sizes.headerMobileHeight,
+          sizes.headerDesktopHeight,
           sizes.headerDesktopHeight,
         ]}
         width={1}
         alignItems="center"
         justifyContent="space-between"
-        px={[sizes.paddingSm, sizes.paddingMd, sizes.paddingLg]}
       >
         <Container alignItems="center">
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
           <LogoContainer>
-            <Logo {...{ colorMode }} />
+            <Logo {...{ colorMode }}/>
           </LogoContainer>
           {!state.openSearch ? (
             <ChannelSelector

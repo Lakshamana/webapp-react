@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { Box, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { Button, Input, Checkbox } from 'components'
@@ -8,7 +7,7 @@ import { useFormik } from 'formik'
 import { initialValues } from './settings'
 import { sizes } from 'styles'
 
-const SigninForm = ({ handleFormSubmit }: Props) => {
+const SigninForm = ({ handleFormSubmit, isLoading }: Props) => {
   const { t } = useTranslation()
 
   const {
@@ -25,7 +24,7 @@ const SigninForm = ({ handleFormSubmit }: Props) => {
       ...initialValues,
     },
     validationSchema,
-	validateOnChange: true,
+    validateOnChange: true,
     onSubmit: async () => {
       handleFormSubmit({ ...values })
     },
@@ -39,35 +38,35 @@ const SigninForm = ({ handleFormSubmit }: Props) => {
       gridGap={3}
     >
       <Input
-        name="signIn.email"
+        name="payload.email"
         onChange={handleChange}
         onBlur={handleBlur}
         type="text"
-        value={values.signIn.email}
+        value={values.payload.email}
         placeholder={t('signin.label.email')}
-        errorMessage={errors.signIn?.email}
-        error={!!errors.signIn?.email && touched.signIn?.email}
+        errorMessage={errors.payload?.email}
+        error={!!errors.payload?.email && touched.payload?.email}
       />
       <Input
-        name="signIn.password"
+        name="payload.password"
         type={'password'}
         onChange={handleChange}
         onBlur={handleBlur}
-        value={values.signIn.password}
+        value={values.payload.password}
         placeholder={t('signin.label.password')}
-        errorMessage={errors.signIn?.password}
-        error={!!errors.signIn?.password && touched.signIn?.password}
+        errorMessage={errors.payload?.password}
+        error={!!errors.payload?.password && touched.payload?.password}
       />
       <Box w="100%" py={2}>
         <Checkbox label={t('signin.label.save_as_default')}></Checkbox>
       </Box>
-      {/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
       <Button
-        width={[1, sizes.loginButtonWidth]}
+        width={[sizes.loginButtonWidth]}
         mt={3}
-        type={dirty && isValid ? 'submit' : 'disabled'}
+        isDisabled={!(dirty && isValid)}
         label={t('signin.actions.login')}
-        onClick={handleSubmit}
+        onClick={() => handleSubmit()}
+        isLoading={isLoading}
       ></Button>
     </Flex>
   )

@@ -4,7 +4,7 @@ import { colors } from 'styles'
 import { AccountInformationProps, Information } from './types'
 import { ActionLink, TextWrapper, Label } from '../../styles'
 
-const AccountInformation = ({ data }: AccountInformationProps) => {
+const AccountInformation = ({ data, updateText }: AccountInformationProps) => {
   if (!data?.length) return <></>
 
   return (
@@ -26,7 +26,7 @@ const AccountInformation = ({ data }: AccountInformationProps) => {
             fontSize={12}
             onClick={item?.onClick ? item.onClick : () => {}}
           >
-            UPDATE
+            {updateText}
           </ActionLink>
         </Container>
       ))}

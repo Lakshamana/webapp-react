@@ -7,7 +7,7 @@ import {
   Container,
   Text,
   SocialSigninButton,
-  AlertComponent
+  AlertComponent,
 } from 'components'
 import { useFormik } from 'formik'
 import { initialValues, validationSchema } from './settings'
@@ -19,6 +19,7 @@ const RegistrationForm = ({
   handleFormSubmit,
   dispatchError,
   error,
+  isLoading
 }: RegistrationProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -68,8 +69,8 @@ const RegistrationForm = ({
         {t('signup.registration.subtitle')}
       </Text>
       <Flex gridGap={7} marginY={5} justifyContent={'center'}>
-        <SocialSigninButton type={'facebook'}></SocialSigninButton>
-        <SocialSigninButton type={'google'}></SocialSigninButton>
+        <SocialSigninButton onClick={() => {}} kind={'google'}></SocialSigninButton>
+        <SocialSigninButton onClick={() => {}} kind={'facebook'}></SocialSigninButton>
       </Flex>
       <Text
         fontSize={16}
@@ -136,11 +137,12 @@ const RegistrationForm = ({
         ></Checkbox>
       </Container>
       <Button
-        width={[1, sizes.loginButtonWidth]}
-        marginTop={20}
-        type={dirty && isValid ? 'submit' : 'disabled'}
+        width={[sizes.loginButtonWidth]}
+        marginTop={10}
+        isDisabled={!(dirty && isValid)}
         label={'Sign Up'}
-        onClick={handleSubmit}
+        onClick={() => handleSubmit()}
+        isLoading={isLoading}
       ></Button>
     </Flex>
   )

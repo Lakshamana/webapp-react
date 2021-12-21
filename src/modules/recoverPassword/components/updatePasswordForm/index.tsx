@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
 import { useFormik } from 'formik'
-import { Text, CardContainer, Input, Button, AlertComponent } from 'components'
+import { Text, Card, Input, Button, AlertComponent } from 'components'
 import { sizes, colors } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
 import { Props } from './types'
@@ -11,6 +11,7 @@ const UpdatePasswordForm = ({
   handleFormSubmit,
   dispatchError,
   error,
+  isLoading
 }: Props) => {
   const { t } = useTranslation()
 
@@ -31,14 +32,13 @@ const UpdatePasswordForm = ({
     },
     validationSchema,
     validateOnChange: true,
-    validateOnBlur: false,
     onSubmit: async () => {
-      handleFormSubmit({ updatePassword: { ...values } })
+      handleFormSubmit({ payload: { ...values } })
     },
   })
 
   return (
-    <CardContainer
+    <Card
       paddingX={[30, 60]}
       paddingY={[40, 40]}
       width={[1, sizes.loginCardWidth]}
@@ -95,16 +95,16 @@ const UpdatePasswordForm = ({
           errorMessage={errors.password}
           error={!!errors.password && touched.password}
         />
-        {/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
         <Button
-          width={[1, sizes.loginButtonWidth]}
+          width={[sizes.loginButtonWidth]}
           mt={3}
-          type={dirty && isValid ? 'submit' : 'disabled'}
+          isDisabled={!(dirty && isValid)}
+          isLoading={isLoading}
           label={t('common.send')}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
         ></Button>
       </Flex>
-    </CardContainer>
+    </Card>
   )
 }
 

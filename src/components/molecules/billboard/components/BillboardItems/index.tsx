@@ -4,7 +4,7 @@ import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
 import { useTranslation } from "react-i18next"
 import { Button } from "components"
 import { ActionsList } from "../BillboardActions"
-import { getActions, getItems } from "utils"
+import { getActions, getItems } from "helpers"
 import { Props, BillboardItem } from "../../types"
 import { Params } from "../../settings"
 import {
@@ -68,7 +68,6 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                         borderColor={`${colors.blue['300']}`}
                         iconName={'play'}
                         color={`${colors.white}`}
-                        type="billboard"
                         label={t('page.collection.watch_now')}
                         width={'100%'}
                         height={'100%'}
@@ -80,7 +79,6 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                         borderColor={`${colors.grey['800']}`}
                         iconName={'plus-circle'}
                         color={`${colors.white}`}
-                        type="billboard"
                         label={t('page.collection.my_list')}
                         width={'100%'}
                         height={'100%'}

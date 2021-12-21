@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
 import { useFormik } from 'formik'
-import { Text, CardContainer, Input, Button, AlertComponent } from 'components'
+import { Text, Card, Input, Button, AlertComponent } from 'components'
 import { sizes, colors } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
 import { Props } from './types'
@@ -12,6 +12,7 @@ const RequestPasswordResetForm = ({
   handleFormSubmit,
   dispatchError,
   error,
+  isLoading
 }: Props) => {
   const { t } = useTranslation()
   const history = useHistory()
@@ -34,12 +35,12 @@ const RequestPasswordResetForm = ({
     validationSchema,
     validateOnChange: true,
     onSubmit: async () => {
-      handleFormSubmit({ forgotPassword: { ...values } })
+      handleFormSubmit({ payload: { ...values } })
     },
   })
 
   return (
-    <CardContainer
+    <Card
       paddingX={[30, 60]}
       paddingY={[40, 40]}
       width={[1, sizes.loginCardWidth]}
@@ -84,22 +85,22 @@ const RequestPasswordResetForm = ({
           errorMessage={errors.email}
           error={!!errors.email && touched.email}
         />
-        {/* TO-DO LOADING (LOAD IS NOT DEFINED ON FIGMA) */}
         <Button
-          width={[1, sizes.loginButtonWidth]}
+          width={[sizes.loginButtonWidth]}
           marginTop={2}
-          type={dirty && isValid ? 'submit' : 'disabled'}
+          isDisabled={!(dirty && isValid)}
           label={t('recoverPassword.sendCode')}
-          onClick={handleSubmit}
+          isLoading={isLoading}
+          onClick={() => handleSubmit()}
         ></Button>
         <Button
-          width={[1, sizes.loginButtonWidth]}
-          type={'cancel'}
+          width={[sizes.loginButtonWidth]}
+          variant='ghost'
           label={t('common.cancel')}
           onClick={() => history.push('/login')}
         ></Button>
       </Flex>
-    </CardContainer>
+    </Card>
   )
 }
 

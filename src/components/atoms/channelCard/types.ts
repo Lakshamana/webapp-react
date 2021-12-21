@@ -1,8 +1,6 @@
-export interface Props {}
+import { LayoutProps } from "styled-system";
 
-export interface PropsStyle {}
-
-export interface ChannelType {
+export interface ChannelProps extends LayoutProps {
   id?: string;
   name?: string;
   image: string;
@@ -10,4 +8,5 @@ export interface ChannelType {
   text?: string;
   isGeolocked?: boolean;
   isExclusive?: boolean;
+  onClick?: any;
 }

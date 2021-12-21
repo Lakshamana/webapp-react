@@ -10,12 +10,12 @@
 		"actions": [
 			{
 				"id": "2342342",
-				"bgColor": "#0660F9",
-				"borderColor": "#000000",
+				"bgColor": "#ffffff",
+				"borderColor": "#0000ff",
 				"icon": "play",
 				"label": "Watch Now",
 				"route": "",
-				"textColor": "#FFFFFF"
+				"textColor": "blue"
 			},
 			{
 				"id": "234ssssss2342",

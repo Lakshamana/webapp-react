@@ -3,11 +3,15 @@ import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { MUTATION_SIGNIN } from 'services/graphql'
+import {
+  MUTATION_SIGNIN,
+  MUTATION_SOCIAL_SIGNIN,
+} from 'services/graphql'
+import { Social, SocialSignIn } from 'services/firebase'
 import {
   Text,
   LoginLayout,
-  CardContainer,
+  Card,
   SocialSigninButton,
   SigninForm,
   AlertComponent,
@@ -25,7 +29,7 @@ const LoginPage = () => {
 
   const [error, setError] = useState('')
 
-  const [signIn] = useMutation(MUTATION_SIGNIN, {
+  const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
       if (!result?.signIn) {
         setError(t('common.error.generic_api_error'))
@@ -40,16 +44,48 @@ const LoginPage = () => {
     onError: (error) => setError(`${error}`),
   })
 
+  const [socialSignIn, { loading: SocialLoading }] = useMutation(
+    MUTATION_SOCIAL_SIGNIN,
+    {
+      onCompleted: async (result) => {
+        if (!result?.socialSignIn) {
+          setError(t('common.error.generic_api_error'))
+          return
+        }
+
+        await localStorage.setItem(AUTH_TOKEN, result.socialSignIn.token.accessToken)
+        await localStorage.setItem(USER_ACCOUNT, result.socialSignIn.account.id)
+
+        history.push('/home')
+      },
+      onError: (error) => setError(`${error}`),
+    }
+  )
+
   const handleFormSubmit = (FormData) => {
     signIn({
       variables: { ...FormData },
     })
   }
 
+  const handleSocialSignIn = (kind: Social) => {
+    SocialSignIn(kind)
+      .then((input) => {
+        socialSignIn({
+          variables: {
+            input,
+          },
+        })
+      })
+      .catch((error) => {
+        setError(`${error}`)
+      })
+  }
+
   return (
     <LoginLayout>
       <Container width={1} paddingY={[0, 40]}>
-        <CardContainer
+        <Card
           paddingX={[30, 60]}
           paddingY={[40, 40]}
           width={[1, sizes.loginCardWidth]}
@@ -71,8 +107,14 @@ const LoginPage = () => {
             {t('signin.subtitle')}
           </Text>
           <Flex gridGap={7} marginY={30} justifyContent={'center'}>
-            <SocialSigninButton type={'facebook'}></SocialSigninButton>
-            <SocialSigninButton type={'google'}></SocialSigninButton>
+            <SocialSigninButton
+              onClick={() => handleSocialSignIn('google')}
+              kind={'google'}
+            ></SocialSigninButton>
+            <SocialSigninButton
+              onClick={() => handleSocialSignIn('facebook')}
+              kind={'facebook'}
+            ></SocialSigninButton>
           </Flex>
           <Text
             fontSize={16}
@@ -93,7 +135,10 @@ const LoginPage = () => {
               ></AlertComponent>
             )}
           </>
-          <SigninForm handleFormSubmit={handleFormSubmit}></SigninForm>
+          <SigninForm
+            handleFormSubmit={handleFormSubmit}
+            isLoading={loading || SocialLoading}
+          ></SigninForm>
           <Box textAlign={'center'}>
             <Link
               to={'/recoverPassword'}
@@ -109,7 +154,7 @@ const LoginPage = () => {
             </Text>
             <Link to={'/signup'} label={t('signin.actions.signup_here')} />
           </Flex>
-        </CardContainer>
+        </Card>
       </Container>
     </LoginLayout>
   )

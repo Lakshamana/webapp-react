@@ -25,48 +25,56 @@ const SignupForm = () => {
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>()
 
-  const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL, {
-    onCompleted: async (result) => {
-      if (result.verifyMail.exist)
-        setemailExistsError(t('signup.error.email_exists'))
-    },
-    onError: (error) => {
-      if (error.message === 'exception:ACCOUNT_NOT_FOUND') setActiveStep('LGPD')
-      else setemailExistsError(`${error.message}`)
-    },
-  })
+  const [verifyMail, { loading: verifyMailLoading }] = useMutation(
+    MUTATION_VERIFY_MAIL,
+    {
+      onCompleted: async (result) => {
+        if (result.verifyMail.exist)
+          setemailExistsError(t('signup.error.email_exists'))
+      },
+      onError: (error) => {
+        if (error.message === 'exception:ACCOUNT_NOT_FOUND')
+          setActiveStep('LGPD')
+        else setemailExistsError(`${error.message}`)
+      },
+    }
+  )
 
-  const [createAccount] = useMutation(MUTATION_CREATE_ACCOUNT, {
-    onCompleted: async (result) => {
-      if (result.createAccount) {
-        createAccountGDPR({
-          variables: {
-            createAccountGdprLgpd: {
-              accepted: true,
-              account: result.createAccount.id,
+  const [createAccount, { loading: createAccountLoading }] = useMutation(
+    MUTATION_CREATE_ACCOUNT,
+    {
+      onCompleted: async (result) => {
+        if (result.createAccount) {
+          createAccountGDPR({
+            variables: {
+              payload: {
+                accepted: true,
+                account: result.createAccount.id,
+              },
             },
-          },
-        })
-      }
-    },
-    onError: (error) => {
-      setCreateAccountError(`${error.message}`)
-    },
-  })
+          })
+        }
+      },
+      onError: (error) => {
+        setCreateAccountError(`${error.message}`)
+      },
+    }
+  )
 
-  const [createAccountGDPR] = useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
-    onCompleted: async (result) => {
-      if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
-    },
-    onError: (error) => {
-      setCreateAccountError(`${error.message}`)
-    },
-  })
+  const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
+    useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
+      onCompleted: async (result) => {
+        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+      },
+      onError: (error) => {
+        setCreateAccountError(`${error.message}`)
+      },
+    })
 
   const handleRegistrationSubmit = (FormData) => {
     verifyMail({
       variables: {
-        verifyMailInput: {
+        payload: {
           email: FormData.createAccount.email,
         },
       },
@@ -88,13 +96,19 @@ const SignupForm = () => {
           <RegistrationForm
             handleFormSubmit={handleRegistrationSubmit}
             error={emailExistsError}
+            isLoading={verifyMailLoading}
             dispatchError={() => {
               setemailExistsError('')
             }}
           ></RegistrationForm>
         )
       case 'LGPD':
-        return <GDPRForm handleFormSubmit={handleGDPRSubmit}></GDPRForm>
+        return (
+          <GDPRForm
+            handleFormSubmit={handleGDPRSubmit}
+            isLoading={createAccountGDPRLoading || createAccountLoading}
+          ></GDPRForm>
+        )
       case 'Custom':
         return (
           <AdditionalInformationForm

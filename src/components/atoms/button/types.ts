@@ -1,29 +1,16 @@
-import {
-  ColorProps,
-  SpaceProps,
-  LayoutProps,
-  TypographyProps,
-  BorderProps,
-  VariantArgs,
-} from "styled-system";
+import { ButtonProps } from '@chakra-ui/react'
 
-type ButtonType = "submit" | "reset" | "billboard" | "disabled" | "cancel" | "children" | "outlined"
 
-export interface ButtonProps
-  extends SpaceProps,
-    LayoutProps,
-    TypographyProps,
-    VariantArgs,
-    BorderProps,
-    ColorProps {
-  label?: string;
-  style?: React.CSSProperties;
-  type?: ButtonType;
-  iconName?: string;
-  onClick?: Function;
-  children?: any;
+export interface Props extends ButtonProps {
+  label?: string
+  children?: JSX.Element | JSX.Element[]
+  iconName?: string
 }
 
 export const defaultProps = {
-  type: "submit",
-};
+  variant: 'solid',
+  borderRadius: '6px',
+  color: 'white',
+  fontSize: '16px',
+  width: '100%'
+}

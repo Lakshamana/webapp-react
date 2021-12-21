@@ -10,7 +10,7 @@ import {
   Participants
 } from "components"
 import { pxToRem } from 'styles/metrics'
-import { kFormatter } from 'utils'
+import { kFormatter } from 'helpers'
 import { Title, Subtitle, CommentCount } from './style'
 import { video } from './mock'
 import { useThemeStore } from 'services/stores/theme'
@@ -75,12 +75,13 @@ const VideoPostViewPage = () => {
                   />
                 </Flex>
 
-                <Flex marginTop={pxToRem(75)}>
+                <Flex marginTop={pxToRem(40)}>
                   {video?.comments.map((comment) => (
                     <Comment
                       userName={comment.userName}
                       createdAt={comment.createdAt}
                       comment={comment.comment}
+                      answers={comment.answers}
                     />
                   ))}
                 </Flex>

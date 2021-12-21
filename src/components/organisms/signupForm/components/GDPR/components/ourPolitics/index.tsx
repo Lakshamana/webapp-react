@@ -8,7 +8,7 @@ import { useThemeStore } from 'services/stores/theme'
 import { useFlags } from 'config/firebase/FlagsProvider'
 import { colors, sizes } from 'styles'
 
-const OurPolitics = ({ handleFormSubmit }: ConfirmAgeProps) => {
+const OurPolitics = ({ handleFormSubmit, isLoading }: ConfirmAgeProps) => {
   const history = useHistory()
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -70,18 +70,15 @@ const OurPolitics = ({ handleFormSubmit }: ConfirmAgeProps) => {
         ></Checkbox>
       </Container>
       <Button
-        width={[1, sizes.loginButtonWidth]}
-        paddingLeft={105}
-        paddingRight={105}
-        type={terms ? 'submit' : 'disabled'}
+        width={[sizes.loginButtonWidth]}
+        isDisabled={!terms}
         label={t('signup.actions.register')}
-        onClick={() => (terms ? handleFormSubmit : {})}
+        onClick={() => handleFormSubmit()}
+        isLoading={isLoading}
       ></Button>
       <Button
-        width={[1, sizes.loginButtonWidth]}
-        paddingLeft={105}
-        paddingRight={105}
-        type={'cancel'}
+        width={[sizes.loginButtonWidth]}
+        variant="ghost"
         label={t('signup.actions.cancel')}
         onClick={() => history.push('/login')}
       ></Button>

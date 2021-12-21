@@ -1,4 +1,4 @@
-import { ButtonProps } from 'components/atoms/button/types';
+import { Props as ButtonProps} from 'components/atoms/button/types';
 
 export interface BillboardItem {
     id: string,

@@ -12,7 +12,7 @@ import {
   MyListPage,
   TagPage,
   SearchPage,
-  ChannelList,
+  ChannelsPage,
   FeedPage,
   RecoverPasswordPage,
   VideoPostViewPage
@@ -76,9 +76,10 @@ const ClientRoutes = ({ isAccesible }: any) => (
       fallback={HomePage}
     />
     <ClientRoute
-      isAccesible={isAccesible?.channelList}
-      path="/channelList"
-      component={ChannelList}
+      isAccesible={isAccesible?.channels}
+      path="/channels"
+      component={ChannelsPage}
+      fallback={HomePage}
     />
     <ClientRoute
       isAccesible={isAccesible?.feed}

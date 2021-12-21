@@ -44,7 +44,6 @@ const SimpleTableFooter = ({
       <WrapperPagination my={[2, 2, 0]}>
         <Button
           mx={1}
-          type="children"
           onClick={() => currentPage !== 1 && onChange(currentPage - 1)}
         >
           <Icon width={20} icon="mdi:chevron-left" color={colors.white} />
@@ -77,7 +76,6 @@ const SimpleTableFooter = ({
         )}
         <Button
           mx={1}
-          type="children"
           onClick={() =>
             currentPage !== countPages &&
             countPages > 1 &&

@@ -2,13 +2,13 @@ import { Props, defaultProps } from "./types";
 import { Container } from './style'
 
 
-const CardContainer = ({ children, ...props }: Props) => (
+const Card = ({ children, ...props }: Props) => (
     <Container {...props}>
         {children}
     </Container>
 
 );
 
-CardContainer.defaultProps = defaultProps
+Card.defaultProps = defaultProps
 
-export { CardContainer };
+export { Card };

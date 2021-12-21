@@ -10,7 +10,8 @@ const Input = ({
   value,
   type = "text",
   onChange,
-  onEnterPress = () => { },
+  onBlur,
+  onEnterPress = () => {},
   error,
   errorMessage,
   rightIcon = "",
@@ -28,7 +29,7 @@ const Input = ({
       {...{ onEnterPress }}
     >
       <InputInline
-        {...{ onChange, value, error, placeholder }}
+        {...{ onChange, onBlur, value, error, placeholder }}
         name={name}
         type={showPassword ? "text" : type}
         background={colorMode === "light" ? "#e0e1e1" : "#fff"}

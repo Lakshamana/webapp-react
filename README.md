@@ -11,8 +11,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - [node](https://nodejs.org) `nvm install --lts`
 - [yarn](https://www.npmjs.com/package/yarn?activeTab=versions) `npm i -g yarn`
 
-### Add the necessary env vars
-- Env vars for develop are on .env.example
+### [Important] Add the necessary env vars
+- Env vars for development are on .env.example
 
 ## Available Scripts
 
@@ -45,4 +45,11 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
+```
+yarn storybook
+```
 
+Runs the app storybook in the development mode.\
+Open [http://localhost:6006](http://localhost:6006) to view it in the browser.
+
+The page will reload if you make edits.\

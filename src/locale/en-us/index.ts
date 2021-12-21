@@ -3,7 +3,8 @@ const EN_US = {
     common: {
       or: 'or',
       error: {
-        generic_api_error: "Something went wrong. We are going to fix it. Try again later.",
+        generic_api_error:
+          'Something went wrong. We are going to fix it. Try again later.',
         field_required: 'Field {{field_name}} is required',
         field_must_match: '{{field_name}} must match',
         valid_email: 'Must be a valid email',
@@ -29,11 +30,12 @@ const EN_US = {
       no: 'No',
       close: 'Close',
       send: 'Send',
-      enjoy_your_content: "Enjoy your content",
+      enjoy_your_content: 'Enjoy your content',
       retry: 'Retry',
       access_your_account: 'Access your acount',
       back: 'Back',
-      cancel: 'Cancelar',
+      cancel: 'Cancel',
+      confirm: 'Confirm',
       update: 'Update'
     },
     signin: {
@@ -72,8 +74,9 @@ const EN_US = {
       },
       reconfirm_age: {
         title: 'Did you enter it correctly?',
-        subtitle: "It looks like you aren't old enough to have a {{organization}} account. If you entered the wrong age in error, please update it now. Otherwise you will not be able to continue registration and no data entered will be stored.",
-        under_age: 'I am under {{age}}'
+        subtitle:
+          "It looks like you aren't old enough to have a {{organization}} account. If you entered the wrong age in error, please update it now. Otherwise you will not be able to continue registration and no data entered will be stored.",
+        under_age: 'I am under {{age}}',
       },
       our_politics: {
         title: 'Our Politics',
@@ -98,31 +101,32 @@ const EN_US = {
         back: 'Back',
       },
       error: {
-        email_exists: 'A user with this email address already exists.'
-      }
+        email_exists: 'A user with this email address already exists.',
+      },
     },
     recoverPassword: {
       title: 'Forgot your password? No problem!',
       subtitle: "We'll send to your email a code to reset your password.",
-      sendCode: "Send me a code",
+      sendCode: 'Send me a code',
       label: {
-        code: "Code"
+        code: 'Code',
       },
       success: {
-        title: "Password reset",
-        description: "Your password has been saved and your account has been updated successfully."
+        title: 'Password reset',
+        description:
+          'Your password has been saved and your account has been updated successfully.',
       },
       error: {
         title: 'Something went wrong!',
-        description: 'We are going to fix it. Try again later.'
-      }
+        description: 'We are going to fix it. Try again later.',
+      },
     },
     updatePassword: {
-      title: "A code has been emailed to you",
-      subtitle: "Please, use this code and input a new password",
+      title: 'A code has been emailed to you',
+      subtitle: 'Please, use this code and input a new password',
       label: {
-        updatePassword: "Update password"
-      }
+        updatePassword: 'Update password',
+      },
     },
     header: {
       tabs: {
@@ -154,6 +158,9 @@ const EN_US = {
         most_recent: 'Most Recents',
         popular: 'Popular',
       },
+      channels: {
+        title: 'Channels'
+      },
       collection: {
         action: 'Action',
         drama: 'Drama',
@@ -168,6 +175,7 @@ const EN_US = {
       account: {
         push: 'Push',
         back: 'Back',
+        on: 'on',
         cancel: 'CANCEL',
         delete: 'DELETE',
         update: 'UPDATE',
@@ -180,7 +188,7 @@ const EN_US = {
         phone: 'Phone',
         account_info: 'Your Account Information',
         language_selection: 'Language Selection',
-        delete_account: 'Delete Account',
+        delete_account: 'Delete my Account',
         billing_information: 'Your Billing Information',
         billing_history: 'View Billing History',
         your_subscription: 'Your Subscription',
@@ -188,9 +196,9 @@ const EN_US = {
         monthly_plan: 'ABS Monthly Plan',
         next_billing: 'Next Billing Date',
         last_billing: 'Last Billing Date',
-        pause_subscription: 'Pause Subscription',
+        pause_subscription: 'Pause your Subscription',
         payment_information: 'Your Payment Information',
-        cancel_subscriptions: 'Cancel your subscriptions',
+        cancel_subscriptions: 'Cancel your Subscriptions',
         add_payment: 'Add Payment Method',
         payment_method: 'Payment Method',
       },
