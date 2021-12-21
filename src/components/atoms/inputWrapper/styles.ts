@@ -18,7 +18,7 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${space}
   ${layout}
   ${border}
-  background-color: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
+  ${({ background }) => `background-color: ${background};`}
   color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
   display: flex;
   flex-direction: row;

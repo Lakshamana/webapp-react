@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { color, flexbox, layout } from "styled-system";
+import { breakpoints } from "styles";
 
 export const BoxChatMain: any = styled.div`
   ${flexbox}
   ${layout}
+  ${color}
   padding: 16px;
   display: flex;
   flex-direction: row;
@@ -11,8 +13,9 @@ export const BoxChatMain: any = styled.div`
 `;
 
 export const AvatarContainer: any = styled.div`
-  height: 285px;
-  margin-right: 24px;
+  @media screen and (max-width: ${breakpoints.lg}) {
+    display: none
+  }
 `;
 
 export const MainContainer: any = styled.div`
@@ -21,11 +24,15 @@ export const MainContainer: any = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 285px;
+  @media screen and (min-width: ${breakpoints.lg}) {
+    width: 80%;
+  }
 `;
 
 export const DateContainer: any = styled.div`
-  margin-left: 16px;
+  @media screen and (min-width: ${breakpoints.lg}) {
+    margin-left: 16px;
+  }
 `;
 
 export const DateText: any = styled.div`
@@ -39,8 +46,11 @@ export const BoxContainer: any = styled.div`
   display: flex;
   flex-direction: column;
   ${({ isOwnUser }: any) => `background: ${isOwnUser ? "#0660F9" : "#fff"};`}
-  padding: 16px;
   border-radius: 8px;
+  padding: 12px;
+  @media screen and (min-width: ${breakpoints.lg}) {
+    padding: 16px;
+  }
 `;
 export const NameUserText: any = styled.span`
   ${color}

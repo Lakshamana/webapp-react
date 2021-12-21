@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Props } from "./types";
 
 import { Container } from "components/atoms";
@@ -11,17 +11,17 @@ import {
 const LivechatMolecule = ({
   title = "Live chat",
   dataChat = [],
-  onPressEnter = () => {},
-  onChangeChat = () => {},
-  onCloseChat = () => {},
+  onPressEnter = () => { },
+  onChangeChat = () => { },
+  onCloseChat = () => { },
 }: Props) => {
   const [value, setValue] = useState("");
   const [optionsState, setOptionsState] = useState(dataChat);
 
   return (
-    <Container flex={2} flexDirection={["column"]}>
+    <Container flex={2} width={'100%'} height={'100%'} flexDirection={["column"]} overflowY={'scroll'} justifyContent={'space-between'}>
       <LivechatHeader title={title} onCloseChat={() => onCloseChat()} />
-      <LivechatBody options={optionsState} />
+      <LivechatBody options={optionsState}/>
       <LivechatFooter
         value={value}
         onChange={(e) => setValue(e.target.value)}

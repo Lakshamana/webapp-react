@@ -6,7 +6,7 @@ import { BoxChat } from "components/atoms";
 
 const LivechatBody = ({ options = [] }: Props) => {
   return (
-    <MainChatBody maxHeight={["55vh"]}>
+    <MainChatBody>
       {options.map((e) => (
         <BoxChat
           isOwnUser={e.isOwnUser}

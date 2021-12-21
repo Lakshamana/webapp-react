@@ -1,8 +1,9 @@
-import React, { ReactElement } from "react";
+import { Container } from "@chakra-ui/react";
+import { ReactElement } from "react";
 import { Avatar } from "../avatar";
 import {
-  BoxChatMain,
   AvatarContainer,
+  BoxChatMain,
   MainContainer,
   BoxContainer,
   DateContainer,
@@ -22,22 +23,24 @@ const BoxChat = ({
 }: Props): ReactElement => {
   return (
     <BoxChatMain justifyContent={isOwnUser ? "flex-end" : "flex-start"}>
-      <AvatarContainer>
-        <Avatar icon={avatarUrl} backgroundAvatar="#e1e1e1" colorIcon="#000" />
-      </AvatarContainer>
-      <MainContainer width={["80%", "60%", "40%"]}>
-        <DateContainer>
-          <DateText>{date}</DateText>
-        </DateContainer>
-        <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>
-          <NameUserText color={isOwnUser ? "#fff" : "#444"}>
-            {username}
-          </NameUserText>
-          <MessageText color={isOwnUser ? "#fff" : "#444"}>
-            {message}
-          </MessageText>
-        </BoxContainer>
-      </MainContainer>
+      <Container display={'flex'}>
+        <AvatarContainer>
+          <Avatar icon={avatarUrl} backgroundAvatar="#e1e1e1" colorIcon="#000" />
+        </AvatarContainer>
+        <MainContainer>
+          <DateContainer>
+            <DateText>{date}</DateText>
+            <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>
+              <NameUserText color={isOwnUser ? "#fff" : "#444"}>
+                {username}
+              </NameUserText>
+              <MessageText color={isOwnUser ? "#fff" : "#444"}>
+                {message}
+              </MessageText>
+            </BoxContainer>
+          </DateContainer>
+        </MainContainer>
+      </Container>
     </BoxChatMain>
   );
 };

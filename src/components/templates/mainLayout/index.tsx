@@ -5,7 +5,7 @@ import { Props, defaultProps } from "./types";
 const MainLayout = ({ children, ...props }: Props) => (
   <LayoutContainer flexDirection="column">
     <Header />
-    <ChildContainer pb={30} {...props} >
+    <ChildContainer pb={30} justifyContent={'center'} {...props} >
       {children}
     </ChildContainer>
     <InternalFooter />

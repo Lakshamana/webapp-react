@@ -1,33 +1,39 @@
-import React, { useState } from "react";
-import { Avatar } from "components/atoms";
+import { useState } from "react";
 import {
   LivechatFooterMain,
   IconContainer,
-  IconItem,
   InputContainer,
   AnimatedIcon,
   PopoverIcon,
   Reaction,
 } from "./style";
+import { colors } from 'styles'
 import { Props } from "./types";
 import { Input } from "components/molecules";
 import { availableReactions } from "./settings";
+import { useThemeStore } from "services/stores/theme";
 
 const LivechatFooter = ({
-  onPressIcon = () => {},
+  onPressIcon = () => { },
   value = "",
-  onChange = () => {},
-  onEnter = () => {},
+  onChange = () => { },
+  onEnter = () => { },
 }: Props) => {
   const [show, setShow] = useState(false);
+  const { colorMode } = useThemeStore()
+
+  const colorLayout = {
+    color: colors.generalText[colorMode]
+  }
+
   return (
-    <LivechatFooterMain>
+    <LivechatFooterMain {...{ colorMode }}>
       <IconContainer flex={2} justifyContent="center">
         <AnimatedIcon
           width={32}
           icon="majesticons:emoji-happy-line"
-          color="#fff"
           style={{ cursor: "pointer" }}
+          {...colorLayout}
           onClick={() => {
             setShow(!show);
             onPressIcon();
