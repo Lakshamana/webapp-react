@@ -34,12 +34,12 @@ const LiveChat = () => {
             padding: 20,
             zIndex: 100,
           }}>Ao Vivo</div>
-          <Box w={{ ssm: '100%', md: '70%', xl: '100%' }} my={{ ssm: '2', md: '0' }} h={{ ssm: '300px', lg: '40vh', xl: '80vh' }}>
+          <Box w={'100%'} my={{ ssm: '2', md: '0' }} h={{ ssm: '300px', lg: '70vh', xl: '80vh' }}>
             {initialLivestream && initialLivestream?.src && (
               <VideoPlayer {...{ ...initialLivestream }} skin={"facebook-skin"} />
             )}
           </Box>
-          <Box w={{ ssm: '100%', md: '30%', xl: '30%' }} h={{ ssm: '60vh', lg: '40vh', xl: '80vh' }}>
+          <Box w={{ ssm: '100%', lg: '50%', xl: '30%' }} h={{ ssm: '60vh', lg: '70vh', xl: '80vh' }}>
             <Livechat
               dataChat={optionsState}
               onChangeChat={(e) => setOptionsState(e)}
