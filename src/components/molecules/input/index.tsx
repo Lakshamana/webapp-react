@@ -2,7 +2,6 @@ import { useState } from "react";
 import { InputInline, InputWrapper } from "components/atoms";
 
 import { Props } from "./types";
-import { useThemeStore } from "services/stores/theme";
 
 const Input = ({
   name,
@@ -11,19 +10,18 @@ const Input = ({
   type = "text",
   onChange,
   onBlur,
-  onEnterPress = () => {},
+  onEnterPress = () => { },
   error,
   errorMessage,
   rightIcon = "",
+  inverted = false,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(type !== "password");
-  const { colorMode } = useThemeStore()
 
   return (
     <InputWrapper
       {...{ error, errorMessage, rightIcon, type, name }}
-      background={colorMode === "light" ? "#e0e1e1" : "#fff"}
-      color="white"
+      inverted={inverted}
       placeholderColor="#F2FFF8"
       onChangeShowPassword={setShowPassword}
       {...{ onEnterPress }}
@@ -32,8 +30,7 @@ const Input = ({
         {...{ onChange, onBlur, value, error, placeholder }}
         name={name}
         type={showPassword ? "text" : type}
-        background={colorMode === "light" ? "#e0e1e1" : "#fff"}
-        color="#000"
+        inverted={inverted}
         autocomplete="off"
         placeholderColor="#F2FFF8"
         onKeyDown={(e: any) => {

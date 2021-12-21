@@ -22,8 +22,9 @@ const InputWrapper = ({
   placeholderColor = "",
   rightIcon = "",
   leftIcon = "",
-  onChangeShowPassword = () => {},
-  onEnterPress = () => {},
+  onChangeShowPassword = () => { },
+  onEnterPress = () => { },
+  inverted = false,
   ...props
 }: Props): any => {
   const [showPassword, setShowPassword] = useState(type !== "password");
@@ -108,6 +109,7 @@ const InputWrapper = ({
         width={width || "100%"}
         minHeight={height || 56}
         error={error}
+        inverted={inverted}
         background={background}
         borderRadius={4}
       >
