@@ -1,8 +1,8 @@
-import { TypographyProps, SpaceProps } from 'styled-system'
+type VideoBadgeType = 'default' | 'live' | 'social' | 'social-end';
 
-export interface Props extends TypographyProps, SpaceProps {
+export interface VideoBadgeProps {
   children: any
-  kind?: string
+  kind?: VideoBadgeType
 }
 
 export const defaultProps = {
