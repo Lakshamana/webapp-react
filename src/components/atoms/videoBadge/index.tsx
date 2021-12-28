@@ -1,8 +1,8 @@
-import { Props, defaultProps } from "./types";
+import { VideoBadgeProps, defaultProps } from "./types";
 
 import { Box, Flex } from "@chakra-ui/react";
 
-const VideoBadge = ({ children, kind }: Props) => {
+const VideoBadge = ({ children, kind }: VideoBadgeProps) => {
   const getBadgeStyle = () => {
     switch (kind) {
       case 'social':
