@@ -36,7 +36,7 @@ const PT_BR = {
       back: 'Voltar',
       cancel: 'Cancelar',
       confirm: 'Confirmar',
-      update: 'Atualizar'
+      update: 'Atualizar',
     },
     signin: {
       title: 'Acesse Fanhero agora',
@@ -160,7 +160,7 @@ const PT_BR = {
         popular: 'Popular',
       },
       channels: {
-        title: 'Canais'
+        title: 'Canais',
       },
       collection: {
         action: 'Ação',
@@ -193,7 +193,7 @@ const PT_BR = {
         billing_information: 'Informações de Compra',
         billing_history: 'Ver Histórico de Compra',
         your_subscription: 'Sua Assinatura',
-        manage_subscription: 'Gerencie Assinatura',
+        manage_subscription: 'Gerenciar Assinatura',
         monthly_plan: 'Plano Mensal ABS',
         next_billing: 'Próxima Data de Pagamento',
         last_billing: 'Última Data de Faturamento',
