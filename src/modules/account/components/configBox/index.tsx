@@ -9,6 +9,7 @@ const ConfigBox = ({ children, removeMargin }: ConfigBoxProps) => (
     paddingY={24}
     mt={removeMargin ? '0px' : 3}
     removeShadow
+    reduceBorder
   >
     {children}
   </Card>
