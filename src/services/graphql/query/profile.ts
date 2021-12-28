@@ -8,7 +8,7 @@ export const QUERY_PROFILE = gql`
       phone
       locale
     }
-    account(FindOneParamsDto: { id: $account }) {
+    account(id: $account) {
       username
       display_name
       email

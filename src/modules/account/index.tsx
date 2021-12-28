@@ -72,7 +72,7 @@ const Account = () => {
       >
         <Navbar {...{ colorMode }} text={t('page.account.back')} />
         <ContentBlock
-          mb={3}
+          mb={[3, 3, 3, 4]}
           title={t('page.account.account_info')}
           {...{ colorMode }}
         >
@@ -120,7 +120,7 @@ const Account = () => {
         </ContentBlock>
 
         <ContentBlock
-          mb={3}
+          mb={[3, 3, 3, 4]}
           mt={[3, 3, 3, 0]}
           title={t('page.account.billing_information')}
           action={{
@@ -210,7 +210,7 @@ const Account = () => {
         </ContentBlock>
 
         <ContentBlock
-          mb={3}
+          mb={[3, 3, 3, 4]}
           mt={[3, 3, 3, 0]}
           title={t('page.account.payment_information')}
           action={{
