@@ -11,7 +11,7 @@ export const Container = styled.div<Props>`
 	mix-blend-mode: normal;
   box-shadow: ${({ removeShadow }) =>
     !!removeShadow ? 'none' : '0px 4px 4px rgba(0, 0, 0, 0.25)'};
-  border-radius: ${({ reduceBorder }) => (reduceBorder ? 4 : 8)}px;
+  border-radius: ${({ roundBorder }) => roundBorder}px;
   background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
 
   @media screen and (max-width: ${breakpoints.sm}) {

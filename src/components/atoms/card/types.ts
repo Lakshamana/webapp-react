@@ -13,10 +13,11 @@ export interface Props
   children?: JSX.Element | JSX.Element[]
   backgroundColor?: string
   removeShadow?: boolean
-  reduceBorder?: boolean
+  roundBorder?: number
 }
 
 export const defaultProps = {
   paddingY: 32,
   paddingX: 48,
+  roundBorder: 8,
 }

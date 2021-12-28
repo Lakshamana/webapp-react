@@ -8,8 +8,8 @@ const ConfigBox = ({ children, removeMargin }: ConfigBoxProps) => (
     paddingX={24}
     paddingY={24}
     mt={removeMargin ? '0px' : 3}
+    roundBorder={4}
     removeShadow
-    reduceBorder
   >
     {children}
   </Card>
