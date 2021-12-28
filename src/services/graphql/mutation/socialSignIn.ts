@@ -5,6 +5,11 @@ export const MUTATION_SOCIAL_SIGNIN = gql`
     socialSignIn(input: $input) {
       account {
         id
+        display_name
+        username
+        status {
+          gdpr
+        }
       }
       token {
         accessToken

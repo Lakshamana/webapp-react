@@ -8,6 +8,8 @@ export const MUTATION_SIGNIN = gql`
 			}
 			account {
 				id
+				display_name
+				username
 			}
 		}
 	}
