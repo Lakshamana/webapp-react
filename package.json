@@ -98,6 +98,7 @@
   },
   "devDependencies": {
     "@firebase/app-types": "^0.7.0",
+    "@firebase/auth-types": "^0.11.0",
     "@firebase/remote-config-types": "^0.2.0",
     "@graphql-codegen/cli": "2.2.0",
     "@graphql-codegen/typescript": "2.2.2",
