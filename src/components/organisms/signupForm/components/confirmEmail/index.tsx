@@ -1,13 +1,12 @@
-import { useHistory } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import { useThemeStore } from 'services/stores/theme'
+import { ConfirmEmailProps } from './types'
 import { Button, Text } from 'components'
 import { colors, sizes } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
-import { useTranslation } from 'react-i18next'
 import { ReactComponent as EmailSVG } from 'assets/icons/email.svg'
 
-const ConfirmEmailForm = () => {
-  const history = useHistory()
+const ConfirmEmailForm = ({ onClose }: ConfirmEmailProps) => {
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
 
@@ -33,7 +32,7 @@ const ConfirmEmailForm = () => {
         width={[sizes.loginButtonWidth]}
         variant={'ghost'}
         label={t('common.close')}
-        onClick={() => history.push('/login')}
+        onClick={onClose}
       ></Button>
     </Flex>
   )

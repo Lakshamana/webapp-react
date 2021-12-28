@@ -1,15 +1,13 @@
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { Button, Text, Container, Checkbox, Link } from 'components'
 import { ConfirmAgeProps } from './types'
 import { useThemeStore } from 'services/stores/theme'
-import { useFlags } from 'config/firebase/FlagsProvider'
+import { useFlags } from 'contexts/flags'
 import { colors, sizes } from 'styles'
 
-const OurPolitics = ({ handleFormSubmit, isLoading }: ConfirmAgeProps) => {
-  const history = useHistory()
+const OurPolitics = ({ handleFormSubmit, isLoading, onCancel }: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { ORGANIZATION } = useFlags()
@@ -80,7 +78,7 @@ const OurPolitics = ({ handleFormSubmit, isLoading }: ConfirmAgeProps) => {
         width={[sizes.loginButtonWidth]}
         variant="ghost"
         label={t('signup.actions.cancel')}
-        onClick={() => history.push('/login')}
+        onClick={() => onCancel}
       ></Button>
     </Flex>
   )
