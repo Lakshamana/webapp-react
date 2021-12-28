@@ -1,5 +1,7 @@
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { useFlags } from 'contexts/flags'
+import { useThemeStore } from 'services/stores/theme'
 import {
   Input,
   Checkbox,
@@ -8,21 +10,37 @@ import {
   Text,
   SocialSigninButton,
   AlertComponent,
+  Link,
 } from 'components'
 import { useFormik } from 'formik'
 import { initialValues, validationSchema } from './settings'
 import { RegistrationProps } from './types'
 import { colors, fonts, sizes } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
 
 const RegistrationForm = ({
   handleFormSubmit,
+  handleSocialSignUp,
   dispatchError,
   error,
-  isLoading
+  isLoading,
 }: RegistrationProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { ORGANIZATION } = useFlags()
+
+  const renderCheckboxLabel = () => {
+    return (
+      <>
+        {t('common.accept_all')}
+        <Link
+          paddingX={1}
+          to={ORGANIZATION.TERMS_URL}
+          label={t('common.terms')}
+          isExternal
+        />
+      </>
+    )
+  }
 
   const {
     values,
@@ -69,8 +87,14 @@ const RegistrationForm = ({
         {t('signup.registration.subtitle')}
       </Text>
       <Flex gridGap={7} marginY={5} justifyContent={'center'}>
-        <SocialSigninButton onClick={() => {}} kind={'google'}></SocialSigninButton>
-        <SocialSigninButton onClick={() => {}} kind={'facebook'}></SocialSigninButton>
+        <SocialSigninButton
+          onClick={() => handleSocialSignUp('google')}
+          kind={'google'}
+        ></SocialSigninButton>
+        <SocialSigninButton
+          onClick={() => handleSocialSignUp('facebook')}
+          kind={'facebook'}
+        ></SocialSigninButton>
       </Flex>
       <Text
         fontSize={16}
@@ -133,7 +157,7 @@ const RegistrationForm = ({
           }
           name={'createAccount.terms_of_service'}
           paddingTop={2}
-          label={t('signup.actions.accept_terms')}
+          label={renderCheckboxLabel()}
         ></Checkbox>
       </Container>
       <Button
