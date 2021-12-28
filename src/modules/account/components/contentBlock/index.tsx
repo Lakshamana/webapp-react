@@ -1,7 +1,8 @@
-import { Container } from 'components'
 import { SingleConfiguration } from '..'
 
+import { pxToRem } from 'styles/metrics'
 import { ContentBlockProps } from './types'
+import { ContentContainer } from './styles'
 
 const ContentBlock = ({
   title,
@@ -10,11 +11,12 @@ const ContentBlock = ({
   colorMode,
   ...props
 }: ContentBlockProps) => (
-  <Container width={[1, 1, 1, '32%']} flexDirection="column" {...props}>
+  <ContentContainer width={[1, 1, 1, '49%']} flexDirection="column" {...props}>
     <SingleConfiguration
       fontStyle={{
-        fontWeight: 'bold',
+        fontSize: pxToRem(20),
         marginLeft: '24px',
+        fontWeight: 'bold',
       }}
       text={title}
       {...{
@@ -23,7 +25,7 @@ const ContentBlock = ({
       }}
     />
     {children}
-  </Container>
+  </ContentContainer>
 )
 
 export { ContentBlock }

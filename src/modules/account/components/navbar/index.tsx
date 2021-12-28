@@ -1,7 +1,10 @@
 import { Icon } from '@iconify/react'
 import { Container, Text, Link } from 'components'
-import { colors } from 'styles'
+
 import { NavbarProps } from './types'
+
+import { colors } from 'styles'
+import { pxToRem } from 'styles/metrics'
 import { BackTextBox, WrapperIcon } from '../../styles'
 
 const Navbar = ({ colorMode, text }: NavbarProps) => (
@@ -16,7 +19,11 @@ const Navbar = ({ colorMode, text }: NavbarProps) => (
       </Link>
     </WrapperIcon>
     <BackTextBox ml={2} px={2}>
-      <Text fontWeight="bold" color={colors.generalText[colorMode]}>
+      <Text
+        fontWeight="bold"
+        fontSize={pxToRem(20)}
+        color={colors.generalText[colorMode]}
+      >
         {text}
       </Text>
     </BackTextBox>

@@ -11,7 +11,7 @@ const SingleConfiguration = ({
   colorMode,
   fontStyle = { fontWeight: 500, color: colors.grey['800'] },
 }: SingleConfigurationProps) => (
-  <Container justifyContent="space-between" width={1}>
+  <Container width={1} justifyContent="space-between" alignItems="center">
     <Text {...fontStyle} color={colors.generalText[colorMode]}>
       {text}
     </Text>
