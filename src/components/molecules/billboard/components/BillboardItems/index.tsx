@@ -4,7 +4,7 @@ import SwiperCore, { Autoplay, Pagination, EffectFade } from "swiper"
 import { useTranslation } from "react-i18next"
 import { Button } from "components"
 import { ActionsList } from "../BillboardActions"
-import { getActions, getItems } from "helpers"
+import { getActions, getItems } from "utils"
 import { Props, BillboardItem } from "../../types"
 import { Params } from "../../settings"
 import {

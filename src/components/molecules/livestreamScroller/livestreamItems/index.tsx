@@ -3,7 +3,7 @@ import { SwiperSlide } from "swiper/react"
 import { LivestreamPostCard } from "components"
 import { LiveScrollerProps } from "../types"
 import { LivePostProps } from "components/atoms/livestreamPostCard/types"
-import { getItems } from "helpers"
+import { getItems } from "utils"
 
 const LivestreamItems = ({ items }: LiveScrollerProps): JSX.Element => {
 	return (
