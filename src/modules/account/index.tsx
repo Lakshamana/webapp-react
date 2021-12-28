@@ -15,7 +15,7 @@ import {
   Navbar,
 } from './components'
 
-import { USER_LOCALE, USER_ACCOUNT } from 'config/constants'
+import { USER_LOCALE, ACCOUNT_INFO } from 'config/constants'
 import { QUERY_PROFILE } from 'services/graphql'
 import { colors, sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
@@ -34,7 +34,7 @@ const Account = () => {
 
   const { data: profileData } = useQuery(QUERY_PROFILE, {
     variables: {
-      account: localStorage.getItem(USER_ACCOUNT),
+      account: localStorage.getItem(ACCOUNT_INFO),
     },
   })
 
