@@ -36,7 +36,8 @@ const PT_BR = {
       back: 'Voltar',
       cancel: 'Cancelar',
       confirm: 'Confirmar',
-      update: 'Atualizar'
+      update: 'Atualizar',
+      accept_all: 'Eu aceito todos os'
     },
     signin: {
       title: 'Acesse Fanhero agora',
