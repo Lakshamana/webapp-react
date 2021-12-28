@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import { useHistory } from 'react-router'
+import { useMutation } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import {
   MUTATION_CREATE_ACCOUNT,
   MUTATION_CREATE_ACCOUNT_GDPR,
   MUTATION_VERIFY_MAIL,
+  MUTATION_SOCIAL_SIGNIN,
 } from 'services/graphql'
 import {
   RegistrationForm,
@@ -10,17 +14,22 @@ import {
   ConfirmEmailForm,
   AdditionalInformationForm,
 } from './components'
+import { saveData } from 'services/storage'
+import { SocialSignIn } from 'services/firebase'
+import { AUTH_TOKEN, ACCOUNT_INFO } from 'config/constants'
 import { AlertComponent } from 'components'
-import { useMutation } from '@apollo/client'
-import { useTranslation } from 'react-i18next'
 import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
 
 const SignupForm = () => {
   const { t } = useTranslation()
+  const history = useHistory()
+
   const [activeStep, setActiveStep] = useState<SignUpSteps>('Register')
   const [emailExistsError, setemailExistsError] = useState('')
+  const [socialSignUpError, setSocialSignUpError] = useState('')
   const [createAccountError, setCreateAccountError] = useState('')
+  const [accountID, setAccountID] = useState('')
 
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>()
@@ -37,6 +46,29 @@ const SignupForm = () => {
           setActiveStep('LGPD')
         else setemailExistsError(`${error.message}`)
       },
+    }
+  )
+
+  const [socialSignIn, { loading: SocialLoading }] = useMutation(
+    MUTATION_SOCIAL_SIGNIN,
+    {
+      onCompleted: async (result) => {
+        if (!result?.socialSignIn) {
+          setSocialSignUpError(t('common.error.generic_api_error'))
+          return
+        }
+
+        await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
+        await saveData(ACCOUNT_INFO, result.socialSignIn.account)
+        setAccountID(result.socialSignIn.account.id)
+
+        if (!result?.socialSignIn.account.status.gdpr) {
+          setActiveStep('LGPD')
+        } else {
+          history.push('/home')
+        }
+      },
+      onError: (error) => setSocialSignUpError(`${error}`),
     }
   )
 
@@ -84,9 +116,34 @@ const SignupForm = () => {
   }
 
   const handleGDPRSubmit = () => {
-    createAccount({
-      variables: { ...createAccountData },
-    })
+    if (accountID) {
+      createAccountGDPR({
+        variables: {
+          payload: {
+            accepted: true,
+            account: accountID,
+          },
+        },
+      })
+    } else {
+      createAccount({
+        variables: { ...createAccountData },
+      })
+    }
+  }
+
+  const handleSocialSignUp = (kind) => {
+    SocialSignIn(kind)
+      .then((input) => {
+        socialSignIn({
+          variables: {
+            input,
+          },
+        })
+      })
+      .catch((error) => {
+        setSocialSignUpError(`${error}`)
+      })
   }
 
   const renderStep = () => {
@@ -95,8 +152,9 @@ const SignupForm = () => {
         return (
           <RegistrationForm
             handleFormSubmit={handleRegistrationSubmit}
+            handleSocialSignUp={handleSocialSignUp}
             error={emailExistsError}
-            isLoading={verifyMailLoading}
+            isLoading={verifyMailLoading || SocialLoading}
             dispatchError={() => {
               setemailExistsError('')
             }}
@@ -106,6 +164,7 @@ const SignupForm = () => {
         return (
           <GDPRForm
             handleFormSubmit={handleGDPRSubmit}
+            onCancel={() => history.push('/login')}
             isLoading={createAccountGDPRLoading || createAccountLoading}
           ></GDPRForm>
         )
@@ -118,7 +177,11 @@ const SignupForm = () => {
           ></AdditionalInformationForm>
         )
       case 'ConfirmEmail':
-        return <ConfirmEmailForm></ConfirmEmailForm>
+        return (
+          <ConfirmEmailForm
+            onClose={() => history.push('/login')}
+          ></ConfirmEmailForm>
+        )
     }
   }
 
@@ -128,9 +191,10 @@ const SignupForm = () => {
         <AlertComponent
           marginY={20}
           type={'error'}
-          description={createAccountError}
+          description={createAccountError || socialSignUpError}
           onClose={() => {
             setCreateAccountError('')
+            setSocialSignUpError('')
           }}
         ></AlertComponent>
       )}

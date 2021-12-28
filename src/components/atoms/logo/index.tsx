@@ -2,7 +2,7 @@ import { ReactComponent as FanheroLogo } from './logo.svg'
 import { Props, defaultProps } from './types'
 import { LogoContainer } from './styles'
 import { Image } from '@chakra-ui/react'
-import { useFlags } from 'config/firebase/FlagsProvider'
+import { useFlags } from 'contexts/flags'
 
 const Logo = ({ height, width, ...props }: Props): any => {
   const { ORGANIZATION } = useFlags()

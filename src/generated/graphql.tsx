@@ -97,6 +97,7 @@ export type AccountStatus = {
   active?: Maybe<Scalars['Boolean']>;
   block_perm?: Maybe<Scalars['Boolean']>;
   block_temp?: Maybe<Scalars['DateTime']>;
+  gdpr?: Maybe<Scalars['Boolean']>;
   pending_activation?: Maybe<Scalars['Boolean']>;
 };
 
@@ -683,18 +684,6 @@ export type AdminMediaVideo = {
   width?: Maybe<Scalars['Int']>;
 };
 
-export type AdminMenuTypeSortDirective = {
-  direction?: Maybe<SortDirection>;
-  name: AdminMenuTypeSortEnum;
-};
-
-export enum AdminMenuTypeSortEnum {
-  CreatedAt = 'createdAt',
-  Name = 'name',
-  Route = 'route',
-  Sort = 'sort'
-}
-
 export type AdminMutation = {
   __typename?: 'AdminMutation';
   activateConfiguredDestination?: Maybe<ConfiguredDestination>;
@@ -717,7 +706,6 @@ export type AdminMutation = {
   createImaAd?: Maybe<Ad>;
   createInterstitialAd?: Maybe<Ad>;
   createLayer?: Maybe<Layer>;
-  createMenu?: Maybe<Menu>;
   createOnDemandPost?: Maybe<AdminOnDemandPost>;
   createPhotoPost?: Maybe<AdminPhotoPost>;
   createPoll?: Maybe<AdminPoll>;
@@ -747,7 +735,6 @@ export type AdminMutation = {
   deleteLayer?: Maybe<Layer>;
   deleteLivestream?: Maybe<AdminLivestreamEvent>;
   deleteMedia?: Maybe<AdminMedia>;
-  deleteMenu?: Maybe<Menu>;
   deletePoll?: Maybe<AdminPoll>;
   deletePost?: Maybe<PostCommon>;
   deletePredefinedList?: Maybe<PredefinedList>;
@@ -788,7 +775,6 @@ export type AdminMutation = {
   updateLayer?: Maybe<Layer>;
   updateLivestream?: Maybe<AdminLivestreamEvent>;
   updateMedia?: Maybe<AdminMedia>;
-  updateMenu?: Maybe<Menu>;
   updateOnDemandPost?: Maybe<AdminOnDemandPost>;
   updatePhotoPost?: Maybe<AdminPhotoPost>;
   updatePoll?: Maybe<AdminPoll>;
@@ -903,11 +889,6 @@ export type AdminMutationCreateInterstitialAdArgs = {
 
 export type AdminMutationCreateLayerArgs = {
   layer: CreateLayer;
-};
-
-
-export type AdminMutationCreateMenuArgs = {
-  menu: CreateMenu;
 };
 
 
@@ -1045,11 +1026,6 @@ export type AdminMutationDeleteLivestreamArgs = {
 
 
 export type AdminMutationDeleteMediaArgs = {
-  id: Scalars['String'];
-};
-
-
-export type AdminMutationDeleteMenuArgs = {
   id: Scalars['String'];
 };
 
@@ -1256,12 +1232,6 @@ export type AdminMutationUpdateLivestreamArgs = {
 
 export type AdminMutationUpdateMediaArgs = {
   description: Scalars['String'];
-  id: Scalars['String'];
-};
-
-
-export type AdminMutationUpdateMenuArgs = {
-  changes: UpdateMenu;
   id: Scalars['String'];
 };
 
@@ -1806,8 +1776,6 @@ export type AdminQuery = {
   media?: Maybe<AdminMedia>;
   medias?: Maybe<Array<Maybe<AdminMedia>>>;
   mediasCount?: Maybe<Scalars['Int']>;
-  menu?: Maybe<Menu>;
-  menus?: Maybe<Array<Maybe<Menu>>>;
   order?: Maybe<AdminOrder>;
   orders?: Maybe<Array<Maybe<AdminOrder>>>;
   ordersCount?: Maybe<Scalars['Int']>;
@@ -2070,19 +2038,6 @@ export type AdminQueryMediasArgs = {
 export type AdminQueryMediasCountArgs = {
   filter?: Maybe<MediaFilter>;
   search?: Maybe<Scalars['String']>;
-};
-
-
-export type AdminQueryMenuArgs = {
-  id: Scalars['String'];
-};
-
-
-export type AdminQueryMenusArgs = {
-  filter?: Maybe<MenuFilter>;
-  limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<Maybe<AdminMenuTypeSortDirective>>>;
-  skip?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2672,8 +2627,9 @@ export type AvailableChannel = {
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
+  kind?: Maybe<Scalars['String']>;
   logo?: Maybe<Scalars['JSON']>;
-  menu?: Maybe<Array<Maybe<Menu>>>;
+  menu?: Maybe<Menu>;
   name: Scalars['String'];
   organization: Scalars['ID'];
   status: Scalars['String'];
@@ -3217,6 +3173,7 @@ export type CreateChannelInput = {
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
+  menu: Scalars['ID'];
   name: Scalars['String'];
   status?: Maybe<Scalars['String']>;
 };
@@ -3347,9 +3304,8 @@ export type CreateLayer = {
 export type CreateMenu = {
   icon?: Maybe<Scalars['String']>;
   name: Scalars['String'];
-  parentId?: Maybe<Scalars['String']>;
-  platformExclusive?: Maybe<Platform>;
-  route?: Maybe<Scalars['String']>;
+  parentId?: Maybe<Scalars['ID']>;
+  route: Scalars['String'];
   sort?: Maybe<Scalars['Int']>;
 };
 
@@ -3742,8 +3698,9 @@ export type GeolockedChannel = {
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
+  kind?: Maybe<Scalars['String']>;
   logo?: Maybe<Scalars['JSON']>;
-  menu?: Maybe<Array<Maybe<Menu>>>;
+  menu?: Maybe<Menu>;
   name: Scalars['String'];
   organization: Scalars['ID'];
   status: Scalars['String'];
@@ -4152,48 +4109,19 @@ export type Meeting = {
 
 export type Menu = {
   __typename?: 'Menu';
-  channel?: Maybe<Channel>;
-  children?: Maybe<Array<Maybe<MenuChild>>>;
+  channel?: Maybe<Scalars['String']>;
+  children?: Maybe<Menu>;
+  deleted?: Maybe<Scalars['Boolean']>;
   icon?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  parameters?: Maybe<MenuParameters>;
-  parentId?: Maybe<Scalars['String']>;
+  organization?: Maybe<Scalars['String']>;
+  parameters?: Maybe<Parameters>;
+  parent?: Maybe<Menu>;
+  platformExclusive?: Maybe<PlatformExclusive>;
   route?: Maybe<Scalars['String']>;
-};
-
-export type MenuChild = {
-  __typename?: 'MenuChild';
-  icon?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-  parameters?: Maybe<MenuParameters>;
-  parentId?: Maybe<Scalars['String']>;
-  platformExclusive?: Maybe<Platform>;
-  route?: Maybe<Scalars['String']>;
-};
-
-export type MenuFilter = {
-  /** search for records where is greater than */
-  createdAtGt?: Maybe<Scalars['DateTime']>;
-  /** search for records where is greater than or equal to */
-  createdAtGte?: Maybe<Scalars['DateTime']>;
-  /** search for records where is less than */
-  createdAtLt?: Maybe<Scalars['DateTime']>;
-  /** search for records where is less than or equal to */
-  createdAtLte?: Maybe<Scalars['DateTime']>;
-  icon?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  /** Perform a simple text search similar to String.contains? */
-  nameContains?: Maybe<Scalars['String']>;
-  /** Perform a simple text search similar to !String.contains? */
-  nameNotcontains?: Maybe<Scalars['String']>;
-  platformExclusive?: Maybe<Platform>;
-};
-
-export type MenuParameters = {
-  __typename?: 'MenuParameters';
-  missing?: Maybe<Scalars['String']>;
+  sort?: Maybe<Scalars['Int']>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type MessageAuthor = {
@@ -4246,6 +4174,7 @@ export type Mutation = {
   createCustomField: ResponseCustomFieldsOutput;
   createEmailTemplate: EmailTemplate;
   createGroup: GroupDto;
+  createMenu: Menu;
   createOrderIntent?: Maybe<OrderIntent>;
   createOrganization: ResponseOrganizationOutput;
   createPermission: PermissionDto;
@@ -4254,6 +4183,7 @@ export type Mutation = {
   deactiveAccount: Account;
   deleteComment?: Maybe<Comment>;
   deleteCustomField: ResponseCustomFieldsOutput;
+  deleteMenu: Menu;
   finishRoom?: Maybe<Room>;
   forgetAccount: Account;
   joinBroadcastRoom?: Maybe<BroadcastRoom>;
@@ -4297,6 +4227,7 @@ export type Mutation = {
   updateCustomField: ResponseCustomFieldsOutput;
   updateEmailTemplate: EmailTemplate;
   updateGroup: GroupDto;
+  updateMenu: Menu;
   updateMyAccount: Account;
   updateMyProfile: Profile;
   updateOrganization: ResponseOrganizationOutput;
@@ -4433,6 +4364,11 @@ export type MutationCreateGroupArgs = {
 };
 
 
+export type MutationCreateMenuArgs = {
+  payload: CreateMenu;
+};
+
+
 export type MutationCreateOrderIntentArgs = {
   platform: OrderPlatform;
   productPriceId: Scalars['String'];
@@ -4471,7 +4407,12 @@ export type MutationDeleteCommentArgs = {
 
 
 export type MutationDeleteCustomFieldArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteMenuArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -4481,7 +4422,7 @@ export type MutationFinishRoomArgs = {
 
 
 export type MutationForgetAccountArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -4524,12 +4465,12 @@ export type MutationPinPostArgs = {
 
 
 export type MutationRemoveAccountArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationRemoveAccountGdprLgpdArgs = {
-  account: Scalars['String'];
+  account: Scalars['ID'];
 };
 
 
@@ -4539,7 +4480,7 @@ export type MutationRemoveAccountSessionArgs = {
 
 
 export type MutationRemoveChannelArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -4549,7 +4490,7 @@ export type MutationRemoveCouponArgs = {
 
 
 export type MutationRemoveEmailTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -4559,7 +4500,7 @@ export type MutationRemoveGroupArgs = {
 
 
 export type MutationRemoveOrganizationArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -4650,13 +4591,13 @@ export type MutationUnpinPostArgs = {
 
 
 export type MutationUpdateAccountArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   payload: UpdateAccountInput;
 };
 
 
 export type MutationUpdateAccountGdprLgpdArgs = {
-  account: Scalars['String'];
+  account: Scalars['ID'];
   payload: UpdateAccountGdprLgpdInput;
 };
 
@@ -4668,7 +4609,7 @@ export type MutationUpdateAccountSessionArgs = {
 
 
 export type MutationUpdateChannelArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   payload: UpdateChannelInput;
 };
 
@@ -4680,13 +4621,13 @@ export type MutationUpdateCommentArgs = {
 
 
 export type MutationUpdateCustomFieldArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   payload: UpdateCustomFieldInput;
 };
 
 
 export type MutationUpdateEmailTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   payload: UpdateEmailTemplateDto;
 };
 
@@ -4694,6 +4635,12 @@ export type MutationUpdateEmailTemplateArgs = {
 export type MutationUpdateGroupArgs = {
   id: Scalars['ID'];
   payload: UpdateGroupDto;
+};
+
+
+export type MutationUpdateMenuArgs = {
+  id: Scalars['ID'];
+  payload?: Maybe<UpdateMenu>;
 };
 
 
@@ -4708,7 +4655,7 @@ export type MutationUpdateMyProfileArgs = {
 
 
 export type MutationUpdateOrganizationArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   payload: UpdateOrganizationInput;
 };
 
@@ -5201,6 +5148,12 @@ export type OrganizationSettings = {
   zoho?: Maybe<Scalars['JSON']>;
 };
 
+export type Parameters = {
+  __typename?: 'Parameters';
+  id: Scalars['ID'];
+  missing?: Maybe<Scalars['String']>;
+};
+
 export type PasswordChanged = {
   __typename?: 'PasswordChanged';
   success: Scalars['Boolean'];
@@ -5306,6 +5259,11 @@ export type PhotoPost = PostCommon & {
 export enum Platform {
   Mobile = 'MOBILE',
   Web = 'WEB'
+}
+
+export enum PlatformExclusive {
+  Mobile = 'Mobile',
+  Web = 'Web'
 }
 
 export type Poll = PostCommon & {
@@ -5647,8 +5605,8 @@ export type Profile = {
   account: Scalars['ID'];
   address?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
-  birthday: Scalars['DateTime'];
-  custom_fields: Scalars['JSONObject'];
+  birthday?: Maybe<Scalars['DateTime']>;
+  custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
   /** Id */
   id: Scalars['String'];
@@ -5737,10 +5695,13 @@ export type Query = {
   layersCount?: Maybe<Scalars['Int']>;
   livestream?: Maybe<Livestream>;
   livestreams?: Maybe<Array<Maybe<Livestream>>>;
+  menu: Menu;
+  menus: Array<Menu>;
   order?: Maybe<Order>;
   orders?: Maybe<Array<Maybe<Order>>>;
   ordersByChannel?: Maybe<Array<Maybe<Order>>>;
   organization: ResponseOrganizationOutput;
+  organizationPublicSettings: ResponseOrganizationOutput;
   organizations: Array<ResponseOrganizationOutput>;
   permission: PermissionDto;
   permissions: Array<PermissionDto>;
@@ -5777,12 +5738,12 @@ export type Query = {
 
 
 export type QueryAccountArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryAccountGdprLgpdArgs = {
-  account: Scalars['String'];
+  account: Scalars['ID'];
 };
 
 
@@ -5832,7 +5793,7 @@ export type QueryCategoryArgs = {
 
 
 export type QueryChannelArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -5866,12 +5827,12 @@ export type QueryCouponArgs = {
 
 
 export type QueryCustomFieldArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryEmailTemplateArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -5925,6 +5886,11 @@ export type QueryLivestreamsArgs = {
 };
 
 
+export type QueryMenuArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryOrderArgs = {
   id: Scalars['String'];
 };
@@ -5947,7 +5913,12 @@ export type QueryOrdersByChannelArgs = {
 
 
 export type QueryOrganizationArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
+};
+
+
+export type QueryOrganizationPublicSettingsArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -6904,6 +6875,7 @@ export type UpdateChannelInput = {
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
+  menu?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
 };
@@ -7003,8 +6975,7 @@ export type UpdateLivestream = {
 export type UpdateMenu = {
   icon?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  parentId?: Maybe<Scalars['String']>;
-  platformExclusive?: Maybe<Platform>;
+  parentId?: Maybe<Scalars['ID']>;
   route?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
 };
@@ -7275,7 +7246,7 @@ export type CreateAccountMutationVariables = Exact<{
 export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, tenant_id?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename?: 'AccountStatus', active?: Maybe<boolean>, block_perm?: Maybe<boolean>, block_temp?: Maybe<any>, pending_activation?: Maybe<boolean> }> } };
 
 export type CreateAccountGdprLgpdMutationVariables = Exact<{
-  createAccountGdprLgpd: CreateAccountGdprLgpdInput;
+  payload: CreateAccountGdprLgpdInput;
 }>;
 
 
@@ -7298,7 +7269,7 @@ export type SigninMutationVariables = Exact<{
 }>;
 
 
-export type SigninMutation = { __typename?: 'Mutation', signIn: { __typename?: 'SingIn', token: { __typename?: 'AccessToken', accessToken: string }, account: { __typename?: 'Account', id: string } } };
+export type SigninMutation = { __typename?: 'Mutation', signIn: { __typename?: 'SingIn', token: { __typename?: 'AccessToken', accessToken: string }, account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, username?: Maybe<string> } } };
 
 export type SignOutMutationVariables = Exact<{
   payload: RefreshTokenInput;
@@ -7312,7 +7283,7 @@ export type SocialSignInMutationVariables = Exact<{
 }>;
 
 
-export type SocialSignInMutation = { __typename?: 'Mutation', socialSignIn: { __typename?: 'SingIn', account: { __typename?: 'Account', id: string }, token: { __typename?: 'AccessToken', accessToken: string } } };
+export type SocialSignInMutation = { __typename?: 'Mutation', socialSignIn: { __typename?: 'SingIn', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename?: 'AccountStatus', gdpr?: Maybe<boolean> }> }, token: { __typename?: 'AccessToken', accessToken: string } } };
 
 export type UpdatePasswordMutationVariables = Exact<{
   payload: UpdatePassword;
@@ -7328,12 +7299,40 @@ export type VerifyMailMutationVariables = Exact<{
 
 export type VerifyMailMutation = { __typename?: 'Mutation', verifyMail: { __typename?: 'VerifyMail', exist: boolean } };
 
+export type AccountQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type AccountQuery = { __typename?: 'Query', account: { __typename: 'Account', display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, id: string, last_name?: Maybe<string>, organization?: Maybe<string>, tenant_id?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename: 'AccountStatus', active?: Maybe<boolean>, gdpr?: Maybe<boolean> }> } };
+
 export type ChannelsQueryVariables = Exact<{
   filter: FilterFindAllChannelsInput;
 }>;
 
 
 export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', banner?: Maybe<any>, customization?: Maybe<any>, description: string, entitlements?: Maybe<any>, geofence?: Maybe<any>, id: string, logo?: Maybe<any>, name: string, organization: string, status: string, thumbnail?: Maybe<any> } | { __typename: 'GeolockedChannel', id: string, name: string, customization?: Maybe<any>, thumbnail?: Maybe<any> }> };
+
+export type OrganizationQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type OrganizationQuery = { __typename?: 'Query', organization: { __typename?: 'ResponseOrganizationOutput', id: string } };
+
+export type OrganizationPublicSettingsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationOutput', id: string, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string>, settings?: Maybe<{ __typename?: 'OrganizationSettings', bucket?: Maybe<string>, aws?: Maybe<any> }> } };
+
+export type ProfileQueryVariables = Exact<{
+  account: Scalars['ID'];
+}>;
+
+
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatar?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> } };
 
 
 export const CreateAccountDocument = gql`
@@ -7389,8 +7388,8 @@ export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccount
 export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
 export const CreateAccountGdprLgpdDocument = gql`
-    mutation CreateAccountGdprLgpd($createAccountGdprLgpd: CreateAccountGdprLgpdInput!) {
-  createAccountGdprLgpd(payload: $createAccountGdprLgpd) {
+    mutation CreateAccountGdprLgpd($payload: CreateAccountGdprLgpdInput!) {
+  createAccountGdprLgpd(payload: $payload) {
     id
     accepted
     accepted_at
@@ -7422,7 +7421,7 @@ export type CreateAccountGdprLgpdComponentProps = Omit<ApolloReactComponents.Mut
  * @example
  * const [createAccountGdprLgpdMutation, { data, loading, error }] = useCreateAccountGdprLgpdMutation({
  *   variables: {
- *      createAccountGdprLgpd: // value for 'createAccountGdprLgpd'
+ *      payload: // value for 'payload'
  *   },
  * });
  */
@@ -7520,6 +7519,8 @@ export const SigninDocument = gql`
     }
     account {
       id
+      display_name
+      username
     }
   }
 }
@@ -7598,6 +7599,11 @@ export const SocialSignInDocument = gql`
   socialSignIn(input: $input) {
     account {
       id
+      display_name
+      username
+      status {
+        gdpr
+      }
     }
     token {
       accessToken
@@ -7715,6 +7721,60 @@ export function useVerifyMailMutation(baseOptions?: Apollo.MutationHookOptions<V
 export type VerifyMailMutationHookResult = ReturnType<typeof useVerifyMailMutation>;
 export type VerifyMailMutationResult = Apollo.MutationResult<VerifyMailMutation>;
 export type VerifyMailMutationOptions = Apollo.BaseMutationOptions<VerifyMailMutation, VerifyMailMutationVariables>;
+export const AccountDocument = gql`
+    query Account($id: ID!) {
+  account(id: $id) {
+    display_name
+    email
+    first_name
+    id
+    last_name
+    organization
+    status {
+      active
+      gdpr
+      __typename
+    }
+    tenant_id
+    __typename
+    username
+  }
+}
+    `;
+export type AccountComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<AccountQuery, AccountQueryVariables>, 'query'> & ({ variables: AccountQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const AccountComponent = (props: AccountComponentProps) => (
+      <ApolloReactComponents.Query<AccountQuery, AccountQueryVariables> query={AccountDocument} {...props} />
+    );
+    
+
+/**
+ * __useAccountQuery__
+ *
+ * To run a query within a React component, call `useAccountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAccountQuery(baseOptions: Apollo.QueryHookOptions<AccountQuery, AccountQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AccountQuery, AccountQueryVariables>(AccountDocument, options);
+      }
+export function useAccountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountQuery, AccountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AccountQuery, AccountQueryVariables>(AccountDocument, options);
+        }
+export type AccountQueryHookResult = ReturnType<typeof useAccountQuery>;
+export type AccountLazyQueryHookResult = ReturnType<typeof useAccountLazyQuery>;
+export type AccountQueryResult = Apollo.QueryResult<AccountQuery, AccountQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: FilterFindAllChannelsInput!) {
   channels(filter: $filter) {
@@ -7776,3 +7836,138 @@ export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
 export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
 export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
+export const OrganizationDocument = gql`
+    query Organization($id: ID!) {
+  organization(id: $id) {
+    id
+  }
+}
+    `;
+export type OrganizationComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationQuery, OrganizationQueryVariables>, 'query'> & ({ variables: OrganizationQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const OrganizationComponent = (props: OrganizationComponentProps) => (
+      <ApolloReactComponents.Query<OrganizationQuery, OrganizationQueryVariables> query={OrganizationDocument} {...props} />
+    );
+    
+
+/**
+ * __useOrganizationQuery__
+ *
+ * To run a query within a React component, call `useOrganizationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrganizationQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrganizationQuery(baseOptions: Apollo.QueryHookOptions<OrganizationQuery, OrganizationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrganizationQuery, OrganizationQueryVariables>(OrganizationDocument, options);
+      }
+export function useOrganizationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationQuery, OrganizationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrganizationQuery, OrganizationQueryVariables>(OrganizationDocument, options);
+        }
+export type OrganizationQueryHookResult = ReturnType<typeof useOrganizationQuery>;
+export type OrganizationLazyQueryHookResult = ReturnType<typeof useOrganizationLazyQuery>;
+export type OrganizationQueryResult = Apollo.QueryResult<OrganizationQuery, OrganizationQueryVariables>;
+export const OrganizationPublicSettingsDocument = gql`
+    query OrganizationPublicSettings($id: ID!) {
+  organizationPublicSettings(id: $id) {
+    id
+    status
+    customization
+    settings {
+      bucket
+      aws
+    }
+    avatarCdnBaseUrl
+    audioCdnBaseUrl
+    imageCdnBaseUrl
+  }
+}
+    `;
+export type OrganizationPublicSettingsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>, 'query'> & ({ variables: OrganizationPublicSettingsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const OrganizationPublicSettingsComponent = (props: OrganizationPublicSettingsComponentProps) => (
+      <ApolloReactComponents.Query<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables> query={OrganizationPublicSettingsDocument} {...props} />
+    );
+    
+
+/**
+ * __useOrganizationPublicSettingsQuery__
+ *
+ * To run a query within a React component, call `useOrganizationPublicSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationPublicSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrganizationPublicSettingsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrganizationPublicSettingsQuery(baseOptions: Apollo.QueryHookOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>(OrganizationPublicSettingsDocument, options);
+      }
+export function useOrganizationPublicSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>(OrganizationPublicSettingsDocument, options);
+        }
+export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsQuery>;
+export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
+export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
+export const ProfileDocument = gql`
+    query Profile($account: ID!) {
+  profile(account: $account) {
+    avatar
+    id
+    phone
+    locale
+  }
+}
+    `;
+export type ProfileComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ProfileQuery, ProfileQueryVariables>, 'query'> & ({ variables: ProfileQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const ProfileComponent = (props: ProfileComponentProps) => (
+      <ApolloReactComponents.Query<ProfileQuery, ProfileQueryVariables> query={ProfileDocument} {...props} />
+    );
+    
+
+/**
+ * __useProfileQuery__
+ *
+ * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileQuery({
+ *   variables: {
+ *      account: // value for 'account'
+ *   },
+ * });
+ */
+export function useProfileQuery(baseOptions: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+      }
+export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+        }
+export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
+export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;

@@ -9,3 +9,5 @@ export const defaultProps = {
 	alignItems: "center",
 	padding: 0
 }
+
+export type SignInSteps = 'Login' | 'LGPD' | 'ConfirmEmail' | 'Custom'

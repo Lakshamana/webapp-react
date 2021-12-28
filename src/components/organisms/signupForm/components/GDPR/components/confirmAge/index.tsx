@@ -4,7 +4,7 @@ import { Reconfirm } from './reconfirm'
 import { ConfirmAgeProps } from './types'
 import { ConfirmAgeSteps } from './types'
 
-const ConfirmAgeForm = ({ handleFormSubmit, gdprAge }: ConfirmAgeProps) => {
+const ConfirmAgeForm = ({ handleFormSubmit, onCancel, gdprAge }: ConfirmAgeProps) => {
   const [activeStep, setActiveStep] = useState<ConfirmAgeSteps>('Confirm')
 
   const renderStep = () => {
@@ -21,6 +21,7 @@ const ConfirmAgeForm = ({ handleFormSubmit, gdprAge }: ConfirmAgeProps) => {
         return (
           <Reconfirm
             handleFormSubmit={handleFormSubmit}
+            onCancel={onCancel}
             gdprAge={gdprAge}
           ></Reconfirm>
         )

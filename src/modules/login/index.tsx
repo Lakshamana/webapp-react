@@ -1,33 +1,31 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Box, Flex } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import {
   MUTATION_SIGNIN,
   MUTATION_SOCIAL_SIGNIN,
+  MUTATION_CREATE_ACCOUNT_GDPR,
 } from 'services/graphql'
 import { Social, SocialSignIn } from 'services/firebase'
+import { saveData } from 'services/storage'
 import {
-  Text,
-  LoginLayout,
-  Card,
-  SocialSigninButton,
-  SigninForm,
-  AlertComponent,
-  Link,
-} from 'components'
+  GDPRForm,
+  ConfirmEmailForm,
+} from 'components/organisms/signupForm/components'
+import { LoginLayout, Card, SigninForm } from 'components'
 import { Container } from './styles'
-import { sizes, colors } from 'styles'
-import { AUTH_TOKEN, USER_ACCOUNT } from 'config/constants'
-import { useThemeStore } from 'services/stores/theme'
+import { sizes } from 'styles'
+import { AUTH_TOKEN, ACCOUNT_INFO } from 'config/constants'
+import { SignInSteps } from './types'
 
 const LoginPage = () => {
   const { t } = useTranslation()
   const history = useHistory()
-  const { colorMode } = useThemeStore()
 
   const [error, setError] = useState('')
+  const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
+  const [account, setAccount] = useState('')
 
   const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
@@ -36,8 +34,8 @@ const LoginPage = () => {
         return
       }
 
-      await localStorage.setItem(AUTH_TOKEN, result.signIn.token.accessToken)
-      await localStorage.setItem(USER_ACCOUNT, result.signIn.account.id)
+      await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
+      await saveData(ACCOUNT_INFO, result.signIn.account)
 
       history.push('/home')
     },
@@ -53,14 +51,38 @@ const LoginPage = () => {
           return
         }
 
-        await localStorage.setItem(AUTH_TOKEN, result.socialSignIn.token.accessToken)
-        await localStorage.setItem(USER_ACCOUNT, result.socialSignIn.account.id)
+        await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
+        await saveData(ACCOUNT_INFO, result.socialSignIn.account)
 
-        history.push('/home')
+        if (!result?.socialSignIn.account.status.gdpr) {
+          setActiveStep('LGPD')
+          setAccount(result.socialSignIn.account.id)
+        } else {
+          history.push('/home')
+        }
       },
       onError: (error) => setError(`${error}`),
     }
   )
+
+  const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
+    useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
+      onCompleted: async (result) => {
+        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+      },
+      onError: (error) => {},
+    })
+
+  const handleGDPRSubmit = () => {
+    createAccountGDPR({
+      variables: {
+        payload: {
+          accepted: true,
+          account: account,
+        },
+      },
+    })
+  }
 
   const handleFormSubmit = (FormData) => {
     signIn({
@@ -82,6 +104,37 @@ const LoginPage = () => {
       })
   }
 
+  const renderStep = () => {
+    switch (activeStep) {
+      case 'Login':
+        return (
+          <SigninForm
+            handleFormSubmit={handleFormSubmit}
+            handleSocialSubmit={handleSocialSignIn}
+            dispatchError={() => {
+              setError('')
+            }}
+            isLoading={loading || SocialLoading}
+            error={error}
+          ></SigninForm>
+        )
+      case 'LGPD':
+        return (
+          <GDPRForm
+            handleFormSubmit={handleGDPRSubmit}
+            onCancel={() => setActiveStep('Login')}
+            isLoading={createAccountGDPRLoading}
+          ></GDPRForm>
+        )
+      case 'ConfirmEmail':
+        return (
+          <ConfirmEmailForm
+            onClose={() => setActiveStep('Login')}
+          ></ConfirmEmailForm>
+        )
+    }
+  }
+
   return (
     <LoginLayout>
       <Container width={1} paddingY={[0, 40]}>
@@ -90,70 +143,7 @@ const LoginPage = () => {
           paddingY={[40, 40]}
           width={[1, sizes.loginCardWidth]}
         >
-          <Text
-            fontSize={24}
-            textAlign={'center'}
-            fontWeight={'bolder'}
-            color={colors.generalText[colorMode]}
-          >
-            {t('signin.title')}
-          </Text>
-          <Text
-            fontSize={16}
-            paddingTop={10}
-            textAlign={'center'}
-            color={colors.secondaryText[colorMode]}
-          >
-            {t('signin.subtitle')}
-          </Text>
-          <Flex gridGap={7} marginY={30} justifyContent={'center'}>
-            <SocialSigninButton
-              onClick={() => handleSocialSignIn('google')}
-              kind={'google'}
-            ></SocialSigninButton>
-            <SocialSigninButton
-              onClick={() => handleSocialSignIn('facebook')}
-              kind={'facebook'}
-            ></SocialSigninButton>
-          </Flex>
-          <Text
-            fontSize={16}
-            textAlign={'center'}
-            marginBottom={error ? 15 : 0}
-            color={colors.secondaryText[colorMode]}
-          >
-            {t('common.or')}
-          </Text>
-          <>
-            {!!error && (
-              <AlertComponent
-                type={'error'}
-                description={error}
-                onClose={() => {
-                  setError('')
-                }}
-              ></AlertComponent>
-            )}
-          </>
-          <SigninForm
-            handleFormSubmit={handleFormSubmit}
-            isLoading={loading || SocialLoading}
-          ></SigninForm>
-          <Box textAlign={'center'}>
-            <Link
-              to={'/recoverPassword'}
-              defaultColor
-              label={t('signin.actions.forgot_password')}
-              textTransform={'uppercase'}
-              fontWeight={'bolder'}
-            />
-          </Box>
-          <Flex justifyContent={'center'} flexWrap={'wrap'} mt={10}>
-            <Text color={colors.generalText[colorMode]} paddingRight={1}>
-              {t('signin.label.dont_have_account')}
-            </Text>
-            <Link to={'/signup'} label={t('signin.actions.signup_here')} />
-          </Flex>
+          {renderStep()}
         </Card>
       </Container>
     </LoginLayout>

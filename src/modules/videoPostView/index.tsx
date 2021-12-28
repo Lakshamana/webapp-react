@@ -10,15 +10,13 @@ import {
   Participants
 } from "components"
 import { pxToRem } from 'styles/metrics'
-import { kFormatter } from 'helpers'
+import { kFormatter } from 'utils'
 import { Title, Subtitle, CommentCount } from './style'
 import { video } from './mock'
 import { useThemeStore } from 'services/stores/theme'
-import { useBreakpoint } from 'services/hooks'
 
 const VideoPostViewPage = () => {
   const { colorMode } = useThemeStore()
-  const { isDesktop } = useBreakpoint()
 
   return (
     <MainLayout>
@@ -26,7 +24,7 @@ const VideoPostViewPage = () => {
         <Flex flexDir="column" width={pxToRem(1186)}>
           <VideoPlayer {...video.playerPros} />
 
-          <Flex flexDir="column" paddingX={!isDesktop ? pxToRem(20) : 0}>
+          <Flex flexDir="column" paddingX={pxToRem(20)}>
             <Title>{video.title}</Title>
             <Subtitle>{video.subtitle}</Subtitle>
 
@@ -50,11 +48,11 @@ const VideoPostViewPage = () => {
           >
             <Flex
               width={pxToRem(1186)}
-              paddingX={!isDesktop ? pxToRem(20) : 0}
+              paddingX={pxToRem(20)}
               borderTop="1px solid"
               borderColor={colorMode === 'dark' ? 'grey.800': 'grey.300'}
               mt="-1px"
-              flexDir={isDesktop ? 'row' : 'column'}
+              flexDir={'row'}
             >
               <Flex flex={1} flexDir="column" paddingTop={pxToRem(40)}>
                 <Flex>

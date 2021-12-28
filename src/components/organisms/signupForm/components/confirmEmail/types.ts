@@ -1,4 +1,3 @@
 export interface ConfirmEmailProps {
-    name: string;
-    email: string;
+    onClose: () => void
 }

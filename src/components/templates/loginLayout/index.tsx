@@ -1,7 +1,7 @@
 import { ExternalFooter, ExternalHeader } from 'components'
 import { ChildContainer, LayoutContainer } from './style'
 import { Props, defaultProps } from './types'
-import { useFlags } from 'config/firebase/FlagsProvider'
+import { useFlags } from 'contexts/flags'
 
 const LoginLayout = ({
   children,

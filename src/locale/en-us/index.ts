@@ -36,7 +36,8 @@ const EN_US = {
       back: 'Back',
       cancel: 'Cancel',
       confirm: 'Confirm',
-      update: 'Update'
+      update: 'Update',
+      accept_all: 'I accept all'
     },
     signin: {
       title: 'Access Fanhero now',

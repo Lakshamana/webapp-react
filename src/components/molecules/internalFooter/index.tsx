@@ -1,6 +1,6 @@
 import { Logo, Text, Link } from 'components/atoms'
 import { useTranslation } from 'react-i18next'
-import { useFlags } from 'config/firebase/FlagsProvider'
+import { useFlags } from 'contexts/flags'
 import { BoxFooter, FooterItems, TextFooter } from './style'
 
 const InternalFooter = () => {

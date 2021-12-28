@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { getValue } from 'firebase/remote-config'
 import { fetchAndActivate } from 'firebase/remote-config'
 import * as crypto from 'crypto-js'
-import { firebaseRemoteConfig } from './index'
+import { firebaseRemoteConfig } from 'config/firebase'
+import { LoadingScreen } from 'components'
 import { FlagTypes, defaultProps } from './types'
 
 const FlagsContext = React.createContext({})
@@ -15,27 +16,35 @@ export const useFlags = () => {
 const { REACT_APP_REMOTE_CONFIG_SECRET } = process.env
 const configSecret = Object.freeze(REACT_APP_REMOTE_CONFIG_SECRET)
 
-const FlagsProvider = ({ children }) => {
+export const FlagsProvider = ({ children }) => {
   const [flags, setFlags] = useState<FlagTypes>({ ...defaultProps })
+  const [loading, setLoading] = useState(true)
 
   React.useEffect(() => {
-    // firebaseRemoteConfig.defaultConfig = defaults
     fetchAndActivate(firebaseRemoteConfig)
       .then(() => {
         return getValue(firebaseRemoteConfig, 'configuration_react').asString()
       })
-      .then((remoteFlags) => {
+      .then((remoteFlags: string) => {
         const decryptedEnv = crypto.AES.decrypt(remoteFlags, configSecret)
         const data = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
         const newFlags = {
           ...data,
         }
-        setFlags({ ORGANIZATION: newFlags.ORGANIZATION, CHANNELS: newFlags.CHANNELS })
+        setFlags({
+          ORGANIZATION: newFlags.ORGANIZATION,
+          CHANNELS: newFlags.CHANNELS,
+        })
       })
       .catch((error) => console.error(error))
+      .finally(() => setLoading(false))
   }, [])
 
-  return <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
+  return loading ? (
+    <LoadingScreen />
+  ) : (
+    <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
+  )
 }
 
 export default FlagsProvider

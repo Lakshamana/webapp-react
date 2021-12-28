@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useFlags } from 'config/firebase/FlagsProvider'
+import { useFlags } from 'contexts/flags'
 import { Logo, Text, Container, Link } from 'components/atoms'
 import { BoxFooter, FooterItems, TextFooter } from './style'
 

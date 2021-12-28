@@ -10,6 +10,5 @@ import 'firebase/remote-config'
 export const firebaseApp = initializeApp(FIREBASE_CONFIG)
 
 export const firebaseRemoteConfig = getRemoteConfig()
-firebaseRemoteConfig.settings.fetchTimeoutMillis = 5000
-// Only for development
-firebaseRemoteConfig.settings.minimumFetchIntervalMillis = 5000
+firebaseRemoteConfig.settings.fetchTimeoutMillis = 60000
+firebaseRemoteConfig.settings.minimumFetchIntervalMillis = 1

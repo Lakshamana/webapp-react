@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { StyleContainer } from 'components'
-import { breakpoints } from 'styles'
+import { breakpoints, sizes } from 'styles'
 
 interface PropsSideContainer {
   open: boolean
@@ -8,7 +8,7 @@ interface PropsSideContainer {
 
 export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
   position: absolute;
-  top: 70px;
+  top: ${sizes.headerMobileHeight};
   z-index: 1000;
   overflow: auto;
   height: calc(100% - 70px);
@@ -22,7 +22,8 @@ export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
       : `
       width: 0px;
       transition: ease-in 0.25s;`}
-  @media (min-width: ${breakpoints.lg}) {
+
+  @media (min-width: ${breakpoints.md}) {
     top: 100px;
     height: calc(100% - 100px);
   }

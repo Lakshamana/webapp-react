@@ -3,7 +3,7 @@ import { SimpleGrid } from '@chakra-ui/react'
 import { ChannelCard } from 'components'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
-import { RANDOM_ID } from 'helpers'
+import { RANDOM_ID } from 'utils'
 import { Props } from './types'
 
 const Skeleton = ({ children, numberOfCards, ...props }: Props) => {

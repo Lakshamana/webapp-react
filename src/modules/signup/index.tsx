@@ -23,6 +23,8 @@ const SignupPage = () => {
               {t('signup.registration.already_have_account')}
             </Text>
             <Link
+              fontWeight={'bolder'}
+              textTransform={'uppercase'}
               label={t('signup.actions.signin_here')}
               to={'/login'}
             ></Link>

@@ -3,7 +3,7 @@ import { VideoPostCard } from "components"
 import { SwiperSlide } from "swiper/react"
 import { VideoScrollerProps } from "../types"
 import { VideoPostProps } from "components/atoms/videoPostCards/types"
-import { getItems } from "helpers"
+import { getItems } from "utils"
 
 const OndemandItems = ({ items }: VideoScrollerProps): JSX.Element => {
 	return (
