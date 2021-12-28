@@ -10,11 +10,10 @@ import {
   theme,
   breakpoints as themeBreakpoints,
 } from 'styles'
-import { BreakpointProvider } from 'services/hooks'
-import { AuthProvider } from '../authProvider'
+import { AuthProvider } from 'contexts/auth'
+import { FlagsProvider } from 'contexts/flags'
 import { ThemeProvider } from 'styled-components'
 import { useThemeStore } from 'services/stores/theme'
-import FlagsProvider from 'config/firebase/FlagsProvider'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
 
@@ -41,14 +40,12 @@ const TemplateProvider = ({ children }: any) => {
     >
       <ChakraProvider theme={customTheme}>
         <FlagsProvider>
-          <BreakpointProvider>
-            <Global
-              styles={css`
-                ${globalStyles}
-              `}
-            />
-            <AuthProvider>{children}</AuthProvider>
-          </BreakpointProvider>
+          <Global
+            styles={css`
+              ${globalStyles}
+            `}
+          />
+          <AuthProvider>{children}</AuthProvider>
         </FlagsProvider>
       </ChakraProvider>
     </ThemeProvider>
