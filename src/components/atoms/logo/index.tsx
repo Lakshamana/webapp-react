@@ -1,16 +1,15 @@
 import { ReactComponent as FanheroLogo } from './logo.svg'
-import { Props, defaultProps } from './types'
-import { LogoContainer } from './styles'
 import { Image } from '@chakra-ui/react'
-import { useFlags } from 'contexts/flags'
+import { Props, defaultProps } from './types'
 
-const Logo = ({ height, width, ...props }: Props): any => {
-  const { ORGANIZATION } = useFlags()
-
+const Logo = ({ height, width, src, ...props }: Props): any => {
   return (
-    <LogoContainer {...props}>
-      <Image src={ORGANIZATION.LOGO_IMAGE} {...{ height, width }} ignoreFallback fallback={<FanheroLogo></FanheroLogo>}></Image>
-    </LogoContainer>
+    <Image
+      src={src}
+      {...{ height, width }}
+      {...props}
+      fallback={<FanheroLogo></FanheroLogo>}
+    ></Image>
   )
 }
 
