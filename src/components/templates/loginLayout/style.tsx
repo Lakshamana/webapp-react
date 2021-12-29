@@ -8,7 +8,7 @@ export const ChildContainer = styled(StyleContainer) <Props>`
     align-items: center;
     height: auto;
     min-height: calc(100vh - ${sizes.footerDesktopHeight} - ${sizes.headerDesktopHeight});
-    background: ${(props: Props) => (props.backgroundImage ? `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url(${props.backgroundImage})` : '')} center/cover fixed;
+    background: ${(props: Props) => (`url('${props.backgroundImage}')`)};
     @media screen and (max-width: ${breakpoints.md}) {
       min-height: calc(100vh - ${sizes.footerMobileHeight} - ${sizes.headerMobileHeight});
   }

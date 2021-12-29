@@ -10,6 +10,8 @@ import {
 } from './components'
 
 import { useThemeStore } from 'services/stores/theme'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { useOrganizationStore } from 'services/stores'
 import {
   CHANNELS,
   DEFAULT_USER,
@@ -25,6 +27,17 @@ import { HeaderContainer, LogoContainer } from './styles'
 const HeaderComponent = () => {
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
+
+  const { organization } = useOrganizationStore()
+  const { generateImage } = useThumbor()
+  const org_logo = generateImage(
+    ThumborInstanceTypes.IMAGE,
+    organization?.customization.logo,
+    {
+      size: { height: 80 },
+    }
+  )
+
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     selected: getSelectedTab(pathname),
@@ -79,7 +92,7 @@ const HeaderComponent = () => {
         <Container alignItems="center">
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
           <LogoContainer>
-            <Logo {...{ colorMode }}/>
+            <Logo ignoreFallback src={org_logo} width={180}/>
           </LogoContainer>
           {!state.openSearch ? (
             <ChannelSelector
