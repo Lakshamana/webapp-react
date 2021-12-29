@@ -11,7 +11,7 @@ const EN_US = {
         accept_terms_and_conditions:
           'You must accept the terms and conditions.',
         password_error:
-          'Password must contain min of 8 characteres, one uppercase, one lowercase, one number and one special character',
+          'Password must contain a min of 8 characters, one uppercase, one lowercase, one number and one special character',
       },
       what_is_this: 'What is this?',
       more: 'more',
@@ -80,7 +80,7 @@ const EN_US = {
         under_age: 'I am under {{age}}',
       },
       our_politics: {
-        title: 'Our Politics',
+        title: 'Our Policies',
         description:
           'We want you to know exactly how our app works and how we keep your details recorded. We take the protection of your data very seriously and have updated our Privacy Policy and Terms and Conditions.',
         agree: 'I agree to the',
