@@ -61,6 +61,7 @@ const SearchBar = ({
           onOpen,
           isLazy: true,
           matchWidth: true,
+          gutter: 0,
         }}
         trigger={
           <CustomContainer
