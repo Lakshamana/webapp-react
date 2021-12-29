@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useApolloClient } from '@apollo/client'
 import {
   QUERY_ORGANIZATION_PUBLIC_SETTINGS,
@@ -8,6 +8,7 @@ import { useAuthStore, useOrganizationStore } from 'services/stores'
 import { USER_KEY, ORGANIZATION_INFO, AUTH_TOKEN } from 'config/constants'
 
 import { saveData, getData, clearData } from 'services/storage'
+import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
 
@@ -21,6 +22,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user, setUser } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
+  const [loading, setLoading] = useState(true)
 
   const client = useApolloClient()
 
@@ -35,11 +37,14 @@ export const AuthProvider = ({ children }) => {
   }
 
   const loadOrganization = async () => {
-    if (organization) return
-
+    if (organization) {
+      setLoading(false)
+      return
+    }
     const organizationData = getData(ORGANIZATION_INFO)
     if (organizationData) {
       setOrganization(organizationData)
+      setLoading(false)
       return
     }
     await getOrganization()
@@ -58,10 +63,12 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data.organizationPublicSettings
           saveData(ORGANIZATION_INFO, dataOrganization)
           setOrganization(dataOrganization)
+          setLoading(false)
         }
         resolve(true)
       } catch (error) {
         reject(error)
+        setLoading(false)
       }
     })
   }
@@ -87,7 +94,9 @@ export const AuthProvider = ({ children }) => {
     loadOrganization()
   }, [])
 
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <AuthContext.Provider value={{ signOut, updateUser, signed }}>
       {children}
     </AuthContext.Provider>
