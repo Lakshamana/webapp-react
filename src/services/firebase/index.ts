@@ -5,6 +5,8 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
+  fetchSignInMethodsForEmail,
+  linkWithCredential,
 } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
@@ -34,11 +36,22 @@ onAuthStateChanged(AUTH, (user) => {
 const FB_PROVIDER = new FacebookAuthProvider()
 const GOOGLE_PROVIDER = new GoogleAuthProvider()
 
+function getProvider(kind: string) {
+  switch (kind) {
+    case 'facebook':
+      return FB_PROVIDER
+    case 'google':
+      return GOOGLE_PROVIDER
+    default:
+      throw new Error(`No provider implemented for ${kind}`)
+  }
+}
+
 export const SocialSignIn = (
   kind: Social
 ): Promise<CreateAccountSocialSignInDto> => {
   return new Promise(function (resolve, reject) {
-    const PROVIDER = kind === 'facebook' ? FB_PROVIDER : GOOGLE_PROVIDER
+    const PROVIDER = getProvider(kind)
     signInWithPopup(AUTH, PROVIDER)
       .then((result) => {
         const credential =
@@ -57,13 +70,34 @@ export const SocialSignIn = (
         }
       })
       .catch((error) => {
-        reject(new Error(`${error.code}: ${error.message}`))
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          const pendingCred = error.credential
+          const email = error.email
+          fetchSignInMethodsForEmail(AUTH, email).then((methods) => {
+            const provider = getProvider(methods[0])
+            signInWithPopup(AUTH, provider).then((result) => {
+              linkWithCredential(result.user, pendingCred).then((usercred) => {
+                const credential =
+                  kind === 'facebook'
+                    ? FacebookAuthProvider.credentialFromResult(usercred)
+                    : GoogleAuthProvider.credentialFromResult(usercred)
+                if (credential) {
+                  const { email, refreshToken } = usercred.user
+                  const { accessToken, providerId } = credential
+                  resolve({
+                    accessToken: accessToken || '',
+                    authProvider: providerId,
+                    email: email || '',
+                    refreshToken: refreshToken,
+                  })
+                }
+              })
+            })
+          })
+        }
       })
   })
 }
-
-// TO-DO: Firebase Auth Error handler
-const handleErrors = (code) => {}
 
 export const signOutSocial = () => {
   signOut(AUTH)
