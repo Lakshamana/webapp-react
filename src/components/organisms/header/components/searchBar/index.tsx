@@ -101,7 +101,11 @@ const SearchBar = ({
         }
       >
         <Container>
-          <SearchPopover {...{ data }} />
+          <SearchPopover
+            data={data}
+            textColor={colorSchema.primary}
+            section={colorSchema.section}
+          />
         </Container>
       </Popover>
       <SearchContainer px={[0, 0, 0, 3]} onClick={onOpen} {...{ open }}>

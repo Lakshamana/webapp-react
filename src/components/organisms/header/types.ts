@@ -69,6 +69,8 @@ export interface PropsChannelSelected {
 
 export interface PropsSearchPopover {
   data: Array<SearchResults>;
+  textColor?: string;
+  section?: string;
 }
 
 export interface PropsChannelSelector extends SpaceProps, PropsChannels {

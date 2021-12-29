@@ -99,7 +99,7 @@ export const colors = {
       dark:  '#222222'
     },
     section: {
-      light: '#DCDCDC',
+      light: '#E2E9E9',
       dark:  '#000000'
     }
   },
