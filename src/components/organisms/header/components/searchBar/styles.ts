@@ -35,10 +35,8 @@ export const CustomContainer = styled(StyleContainer)<PropsContainer>`
       ? css`
           width: auto;
           background-color: ${background};
-          transition: ease-in 0.25s;
         `
       : css`
-          transition: ease-in 0.25s;
           width: 0px;
           svg {
             width: 0px;
