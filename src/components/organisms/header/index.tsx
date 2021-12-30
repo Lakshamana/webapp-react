@@ -21,10 +21,11 @@ import {
 } from './settings'
 import { Channel, defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
-import { sizes } from 'styles'
+import { sizes, breakpoints } from 'styles'
 import { HeaderContainer, LogoContainer } from './styles'
 
 const HeaderComponent = () => {
+  const  [ visibleMobile, setVisibleMobile ] = useState('flex');
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
 
@@ -59,6 +60,7 @@ const HeaderComponent = () => {
   }
 
   const handleCloseSearch = () => {
+    setVisibleMobile('flex')
     dispatch({ type: 'search', value: '' })
     dispatch({ type: 'openSearch', value: false })
   }
@@ -67,7 +69,21 @@ const HeaderComponent = () => {
     dispatch({ type: 'openMenu', value: !state.openMenu })
 
   const handleOpenSearch = () => {
+    if(isMobile())  setVisibleMobile('none');
     dispatch({ type: 'openSearch', value: true })
+  }
+
+  const isMobile = () => {
+    const { width } = getWindowDimensions();
+    return width < Number(breakpoints.lg.replace('px',''))
+  }
+
+  const getWindowDimensions = () => {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
   }
 
   return (
@@ -89,7 +105,7 @@ const HeaderComponent = () => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Container alignItems="center">
+        <Container alignItems="center" display={visibleMobile}>
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
           <LogoContainer>
             <Logo ignoreFallback src={org_logo} width={180}/>
