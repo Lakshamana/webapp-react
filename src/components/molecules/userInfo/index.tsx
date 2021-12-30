@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
-
-
+import { useAuth } from 'contexts/auth'
 import { Container, Text, Popover } from 'components'
 import { PopoverOption } from './components'
 
@@ -25,6 +24,7 @@ const UserInfo = ({
   const [open, setOpen] = useState(false)
   const history = useHistory()
   const { t } = useTranslation()
+  const { signOut } = useAuth()
 
   return (
     <Container display={['none', 'none', 'none', 'flex']}>
@@ -34,7 +34,7 @@ const UserInfo = ({
           onOpen: () => setOpen(true),
           onClose: () => setOpen(false),
         }}
-        background={colors.headerUserPopoverBg[colorMode]}
+        background={colors.cardBg[colorMode]}
         trigger={
           <button>
             <UserContainer px={1} {...{ delimited }}>
@@ -54,14 +54,14 @@ const UserInfo = ({
           <OptionsList>
             <PopoverOption
               color={colors.generalText[colorMode]}
-              text={t('header.userPopover.edit_profile')}
+              text={t('header.userPopover.settings')}
               onClick={() => history.push('/account')}
               icon={
                 <Icon
                   width={18}
                   height={18}
-                  icon="mdi:account"
                   color={colors.generalText[colorMode]}
+                  icon="mdi:cog-outline"
                 />
               }
             />
@@ -93,20 +93,7 @@ const UserInfo = ({
             />
             <PopoverOption
               color={colors.generalText[colorMode]}
-              text={t('header.userPopover.settings')}
-              onClick={() => {}}
-              icon={
-                <Icon
-                  width={18}
-                  height={18}
-                  color={colors.generalText[colorMode]}
-                  icon="mdi:cog-outline"
-                />
-              }
-            />
-            <PopoverOption
-              color={colors.generalText[colorMode]}
-              onClick={() => {}}
+              onClick={signOut}
               text={t('header.userPopover.exit')}
               icon={
                 <Icon
