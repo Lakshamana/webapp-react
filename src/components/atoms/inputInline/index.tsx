@@ -11,7 +11,7 @@ const InputInline = ({
   error = false,
   errorMessage = "",
   onKeyDown = () => { },
-  background = "",
+  background = "#444444",
   color = "",
   placeholderColor = "",
   inverted = false,

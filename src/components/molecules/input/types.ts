@@ -10,4 +10,6 @@ export interface Props {
   rightIcon?: 'check' | 'send' | string
   onEnterPress?: Function | undefined
   inverted?: boolean
+  color?: string
+  background?: string
 }

@@ -15,6 +15,8 @@ const Input = ({
   errorMessage,
   rightIcon = "",
   inverted = false,
+  color,
+  background,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(type !== "password");
 
@@ -27,7 +29,7 @@ const Input = ({
       {...{ onEnterPress }}
     >
       <InputInline
-        {...{ onChange, onBlur, value, error, placeholder }}
+        {...{ onChange, onBlur, value, error, placeholder, color, background }}
         name={name}
         type={showPassword ? "text" : type}
         inverted={inverted}
