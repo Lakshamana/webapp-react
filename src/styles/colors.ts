@@ -93,6 +93,16 @@ export const colors = {
       dark: '#2F2D2D'
     }
   },
+  search: {
+    result: {
+      light: '#FFFFFF',
+      dark:  '#222222'
+    },
+    section: {
+      light: '#E2E9E9',
+      dark:  '#000000'
+    }
+  },
   white: '#FFFFFF',
   black: '#000000',
   background: '#313740',

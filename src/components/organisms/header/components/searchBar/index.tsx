@@ -22,16 +22,16 @@ const SearchBar = ({
     () =>
       colorMode === "light"
         ? {
-            primary: "#000",
-            background: "white",
-            results: colors.background,
-            section: colors.backgroundLayout,
+            primary: colors.generalText.light,
+            background: colors.search.result.light,
+            results: colors.search.result.light,
+            section: colors.search.section.light,
           }
         : {
-            primary: "#fff",
-            results: colors.background,
-            section: colors.backgroundLayout,
-            background: colors.backgroundLayout,
+            primary: colors.generalText.dark,
+            background: colors.search.result.dark,
+            results: colors.search.result.dark,
+            section: colors.search.section.dark,
           },
     [colorMode]
   );
@@ -61,12 +61,13 @@ const SearchBar = ({
           onOpen,
           isLazy: true,
           matchWidth: true,
+          gutter: 0,
         }}
         trigger={
           <CustomContainer
             px={[3]}
             flex={1}
-            background={colorSchema.section}
+            background={colorSchema.results}
             height={["70px", "70px", "70px", "100px"]}
             ref={triggerRef}
             {...{ open }}
@@ -83,9 +84,10 @@ const SearchBar = ({
             <InputInline
               height="inherit"
               placeholder="Search"
-              background="transparent"
+              background={colorSchema.results}
               value={search}
               onChange={onSearch}
+              color={colorSchema.primary}
             />
             <Container ml={2} onClick={onClose}>
               <Icon
@@ -99,7 +101,11 @@ const SearchBar = ({
         }
       >
         <Container>
-          <SearchPopover {...{ data }} />
+          <SearchPopover
+            data={data}
+            textColor={colorSchema.primary}
+            section={colorSchema.section}
+          />
         </Container>
       </Popover>
       <SearchContainer px={[0, 0, 0, 3]} onClick={onOpen} {...{ open }}>

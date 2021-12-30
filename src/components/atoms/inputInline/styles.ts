@@ -27,26 +27,19 @@ export const Input: any = styled.input<PropsStyle>`
   ${space}
   ${fontSize}
   ${commonStyles}
+  background-color:${ ({ background }) => background };
+  color: ${ ({ color }) => color };
   width: 100%;
   padding-left: 16px;
   font-size: 16px;
   width: 100%;
-  ${({ theme, inverted }) => {
-    if (!inverted) {
-      return `background-color: ${theme.colors.inputBg[theme.colorMode]};`
-    }
-    const invertedColor = theme.colorMode === 'dark' ? 'light' : 'dark'
-    return `background-color: ${theme.colors.inputBg[invertedColor]};`
-  }}
-  ${({ theme, inverted }) => {
-    if (!inverted) {
-      return `color: ${theme.colors.inputText[theme.colorMode]};`
-    }
-    const invertedColor = theme.colorMode === 'dark' ? 'light' : 'dark'
-    return `color: ${theme.colors.inputText[invertedColor]};`
-  }}
   &::placeholder {
+    font-family: Helvetica;
     color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
+    font-weight: 100;
+    font-style: italic;
+    font-size: 18px;
+    opacity: 0.5;
   }
 `
 
