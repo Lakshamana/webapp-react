@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
 import { useFormik } from 'formik'
@@ -11,9 +12,10 @@ const UpdatePasswordForm = ({
   handleFormSubmit,
   dispatchError,
   error,
-  isLoading
+  isLoading,
 }: Props) => {
   const { t } = useTranslation()
+  const history = useHistory()
 
   const { colorMode } = useThemeStore()
 
@@ -102,6 +104,12 @@ const UpdatePasswordForm = ({
           isLoading={isLoading}
           label={t('common.send')}
           onClick={() => handleSubmit()}
+        ></Button>
+        <Button
+          width={[sizes.loginButtonWidth]}
+          variant="ghost"
+          label={t('common.cancel')}
+          onClick={() => history.push('/login')}
         ></Button>
       </Flex>
     </Card>

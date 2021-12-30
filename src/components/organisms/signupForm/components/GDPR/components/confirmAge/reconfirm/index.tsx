@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
@@ -6,10 +5,9 @@ import { Button, Text } from 'components'
 import { ConfirmAgeProps } from './types'
 import { sizes, colors } from 'styles'
 
-const Reconfirm = ({ handleFormSubmit, gdprAge }: ConfirmAgeProps) => {
+const Reconfirm = ({ handleFormSubmit, gdprAge, onCancel }: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const history = useHistory()
 
   return (
     <Flex alignItems={'center'} flexDirection={'column'} gridGap={5}>
@@ -39,7 +37,7 @@ const Reconfirm = ({ handleFormSubmit, gdprAge }: ConfirmAgeProps) => {
         width={[sizes.loginButtonWidth]}
         variant='ghost'
         label={t('signup.reconfirm_age.under_age', { age: gdprAge })}
-        onClick={() => history.push('/login')}
+        onClick={onCancel}
       ></Button>
     </Flex>
   )
