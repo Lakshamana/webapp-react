@@ -69,7 +69,10 @@ const HeaderComponent = () => {
     dispatch({ type: 'openMenu', value: !state.openMenu })
 
   const handleOpenSearch = () => {
-    if(isMobile())  setVisibleMobile('none');
+    if(isMobile())  {
+      dispatch({ type: 'openMenu', value: false });
+      setVisibleMobile('none');
+    }
     dispatch({ type: 'openSearch', value: true })
   }
 
