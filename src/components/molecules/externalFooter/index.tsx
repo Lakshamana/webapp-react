@@ -49,7 +49,7 @@ const ExternalFooter = () => {
             justifyContent={'right'}
             ignoreFallback
             src={org_logo}
-            mb={[4, 4, 4, 4, 0]}
+            mb={[6, 6, 6, 6, 0]}
             width={180}
           />
         </Container>

@@ -43,7 +43,7 @@ const InternalFooter = () => {
           alignItems={'center'}
           justifyContent={'right'}
           marginLeft={['none', 'none', 'none', 'none', 'auto']}
-          mb={[4, 4, 4, 4, 0]}
+          mb={[6, 6, 6, 6, 0]}
           width={180}
           src={org_logo}
           ignoreFallback
