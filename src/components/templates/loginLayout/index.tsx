@@ -1,7 +1,8 @@
 import { ExternalFooter, ExternalHeader } from 'components'
 import { ChildContainer, LayoutContainer } from './style'
 import { Props, defaultProps } from './types'
-import { useFlags } from 'contexts/flags'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { useOrganizationStore } from 'services/stores'
 
 const LoginLayout = ({
   children,
@@ -10,14 +11,19 @@ const LoginLayout = ({
   mode,
   ...props
 }: Props) => {
-  const { ORGANIZATION } = useFlags()
+  const { organization } = useOrganizationStore()
+  const { generateImage } = useThumbor()
+  const bg_login = generateImage(
+    ThumborInstanceTypes.IMAGE,
+    organization?.customization.login_image
+  )
   return (
     <LayoutContainer flexDirection="column">
       <ExternalHeader {...{ mode, rightContent, rightContentStyle }} />
       <ChildContainer
         justifyContent={'center'}
         width={1}
-        backgroundImage={ORGANIZATION.LOGIN_IMAGE}
+        backgroundImage={bg_login}
         {...{ ...props }}
       >
         {children}

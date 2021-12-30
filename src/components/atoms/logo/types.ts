@@ -1,6 +1,6 @@
-import { LayoutProps, SpaceProps, FlexboxProps } from "styled-system";
+import { ImageProps } from '@chakra-ui/react'
 
-export interface Props extends FlexboxProps, LayoutProps, SpaceProps {
+export interface Props extends ImageProps {
   height?: number;
   width?: number;
 }
