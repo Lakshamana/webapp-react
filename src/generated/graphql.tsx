@@ -49,6 +49,7 @@ export enum AccessFlag {
 export type AccessToken = {
   __typename?: 'AccessToken';
   accessToken: Scalars['String'];
+  firebaseToken: Scalars['String'];
 };
 
 export type Account = {
@@ -4193,6 +4194,7 @@ export type Mutation = {
   orderCustomFormAnswers?: Maybe<Order>;
   pinCategory?: Maybe<Category>;
   pinPost?: Maybe<Post>;
+  publishRemoteConfig: PublishRemoteConfig;
   refreshToken: RefreshSignIn;
   removeAccount: Account;
   removeAccountGdprLgpd: AccountGdprLgpd;
@@ -4461,6 +4463,11 @@ export type MutationPinCategoryArgs = {
 
 export type MutationPinPostArgs = {
   postId: Scalars['String'];
+};
+
+
+export type MutationPublishRemoteConfigArgs = {
+  payload: RemoteConfig;
 };
 
 
@@ -5640,6 +5647,12 @@ export enum PromotionTypeSortEnum {
   StartedAt = 'startedAt'
 }
 
+export type PublishRemoteConfig = {
+  __typename?: 'PublishRemoteConfig';
+  configuration?: Maybe<Scalars['String']>;
+  published?: Maybe<Scalars['Boolean']>;
+};
+
 export type PurebrosOrder = {
   platform: Scalars['String'];
   productId: Scalars['String'];
@@ -5678,6 +5691,8 @@ export type Query = {
   category?: Maybe<Category>;
   channel: Channel;
   channels: Array<Channel>;
+  checkChannel: ResponseAvailabilityOutput;
+  checkOrg: ResponseAvailabilityOutput;
   comment?: Maybe<Comment>;
   comments?: Maybe<Array<Maybe<Comment>>>;
   /** List of posts recently played by the user. */
@@ -5799,6 +5814,17 @@ export type QueryChannelArgs = {
 
 export type QueryChannelsArgs = {
   filter?: Maybe<FilterFindAllChannelsInput>;
+};
+
+
+export type QueryCheckChannelArgs = {
+  name: Scalars['String'];
+  organizationId: Scalars['String'];
+};
+
+
+export type QueryCheckOrgArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -6289,12 +6315,17 @@ export type RefreshSignIn = {
 export type RefreshToken = {
   __typename?: 'RefreshToken';
   accessToken: Scalars['String'];
+  firebaseToken: Scalars['String'];
   /** Id */
-  id: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
 };
 
 export type RefreshTokenInput = {
   accessToken: Scalars['String'];
+};
+
+export type RemoteConfig = {
+  configuration: Scalars['String'];
 };
 
 export type Report = {
@@ -6317,6 +6348,12 @@ export enum ReportType {
   Post = 'POST',
   User = 'USER'
 }
+
+export type ResponseAvailabilityOutput = {
+  __typename?: 'ResponseAvailabilityOutput';
+  id: Scalars['ID'];
+  isAvailable: Scalars['Boolean'];
+};
 
 export type ResponseCustomFieldsOutput = {
   __typename?: 'ResponseCustomFieldsOutput';
@@ -7325,14 +7362,14 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 }>;
 
 
-export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationOutput', id: string, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string>, settings?: Maybe<{ __typename?: 'OrganizationSettings', bucket?: Maybe<string>, aws?: Maybe<any> }> } };
+export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationOutput', id: string, kind?: Maybe<string>, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string>, settings?: Maybe<{ __typename?: 'OrganizationSettings', bucket?: Maybe<string>, aws?: Maybe<any> }> } };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatar?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatar?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> }, account: { __typename?: 'Account', username?: Maybe<string>, display_name?: Maybe<string>, email?: Maybe<string> } };
 
 
 export const CreateAccountDocument = gql`
@@ -7881,6 +7918,7 @@ export const OrganizationPublicSettingsDocument = gql`
     query OrganizationPublicSettings($id: ID!) {
   organizationPublicSettings(id: $id) {
     id
+    kind
     status
     customization
     settings {
@@ -7934,6 +7972,11 @@ export const ProfileDocument = gql`
     id
     phone
     locale
+  }
+  account(id: $account) {
+    username
+    display_name
+    email
   }
 }
     `;

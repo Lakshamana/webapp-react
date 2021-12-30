@@ -12,6 +12,7 @@ export const QUERY_ORGANIZATION_PUBLIC_SETTINGS = gql`
   query OrganizationPublicSettings($id: ID!) {
     organizationPublicSettings(id: $id) {
       id
+      kind
       status
       customization
       settings {

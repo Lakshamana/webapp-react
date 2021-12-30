@@ -78,7 +78,7 @@ const OurPolitics = ({ handleFormSubmit, isLoading, onCancel }: ConfirmAgeProps)
         width={[sizes.loginButtonWidth]}
         variant="ghost"
         label={t('signup.actions.cancel')}
-        onClick={() => onCancel}
+        onClick={onCancel}
       ></Button>
     </Flex>
   )
