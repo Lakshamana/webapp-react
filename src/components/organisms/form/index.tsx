@@ -24,7 +24,7 @@ const Form = ({ handleFormSubmit, fields, button, initialValues } : Props) => {
         case 'select':
         case 'checkbox':
         default:
-          memo[curr.name] = Yup.string().trim().required(curr.required)
+          memo[curr.name] = Yup.string().trim().required('Campo obrigatório')
           break
       }
     }
@@ -32,18 +32,17 @@ const Form = ({ handleFormSubmit, fields, button, initialValues } : Props) => {
     return memo
   }, {})
 
-  const { values, handleChange, handleSubmit, errors, isValid } = useFormik({
+  const formik = useFormik({
 		initialValues: { ...(initialValues || {}) },
 		validationSchema: Yup.object().shape(shape),
 		validateOnChange: false,
 		validateOnBlur: false,
 		onSubmit: async () => {
-      console.log('values', values)
-		  isValid && handleFormSubmit && handleFormSubmit(values)
+      console.log('values', formik.values)
+		  formik.isValid && handleFormSubmit && handleFormSubmit(formik.values)
 		}
   })
 
-  console.log('errors', errors)
   return (
     <Box>
       <form>
@@ -61,15 +60,16 @@ const Form = ({ handleFormSubmit, fields, button, initialValues } : Props) => {
 
             <Input
               {...field}
+              placeholder={field.name}
               key={`${index}formFieldInput${field.name}`}
-              onChange={handleChange}
-              error={!!errors[field.name]}
-              errorMessage={errors[field.name]?.toString()}
+              onChange={formik.handleChange}
+              error={!!formik.errors[field.name]}
+              errorMessage={formik.errors[field.name]?.toString()}
             />
           </Box>
         ))}
 
-        {!!button && button(handleSubmit)}
+        {!!button && button(formik)}
       </form>
     </Box>
   )

@@ -92,6 +92,10 @@ const EN_US = {
         description: 'We sent you a email to confirm your account.',
         resend: 'Resend Email',
       },
+      custom_fields: {
+        title: 'Additional Information',
+        subtitle: 'We need a little more information about you',
+      },
       actions: {
         signup: 'Signup',
         signin_here: 'Sign In here',

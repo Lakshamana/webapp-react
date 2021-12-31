@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import {
   MUTATION_CREATE_ACCOUNT,
   MUTATION_CREATE_ACCOUNT_GDPR,
   MUTATION_VERIFY_MAIL,
   MUTATION_SOCIAL_SIGNIN,
+  QUERY_CUSTOM_FIELDS,
 } from 'services/graphql'
 import { useAuth } from 'contexts/auth'
 import {
   RegistrationForm,
   GDPRForm,
   ConfirmEmailForm,
-  AdditionalInformationForm,
+  CustomFieldsForm
 } from './components'
 import { saveData } from 'services/storage'
 import { SocialSignIn } from 'services/firebase'
@@ -45,11 +46,13 @@ const SignupForm = () => {
       },
       onError: (error) => {
         if (error.message === 'exception:ACCOUNT_NOT_FOUND')
-          setActiveStep('LGPD')
+          setActiveStep('Custom')
         else setemailExistsError(`${error.message}`)
       },
     }
   )
+
+  const { data: customFieldsData, loading: customFieldsLoading } = useQuery(QUERY_CUSTOM_FIELDS)
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(
     MUTATION_SOCIAL_SIGNIN,
@@ -117,6 +120,12 @@ const SignupForm = () => {
     setCreateAccountData({ ...FormData })
   }
 
+  const handleCustomFieldsSubmit = (FormData) => {
+    setActiveStep('LGPD')
+
+    setCreateAccountData({ ...FormData })
+  }
+
   const handleGDPRSubmit = () => {
     if (accountID) {
       createAccountGDPR({
@@ -148,6 +157,7 @@ const SignupForm = () => {
       })
   }
 
+  console.log('customFieldsData', customFieldsData)
   const renderStep = () => {
     switch (activeStep) {
       case 'Register':
@@ -162,6 +172,16 @@ const SignupForm = () => {
             }}
           ></RegistrationForm>
         )
+      case 'Custom':
+          return (
+            customFieldsData?.customFields[0].fields && (
+              <CustomFieldsForm
+                fields={customFieldsData?.customFields[0].fields || []}
+                handleFormSubmit={handleCustomFieldsSubmit}
+                isLoading={customFieldsLoading}
+              ></CustomFieldsForm>
+            )
+          )
       case 'LGPD':
         return (
           <GDPRForm
@@ -170,14 +190,7 @@ const SignupForm = () => {
             isLoading={createAccountGDPRLoading || createAccountLoading}
           ></GDPRForm>
         )
-      case 'Custom':
-        return (
-          <AdditionalInformationForm
-            name={'Bianca'}
-            email={'teste'}
-            fullname={'Bianca Silva'}
-          ></AdditionalInformationForm>
-        )
+
       case 'ConfirmEmail':
         return (
           <ConfirmEmailForm

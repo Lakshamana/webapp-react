@@ -92,6 +92,10 @@ const PT_BR = {
         description: 'Nós enviamos um email para verificar sua conta.',
         resend: 'Reenviar Email',
       },
+      custom_fields: {
+        title: 'Informações adicionais',
+        subtitle: 'Precisamos de um pouco mais de informações sobre você',
+      },
       actions: {
         signup: 'Registrar',
         signin_here: 'Faça o Login',
