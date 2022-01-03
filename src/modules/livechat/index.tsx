@@ -40,7 +40,7 @@ const LiveChat = () => {
             />
           </Box>
         </Box>
-        <Box px={{ ssm: '4', xl: '12' }} mt={10}>
+        <Box px={{ ssm: '4', lg: '150px',xl: '300px' }} mt={10}>
           <Text fontWeight={700} fontSize={36} {...colorLayout}>
             Quasar Supabase - 01 Configurando projeto
           </Text>
