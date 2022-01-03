@@ -88,6 +88,7 @@ const SearchBar = ({
               value={search}
               onChange={onSearch}
               color={colorSchema.primary}
+              placeholderFontStyle="italic"
             />
             <Container ml={2} onClick={onClose}>
               <Icon

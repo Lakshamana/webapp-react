@@ -19,7 +19,8 @@ interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
   background?: string
   color?: string
   placeholderColor?: string
-  inverted?: boolean
+  inverted?: boolean,
+  placeholderFontStyle?: string
 }
 
 export const Input: any = styled.input<PropsStyle>`
@@ -37,7 +38,7 @@ export const Input: any = styled.input<PropsStyle>`
     font-family: Helvetica;
     color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
     font-weight: 100;
-    font-style: italic;
+    font-style: ${({ placeholderFontStyle }) => placeholderFontStyle};;
     font-size: 18px;
     opacity: 0.5;
   }
