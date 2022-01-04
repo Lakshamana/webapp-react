@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { color, flexbox, layout } from "styled-system";
 import { breakpoints } from "styles";
+import { Container } from "@chakra-ui/react";
 
 export const BoxChatMain: any = styled.div`
   ${flexbox}
@@ -63,3 +64,7 @@ export const MessageText: any = styled.span`
   font-size: 14px;
   font-weight: 300;
 `;
+
+export const ContainerCustom = styled(Container)`
+  gap: 1em
+`
