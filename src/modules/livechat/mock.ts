@@ -1,7 +1,7 @@
 export const options = [
   {
     iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
@@ -9,7 +9,7 @@ export const options = [
   },
   {
     iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
@@ -17,7 +17,7 @@ export const options = [
   },
   {
     iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
@@ -25,7 +25,15 @@ export const options = [
   },
   {
     iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
+    username: 'Yuri Mustifaga',
+    message:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+    isOwnUser: true,
+  },
+  {
+    iconUrl: '',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
@@ -33,7 +41,7 @@ export const options = [
   },
   {
     iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
@@ -41,7 +49,7 @@ export const options = [
   },
   {
     iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
@@ -49,15 +57,7 @@ export const options = [
   },
   {
     iconUrl: '',
-    date: '01/01/2001',
-    username: 'Yuri Mustifaga',
-    message:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-    isOwnUser: false,
-  },
-  {
-    iconUrl: '',
-    date: '01/01/2001',
+    date: 'Jul 26, 2021, 5:30 PM',
     username: 'Yuri Mustifaga',
     message:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",

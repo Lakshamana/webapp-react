@@ -36,16 +36,16 @@ const LiveChat = () => {
             <Livechat
               dataChat={optionsState}
               onChangeChat={(e) => setOptionsState(e)}
-              title="Livechat"
+              title="Live chat"
             />
           </Box>
         </Box>
         <Box px={{ ssm: '4', lg: '150px',xl: '300px' }} mt={10}>
           <Text fontWeight={700} fontSize={36} {...colorLayout}>
-            Quasar Supabase - 01 Configurando projeto
+            Title lorem ipsum dolor sit amet consectetur elit sed do eiusmod tempor incididunt 
           </Text>
           <Text fontWeight={300} fontSize={16} {...colorLayout}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            Ao saber que tem câncer, um professor passa a fabricar metanfetamina pelo futuro da família, mudando o destino de todos.
           </Text>
         </Box >
       </Box>

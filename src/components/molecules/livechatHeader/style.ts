@@ -18,7 +18,7 @@ export const HeaderMain = styled.div<CustomPropsStyle>`
     if(colorMode === 'light') {
       return theme.colors.inputBg[theme.colorMode];
     }
-    return theme.colors.inputBg[theme.colorMode];
+    return theme.colors.cardBg[theme.colorMode];
   }};
 `
 
