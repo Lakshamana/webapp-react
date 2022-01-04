@@ -5,7 +5,12 @@ import {
   MUTATION_SIGNOUT,
 } from 'services/graphql'
 import { useAuthStore, useOrganizationStore } from 'services/stores'
-import { USER_KEY, ORGANIZATION_INFO, AUTH_TOKEN } from 'config/constants'
+import {
+  USER_KEY,
+  ORGANIZATION_INFO,
+  AUTH_TOKEN,
+  ACCOUNT_INFO,
+} from 'config/constants'
 
 import { saveData, getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
@@ -20,7 +25,7 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
-  const { user, setUser } = useAuthStore()
+  const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
   const [loading, setLoading] = useState(true)
 
@@ -34,6 +39,24 @@ export const AuthProvider = ({ children }) => {
     saveData(USER_KEY, user)
     await getOrganization()
     setUser(user)
+  }
+
+  const updateAccount = async (account) => {
+    saveData(ACCOUNT_INFO, account)
+    setAccount(account)
+  }
+
+  const loadAccount = async () => {
+    if (account) {
+      setLoading(false)
+      return
+    }
+    const accountData = getData(ACCOUNT_INFO)
+    if (accountData) {
+      setAccount(accountData)
+      setLoading(false)
+      return
+    }
   }
 
   const loadOrganization = async () => {
@@ -92,12 +115,15 @@ export const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     loadOrganization()
+    loadAccount()
   }, [])
 
   return loading ? (
     <LoadingScreen />
   ) : (
-    <AuthContext.Provider value={{ signOut, updateUser, signed }}>
+    <AuthContext.Provider
+      value={{ signOut, updateUser, updateAccount, signed }}
+    >
       {children}
     </AuthContext.Provider>
   )
