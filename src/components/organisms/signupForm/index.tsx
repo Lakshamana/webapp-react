@@ -8,6 +8,7 @@ import {
   MUTATION_VERIFY_MAIL,
   MUTATION_SOCIAL_SIGNIN,
 } from 'services/graphql'
+import { useAuth } from 'contexts/auth'
 import {
   RegistrationForm,
   GDPRForm,
@@ -16,7 +17,7 @@ import {
 } from './components'
 import { saveData } from 'services/storage'
 import { SocialSignIn } from 'services/firebase'
-import { AUTH_TOKEN, ACCOUNT_INFO } from 'config/constants'
+import { AUTH_TOKEN } from 'config/constants'
 import { AlertComponent } from 'components'
 import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
@@ -24,6 +25,7 @@ import { SignUpSteps } from './types'
 const SignupForm = () => {
   const { t } = useTranslation()
   const history = useHistory()
+  const { updateAccount } = useAuth()
 
   const [activeStep, setActiveStep] = useState<SignUpSteps>('Register')
   const [emailExistsError, setemailExistsError] = useState('')
@@ -59,7 +61,7 @@ const SignupForm = () => {
         }
 
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
-        await saveData(ACCOUNT_INFO, result.socialSignIn.account)
+        await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)
 
         if (!result?.socialSignIn.account.status.gdpr) {
