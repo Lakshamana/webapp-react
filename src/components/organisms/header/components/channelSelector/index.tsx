@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Container, Popover } from "components";
-import { Channels, ChannelSearch, ChannelSelected } from "..";
+import { useState } from 'react'
+import { Container, Popover } from 'components'
+import { Channels, ChannelSearch, ChannelSelected } from '..'
 
-import { PropsChannelSelector } from "../../types";
-import { defaultProps } from "./types";
-import { CustomContainer } from "./styles";
+import { PropsChannelSelector } from '../../types'
+import { defaultProps } from './types'
+import { CustomContainer } from './styles'
 
 const ChannelSelector = ({
   onSelect,
@@ -14,34 +14,30 @@ const ChannelSelector = ({
   colorMode,
   ...props
 }: PropsChannelSelector) => {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
 
   const handleSearch = (e: any) => {
-    setSearch(e.target.value);
-    onSearch(e.target.value);
-  };
+    setSearch(e.target.value)
+    onSearch(e.target.value)
+  }
 
   const handleSelect = (channel: any) => {
-    onSelect(channel);
-    setOpen(false);
-  };
+    onSelect(channel)
+    setOpen(false)
+  }
 
   return (
     <CustomContainer
       {...props}
-      px={3}
-      display={["none", "none", "none", "flex"]}
+      display={['none', 'none', 'none', 'flex']}
       height={[50]}
     >
       <Popover
-        props={{
-          isOpen: open,
-          onOpen: () => setOpen(true),
-          onClose: () => setOpen(false),
-        }}
-        background="backgroundLayout"
-        trigger={
+        isOpen={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        popoverTrigger={
           <button>
             <ChannelSelected {...{ selected, open, colorMode }} />
           </button>
@@ -56,9 +52,9 @@ const ChannelSelector = ({
         </Container>
       </Popover>
     </CustomContainer>
-  );
-};
+  )
+}
 
-ChannelSelector.defaultProps = defaultProps;
+ChannelSelector.defaultProps = defaultProps
 
-export { ChannelSelector };
+export { ChannelSelector }

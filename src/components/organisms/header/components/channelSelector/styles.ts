@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
 import { StyleContainer } from "components/atoms/container";
-import { breakpoints } from "styles";
 
 interface IconContainerProps {
   open: boolean;
@@ -14,9 +13,6 @@ export const CustomContainer = styled(StyleContainer)`
   align-items: center;
   border-left: 1px solid ${({ theme }) => theme.colors.grey["800"]};
   padding: 0 16px;
-  @media screen and (min-width: ${breakpoints.xl}) {
-    padding: 0 32px;
-  }
 `;
 
 export const ChannelIcon = styled.img<TypeSpaceProps>`
