@@ -19,5 +19,5 @@ export const Bar = styled.div<SpaceLayoutProps>`
   border: 1px solid #444444;
   width: 90%;
   align-self: center;
-  margin-top: 2.5em;
+  margin: 2.5em 0;
 `;

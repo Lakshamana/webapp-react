@@ -40,7 +40,7 @@ const LiveChat = () => {
             />
           </Box>
         </Box>
-        <Box px={{ ssm: '4', lg: '150px',xl: '300px' }} mt={10}>
+        <Box px={{ ssm: '4', lg: '150px',xl: '300px' }} py={'2em'} m='0'>
           <Text fontWeight={700} fontSize={36} {...colorLayout}>
             Title lorem ipsum dolor sit amet consectetur elit sed do eiusmod tempor incididunt 
           </Text>
