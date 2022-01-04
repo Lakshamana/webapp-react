@@ -18,8 +18,7 @@ const Template: ComponentStory<typeof Avatar> = (args) => <Avatar {...args} />;
 export const Component = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Component.args = {
-  backgroundAvatar: "#222",
-  colorIcon: "#fff",
-  icon: "",
+  background: "#222",
+  color: "#fff",
   size: "large",
 };
