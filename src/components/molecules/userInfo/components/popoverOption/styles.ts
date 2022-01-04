@@ -6,6 +6,6 @@ export const Option = styled.li<SpaceProps>`
   cursor: pointer;
   user-select: none;
   :hover {
-    background: #0660f9;
+    background: ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
   }
 `;

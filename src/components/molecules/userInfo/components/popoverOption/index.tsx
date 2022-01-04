@@ -3,7 +3,7 @@ import { PropsPopoverOption } from "../../types";
 import { Option } from "./styles";
 
 const PopoverOption = ({ text, icon, onClick, color }: PropsPopoverOption) => (
-  <Option {...{ onClick }} py={2} mb={2}>
+  <Option {...{ onClick }} py={'12px'}>
     <Container alignItems="center">
       <Container width="30px" ml={3} justifyContent="center">
         {icon}

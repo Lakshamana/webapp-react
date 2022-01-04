@@ -16,12 +16,14 @@ import {
 import { LoginLayout, Card, SigninForm } from 'components'
 import { Container } from './styles'
 import { sizes } from 'styles'
-import { AUTH_TOKEN, ACCOUNT_INFO } from 'config/constants'
+import { useAuth } from 'contexts/auth'
+import { AUTH_TOKEN } from 'config/constants'
 import { SignInSteps } from './types'
 
 const LoginPage = () => {
   const { t } = useTranslation()
   const history = useHistory()
+  const { updateAccount } = useAuth()
 
   const [error, setError] = useState('')
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
@@ -35,7 +37,7 @@ const LoginPage = () => {
       }
 
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
-      await saveData(ACCOUNT_INFO, result.signIn.account)
+      await updateAccount(result.signIn.account)
 
       history.push('/home')
     },
@@ -52,7 +54,7 @@ const LoginPage = () => {
         }
 
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
-        await saveData(ACCOUNT_INFO, result.socialSignIn.account)
+        await updateAccount(result.socialSignIn.account)
 
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('LGPD')

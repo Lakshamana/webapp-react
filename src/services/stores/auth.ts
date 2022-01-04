@@ -5,7 +5,7 @@ interface AuthState {
   user: Profile | null
   account: Account | null
   setUser: (user: Profile) => void
-  setAccount?: (account: Account) => void
+  setAccount: (account: Account) => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({

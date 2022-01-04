@@ -9,6 +9,8 @@ export const ChildContainer = styled(StyleContainer) <Props>`
     height: auto;
     min-height: calc(100vh - ${sizes.footerDesktopHeight} - ${sizes.headerDesktopHeight});
     background: ${(props: Props) => (`url('${props.backgroundImage}')`)};
+    background-size: cover;
+    background-position: center;
     @media screen and (max-width: ${breakpoints.md}) {
       min-height: calc(100vh - ${sizes.footerMobileHeight} - ${sizes.headerMobileHeight});
   }

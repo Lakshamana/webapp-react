@@ -20,7 +20,6 @@ export const QUERY_CHANNELS = gql`
       ... on GeolockedChannel {
         id
         name
-        customization
         thumbnail
         __typename
       }
