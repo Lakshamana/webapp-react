@@ -21,7 +21,7 @@ const LivechatHeader = ({ title = "", onCloseChat = () => { } }: Props) => {
   return (
     <HeaderMain height={["81px"]} width={["100%"]} display="flex" {...{ colorMode }}>
       <AvatarContainer flex={3} width={["100%"]}>
-        <Avatar icon="bx:bx-user" colorIcon="#000" />
+        <Avatar src="" colorScheme="#000" />
       </AvatarContainer>
       <TextContainer flex={10}>
         <Text fontSize={24} fontWeight={500} {...colorLayout}>

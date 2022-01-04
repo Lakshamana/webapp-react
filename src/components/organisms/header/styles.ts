@@ -22,8 +22,4 @@ export const HeaderContainer = styled(StyleContainer)`
 
 export const LogoContainer = styled.div`
   padding: 0 ${({ theme }) => theme.sizes.paddingSm};
-
-  @media screen and (min-width: ${breakpoints.xl}) {
-    padding: 0 ${({ theme }) => theme.sizes.paddingLg};
-  }
 `

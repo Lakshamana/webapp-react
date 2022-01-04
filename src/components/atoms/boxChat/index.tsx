@@ -25,7 +25,7 @@ const BoxChat = ({
     <BoxChatMain justifyContent={isOwnUser ? "flex-end" : "flex-start"}>
       <Container display={'flex'}>
         <AvatarContainer>
-          <Avatar icon={avatarUrl} backgroundAvatar="#e1e1e1" colorIcon="#000" />
+          <Avatar src={avatarUrl} bg="#e1e1e1" color="#000" />
         </AvatarContainer>
         <MainContainer>
           <DateContainer>
