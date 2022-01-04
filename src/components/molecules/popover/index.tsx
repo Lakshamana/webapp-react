@@ -3,19 +3,32 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverBody,
-} from "@chakra-ui/react";
+  PopoverArrow,
+} from '@chakra-ui/react'
+import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
 
-import { Props, defaultProps } from "./types";
+import { Props } from './types'
 
-const Popover = ({ children, trigger, background, props }: Props) => (
-  <ChakraPopover {...props}>
-    {trigger && <PopoverTrigger>{trigger}</PopoverTrigger>}
-    <PopoverContent bg={background} width={250}>
-      <PopoverBody>{children}</PopoverBody>
-    </PopoverContent>
-  </ChakraPopover>
-);
+const Popover = ({
+  children,
+  popoverTrigger,
+  background,
+  hasArrow,
+  ...props
+}: Props) => {
+  const { colorMode } = useThemeStore()
+  return (
+    <ChakraPopover {...props} arrowShadowColor={'transparent'} arrowSize={12} preventOverflow>
+      <PopoverTrigger>{popoverTrigger}</PopoverTrigger>
+      <PopoverContent bg={background || colors.cardBg[colorMode]}>
+        {hasArrow && (
+          <PopoverArrow backgroundColor={colors.cardBg[colorMode]} />
+        )}
+        <PopoverBody>{children}</PopoverBody>
+      </PopoverContent>
+    </ChakraPopover>
+  )
+}
 
-Popover.defaultProps = defaultProps;
-
-export { Popover };
+export { Popover }

@@ -1,50 +1,41 @@
-import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from 'contexts/auth'
-import { Container, Text, Popover } from 'components'
+import { Container, Text, Popover, Avatar } from 'components'
 import { PopoverOption } from './components'
+import { useAuthStore } from 'services/stores'
 
 import { PropsUserInfo } from './types'
-import {
-  UserContainer,
-  CircleImage,
-  OptionsList,
-  TextContainer,
-} from './styles'
+import { UserContainer, OptionsList, TextContainer } from './styles'
 import { colors } from 'styles'
 
 const UserInfo = ({
-  user,
   delimited = true,
   colorMode,
   toggleColorMode,
 }: PropsUserInfo) => {
-  const [open, setOpen] = useState(false)
   const history = useHistory()
   const { t } = useTranslation()
   const { signOut } = useAuth()
+  const { account } = useAuthStore()
 
   return (
-    <Container display={['none', 'none', 'none', 'flex']}>
+    <Container display={['none', 'none', 'none', 'flex']} alignItems={'center'}>
+      <TextContainer maxWidth={['150px']}>
+        <Text ellipsis color={colors.secondaryText[colorMode]}>
+          {account?.username || account?.display_name}
+        </Text>
+      </TextContainer>
       <Popover
-        props={{
-          isOpen: open,
-          onOpen: () => setOpen(true),
-          onClose: () => setOpen(false),
-        }}
-        background={colors.cardBg[colorMode]}
-        trigger={
+        hasArrow
+        isLazy
+        placement={'bottom-end'}
+        popoverTrigger={
           <button>
-            <UserContainer px={1} {...{ delimited }}>
-              <TextContainer maxWidth={['150px']}>
-                <Text ellipsis color={colors.secondaryText[colorMode]}>
-                  {user?.name || ''}
-                </Text>
-              </TextContainer>
+            <UserContainer {...{ delimited }}>
               <Container>
-                <CircleImage width={50} height={50} src={user?.avatar} />
+                <Avatar width={'45px'} height={'45px'} src={''} />
               </Container>
             </UserContainer>
           </button>

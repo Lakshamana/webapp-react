@@ -1,26 +1,14 @@
-import styled from "styled-components";
-import { StyleContainer } from "components";
-import { space, layout, SpaceProps, LayoutProps } from "styled-system";
-import { breakpoints } from "styles";
+import styled from 'styled-components'
+import { StyleContainer } from 'components'
+import { space, layout } from 'styled-system'
 
-interface UserContainerProps extends SpaceProps {
-  delimited: boolean;
-}
-
-export const UserContainer = styled.div<UserContainerProps>`
+export const UserContainer = styled.div`
   ${space}
   display: flex;
   align-items: center;
-  border-left: ${({ theme, delimited }) =>
-    delimited ? `1px solid ${theme.colors.grey["700"]}` : "none"};
   user-select: none;
   cursor: pointer;
-`;
-
-export const CircleImage = styled.img<LayoutProps>`
-  ${layout}
-  border-radius: 50%;
-`;
+`
 
 export const OptionsList = styled.ul`
   ${layout}
@@ -30,13 +18,12 @@ export const OptionsList = styled.ul`
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
   }
-`;
+`
 
 export const TextContainer = styled(StyleContainer)`
   display: flex;
+  height: 100%;
   padding: 0 16px;
-
-  @media screen and (min-width: ${breakpoints.xl}) {
-    padding: 0 32px;
-  }
-`;
+  border-left: ${({ theme }) => `1px solid ${theme.colors.grey['700']}`};
+  align-items: center;
+`

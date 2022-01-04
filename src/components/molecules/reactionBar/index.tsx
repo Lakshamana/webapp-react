@@ -36,7 +36,7 @@ const ReactionBar = ({
         <Container>
           <Reaction>
             <Popover
-              trigger={
+              popoverTrigger={
                 <button>
                   <Reaction p={1} mr={1} minWidth={50} minHeight={32}>
                     <Icon width={20} height={20} icon="mdi:plus" />

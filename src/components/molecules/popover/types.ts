@@ -1,10 +1,8 @@
-export interface Props {
-  children: JSX.Element;
-  trigger?: JSX.Element;
-  background?: string;
-  props?: any;
-}
+import { PopoverProps } from '@chakra-ui/react'
 
-export const defaultProps = {
-  background: "#444444",
-};
+export interface Props extends PopoverProps {
+  children: JSX.Element
+  popoverTrigger: JSX.Element
+  background?: string
+  hasArrow?: boolean
+}

@@ -56,14 +56,12 @@ const SearchBar = ({
     <Section display="flex" alignItems="center" flex={1}>
       <Popover
         background={colorSchema.results}
-        props={{
-          isOpen: open,
-          onOpen,
-          isLazy: true,
-          matchWidth: true,
-          gutter: 0,
-        }}
-        trigger={
+        isOpen={open}
+        onOpen={onOpen}
+        isLazy={true}
+        matchWidth={true}
+        gutter={0}
+        popoverTrigger={
           <CustomContainer
             px={[3]}
             flex={1}
