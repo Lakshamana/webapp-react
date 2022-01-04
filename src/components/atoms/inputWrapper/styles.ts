@@ -16,13 +16,16 @@ export const BoxWrapper = styled.div<PropsStyle>`
   ${space}
   ${layout}
   ${border}
-  ${({ theme, inverted }) => {
-    if (!inverted) {
-      return `background-color: ${theme.colors.inputBg[theme.colorMode]};`
+  background-color: ${({ theme, inverted, background }) => {
+    if(background===''){
+      if (!inverted) {
+        return theme.colors.inputBg[theme.colorMode];
+      }
+      const invertedColor = theme.colorMode === 'dark' ? 'light' : 'dark'
+      return theme.colors.inputBg[invertedColor];
     }
-    const invertedColor = theme.colorMode === 'dark' ? 'light' : 'dark'
-    return `background-color: ${theme.colors.inputBg[invertedColor]};`
-  }}
+    return background;
+  }};
   color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
   display: flex;
   flex-direction: row;
