@@ -47,6 +47,7 @@ const LiveChat = () => {
           <Text fontWeight={300} fontSize={16} {...colorLayout}>
             Ao saber que tem câncer, um professor passa a fabricar metanfetamina pelo futuro da família, mudando o destino de todos.
           </Text>
+          <Bar/>
         </Box >
       </Box>
     </MainLayout >
