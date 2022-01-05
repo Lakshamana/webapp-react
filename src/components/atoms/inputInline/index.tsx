@@ -15,6 +15,7 @@ const InputInline = ({
   color = "",
   placeholderColor = "",
   inverted = false,
+  placeholderFontStyle = 'normal',
   ...props
 }: Props) => {
   const ref: any = React.useRef(null);
@@ -38,7 +39,8 @@ const InputInline = ({
         color,
         placeholderColor,
         background,
-        inverted
+        inverted,
+        placeholderFontStyle
       }}
     />
   );

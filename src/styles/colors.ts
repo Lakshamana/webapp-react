@@ -42,7 +42,7 @@ export const colors = {
     dark: '#000000',
   },
   inputBg: {
-    light: '#ffffff',
+    light: '#E2E9E9',
     dark: '#444444',
   },
   selectBg: {

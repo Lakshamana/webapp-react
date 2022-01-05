@@ -4,11 +4,22 @@ import { StyledProps } from './types'
 
 import { Text as TextComponent } from 'components/atoms'
 
-export const HeaderMain = styled.div<StyledProps>`
+interface CustomPropsStyle extends StyledProps {
+  colorMode?: string
+}
+
+export const HeaderMain = styled.div<CustomPropsStyle>`
   ${layout}
   ${space}
   ${flexbox}
+  padding: 1em 0;
   align-items: center;
+  background-color: ${({ colorMode, theme })=>{
+    if(colorMode === 'light') {
+      return theme.colors.inputBg[theme.colorMode];
+    }
+    return theme.colors.cardBg[theme.colorMode];
+  }};
 `
 
 export const AvatarContainer = styled.div<StyledProps>`

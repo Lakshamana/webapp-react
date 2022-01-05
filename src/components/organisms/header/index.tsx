@@ -144,7 +144,7 @@ const HeaderComponent = () => {
         ) : (
           <></>
         )}
-        <Container alignItems="center" flex={state.openSearch ? 1 : 'none'}>
+        <Container alignItems="center" flex={state.openSearch ? 1 : 'none'} zIndex={1000}>
           <SearchBar
             data={searchValues}
             open={state.openSearch}

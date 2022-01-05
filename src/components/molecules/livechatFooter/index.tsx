@@ -53,7 +53,7 @@ const LivechatFooter = ({
         <Input
           value={value}
           onChange={onChange}
-          inverted
+          inverted={false}
           rightIcon="send"
           onEnterPress={() => onEnter()}
         />

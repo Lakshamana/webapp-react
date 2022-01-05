@@ -19,13 +19,13 @@ const VideoBadge = ({ children, kind }: VideoBadgeProps) => {
         )
       case 'live':
         return (
-          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={16} bg={'#FF0000'} color={'white'} fontWeight={700}>
+          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={14} bg={'#FF0000'} color={'white'} fontWeight={700}>
             {children}
           </Box>
         )
       default:
         return (
-          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={16} bg={'#444444'} color={'white'} fontWeight={500}>
+          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={14} bg={'#444444'} color={'white'} fontWeight={500}>
             {children}
           </Box>
         )

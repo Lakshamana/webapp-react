@@ -10,6 +10,7 @@ import {
   DateText,
   NameUserText,
   MessageText,
+  ContainerCustom,
 } from "./style";
 
 import { Props, defaultProps } from "./types";
@@ -23,7 +24,7 @@ const BoxChat = ({
 }: Props): ReactElement => {
   return (
     <BoxChatMain justifyContent={isOwnUser ? "flex-end" : "flex-start"}>
-      <Container display={'flex'}>
+      <ContainerCustom display={'flex'} flexDirection={isOwnUser ? "row-reverse" : "row"}>
         <AvatarContainer>
           <Avatar src={avatarUrl} bg="#e1e1e1" color="#000" />
         </AvatarContainer>
@@ -40,7 +41,7 @@ const BoxChat = ({
             </BoxContainer>
           </DateContainer>
         </MainContainer>
-      </Container>
+      </ContainerCustom>
     </BoxChatMain>
   );
 };

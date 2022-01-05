@@ -19,7 +19,8 @@ interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
   background?: string
   color?: string
   placeholderColor?: string
-  inverted?: boolean
+  inverted?: boolean,
+  placeholderFontStyle?: string
 }
 
 export const Input: any = styled.input<PropsStyle>`
@@ -27,7 +28,16 @@ export const Input: any = styled.input<PropsStyle>`
   ${space}
   ${fontSize}
   ${commonStyles}
-  background-color:${ ({ background }) => background };
+  background-color: ${({ theme, inverted, background }) => {
+    if(background===''){
+      if (!inverted) {
+        return theme.colors.inputBg[theme.colorMode];
+      }
+      const invertedColor = theme.colorMode === 'dark' ? 'light' : 'dark'
+      return theme.colors.inputBg[invertedColor];
+    }
+    return background;
+  }};
   color: ${ ({ color }) => color };
   width: 100%;
   padding-left: 16px;
@@ -37,7 +47,7 @@ export const Input: any = styled.input<PropsStyle>`
     font-family: Helvetica;
     color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
     font-weight: 100;
-    font-style: italic;
+    font-style: ${({ placeholderFontStyle }) => placeholderFontStyle};;
     font-size: 18px;
     opacity: 0.5;
   }

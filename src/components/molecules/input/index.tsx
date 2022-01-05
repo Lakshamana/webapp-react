@@ -15,8 +15,8 @@ const Input = ({
   errorMessage,
   rightIcon = "",
   inverted = false,
-  color,
-  background,
+  color = "",
+  background = "",
 }: Props) => {
   const [showPassword, setShowPassword] = useState(type !== "password");
 
