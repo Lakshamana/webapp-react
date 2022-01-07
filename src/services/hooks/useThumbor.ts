@@ -30,6 +30,8 @@ export const useThumbor = () => {
     path: string,
     options?: ThumborParams
   ) => {
+    if (!organization) return
+    
     const getThumborType = () => {
       switch (type) {
         case ThumborInstanceTypes.AVATAR:
@@ -82,7 +84,7 @@ export const useThumbor = () => {
 
     const url_w_filters = `${url[0]}${url[1].replace(/:/g, '/filters:')}`
 
-    return url_w_filters.replace('/unsafe', '')
+    return url_w_filters?.replace('/unsafe', '')
   }
 
   return { generateImage }
