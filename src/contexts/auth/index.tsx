@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
   const client = useApolloClient()
 
   const signed = !!user
+  const kind = 'public' //organization?.kind
 
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
@@ -122,7 +123,7 @@ export const AuthProvider = ({ children }) => {
     <LoadingScreen />
   ) : (
     <AuthContext.Provider
-      value={{ signOut, updateUser, updateAccount, signed }}
+      value={{ signOut, updateUser, updateAccount, signed, kind }}
     >
       {children}
     </AuthContext.Provider>

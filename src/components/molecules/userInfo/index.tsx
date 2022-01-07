@@ -20,6 +20,18 @@ const UserInfo = ({
   const { signOut } = useAuth()
   const { account } = useAuthStore()
 
+  if (!account) {
+    return (
+      <Container>
+        <TextContainer maxWidth={['150px']}>
+          <Text ellipsis color={colors.secondaryText[colorMode]}>
+            Login
+          </Text>
+        </TextContainer>
+      </Container>
+    )
+  }
+
   return (
     <Container display={['none', 'none', 'none', 'flex']} alignItems={'center'}>
       <TextContainer maxWidth={['150px']}>

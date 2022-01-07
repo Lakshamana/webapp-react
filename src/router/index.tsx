@@ -1,14 +1,17 @@
 import { BrowserRouter } from "react-router-dom";
 
 import { ClientRoutes } from "./routes";
-import { permission } from "./permission";
+import { publicPermission, exclusivePermission } from "./permission";
+import { useAuth } from "contexts/auth";
 
 const Router = () => {
-  // Is Accesible is an object that must be updated here
+  const { kind } = useAuth()
+
+  const isPublicKind = kind === 'public'
 
   return (
     <>
-      <ClientRoutes isAccesible={permission} />
+      <ClientRoutes isAccesible={isPublicKind ? publicPermission : exclusivePermission} />
     </>
   );
 };
