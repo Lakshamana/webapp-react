@@ -20,7 +20,6 @@ import { saveData } from 'services/storage'
 import { SocialSignIn } from 'services/firebase'
 import { AUTH_TOKEN } from 'config/constants'
 import { AlertComponent } from 'components'
-import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
 
 const SignupForm = () => {
@@ -34,8 +33,7 @@ const SignupForm = () => {
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
 
-  const [createAccountData, setCreateAccountData] =
-    useState<CreateAccountInput>()
+  const [createAccountData, setCreateAccountData] = useState<any>()
 
   const [verifyMail, { loading: verifyMailLoading }] = useMutation(
     MUTATION_VERIFY_MAIL,
@@ -123,7 +121,14 @@ const SignupForm = () => {
   const handleCustomFieldsSubmit = (FormData) => {
     setActiveStep('LGPD')
 
-    setCreateAccountData({ ...FormData })
+    const data = {
+      createAccount: {
+        ...createAccountData.createAccount, 
+        custom_fields: { ...FormData }
+      }
+    }
+
+    setCreateAccountData(data)
   }
 
   const handleGDPRSubmit = () => {
@@ -157,7 +162,6 @@ const SignupForm = () => {
       })
   }
 
-  console.log('customFieldsData', customFieldsData)
   const renderStep = () => {
     switch (activeStep) {
       case 'Register':
