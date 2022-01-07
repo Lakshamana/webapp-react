@@ -13,7 +13,6 @@ const CustomFieldsForm = ({
 }: RegistrationProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  // const { ORGANIZATION } = useFlags()
 
   return (
     <Flex alignItems={'center'} flexDirection={'column'} gridGap={2}>
