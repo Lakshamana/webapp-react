@@ -45,7 +45,7 @@ const SignupForm = () => {
       },
       onError: (error) => {
         if (error.message === 'exception:ACCOUNT_NOT_FOUND')
-          setActiveStep('LGPD')
+          setActiveStep('GDPR')
         else setemailExistsError(`${error.message}`)
       },
     }
@@ -65,7 +65,7 @@ const SignupForm = () => {
         setAccountID(result.socialSignIn.account.id)
 
         if (!result?.socialSignIn.account.status.gdpr) {
-          setActiveStep('LGPD')
+          setActiveStep('GDPR')
         } else {
           history.push('/home')
         }
@@ -162,7 +162,7 @@ const SignupForm = () => {
             }}
           ></RegistrationForm>
         )
-      case 'LGPD':
+      case 'GDPR':
         return (
           <GDPRForm
             handleFormSubmit={handleGDPRSubmit}
