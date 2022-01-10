@@ -3,4 +3,4 @@ export interface SignupProps {
     password: string;
 }
 
-export type SignUpSteps = 'Register' | 'LGPD' | 'ConfirmEmail' | 'Custom'
+export type SignUpSteps = 'Register' | 'GDPR' | 'ConfirmEmail' | 'Custom'
