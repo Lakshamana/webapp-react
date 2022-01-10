@@ -9,6 +9,7 @@ import { useAuthStore } from 'services/stores'
 import { PropsUserInfo } from './types'
 import { UserContainer, OptionsList, TextContainer } from './styles'
 import { colors } from 'styles'
+import { Link } from '@chakra-ui/react'
 
 const UserInfo = ({
   delimited = true,
@@ -25,7 +26,9 @@ const UserInfo = ({
       <Container>
         <TextContainer maxWidth={['150px']}>
           <Text ellipsis color={colors.secondaryText[colorMode]}>
-            Login
+            <Link href='/login'>
+              Login
+            </Link>
           </Text>
         </TextContainer>
       </Container>
