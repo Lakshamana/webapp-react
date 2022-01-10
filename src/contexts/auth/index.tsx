@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useApolloClient } from '@apollo/client'
 import {
   QUERY_ORGANIZATION_PUBLIC_SETTINGS,
@@ -17,23 +17,23 @@ import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
 
-const AuthContext = React.createContext({})
+const AuthContext = createContext({})
 
 export const useAuth = () => {
-  const context = React.useContext(AuthContext)
+  const context = useContext(AuthContext)
   return context as AuthTypes
 }
 
 export const AuthProvider = ({ children }) => {
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
-  const [loading, setLoading] = useState(true)
+  const [ loading, setLoading ] = useState(true)
 
   const client = useApolloClient()
 
   const signed = !!user
-  const kind = 'public' //organization?.kind
-
+  const [ kind, setKind ] = useState('exclusive');
+  
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
   const updateUser = async (user) => {
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login'
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadOrganization()
     loadAccount()
   }, [])
