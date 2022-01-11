@@ -5,8 +5,8 @@ const FeedPage = () => {
 		<MainLayout>
 			<Container flexDirection={"column"} width={"100%"}>
 				<FeedPostCard
-					postTitle='Teste title'
-					postDescription='Description...'
+					postTitle='Tile of the post'
+					postDescription='This is the description of the post...'
 					date='3 days ago'
 					hasActivity={true}
 					coverImage='https://cdn.dooca.store/996/files/breaking-bad.jpg'
@@ -23,8 +23,8 @@ const FeedPage = () => {
 					voted={true}
 				/>
 				<FeedPostCard
-					postTitle='Teste Video post'
-					postDescription='Description...'
+					postTitle='Tile of the post'
+					postDescription='This is the description of the post...'
 					date='3 days ago'
 					hasActivity={true}
 					coverImage='https://img.ibxk.com.br/2019/09/05/05150900742176.jpg'
@@ -41,8 +41,8 @@ const FeedPage = () => {
 					voted={true}
 				/>
 				<FeedPostCard
-					postTitle='Teste Blog post'
-					postDescription='Description...'
+					postTitle='Tile of the post'
+					postDescription='This is the description of the post...'
 					date='3 days ago'
 					hasActivity={true}
 					coverImage='https://img.ibxk.com.br/2019/09/05/05150900742176.jpg'
@@ -59,8 +59,8 @@ const FeedPage = () => {
 					voted={true}
 				/>
 				<FeedPostCard
-					postTitle='Teste Blog post'
-					postDescription='Description...'
+					postTitle='Tile of the post'
+					postDescription='This is the description of the post...'
 					date='3 days ago'
 					hasActivity={true}
 					coverImage='https://img.ibxk.com.br/2019/09/05/05150900742176.jpg'
@@ -77,8 +77,8 @@ const FeedPage = () => {
 					voted={true}
 				/>
 				<FeedPostCard
-					postTitle='Teste Audio post'
-					postDescription='Description...'
+					postTitle='Tile of the post'
+					postDescription='This is the description of the post...'
 					date='3 days ago'
 					hasActivity={true}
 					coverImage='https://br.web.img2.acsta.net/newsv7/20/05/21/22/45/4919243.jpg'

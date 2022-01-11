@@ -6,6 +6,7 @@ import { Props } from './types'
 import { availableReactions } from './settings'
 import { Reaction } from './styles'
 import { colors } from 'styles'
+import { formatNumber } from 'utils';
 
 const ReactionBar = ({
   reactions = [],
@@ -69,7 +70,7 @@ const ReactionBar = ({
           kind="regular"
           fontWeight={500}
           color={colors.generalText[colorMode]}
-        >{`${totalReactions} ${reactionsTitle}`}</Text>
+        >{`${formatNumber(totalReactions,1)} ${reactionsTitle}`}</Text>
       </Container>
     </Container>
   )
