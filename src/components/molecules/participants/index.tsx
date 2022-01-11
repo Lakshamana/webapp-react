@@ -20,7 +20,7 @@ const Participants = ({ participants, totalParticipants }: Props) => (
     </Container>
     {totalParticipants > 3 ? (
       <Container ml={3}>
-        <Button p={1} minWidth="50px" onClick={() => {}}>
+        <Button py={1} px={2} minWidth="50px" onClick={() => {}}>
           + {formatNumber(totalParticipants, 1)}
         </Button>
       </Container>
