@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   const client = useApolloClient()
 
   const signed = !!user
-  const [ kind, setKind ] = useState('exclusive');
+  const [ kind, setKind ] = useState('public');
   
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
@@ -62,12 +62,14 @@ export const AuthProvider = ({ children }) => {
 
   const loadOrganization = async () => {
     if (organization) {
+      if (organization.kind) setKind(organization.kind)
       setLoading(false)
       return
     }
     const organizationData = getData(ORGANIZATION_INFO)
     if (organizationData) {
       setOrganization(organizationData)
+      setKind(organizationData.kind)
       setLoading(false)
       return
     }
@@ -87,6 +89,7 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data.organizationPublicSettings
           saveData(ORGANIZATION_INFO, dataOrganization)
           setOrganization(dataOrganization)
+          setKind(dataOrganization.kind)
           setLoading(false)
         }
         resolve(true)
