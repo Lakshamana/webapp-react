@@ -14,13 +14,14 @@ import {
   RegistrationForm,
   GDPRForm,
   ConfirmEmailForm,
-  CustomFieldsForm
+  CustomFieldsForm,
 } from './components'
 import { saveData } from 'services/storage'
 import { SocialSignIn } from 'services/firebase'
 import { AUTH_TOKEN } from 'config/constants'
 import { AlertComponent } from 'components'
 import { SignUpSteps } from './types'
+import { CreateAccountInput } from 'generated/graphql'
 
 const SignupForm = () => {
   const { t } = useTranslation()
@@ -33,7 +34,8 @@ const SignupForm = () => {
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
 
-  const [createAccountData, setCreateAccountData] = useState<any>()
+  const [createAccountData, setCreateAccountData] =
+    useState<CreateAccountInput>({ email: '', password: '' })
 
   const [verifyMail, { loading: verifyMailLoading }] = useMutation(
     MUTATION_VERIFY_MAIL,
@@ -50,7 +52,8 @@ const SignupForm = () => {
     }
   )
 
-  const { data: customFieldsData, loading: customFieldsLoading } = useQuery(QUERY_CUSTOM_FIELDS)
+  const { data: customFieldsData, loading: customFieldsLoading } =
+    useQuery(QUERY_CUSTOM_FIELDS)
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(
     MUTATION_SOCIAL_SIGNIN,
@@ -110,7 +113,7 @@ const SignupForm = () => {
     verifyMail({
       variables: {
         payload: {
-          email: FormData.createAccount.email,
+          email: FormData.email,
         },
       },
     })
@@ -121,14 +124,10 @@ const SignupForm = () => {
   const handleCustomFieldsSubmit = (FormData) => {
     setActiveStep('LGPD')
 
-    const data = {
-      createAccount: {
-        ...createAccountData.createAccount, 
-        custom_fields: { ...FormData }
-      }
-    }
-
-    setCreateAccountData(data)
+    setCreateAccountData({
+      ...createAccountData,
+      custom_fields: { ...FormData },
+    })
   }
 
   const handleGDPRSubmit = () => {
@@ -143,7 +142,7 @@ const SignupForm = () => {
       })
     } else {
       createAccount({
-        variables: { ...createAccountData },
+        variables: { createAccount: { ...createAccountData } },
       })
     }
   }
@@ -177,15 +176,15 @@ const SignupForm = () => {
           ></RegistrationForm>
         )
       case 'Custom':
-          return (
-            customFieldsData?.customFields[0].fields && (
-              <CustomFieldsForm
-                fields={customFieldsData?.customFields[0].fields || []}
-                handleFormSubmit={handleCustomFieldsSubmit}
-                isLoading={customFieldsLoading}
-              ></CustomFieldsForm>
-            )
+        return (
+          customFieldsData?.customFields[0].fields && (
+            <CustomFieldsForm
+              fields={customFieldsData?.customFields[0].fields || []}
+              handleFormSubmit={handleCustomFieldsSubmit}
+              isLoading={customFieldsLoading}
+            ></CustomFieldsForm>
           )
+        )
       case 'LGPD':
         return (
           <GDPRForm
