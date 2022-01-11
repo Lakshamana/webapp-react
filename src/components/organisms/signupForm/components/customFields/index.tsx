@@ -9,7 +9,7 @@ import { colors, fonts, sizes } from 'styles'
 const CustomFieldsForm = ({
   handleFormSubmit,
   isLoading,
-  fields
+  fields,
 }: RegistrationProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -37,7 +37,7 @@ const CustomFieldsForm = ({
 
       <Form
         fields={fields}
-        button={({ dirty, isValid, handleSubmit }) => 
+        button={({ dirty, isValid, handleSubmit }) => (
           <Button
             width={[sizes.loginButtonWidth]}
             marginTop={10}
@@ -46,10 +46,8 @@ const CustomFieldsForm = ({
             onClick={handleSubmit}
             isLoading={isLoading}
           ></Button>
-        }
+        )}
         handleFormSubmit={(data) => {
-          console.log('data', data)
-
           handleFormSubmit(data)
         }}
       />
