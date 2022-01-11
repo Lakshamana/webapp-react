@@ -60,10 +60,8 @@ const RegistrationForm = ({
     validateOnBlur: false,
     onSubmit: async () => {
       handleFormSubmit({
-        createAccount: {
-          email: values.createAccount.email,
-          password: values.createAccount.password,
-        },
+        email: values.createAccount.email,
+        password: values.createAccount.password,
       })
     },
   })
