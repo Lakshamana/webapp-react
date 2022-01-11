@@ -49,11 +49,19 @@ const FeedPostCard = ({ ...props }: Props) => {
 				</CardReactions>
 				<CardFooter>
 					<Participants
-						totalParticipants={4}
+						totalParticipants={9900}
 						participants={[
 							{
 								id: 1,
 								img: "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg"
+							},
+							{
+								id: 1,
+								img: "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/10.jpg"
+							},
+							{
+								id: 1,
+								img: "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/11.jpg"
 							}
 						]}
 					/>
