@@ -84,7 +84,7 @@ const Comment = ({
                 {answers?.map(({ userName, createdAt, comment }) => (
                   <Flex marginTop={pxToRem(12)}>
                     <Flex marginRight={pxToRem(12)}>
-                      <Avatar size="medium" />
+                      <Avatar />
                     </Flex>
                     <Flex flexDir={"column"}>
                       <CommentWrapper
