@@ -12,7 +12,8 @@ const EN_US = {
           'You must accept the terms and conditions.',
         password_error:
           'Password must contain a min of 8 characters, one uppercase, one lowercase, one number and one special character',
-      },
+        confirm_email: 'Please use the email previously entered during registration'
+        },
       what_is_this: 'What is this?',
       more: 'more',
       terms: 'Terms and Conditions',
@@ -37,7 +38,9 @@ const EN_US = {
       cancel: 'Cancel',
       confirm: 'Confirm',
       update: 'Update',
-      accept_all: 'I accept all'
+      accept_all: 'I accept all',
+      agree: 'Agree',
+      cancel_registration: 'Cancel registration'
     },
     signin: {
       title: 'Access Fanhero now',
@@ -46,7 +49,7 @@ const EN_US = {
       label: {
         email: 'Email',
         password: 'Password',
-        dont_have_account: "Doesn't have an account?",
+        dont_have_account: "Don't have an account?",
         save_as_default: 'Save as default',
       },
       actions: {
@@ -79,6 +82,13 @@ const EN_US = {
           "It looks like you aren't old enough to have a {{organization}} account. If you entered the wrong age in error, please update it now. Otherwise you will not be able to continue registration and no data entered will be stored.",
         under_age: 'I am under {{age}}',
       },
+      reconfirm_age_email: {
+        title: 'AGE CONFIRMATION',
+        subtitle: 'By clicking "Agree" below, I certify that the following is accurate and true:',
+        age_declaration: 'I am an individual {{age}} years of age or older. I previously provided the wrong age to {{organization}}.',
+        warning: 'I understand that if {{organization}} discovers any of my statements to be inaccurate, it may disable and delete this account without notice.',
+        input: 'Re-enter email'
+      },
       our_politics: {
         title: 'Our Policies',
         description:
@@ -89,7 +99,7 @@ const EN_US = {
       },
       confirm_email: {
         title: 'Email verification',
-        description: 'We sent you a email to confirm your account.',
+        description: 'We sent you an email to confirm your account.',
         resend: 'Resend Email',
       },
       custom_fields: {
@@ -128,7 +138,7 @@ const EN_US = {
     },
     updatePassword: {
       title: 'A code has been emailed to you',
-      subtitle: 'Please, use this code and input a new password',
+      subtitle: 'Please use the code received and enter a new password',
       label: {
         updatePassword: 'Update password',
       },

@@ -12,7 +12,8 @@ const PT_BR = {
           'Você precisa aceitar os Termos e Condições',
         password_error:
           'A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial',
-      },
+        confirm_email: 'Por favor, digite o mesmo email utilizado para o cadastro.'
+        },
       what_is_this: 'O que é isso?',
       more: 'mais',
       terms: 'Termos e Condições',
@@ -37,7 +38,7 @@ const PT_BR = {
       cancel: 'Cancelar',
       confirm: 'Confirmar',
       update: 'Atualizar',
-      accept_all: 'Eu aceito todos os'
+      accept_all: 'Eu aceito todos os',
     },
     signin: {
       title: 'Acesse Fanhero agora',
@@ -78,6 +79,16 @@ const PT_BR = {
         subtitle:
           'Parece que você não tem idade suficiente para ter uma conta da {{organization}}. Se você inseriu a idade errada por engano, atualize-a agora. Caso contrário, você não poderá continuar o registro e nenhum dado inserido será armazenado.',
         under_age: 'Tenho menos de {{age}} anos',
+      },
+      reconfirm_age_email: {
+        title: 'CONFIRMAÇÃO DA IDADE',
+        subtitle:
+          'Ao clicar em "Concordo" abaixo, certifico que o seguinte é preciso e verdadeiro:',
+        age_declaration:
+          'Eu sou um indivíduo com {{age}} anos de idade ou mais. Eu anteriormente forneci a idade errada para a {{organization}}.',
+        warning:
+          'Eu entendo que se a {{organization}} analisar que qualquer uma das minhas declarações é imprecisa, ela pode desativar e excluir esta conta sem aviso prévio.',
+        input: 'Digite novamente o emai',
       },
       our_politics: {
         title: 'Nossa Política',

@@ -8,7 +8,7 @@ import { GDPRProps } from './types'
 
 export type GDPRSteps = 'Citizenship' | 'ConfirmAge' | 'OurPolitics'
 
-const GDPRForm = ({ handleFormSubmit, isLoading, onCancel }: GDPRProps) => {
+const GDPRForm = ({ handleFormSubmit, isLoading, onCancel, userEmail }: GDPRProps) => {
   const [activeStep, setActiveStep] = useState<GDPRSteps>('Citizenship')
   const [age, setAge] = useState('')
 
@@ -29,6 +29,7 @@ const GDPRForm = ({ handleFormSubmit, isLoading, onCancel }: GDPRProps) => {
         return (
           <ConfirmAgeForm
             gdprAge={age}
+            userEmail={userEmail}
             onCancel={onCancel}
             handleFormSubmit={() => setActiveStep('OurPolitics')}
           ></ConfirmAgeForm>

@@ -80,7 +80,7 @@ const SignupForm = () => {
         setAccountID(result.socialSignIn.account.id)
 
         if (!result?.socialSignIn.account.status.gdpr) {
-          setActiveStep('LGPD')
+          setActiveStep('GDPR')
         } else {
           history.push('/home')
         }
@@ -204,7 +204,6 @@ const SignupForm = () => {
             isLoading={createAccountGDPRLoading || createAccountLoading}
           ></GDPRForm>
         )
-
       case 'ConfirmEmail':
         return (
           <ConfirmEmailForm
