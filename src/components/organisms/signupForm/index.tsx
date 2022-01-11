@@ -37,6 +37,9 @@ const SignupForm = () => {
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>({ email: '', password: '' })
 
+  const { data: customFieldsData, loading: customFieldsLoading } =
+    useQuery(QUERY_CUSTOM_FIELDS)
+
   const [verifyMail, { loading: verifyMailLoading }] = useMutation(
     MUTATION_VERIFY_MAIL,
     {
@@ -45,15 +48,23 @@ const SignupForm = () => {
           setemailExistsError(t('signup.error.email_exists'))
       },
       onError: (error) => {
-        if (error.message === 'exception:ACCOUNT_NOT_FOUND')
-          setActiveStep('Custom')
-        else setemailExistsError(`${error.message}`)
+        if (error.message !== 'exception:ACCOUNT_NOT_FOUND') {
+          setemailExistsError(`${error.message}`)
+          return
+        }
+
+        if (
+          !customFieldsData?.customFields?.length 
+          || !customFieldsData?.customFields[0]?.fields?.length
+        ) {
+          setActiveStep('LGPD')
+          return
+        }
+
+        setActiveStep('Custom')
       },
     }
   )
-
-  const { data: customFieldsData, loading: customFieldsLoading } =
-    useQuery(QUERY_CUSTOM_FIELDS)
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(
     MUTATION_SOCIAL_SIGNIN,
@@ -177,9 +188,9 @@ const SignupForm = () => {
         )
       case 'Custom':
         return (
-          customFieldsData?.customFields[0].fields && (
+          customFieldsData?.customFields[0]?.fields && (
             <CustomFieldsForm
-              fields={customFieldsData?.customFields[0].fields || []}
+              fields={customFieldsData?.customFields[0]?.fields || []}
               handleFormSubmit={handleCustomFieldsSubmit}
               isLoading={customFieldsLoading}
             ></CustomFieldsForm>
