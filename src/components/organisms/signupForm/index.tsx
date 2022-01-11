@@ -1,26 +1,27 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import {
   MUTATION_CREATE_ACCOUNT,
   MUTATION_CREATE_ACCOUNT_GDPR,
   MUTATION_VERIFY_MAIL,
   MUTATION_SOCIAL_SIGNIN,
+  QUERY_CUSTOM_FIELDS,
 } from 'services/graphql'
 import { useAuth } from 'contexts/auth'
 import {
   RegistrationForm,
   GDPRForm,
   ConfirmEmailForm,
-  AdditionalInformationForm,
+  CustomFieldsForm,
 } from './components'
 import { saveData } from 'services/storage'
 import { SocialSignIn } from 'services/firebase'
 import { AUTH_TOKEN } from 'config/constants'
 import { AlertComponent } from 'components'
-import { CreateAccountInput } from 'generated/graphql'
 import { SignUpSteps } from './types'
+import { CreateAccountInput } from 'generated/graphql'
 
 const SignupForm = () => {
   const { t } = useTranslation()
@@ -34,7 +35,10 @@ const SignupForm = () => {
   const [accountID, setAccountID] = useState('')
 
   const [createAccountData, setCreateAccountData] =
-    useState<CreateAccountInput>()
+    useState<CreateAccountInput>({ email: '', password: '' })
+
+  const { data: customFieldsData, loading: customFieldsLoading } =
+    useQuery(QUERY_CUSTOM_FIELDS)
 
   const [verifyMail, { loading: verifyMailLoading }] = useMutation(
     MUTATION_VERIFY_MAIL,
@@ -44,9 +48,20 @@ const SignupForm = () => {
           setemailExistsError(t('signup.error.email_exists'))
       },
       onError: (error) => {
-        if (error.message === 'exception:ACCOUNT_NOT_FOUND')
-          setActiveStep('GDPR')
-        else setemailExistsError(`${error.message}`)
+        if (error.message !== 'exception:ACCOUNT_NOT_FOUND') {
+          setemailExistsError(`${error.message}`)
+          return
+        }
+
+        if (
+          !customFieldsData?.customFields?.length 
+          || !customFieldsData?.customFields[0]?.fields?.length
+        ) {
+          setActiveStep('LGPD')
+          return
+        }
+
+        setActiveStep('Custom')
       },
     }
   )
@@ -109,12 +124,21 @@ const SignupForm = () => {
     verifyMail({
       variables: {
         payload: {
-          email: FormData.createAccount.email,
+          email: FormData.email,
         },
       },
     })
 
     setCreateAccountData({ ...FormData })
+  }
+
+  const handleCustomFieldsSubmit = (FormData) => {
+    setActiveStep('LGPD')
+
+    setCreateAccountData({
+      ...createAccountData,
+      custom_fields: { ...FormData },
+    })
   }
 
   const handleGDPRSubmit = () => {
@@ -129,7 +153,7 @@ const SignupForm = () => {
       })
     } else {
       createAccount({
-        variables: { ...createAccountData },
+        variables: { createAccount: { ...createAccountData } },
       })
     }
   }
@@ -162,21 +186,23 @@ const SignupForm = () => {
             }}
           ></RegistrationForm>
         )
-      case 'GDPR':
+      case 'Custom':
+        return (
+          customFieldsData?.customFields[0]?.fields && (
+            <CustomFieldsForm
+              fields={customFieldsData?.customFields[0]?.fields || []}
+              handleFormSubmit={handleCustomFieldsSubmit}
+              isLoading={customFieldsLoading}
+            ></CustomFieldsForm>
+          )
+        )
+      case 'LGPD':
         return (
           <GDPRForm
             handleFormSubmit={handleGDPRSubmit}
             onCancel={() => history.push('/login')}
             isLoading={createAccountGDPRLoading || createAccountLoading}
           ></GDPRForm>
-        )
-      case 'Custom':
-        return (
-          <AdditionalInformationForm
-            name={'Bianca'}
-            email={'teste'}
-            fullname={'Bianca Silva'}
-          ></AdditionalInformationForm>
         )
       case 'ConfirmEmail':
         return (
