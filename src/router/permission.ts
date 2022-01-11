@@ -1,6 +1,22 @@
-export const publicPermission = {
+export const publicPermissionUnauthenticated = {
   dashboard: true,
   login: true,
+  livechat: true,
+  home: true,
+  collections: true,
+  mylist: true,
+  tags: true,
+  account: false,
+  search: true,
+  channels: true,
+  feed: true,
+  signup: true,
+  recoverPassword: true
+};
+
+export const publicPermissionAuthenticated = {
+  dashboard: true,
+  login: false,
   livechat: true,
   home: true,
   collections: true,
@@ -14,18 +30,50 @@ export const publicPermission = {
   recoverPassword: true
 };
 
-export const exclusivePermission = {
-  dashboard: true,
+export const exclusivePermissionUnauthenticated = {
+  dashboard: false,
   login: true,
+  livechat: false,
+  home: false,
+  collections: false,
+  mylist: false,
+  tags: false,
+  account: false,
+  search: false,
+  channels: false,
+  feed: false,
+  signup: true,
+  recoverPassword: true
+};
+
+export const exclusivePermissionAuthenticated = {
+  dashboard: true,
+  login: false,
   livechat: true,
   home: true,
-  collections: false,
+  collections: true,
   mylist: true,
   tags: true,
   account: true,
   search: true,
   channels: true,
-  feed: false,
+  feed: true,
+  signup: false,
+  recoverPassword: false
+};
+
+export const defaultPermission = {
+  dashboard: true,
+  login: true,
+  livechat: true,
+  home: true,
+  collections: true,
+  mylist: true,
+  tags: true,
+  account: true,
+  search: true,
+  channels: true,
+  feed: true,
   signup: true,
   recoverPassword: true
 };
