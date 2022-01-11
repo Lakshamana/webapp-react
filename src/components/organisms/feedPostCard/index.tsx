@@ -21,6 +21,21 @@ import {
 const FeedPostCard = ({ ...props }: Props) => {
 	const { t } = useTranslation()
 	const { colorMode } = useThemeStore()
+	const reactions = [
+		{
+			value: '\uD83D\uDE02',
+			count: 212
+		},
+		{
+			value: '\uD83D\uDE42',
+			count: 125
+		},
+		{
+			value: '\u2764\uFE0F',
+			count: 53
+		},
+
+	]
 
 	return (
 		<FeedContent>
@@ -45,7 +60,7 @@ const FeedPostCard = ({ ...props }: Props) => {
 				<CardDescription fontSize={15}>{props.postDescription}</CardDescription>
 				{props.type === "Poll" ? <SetMediaType {...props} /> : ""}
 				<CardReactions>
-					<ReactionBar totalReactions={2500} reactionsTitle='Reactions' />
+					<ReactionBar reactions={reactions} totalReactions={2500} reactionsTitle='reactions' />
 				</CardReactions>
 				<CardFooter>
 					<Participants
@@ -56,11 +71,11 @@ const FeedPostCard = ({ ...props }: Props) => {
 								img: "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg"
 							},
 							{
-								id: 1,
+								id: 2,
 								img: "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/10.jpg"
 							},
 							{
-								id: 1,
+								id: 3,
 								img: "https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/11.jpg"
 							}
 						]}

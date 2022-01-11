@@ -24,12 +24,12 @@ const ReactionBar = ({
               key={`${reaction.value}-reaction`}
               p={1}
               mr={1}
-              minWidth={50}
+              // minWidth={50}
               minHeight={32}
             >
               <div>{reaction.value}</div>
               <Text kind="regular" ml={2}>
-                {reaction.count}
+                {formatNumber(reaction.count,1)}
               </Text>
             </Reaction>
           ))}
