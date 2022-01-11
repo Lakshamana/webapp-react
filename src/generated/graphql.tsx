@@ -3070,6 +3070,7 @@ export type CreateAccountGdprLgpdInput = {
 };
 
 export type CreateAccountInput = {
+  custom_fields?: Maybe<Scalars['JSONObject']>;
   display_name?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   first_name?: Maybe<Scalars['String']>;
@@ -3952,6 +3953,15 @@ export enum LivestreamTypeSortEnum {
   ScheduledStartAt = 'scheduledStartAt',
   StartedAt = 'startedAt'
 }
+
+export type Me = {
+  __typename?: 'Me';
+  account: Account;
+  /** Id */
+  id: Scalars['String'];
+  organization: OrganizationPublicOutput;
+  profile: Profile;
+};
 
 export type MediaAudio = {
   __typename?: 'MediaAudio';
@@ -5138,6 +5148,38 @@ export enum OrderTypeSortEnum {
   PurchasedAt = 'purchasedAt'
 }
 
+export type OrganizationPublicCustomization = {
+  __typename?: 'OrganizationPublicCustomization';
+  configuration?: Maybe<Scalars['String']>;
+  favIcon?: Maybe<Scalars['String']>;
+  loginImage?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
+};
+
+export type OrganizationPublicOutput = {
+  __typename?: 'OrganizationPublicOutput';
+  audioCdnBaseUrl?: Maybe<Scalars['String']>;
+  avatarCdnBaseUrl?: Maybe<Scalars['String']>;
+  current_version?: Maybe<Scalars['String']>;
+  customization?: Maybe<OrganizationPublicCustomization>;
+  /** Id */
+  id: Scalars['String'];
+  identifier?: Maybe<Scalars['String']>;
+  imageCdnBaseUrl?: Maybe<Scalars['String']>;
+  kind?: Maybe<Scalars['String']>;
+  min_compat_version?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  portal_url?: Maybe<Scalars['String']>;
+  settings?: Maybe<OrganizationPublicSettings>;
+  status?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Scalars['String']>;
+};
+
+export type OrganizationPublicSettings = {
+  __typename?: 'OrganizationPublicSettings';
+  bucket?: Maybe<Scalars['String']>;
+};
+
 export type OrganizationSettings = {
   __typename?: 'OrganizationSettings';
   apple?: Maybe<Scalars['JSON']>;
@@ -5611,7 +5653,8 @@ export type Profile = {
   __typename?: 'Profile';
   account: Scalars['ID'];
   address?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Scalars['String']>;
+  avatarDynamicUrl?: Maybe<Scalars['String']>;
+  avatarUrl?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
@@ -5710,13 +5753,14 @@ export type Query = {
   layersCount?: Maybe<Scalars['Int']>;
   livestream?: Maybe<Livestream>;
   livestreams?: Maybe<Array<Maybe<Livestream>>>;
+  me: Me;
   menu: Menu;
   menus: Array<Menu>;
   order?: Maybe<Order>;
   orders?: Maybe<Array<Maybe<Order>>>;
   ordersByChannel?: Maybe<Array<Maybe<Order>>>;
   organization: ResponseOrganizationOutput;
-  organizationPublicSettings: ResponseOrganizationOutput;
+  organizationPublicSettings: ResponseOrganizationPublicOutput;
   organizations: Array<ResponseOrganizationOutput>;
   permission: PermissionDto;
   permissions: Array<PermissionDto>;
@@ -6415,6 +6459,24 @@ export type ResponseOrganizationOutput = {
   web_url?: Maybe<Scalars['String']>;
 };
 
+export type ResponseOrganizationPublicOutput = {
+  __typename?: 'ResponseOrganizationPublicOutput';
+  audioCdnBaseUrl?: Maybe<Scalars['String']>;
+  avatarCdnBaseUrl?: Maybe<Scalars['String']>;
+  current_version?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
+  identifier?: Maybe<Scalars['String']>;
+  imageCdnBaseUrl?: Maybe<Scalars['String']>;
+  kind?: Maybe<Scalars['String']>;
+  min_compat_version?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  portal_url?: Maybe<Scalars['String']>;
+  settings?: Maybe<OrganizationPublicSettings>;
+  status?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Scalars['String']>;
+};
+
 export type RevenuecatOrderIntent = {
   __typename?: 'RevenuecatOrderIntent';
   status?: Maybe<IntentStatus>;
@@ -7102,7 +7164,6 @@ export type UpdateProductPrice = {
 
 export type UpdateProfileInput = {
   address?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
@@ -7348,7 +7409,12 @@ export type ChannelsQueryVariables = Exact<{
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', banner?: Maybe<any>, customization?: Maybe<any>, description: string, entitlements?: Maybe<any>, geofence?: Maybe<any>, id: string, logo?: Maybe<any>, name: string, organization: string, status: string, thumbnail?: Maybe<any> } | { __typename: 'GeolockedChannel', id: string, name: string, customization?: Maybe<any>, thumbnail?: Maybe<any> }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', banner?: Maybe<any>, customization?: Maybe<any>, description: string, entitlements?: Maybe<any>, geofence?: Maybe<any>, id: string, logo?: Maybe<any>, name: string, organization: string, status: string, thumbnail?: Maybe<any> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, customization?: Maybe<any> }> };
+
+export type CustomFieldsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CustomFieldsQuery = { __typename?: 'Query', customFields: Array<{ __typename?: 'ResponseCustomFieldsOutput', fields: Array<{ __typename?: 'ResponseFieldOutput', id: string, name: string, required: boolean, type: CustomFieldTypesEnum }> }> };
 
 export type OrganizationQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -7362,14 +7428,14 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 }>;
 
 
-export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationOutput', id: string, kind?: Maybe<string>, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string>, settings?: Maybe<{ __typename?: 'OrganizationSettings', bucket?: Maybe<string>, aws?: Maybe<any> }> } };
+export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationPublicOutput', id: string, kind?: Maybe<string>, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatar?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> }, account: { __typename?: 'Account', username?: Maybe<string>, display_name?: Maybe<string>, email?: Maybe<string> } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatarUrl?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> }, account: { __typename?: 'Account', username?: Maybe<string>, display_name?: Maybe<string>, email?: Maybe<string> } };
 
 
 export const CreateAccountDocument = gql`
@@ -7832,8 +7898,8 @@ export const ChannelsDocument = gql`
     ... on GeolockedChannel {
       id
       name
-      customization
       thumbnail
+      customization
       __typename
     }
   }
@@ -7873,6 +7939,51 @@ export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
 export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
 export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
+export const CustomFieldsDocument = gql`
+    query CustomFields {
+  customFields {
+    fields {
+      id
+      name
+      required
+      type
+    }
+  }
+}
+    `;
+export type CustomFieldsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CustomFieldsQuery, CustomFieldsQueryVariables>, 'query'>;
+
+    export const CustomFieldsComponent = (props: CustomFieldsComponentProps) => (
+      <ApolloReactComponents.Query<CustomFieldsQuery, CustomFieldsQueryVariables> query={CustomFieldsDocument} {...props} />
+    );
+    
+
+/**
+ * __useCustomFieldsQuery__
+ *
+ * To run a query within a React component, call `useCustomFieldsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCustomFieldsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCustomFieldsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCustomFieldsQuery(baseOptions?: Apollo.QueryHookOptions<CustomFieldsQuery, CustomFieldsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CustomFieldsQuery, CustomFieldsQueryVariables>(CustomFieldsDocument, options);
+      }
+export function useCustomFieldsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CustomFieldsQuery, CustomFieldsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CustomFieldsQuery, CustomFieldsQueryVariables>(CustomFieldsDocument, options);
+        }
+export type CustomFieldsQueryHookResult = ReturnType<typeof useCustomFieldsQuery>;
+export type CustomFieldsLazyQueryHookResult = ReturnType<typeof useCustomFieldsLazyQuery>;
+export type CustomFieldsQueryResult = Apollo.QueryResult<CustomFieldsQuery, CustomFieldsQueryVariables>;
 export const OrganizationDocument = gql`
     query Organization($id: ID!) {
   organization(id: $id) {
@@ -7921,10 +8032,6 @@ export const OrganizationPublicSettingsDocument = gql`
     kind
     status
     customization
-    settings {
-      bucket
-      aws
-    }
     avatarCdnBaseUrl
     audioCdnBaseUrl
     imageCdnBaseUrl
@@ -7968,7 +8075,7 @@ export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<Organizat
 export const ProfileDocument = gql`
     query Profile($account: ID!) {
   profile(account: $account) {
-    avatar
+    avatarUrl
     id
     phone
     locale
