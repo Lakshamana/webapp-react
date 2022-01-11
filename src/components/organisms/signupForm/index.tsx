@@ -57,7 +57,7 @@ const SignupForm = () => {
           !customFieldsData?.customFields?.length 
           || !customFieldsData?.customFields[0]?.fields?.length
         ) {
-          setActiveStep('LGPD')
+          setActiveStep('GDPR')
           return
         }
 
@@ -133,7 +133,7 @@ const SignupForm = () => {
   }
 
   const handleCustomFieldsSubmit = (FormData) => {
-    setActiveStep('LGPD')
+    setActiveStep('GDPR')
 
     setCreateAccountData({
       ...createAccountData,
@@ -196,7 +196,7 @@ const SignupForm = () => {
             ></CustomFieldsForm>
           )
         )
-      case 'LGPD':
+      case 'GDPR':
         return (
           <GDPRForm
             handleFormSubmit={handleGDPRSubmit}
