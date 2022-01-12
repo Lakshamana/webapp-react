@@ -1,14 +1,45 @@
 import { BrowserRouter } from "react-router-dom";
 
 import { ClientRoutes } from "./routes";
-import { permission } from "./permission";
+import {
+  publicPermissionUnauthenticated,
+  publicPermissionAuthenticated,
+  exclusivePermissionUnauthenticated,
+  exclusivePermissionAuthenticated,
+  defaultPermission
+} from "./permission";
+import { useAuth } from "contexts/auth";
+import { useAuthStore } from 'services/stores'
+import { useEffect, useState } from "react";
 
 const Router = () => {
-  // Is Accesible is an object that must be updated here
+  const { kind } = useAuth()
+
+  const { account } = useAuthStore()
+
+  const [ currentPermissions, setCurrentPermissions ] = useState(defaultPermission)
+
+  const permission = () => {
+    switch (kind) {
+      case 'public':
+        setCurrentPermissions(account ? publicPermissionAuthenticated : publicPermissionUnauthenticated);
+        break;
+      case 'exclusive':
+        setCurrentPermissions(account ? exclusivePermissionAuthenticated : exclusivePermissionUnauthenticated);
+        break;
+      default:
+        setCurrentPermissions(defaultPermission);
+    }
+  }
+
+  useEffect(() => {
+    permission()
+  }, [kind, account])
+
 
   return (
     <>
-      <ClientRoutes isAccesible={permission} />
+      <ClientRoutes isAccesible={currentPermissions} />
     </>
   );
 };
