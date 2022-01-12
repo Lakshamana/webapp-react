@@ -1,9 +1,46 @@
-import { MainLayout, Container, FeedPostCard } from "components"
+import { MainLayout, Container, FeedPostCard, Select } from "components"
+import { useState } from "react"
 
 const FeedPage = () => {
+
+	const filterList = [
+		{
+			value: 'recent',
+			label: 'Most Recent'
+		},
+		{
+			value: 'old',
+			label: 'Most Old'
+		},
+		{
+			value: 'popular',
+			label: 'Popular'
+		},
+	]
+
+	const [ filterBy, SetFilterBy ] = useState();
+
+	const handleFilterChange = (evt: any) => {
+    const { value } = evt?.target;
+    SetFilterBy(value);
+  }
+
 	return (
 		<MainLayout>
 			<Container flexDirection={"column"} width={"100%"}>
+				<Container 
+					flexDirection={"column"}
+					width={"100%"}
+					margin="1em auto 0 auto"
+					maxWidth="746px"
+					alignItems="flex-end"
+				>
+					<Select
+						options={filterList}
+						value={filterBy}
+						onChange={handleFilterChange}
+					/>
+				</Container>
 				<FeedPostCard
 					postTitle='Tile of the post'
 					postDescription='This is the description of the post...'
