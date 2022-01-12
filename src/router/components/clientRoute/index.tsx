@@ -1,23 +1,25 @@
-import { useEffect } from "react";
-import { Route } from "react-router-dom";
+import React ,{ useEffect } from "react";
+import { Route, Redirect  } from "react-router-dom";
 
 import { Props } from "./types";
 
-const ClientRoute: React.FunctionComponent<any> = ({
+const ClientRoute = ({
+  component: Component,
   path,
-  component,
-  children,
   isAccesible,
-  fallback,
+  redirectTo,
+  ...rest
 }: Props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [path]);
 
   return (
-    <Route component={isAccesible ? component : fallback} {...{ path }}>
-      {children}
-    </Route>
+    <Route exact path="/" {...rest} render={() => (
+      isAccesible
+      ? <Component/>
+      : <Redirect to={redirectTo} />
+    )} />
   );
 };
 

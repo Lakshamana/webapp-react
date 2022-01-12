@@ -9,6 +9,7 @@ import { useAuthStore } from 'services/stores'
 import { PropsUserInfo } from './types'
 import { UserContainer, OptionsList, TextContainer } from './styles'
 import { colors } from 'styles'
+import { Link } from '@chakra-ui/react'
 
 const UserInfo = ({
   delimited = true,
@@ -19,6 +20,20 @@ const UserInfo = ({
   const { t } = useTranslation()
   const { signOut } = useAuth()
   const { account } = useAuthStore()
+
+  if (!account) {
+    return (
+      <Container>
+        <TextContainer maxWidth={['150px']}>
+          <Text ellipsis color={colors.secondaryText[colorMode]}>
+            <Link href='/login'>
+              Login
+            </Link>
+          </Text>
+        </TextContainer>
+      </Container>
+    )
+  }
 
   return (
     <Container display={['none', 'none', 'none', 'flex']} alignItems={'center'}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useApolloClient } from '@apollo/client'
 import {
   QUERY_ORGANIZATION_PUBLIC_SETTINGS,
@@ -17,22 +17,23 @@ import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
 
-const AuthContext = React.createContext({})
+const AuthContext = createContext({})
 
 export const useAuth = () => {
-  const context = React.useContext(AuthContext)
+  const context = useContext(AuthContext)
   return context as AuthTypes
 }
 
 export const AuthProvider = ({ children }) => {
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
-  const [loading, setLoading] = useState(true)
+  const [ loading, setLoading ] = useState(true)
 
   const client = useApolloClient()
 
   const signed = !!user
-
+  const [ kind, setKind ] = useState('public');
+  
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
   const updateUser = async (user) => {
@@ -61,12 +62,14 @@ export const AuthProvider = ({ children }) => {
 
   const loadOrganization = async () => {
     if (organization) {
+      if (organization.kind) setKind(organization.kind)
       setLoading(false)
       return
     }
     const organizationData = getData(ORGANIZATION_INFO)
     if (organizationData) {
       setOrganization(organizationData)
+      setKind(organizationData.kind)
       setLoading(false)
       return
     }
@@ -86,6 +89,7 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data.organizationPublicSettings
           saveData(ORGANIZATION_INFO, dataOrganization)
           setOrganization(dataOrganization)
+          setKind(dataOrganization.kind)
           setLoading(false)
         }
         resolve(true)
@@ -113,7 +117,7 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login'
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadOrganization()
     loadAccount()
   }, [])
@@ -122,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     <LoadingScreen />
   ) : (
     <AuthContext.Provider
-      value={{ signOut, updateUser, updateAccount, signed }}
+      value={{ signOut, updateUser, updateAccount, signed, kind }}
     >
       {children}
     </AuthContext.Provider>
