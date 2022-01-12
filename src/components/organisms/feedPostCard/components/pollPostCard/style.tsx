@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { SpaceProps, space } from "styled-system"
-import { Props } from "../../types"
+import { Props, itensQuestions } from "../../types"
 import { colors } from "styles"
 
 export const PollContent = styled.div<SpaceProps>`
@@ -25,8 +25,10 @@ export const PollItem = styled.div<Props>`
 	border-radius: 2px;
 	overflow: hidden;
 	font-size: 14px;
-	border: ${(props: Props) =>
-		props.voted ? `2px solid ${colors.blue["300"]}` : ""};
+	&:hover {
+		border: ${(props: Props) =>
+			props.voted ? `2px solid ${colors.blue["300"]}` : ""};
+	}
 `
 
 export const PollItemText = styled.div<SpaceProps>`
@@ -39,7 +41,7 @@ export const PollItemText = styled.div<SpaceProps>`
 `
 
 export const ProgressBar = styled.div`
-	width: ${(props: Props) => (props.percentage ? props.percentage : "")};
+	width: ${(props: itensQuestions) => (props.percentage ? props.percentage : "")};
 	left: 0;
 	top: 0;
 	bottom: 0;

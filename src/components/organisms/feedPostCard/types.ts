@@ -27,6 +27,14 @@ export interface Props extends SpaceProps, LayoutProps, TypographyProps, Flexbox
 	voted: boolean
 	isExclusive: boolean
 	isGeolocked: boolean
+	itensQuestions?: Array<any|itensQuestions>
+}
+
+export interface itensQuestions {
+	id: number,
+	item: string,
+	percentage: string,
+	winner: boolean
 }
 
 export const defaultProps = {

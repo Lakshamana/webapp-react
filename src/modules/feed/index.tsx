@@ -73,6 +73,26 @@ const FeedPage = () => {
 					voteCount={20}
 					timeRemaining='2 days'
 					itemQuestion='Question test'
+					itensQuestions={[
+						{
+							id: 1,
+							item: 'This might be a good option',
+							percentage: '30%',
+							winner: false
+						},
+						{
+							id: 2,
+							item: 'This is the one that will win!',
+							percentage: '50%',
+							winner: true
+						},
+						{
+							id: 3,
+							item: 'This is not going anywhere...!',
+							percentage: '20%',
+							winner: false
+						},
+					]}
 					percentage='60%'
 					voted={true}
 				/>
