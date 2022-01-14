@@ -1,4 +1,3 @@
-import { Container } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import { Avatar } from "../avatar";
 import {
@@ -24,11 +23,11 @@ const BoxChat = ({
 }: Props): ReactElement => {
   return (
     <BoxChatMain justifyContent={isOwnUser ? "flex-end" : "flex-start"}>
-      <ContainerCustom display={'flex'} flexDirection={isOwnUser ? "row-reverse" : "row"}>
+      <ContainerCustom display={'flex'} flexDirection={isOwnUser ? "row-reverse" : "row"} isOwnUser={isOwnUser}>
         <AvatarContainer>
           <Avatar src={avatarUrl} bg="#e1e1e1" color="#000" />
         </AvatarContainer>
-        <MainContainer>
+        <MainContainer isOwnUser={isOwnUser}>
           <DateContainer>
             <DateText>{date}</DateText>
             <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>

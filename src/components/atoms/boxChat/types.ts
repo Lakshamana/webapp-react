@@ -11,4 +11,19 @@ export const defaultProps = {
   username: "",
   message: "",
   date: "",
-};
+}
+
+export interface Theme {
+  isOwnUser?: boolean
+  theme: ThemeDefinition
+}
+
+interface ThemeDefinition {
+  colors: ColorsDefinition,
+  colorMode: string
+}
+
+interface ColorsDefinition {
+  livechatText: string
+  livechatBg: string
+}
