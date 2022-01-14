@@ -33,7 +33,7 @@ const EN_US = {
       send: 'Send',
       enjoy_your_content: 'Enjoy your content',
       retry: 'Retry',
-      access_your_account: 'Access your acount',
+      access_your_account: 'Access your account',
       back: 'Back',
       cancel: 'Cancel',
       confirm: 'Confirm',
@@ -44,7 +44,7 @@ const EN_US = {
     },
     signin: {
       title: 'Access Fanhero now',
-      subtitle: 'Please login into your account now',
+      subtitle: 'Please log into your account now',
       or: 'or',
       label: {
         email: 'Email',
@@ -79,7 +79,7 @@ const EN_US = {
       reconfirm_age: {
         title: 'Did you enter it correctly?',
         subtitle:
-          "It looks like you aren't old enough to have a {{organization}} account. If you entered the wrong age in error, please update it now. Otherwise you will not be able to continue registration and no data entered will be stored.",
+          "It looks like you aren't old enough to have an account. If you entered the wrong age in error, please update it now. Otherwise you will not be able to continue registration and no data entered will be stored.",
         under_age: 'I am under {{age}}',
       },
       reconfirm_age_email: {
