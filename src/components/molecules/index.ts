@@ -1,7 +1,6 @@
 export * from "./comment";
 export * from "./participants";
 export * from "./radioGroup";
-export * from "./popover";
 export * from "./postDetails";
 export * from "./reactionBar";
 export * from "./tab";
