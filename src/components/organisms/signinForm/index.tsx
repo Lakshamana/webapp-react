@@ -8,8 +8,7 @@ import {
   Link,
   Text,
   SocialSigninButton,
-  Checkbox,
-  AlertComponent
+  AlertComponent,
 } from 'components'
 import { initialValues, validationSchema } from './settings'
 import { Props } from './types'
@@ -116,9 +115,6 @@ const SigninForm = ({
           errorMessage={errors.payload?.password}
           error={!!errors.payload?.password && touched.payload?.password}
         />
-        {/* <Box w="100%" py={2}>
-          <Checkbox label={t('signin.label.save_as_default')}></Checkbox>
-        </Box> */}
         <Button
           width={[sizes.loginButtonWidth]}
           mt={3}
