@@ -21,6 +21,7 @@ export const QUERY_CHANNELS = gql`
         id
         name
         thumbnail
+        customization
         __typename
       }
     }
