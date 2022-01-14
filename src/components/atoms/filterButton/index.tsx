@@ -1,33 +1,33 @@
 import React from 'react'
-import { 
-  FilterButtonProps, 
-  ArrowMenuProps, 
-  MenuItemProps, 
+import {
+  FilterButtonProps,
+  ArrowMenuProps,
+  MenuItemProps,
   defaultProps,
-  OptionsProps
+  OptionsProps,
 } from './types'
 
 import {
-  Box, 
+  Box,
   Center,
   Menu,
   MenuButton,
   MenuList,
   MenuItem as RawMenuItem,
-} from "@chakra-ui/react"
+} from '@chakra-ui/react'
 
-import { Text } from "../text"
+import { Text } from '../text'
 
-import { theme } from "styles/theme"
-import { ReactComponent as FilterIcon } from "assets/icons/filter.svg"
+import { theme } from 'styles/theme'
+import { ReactComponent as FilterIcon } from 'assets/icons/filter.svg'
 
 const MenuItem = ({ selected, ...props }: MenuItemProps) => (
-  <RawMenuItem 
+  <RawMenuItem
     {...props}
-    style={{ 
+    style={{
       color: selected ? theme.colors.white : theme.colors.black,
       backgroundColor: selected ? theme.colors.blue['300'] : theme.colors.white,
-      padding: theme.pxToRem(20)
+      padding: theme.pxToRem(20),
     }}
   />
 )
@@ -43,12 +43,11 @@ const ArrowMenu = ({ selected }: ArrowMenuProps) => (
     borderWidth={`0 3px 3px 0`}
     display="inline-block"
     padding={theme.pxToRem(8)}
-    style={{ transform: "rotate(-135deg)" }}
+    style={{ transform: 'rotate(-135deg)' }}
   />
 )
 
 const FilterButton = ({ onChange, options, label }: FilterButtonProps) => {
-
   const [selected, setSelected] = React.useState<number | undefined>(undefined)
 
   React.useEffect(() => {
@@ -56,14 +55,11 @@ const FilterButton = ({ onChange, options, label }: FilterButtonProps) => {
 
     const option: OptionsProps | undefined = options && options[selected]
     option && onChange(option?.value || option)
+    // eslint-disable-next-line
   }, [selected])
 
   return (
-    <Menu
-      direction="rtl"
-      autoSelect={false}
-      closeOnSelect={false}
-    >
+    <Menu direction="rtl" autoSelect={false} closeOnSelect={false}>
       <MenuButton>
         <Center>
           <Box mr={2}>
@@ -71,25 +67,26 @@ const FilterButton = ({ onChange, options, label }: FilterButtonProps) => {
           </Box>
 
           <Text fontSize={theme.pxToRem(23)} fontWeight={500}>
-            { label || '' }
+            {label || ''}
           </Text>
         </Center>
       </MenuButton>
 
       <MenuList padding={0} border="none" overflow="hidden" minW="fit-content">
-        {options && options.map(({ label }, index) => (
-          <MenuItem
-            onClick={() => setSelected(index)}
-            selected={selected === index}
-          >
-            { label }
-            {index === 0 && <ArrowMenu selected={selected === 0} />}
-          </MenuItem>
-        ))}
+        {options &&
+          options.map(({ label }, index) => (
+            <MenuItem
+              onClick={() => setSelected(index)}
+              selected={selected === index}
+            >
+              {label}
+              {index === 0 && <ArrowMenu selected={selected === 0} />}
+            </MenuItem>
+          ))}
       </MenuList>
     </Menu>
   )
-};
+}
 
 FilterButton.defaultProps = defaultProps
 
