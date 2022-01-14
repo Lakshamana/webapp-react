@@ -1,7 +1,7 @@
 export const USER_KEY = '@App:user'
 export const AUTH_TOKEN = '@App:token'
 export const ACCOUNT_INFO = '@App:account'
-export const USER_LOCALE = '@App:locale'
+export const APP_LOCALE = '@App:locale'
 export const THEME = '@App:theme'
 export const ORGANIZATION_INFO = '@App:organization'
 export const CHANNEL_INFO = '@App:channel'

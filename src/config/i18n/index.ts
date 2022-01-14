@@ -1,10 +1,11 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import { getData } from 'services/storage'
 
-import { USER_LOCALE } from 'config/constants'
+import { APP_LOCALE } from 'config/constants'
 import translations from 'locale'
 
-const localeSet = localStorage.getItem(USER_LOCALE)
+const localeSet = getData(APP_LOCALE)
 
 const i18nConfig = {
   resources: translations,

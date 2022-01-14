@@ -15,7 +15,7 @@ import {
   Navbar,
 } from './components'
 
-import { USER_LOCALE, ACCOUNT_INFO } from 'config/constants'
+import { APP_LOCALE, ACCOUNT_INFO } from 'config/constants'
 import { QUERY_PROFILE } from 'services/graphql'
 import { colors, sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
@@ -46,7 +46,7 @@ const Account = () => {
   const { values, setFieldValue } = useFormik({
     initialValues: {
       ...initialValues,
-      locale: localStorage.getItem(USER_LOCALE) || initialValues.locale,
+      locale: localStorage.getItem(APP_LOCALE) || initialValues.locale,
     },
     validationSchema,
     validateOnChange: true,
@@ -57,7 +57,7 @@ const Account = () => {
   const handleLanguageChange = (evt: any) => {
     const { value } = evt?.target
     setFieldValue('locale', value)
-    localStorage.setItem(USER_LOCALE, value)
+    localStorage.setItem(APP_LOCALE, value)
     i18n.changeLanguage(value)
   }
 
