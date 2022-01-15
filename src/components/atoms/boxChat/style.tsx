@@ -16,10 +16,7 @@ export const BoxChatMain: any = styled.div`
     padding: 8px;
   }
   @media screen and (min-width: ${breakpoints.lg}) {
-    padding-top: 16px;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
+    padding: 10px 0;
   }
 `;
 
