@@ -7,6 +7,7 @@ import { defaultProps } from './types'
 import { CustomContainer } from './styles'
 
 const ChannelSelector = ({
+  display,
   onSelect,
   onSearch,
   channels,
@@ -30,16 +31,20 @@ const ChannelSelector = ({
   return (
     <CustomContainer
       {...props}
-      display={['none', 'none', 'none', 'flex']}
+      display={display === 'menu'
+        ? ['none', 'none', 'none', 'flex']
+        : ['flex', 'flex', 'flex', 'none']
+      }
       height={[50]}
     >
       <Popover
+        display={display}
         isOpen={open}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
         popoverTrigger={
           <button>
-            <ChannelSelected {...{ selected, open, colorMode }} />
+            <ChannelSelected {...{ selected, open, colorMode, display }} />
           </button>
         }
       >

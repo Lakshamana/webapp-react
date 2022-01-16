@@ -23,3 +23,11 @@ export const HeaderContainer = styled(StyleContainer)`
 export const LogoContainer = styled.div`
   padding: 0 ${({ theme }) => theme.sizes.paddingSm};
 `
+
+export const ChannelContainer = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+`

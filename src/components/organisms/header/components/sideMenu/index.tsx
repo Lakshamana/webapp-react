@@ -6,7 +6,7 @@ import { PropsSideMenu } from '../../types'
 import { SideContainer, ScrollContainer } from './styles'
 import { colors } from 'styles'
 
-const SideMenu = ({ open, data, user, colorMode }: PropsSideMenu) => (
+const SideMenu = ({ open, data, user, colorMode, children }: PropsSideMenu) => (
   <SideContainer display="block" {...{ open }}>
     <ScrollContainer
       flexDirection="column"
@@ -14,6 +14,7 @@ const SideMenu = ({ open, data, user, colorMode }: PropsSideMenu) => (
       my={3}
     >
       <SideUserInfo {...{ user }} />
+      {children}
       {data?.map((item: any) => (
         <Link to={item.url} key={`Path-${item.id}`}>
           <Container width={1} pl={3} py={3}>
