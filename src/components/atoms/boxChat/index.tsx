@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
-import { Avatar } from "../avatar";
 import {
   AvatarContainer,
+  AvatarCustom,
   BoxChatMain,
   MainContainer,
   BoxContainer,
@@ -25,7 +25,7 @@ const BoxChat = ({
     <BoxChatMain justifyContent={isOwnUser ? "flex-end" : "flex-start"}>
       <ContainerCustom display={'flex'} flexDirection={isOwnUser ? "row-reverse" : "row"} isOwnUser={isOwnUser}>
         <AvatarContainer>
-          <Avatar src={avatarUrl} bg="#e1e1e1" color="#000" />
+          <AvatarCustom src={avatarUrl} bg="#e1e1e1" color="#000" />
         </AvatarContainer>
         <MainContainer isOwnUser={isOwnUser}>
           <DateContainer>

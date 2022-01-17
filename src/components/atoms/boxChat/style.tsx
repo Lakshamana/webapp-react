@@ -3,6 +3,7 @@ import { color, flexbox, layout } from "styled-system";
 import { breakpoints } from "styles";
 import { Container } from "@chakra-ui/react";
 import { Theme } from "./types";
+import { Avatar } from "../avatar";
 
 export const BoxChatMain: any = styled.div`
   ${flexbox}
@@ -11,13 +12,6 @@ export const BoxChatMain: any = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 4px;
-  @media screen and (min-width: ${breakpoints.md}) {
-    padding: 8px;
-  }
-  @media screen and (min-width: ${breakpoints.lg}) {
-    padding: 10px 0;
-  }
 `;
 
 export const AvatarContainer: any = styled.div`
@@ -26,19 +20,17 @@ export const AvatarContainer: any = styled.div`
   }
 `;
 
+export const AvatarCustom = styled(Avatar)`
+  width: 36px;
+  height: 36px;
+`
+
 export const MainContainer: any = styled.div`
   ${layout}
   ${flexbox}
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  ${({ isOwnUser }: Pick<Theme, 'isOwnUser'>) => `
-    @media screen and (min-width: ${breakpoints.lg}) {
-      width: 80%;
-      margin-left: ${isOwnUser ? '0' : '16px'};
-      margin-right: ${isOwnUser ? '16px' : '0'};
-    }
-  `}
 `;
 
 export const DateContainer: any = styled.div` 
@@ -60,31 +52,21 @@ export const BoxContainer: any = styled.div`
   }}
   border-radius: 8px;
   padding: 12px;
-  @media screen and (min-width: ${breakpoints.lg}) {
-    padding: 16px;
-  }
 `;
 export const NameUserText: any = styled.span`
   ${color}
   font-weight: bold;
-  font-size: 12px;
+  font-size: 11px;
 `;
 
 export const MessageText: any = styled.span`
   ${color}
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 300;
 `;
 
 export const ContainerCustom = styled(Container)`
   max-width: 100%;
-  ${({ isOwnUser }: Pick<Theme, 'isOwnUser'>) => `
-    @media screen and (min-width: ${breakpoints.lg}) {
-      padding-right: ${isOwnUser ? '16px' : '4px'};
-      padding-left: ${isOwnUser ? '4px' : '16px'};
-    }
-  `}
-  @media screen and (min-width: ${breakpoints.xl}) {
-    max-width: 60ch;
-  }
+  padding: 0;
+  gap: 12px;
 `
