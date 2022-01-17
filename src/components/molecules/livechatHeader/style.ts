@@ -13,41 +13,21 @@ export const HeaderMain = styled.div<CustomPropsStyle>`
   ${layout}
   ${space}
   ${flexbox}
+  height: 48px;
   align-items: center;
   background-color: ${({ colorMode, theme })=> colorMode === 'light' 
     ? theme.colors.inputBg[theme.colorMode]
     : theme.colors.cardBg[theme.colorMode]
   };
-
-  padding: 0.8em 0;
+  padding: 0.8em 1em;
   @media screen and (min-width: ${breakpoints.lg}) {
-    padding: 0.4em 0
+    padding: 0.4em 1em;
   }
   @media screen and (min-width: ${breakpoints.xl}) {
-    padding: 0.6em 0
+    padding: 0.6em 1em;
   }
-`
-
-export const AvatarContainer = styled.div<StyledProps>`
-  ${layout}
-  ${flexbox}
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-export const TextContainer = styled.div<StyledProps>`
-  ${layout}
-  ${flexbox}
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 `
 
 export const Text = styled(TextComponent)<StyledProps>`
   text-transform: uppercase;
-`
-
-export const DotsContainer = styled.div<StyledProps>`
-  ${flexbox}
 `
