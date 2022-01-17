@@ -120,6 +120,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     loadOrganization()
     loadAccount()
+    // eslint-disable-next-line
   }, [])
 
   return loading ? (

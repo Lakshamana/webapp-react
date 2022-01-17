@@ -77,7 +77,7 @@ const PT_BR = {
       reconfirm_age: {
         title: 'Você digitou corretamente?',
         subtitle:
-          'Parece que você não tem idade suficiente para ter uma conta da {{organization}}. Se você inseriu a idade errada por engano, atualize-a agora. Caso contrário, você não poderá continuar o registro e nenhum dado inserido será armazenado.',
+          'Parece que você não tem idade suficiente para ter uma conta. Se você digitou a idade errada por engano, atualize-a agora. Caso contrário, você não poderá continuar o registro e nenhum dado inserido será armazenado.',
         under_age: 'Tenho menos de {{age}} anos',
       },
       reconfirm_age_email: {

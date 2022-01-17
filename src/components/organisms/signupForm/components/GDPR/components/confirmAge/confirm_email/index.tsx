@@ -42,6 +42,7 @@ const ConfirmEmail = ({
 
   useEffect(() => {
     setFieldValue('email', userEmail)
+    // eslint-disable-next-line
   }, [userEmail])
 
   return (
