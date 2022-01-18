@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { layout } from "styled-system";
 import { StyleContainer } from 'components'
 import { breakpoints, sizes } from 'styles'
 
@@ -48,4 +49,13 @@ export const ScrollContainer = styled(StyleContainer)`
 
 export const ExitContainer = styled(StyleContainer)`
   cursor: pointer;
+`
+
+export const Circle = styled.div`
+  ${layout}
+  background-color: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
 `
