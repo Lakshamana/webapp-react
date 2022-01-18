@@ -23,9 +23,9 @@ const LiveChat = () => {
     <MainLayout py={0}>
       <Box display="flex" flexDirection={'column'}>
         <Box display="flex" flexDirection={{ ssm: 'column', lg: 'row' }} position={'relative'}>
-          <Flex position={'absolute'} zIndex={100} w={'146px'} mt={'16px'} ml={'16px'} justifyContent="space-between">
-            <VideoBadge kind={'live'}>LIVE</VideoBadge>
-            <VideoBadge>999k</VideoBadge>
+          <Flex gridGap={2} position={'absolute'} zIndex={100} mt={'16px'} ml={'16px'} justifyContent="flex-start">
+            <VideoBadge kind={'live'} >LIVE</VideoBadge>
+            <VideoBadge kind={'view-counter'}>999k</VideoBadge>
           </Flex>
           <Box w={'100%'} my={{ ssm: '2', md: '0' }} h={{ ssm: '300px', lg: '70vh', xl: '80vh' }}>
             {initialLivestream && initialLivestream?.src && (

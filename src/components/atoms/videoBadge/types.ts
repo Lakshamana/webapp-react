@@ -1,4 +1,4 @@
-type VideoBadgeType = 'default' | 'live' | 'social' | 'social-end';
+type VideoBadgeType = 'default' | 'live' | 'social' | 'social-end' | 'view-counter';
 
 export interface VideoBadgeProps {
   children: any
