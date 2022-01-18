@@ -62,7 +62,7 @@ export const NameUserText: any = styled.span`
 
 export const MessageText: any = styled.span`
   ${color}
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 300;
 `;
 
