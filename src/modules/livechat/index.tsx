@@ -29,7 +29,7 @@ const LiveChat = () => {
           </Flex>
           <Box w={'100%'} my={{ ssm: '2', md: '0' }} h={{ ssm: '300px', lg: '70vh', xl: '80vh' }}>
             {initialLivestream && initialLivestream?.src && (
-              <VideoPlayer {...{ ...initialLivestream }} skin={"facebook-skin"} />
+              <VideoPlayer {...{ ...initialLivestream }} />
             )}
           </Box>
           <Box w={{ ssm: '100%', lg: '50%', xl: '30%' }} h={{ ssm: '60vh', lg: '70vh', xl: '80vh' }}>
