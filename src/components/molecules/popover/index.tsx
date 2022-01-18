@@ -24,7 +24,7 @@ const Popover = ({
       <PopoverTrigger>{popoverTrigger}</PopoverTrigger>
       <PopoverContent
         bg={background || colors.cardBg[colorMode]}
-        width={display === 'sidebar' ? '100%' : 320}
+        width={display === 'sidebar' ? 275 : 320}
       >
         {hasArrow && (
           <PopoverArrow backgroundColor={colors.cardBg[colorMode]} />
