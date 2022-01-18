@@ -52,6 +52,7 @@ export const BoxContainer: any = styled.div`
   }}
   border-radius: 8px;
   padding: 12px;
+  min-height: 0;
 `;
 export const NameUserText: any = styled.span`
   ${color}
