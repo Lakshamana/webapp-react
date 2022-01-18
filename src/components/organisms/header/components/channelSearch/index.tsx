@@ -18,13 +18,18 @@ const ChannelSearch = ({ search, onChange, colorMode }: PropsChannelSearch) => {
       <Container width="85%">
         <InputInline
           placeholder={t("header.channel_search")}
-          background={colors.backgroundLayout}
+          background={colors.channel.background[colorMode]}
           value={search}
           {...{ onChange }}
         />
       </Container>
       <Container ml={2}>
-        <Icon width={18} height={18} icon="bx:bx-search" color="white" />
+        <Icon
+          width={18}
+          height={18}
+          icon="bx:bx-search"
+          color={colors.channel.searchIcon[colorMode]}
+        />
       </Container>
     </SearchContainer>
   );

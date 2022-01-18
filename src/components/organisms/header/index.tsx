@@ -95,9 +95,14 @@ const HeaderComponent = () => {
       <SideMenu
         open={state.openMenu}
         data={MENUTABS}
-        user={DEFAULT_USER}
+        selected={state.selected}
         {...{ colorMode }}
       >
+        <UserInfo
+          display={'sidebar'}
+          user={DEFAULT_USER}
+          {...{ colorMode, toggleColorMode }}
+        />
         <ChannelContainer>
           <ChannelSelector
             display={'sidebar'}
@@ -166,7 +171,11 @@ const HeaderComponent = () => {
             search={state.search}
             {...{ colorMode }}
           />
-          <UserInfo user={DEFAULT_USER} {...{ colorMode, toggleColorMode }} />
+          <UserInfo
+            display={'menu'}
+            user={DEFAULT_USER}
+            {...{ colorMode, toggleColorMode }}
+          />
         </Container>
       </HeaderContainer>
     </>
