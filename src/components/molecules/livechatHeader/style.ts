@@ -26,6 +26,9 @@ export const HeaderMain = styled.div<CustomPropsStyle>`
   @media screen and (min-width: ${breakpoints.xl}) {
     padding: 0.6em 1em;
   }
+  border-bottom-width: 1px;
+  border-bottom-color: #444444;
+  border-bottom-style: solid;
 `
 
 export const Text = styled(TextComponent)<StyledProps>`
