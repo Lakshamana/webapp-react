@@ -8,22 +8,16 @@ import { Icon } from '@iconify/react'
 export const LivechatFooterMain = styled.div<StyledProps>`
   ${layout}
   width: 100%;
-  height: 100px;
+  height: 48px;
   border-top-width: 1px;
   border-top-color: #444444;
   border-top-style: solid;
   display: flex;
+  gap: 1em;
   flex-direction: row;
   align-items: center;
 
-  padding-top: 14px;
-  padding-bottom: 14px;
-  padding-right: 16px;
-  @media screen and (min-width: ${breakpoints.lg}) {
-    padding-top: 8px;
-    padding-bottom: 0px;
-    padding-right: 16px;
-  }
+  padding: 0.5em 1em;
 `
 
 export const IconContainer = styled.div<StyledProps>`

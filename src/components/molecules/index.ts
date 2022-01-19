@@ -26,3 +26,4 @@ export * from "./livechat";
 export * from "./userInfo";
 export * from "./playlistPostCard";
 export * from "./videoPlaylist";
+export * from "./livechatFooterInput";
