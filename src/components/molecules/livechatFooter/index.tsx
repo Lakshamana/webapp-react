@@ -40,9 +40,9 @@ const LivechatFooter = ({
           }}
         />
         {show && (
-          <PopoverIcon gridTemplateColumns="1fr 1fr 1fr">
+          <PopoverIcon>
             {availableReactions.map((reaction) => (
-              <Reaction key={`${reaction.value}-popover`} p={1} m={1}>
+              <Reaction key={`${reaction.value}-popover`}>
                 {reaction.value}
               </Reaction>
             ))}

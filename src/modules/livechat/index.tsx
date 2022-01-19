@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { MainLayout } from "components";
 import { Box, Flex } from "@chakra-ui/react"
 import { useThemeStore } from "services/stores/theme";
 
 import { VideoPlayer } from "components/molecules";
 import { Text, VideoBadge } from "components/atoms";
-import { Bar, BoxCustom } from "./style";
+import { Bar, BoxCustom, MainLayoutCustom } from "./style";
 import { colors } from 'styles'
 
 import { options, initialLivestream } from "./mock";
@@ -20,7 +19,7 @@ const LiveChat = () => {
   }
 
   return (
-    <MainLayout py={0}>
+    <MainLayoutCustom py={0}>
       <Box display="flex" flexDirection={'column'}>
         <Box display="flex" flexDirection={{ ssm: 'column', lg: 'row' }} position={'relative'}>
           <Flex gridGap={2} position={'absolute'} zIndex={100} mt={'16px'} ml={'16px'} justifyContent="flex-start">
@@ -51,7 +50,7 @@ const LiveChat = () => {
           <Bar/>
         </BoxCustom >
       </Box>
-    </MainLayout >
+    </MainLayoutCustom >
   );
 };
 

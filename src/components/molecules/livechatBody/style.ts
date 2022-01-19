@@ -12,4 +12,5 @@ export const MainChatBody = styled.div<StyledProps>`
   gap: 1em;
   overflow-y: scroll;
   scroll-snap-align: end;
+  background: ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
 `
