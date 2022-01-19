@@ -41,10 +41,10 @@ const LiveChat = () => {
           </Box>
         </Box>
         <BoxCustom px={{ ssm: '4', lg: '150px',xl: '300px' }} py={'2em'} m='0'>
-          <Text fontWeight={700} fontSize={36} {...colorLayout}>
+          <Text fontWeight={700} fontSize={30} {...colorLayout}>
             Title lorem ipsum dolor sit amet consectetur elit sed do eiusmod tempor incididunt 
           </Text>
-          <Text fontWeight={300} fontSize={16} {...colorLayout}>
+          <Text fontWeight={300} fontSize={15} {...colorLayout}>
             Ao saber que tem câncer, um professor passa a fabricar metanfetamina pelo futuro da família, mudando o destino de todos.
           </Text>
           <Bar/>
