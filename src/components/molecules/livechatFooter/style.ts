@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { space, layout, flexbox, grid } from 'styled-system'
-import { breakpoints } from 'styles'
 import { StyledProps } from './types'
 
 import { Icon } from '@iconify/react'
@@ -8,7 +7,6 @@ import { Icon } from '@iconify/react'
 export const LivechatFooterMain = styled.div<StyledProps>`
   ${layout}
   width: 100%;
-  height: 48px;
   border-top-width: 1px;
   border-top-color: #444444;
   border-top-style: solid;
@@ -16,7 +14,6 @@ export const LivechatFooterMain = styled.div<StyledProps>`
   gap: 1em;
   flex-direction: row;
   align-items: center;
-
   padding: 0.5em 1em;
 `
 

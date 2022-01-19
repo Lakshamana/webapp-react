@@ -1,6 +1,7 @@
-import { Input, InputGroup, InputRightElement, Text } from '@chakra-ui/react'
+import { InputGroup, InputRightElement } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Props } from "./types";
+import { InputCustom, CharacterCounter } from './style';
 
 const LivechatFooterInput = ({
   value = '',
@@ -9,7 +10,7 @@ const LivechatFooterInput = ({
 }: Props) => {
   return (
     <InputGroup size="md">
-      <Input
+      <InputCustom
         pr="4.5rem"
         type="text"
         placeholder="Say something..."
@@ -29,9 +30,9 @@ const LivechatFooterInput = ({
         px="1em"
       >
         {value.length !== 0 && (
-          <Text fontSize="xs" color="#5c5c5c">
+          <CharacterCounter fontSize="xs">
             {value.length}
-          </Text>
+          </CharacterCounter>
         )}
         <Icon
           icon="fluent:send-28-filled"
