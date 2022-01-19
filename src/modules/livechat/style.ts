@@ -41,3 +41,18 @@ export const MainLayoutCustom = styled(MainLayout)`
     return theme.colors.search.section[theme.colorMode];
   }};
 `
+
+export const OpenLivechat = styled.div`
+  position: absolute;
+  padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px 0 0 4px;
+  right: 0px;
+  /* opacity: 0.5; */
+  background: ${({ theme })=> theme.colors === 'light' 
+    ? theme.colors.inputBg[theme.colorMode]
+    : theme.colors.cardBg[theme.colorMode]
+  };
+`

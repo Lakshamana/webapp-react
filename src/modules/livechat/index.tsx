@@ -4,15 +4,18 @@ import { useThemeStore } from "services/stores/theme";
 
 import { VideoPlayer } from "components/molecules";
 import { Text, VideoBadge } from "components/atoms";
-import { Bar, BoxCustom, MainLayoutCustom } from "./style";
+import { Bar, BoxCustom, MainLayoutCustom, OpenLivechat } from "./style";
 import { colors } from 'styles'
 
 import { options, initialLivestream } from "./mock";
 import { Livechat } from "components/molecules/livechat";
+import { Icon } from "@iconify/react";
 
 const LiveChat = () => {
-  const [optionsState, setOptionsState] = useState(options);
+  const [ optionsState, setOptionsState ] = useState(options);
   const { colorMode } = useThemeStore()
+
+  const [ livechatState, setlivechatState ] = useState(true);
 
   const colorLayout = {
     color: colors.generalText[colorMode]
@@ -31,14 +34,25 @@ const LiveChat = () => {
               <VideoPlayer {...{ ...initialLivestream }} />
             )}
           </Box>
-          <Box w={{ ssm: '100%', lg: '50%', xl: '30%' }} h={{ ssm: '60vh', lg: '70vh', xl: '80vh' }}>
-            <Livechat
-              dataChat={optionsState}
-              onChangeChat={(e) => setOptionsState(e)}
-              onCloseChat={(e)=>console.log(e)}
-              title="Live chat"
-            />
-          </Box>
+            { livechatState ?
+              <Box w={{ ssm: '100%', lg: '50%', xl: '30%' }} h={{ ssm: '60vh', lg: '70vh', xl: '80vh' }}>
+                <Livechat
+                  dataChat={optionsState}
+                  onChangeChat={(e) => setOptionsState(e)}
+                  onCloseChat={(e)=>setlivechatState(!e)}
+                  title="Live chat"
+                />
+              </Box>
+              :
+              <OpenLivechat onClick={()=>setlivechatState(true)}>
+                <Icon
+                  icon="carbon:chat"
+                  width="28"
+                  height="28"
+                  style={{ color: '#ffffff' }}
+                />
+              </OpenLivechat>
+            }
         </Box>
         <BoxCustom px={{ ssm: '4', lg: '150px',xl: '300px' }} py={'2em'} m='0'>
           <Text fontWeight={700} fontSize={30} {...colorLayout}>

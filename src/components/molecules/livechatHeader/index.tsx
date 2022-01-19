@@ -23,7 +23,7 @@ const LivechatHeader = ({ title = "", onCloseChat = () => { } }: Props) => {
           {title}
         </Text>
         <Icon
-          icon={ chatOpen? "mdi:eye-off-outline" : "mdi:eye-outline"}
+          icon={ chatOpen? "carbon:chat-off" : "carbon:chat"}
           width="28"
           height="28"
           style={{ color: '#ffffff' }}
