@@ -36,10 +36,13 @@ export const MainContainer: any = styled.div`
 export const DateContainer: any = styled.div` 
 `;
 
-export const DateText: any = styled.div`
+export const NameUserText: any = styled.div`
 ${({ theme: { colors, colorMode } }: Theme) => `color: ${colors.livechatText[colorMode]};`}
   font-size: 12px;
-  font-weight: 300;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  justify-content: ${ ({ isOwnUser }: Theme) => (isOwnUser ? 'flex-end' : 'flex-start') };
 `;
 
 export const BoxContainer: any = styled.div`
@@ -54,16 +57,12 @@ export const BoxContainer: any = styled.div`
   padding: 12px;
   min-height: 0;
 `;
-export const NameUserText: any = styled.span`
-  ${color}
-  font-weight: bold;
-  font-size: 11px;
-`;
 
 export const MessageText: any = styled.span`
-  ${color}
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 300;
+  color: ${ ({ isOwnUser }: Theme) => (isOwnUser ? "#fff" : "#444") };
+  text-align: ${ ({ isOwnUser }: Theme) => (isOwnUser ? "end" : "start") };
 `;
 
 export const ContainerCustom = styled(Container)`

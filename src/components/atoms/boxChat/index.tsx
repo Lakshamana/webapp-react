@@ -6,7 +6,6 @@ import {
   MainContainer,
   BoxContainer,
   DateContainer,
-  DateText,
   NameUserText,
   MessageText,
   ContainerCustom,
@@ -29,12 +28,9 @@ const BoxChat = ({
         </AvatarContainer>
         <MainContainer isOwnUser={isOwnUser}>
           <DateContainer>
-            <DateText>{date}</DateText>
+            <NameUserText isOwnUser={isOwnUser}>{username}</NameUserText>
             <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>
-              <NameUserText color={isOwnUser ? "#fff" : "#444"}>
-                {username}
-              </NameUserText>
-              <MessageText color={isOwnUser ? "#fff" : "#444"}>
+              <MessageText isOwnUser={isOwnUser}>
                 {message}
               </MessageText>
             </BoxContainer>
