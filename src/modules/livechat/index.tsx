@@ -36,6 +36,7 @@ const LiveChat = () => {
             <Livechat
               dataChat={optionsState}
               onChangeChat={(e) => setOptionsState(e)}
+              onCloseChat={(e)=>console.log(e)}
               title="Live chat"
             />
           </Box>

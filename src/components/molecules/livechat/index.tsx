@@ -20,7 +20,7 @@ const LivechatMolecule = ({
 
   return (
     <Container flex={2} width={'102%'} height={'100%'} flexDirection={["column"]} overflowY={'scroll'} justifyContent={'space-between'}>
-      <LivechatHeader title={title} onCloseChat={() => onCloseChat()} />
+      <LivechatHeader title={title} onCloseChat={onCloseChat} />
       <LivechatBody options={optionsState} />
       <LivechatFooter
         value={value}
