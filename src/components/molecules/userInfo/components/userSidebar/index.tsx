@@ -8,6 +8,7 @@ const UserSidebar = ({ account }: PropsUserSidebar) => (
   <UserContainer
     py={2}
     display="flex"
+    width={273}
     justifyContent="space-between"
     alignItems="center"
   >
@@ -19,7 +20,7 @@ const UserSidebar = ({ account }: PropsUserSidebar) => (
             : <Avatar width={'45px'} height={'45px'} src={''} />
         }
       </Container>
-      <Container width={220} px={2}>
+      <Container px={2}>
         <Text ellipsis color={colors.white}>
           {account?.username || account?.display_name}
         </Text>

@@ -28,6 +28,8 @@ export const ChannelContainer = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
   display: flex;
-  justify-content: right;
+  justify-content: center;
   align-items: center;
+  align-self: center;
+  width: 273px;
 `

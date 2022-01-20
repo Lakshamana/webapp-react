@@ -13,19 +13,28 @@ const SideMenu = ({ open, data, selected, colorMode, children }: PropsSideMenu) 
       my={3}
     >
       {children}
-      {data?.map((item: any) => (
-        <Link to={item.url} key={`Path-${item.id}`}>
-          <Container width={1} pl={3} py={3} alignItems={'center'}>
-            {selected === item.id && <Circle />}
-            <Text
-              style={{ textTransform: 'uppercase' }}
-              color={colors.secondaryText[colorMode]}
-            >
-              {item.label}
-            </Text>
-          </Container>
-        </Link>
-      ))}
+      {data?.map((item: any) => {
+        const isSelected = selected === item.id
+        return (
+          <Link to={item.url} key={`Path-${item.id}`}>
+            <Container width={1} pl={3} py={3} alignItems={'center'} justifyContent={'center'}>
+              {isSelected && <Circle />}
+              <Text
+                style={{
+                  textTransform: 'uppercase',
+                  fontWeight: isSelected ? 'bold' : 'normal'
+                }}
+                color={isSelected
+                  ? colors.generalText[colorMode]
+                  : colors.secondaryText[colorMode]
+                }
+              >
+                {item.label}
+              </Text>
+            </Container>
+          </Link>
+        )
+      })}
     </ScrollContainer>
   </SideContainer>
 )

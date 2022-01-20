@@ -7,7 +7,7 @@ interface PropsSideContainer {
   open: boolean
 }
 
-export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
+export const SideContainer = styled(StyleContainer) <PropsSideContainer>`
   position: absolute;
   top: ${sizes.headerMobileHeight};
   z-index: 1000;
@@ -57,5 +57,5 @@ export const Circle = styled.div`
   border-radius: 50%;
   width: 8px;
   height: 8px;
-  margin-right: 4px;
+  margin-right: 8px;
 `

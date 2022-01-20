@@ -29,14 +29,7 @@ const ChannelSelector = ({
   }
 
   return (
-    <CustomContainer
-      {...props}
-      display={display === 'menu'
-        ? ['none', 'none', 'none', 'flex']
-        : ['flex', 'flex', 'flex', 'none']
-      }
-      height={[50]}
-    >
+    <CustomContainer {...{ display, ...props }} height={[50]}>
       <Popover
         display={display}
         isOpen={open}
