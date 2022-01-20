@@ -1,4 +1,4 @@
-import { LoginLayout, Card, SignupForm } from 'components'
+import { Card, SignupForm } from 'components'
 import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
 import { Link, Text } from 'components'
@@ -10,7 +10,6 @@ const SignupPage = () => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   return (
-    <LoginLayout>
       <Container width={1} paddingY={[0, 40]}>
         <Card
           paddingX={[30, 60]}
@@ -31,7 +30,6 @@ const SignupPage = () => {
           </Flex>
         </Card>
       </Container>
-    </LoginLayout>
   )
 }
 
