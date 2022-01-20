@@ -1,9 +1,7 @@
 import styled from 'styled-components'
-import { layout } from 'styled-system'
 import { StyledProps } from './types'
 
 export const MainChatBody = styled.div<StyledProps>`
-  ${layout}
   display: flex;
   flex-direction: column;
   width: 100%;
