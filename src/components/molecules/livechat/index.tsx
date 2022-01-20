@@ -19,9 +19,9 @@ const LivechatMolecule = ({
   const [optionsState, setOptionsState] = useState(dataChat);
 
   return (
-    <Container flex={2} width={'100%'} height={'100%'} flexDirection={["column"]} overflowY={'scroll'} justifyContent={'space-between'}>
+    <Container flex={2} width={'102%'} height={'100%'} flexDirection={["column"]} overflowY={'scroll'} justifyContent={'space-between'}>
       <LivechatHeader title={title} onCloseChat={() => onCloseChat()} />
-      <LivechatBody options={optionsState}/>
+      <LivechatBody options={optionsState} />
       <LivechatFooter
         value={value}
         onChange={(e) => setValue(e.target.value)}

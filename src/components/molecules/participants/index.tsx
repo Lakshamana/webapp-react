@@ -3,6 +3,7 @@ import { Container } from "components";
 import { getParticipants } from "./utils";
 import { Props, TypeParticipant, defaultProps } from "./types";
 import { Participant, Button } from "./styles";
+import { formatNumber } from "utils";
 
 const Participants = ({ participants, totalParticipants }: Props) => (
   <Container alignItems="center">
@@ -19,8 +20,8 @@ const Participants = ({ participants, totalParticipants }: Props) => (
     </Container>
     {totalParticipants > 3 ? (
       <Container ml={3}>
-        <Button p={1} minWidth="50px" onClick={() => {}}>
-          + {totalParticipants}
+        <Button py={1} px={2} minWidth="50px" onClick={() => {}}>
+          + {formatNumber(totalParticipants, 1)}
         </Button>
       </Container>
     ) : (

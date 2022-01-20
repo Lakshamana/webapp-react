@@ -1,7 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
-import { useOrganizationStore } from 'services/stores'
 import { Button, Text } from 'components'
 import { ConfirmAgeProps } from './types'
 import { sizes, colors } from 'styles'
@@ -9,7 +8,6 @@ import { sizes, colors } from 'styles'
 const Reconfirm = ({ handleFormSubmit, gdprAge, onCancel }: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const { organization } = useOrganizationStore()
 
   return (
     <Flex alignItems={'center'} flexDirection={'column'} gridGap={5}>
@@ -27,7 +25,7 @@ const Reconfirm = ({ handleFormSubmit, gdprAge, onCancel }: ConfirmAgeProps) => 
         textAlign={'center'}
         color={colors.secondaryText[colorMode]}
       >
-        {t('signup.reconfirm_age.subtitle', { organization: organization?.name })}
+        {t('signup.reconfirm_age.subtitle')}
       </Text>
       <Button
         width={[sizes.loginButtonWidth]}

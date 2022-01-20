@@ -15,27 +15,30 @@ import {
 
 const PollPost = ({ ...props }: Props) => {
 	const { t } = useTranslation()
+	console.log(props);
 	return (
 		<PollContent paddingX={3} paddingY={2}>
-			<PollItem {...props} padding={2} marginBottom={2}>
-				<ProgressBar {...props} />
-				<PollItemText>
-					<Text kind='headline' color={colors.white}>{props.itemQuestion}</Text>
-				</PollItemText>
-				<Flex
-					width={"15%"}
-					justifyContent={"flex-end"}
-					alignItems={"center"}
-					color={colors.white}
-					gridGap={1}>
-					{props.winning ? (
-						<Icon width={14} icon='mdi:check' color={colors.blue["300"]} />
-					) : (
-						""
-					)}
-					{props.percentage}
-				</Flex>
-			</PollItem>
+			{props.itensQuestions && props.itensQuestions.map(question=>(
+				<PollItem {...props} padding={2} marginBottom={2} key={question.id}>
+					<ProgressBar { ...question } />
+					<PollItemText>
+						<Text kind='headline' color={colors.white}>{question.item}</Text>
+					</PollItemText>
+					<Flex
+						width={"15%"}
+						justifyContent={"flex-end"}
+						alignItems={"center"}
+						color={colors.white}
+						gridGap={1}>
+						{question.winner ? (
+							<Icon width={14} icon='mdi:check' color={colors.blue["300"]} />
+						) : (
+							""
+						)}
+						{question.percentage}
+					</Flex>
+				</PollItem>
+			))}
 			<PollStatus {...props}>
 				<Flex
 					fontSize={14}

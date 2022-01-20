@@ -1,11 +1,11 @@
-import { memo, useEffect, useMemo } from "react";
-import { Container, Button } from "components";
-import { Icon } from "@iconify/react";
+import { memo, useEffect, useMemo } from 'react'
+import { Container, Button } from 'components'
+import { Icon } from '@iconify/react'
 
-import { getPages } from "./utils";
-import { TableFooterProps, defaultProps } from "./types";
-import { colors } from "styles";
-import { WrapperPagination } from "./styles";
+import { getPages } from './utils'
+import { TableFooterProps, defaultProps } from './types'
+import { colors } from 'styles'
+import { WrapperPagination } from './styles'
 
 const SimpleTableFooter = ({
   count,
@@ -18,26 +18,27 @@ const SimpleTableFooter = ({
   const countPages: any = useMemo(
     () => Math.round(count / limit + 0.4),
     [count, limit]
-  );
+  )
 
   const pages = useMemo(
     () => getPages({ currentPage, countPages }),
     [countPages, currentPage]
-  );
+  )
 
   const onChange = (nextPage: number) => {
-    const skip = (nextPage - 1) * limit + 1;
-    onChangePage(nextPage, skip - 1);
-  };
+    const skip = (nextPage - 1) * limit + 1
+    onChangePage(nextPage, skip - 1)
+  }
 
   useEffect(() => {
-    const start = currentPage * limit - limit + 1;
+    const start = currentPage * limit - limit + 1
     if (start > count) {
-      onChangePage(1, 0);
+      onChangePage(1, 0)
     }
-  }, [count]);
+    // eslint-disable-next-line
+  }, [count])
 
-  if (!count) return <></>;
+  if (!count) return <></>
 
   return (
     <Container {...props}>
@@ -86,11 +87,11 @@ const SimpleTableFooter = ({
         </Button>
       </WrapperPagination>
     </Container>
-  );
-};
+  )
+}
 
-SimpleTableFooter.defaultProps = defaultProps;
+SimpleTableFooter.defaultProps = defaultProps
 
-const TableFooter = memo(SimpleTableFooter);
+const TableFooter = memo(SimpleTableFooter)
 
-export { TableFooter };
+export { TableFooter }

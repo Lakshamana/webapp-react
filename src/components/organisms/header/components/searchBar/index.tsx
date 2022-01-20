@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { Icon } from "@iconify/react";
-import { useEffect, useRef } from "react";
-import { Container, Popover, InputInline } from "components";
-import { SearchPopover } from "..";
+import { useMemo } from 'react'
+import { Icon } from '@iconify/react'
+import { useEffect, useRef } from 'react'
+import { Container, Popover, InputInline } from 'components'
+import { SearchPopover } from '..'
 
-import { PropsSearchBar } from "../../types";
-import { SearchContainer, CustomContainer, Section } from "./styles";
-import { colors } from "styles";
+import { PropsSearchBar } from '../../types'
+import { SearchContainer, CustomContainer, Section } from './styles'
+import { colors } from 'styles'
 
 const SearchBar = ({
   data,
@@ -17,10 +17,10 @@ const SearchBar = ({
   onOpen,
   colorMode,
 }: PropsSearchBar) => {
-  const triggerRef = useRef<any>();
+  const triggerRef = useRef<any>()
   const colorSchema = useMemo(
     () =>
-      colorMode === "light"
+      colorMode === 'light'
         ? {
             primary: colors.generalText.light,
             background: colors.search.result.light,
@@ -34,7 +34,7 @@ const SearchBar = ({
             section: colors.search.section.dark,
           },
     [colorMode]
-  );
+  )
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -43,14 +43,15 @@ const SearchBar = ({
         triggerRef?.current &&
         !triggerRef?.current.contains(event.target)
       ) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open]);
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+    // eslint-disable-next-line
+  }, [open])
 
   return (
     <Section display="flex" alignItems="center" flex={1}>
@@ -66,7 +67,7 @@ const SearchBar = ({
             px={[3]}
             flex={1}
             background={colorSchema.results}
-            height={["70px", "70px", "70px", "100px"]}
+            height={['70px', '70px', '70px', '100px']}
             ref={triggerRef}
             {...{ open }}
           >
@@ -116,7 +117,7 @@ const SearchBar = ({
         />
       </SearchContainer>
     </Section>
-  );
-};
+  )
+}
 
-export { SearchBar };
+export { SearchBar }

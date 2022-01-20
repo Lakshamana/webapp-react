@@ -199,6 +199,7 @@ const SignupForm = () => {
       case 'GDPR':
         return (
           <GDPRForm
+            userEmail={createAccountData.email}
             handleFormSubmit={handleGDPRSubmit}
             onCancel={() => history.push('/login')}
             isLoading={createAccountGDPRLoading || createAccountLoading}

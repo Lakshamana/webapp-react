@@ -57,6 +57,15 @@ export const colors = {
     light: '#666666',
     dark: '#F2FFF8',
   },
+  livechatText: {
+    light: '#000000',
+    dark: '#e1e1e1',
+  },
+  livechatBg: {
+    light: '#f0f0f5',
+    dark: '#ffffff',
+    me: '#0660F9'
+  },
   billboardText: {
     light: '#444444',
     dark: '#ffffff',
