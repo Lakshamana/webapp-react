@@ -29,7 +29,7 @@ const LivechatHeader = ({ title = '', onCloseChat = () => {} }: Props) => {
         icon={chatOpen ? 'carbon:chat-off' : 'carbon:chat'}
         width="28"
         height="28"
-        style={{ color: '#ffffff', cursor: 'pointer' }}
+        style={{ color: colorLayout.color, cursor: 'pointer' }}
         onClick={() => {
           setchatOpen(!chatOpen)
           onCloseChat(chatOpen)
