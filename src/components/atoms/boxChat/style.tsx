@@ -3,7 +3,6 @@ import { color, flexbox, layout } from "styled-system";
 import { breakpoints } from "styles";
 import { Container } from "@chakra-ui/react";
 import { Theme } from "./types";
-import { Avatar } from "../avatar";
 
 export const BoxChatMain: any = styled.div`
   ${flexbox}
@@ -19,11 +18,6 @@ export const AvatarContainer: any = styled.div`
     display: none
   }
 `;
-
-export const AvatarCustom = styled(Avatar)`
-  width: 36px;
-  height: 36px;
-`
 
 export const MainContainer: any = styled.div`
   ${layout}
