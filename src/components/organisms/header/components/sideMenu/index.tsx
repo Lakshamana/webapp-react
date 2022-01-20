@@ -17,7 +17,7 @@ const SideMenu = ({ open, data, selected, colorMode, children }: PropsSideMenu) 
         const isSelected = selected === item.id
         return (
           <Link to={item.url} key={`Path-${item.id}`}>
-            <Container width={1} pl={3} py={3} alignItems={'center'} justifyContent={'center'}>
+            <Container width={1} py={3} alignItems={'center'} justifyContent={'center'}>
               {isSelected && <Circle />}
               <Text
                 style={{

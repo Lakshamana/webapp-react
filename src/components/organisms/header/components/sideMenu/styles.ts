@@ -36,7 +36,7 @@ export const ScrollContainer = styled(StyleContainer)`
     display: block;
   }
   @media (min-width: ${breakpoints.lg}) {
-    a:nth-child(n + 1):nth-child(-n + 4) {
+    a:nth-child(n + 1):nth-child(-n + 5) {
       display: none;
     }
   }

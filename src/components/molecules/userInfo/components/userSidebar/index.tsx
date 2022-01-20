@@ -9,7 +9,7 @@ const UserSidebar = ({ account }: PropsUserSidebar) => (
     py={2}
     display="flex"
     width={273}
-    justifyContent="space-between"
+    justifyContent="center"
     alignItems="center"
   >
     <Container alignItems="center">
