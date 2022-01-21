@@ -62,7 +62,6 @@ const Account = () => {
   }
 
   return (
-    <MainLayout>
       <Container
         width={1}
         mt={3}
@@ -252,8 +251,7 @@ const Account = () => {
             />
           </ConfigBox>
         </ContentBlock>
-      </Container>
-    </MainLayout>
+    </Container>
   )
 }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
-import { LoginLayout, AlertCard } from 'components'
+import { AlertCard } from 'components'
 import { Container } from './styles'
 import { RequestPasswordResetForm, UpdatePasswordForm } from './components'
 import { ResetPasswordSteps } from './types'
@@ -102,11 +102,9 @@ const RecoverPasswordPage = () => {
   }
 
   return (
-    <LoginLayout>
-      <Container width={1} paddingY={[0, 40]}>
-        {renderStep()}
-      </Container>
-    </LoginLayout>
+    <Container width={1} paddingY={[0, 40]}>
+      {renderStep()}
+    </Container>
   )
 }
 
