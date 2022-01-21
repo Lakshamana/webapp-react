@@ -79,7 +79,7 @@ export const defaultProps = {
     TERMS_URL: '',
     PRIVACY_URL: '',
     GDPR_URL: '',
-    LOCALE: 'pt',
+    LOCALE: 'pt-BR',
     LOGIN_IMAGE: '',
     LOGO_IMAGE: '',
     HOME_CHANNEL_ID: '',

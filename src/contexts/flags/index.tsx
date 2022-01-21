@@ -5,6 +5,8 @@ import * as crypto from 'crypto-js'
 import { firebaseRemoteConfig } from 'config/firebase'
 import { LoadingScreen } from 'components'
 import { FlagTypes, defaultProps } from './types'
+import { APP_LOCALE } from 'config/constants'
+import { getData, saveData } from 'services/storage'
 
 const FlagsContext = React.createContext({})
 
@@ -35,6 +37,9 @@ export const FlagsProvider = ({ children }) => {
           ORGANIZATION: newFlags.ORGANIZATION,
           CHANNELS: newFlags.CHANNELS,
         })
+
+        if (!getData(APP_LOCALE))
+          saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE)
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))
