@@ -1,16 +1,15 @@
 import { ReactElement } from "react";
-import { Avatar } from "../avatar";
 import {
   AvatarContainer,
   BoxChatMain,
   MainContainer,
   BoxContainer,
   DateContainer,
-  DateText,
   NameUserText,
   MessageText,
   ContainerCustom,
 } from "./style";
+import { Avatar } from "../avatar";
 
 import { Props, defaultProps } from "./types";
 
@@ -25,16 +24,13 @@ const BoxChat = ({
     <BoxChatMain justifyContent={isOwnUser ? "flex-end" : "flex-start"}>
       <ContainerCustom display={'flex'} flexDirection={isOwnUser ? "row-reverse" : "row"} isOwnUser={isOwnUser}>
         <AvatarContainer>
-          <Avatar src={avatarUrl} bg="#e1e1e1" color="#000" />
+          <Avatar width={'36px'} height={'36px'} src={avatarUrl} bg="#e1e1e1" color="#000" />
         </AvatarContainer>
         <MainContainer isOwnUser={isOwnUser}>
           <DateContainer>
-            <DateText>{date}</DateText>
+            <NameUserText isOwnUser={isOwnUser}>{username}</NameUserText>
             <BoxContainer isOwnUser={isOwnUser} minHeight={[86]}>
-              <NameUserText color={isOwnUser ? "#fff" : "#444"}>
-                {username}
-              </NameUserText>
-              <MessageText color={isOwnUser ? "#fff" : "#444"}>
+              <MessageText isOwnUser={isOwnUser}>
                 {message}
               </MessageText>
             </BoxContainer>

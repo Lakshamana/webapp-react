@@ -1,6 +1,7 @@
 import { VideoBadgeProps, defaultProps } from "./types";
 
 import { Box, Flex } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 
 const VideoBadge = ({ children, kind }: VideoBadgeProps) => {
   const getBadgeStyle = () => {
@@ -19,7 +20,19 @@ const VideoBadge = ({ children, kind }: VideoBadgeProps) => {
         )
       case 'live':
         return (
-          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={14} bg={'#FF0000'} color={'white'} fontWeight={700}>
+          <Box textAlign={'center'} px={'10px'} rounded={4} fontSize={14} bg={'#FF0000'} color={'white'} fontWeight={700}>
+            {children}
+          </Box>
+        )
+      case 'view-counter':
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" px={'10px'} rounded={4} fontSize={14} bg={'#444444'} color={'white'} fontWeight={500}>
+            <Icon
+              icon="mdi:account"
+              width="16"
+              height="16"
+              style={{ color: '##fff' }}
+            />
             {children}
           </Box>
         )
