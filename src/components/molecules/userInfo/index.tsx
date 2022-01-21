@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from 'contexts/auth'
-import { Container, Text, Popover, Avatar, Modal, Button } from 'components'
+import { Container, Popover, Modal } from 'components'
 import { PopoverOption, UserMenu, NotLogged, UserSidebar } from './components'
 import { useAuthStore } from 'services/stores'
 import { PropsUserInfo } from './types'
@@ -22,7 +22,7 @@ const UserInfo = ({
   const { account, user } = useAuthStore()
   const [openModal, setOpenModal] = useState(false)
 
-  const avatar_url = user?.avatar_url || ''
+  const avatar_url = user?.avatar_url
 
   if (!account) {
     return <NotLogged {...{ display, colorMode }} />
@@ -30,9 +30,10 @@ const UserInfo = ({
 
   return (
     <Container
-      display={display === 'menu'
-        ? ['none', 'none', 'none', 'flex']
-        : ['flex', 'flex', 'flex', 'none']
+      display={
+        display === 'menu'
+          ? ['none', 'none', 'none', 'flex']
+          : ['flex', 'flex', 'flex', 'none']
       }
       alignItems={'center'}
       alignSelf={'center'}
@@ -41,18 +42,14 @@ const UserInfo = ({
         hasArrow
         isLazy
         placement={'bottom-end'}
-        display='sidebar'
+        display="sidebar"
         popoverTrigger={
           <button>
             <UserContainer {...{ delimited }}>
-              {
-                display === 'menu' && account &&
-                <UserMenu {...{ colorMode, account }} />
-              }
-              {
-                display === 'sidebar' &&
-                <UserSidebar {...{ account }} />
-              }
+              {display === 'menu' && account && (
+                <UserMenu {...{ colorMode, account, avatar_url }} />
+              )}
+              {display === 'sidebar' && <UserSidebar {...{ account }} />}
             </UserContainer>
           </button>
         }
@@ -60,7 +57,6 @@ const UserInfo = ({
         <Container flexDirection="column">
           <OptionsList>
             <PopoverOption
-              
               color={colors.generalText[colorMode]}
               text={t('header.userPopover.settings')}
               onClick={() => history.push('/account')}
@@ -85,9 +81,10 @@ const UserInfo = ({
                 <Icon
                   width={18}
                   height={18}
-                  icon={colorMode === 'dark'
-                    ? "mdi:white-balance-sunny"
-                    : "mdi:moon-waning-crescent"
+                  icon={
+                    colorMode === 'dark'
+                      ? 'mdi:white-balance-sunny'
+                      : 'mdi:moon-waning-crescent'
                   }
                   color={colors.generalText[colorMode]}
                 />
