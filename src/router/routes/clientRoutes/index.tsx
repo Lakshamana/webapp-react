@@ -6,7 +6,7 @@ import {
   LoginPage,
   LiveChat,
   SignupPage,
-  Account,
+  AccountPage,
   CollectionsPage,
   PlayerPage,
   MyListPage,
@@ -68,7 +68,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
       <ClientRoute
         isAccesible={isAccesible?.account}
         path="/account"
-        component={Account}
+        component={AccountPage}
         redirectTo="/home"
       />
       <ClientRoute
