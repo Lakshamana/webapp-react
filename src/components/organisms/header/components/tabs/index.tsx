@@ -1,8 +1,8 @@
-import { Tab } from "components";
+import { Tab } from 'components'
 
-import { colors } from "styles";
-import { TabContainer } from "./styles";
-import { PropsTabs } from "../../types";
+import { colors } from 'styles'
+import { TabContainer } from './styles'
+import { PropsTabs } from '../../types'
 
 const Tabs = ({ selected, setSelected, data, colorMode }: PropsTabs) => (
   <TabContainer display="flex">
@@ -11,7 +11,7 @@ const Tabs = ({ selected, setSelected, data, colorMode }: PropsTabs) => (
         key={tab.id}
         link={tab.url}
         selected={selected === tab.id}
-        onSelect={() => setSelected(tab.label)}
+        onSelect={() => setSelected(tab.id)}
         color={colors.secondaryText[colorMode]}
         {...tab.style}
       >
@@ -19,6 +19,6 @@ const Tabs = ({ selected, setSelected, data, colorMode }: PropsTabs) => (
       </Tab>
     ))}
   </TabContainer>
-);
+)
 
-export { Tabs };
+export { Tabs }

@@ -9,7 +9,7 @@ import {
 import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import { AUTH_TOKEN } from 'config/constants'
-import { getData, clearData } from 'services/storage'
+import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql/mutation/refreshToken'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
@@ -36,8 +36,8 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
-        switch (err.extensions.code) {
-          case 'UNAUTHENTICATED':
+        switch (err.extensions.response.message) {
+          case 'INVALID_TOKEN':
             try {
               const token = getData(AUTH_TOKEN)
               const result = fromPromise(refreshToken(token))
@@ -51,7 +51,7 @@ const errorLink = onError(
                   return
                 }
 
-                localStorage.setItem(AUTH_TOKEN, accessToken)
+                saveData(AUTH_TOKEN, accessToken)
 
                 const authorization = accessToken ? `Bearer ${accessToken}` : ''
                 const headers = operation.getContext().headers

@@ -41,7 +41,13 @@ const LoginPage = () => {
 
       history.push('/home')
     },
-    onError: (error) => setError(`${error}`),
+    onError: (error) => {
+      if (error.message === 'exception:PASSWORD_MISMATCH') {
+        setError(t('signin.error.wrong_credentials'))
+        return
+      }
+      setError(`${error.message}`)
+    },
   })
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(

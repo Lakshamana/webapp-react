@@ -1,4 +1,4 @@
-export const USER_KEY = '@App:user'
+export const USER_INFO = '@App:user'
 export const AUTH_TOKEN = '@App:token'
 export const ACCOUNT_INFO = '@App:account'
 export const APP_LOCALE = '@App:locale'
