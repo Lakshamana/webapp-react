@@ -62,6 +62,7 @@ export type Account = {
   last_name?: Maybe<Scalars['String']>;
   organization?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+  profile?: Maybe<Profile>;
   status?: Maybe<AccountStatus>;
   tenant_id?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
@@ -2773,6 +2774,7 @@ export type BroadcastDestination = {
   configuredDestinationId?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   isActive?: Maybe<Scalars['Boolean']>;
+  livestreamEvent?: Maybe<LivestreamEvent>;
   livestreamEventId?: Maybe<Scalars['String']>;
   response?: Maybe<Scalars['Json']>;
   settings?: Maybe<Scalars['Json']>;
@@ -3175,7 +3177,7 @@ export type CreateChannelInput = {
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
-  menu: Scalars['ID'];
+  menu?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   status?: Maybe<Scalars['String']>;
 };
@@ -5653,8 +5655,8 @@ export type Profile = {
   __typename?: 'Profile';
   account: Scalars['ID'];
   address?: Maybe<Scalars['String']>;
-  avatarDynamicUrl?: Maybe<Scalars['String']>;
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatar_dynamic_url?: Maybe<Scalars['String']>;
+  avatar_url?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
@@ -5724,6 +5726,7 @@ export type Query = {
   accountSession: AccountSession;
   accountSessions: Array<AccountSession>;
   accounts: Array<Account>;
+  accountsCount: ResponseAccountsCount;
   accountsGdprLgpd: Array<AccountGdprLgpd>;
   ad?: Maybe<Ad>;
   admin?: Maybe<AdminQuery>;
@@ -6393,6 +6396,13 @@ export enum ReportType {
   User = 'USER'
 }
 
+export type ResponseAccountsCount = {
+  __typename?: 'ResponseAccountsCount';
+  count: Scalars['Float'];
+  /** Id */
+  id: Scalars['String'];
+};
+
 export type ResponseAvailabilityOutput = {
   __typename?: 'ResponseAvailabilityOutput';
   id: Scalars['ID'];
@@ -6456,7 +6466,7 @@ export type ResponseOrganizationOutput = {
   settings?: Maybe<OrganizationSettings>;
   status?: Maybe<Scalars['String']>;
   tenant_id?: Maybe<Scalars['String']>;
-  web_url?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Array<Scalars['String']>>;
 };
 
 export type ResponseOrganizationPublicOutput = {
@@ -6809,8 +6819,8 @@ export type Style = {
 
 export type SubjectDto = {
   __typename?: 'SubjectDto';
-  entity: Scalars['String'];
-  fields: Array<Scalars['String']>;
+  entity?: Maybe<Scalars['String']>;
+  fields?: Maybe<Array<Scalars['String']>>;
   /** Id */
   id: Scalars['String'];
 };
@@ -7383,12 +7393,26 @@ export type SocialSignInMutationVariables = Exact<{
 
 export type SocialSignInMutation = { __typename?: 'Mutation', socialSignIn: { __typename?: 'SingIn', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename?: 'AccountStatus', gdpr?: Maybe<boolean> }> }, token: { __typename?: 'AccessToken', accessToken: string } } };
 
+export type UpdateMyAccountMutationVariables = Exact<{
+  payload: UpdateAccountInput;
+}>;
+
+
+export type UpdateMyAccountMutation = { __typename?: 'Mutation', updateMyAccount: { __typename?: 'Account', display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> } };
+
 export type UpdatePasswordMutationVariables = Exact<{
   payload: UpdatePassword;
 }>;
 
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'PasswordChanged', success: boolean } };
+
+export type UpdateMyProfileMutationVariables = Exact<{
+  payload: UpdateProfileInput;
+}>;
+
+
+export type UpdateMyProfileMutation = { __typename?: 'Mutation', updateMyProfile: { __typename?: 'Profile', address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, gender?: Maybe<string>, phone?: Maybe<string>, locale?: Maybe<string> } };
 
 export type VerifyMailMutationVariables = Exact<{
   payload: VerifyEmailDto;
@@ -7402,7 +7426,7 @@ export type AccountQueryVariables = Exact<{
 }>;
 
 
-export type AccountQuery = { __typename?: 'Query', account: { __typename: 'Account', display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, id: string, last_name?: Maybe<string>, organization?: Maybe<string>, tenant_id?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename: 'AccountStatus', active?: Maybe<boolean>, gdpr?: Maybe<boolean> }> } };
+export type AccountQuery = { __typename?: 'Query', account: { __typename?: 'Account', display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> } };
 
 export type ChannelsQueryVariables = Exact<{
   filter: FilterFindAllChannelsInput;
@@ -7416,6 +7440,11 @@ export type CustomFieldsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CustomFieldsQuery = { __typename?: 'Query', customFields: Array<{ __typename?: 'ResponseCustomFieldsOutput', fields: Array<{ __typename?: 'ResponseFieldOutput', id: string, name: string, required: boolean, type: CustomFieldTypesEnum }> }> };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> }, profile: { __typename?: 'Profile', address?: Maybe<string>, avatar_url?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string> } } };
+
 export type OrganizationQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -7428,14 +7457,14 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 }>;
 
 
-export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationPublicOutput', id: string, kind?: Maybe<string>, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
+export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationPublicOutput', id: string, name?: Maybe<string>, kind?: Maybe<string>, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', avatarUrl?: Maybe<string>, id: string, phone?: Maybe<string>, locale?: Maybe<string> }, account: { __typename?: 'Account', username?: Maybe<string>, display_name?: Maybe<string>, email?: Maybe<string> } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', address?: Maybe<string>, avatar_url?: Maybe<string>, birthday?: Maybe<any>, phone?: Maybe<string> } };
 
 
 export const CreateAccountDocument = gql`
@@ -7746,6 +7775,49 @@ export function useSocialSignInMutation(baseOptions?: Apollo.MutationHookOptions
 export type SocialSignInMutationHookResult = ReturnType<typeof useSocialSignInMutation>;
 export type SocialSignInMutationResult = Apollo.MutationResult<SocialSignInMutation>;
 export type SocialSignInMutationOptions = Apollo.BaseMutationOptions<SocialSignInMutation, SocialSignInMutationVariables>;
+export const UpdateMyAccountDocument = gql`
+    mutation UpdateMyAccount($payload: UpdateAccountInput!) {
+  updateMyAccount(payload: $payload) {
+    display_name
+    email
+    first_name
+    last_name
+    username
+  }
+}
+    `;
+export type UpdateMyAccountMutationFn = Apollo.MutationFunction<UpdateMyAccountMutation, UpdateMyAccountMutationVariables>;
+export type UpdateMyAccountComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMyAccountMutation, UpdateMyAccountMutationVariables>, 'mutation'>;
+
+    export const UpdateMyAccountComponent = (props: UpdateMyAccountComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateMyAccountMutation, UpdateMyAccountMutationVariables> mutation={UpdateMyAccountDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateMyAccountMutation__
+ *
+ * To run a mutation, you first call `useUpdateMyAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMyAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMyAccountMutation, { data, loading, error }] = useUpdateMyAccountMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useUpdateMyAccountMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMyAccountMutation, UpdateMyAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMyAccountMutation, UpdateMyAccountMutationVariables>(UpdateMyAccountDocument, options);
+      }
+export type UpdateMyAccountMutationHookResult = ReturnType<typeof useUpdateMyAccountMutation>;
+export type UpdateMyAccountMutationResult = Apollo.MutationResult<UpdateMyAccountMutation>;
+export type UpdateMyAccountMutationOptions = Apollo.BaseMutationOptions<UpdateMyAccountMutation, UpdateMyAccountMutationVariables>;
 export const UpdatePasswordDocument = gql`
     mutation UpdatePassword($payload: UpdatePassword!) {
   updatePassword(payload: $payload) {
@@ -7785,6 +7857,50 @@ export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
 export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export const UpdateMyProfileDocument = gql`
+    mutation UpdateMyProfile($payload: UpdateProfileInput!) {
+  updateMyProfile(payload: $payload) {
+    address
+    birthday
+    custom_fields
+    gender
+    phone
+    locale
+  }
+}
+    `;
+export type UpdateMyProfileMutationFn = Apollo.MutationFunction<UpdateMyProfileMutation, UpdateMyProfileMutationVariables>;
+export type UpdateMyProfileComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateMyProfileMutation, UpdateMyProfileMutationVariables>, 'mutation'>;
+
+    export const UpdateMyProfileComponent = (props: UpdateMyProfileComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateMyProfileMutation, UpdateMyProfileMutationVariables> mutation={UpdateMyProfileDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateMyProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateMyProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMyProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMyProfileMutation, { data, loading, error }] = useUpdateMyProfileMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useUpdateMyProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMyProfileMutation, UpdateMyProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMyProfileMutation, UpdateMyProfileMutationVariables>(UpdateMyProfileDocument, options);
+      }
+export type UpdateMyProfileMutationHookResult = ReturnType<typeof useUpdateMyProfileMutation>;
+export type UpdateMyProfileMutationResult = Apollo.MutationResult<UpdateMyProfileMutation>;
+export type UpdateMyProfileMutationOptions = Apollo.BaseMutationOptions<UpdateMyProfileMutation, UpdateMyProfileMutationVariables>;
 export const VerifyMailDocument = gql`
     mutation VerifyMail($payload: VerifyEmailDTO!) {
   verifyMail(payload: $payload) {
@@ -7830,16 +7946,7 @@ export const AccountDocument = gql`
     display_name
     email
     first_name
-    id
     last_name
-    organization
-    status {
-      active
-      gdpr
-      __typename
-    }
-    tenant_id
-    __typename
     username
   }
 }
@@ -7984,6 +8091,60 @@ export function useCustomFieldsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type CustomFieldsQueryHookResult = ReturnType<typeof useCustomFieldsQuery>;
 export type CustomFieldsLazyQueryHookResult = ReturnType<typeof useCustomFieldsLazyQuery>;
 export type CustomFieldsQueryResult = Apollo.QueryResult<CustomFieldsQuery, CustomFieldsQueryVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    account {
+      display_name
+      email
+      first_name
+      last_name
+      username
+    }
+    profile {
+      address
+      avatar_url
+      birthday
+      custom_fields
+      locale
+      phone
+    }
+  }
+}
+    `;
+export type MeComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MeQuery, MeQueryVariables>, 'query'>;
+
+    export const MeComponent = (props: MeComponentProps) => (
+      <ApolloReactComponents.Query<MeQuery, MeQueryVariables> query={MeDocument} {...props} />
+    );
+    
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const OrganizationDocument = gql`
     query Organization($id: ID!) {
   organization(id: $id) {
@@ -8029,6 +8190,7 @@ export const OrganizationPublicSettingsDocument = gql`
     query OrganizationPublicSettings($id: ID!) {
   organizationPublicSettings(id: $id) {
     id
+    name
     kind
     status
     customization
@@ -8075,15 +8237,10 @@ export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<Organizat
 export const ProfileDocument = gql`
     query Profile($account: ID!) {
   profile(account: $account) {
-    avatarUrl
-    id
+    address
+    avatar_url
+    birthday
     phone
-    locale
-  }
-  account(id: $account) {
-    username
-    display_name
-    email
   }
 }
     `;
