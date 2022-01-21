@@ -35,19 +35,8 @@ export const Separator = styled.div<SpaceProps>`
   background: ${colors.grey['200']};
 `
 
-export const BackTextBox = styled.div<SpaceProps>`
-  ${space}
-  display: flex;
-  align-items: center;
-  border-left: 1px solid
-    ${({ theme }) => theme.colors.generalText[theme.colorMode]};
-`
-
 export const Label = styled.span<TypographyProps>`
   ${typography}
   color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
-`
-
-export const WrapperIcon = styled.div`
-  cursor: pointer;
+  margin-right: 10px;
 `

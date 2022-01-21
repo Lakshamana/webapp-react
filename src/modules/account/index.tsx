@@ -1,52 +1,103 @@
-import { useMemo } from 'react'
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+import { Box } from '@chakra-ui/layout'
 
-import { Container, Text, MainLayout, ToggleButton, Select } from 'components'
+import {
+  Container,
+  ToggleButton,
+  Select,
+  Button,
+  Skeleton,
+  AlertComponent,
+} from 'components'
 
 import {
   ContentBlock,
-  AccountInformation,
+  AccountInfo,
   SingleConfiguration,
   ConfigBox,
-  PaymentMethods,
-  Subscription,
+  ProfileInfo,
   Navbar,
 } from './components'
 
-import { APP_LOCALE, ACCOUNT_INFO } from 'config/constants'
-import { QUERY_PROFILE } from 'services/graphql'
-import { colors, sizes } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
+import { APP_LOCALE } from 'config/constants'
 import {
-  PAYMENT_METHODS,
-  LANGUAGES,
-  initialValues,
-  validationSchema,
-} from './settings'
+  MUTATION_UPDATE_ACCOUNT,
+  MUTATION_UPDATE_PROFILE,
+} from 'services/graphql'
+import { sizes } from 'styles'
+import { useThemeStore } from 'services/stores/theme'
+import { useAuth } from 'contexts/auth'
+import { LANGUAGES, initialValues, validationSchema } from './settings'
 
-import { formatAccountInfo } from './utils'
+import { saveData, getData } from 'services/storage'
+import { useEffect } from 'react'
 
-const Account = () => {
+const AccountPage = () => {
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { updateAccount, updateUser, getAccount, loadingAccount } = useAuth()
+  const [updateAccountError, setUpdateAccountError] = useState('')
+  const [updateProfileError, setUpdateProfileError] = useState('')
 
-  const { data: profileData } = useQuery(QUERY_PROFILE, {
-    variables: {
-      account: localStorage.getItem(ACCOUNT_INFO),
-    },
-  })
-
-  const accountInfo = useMemo(
-    () => formatAccountInfo(profileData, t),
-    [profileData, t]
+  const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
+    MUTATION_UPDATE_ACCOUNT,
+    {
+      onCompleted: async (result) => {
+        if (!result?.updateMyAccount) {
+          setUpdateAccountError(t('common.error.generic_api_error'))
+          return
+        }
+        updateAccount(result.updateMyAccount)
+      },
+      onError: (error) => {
+        setUpdateAccountError(`${error.message}`)
+      },
+    }
   )
+
+  const callUpdateMyAccount = (value: Object) => {
+    updateMyAccount({
+      variables: {
+        payload: {
+          ...value,
+        },
+      },
+    })
+  }
+
+  const [updateMyProfile, { loading: loadingUpdateProfile }] = useMutation(
+    MUTATION_UPDATE_PROFILE,
+    {
+      onCompleted: async (result) => {
+        if (!result?.updateMyProfile) {
+          setUpdateProfileError(t('common.error.generic_api_error'))
+          return
+        }
+        updateUser(result.updateMyProfile)
+      },
+      onError: (error) => {
+        setUpdateProfileError(`${error.message}`)
+      },
+    }
+  )
+
+  const callUpdateMyProfile = (value: Object) => {
+    updateMyProfile({
+      variables: {
+        payload: {
+          ...value,
+        },
+      },
+    })
+  }
 
   const { values, setFieldValue } = useFormik({
     initialValues: {
       ...initialValues,
-      locale: localStorage.getItem(APP_LOCALE) || initialValues.locale,
+      locale: getData(APP_LOCALE),
     },
     validationSchema,
     validateOnChange: true,
@@ -54,72 +105,146 @@ const Account = () => {
     onSubmit: async () => {},
   })
 
+  useEffect(() => {
+    getAccount()
+    // eslint-disable-next-line
+  }, [])
+
   const handleLanguageChange = (evt: any) => {
     const { value } = evt?.target
     setFieldValue('locale', value)
-    localStorage.setItem(APP_LOCALE, value)
+    saveData(APP_LOCALE, value)
     i18n.changeLanguage(value)
   }
 
   return (
-    <MainLayout>
-      <Container
-        width={1}
-        mt={3}
-        mx={[sizes.paddingSm, sizes.paddingMd, sizes.paddingLg]}
-        flexWrap="wrap"
-        justifyContent="space-between"
+    <Container
+      width={1}
+      mt={3}
+      mx={[sizes.paddingSm, sizes.paddingMd, sizes.paddingLg]}
+      flexWrap="wrap"
+      justifyContent="space-between"
+    >
+      <Navbar {...{ colorMode }} text={t('page.account.back')} />{' '}
+      <ContentBlock
+        mb={[3, 3, 3, 4]}
+        title={t('page.account.profile_info')}
+        {...{ colorMode }}
       >
-        <Navbar {...{ colorMode }} text={t('page.account.back')} />
-        <ContentBlock
-          mb={[3, 3, 3, 4]}
-          title={t('page.account.account_info')}
-          {...{ colorMode }}
-        >
+        <Skeleton isLoaded={!loadingAccount}>
           <ConfigBox>
-            <AccountInformation
-              data={accountInfo}
-              updateText={t('page.account.update')}
-            />
+            {updateProfileError && (
+              <Box mb={4}>
+                <AlertComponent
+                  type={'error'}
+                  description={updateProfileError}
+                  onClose={() => setUpdateProfileError('')}
+                ></AlertComponent>
+              </Box>
+            )}
+            {!loadingAccount && (
+              <ProfileInfo
+                updateProfile={callUpdateMyProfile}
+                isLoading={loadingUpdateProfile}
+              />
+            )}
           </ConfigBox>
+        </Skeleton>
+      </ContentBlock>
+      <ContentBlock
+        mb={[3, 3, 3, 4]}
+        title={t('page.account.account_info')}
+        {...{ colorMode }}
+      >
+        <Skeleton isLoaded={!loadingAccount}>
           <ConfigBox>
-            <Text color={colors.generalText[colorMode]} mb={2}>
-              {t('page.account.language_selection')}
-            </Text>
-            <Select
-              options={LANGUAGES}
-              value={values.locale}
-              onChange={handleLanguageChange}
-            />
+            {updateAccountError && (
+              <Box mb={4}>
+                <AlertComponent
+                  type={'error'}
+                  description={updateAccountError}
+                  onClose={() => setUpdateAccountError('')}
+                ></AlertComponent>
+              </Box>
+            )}
+            {!loadingAccount && (
+              <AccountInfo
+                updateAccount={callUpdateMyAccount}
+                isLoading={loadingUpdateAccount}
+              />
+            )}
           </ConfigBox>
-          <ConfigBox>
-            <SingleConfiguration
-              text={t('page.account.push')}
-              children={
-                <>
-                  <ToggleButton
-                    checked={values.push}
-                    onChange={() => setFieldValue('push', !values.push)}
-                  />
-                </>
-              }
-              {...{ colorMode }}
-            />
-          </ConfigBox>
-          <ConfigBox>
-            <SingleConfiguration
-              text={t('page.account.delete_account')}
-              action={{
-                text: t('page.account.delete'),
-                onClick: () => {},
-                fontWeight: 'bold',
-              }}
-              {...{ colorMode }}
-            />
-          </ConfigBox>
-        </ContentBlock>
-
-        <ContentBlock
+        </Skeleton>
+      </ContentBlock>
+      <ContentBlock
+        mb={[3, 3, 3, 4]}
+        title={t('page.account.account_settings')}
+        {...{ colorMode }}
+      >
+        <ConfigBox>
+          <SingleConfiguration
+            text={t('page.account.language_selection')}
+            children={
+              <Select
+                options={LANGUAGES}
+                value={values.locale}
+                onChange={handleLanguageChange}
+              />
+            }
+            {...{ colorMode }}
+          />
+        </ConfigBox>
+        <ConfigBox>
+          <SingleConfiguration
+            text={t('page.account.push_notifications')}
+            children={
+              <ToggleButton
+                size="md"
+                checked={values.push}
+                onChange={() => setFieldValue('push', !values.push)}
+              />
+            }
+            {...{ colorMode }}
+          />
+        </ConfigBox>
+      </ContentBlock>
+      <ContentBlock
+        mb={[3, 3, 3, 4]}
+        title={t('page.account.security')}
+        {...{ colorMode }}
+      >
+        <ConfigBox>
+          <SingleConfiguration
+            text={t('page.account.password')}
+            children={
+              <Button
+                size="sm"
+                width="auto"
+                variant="link"
+                color="red"
+                label={t('page.account.update_password')}
+              ></Button>
+            }
+            {...{ colorMode }}
+          />
+        </ConfigBox>
+        <ConfigBox>
+          <SingleConfiguration
+            text={t('page.account.delete_account')}
+            children={
+              <Button
+                size="sm"
+                width="auto"
+                variant="link"
+                color="red"
+                label={t('page.account.delete')}
+              ></Button>
+            }
+            {...{ colorMode }}
+          />
+        </ConfigBox>
+      </ContentBlock>
+      {/* <ContentBlock
           mb={[3, 3, 3, 4]}
           mt={[3, 3, 3, 0]}
           title={t('page.account.billing_information')}
@@ -207,9 +332,8 @@ const Account = () => {
               }}
             />
           </ConfigBox>
-        </ContentBlock>
-
-        <ContentBlock
+        </ContentBlock> */}
+      {/* <ContentBlock
           mb={[3, 3, 3, 4]}
           mt={[3, 3, 3, 0]}
           title={t('page.account.payment_information')}
@@ -251,10 +375,9 @@ const Account = () => {
               }
             />
           </ConfigBox>
-        </ContentBlock>
-      </Container>
-    </MainLayout>
+        </ContentBlock> */}
+    </Container>
   )
 }
 
-export { Account }
+export { AccountPage }
