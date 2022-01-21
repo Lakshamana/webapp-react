@@ -1,25 +1,43 @@
 import { Flex } from '@chakra-ui/layout'
-import { useTranslation } from "react-i18next"
-import { MainLayout, Container } from "components";
-import { BillboardScroller, CollectionScroller, LivestreamScroller, OnDemandScroller } from "components/molecules"
-import billboardData from "./billboard.json"
-import liveStreamsData from "./livestreams.json"
-import collectionsData from "./collections.json"
-import onDemandData from "./onDemand.json"
+import { useTranslation } from 'react-i18next'
+import { Container } from 'components'
+import {
+  BillboardScroller,
+  CollectionScroller,
+  LivestreamScroller,
+  OnDemandScroller,
+} from 'components/molecules'
+import billboardData from './billboard.json'
+import liveStreamsData from './livestreams.json'
+import collectionsData from './collections.json'
+import onDemandData from './onDemand.json'
 
 const HomePage = () => {
-	const { t } = useTranslation()
+  const { t } = useTranslation()
   return (
-  <MainLayout>
-    <Container flexDirection={"column"} display={"flex"}>
-      <BillboardScroller items={billboardData} customButtons={true}></BillboardScroller>
-      <Flex gridGap={10} flexDirection={"column"}>
-        <LivestreamScroller items={liveStreamsData} sectionTitle={t("page.home.live")} hasMoreLink={true}></LivestreamScroller>
-        <OnDemandScroller items={onDemandData} sectionTitle={t("page.home.most_recent")} hasMoreLink={true}></OnDemandScroller>
-        <CollectionScroller items={collectionsData} sectionTitle={t("page.home.popular")}hasMoreLink={true}></CollectionScroller>
+    <Container flexDirection={'column'} display={'flex'}>
+      <BillboardScroller
+        items={billboardData}
+        customButtons={true}
+      ></BillboardScroller>
+      <Flex gridGap={10} flexDirection={'column'}>
+        <LivestreamScroller
+          items={liveStreamsData}
+          sectionTitle={t('page.home.live')}
+          hasMoreLink={true}
+        ></LivestreamScroller>
+        <OnDemandScroller
+          items={onDemandData}
+          sectionTitle={t('page.home.most_recent')}
+          hasMoreLink={true}
+      ></OnDemandScroller>
+        <CollectionScroller
+          items={collectionsData}
+          sectionTitle={t('page.home.popular')}
+          hasMoreLink={true}
+        ></CollectionScroller>
       </Flex>
     </Container>
-  </MainLayout>
   )
 }
 

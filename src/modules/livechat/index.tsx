@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { MainLayout } from "components";
 import { Box, Flex } from "@chakra-ui/react"
 import { useThemeStore } from "services/stores/theme";
 
@@ -20,7 +19,6 @@ const LiveChat = () => {
   }
 
   return (
-    <MainLayout py={0}>
       <Box display="flex" flexDirection={'column'}>
         <Box display="flex" flexDirection={{ ssm: 'column', lg: 'row' }} position={'relative'}>
           <Flex position={'absolute'} zIndex={100} w={'146px'} mt={'16px'} ml={'16px'} justifyContent="space-between">
@@ -50,7 +48,6 @@ const LiveChat = () => {
           <Bar/>
         </BoxCustom >
       </Box>
-    </MainLayout >
   );
 };
 
