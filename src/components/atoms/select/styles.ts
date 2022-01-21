@@ -4,7 +4,7 @@ import { StyleContainer } from 'components/atoms'
 export const SelectContainer = styled(StyleContainer)`
   display: flex;
   select {
-    border-radius: 0px;
+    border-radius: 4px;
     :hover,
     :focus {
       box-shadow: unset;
