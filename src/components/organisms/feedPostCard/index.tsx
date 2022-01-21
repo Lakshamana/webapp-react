@@ -1,5 +1,3 @@
-import { Icon } from "@iconify/react";
-import { Menu, MenuButton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Text, ReactionBar, Participants } from "components";
 import { SetMediaType } from "./components";
@@ -48,14 +46,6 @@ const FeedPostCard = ({ ...props }: Props) => {
 					<Date fontSize='12px' fontWeight={"Bold"} marginRight={3}>
 						{props.date}
 					</Date>
-					<Menu>
-						<MenuButton>
-							<Icon
-								icon="mdi:dots-horizontal"
-								color={`${colors.grey['700']}`}
-							/>
-						</MenuButton>
-					</Menu>
 				</CardHeader>
 				<CardDescription fontSize={15}>{props.postDescription}</CardDescription>
 				{props.type === "Poll" ? <SetMediaType {...props} /> : ""}

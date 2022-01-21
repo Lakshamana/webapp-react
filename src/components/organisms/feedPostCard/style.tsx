@@ -36,7 +36,7 @@ export const Date: any = styled.span`
 export const CardDescription: any = styled.p`
     color: ${colors.grey["700"]};           
     width: 100%;
-    padding: 16px 16px 0px 16px;
+    padding: 4px 16px 0px 16px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;

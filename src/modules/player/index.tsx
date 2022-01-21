@@ -1,5 +1,5 @@
 import { Center, Textarea, Button, Select } from '@chakra-ui/react'
-import { MainLayout, Container, VideoPlayer } from "components";
+import { Container, VideoPlayer } from "components";
 import { useState } from 'react';
 
 const PlayerPage = () => {
@@ -61,7 +61,6 @@ const PlayerPage = () => {
   }
 
   return (
-    <MainLayout>
       <Container flexDirection="column" width="100%">
         <Center flex="1" padding={5} border="0 solid red">
           <Center width={700} height={400} border="0 solid blue">
@@ -113,7 +112,6 @@ const PlayerPage = () => {
         </Center>
 
       </Container>
-    </MainLayout>
   )
 };
 
