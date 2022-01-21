@@ -2,14 +2,15 @@ import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from 'contexts/auth'
-import { Container, Text, Popover, Avatar } from 'components'
+import { Container, Text, Popover, Avatar, Modal } from 'components'
 import { PopoverOption } from './components'
 import { useAuthStore } from 'services/stores'
 
 import { PropsUserInfo } from './types'
 import { UserContainer, OptionsList, TextContainer } from './styles'
 import { colors } from 'styles'
-import { Link } from '@chakra-ui/react'
+import { useState } from 'react'
+import { Button } from 'components/atoms'
 
 const UserInfo = ({
   delimited = true,
@@ -19,18 +20,16 @@ const UserInfo = ({
   const history = useHistory()
   const { t } = useTranslation()
   const { signOut } = useAuth()
-  const { account } = useAuthStore()
+  const { account, user } = useAuthStore()
+  const [openModal, setOpenModal] = useState(false)
+
+  const avatar_url = user?.avatar_url || ''
 
   if (!account) {
     return (
-      <Container>
-        <TextContainer maxWidth={['150px']}>
-          <Text ellipsis color={colors.secondaryText[colorMode]}>
-            <Link href='/login'>
-              Login
-            </Link>
-          </Text>
-        </TextContainer>
+      <Container display='flex'>
+        <Button size='sm' width='50%' fontWeight='500' fontSize='14px' label='Login' variant='ghost'></Button>
+        <Button size='sm' width='50%' paddingX={10} borderRadius='4px' fontWeight='500' fontSize='14px' label='Signup' variant='solid'></Button>
       </Container>
     )
   }
@@ -50,7 +49,11 @@ const UserInfo = ({
           <button>
             <UserContainer {...{ delimited }}>
               <Container>
-                <Avatar width={'45px'} height={'45px'} src={''} />
+                <Avatar
+                  width={'45px'}
+                  height={'45px'}
+                  src={avatar_url}
+                />
               </Container>
             </UserContainer>
           </button>
@@ -59,6 +62,7 @@ const UserInfo = ({
         <Container flexDirection="column" width={1}>
           <OptionsList>
             <PopoverOption
+              
               color={colors.generalText[colorMode]}
               text={t('header.userPopover.settings')}
               onClick={() => history.push('/account')}
@@ -99,7 +103,7 @@ const UserInfo = ({
             />
             <PopoverOption
               color={colors.generalText[colorMode]}
-              onClick={signOut}
+              onClick={() => setOpenModal(true)}
               text={t('header.userPopover.exit')}
               icon={
                 <Icon
@@ -113,6 +117,14 @@ const UserInfo = ({
           </OptionsList>
         </Container>
       </Popover>
+      <Modal
+        title={t('common.sign_out')}
+        subtitle={t('common.confirm_signout')}
+        closeButton={false}
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        onConfirm={signOut}
+      ></Modal>
     </Container>
   )
 }
