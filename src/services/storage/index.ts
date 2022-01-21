@@ -1,5 +1,5 @@
 import {
-  USER_KEY,
+  USER_INFO,
   ACCOUNT_INFO,
   ORGANIZATION_INFO,
   CHANNEL_INFO,
@@ -28,7 +28,7 @@ export const getData = (key: string) => {
 
 export const clearData = () => {
   try {
-    localStorage.removeItem(USER_KEY)
+    localStorage.removeItem(USER_INFO)
     localStorage.removeItem(ACCOUNT_INFO)
     localStorage.removeItem(ORGANIZATION_INFO)
     localStorage.removeItem(CHANNEL_INFO)
