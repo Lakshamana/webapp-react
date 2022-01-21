@@ -22,10 +22,10 @@ import {
 import { Channel, defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
 import { sizes, breakpoints } from 'styles'
-import { HeaderContainer, LogoContainer } from './styles'
+import { HeaderContainer, LogoContainer, ChannelContainer } from './styles'
 
 const HeaderComponent = () => {
-  const  [ visibleMobile, setVisibleMobile ] = useState('flex');
+  const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
 
@@ -65,11 +65,12 @@ const HeaderComponent = () => {
     dispatch({ type: 'openSearch', value: false })
   }
 
-  const handleOpenMenu = () =>
+  const handleOpenMenu = () => {
     dispatch({ type: 'openMenu', value: !state.openMenu })
+  }
 
   const handleOpenSearch = () => {
-    if(isMobile())  {
+    if (isMobile()) {
       dispatch({ type: 'openMenu', value: false });
       setVisibleMobile('none');
     }
@@ -78,7 +79,7 @@ const HeaderComponent = () => {
 
   const isMobile = () => {
     const { width } = getWindowDimensions();
-    return width < Number(breakpoints.lg.replace('px',''))
+    return width < Number(breakpoints.lg.replace('px', ''))
   }
 
   const getWindowDimensions = () => {
@@ -94,9 +95,24 @@ const HeaderComponent = () => {
       <SideMenu
         open={state.openMenu}
         data={MENUTABS}
-        user={DEFAULT_USER}
+        selected={state.selected}
         {...{ colorMode }}
-      />
+      >
+        <UserInfo
+          display={'sidebar'}
+          user={DEFAULT_USER}
+          {...{ colorMode, toggleColorMode }}
+        />
+        <ChannelContainer>
+          <ChannelSelector
+            display={'sidebar'}
+            onSelect={handleChannelSelect}
+            onSearch={handleChannelSearch}
+            selected={state.channel}
+            {...{ channels, colorMode }}
+          />
+        </ChannelContainer>
+      </SideMenu>
       <HeaderContainer
         height={[
           sizes.headerMobileHeight,
@@ -111,10 +127,11 @@ const HeaderComponent = () => {
         <Container alignItems="center" display={visibleMobile}>
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
           <LogoContainer>
-            <Logo ignoreFallback src={org_logo} width={180}/>
+            <Logo ignoreFallback src={org_logo} width={180} />
           </LogoContainer>
           {!state.openSearch ? (
             <ChannelSelector
+              display={'menu'}
               onSelect={handleChannelSelect}
               onSearch={handleChannelSearch}
               selected={state.channel}
@@ -154,7 +171,11 @@ const HeaderComponent = () => {
             search={state.search}
             {...{ colorMode }}
           />
-          <UserInfo user={DEFAULT_USER} {...{ colorMode, toggleColorMode }} />
+          <UserInfo
+            display={'menu'}
+            user={DEFAULT_USER}
+            {...{ colorMode, toggleColorMode }}
+          />
         </Container>
       </HeaderContainer>
     </>

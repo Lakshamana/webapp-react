@@ -6,6 +6,7 @@ import { colors } from "styles";
 import { ChannelIcon, IconContainer, TextContainer } from "./styles";
 
 const ChannelSelected = ({
+  display,
   selected,
   open,
   colorMode,
@@ -13,7 +14,11 @@ const ChannelSelected = ({
   const { t } = useTranslation();
   return (
     <Container alignItems="center">
-      <TextContainer alignItems="flex-start" flexDirection="column" mr={2}>
+      <TextContainer
+        alignItems="flex-start"
+        mr={2}
+        {...{ display }}
+      >
         <Text
           lineHeight={1}
           fontSize={14}

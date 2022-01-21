@@ -1,44 +1,42 @@
-import { Avatar } from "components/atoms";
-import {
-  HeaderMain,
-  AvatarContainer,
-  TextContainer,
-  DotsContainer,
-  Text,
-} from "./style";
+import { HeaderMain, Text } from './style'
 import { colors } from 'styles'
-import { Props } from "./types";
-import { Icon } from "@iconify/react";
-import { useThemeStore } from "services/stores/theme";
+import { Props } from './types'
+import { useThemeStore } from 'services/stores/theme'
+import { Icon } from '@iconify/react'
+import { useState } from 'react'
 
-const LivechatHeader = ({ title = "", onCloseChat = () => { } }: Props) => {
+const LivechatHeader = ({ title = '', onCloseChat = () => {} }: Props) => {
   const { colorMode } = useThemeStore()
 
+  const [chatOpen, setchatOpen] = useState(true)
+
   const colorLayout = {
-    color: colors.generalText[colorMode]
+    color: colors.generalText[colorMode],
   }
 
   return (
-    <HeaderMain height={"81px"} width={"100%"} display="flex" {...{ colorMode }}>
-      <AvatarContainer flex={3} width={"100%"}>
-        <Avatar src="" colorScheme="#000" />
-      </AvatarContainer>
-      <TextContainer flex={10}>
-        <Text fontSize={24} fontWeight={500} {...colorLayout}>
-          {title}
-        </Text>
-      </TextContainer>
-      <DotsContainer flex={2}>
-        <Icon
-          width={36}
-          icon="ci:close-big"
-          style={{ cursor: "pointer" }}
-          {...colorLayout}
-          onClick={() => onCloseChat()}
-        />
-      </DotsContainer>
+    <HeaderMain
+      justifyContent="space-between"
+      height="48px"
+      width={'100%'}
+      display="flex"
+      {...{ colorMode }}
+    >
+      <Text fontSize={20} fontWeight={500} {...colorLayout}>
+        {title}
+      </Text>
+      <Icon
+        icon={chatOpen ? 'carbon:chat-off' : 'carbon:chat'}
+        width="28"
+        height="28"
+        style={{ color: colorLayout.color, cursor: 'pointer' }}
+        onClick={() => {
+          setchatOpen(!chatOpen)
+          onCloseChat(chatOpen)
+        }}
+      />
     </HeaderMain>
   )
 }
 
-export { LivechatHeader };
+export { LivechatHeader }

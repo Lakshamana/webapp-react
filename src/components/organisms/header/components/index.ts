@@ -6,5 +6,4 @@ export * from "./menuIcon";
 export * from "./searchBar";
 export * from "./searchPopover";
 export * from "./sideMenu";
-export * from "./sideUserInfo";
 export * from "./tabs";

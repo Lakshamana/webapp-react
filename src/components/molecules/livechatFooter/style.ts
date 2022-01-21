@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { space, layout, flexbox, grid } from 'styled-system'
-import { breakpoints } from 'styles'
 import { StyledProps } from './types'
 
 import { Icon } from '@iconify/react'
@@ -8,22 +7,15 @@ import { Icon } from '@iconify/react'
 export const LivechatFooterMain = styled.div<StyledProps>`
   ${layout}
   width: 100%;
-  height: 100px;
   border-top-width: 1px;
   border-top-color: #444444;
   border-top-style: solid;
   display: flex;
+  gap: 1em;
   flex-direction: row;
   align-items: center;
-
-  padding-top: 14px;
-  padding-bottom: 14px;
-  padding-right: 16px;
-  @media screen and (min-width: ${breakpoints.lg}) {
-    padding-top: 8px;
-    padding-bottom: 0px;
-    padding-right: 16px;
-  }
+  padding: 0.5em 1em;
+  background: ${({ theme }) => theme.colors.footerBg[theme.colorMode]};
 `
 
 export const IconContainer = styled.div<StyledProps>`
@@ -43,28 +35,32 @@ export const AnimatedIcon = styled(Icon)`
 `
 
 export const PopoverIcon = styled.div<StyledProps>`
-  display: grid;
   ${flexbox}
   ${grid}
-  width: 200px;
-  height: 140px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   position: absolute;
-  background: #222;
+  background: ${({ theme }) => theme.colors.footerBg[theme.colorMode]};
   z-index: 99;
-  top: -184px;
+  bottom: 60px;
   left: 0px;
   -webkit-box-shadow: 3px 6px 17px 1px #000000;
   box-shadow: 3px 6px 17px 1px #000000;
+  border-radius: 4px;
 `
 
 export const Reaction = styled.div<StyledProps>`
   ${space}
   ${layout}
+  padding: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
   color: white;
   cursor: pointer;
   align-items: center;
+  border-radius: 4px;
+  :hover {
+    background: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
+  }
 `

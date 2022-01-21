@@ -12,6 +12,7 @@ import { Props } from './types'
 
 const Popover = ({
   children,
+  display,
   popoverTrigger,
   background,
   hasArrow,
@@ -21,13 +22,16 @@ const Popover = ({
   return (
     <ChakraPopover {...props} arrowShadowColor={'transparent'} arrowSize={12} preventOverflow>
       <PopoverTrigger>{popoverTrigger}</PopoverTrigger>
-      <PopoverContent bg={background || colors.cardBg[colorMode]}>
+      <PopoverContent
+        bg={background || colors.cardBg[colorMode]}
+        width={display === 'sidebar' ? 275 : 320}
+      >
         {hasArrow && (
           <PopoverArrow backgroundColor={colors.cardBg[colorMode]} />
         )}
         <PopoverBody>{children}</PopoverBody>
       </PopoverContent>
-    </ChakraPopover>
+    </ChakraPopover >
   )
 }
 

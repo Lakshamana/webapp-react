@@ -9,13 +9,14 @@ import {
   defaultPermission,
 } from './permission'
 import { useAuth } from 'contexts/auth'
-import { useAuthStore } from 'services/stores'
 import { useEffect, useState } from 'react'
+import { getData } from 'services/storage'
+import { AUTH_TOKEN } from 'config/constants'
 
 const Router = () => {
   const { kind } = useAuth()
 
-  const { account } = useAuthStore()
+  const accessToken = getData(AUTH_TOKEN)
 
   const [currentPermissions, setCurrentPermissions] =
     useState(defaultPermission)
@@ -25,14 +26,14 @@ const Router = () => {
       switch (kind) {
         case 'public':
           setCurrentPermissions(
-            account
+            accessToken
               ? publicPermissionAuthenticated
               : publicPermissionUnauthenticated
           )
           break
         case 'exclusive':
           setCurrentPermissions(
-            account
+            accessToken
               ? exclusivePermissionAuthenticated
               : exclusivePermissionUnauthenticated
           )
@@ -42,7 +43,7 @@ const Router = () => {
       }
     }
     permission()
-  }, [kind, account])
+  }, [kind, accessToken])
 
   return (
     <>

@@ -7,6 +7,7 @@ export type User = {
 };
 
 type ColorMode = "dark" | "light";
+type DisplayMode = 'menu' | 'sidebar';
 
 export type Channel = {
   name: string;
@@ -62,6 +63,7 @@ export interface PropsChannelSearch {
 }
 
 export interface PropsChannelSelected {
+  display: DisplayMode;
   open: boolean;
   selected: Channel | null;
   colorMode: ColorMode;
@@ -74,6 +76,7 @@ export interface PropsSearchPopover {
 }
 
 export interface PropsChannelSelector extends SpaceProps, PropsChannels {
+  display: DisplayMode;
   onSearch: any;
 }
 
@@ -85,12 +88,9 @@ export interface PropsMenuIcon extends SpaceProps {
 export interface PropsSideMenu {
   open: boolean;
   data: Array<Tab>;
-  user: User | undefined;
+  selected: Tab | undefined;
   colorMode: ColorMode;
-}
-
-export interface PropsSideUserInfo {
-  user: User | undefined;
+  children: JSX.Element | JSX.Element[]
 }
 
 export const defaultProps = {};

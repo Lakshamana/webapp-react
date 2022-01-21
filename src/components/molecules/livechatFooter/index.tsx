@@ -9,9 +9,9 @@ import {
 } from "./style";
 import { colors } from 'styles'
 import { Props } from "./types";
-import { Input } from "components/molecules";
 import { availableReactions } from "./settings";
 import { useThemeStore } from "services/stores/theme";
+import { LivechatFooterInput } from "components";
 
 const LivechatFooter = ({
   onPressIcon = () => { },
@@ -28,21 +28,21 @@ const LivechatFooter = ({
 
   return (
     <LivechatFooterMain {...{ colorMode }}>
-      <IconContainer flex={2} justifyContent="center">
+      <IconContainer justifyContent="center">
         <AnimatedIcon
           width={32}
           icon="majesticons:emoji-happy-line"
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
           {...colorLayout}
           onClick={() => {
-            setShow(!show);
-            onPressIcon();
+            setShow(!show)
+            onPressIcon()
           }}
         />
         {show && (
-          <PopoverIcon gridTemplateColumns="1fr 1fr 1fr">
+          <PopoverIcon>
             {availableReactions.map((reaction) => (
-              <Reaction key={`${reaction.value}-popover`} p={1} m={1}>
+              <Reaction key={`${reaction.value}-popover`}>
                 {reaction.value}
               </Reaction>
             ))}
@@ -50,16 +50,21 @@ const LivechatFooter = ({
         )}
       </IconContainer>
       <InputContainer flex={8} justifyContent="center">
-        <Input
+        <LivechatFooterInput
+          onEnter={onEnter}
+          onChange={onChange}
+          value={value}
+        />
+        {/* <Input
           value={value}
           onChange={onChange}
           inverted={false}
           rightIcon="send"
           onEnterPress={() => onEnter()}
-        />
+        /> */}
       </InputContainer>
     </LivechatFooterMain>
-  );
+  )
 };
 
 export { LivechatFooter };

@@ -13,7 +13,7 @@ import {
   GDPRForm,
   ConfirmEmailForm,
 } from 'components/organisms/signupForm/components'
-import { LoginLayout, Card, SigninForm } from 'components'
+import { Card, SigninForm } from 'components'
 import { Container } from './styles'
 import { sizes } from 'styles'
 import { useAuth } from 'contexts/auth'
@@ -144,17 +144,15 @@ const LoginPage = () => {
   }
 
   return (
-    <LoginLayout>
-      <Container width={1} paddingY={[0, 40]}>
-        <Card
-          paddingX={[30, 60]}
-          paddingY={[40, 40]}
-          width={[1, sizes.loginCardWidth]}
-        >
-          {renderStep()}
-        </Card>
-      </Container>
-    </LoginLayout>
+    <Container width={1} paddingY={[0, 40]}>
+      <Card
+        paddingX={[30, 60]}
+        paddingY={[40, 40]}
+        width={[1, sizes.loginCardWidth]}
+      >
+        {renderStep()}
+      </Card>
+    </Container>
   )
 }
 

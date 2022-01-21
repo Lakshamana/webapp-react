@@ -1,18 +1,17 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from 'contexts/auth'
-import { Container, Text, Popover, Avatar, Modal } from 'components'
-import { PopoverOption } from './components'
+import { Container, Text, Popover, Avatar, Modal, Button } from 'components'
+import { PopoverOption, UserMenu, NotLogged, UserSidebar } from './components'
 import { useAuthStore } from 'services/stores'
-
 import { PropsUserInfo } from './types'
-import { UserContainer, OptionsList, TextContainer } from './styles'
+import { UserContainer, OptionsList } from './styles'
 import { colors } from 'styles'
-import { useState } from 'react'
-import { Button } from 'components/atoms'
 
 const UserInfo = ({
+  display,
   delimited = true,
   colorMode,
   toggleColorMode,
@@ -26,40 +25,39 @@ const UserInfo = ({
   const avatar_url = user?.avatar_url || ''
 
   if (!account) {
-    return (
-      <Container display='flex'>
-        <Button size='sm' width='50%' fontWeight='500' fontSize='14px' label='Login' variant='ghost'></Button>
-        <Button size='sm' width='50%' paddingX={10} borderRadius='4px' fontWeight='500' fontSize='14px' label='Signup' variant='solid'></Button>
-      </Container>
-    )
+    return <NotLogged {...{ display, colorMode }} />
   }
 
   return (
-    <Container display={['none', 'none', 'none', 'flex']} alignItems={'center'}>
-      <TextContainer maxWidth={['150px']}>
-        <Text ellipsis color={colors.secondaryText[colorMode]}>
-          {account?.username || account?.display_name}
-        </Text>
-      </TextContainer>
+    <Container
+      display={display === 'menu'
+        ? ['none', 'none', 'none', 'flex']
+        : ['flex', 'flex', 'flex', 'none']
+      }
+      alignItems={'center'}
+      alignSelf={'center'}
+    >
       <Popover
         hasArrow
         isLazy
         placement={'bottom-end'}
+        display='sidebar'
         popoverTrigger={
           <button>
             <UserContainer {...{ delimited }}>
-              <Container>
-                <Avatar
-                  width={'45px'}
-                  height={'45px'}
-                  src={avatar_url}
-                />
-              </Container>
+              {
+                display === 'menu' && account &&
+                <UserMenu {...{ colorMode, account }} />
+              }
+              {
+                display === 'sidebar' &&
+                <UserSidebar {...{ account }} />
+              }
             </UserContainer>
           </button>
         }
       >
-        <Container flexDirection="column" width={1}>
+        <Container flexDirection="column">
           <OptionsList>
             <PopoverOption
               
@@ -84,21 +82,15 @@ const UserInfo = ({
               }
               onClick={toggleColorMode}
               icon={
-                colorMode === 'dark' ? (
-                  <Icon
-                    width={18}
-                    height={18}
-                    icon="mdi:white-balance-sunny"
-                    color={colors.generalText[colorMode]}
-                  />
-                ) : (
-                  <Icon
-                    width={18}
-                    height={18}
-                    color={colors.generalText[colorMode]}
-                    icon="mdi:moon-waning-crescent"
-                  />
-                )
+                <Icon
+                  width={18}
+                  height={18}
+                  icon={colorMode === 'dark'
+                    ? "mdi:white-balance-sunny"
+                    : "mdi:moon-waning-crescent"
+                  }
+                  color={colors.generalText[colorMode]}
+                />
               }
             />
             <PopoverOption

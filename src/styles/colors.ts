@@ -26,7 +26,7 @@ export const colors = {
     dark: '#A4A4A4',
   },
   bodyBg: {
-    light: '#ffffff',
+    light: '#f0f0f0',
     dark: '#0F0F0F',
   },
   cardBg: {
@@ -62,7 +62,7 @@ export const colors = {
     dark: '#e1e1e1',
   },
   livechatBg: {
-    light: '#f0f0f5',
+    light: '#E2E9E9',
     dark: '#ffffff',
     me: '#0660F9'
   },
@@ -112,10 +112,41 @@ export const colors = {
       dark:  '#000000'
     }
   },
+  channel: {
+    background: {
+      light: '#FAFAFA',
+      dark: '#20242A',
+    },
+    searchIcon: {
+      light: '#20242A',
+      dark: '#FFFFFF',
+    },
+    itemText: {
+      light: '#20242A',
+      dark: '#FFFFFF',
+    },
+    checkIcon: {
+      light: '#000000',
+      dark: '#FFFFFF',
+    }
+  },
+  reaction: {
+    background: {
+      light: '#d8d3d3',
+      dark:  '#313030'
+    },
+    color: {
+      light: '#747474',
+      dark:  '#747474'
+    },
+    hover: {
+      background: '#0469FF',
+      color: 'white'
+    }
+  },
   white: '#FFFFFF',
   black: '#000000',
   background: '#313740',
-  backgroundLayout: '#20242A',
   textLight: '#EBE9E1',
   textMedium: '#9E9F9D',
   textDark: '#20242A',
