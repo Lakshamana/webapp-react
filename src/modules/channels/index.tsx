@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { SimpleGrid } from '@chakra-ui/react'
 import { QUERY_CHANNELS } from 'services/graphql'
 import { useThemeStore } from 'services/stores/theme'
-import { Container, MainLayout, Text, ChannelCard, Skeleton } from 'components'
+import { Container, Text, ChannelCard, Skeleton } from 'components'
 import { FilterFindAllChannelsInput, ChannelsQuery } from 'generated/graphql'
 import { colors } from 'styles'
 
@@ -18,7 +18,6 @@ const ChannelsPage = () => {
     },
   })
   return (
-    <MainLayout>
       <Container defaultPadding flexDirection="column" width={'100%'}>
         <Text
           color={colors.generalText[colorMode]}
@@ -41,7 +40,6 @@ const ChannelsPage = () => {
           ))}
         </SimpleGrid>
       </Container>
-    </MainLayout>
   )
 }
 

@@ -237,6 +237,13 @@ const EN_US = {
         payment_method: 'Payment Method',
       },
     },
+    cookieConsent: {
+      notice: 'Notice.',
+      description_1: 'uses cookies to provide necessary website functionality, improve your experience and analyze our traffic. By using our website, you agree to',
+      link: 'our Privacy Policy',
+      description_2: 'and our cookies usage.',
+      accept: 'Accept',
+    },
   },
 }
 

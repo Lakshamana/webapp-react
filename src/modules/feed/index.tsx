@@ -1,4 +1,4 @@
-import { MainLayout, Container, FeedPostCard, Select } from "components"
+import { Container, FeedPostCard, Select } from "components"
 import { useState } from "react"
 
 const FeedPage = () => {
@@ -26,7 +26,6 @@ const FeedPage = () => {
   }
 
 	return (
-		<MainLayout>
 			<Container flexDirection={"column"} width={"100%"}>
 				<Container 
 					flexDirection={"column"}
@@ -152,7 +151,6 @@ const FeedPage = () => {
 					voted={true}
 				/>
 			</Container>
-		</MainLayout>
 	)
 }
 

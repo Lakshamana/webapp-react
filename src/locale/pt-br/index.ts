@@ -236,6 +236,13 @@ const PT_BR = {
         payment_method: 'Método de Pagamento',
       },
     },
+    cookieConsent: {
+      notice: 'Aviso prévio.',
+      description_1: 'usa cookies para fornecer a funcionalidade necessária do site, melhorar sua experiência e analisar nosso tráfego. Ao usar nosso site, você concorda com',
+      link: 'nossa Política de Privacidade',
+      description_2: 'e nosso uso de cookies.',
+      accept: 'Aceitar'
+    },
   },
 }
 
