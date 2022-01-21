@@ -1,25 +1,30 @@
-import styled from "styled-components"
-import { Switch } from "@chakra-ui/react"
+import styled from 'styled-components'
+import { Switch } from '@chakra-ui/react'
 
 export const SwitchStyled: any = styled(Switch)`
   .chakra-switch__track {
     overflow: visible;
-    height: 0.4em;
+    display: flex;
+    align-items: center;
+    height: ${({ size }) => (size === 'lg' ? '0.85rem' : '0.65rem')}};
     box-shadow: none !important;
-    background-color: ${({ theme, checked }) => 
-      theme.darkMode
-        ? theme.colors.grey[checked ? 800 : 700]
-        : checked ? theme.colors.purple[200] : theme.colors.grey[250]
-      } !important;
+  }
+
+  .chakra-switch__track[data-checked] {
+    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]}90};
+  }
+
+  .chakra-switch__track[data-focus] {
+    box-shadow: none;
   }
 
   .chakra-switch__thumb {
-    margin-top: -16%;
+    width: ${({ size }) => (size === 'md' ? '1.3rem' : '')};
+    height: ${({ size }) => (size === 'md' ? '1.3rem' : '')};
     box-shadow: 0px 1px 3px rgb(0 0 0 / 60%);
-    background-color: ${({ theme, checked }) => 
-      theme.darkMode
-        ? checked ? theme.colors.blue[300] : theme.colors.grey[650]
-        : checked ? theme.colors.purple[100] : theme.colors.grey[100]
-      } !important;
+    background-color: ${({ theme, checked }) =>
+      checked
+        ? theme.colors.brand.primary[theme.colorMode]
+        : theme.colors.grey[100]} !important;
   }
-`;
+`
