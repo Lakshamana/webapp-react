@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { layout } from "styled-system";
 import { StyleContainer } from 'components'
 import { breakpoints, sizes } from 'styles'
 
@@ -6,7 +7,7 @@ interface PropsSideContainer {
   open: boolean
 }
 
-export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
+export const SideContainer = styled(StyleContainer) <PropsSideContainer>`
   position: absolute;
   top: ${sizes.headerMobileHeight};
   z-index: 1000;
@@ -35,7 +36,7 @@ export const ScrollContainer = styled(StyleContainer)`
     display: block;
   }
   @media (min-width: ${breakpoints.lg}) {
-    a:nth-child(n + 1):nth-child(-n + 4) {
+    a:nth-child(n + 1):nth-child(-n + 5) {
       display: none;
     }
   }
@@ -48,4 +49,13 @@ export const ScrollContainer = styled(StyleContainer)`
 
 export const ExitContainer = styled(StyleContainer)`
   cursor: pointer;
+`
+
+export const Circle = styled.div`
+  ${layout}
+  background-color: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
 `

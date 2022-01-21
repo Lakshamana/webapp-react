@@ -112,6 +112,24 @@ export const colors = {
       dark:  '#000000'
     }
   },
+  channel: {
+    background: {
+      light: '#FAFAFA',
+      dark: '#20242A',
+    },
+    searchIcon: {
+      light: '#20242A',
+      dark: '#FFFFFF',
+    },
+    itemText: {
+      light: '#20242A',
+      dark: '#FFFFFF',
+    },
+    checkIcon: {
+      light: '#000000',
+      dark: '#FFFFFF',
+    }
+  },
   reaction: {
     background: {
       light: '#d8d3d3',
@@ -129,7 +147,6 @@ export const colors = {
   white: '#FFFFFF',
   black: '#000000',
   background: '#313740',
-  backgroundLayout: '#20242A',
   textLight: '#EBE9E1',
   textMedium: '#9E9F9D',
   textDark: '#20242A',

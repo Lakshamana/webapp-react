@@ -6,7 +6,7 @@ interface IconContainerProps {
   open: boolean;
 }
 
-interface TypeSpaceProps extends SpaceProps, LayoutProps {}
+interface TypeSpaceProps extends SpaceProps, LayoutProps { }
 
 export const ChannelIcon = styled.img<TypeSpaceProps>`
   ${layout}
@@ -28,7 +28,19 @@ export const IconContainer = styled.div<IconContainerProps>`
 `;
 
 export const TextContainer = styled(StyleContainer)`
-  display: none;
+  flex-direction: column;
+  ${({ display }) => display === 'menu'
+    ? css`
+        display: none;
+      `
+    : css`
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        gap: 6px;
+        margin-right: 20px;
+      `
+  }
 
   @media screen and (min-width: 1100px) {
     display: flex;
