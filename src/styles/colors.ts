@@ -62,7 +62,7 @@ export const colors = {
     dark: '#e1e1e1',
   },
   livechatBg: {
-    light: '#f0f0f5',
+    light: '#E2E9E9',
     dark: '#ffffff',
     me: '#0660F9'
   },
