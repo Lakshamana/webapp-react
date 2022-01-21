@@ -1,12 +1,13 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react'
 import { useApolloClient } from '@apollo/client'
 import {
   QUERY_ORGANIZATION_PUBLIC_SETTINGS,
+  QUERY_ME,
   MUTATION_SIGNOUT,
 } from 'services/graphql'
 import { useAuthStore, useOrganizationStore } from 'services/stores'
 import {
-  USER_KEY,
+  USER_INFO,
   ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
@@ -27,37 +28,64 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
-  const [ loading, setLoading ] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [loadingAccount, setLoadingAcount] = useState(false)
 
   const client = useApolloClient()
 
   const signed = !!user
-  const [ kind, setKind ] = useState('public');
-  
+  const [kind, setKind] = useState('public')
+
+  const accessToken = getData(AUTH_TOKEN)
+
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
-  const updateUser = async (user) => {
-    saveData(USER_KEY, user)
-    await getOrganization()
-    setUser(user)
+  const updateAccount = async (account) => {
+    await saveData(ACCOUNT_INFO, account)
+    await setAccount(account)
   }
 
-  const updateAccount = async (account) => {
-    saveData(ACCOUNT_INFO, account)
-    setAccount(account)
+  const updateUser = async (user) => {
+    await saveData(USER_INFO, user)
+    await setUser(user)
   }
 
   const loadAccount = async () => {
-    if (account) {
-      setLoading(false)
+    setLoadingAcount(true)
+    if (account && user) {
+      setLoadingAcount(false)
       return
     }
     const accountData = getData(ACCOUNT_INFO)
-    if (accountData) {
+    const userData = getData(USER_INFO)
+    if (accountData && userData) {
       setAccount(accountData)
-      setLoading(false)
+      setUser(userData)
+      setLoadingAcount(false)
       return
     }
+    if (accessToken) await getAccount()
+  }
+
+  const getAccount = () => {
+    new Promise(async (resolve, reject) => {
+      try {
+        const { data } = await client.query({
+          query: QUERY_ME,
+        })
+        if (data?.me) {
+          const userData = data.me.profile
+          const accountData = data.me.account
+          updateUser(userData)
+          updateAccount(accountData)
+          setLoadingAcount(false)
+        }
+        resolve(data.me)
+      } catch (error) {
+        reject(false)
+        setLoadingAcount(false)
+      }
+    })
   }
 
   const loadOrganization = async () => {
@@ -101,13 +129,12 @@ export const AuthProvider = ({ children }) => {
   }
 
   const signOut = async () => {
-    const accessToken = getData(AUTH_TOKEN)
     if (accessToken) {
       await client.mutate({
         mutation: MUTATION_SIGNOUT,
         variables: {
           payload: {
-            accessToken: getData(AUTH_TOKEN),
+            accessToken: accessToken,
           },
         },
       })
@@ -118,8 +145,12 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    loadOrganization()
     loadAccount()
+    // eslint-disable-next-line
+  }, [accessToken])
+
+  useEffect(() => {
+    loadOrganization()
     // eslint-disable-next-line
   }, [])
 
@@ -127,7 +158,15 @@ export const AuthProvider = ({ children }) => {
     <LoadingScreen />
   ) : (
     <AuthContext.Provider
-      value={{ signOut, updateUser, updateAccount, signed, kind }}
+      value={{
+        signOut,
+        updateAccount,
+        updateUser,
+        getAccount,
+        signed,
+        kind,
+        loadingAccount,
+      }}
     >
       {children}
     </AuthContext.Provider>
