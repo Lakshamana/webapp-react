@@ -4,29 +4,55 @@ import { ChannelCard } from 'components'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 import { RANDOM_ID } from 'utils'
-import { Props } from './types'
+import { Props, defaultProps } from './types'
 
-const Skeleton = ({ children, numberOfCards, ...props }: Props) => {
+const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
   const { colorMode } = useThemeStore()
-  return (
-    <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
-      {Array.from(Array(numberOfCards).keys()).map(() => {
+  const renderSkeleton = () => {
+    switch (kind) {
+      case 'cards':
+        return (
+          <SimpleGrid
+            width={'100%'}
+            columns={[1, 2, 2, 3, 3, 4, 5]}
+            spacing={3}
+          >
+            {Array.from(Array(numberOfCards).keys()).map(() => {
+              return (
+                <SkeletonLoading
+                  key={`loading-${RANDOM_ID()}`}
+                  startColor={colors.skeleton.initial[colorMode]}
+                  fadeDuration={0.8}
+                  speed={1}
+                  borderRadius={'4px'}
+                  endColor={colors.skeleton.end[colorMode]}
+                  {...props}
+                >
+                  <ChannelCard image={''}></ChannelCard>
+                </SkeletonLoading>
+              )
+            })}
+          </SimpleGrid>
+        )
+      case 'default':
         return (
           <SkeletonLoading
-            key={`loading-${RANDOM_ID()}`}
             startColor={colors.skeleton.initial[colorMode]}
+            endColor={colors.skeleton.end[colorMode]}
             fadeDuration={0.8}
             speed={1}
-            borderRadius={'4px'}
-            endColor={colors.skeleton.end[colorMode]}
             {...props}
           >
-            <ChannelCard image={''}></ChannelCard>
+            {children}
           </SkeletonLoading>
         )
-      })}
-    </SimpleGrid>
-  )
+      default:
+        return <div></div>
+    }
+  }
+  return renderSkeleton()
 }
+
+Skeleton.defaultProps = defaultProps
 
 export { Skeleton }

@@ -1,10 +1,12 @@
 import { SwitchStyled } from './style'
-import { ToggleButtonProps } from "./types";
+import { ToggleButtonProps } from './types'
 
 const ToggleButton = ({ ...props }: ToggleButtonProps) => {
-  return (
-    <SwitchStyled size="md" isChecked={!!props.checked} {...props} />
-  )
+  return <SwitchStyled isChecked={!!props.checked} {...props} />
 }
 
-export { ToggleButton };
+ToggleButton.defaultProps = {
+  size: 'md',
+}
+
+export { ToggleButton }

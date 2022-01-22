@@ -15,8 +15,8 @@ const ContentBlock = ({
     <SingleConfiguration
       fontStyle={{
         fontSize: pxToRem(20),
-        marginLeft: '24px',
-        fontWeight: 'bold',
+        fontWeight: '500',
+        marginLeft: '15px',
       }}
       text={title}
       {...{

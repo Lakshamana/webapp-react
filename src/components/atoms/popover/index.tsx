@@ -20,7 +20,7 @@ const Popover = ({
 }: Props) => {
   const { colorMode } = useThemeStore()
   return (
-    <ChakraPopover {...props} arrowShadowColor={'transparent'} arrowSize={12} preventOverflow>
+    <ChakraPopover closeOnEsc {...props} arrowShadowColor={'transparent'} arrowSize={12} preventOverflow>
       <PopoverTrigger>{popoverTrigger}</PopoverTrigger>
       <PopoverContent
         bg={background || colors.cardBg[colorMode]}

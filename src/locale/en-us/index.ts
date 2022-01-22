@@ -12,8 +12,9 @@ const EN_US = {
           'You must accept the terms and conditions.',
         password_error:
           'Password must contain a min of 8 characters, one uppercase, one lowercase, one number and one special character',
-        confirm_email: 'Please use the email previously entered during registration'
-        },
+        confirm_email:
+          'Please use the email previously entered during registration',
+      },
       what_is_this: 'What is this?',
       more: 'more',
       terms: 'Terms and Conditions',
@@ -22,6 +23,7 @@ const EN_US = {
       edit_profile: 'Edit profile',
       settings: 'Settings',
       sign_out: 'Sign out',
+      save: 'Save',
       enable: 'Enable',
       disable: 'Disable',
       dark_mode: 'dark mode',
@@ -37,10 +39,11 @@ const EN_US = {
       back: 'Back',
       cancel: 'Cancel',
       confirm: 'Confirm',
+      confirm_signout: 'Are you sure you want to sign out?',
       update: 'Update',
       accept_all: 'I accept all',
       agree: 'Agree',
-      cancel_registration: 'Cancel registration'
+      cancel_registration: 'Cancel registration',
     },
     signin: {
       title: 'Access Fanhero now',
@@ -56,6 +59,9 @@ const EN_US = {
         login: 'Login',
         signup_here: 'Sign Up here',
         forgot_password: 'Forgot password?',
+      },
+      error: {
+        wrong_credentials: 'Your login credentials are incorrect.',
       },
     },
     signup: {
@@ -84,10 +90,13 @@ const EN_US = {
       },
       reconfirm_age_email: {
         title: 'AGE CONFIRMATION',
-        subtitle: 'By clicking "Agree" below, I certify that the following is accurate and true:',
-        age_declaration: 'I am an individual {{age}} years of age or older. I previously provided the wrong age to {{organization}}.',
-        warning: 'I understand that if {{organization}} discovers any of my statements to be inaccurate, it may disable and delete this account without notice.',
-        input: 'Re-enter email'
+        subtitle:
+          'By clicking "Agree" below, I certify that the following is accurate and true:',
+        age_declaration:
+          'I am an individual {{age}} years of age or older. I previously provided the wrong age to {{organization}}.',
+        warning:
+          'I understand that if {{organization}} discovers any of my statements to be inaccurate, it may disable and delete this account without notice.',
+        input: 'Re-enter email',
       },
       our_politics: {
         title: 'Our Policies',
@@ -151,6 +160,7 @@ const EN_US = {
         collections: 'Collections',
         my_list: 'My List',
         settings: 'Settings',
+        tags: 'Tags',
         tools: 'Tools',
         example: 'Example',
       },
@@ -174,7 +184,7 @@ const EN_US = {
         popular: 'Popular',
       },
       channels: {
-        title: 'Channels'
+        title: 'Channels',
       },
       collection: {
         action: 'Action',
@@ -188,20 +198,29 @@ const EN_US = {
         collection: 'Collection',
       },
       account: {
-        push: 'Push',
+        push_notifications: 'Push Notifications',
+        security: 'Security',
         back: 'Back',
         on: 'on',
         cancel: 'CANCEL',
         delete: 'DELETE',
         update: 'UPDATE',
+        update_password: 'Update password',
         default: 'DEFAULT',
         pause: 'PAUSE',
         name: 'Your Name',
         username: 'Username',
         email: 'Email',
+        first_name: 'First Name',
+        last_name: 'Last Name',
+        display_name: 'Display Name',
+        address: 'Address',
+        birthday: 'Birthday',
         password: 'Password',
         phone: 'Phone',
         account_info: 'Your Account Information',
+        profile_info: 'Your Profile Information',
+        account_settings: 'Account Settings',
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
         billing_information: 'Your Billing Information',

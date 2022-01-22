@@ -26,6 +26,7 @@ const ModalComponent = ({
   closeButton,
   cancelButton,
   actionButton,
+  loading,
   ...props
 }: Props) => {
   const { t } = useTranslation()
@@ -41,30 +42,52 @@ const ModalComponent = ({
             <>
               <ModalHeader
                 textColor={colors.generalText[colorMode]}
-                fontSize={'32px'}
+                fontSize={'24px'}
                 textAlign={'center'}
-                paddingBottom={1}
+                fontWeight={500}
+                paddingBottom={subtitle ? 1 : 0}
+                paddingTop={closeButton ? 8 : 5}
               >
                 {title}
               </ModalHeader>
-              {closeButton && <ModalCloseButton autoFocus={false} _focus={{boxShadow: 'none'}} textColor={colors.generalText[colorMode]} />}
-              <ModalBody paddingBottom={4} textColor={colors.secondaryText[colorMode]} size={'16px'} textAlign={'center'}>
+              {closeButton && (
+                <ModalCloseButton
+                  autoFocus={false}
+                  _focus={{ boxShadow: 'none' }}
+                  textColor={colors.generalText[colorMode]}
+                />
+              )}
+              <ModalBody
+                paddingBottom={4}
+                textColor={colors.secondaryText[colorMode]}
+                fontSize={'18px'}
+                textAlign={'center'}
+              >
                 {subtitle}
               </ModalBody>
 
-              <ModalFooter display={'flex'} flexDirection={'column'} paddingBottom={10}>
-                {actionButton && <Button
-                  width={[sizes.loginButtonWidth]}
-                  label={actionLabel || t('common.confirm')}
-                  onClick={onConfirm}
-                />}
-                {cancelButton && <Button
-                  width={[sizes.loginButtonWidth]}
-                  marginTop={2}
-                  variant={'outline'}
-                  label={cancelLabel || t('common.cancel')}
-                  onClick={onClose}
-                />}
+              <ModalFooter
+                display={'flex'}
+                flexDirection={'column'}
+                paddingY={4}
+              >
+                {actionButton && (
+                  <Button
+                    width={[sizes.loginButtonWidth]}
+                    label={actionLabel || t('common.confirm')}
+                    onClick={onConfirm}
+                    isLoading={loading}
+                  />
+                )}
+                {cancelButton && (
+                  <Button
+                    width={[sizes.loginButtonWidth]}
+                    marginTop={2}
+                    variant={'ghost'}
+                    label={cancelLabel || t('common.cancel')}
+                    onClick={onClose}
+                  />
+                )}
               </ModalFooter>
             </>
           )}
