@@ -8,6 +8,7 @@ import {
   FontSizeProps,
 } from 'styled-system'
 import InputMasked from 'react-input-mask'
+import { Input as ChakraInput } from '@chakra-ui/react'
 
 const commonStyles = `
   &:focus {
@@ -23,7 +24,7 @@ interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
   placeholderFontStyle?: string
 }
 
-export const Input: any = styled.input<PropsStyle>`
+export const Input: any = styled(ChakraInput)<PropsStyle>`
   ${layout}
   ${space}
   ${fontSize}

@@ -28,6 +28,7 @@ const InputInline = ({
     <InputMask ref={ref} {...props} mask={mask} maskPlaceholder={placeholder} />
   ) : (
     <Input
+      variant="unstyled"
       {...{
         ...props,
         ref,
