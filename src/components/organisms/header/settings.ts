@@ -11,7 +11,7 @@ export const MENUTABS = [
   {
     id: 'live',
     label: i18n.t('header.tabs.live'),
-    url: '/livechat',
+    url: '/livestreams',
     style: { mx: '25px' },
   },
   {
