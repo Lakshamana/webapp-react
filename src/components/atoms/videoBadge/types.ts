@@ -2,7 +2,8 @@ type VideoBadgeType = 'default' | 'live' | 'social' | 'social-end' | 'view-count
 
 export interface VideoBadgeProps {
   children: any
-  kind?: VideoBadgeType
+  kind?: VideoBadgeType,
+  bg?: string
 }
 
 export const defaultProps = {

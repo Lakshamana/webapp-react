@@ -7,6 +7,7 @@
 		"description": "Premise. In the distant future, following a plague, almost all of the human race have lost the sense of sight, so society has had to find new ways to interact, build, hunt, and survive.",
 		"title": "Single Channel",
 		"infoColor": "#ffffff",
+		"live": true,
 		"actions": [
 			{
 				"id": "cc4f0b63-6d7d-4834-bcd6-fea6d7785cb0",
@@ -27,6 +28,7 @@
 		"description": "Premise. In the distant future, following a plague, almost all of the human race have lost the sense of sight, so society has had to find new ways to interact, build, hunt, and survive.",
 		"title": "Home Landing",
 		"infoColor": "#ffffff",
+		"live": false,
 		"actions": [
 			{
 				"id": "a3dcedca-ec4c-4d1a-a04c-6bca37a069e9",
@@ -47,6 +49,7 @@
 		"description": "Premise. In the distant future, following a plague, almost all of the human race have lost the sense of sight, so society has had to find new ways to interact, build, hunt, and survive.",
 		"title": "Home Landing",
 		"infoColor": "#ffffff",
+		"live": true,
 		"actions": [
 			{
 				"id": "fddcb097-8a17-4cc8-b815-6a22e2ce5e9e",

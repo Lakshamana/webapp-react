@@ -21,6 +21,7 @@ import {
 import { colors } from 'styles'
 import './style.css'
 import "swiper/swiper-bundle.min.css"
+import { VideoBadge } from 'components/atoms'
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
@@ -54,6 +55,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
             </HeroImageWrapper>
             <Info style={{ color: item.infoColor }}>
               <InfoContent>
+                {item.live && (<VideoBadge bg={'#FF0000'}>LIVE</VideoBadge>)}
                 <Title>{item.title}</Title>
                 <Description>{item.description}</Description>
                 {customButtons ? (
