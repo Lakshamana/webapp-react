@@ -11,6 +11,7 @@
 			{
 				"id": "cc4f0b63-6d7d-4834-bcd6-fea6d7785cb0",
 				"bgColor": "#0660F9",
+				"borderColor": "#0660F9",
 				"icon": "play",
 				"label": "Watch Now",
 				"route": "",
@@ -30,6 +31,7 @@
 			{
 				"id": "a3dcedca-ec4c-4d1a-a04c-6bca37a069e9",
 				"bgColor": "#0660F9",
+				"borderColor": "#000000",
 				"icon": "play",
 				"label": "Watch Now",
 				"route": "",
@@ -49,6 +51,7 @@
 			{
 				"id": "fddcb097-8a17-4cc8-b815-6a22e2ce5e9e",
 				"bgColor": "#0660F9",
+				"borderColor": "#EA1D2C",
 				"icon": "play",
 				"label": "Watch Now",
 				"route": "",
