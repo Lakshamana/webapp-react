@@ -12,6 +12,7 @@ export interface Props
     TypographyProps {
   children?: JSX.Element | JSX.Element[]
   isOpen: boolean
+  size?: string
   onClose: () => void
   onConfirm?: () => void
   isCentered?: boolean
@@ -23,11 +24,13 @@ export interface Props
   actionButton?: boolean
   cancelButton?: boolean
   loading?: boolean
+  defaultAction?: boolean
 }
 
 export const defaultProps = { 
   actionButton: true,
   cancelButton: true,
   closeButton: true,
-  loading: false
+  loading: false,
+  defaultAction: true
 } 
