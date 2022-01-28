@@ -9,6 +9,7 @@ export interface BillboardItem {
     description: string
     infoColor: string
     actions?: Array<BillboardItemActions>
+    live?: boolean
 }
 
 export interface BillboardItemActions extends ButtonProps {

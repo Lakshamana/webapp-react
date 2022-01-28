@@ -3,7 +3,7 @@ import { VideoBadgeProps, defaultProps } from "./types";
 import { Box, Flex } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
-const VideoBadge = ({ children, kind }: VideoBadgeProps) => {
+const VideoBadge = ({ children, kind, bg='#444444' }: VideoBadgeProps) => {
   const getBadgeStyle = () => {
     switch (kind) {
       case 'social':
@@ -38,7 +38,7 @@ const VideoBadge = ({ children, kind }: VideoBadgeProps) => {
         )
       default:
         return (
-          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={14} bg={'#444444'} color={'white'} fontWeight={500}>
+          <Box textAlign={'center'} w={'68px'} py={'7px'} rounded={4} fontSize={14} bg={bg} color={'white'} fontWeight={500}>
             {children}
           </Box>
         )

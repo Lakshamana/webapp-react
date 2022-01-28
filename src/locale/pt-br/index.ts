@@ -235,6 +235,11 @@ const PT_BR = {
         add_payment: 'Adicionar Método de Pagamento',
         payment_method: 'Método de Pagamento',
       },
+      live: {
+        live: 'Ao Vivo',
+        upcoming: 'Próximas transmissões',
+        past: 'Assistir Novamente'
+      }
     },
     cookieConsent: {
       notice: 'Aviso prévio.',

@@ -236,6 +236,11 @@ const EN_US = {
         add_payment: 'Add Payment Method',
         payment_method: 'Payment Method',
       },
+      live: {
+        live: 'Live',
+        upcoming: 'Upcoming',
+        past: 'Past'
+      }
     },
     cookieConsent: {
       notice: 'Notice.',

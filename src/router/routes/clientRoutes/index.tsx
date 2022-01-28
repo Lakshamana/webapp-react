@@ -14,7 +14,8 @@ import {
   FeedPage,
   RecoverPasswordPage,
   VideoPostViewPage,
-  LiveChat
+  LiveChat,
+  LiveEvent
 } from 'modules'
 
 import { MainLayout, LoginLayout } from 'components'
@@ -111,6 +112,13 @@ const ClientRoutes = ({ isAccesible }: any) => {
         isAccesible={isAccesible?.livechat}
         path="/livechat"
         component={LiveChat}
+        redirectTo="/login"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={true}
+        path="/livestreams"
+        component={LiveEvent}
         redirectTo="/login"
         template={MainLayout}
       />
