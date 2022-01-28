@@ -8,7 +8,7 @@ import { colors } from 'styles'
 import { pxToRem } from 'styles/metrics'
 
 const Navbar = ({ colorMode, text }: NavbarProps) => (
-  <Container width={1} mt={2} alignItems="center" mb={4}>
+  <Container width={1} mt={1} alignItems="center" mb={2}>
     <Link to="/home">
       <Flex alignItems="center">
         <Icon
