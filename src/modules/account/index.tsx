@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
 import { Box } from '@chakra-ui/layout'
 
 import {
   Container,
-  ToggleButton,
+  Modal,
   Select,
   Button,
   Skeleton,
   AlertComponent,
+  ToggleButton,
 } from 'components'
 
 import {
@@ -29,18 +29,24 @@ import {
 } from 'services/graphql'
 import { sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
+import { useOrganizationStore } from 'services/stores'
 import { useAuth } from 'contexts/auth'
-import { LANGUAGES, initialValues, validationSchema } from './settings'
+import { useAuthStore } from 'services/stores'
+import { LANGUAGES } from './settings'
 
-import { saveData, getData } from 'services/storage'
+import { saveData } from 'services/storage'
 import { useEffect } from 'react'
 
 const AccountPage = () => {
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { organization } = useOrganizationStore()
   const { updateAccount, updateUser, getAccount, loadingAccount } = useAuth()
   const [updateAccountError, setUpdateAccountError] = useState('')
   const [updateProfileError, setUpdateProfileError] = useState('')
+  const [openDeleteAccountModal, setOpenDeleteAccountModal] = useState(false)
+  const { user, account } = useAuthStore()
+  const btnFontSize = '14px'
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -94,17 +100,6 @@ const AccountPage = () => {
     })
   }
 
-  const { values, setFieldValue } = useFormik({
-    initialValues: {
-      ...initialValues,
-      locale: getData(APP_LOCALE),
-    },
-    validationSchema,
-    validateOnChange: true,
-    validateOnBlur: false,
-    onSubmit: async () => {},
-  })
-
   useEffect(() => {
     getAccount()
     // eslint-disable-next-line
@@ -112,9 +107,8 @@ const AccountPage = () => {
 
   const handleLanguageChange = (evt: any) => {
     const { value } = evt?.target
-    setFieldValue('locale', value)
-    saveData(APP_LOCALE, value)
     i18n.changeLanguage(value)
+    saveData(APP_LOCALE, value)
   }
 
   return (
@@ -142,8 +136,10 @@ const AccountPage = () => {
                 ></AlertComponent>
               </Box>
             )}
-            {!loadingAccount && (
+            {!loadingAccount && user && (
               <ProfileInfo
+                locale={i18n.language}
+                user={user}
                 updateProfile={callUpdateMyProfile}
                 isLoading={loadingUpdateProfile}
               />
@@ -167,8 +163,9 @@ const AccountPage = () => {
                 ></AlertComponent>
               </Box>
             )}
-            {!loadingAccount && (
+            {!loadingAccount && account && (
               <AccountInfo
+                account={account}
                 updateAccount={callUpdateMyAccount}
                 isLoading={loadingUpdateAccount}
               />
@@ -185,25 +182,13 @@ const AccountPage = () => {
           <SingleConfiguration
             text={t('page.account.language_selection')}
             children={
-              <Select
-                options={LANGUAGES}
-                value={values.locale}
-                onChange={handleLanguageChange}
-              />
+              <Select options={LANGUAGES} onChange={handleLanguageChange} />
             }
             {...{ colorMode }}
           />
-        </ConfigBox>
-        <ConfigBox>
           <SingleConfiguration
             text={t('page.account.push_notifications')}
-            children={
-              <ToggleButton
-                size="md"
-                checked={values.push}
-                onChange={() => setFieldValue('push', !values.push)}
-              />
-            }
+            children={<ToggleButton size="md" onChange={() => {}} />}
             {...{ colorMode }}
           />
         </ConfigBox>
@@ -220,6 +205,7 @@ const AccountPage = () => {
               <Button
                 size="sm"
                 width="auto"
+                fontSize={btnFontSize}
                 variant="link"
                 color="red"
                 label={t('page.account.update_password')}
@@ -227,22 +213,35 @@ const AccountPage = () => {
             }
             {...{ colorMode }}
           />
-        </ConfigBox>
-        <ConfigBox>
           <SingleConfiguration
             text={t('page.account.delete_account')}
             children={
               <Button
                 size="sm"
                 width="auto"
+                fontSize={btnFontSize}
                 variant="link"
                 color="red"
+                onClick={() => setOpenDeleteAccountModal(true)}
                 label={t('page.account.delete')}
               ></Button>
             }
             {...{ colorMode }}
           />
         </ConfigBox>
+
+        <Modal
+          size="xl"
+          isCentered
+          title={t('page.account.delete_account')}
+          subtitle={t('page.account.delete_account_info', {
+            organization: organization?.name,
+          })}
+          isOpen={openDeleteAccountModal}
+          onClose={() => setOpenDeleteAccountModal(false)}
+          actionLabel={t('page.account.delete')}
+          // onConfirm={forgetAccount}
+        ></Modal>
       </ContentBlock>
       {/* <ContentBlock
           mb={[3, 3, 3, 4]}
