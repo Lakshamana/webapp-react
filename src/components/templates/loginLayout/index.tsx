@@ -13,9 +13,15 @@ const LoginLayout = ({
 }: Props) => {
   const { organization } = useOrganizationStore()
   const { generateImage } = useThumbor()
+  const options = {
+    size: {
+      height: 800,
+    },
+  }
   const bg_login = generateImage(
     ThumborInstanceTypes.IMAGE,
-    organization?.customization.login_image
+    organization?.customization.login_image,
+    options
   )
   return (
     <LayoutContainer flexDirection="column">
