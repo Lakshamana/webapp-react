@@ -8,6 +8,7 @@ import {
   LivestreamScroller,
   OnDemandScroller,
 } from 'components/molecules'
+import { convertToValidColor } from 'utils'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { useLazyQuery } from '@apollo/client'
@@ -63,7 +64,20 @@ const HomePage = () => {
       (memo, curr) => {
         const cover = getUrl(curr)
         const banner = getUrl(curr)
-        memo.push({ ...curr, cover, banner })
+
+        memo.push({
+          ...curr,
+          actions: curr.actions.map(action => (
+            {
+              ...action,
+              bgColor: convertToValidColor(action.bgColor),
+              borderColor: convertToValidColor(action.borderColor),
+              textColor: convertToValidColor(action.textColor),
+            }
+          )),
+          cover,
+          banner
+        })
         return memo
       }, []
     )
