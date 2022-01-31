@@ -36,6 +36,12 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
+        if (!err.extensions.response) {
+          clearData()
+          window.location.href = '/'
+          return
+        }
+
         switch (err.extensions.response.message) {
           case 'INVALID_TOKEN':
             try {

@@ -33,3 +33,11 @@ export const formatNumber = (num: number, digits: number) => {
 	const item = lookup.slice().reverse().find((item) => num >= item.value);
 	return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
 }
+
+export function convertToValidColor(color): string | undefined {
+	if (!color || !color.replace)
+		return undefined
+
+	const myColor = color.replace(/#(..)(......)/, '#$2$1')
+	return myColor || undefined
+}
