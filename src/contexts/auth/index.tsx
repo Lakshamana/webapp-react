@@ -81,8 +81,7 @@ export const AuthProvider = ({ children }) => {
           setLoadingAcount(false)
         }
         resolve(data.me)
-      } catch (error) {
-        reject(false)
+      } catch {
         setLoadingAcount(false)
       }
     })

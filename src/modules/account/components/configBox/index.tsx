@@ -2,12 +2,11 @@ import { Card } from 'components'
 
 import { ConfigBoxProps } from './types'
 
-const ConfigBox = ({ children, removeMargin }: ConfigBoxProps) => (
+const ConfigBox = ({ children }: ConfigBoxProps) => (
   <Card
     width={1}
-    paddingX={[24, 32]}
-    paddingY={24}
-    mt={removeMargin ? '0px' : 3}
+    paddingX={[15, 24]}
+    paddingY={10}
     roundBorder={4}
     removeShadow
   >

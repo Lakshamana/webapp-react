@@ -26,6 +26,7 @@ const ModalComponent = ({
   closeButton,
   cancelButton,
   actionButton,
+  defaultAction,
   loading,
   ...props
 }: Props) => {
@@ -37,7 +38,7 @@ const ModalComponent = ({
         <ModalOverlay />
         <ModalContent paddingTop={3} backgroundColor={colors.cardBg[colorMode]}>
           {children ? (
-            { children }
+            children
           ) : (
             <>
               <ModalHeader
@@ -57,6 +58,7 @@ const ModalComponent = ({
                   textColor={colors.generalText[colorMode]}
                 />
               )}
+
               <ModalBody
                 paddingBottom={4}
                 textColor={colors.secondaryText[colorMode]}
@@ -65,32 +67,27 @@ const ModalComponent = ({
               >
                 {subtitle}
               </ModalBody>
-
-              <ModalFooter
-                display={'flex'}
-                flexDirection={'column'}
-                paddingY={4}
-              >
-                {actionButton && (
-                  <Button
-                    width={[sizes.loginButtonWidth]}
-                    label={actionLabel || t('common.confirm')}
-                    onClick={onConfirm}
-                    isLoading={loading}
-                  />
-                )}
-                {cancelButton && (
-                  <Button
-                    width={[sizes.loginButtonWidth]}
-                    marginTop={2}
-                    variant={'ghost'}
-                    label={cancelLabel || t('common.cancel')}
-                    onClick={onClose}
-                  />
-                )}
-              </ModalFooter>
             </>
           )}
+          <ModalFooter display={'flex'} flexDirection={'column'} paddingY={4}>
+            {actionButton && (
+              <Button
+                width={[sizes.loginButtonWidth]}
+                label={actionLabel || t('common.confirm')}
+                onClick={onConfirm}
+                isLoading={loading}
+              />
+            )}
+            {cancelButton && (
+              <Button
+                width={[sizes.loginButtonWidth]}
+                marginTop={2}
+                variant={'ghost'}
+                label={cancelLabel || t('common.cancel')}
+                onClick={onClose}
+              />
+            )}
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </MainContent>

@@ -222,6 +222,7 @@ const PT_BR = {
         account_settings: 'Configurações da Conta',
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',
+        delete_account_info: 'Por favor digite sua senha para confirmar que você gostaria de deletar sua conta e ter sua informação pessoal removida. Se você é assinante em qualquer app, você precisa ir até a App Store para cancelar sua assinatura. Deletar sua conta não vai cancelar qualquer assinatura existente. {{organization}} irá enviar uma confirmação para o email usado durante o registro.',
         billing_information: 'Informações de Compra',
         billing_history: 'Ver Histórico de Compra',
         your_subscription: 'Sua Assinatura',

@@ -108,11 +108,11 @@ const SearchBar = ({
           />
         </Container>
       </Popover>
-      <SearchContainer px={[0, 0, 0, 3]} onClick={onOpen} {...{ open }}>
+      <SearchContainer onClick={onOpen} px={0} {...{ open }}>
         <Icon
-          width={20}
-          height={20}
-          icon="bx:bx-search"
+          width={28}
+          height={28}
+          icon="mdi:magnify"
           color={colorSchema.primary}
         />
       </SearchContainer>
