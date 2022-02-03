@@ -1,8 +1,15 @@
 import { Button } from 'components'
+import { useHistory } from 'react-router-dom'
 import { BillboardItemActions } from '../../types'
 import { Actions, ContentButton } from './style'
 
 const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
+  const history = useHistory()
+
+  const redirectTo = (route) => {
+    if (route) history.push(`/${route}`)
+  }
+
   return (
     <Actions>
       {actions?.map((action: BillboardItemActions) => (
@@ -17,6 +24,7 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
             variant={'unstyled'}
             label={action.label}
             borderRadius={'6px'}
+            onClick={() => redirectTo(action?.route)}
           />
         </ContentButton>
       ))}
