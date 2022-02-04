@@ -7,7 +7,14 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
   const history = useHistory()
 
   const redirectTo = (route) => {
-    if (route) history.push(`/${route}`)
+    if (!route) return
+
+    if (route.indexOf("http") === 0) {
+      window?.open(route, '_blank')?.focus()
+      return
+    }
+
+    history.push(route)
   }
 
   return (
