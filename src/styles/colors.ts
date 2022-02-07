@@ -26,7 +26,7 @@ export const colors = {
     dark: '#A4A4A4',
   },
   bodyBg: {
-    light: '#f0f0f0',
+    light: '#ffffff',
     dark: '#0F0F0F',
   },
   cardBg: {
@@ -34,7 +34,7 @@ export const colors = {
     dark: '#222222',
   },
   headerBg: {
-    light: '#ffffff',
+    light: '#FAFAFA',
     dark: '#000000',
   },
   footerBg: {
