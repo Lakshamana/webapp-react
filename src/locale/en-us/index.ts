@@ -182,6 +182,7 @@ const EN_US = {
         live: 'Live',
         most_recent: 'Most Recents',
         popular: 'Popular',
+        cardInfoViews: 'Views',
       },
       channels: {
         title: 'Channels',

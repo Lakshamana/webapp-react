@@ -1,15 +1,22 @@
-import { Icon } from "@iconify/react"
 import { useThemeStore } from 'services/stores/theme';
 import { VideoPostProps, defaultProps } from "./types"
-import { PostContent, ExclusiveBlocked, GeolockedBlocked } from "./style"
+import { 
+	CardWrapper, 
+	PostContent, 
+	ExclusiveBlocked, 
+	GeolockedBlocked 
+} from "./style"
 import { colors } from 'styles'
+
+import { Icon } from "@iconify/react";
+import { HoverInfoCard } from '../hoverInfoCard';
 
 const VideoPostCard = ({ ...props }: VideoPostProps) => {
   const { colorMode } = useThemeStore();
 
 	return (
-		<>
-			<PostContent {...props}>
+		<CardWrapper>
+			<PostContent className="postContent" {...props}>
 				{props.isExclusive ? (
 					<ExclusiveBlocked>
 						<Icon width={20} icon={`mdi:lock`} color={colors.generalText[colorMode]}></Icon>
@@ -22,7 +29,9 @@ const VideoPostCard = ({ ...props }: VideoPostProps) => {
 					""
 				)}
 			</PostContent>
-		</>
+
+			<HoverInfoCard {...props} />
+		</CardWrapper>
 	)
 }
 

@@ -2,6 +2,35 @@ import styled from "styled-components"
 import { CollectionPostProps } from "./types"
 import { breakpoints, colors } from "styles"
 
+export const CardWrapper = styled.div`
+	cursor: pointer;
+	position: relative;
+
+	&:hover {
+		z-index: 1;
+		transform: scale(1.3);
+		margin-top: -30%;
+
+		.addMyListIcon {
+			display: block !important;
+		}
+
+		.addMyListIconBg {
+			display: block !important;
+		}
+
+		.postContent {
+			border-radius: 4px 4px 0 0 !important;
+		}
+
+		.infoCard {
+			display: flex;
+			border-radius: 0 0 4px 4px;
+			height: 80px;
+		}
+	}	
+`
+
 export const PostContent = styled.div<CollectionPostProps>`
 	display: flex;
 	width: auto;

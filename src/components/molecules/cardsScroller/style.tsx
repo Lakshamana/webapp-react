@@ -10,7 +10,12 @@ export const Content: any = styled.div`
 
 export const SwiperStyled = styled(Swiper)`
   .swiper-container {
+    overflow: inherit !important;
     padding: 0 1.3rem !important;
+  }
+
+  .swiper-slide:hover {
+    z-index: 1;
   }
 
   .swiper-slide:first-child {
