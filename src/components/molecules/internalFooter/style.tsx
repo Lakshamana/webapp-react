@@ -8,16 +8,13 @@ export const BoxFooter = styled(StyleContainer)`
   bottom: 0;
   left: 0;
   right: 0;
+  box-shadow: 1px 0px 1px rgb(0 0 0 / 38%);
 
   padding: 0 ${({ theme }) => theme.sizes.paddingSm};
 
   @media screen and (min-width: ${breakpoints.md}) {
     padding: 0 ${({ theme }) => theme.sizes.paddingMd};
     height: ${({ theme }) => theme.sizes.footerDesktopHeight};
-  }
-
-  @media screen and (min-width: ${breakpoints.lg}) {
-    padding: 0 ${({ theme }) => theme.sizes.paddingLg};
   }
 `;
 
