@@ -42,6 +42,8 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
 
   const { t } = useTranslation()
 
+  if (!items || !items.length) return <></>
+
   return (
     <Swiper {...Params} style={{ position: "relative", height: "100%" }}>
       {getItems(items).map((item: BillboardItem) => (
