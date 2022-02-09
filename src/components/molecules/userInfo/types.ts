@@ -13,7 +13,6 @@ export type User = {
 
 export interface PropsUserInfo {
   display: 'sidebar' | 'menu';
-  user: User | undefined;
   delimited?: boolean;
   colorMode: "light" | "dark";
   toggleColorMode: any;
