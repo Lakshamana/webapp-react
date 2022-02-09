@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
 import { layout, space, SpaceProps, LayoutProps } from "styled-system";
 import { StyleContainer } from "components/atoms/container";
-import { breakpoints } from "styles";
 
 interface IconContainerProps {
   open: boolean;
@@ -11,21 +10,6 @@ interface TypeSpaceProps extends SpaceProps, LayoutProps { }
 
 export const CustomContainer = styled(StyleContainer)`
   ${layout}
-   ${({ theme, display }) => {
-    return (display === 'menu')
-      ? (`
-        padding: 0 16px;
-        @media screen and (max-width: ${breakpoints.lg}) {
-          display: none;
-        }
-        border-left: 1px solid ${theme.colors.grey["800"]}
-      `)
-      : (`
-        @media screen and (min-width: ${breakpoints.lg}) {
-          display: none;
-        }
-      `)
-  }};
   align-items: center;
 `;
 

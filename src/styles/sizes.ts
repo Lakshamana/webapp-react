@@ -1,7 +1,7 @@
 export const sizes = {
-  headerDesktopHeight: "100px ",
-  headerMobileHeight: "72px",
-  footerDesktopHeight: "108px",
+  headerDesktopHeight: "85px",
+  headerMobileHeight: "65px",
+  footerDesktopHeight: "90px",
   footerMobileHeight: "210px",
   loginCardWidth: "556px",
   loginButtonWidth: "267px",

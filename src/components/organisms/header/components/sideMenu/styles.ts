@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { layout } from "styled-system";
+import { layout } from 'styled-system'
 import { StyleContainer } from 'components'
 import { breakpoints, sizes } from 'styles'
 
@@ -7,17 +7,19 @@ interface PropsSideContainer {
   open: boolean
 }
 
-export const SideContainer = styled(StyleContainer) <PropsSideContainer>`
+export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
   position: absolute;
   top: ${sizes.headerMobileHeight};
   z-index: 1000;
   overflow: auto;
-  height: calc(100% - 70px);
-  background-color: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
+  height: calc(100vh - ${sizes.headerMobileHeight});
+  background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
+  box-shadow: 3px 40px 40px rgb(0 0 0 / 38%);
+
   ${({ open }) =>
     open
       ? css`
-          width: 300px;
+          width: 350px;
           transition: ease-in 0.25s;
         `
       : `
@@ -25,13 +27,14 @@ export const SideContainer = styled(StyleContainer) <PropsSideContainer>`
       transition: ease-in 0.25s;`}
 
   @media (min-width: ${breakpoints.md}) {
-    top: 100px;
-    height: calc(100% - 100px);
+    top: ${sizes.headerDesktopHeight};
+    height: calc(100% - ${sizes.headerDesktopHeight});
   }
 `
 
 export const ScrollContainer = styled(StyleContainer)`
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   a:nth-child(n + 1):nth-child(-n + 10) {
     display: block;
   }
@@ -53,7 +56,8 @@ export const ExitContainer = styled(StyleContainer)`
 
 export const Circle = styled.div`
   ${layout}
-  background-color: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+  background-color: ${({ theme }) =>
+    theme.colors.brand.primary[theme.colorMode]};
   border-radius: 50%;
   width: 8px;
   height: 8px;
