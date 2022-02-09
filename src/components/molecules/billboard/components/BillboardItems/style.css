@@ -1,58 +1,58 @@
 .slider {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 .billboard-pagination {
-    bottom: 50px !important;
-    left: 50% !important;
-    transform: translateX(-50%);
-    z-index: 10;
+  bottom: 50px !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 .swiper-pagination-bullet {
-    width: 105px;
-    height: 6px;
-    padding: 0px;
-    margin: 0 2px !important;
-    background: #ffffff;
-    border: 0;
-    opacity: 0.64;
-    border-radius: 0;
-    cursor: pointer;
+  width: 105px;
+  height: 6px;
+  padding: 0px;
+  margin: 0 2px !important;
+  background: #ffffff;
+  border: 0;
+  opacity: 0.64;
+  border-radius: 0;
+  cursor: pointer;
 }
 
 .swiper-pagination-bullet:hover,
 .swiper-pagination-bullet:focus {
-    outline: unset;
+  outline: unset;
 }
 
-.swiper-pagination-bullet-active{
-    background: #0362fb;
+.swiper-pagination-bullet-active {
+  background: #0362fb;
 }
 
 .swiper-container {
-    padding: 0px !important;
+  overflow: inherit !important;
+  padding: 0px !important;
 }
 
 @media screen and (max-width: 768px) {
-    .pagination {
-        bottom: 30px !important;
-    }
+  .pagination {
+    bottom: 30px !important;
+  }
 
-    .swiper-pagination-bullet {
-        width: 60px;
-        height: 4px;
-    }
+  .swiper-pagination-bullet {
+    width: 60px;
+    height: 4px;
+  }
 }
 
 @media screen and (max-width: 425px) {
-    .pagination {
-        margin-bottom: 5px;
+  .pagination {
+    margin-bottom: 5px;
+  }
 
-    }
-
-    .swiper-pagination-bullet {
-        width: 30px;
-        height: 2px;
-    }
+  .swiper-pagination-bullet {
+    width: 30px;
+    height: 2px;
+  }
 }

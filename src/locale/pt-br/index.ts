@@ -181,6 +181,7 @@ const PT_BR = {
         live: 'Ao vivo',
         most_recent: 'Mais Recentes',
         popular: 'Popular',
+        cardInfoViews: 'Visualizações',
       },
       channels: {
         title: 'Canais',
