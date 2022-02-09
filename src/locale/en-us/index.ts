@@ -62,6 +62,7 @@ const EN_US = {
       },
       error: {
         wrong_credentials: 'Your login credentials are incorrect.',
+        too_many_attempts: 'Number of attempts exceeded. For your security, login is currently not possible. Try again later.'
       },
     },
     signup: {
