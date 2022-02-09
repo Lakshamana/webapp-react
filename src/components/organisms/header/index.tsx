@@ -1,5 +1,6 @@
 import { useState, memo, useReducer } from 'react'
 import { useLocation } from 'react-router-dom'
+import { Divider, Center } from '@chakra-ui/react'
 import { Container, Logo, UserInfo } from 'components'
 import {
   Tabs,
@@ -12,17 +13,11 @@ import {
 import { useThemeStore } from 'services/stores/theme'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { useOrganizationStore } from 'services/stores'
-import {
-  CHANNELS,
-  DEFAULT_USER,
-  SEARCH_VALUES,
-  MENUTABS,
-  initialState,
-} from './settings'
+import { CHANNELS, SEARCH_VALUES, MENUTABS, initialState } from './settings'
 import { Channel, defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
 import { sizes, breakpoints } from 'styles'
-import { HeaderContainer, LogoContainer, ChannelContainer } from './styles'
+import { HeaderContainer, LogoContainer } from './styles'
 
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
@@ -71,23 +66,23 @@ const HeaderComponent = () => {
 
   const handleOpenSearch = () => {
     if (isMobile()) {
-      dispatch({ type: 'openMenu', value: false });
-      setVisibleMobile('none');
+      dispatch({ type: 'openMenu', value: false })
+      setVisibleMobile('none')
     }
     dispatch({ type: 'openSearch', value: true })
   }
 
   const isMobile = () => {
-    const { width } = getWindowDimensions();
+    const { width } = getWindowDimensions()
     return width < Number(breakpoints.lg.replace('px', ''))
   }
 
   const getWindowDimensions = () => {
-    const { innerWidth: width, innerHeight: height } = window;
+    const { innerWidth: width, innerHeight: height } = window
     return {
       width,
-      height
-    };
+      height,
+    }
   }
 
   return (
@@ -98,20 +93,7 @@ const HeaderComponent = () => {
         selected={state.selected}
         {...{ colorMode }}
       >
-        <UserInfo
-          display={'sidebar'}
-          user={DEFAULT_USER}
-          {...{ colorMode, toggleColorMode }}
-        />
-        <ChannelContainer>
-          <ChannelSelector
-            display={'sidebar'}
-            onSelect={handleChannelSelect}
-            onSearch={handleChannelSearch}
-            selected={state.channel}
-            {...{ channels, colorMode }}
-          />
-        </ChannelContainer>
+        <UserInfo display={'sidebar'} {...{ colorMode, toggleColorMode }} />
       </SideMenu>
       <HeaderContainer
         height={[
@@ -129,9 +111,11 @@ const HeaderComponent = () => {
           <LogoContainer>
             <Logo ignoreFallback src={org_logo} width={180} />
           </LogoContainer>
+          <Center pr={5} height="30px">
+            <Divider orientation="vertical" />
+          </Center>
           {!state.openSearch ? (
             <ChannelSelector
-              display={'menu'}
               onSelect={handleChannelSelect}
               onSearch={handleChannelSearch}
               selected={state.channel}
@@ -161,7 +145,11 @@ const HeaderComponent = () => {
         ) : (
           <></>
         )}
-        <Container alignItems="center" flex={state.openSearch ? 1 : 'none'} zIndex={1000}>
+        <Container
+          alignItems="center"
+          flex={state.openSearch ? 1 : 'none'}
+          zIndex={1000}
+        >
           <SearchBar
             data={searchValues}
             open={state.openSearch}
@@ -171,11 +159,7 @@ const HeaderComponent = () => {
             search={state.search}
             {...{ colorMode }}
           />
-          <UserInfo
-            display={'menu'}
-            user={DEFAULT_USER}
-            {...{ colorMode, toggleColorMode }}
-          />
+          <UserInfo display={'menu'} {...{ colorMode, toggleColorMode }} />
         </Container>
       </HeaderContainer>
     </>
