@@ -60,6 +60,7 @@ const PT_BR = {
       },
       error: {
         wrong_credentials: 'Suas credenciais de login estão incorretas.',
+        too_many_attempts: 'Número de tentativas de login excedido. Para sua segurança, não é possível fazer o login no momento. Tente novamente mais tarde.'
       },
     },
     signup: {

@@ -29,24 +29,27 @@ const LoginPage = () => {
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
   const [account, setAccount] = useState('')
 
+  const errorMessage = (type: string) => {
+    const Error = {
+      'exception:PASSWORD_MISMATCH': t('signin.error.wrong_credentials'),
+      'exception:TOO_MANY_ATTEMPTS_TRY_LATER': t(
+        'signin.error.too_many_attempts'
+      ),
+      default: t('signin.error.generic_api_error'),
+    }
+
+    return Error[type] || Error.default
+  }
+
   const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
-      if (!result?.signIn) {
-        setError(t('common.error.generic_api_error'))
-        return
-      }
-
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
       await updateAccount(result.signIn.account)
 
       history.push('/home')
     },
     onError: (error) => {
-      if (error.message === 'exception:PASSWORD_MISMATCH') {
-        setError(t('signin.error.wrong_credentials'))
-        return
-      }
-      setError(`${error.message}`)
+      setError(errorMessage(error.message))
     },
   })
 
@@ -54,11 +57,6 @@ const LoginPage = () => {
     MUTATION_SOCIAL_SIGNIN,
     {
       onCompleted: async (result) => {
-        if (!result?.socialSignIn) {
-          setError(t('common.error.generic_api_error'))
-          return
-        }
-
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
         await updateAccount(result.socialSignIn.account)
 
@@ -69,7 +67,7 @@ const LoginPage = () => {
           history.push('/home')
         }
       },
-      onError: (error) => setError(`${error}`),
+      onError: (error) => setError(errorMessage(error.message)),
     }
   )
 
@@ -78,7 +76,9 @@ const LoginPage = () => {
       onCompleted: async (result) => {
         if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
       },
-      onError: (error) => {},
+      onError: (error) => {
+        setError(errorMessage(error.message))
+      },
     })
 
   const handleGDPRSubmit = () => {
