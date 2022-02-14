@@ -51,7 +51,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
           <BillboardItems>
             <HeroImageWrapper>
               <HeroImg
-                ClassName='swiper-lazy'
+                className='swiper-lazy'
                 src={size.x >= 640 ? item.banner : item.cover}
               />
             </HeroImageWrapper>

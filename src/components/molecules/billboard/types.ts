@@ -13,7 +13,6 @@ export interface BillboardItem {
 }
 
 export interface BillboardItemActions extends ButtonProps {
-    id: string,
     action?: (e: Event) => void,
     bgColor: string,
     borderColor: string,
