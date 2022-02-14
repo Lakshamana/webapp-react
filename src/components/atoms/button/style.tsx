@@ -9,6 +9,8 @@ export const ButtonStyled: any = styled(Button)<Props>`
   display: flex;
   align-items: center;
   text-transform: uppercase;
+  padding: 0px 20px;
+  ${(props) => (props.size === 'sm' ? 'font-size: 14px' : '')};
 
   &:focus {
     box-shadow: none;
@@ -79,13 +81,10 @@ export const ButtonStyled: any = styled(Button)<Props>`
         },
       },
       unstyled: {
-        border: '2px',
-        borderStyle: 'solid',
-        textTransform: 'none',
         '&:disabled': {
           opacity: '0.9',
           '&:hover': {
-            opacity: '0.5'
+            opacity: '0.5',
           },
         },
       },
