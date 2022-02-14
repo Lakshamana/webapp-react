@@ -92,7 +92,7 @@ const HomePage = () => {
         items={billboardData}
         customButtons={true}
       />
-      <Flex gridGap={10} flexDirection={'column'}>
+      <Flex gridGap={8} flexDirection={'column'}>
         <LivestreamScroller
           items={liveStreamsData}
           sectionTitle={t('page.home.live')}
