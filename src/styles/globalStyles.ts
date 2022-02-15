@@ -7,36 +7,41 @@ export const breakpoints = {
 }
 
 export const breakpointKeys = {
-	"mobile-small": "ssm",
-	"mobile-large": "sm",
-	tablet: "md",
-	"desktop-small": "lg",
-	desktop: "xl"
+  'mobile-small': 'ssm',
+  'mobile-large': 'sm',
+  tablet: 'md',
+  'desktop-small': 'lg',
+  desktop: 'xl',
 }
 
 export const fonts = {
-	light: "FreeSans Regular, sans-serif",
-	body: "FreeSans Regular, sans-serif",
-	regular: "FreeSans Regular, sans-serif",
-	medium: "FreeSans Regular, sans-serif",
-	bold: "FreeSans Bold, sans-serif",
-	black: "FreeSans Bold, sans-serif"
+  body: 'HelveticaNeue, sans-serif',
+  regular: 'HelveticaNeue, sans-serif',
+  medium: 'HelveticaNeue-Medium, sans-serif',
+  bold: 'HelveticaNeue, sans-serif',
 }
 
 export const globalStyles = `
 
 @font-face {
-  font-family: 'FreeSans Regular';
-  src: url('/fonts/FreeSans.ttf') format('truetype');
-       url('/fonts/FreeSans.woff') format('woff');
-       url('/fonts/FreeSans.woff2') format('woff2');
+  font-family: 'HelveticaNeue';
+  src: url('/fonts/HelveticaNeue.ttf') format('truetype');
+       url('/fonts/HelveticaNeue.woff') format('woff');
+       url('/fonts/HelveticaNeue.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'FreeSans Bold, sans-serif';
-  src: url('/fonts/FreeSansBold.ttf') format('truetype');
-       url('/fonts/FreeSansBold.woff') format('woff');
-       url('/fonts/FreeSansBold.woff2') format('woff2');
+  font-family: 'HelveticaNeue Medium';
+  src: url('/fonts/HelveticaNeue-Medium.ttf') format('truetype');
+       url('/fonts/HelveticaNeue-Medium.woff') format('woff');
+       url('/fonts/HelveticaNeue-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'HelveticaNeue Bold';
+  src: url('/fonts/HelveticaNeue-Bold.ttf') format('truetype');
+       url('/fonts/HelveticaNeue-Bold.woff') format('woff');
+       url('/fonts/HelveticaNeue-Bold.woff2') format('woff2');
 }
 
 html {
@@ -141,10 +146,6 @@ body::before {
   filter: invert(1);
 }
 
-input:-webkit-autofill {
-  color: #20242A !important;
-}
-
 .chakra-popover__content {
   box-shadow: none !important;
   border: none !important;
@@ -165,5 +166,4 @@ input:-webkit-autofill {
 .chakra-checkbox__control, .chakra-radio__control {
   box-shadow: none !important;
 }
-
 `
