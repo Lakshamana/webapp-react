@@ -9,7 +9,7 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
   const redirectTo = (route) => {
     if (!route) return
 
-    if (route.indexOf("http") === 0) {
+    if (route.indexOf('http') === 0) {
       window?.open(route, '_blank')?.focus()
       return
     }
@@ -19,22 +19,23 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
 
   return (
     <Actions>
-      {actions?.map((action: BillboardItemActions) => (
-        <ContentButton key={`billboard-action-${action.id}`}>
-          <Button
-						width={'100%'}
-						height={'100%'}
-            backgroundColor={action.bgColor}
-            borderColor={action.borderColor}
-            iconName={action.icon}
-            color={action.textColor}
-            variant={'unstyled'}
-            label={action.label}
-            borderRadius={'6px'}
-            onClick={() => redirectTo(action?.route)}
-          />
-        </ContentButton>
-      ))}
+      {actions?.map((action: BillboardItemActions) => {
+        return (
+          <ContentButton key={`billboard-action-${action.label}`}>
+            <Button
+              width="auto"
+              height='45px'
+              backgroundColor={action.bgColor}
+              borderColor={action.borderColor}
+              iconName={action.icon}
+              color={action.textColor}
+              variant={'unstyled'}
+              label={action.label}
+              onClick={() => redirectTo(action?.route)}
+            />
+          </ContentButton>
+        )
+      })}
     </Actions>
   )
 }

@@ -4,39 +4,21 @@ import { breakpoints } from 'styles'
 export const Actions: any = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-
-  @media screen and (max-width: ${breakpoints.md}) {
-    justify-content: center;
-  }
+  justify-content: space-around;
 
   @media screen and (max-width: ${breakpoints.sm}) {
-    max-width: 360px;
-    display: flex;
-    margin-right: 5px;
-    margin-left: 5px;
-    justify-content: center;
+    width: 100%;
   }
 `
 
 export const ContentButton = styled.div`
-  width: 267px;
-  height: 54px;
-
-  &:first-child {
-    margin-right: 15px;
-  }
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
+  margin-right: 10px;
 
   @media screen and (max-width: ${breakpoints.md}) {
-    width: 146px;
-    height: 40px;
-  }
-
-  @media screen and (max-width: ${breakpoints.sm}) {
-    margin-bottom: 10px;
-
-    &:first-child {
-      margin-right: 10px;
-    }
+    margin: 0 10px;
   }
 `
