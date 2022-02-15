@@ -1,7 +1,8 @@
 import { SwiperOptions } from 'swiper'
 
 export const SWIPPER_PARAMS: SwiperOptions = {
-  spaceBetween: 10,
+  initialSlide: 0,
+  spaceBetween: 15,
   speed: 800,
   setWrapperSize: true,
   roundLengths: false,
@@ -12,7 +13,8 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   freeModeMomentum: false,
   grabCursor: true,
   freeModeMomentumBounce: false,
-  slidesOffsetAfter: 0,
+  slidesOffsetAfter: 32,
+  slidesOffsetBefore: 32,
   keyboard: {
     enabled: true,
   },
