@@ -51,6 +51,6 @@ export const BoxWrapperError = styled.div`
 `
 
 export const LabelError = styled.label`
-  color: #ff0000;
-  font-size: 12px;
+  color: red;
+  font-size: 0.8rem;
 `
