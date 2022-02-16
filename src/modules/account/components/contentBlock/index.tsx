@@ -1,6 +1,4 @@
 import { SingleConfiguration } from '..'
-
-import { pxToRem } from 'styles/metrics'
 import { ContentBlockProps } from './types'
 import { ContentContainer } from './styles'
 
@@ -14,8 +12,8 @@ const ContentBlock = ({
   <ContentContainer width={[1, 1, 1, '49%']} flexDirection="column" {...props}>
     <SingleConfiguration
       fontStyle={{
-        fontSize: pxToRem(20),
-        fontWeight: '500',
+        fontSize: '1.2rem',
+        fontWeight: '600',
         marginLeft: '15px',
       }}
       text={title}
