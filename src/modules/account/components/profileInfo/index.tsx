@@ -81,14 +81,14 @@ const ProfileInfo = ({
                 <Label fontSize={pxToRem(16)} fontWeight="500">
                   {t(`page.account.${key}`)}:
                 </Label>
-                {!isEditing &&
+                {isEditing ? 
+                renderInputByType(key, values[key]) :
                   (key === 'birthday' && values[key]
                     ? format(parseISO(values[key]), 'P', {
                         locale: locale === 'pt-BR' ? ptBR : enUS,
                       })
                     : values[key])}
               </Text>
-              {isEditing && renderInputByType(key, values[key])}
             </Box>
           )
         })}
