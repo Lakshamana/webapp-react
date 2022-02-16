@@ -63,6 +63,8 @@ export type Account = {
   organization?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   profile?: Maybe<Profile>;
+  /** Account roles */
+  roles?: Maybe<Array<RolesDto>>;
   status?: Maybe<AccountStatus>;
   tenant_id?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
@@ -77,13 +79,6 @@ export type AccountGdprLgpd = {
   ip: Scalars['String'];
 };
 
-export enum AccountModStatus {
-  Banned = 'BANNED',
-  BlockedPerm = 'BLOCKED_PERM',
-  BlockedTemp = 'BLOCKED_TEMP',
-  None = 'NONE'
-}
-
 export type AccountSession = {
   __typename?: 'AccountSession';
   _id: Scalars['ID'];
@@ -93,6 +88,15 @@ export type AccountSession = {
   id_token: Scalars['String'];
   refresh_token: Scalars['String'];
 };
+
+export type AccountSortBy = {
+  direction?: Maybe<SortDirection>;
+  field: AccountSortFields;
+};
+
+export enum AccountSortFields {
+  Email = 'email'
+}
 
 export type AccountStatus = {
   __typename?: 'AccountStatus';
@@ -117,7 +121,6 @@ export type AdDimensionInput = {
 };
 
 export type AdFilter = {
-  deviceType?: Maybe<DeviceType>;
   location?: Maybe<AdLocation>;
   platform?: Maybe<Platform>;
   source?: Maybe<AdSource>;
@@ -183,7 +186,6 @@ export type AdminAdFilter = {
   createdAtLt?: Maybe<Scalars['DateTime']>;
   /** search for records where is less than or equal to */
   createdAtLte?: Maybe<Scalars['DateTime']>;
-  deviceType?: Maybe<DeviceType>;
   location?: Maybe<AdLocation>;
   platform?: Maybe<Platform>;
   source?: Maybe<AdSource>;
@@ -371,6 +373,7 @@ export type AdminCoupon = {
   expiresAt?: Maybe<Scalars['DateTime']>;
   externalReference?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
+  productId?: Maybe<Scalars['String']>;
   redeemCount?: Maybe<Scalars['Int']>;
   redeemsLeft?: Maybe<Scalars['Int']>;
   status?: Maybe<AdminCouponStatus>;
@@ -600,6 +603,7 @@ export type AdminMediaAudio = {
 
 export type AdminMediaLivestream = {
   __typename?: 'AdminMediaLivestream';
+  /** @deprecated Will always return null */
   aspectRatio?: Maybe<Scalars['String']>;
   /** video base cdn url */
   baseUrl?: Maybe<Scalars['String']>;
@@ -610,6 +614,7 @@ export type AdminMediaLivestream = {
   duration?: Maybe<Scalars['Int']>;
   errorMessage?: Maybe<Scalars['String']>;
   filename?: Maybe<Scalars['String']>;
+  /** @deprecated Will always return null */
   height?: Maybe<Scalars['Int']>;
   /** hls playlist url fragment */
   hlsPath?: Maybe<Scalars['String']>;
@@ -623,6 +628,7 @@ export type AdminMediaLivestream = {
   subtitles?: Maybe<Array<Maybe<Subtitle>>>;
   type?: Maybe<MediaType>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Will always return null */
   width?: Maybe<Scalars['Int']>;
 };
 
@@ -2297,6 +2303,7 @@ export type AdminQuerySubtitlesArgs = {
 export type AdminReport = {
   __typename?: 'AdminReport';
   accountId?: Maybe<Scalars['String']>;
+  contentReported?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
@@ -2647,7 +2654,6 @@ export type BannerAd = {
   /** Example: /123456/example_ad_name */
   adUnitId?: Maybe<Scalars['String']>;
   channel?: Maybe<Channel>;
-  deviceType?: Maybe<DeviceType>;
   dimensions?: Maybe<Array<Maybe<AdDimension>>>;
   entitlementsBypass?: Maybe<Array<Maybe<Product>>>;
   id?: Maybe<Scalars['ID']>;
@@ -2831,7 +2837,6 @@ export type CategoryChildrenArgs = {
 
 export type CategoryPostsArgs = {
   limit?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<Maybe<PostTypeSortDirective>>>;
   skip?: Maybe<Scalars['Int']>;
 };
 
@@ -3092,7 +3097,6 @@ export type CreateAccountSessionInput = {
 export type CreateAccountSocialSignInDto = {
   accessToken: Scalars['String'];
   authProvider: Scalars['String'];
-  email: Scalars['String'];
   refreshToken: Scalars['String'];
 };
 
@@ -3116,8 +3120,6 @@ export type CreateAudioPost = {
 
 export type CreateBannerAd = {
   adUnitId: Scalars['String'];
-  /** Leave empty for all device types */
-  deviceType?: Maybe<DeviceType>;
   dimensions?: Maybe<Array<Maybe<AdDimensionInput>>>;
   entitlementsBypass?: Maybe<Array<Maybe<Scalars['String']>>>;
   location: AdLocation;
@@ -3203,6 +3205,7 @@ export type CreateCoupon = {
   code?: Maybe<Scalars['String']>;
   couponCampaignId?: Maybe<Scalars['ID']>;
   externalReference?: Maybe<Scalars['String']>;
+  productId?: Maybe<Scalars['String']>;
   status?: Maybe<AdminCouponStatus>;
 };
 
@@ -3267,8 +3270,6 @@ export type CreateGroupDto = {
 
 export type CreateImaAd = {
   adTagUrl: Scalars['String'];
-  /** Leave empty for all device types */
-  deviceType?: Maybe<DeviceType>;
   entitlementsBypass?: Maybe<Array<Maybe<Scalars['String']>>>;
   imaType: ImaType;
   /** in milliseconds */
@@ -3280,8 +3281,6 @@ export type CreateImaAd = {
 
 export type CreateInterstitialAd = {
   adUnitId: Scalars['String'];
-  /** Leave empty for all device types */
-  deviceType?: Maybe<DeviceType>;
   entitlementsBypass?: Maybe<Array<Maybe<Scalars['String']>>>;
   location: AdLocation;
   /** Leave empty for all platforms */
@@ -3602,11 +3601,6 @@ export type Destinations = {
   settings?: Maybe<Scalars['Json']>;
 };
 
-export enum DeviceType {
-  Android = 'ANDROID',
-  Ios = 'IOS'
-}
-
 export type DiscountPriceAmountRule = {
   __typename?: 'DiscountPriceAmountRule';
   discountAmount?: Maybe<Price>;
@@ -3666,8 +3660,29 @@ export type FindAllGroupsRequestDto = {
 
 export type FindAllQueryParamsDto = {
   email__exact?: Maybe<Scalars['String']>;
+  first_name__contains?: Maybe<Scalars['String']>;
+  first_name__exact?: Maybe<Scalars['String']>;
+  last_name__contains?: Maybe<Scalars['String']>;
+  last_name__exact?: Maybe<Scalars['String']>;
   organization?: Maybe<Scalars['String']>;
   tenant_id?: Maybe<Scalars['String']>;
+  username__contains?: Maybe<Scalars['String']>;
+  username__exact?: Maybe<Scalars['String']>;
+};
+
+export type FindAllRolesRequestDto = {
+  name__contains?: Maybe<Scalars['String']>;
+  name__exact?: Maybe<Scalars['String']>;
+};
+
+export type FindAllSubjectsQueryParamsDto = {
+  entity__contains?: Maybe<Scalars['String']>;
+  entity__exact?: Maybe<Scalars['String']>;
+  organizationId?: Maybe<Scalars['String']>;
+};
+
+export type ForgetAccountInput = {
+  currentPassword: Scalars['String'];
 };
 
 export type ForgotPassword = {
@@ -3725,6 +3740,15 @@ export type GroupDto = {
   roles: Array<RolesDto>;
 };
 
+export type GroupsSortBy = {
+  direction?: Maybe<SortDirection>;
+  field: GroupsSortFields;
+};
+
+export enum GroupsSortFields {
+  Name = 'name'
+}
+
 export type IapOrderIntent = {
   __typename?: 'IapOrderIntent';
   status?: Maybe<IntentStatus>;
@@ -3734,7 +3758,6 @@ export type ImaAd = {
   __typename?: 'ImaAd';
   adTagUrl?: Maybe<Scalars['String']>;
   channel?: Maybe<Channel>;
-  deviceType?: Maybe<DeviceType>;
   entitlementsBypass?: Maybe<Array<Maybe<Product>>>;
   id?: Maybe<Scalars['ID']>;
   imaType?: Maybe<ImaType>;
@@ -3779,7 +3802,6 @@ export type InterstitialAd = {
   /** Example: /123456/example_ad_name */
   adUnitId?: Maybe<Scalars['String']>;
   channel?: Maybe<Channel>;
-  deviceType?: Maybe<DeviceType>;
   entitlementsBypass?: Maybe<Array<Maybe<Product>>>;
   id?: Maybe<Scalars['ID']>;
   location?: Maybe<AdLocation>;
@@ -3882,13 +3904,16 @@ export type LivestreamEvent = {
   hlsPlaybackUrl?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
   isCommentsEnabled?: Maybe<Scalars['Boolean']>;
+  /** @deprecated No longer used */
   isEmojisEnabled?: Maybe<Scalars['Boolean']>;
   isPresenceEnabled?: Maybe<Scalars['Boolean']>;
   isReactionsEnabled?: Maybe<Scalars['Boolean']>;
+  /** @deprecated No longer used */
   location?: Maybe<Scalars['String']>;
   maxCommentSeats?: Maybe<Scalars['Int']>;
   maxReactionSeats?: Maybe<Scalars['Int']>;
   orientation?: Maybe<LivestreamOrientation>;
+  /** @deprecated No longer used */
   publishUrl?: Maybe<Scalars['String']>;
   reactionsCount?: Maybe<Scalars['Int']>;
   scheduledEndAt?: Maybe<Scalars['DateTime']>;
@@ -4009,6 +4034,7 @@ export type MediaFilter = {
 
 export type MediaLivestream = {
   __typename?: 'MediaLivestream';
+  /** @deprecated Will always return null */
   aspectRatio?: Maybe<Scalars['String']>;
   /** video base cdn url */
   baseUrl?: Maybe<Scalars['String']>;
@@ -4016,6 +4042,7 @@ export type MediaLivestream = {
   /** dash playlist url fragment */
   dashPath?: Maybe<Scalars['String']>;
   duration?: Maybe<Scalars['Int']>;
+  /** @deprecated Will always return null */
   height?: Maybe<Scalars['Int']>;
   /** hls playlist url fragment */
   hlsPath?: Maybe<Scalars['String']>;
@@ -4029,6 +4056,7 @@ export type MediaLivestream = {
   subtitles?: Maybe<Array<Maybe<Subtitle>>>;
   type?: Maybe<MediaType>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+  /** @deprecated Will always return null */
   width?: Maybe<Scalars['Int']>;
 };
 
@@ -4176,12 +4204,15 @@ export type Mutation = {
   applyCoupon?: Maybe<Order>;
   banAccountPerm: Account;
   banAccountTemp: Account;
+  /** @deprecated No longer used. */
   cancelPurebrosSubscription?: Maybe<Scalars['String']>;
+  /** @deprecated No longer used. */
   confirmBexPayment?: Maybe<Order>;
   confirmOrder?: Maybe<Order>;
   createAccount: Account;
   createAccountGdprLgpd: AccountGdprLgpd;
   createAccountSession: AccountSession;
+  /** @deprecated Use `createPayment` instead. */
   createBexPayment?: Maybe<Order>;
   createChannel: AvailableChannel;
   createCustomField: ResponseCustomFieldsOutput;
@@ -4197,6 +4228,7 @@ export type Mutation = {
   deleteComment?: Maybe<Comment>;
   deleteCustomField: ResponseCustomFieldsOutput;
   deleteMenu: Menu;
+  deleteMyAccount: Account;
   finishRoom?: Maybe<Room>;
   forgetAccount: Account;
   joinBroadcastRoom?: Maybe<BroadcastRoom>;
@@ -4228,6 +4260,7 @@ export type Mutation = {
   socialSignIn: SingIn;
   subscribeAndroid?: Maybe<Scalars['String']>;
   subscribeIos?: Maybe<Scalars['String']>;
+  /** @deprecated No longer used. */
   subscribePurebros?: Maybe<Scalars['String']>;
   unbanAccountPerm: Account;
   unbanAccountTemp: Account;
@@ -4246,6 +4279,7 @@ export type Mutation = {
   updateMyProfile: Profile;
   updateOrganization: ResponseOrganizationOutput;
   updatePassword: PasswordChanged;
+  updatePasswordOnly: PasswordOnlyChanged;
   updatePermission: PermissionDto;
   updateProfile: Profile;
   updateRole: RolesDto;
@@ -4386,7 +4420,6 @@ export type MutationCreateMenuArgs = {
 export type MutationCreateOrderIntentArgs = {
   platform: OrderPlatform;
   productPriceId: Scalars['String'];
-  store?: Maybe<Store>;
 };
 
 
@@ -4430,6 +4463,11 @@ export type MutationDeleteMenuArgs = {
 };
 
 
+export type MutationDeleteMyAccountArgs = {
+  input: ForgetAccountInput;
+};
+
+
 export type MutationFinishRoomArgs = {
   id: Scalars['String'];
 };
@@ -4437,6 +4475,7 @@ export type MutationFinishRoomArgs = {
 
 export type MutationForgetAccountArgs = {
   id: Scalars['ID'];
+  input: ForgetAccountInput;
 };
 
 
@@ -4458,7 +4497,6 @@ export type MutationLeaveRoomArgs = {
 
 export type MutationModerateAttendeeArgs = {
   id: Scalars['String'];
-  modStatus: AccountModStatus;
 };
 
 
@@ -4681,6 +4719,11 @@ export type MutationUpdateOrganizationArgs = {
 
 export type MutationUpdatePasswordArgs = {
   payload: UpdatePassword;
+};
+
+
+export type MutationUpdatePasswordOnlyArgs = {
+  payload: UpdatePasswordOnlyInput;
 };
 
 
@@ -5199,6 +5242,12 @@ export type OrganizationSettings = {
   zoho?: Maybe<Scalars['JSON']>;
 };
 
+export type Pagination = {
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortby?: Maybe<Scalars['String']>;
+};
+
 export type Parameters = {
   __typename?: 'Parameters';
   id: Scalars['ID'];
@@ -5207,6 +5256,11 @@ export type Parameters = {
 
 export type PasswordChanged = {
   __typename?: 'PasswordChanged';
+  success: Scalars['Boolean'];
+};
+
+export type PasswordOnlyChanged = {
+  __typename?: 'PasswordOnlyChanged';
   success: Scalars['Boolean'];
 };
 
@@ -5281,6 +5335,15 @@ export type PermissionDto = {
   name: Scalars['String'];
   subject: SubjectDto;
 };
+
+export type PermissionsSortBy = {
+  direction?: Maybe<SortDirection>;
+  field: PermissionsSortFields;
+};
+
+export enum PermissionsSortFields {
+  Name = 'name'
+}
 
 export type PhotoPost = PostCommon & {
   __typename?: 'PhotoPost';
@@ -5656,14 +5719,18 @@ export type Profile = {
   account: Scalars['ID'];
   address?: Maybe<Scalars['String']>;
   avatar_dynamic_url?: Maybe<Scalars['String']>;
+  avatar_path?: Maybe<Scalars['String']>;
   avatar_url?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
+  cpf?: Maybe<Scalars['String']>;
+  created_at?: Maybe<Scalars['DateTime']>;
   custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
   /** Id */
   id: Scalars['String'];
   locale?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
+  updated_at?: Maybe<Scalars['DateTime']>;
 };
 
 export type Promotion = {
@@ -5743,6 +5810,9 @@ export type Query = {
   comments?: Maybe<Array<Maybe<Comment>>>;
   /** List of posts recently played by the user. */
   continueWatchingPosts?: Maybe<Array<Maybe<Post>>>;
+  countPermissions: Scalars['Int'];
+  countRoles: Scalars['Float'];
+  countSubjects: Scalars['Int'];
   coupon?: Maybe<Coupon>;
   customField: ResponseCustomFieldsOutput;
   customFields: Array<ResponseCustomFieldsOutput>;
@@ -5781,7 +5851,9 @@ export type Query = {
   profile: Profile;
   profiles: Array<Profile>;
   promotions?: Maybe<Array<Maybe<Promotion>>>;
+  /** @deprecated No longer used. */
   purebrosStatus?: Maybe<PbStatus>;
+  /** @deprecated No longer used. */
   purebrosToken?: Maybe<Scalars['String']>;
   revenuecatStatus?: Maybe<SubscriptionStatus>;
   role: RolesDto;
@@ -5816,6 +5888,9 @@ export type QueryAccountSessionArgs = {
 
 export type QueryAccountsArgs = {
   filter?: Maybe<FindAllQueryParamsDto>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<AccountSortBy>;
 };
 
 
@@ -5861,6 +5936,7 @@ export type QueryChannelArgs = {
 
 export type QueryChannelsArgs = {
   filter?: Maybe<FilterFindAllChannelsInput>;
+  pagination?: Maybe<Pagination>;
 };
 
 
@@ -5916,6 +5992,9 @@ export type QueryGroupArgs = {
 
 export type QueryGroupsArgs = {
   filter?: Maybe<FindAllGroupsRequestDto>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<GroupsSortBy>;
 };
 
 
@@ -5997,11 +6076,19 @@ export type QueryOrganizationPublicSettingsArgs = {
 
 export type QueryOrganizationsArgs = {
   filter?: Maybe<FilterFindAllOrganizationsInput>;
+  pagination?: Maybe<Pagination>;
 };
 
 
 export type QueryPermissionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryPermissionsArgs = {
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort: PermissionsSortBy;
 };
 
 
@@ -6084,6 +6171,14 @@ export type QueryRoleArgs = {
 };
 
 
+export type QueryRolesArgs = {
+  filter?: Maybe<FindAllRolesRequestDto>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort: RolesSortBy;
+};
+
+
 export type QueryRoomArgs = {
   id?: Maybe<Scalars['String']>;
 };
@@ -6126,6 +6221,14 @@ export type QuerySearchArgs = {
 
 export type QuerySubjectArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QuerySubjectsArgs = {
+  filter?: Maybe<FindAllSubjectsQueryParamsDto>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort: SubjectsSortBy;
 };
 
 
@@ -6484,7 +6587,7 @@ export type ResponseOrganizationPublicOutput = {
   portal_url?: Maybe<Scalars['String']>;
   settings?: Maybe<OrganizationPublicSettings>;
   status?: Maybe<Scalars['String']>;
-  web_url?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Array<Scalars['String']>>;
 };
 
 export type RevenuecatOrderIntent = {
@@ -6520,6 +6623,15 @@ export type RolesDto = {
   permissions: Array<PermissionDto>;
   public: Scalars['Boolean'];
 };
+
+export type RolesSortBy = {
+  direction?: Maybe<SortDirection>;
+  field: RolesSortFields;
+};
+
+export enum RolesSortFields {
+  Name = 'name'
+}
 
 export type Room = ModeratorRoom | RedactedRoom | UserRoom;
 
@@ -6769,9 +6881,7 @@ export type SingIn = {
 };
 
 export enum SortDirection {
-  /** Oldest First */
   Asc = 'ASC',
-  /** Newest First */
   Desc = 'DESC'
 }
 
@@ -6788,6 +6898,7 @@ export type SpreedlyOrderIntent = {
   orderId?: Maybe<Scalars['String']>;
   paymentMethods?: Maybe<Array<Maybe<PaymentMethod>>>;
   status?: Maybe<IntentStatus>;
+  /** @deprecated Use the type inside the `payment_method` instead. */
   type?: Maybe<PaymentType>;
 };
 
@@ -6824,6 +6935,15 @@ export type SubjectDto = {
   /** Id */
   id: Scalars['String'];
 };
+
+export type SubjectsSortBy = {
+  direction?: Maybe<SortDirection>;
+  field: SubjectsSortFields;
+};
+
+export enum SubjectsSortFields {
+  Entity = 'entity'
+}
 
 export type SubscriptionStatus = {
   __typename?: 'SubscriptionStatus';
@@ -6906,7 +7026,6 @@ export type UpdateAccountSessionInput = {
 export type UpdateAd = {
   adTagUrl?: Maybe<Scalars['String']>;
   adUnitId?: Maybe<Scalars['String']>;
-  deviceType?: Maybe<DeviceType>;
   dimensions?: Maybe<Array<Maybe<AdDimensionInput>>>;
   entitlementsBypass?: Maybe<Array<Maybe<Scalars['String']>>>;
   imaType?: Maybe<ImaType>;
@@ -7113,6 +7232,12 @@ export type UpdatePassword = {
   email: Scalars['String'];
   oobCode: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type UpdatePasswordOnlyInput = {
+  currectPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  newPasswordConfirmation: Scalars['String'];
 };
 
 export type UpdatePermissionInput = {
@@ -7360,6 +7485,14 @@ export type CreateAccountGdprLgpdMutationVariables = Exact<{
 
 export type CreateAccountGdprLgpdMutation = { __typename?: 'Mutation', createAccountGdprLgpd: { __typename: 'AccountGdprLgpd', id: string, accepted: boolean, accepted_at: any, account: { __typename?: 'Account', id: string } } };
 
+export type ForgetAcountMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: ForgetAccountInput;
+}>;
+
+
+export type ForgetAcountMutation = { __typename?: 'Mutation', forgetAccount: { __typename?: 'Account', email?: Maybe<string> } };
+
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -7428,12 +7561,26 @@ export type AccountQueryVariables = Exact<{
 
 export type AccountQuery = { __typename?: 'Query', account: { __typename?: 'Account', display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> } };
 
+export type BillboardQueryVariables = Exact<{
+  target: BillboardTarget;
+}>;
+
+
+export type BillboardQuery = { __typename?: 'Query', billboard?: Maybe<Array<Maybe<{ __typename?: 'Billboard', title?: Maybe<string>, target?: Maybe<BillboardTarget>, sort?: Maybe<number>, id?: Maybe<string>, description?: Maybe<string>, delay?: Maybe<number>, actions?: Maybe<Array<Maybe<{ __typename?: 'BillboardAction', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>>>, banner?: Maybe<{ __typename?: 'MediaPhoto', height?: Maybe<number>, id?: Maybe<string>, imgPath?: Maybe<string>, status?: Maybe<string>, type?: Maybe<MediaType>, width?: Maybe<number> }>, cover?: Maybe<{ __typename?: 'MediaPhoto', height?: Maybe<number>, id?: Maybe<string>, imgPath?: Maybe<string>, status?: Maybe<string>, type?: Maybe<MediaType>, width?: Maybe<number> }> }>>> };
+
+export type GetChannelQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetChannelQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', id: string, name: string, description: string, entitlements?: Maybe<any>, customization?: Maybe<any>, geofence?: Maybe<any>, kind?: Maybe<string>, banner?: Maybe<any>, logo?: Maybe<any>, status: string, thumbnail?: Maybe<any> } | { __typename?: 'GeolockedChannel', id: string, name: string, description: string } };
+
 export type ChannelsQueryVariables = Exact<{
   filter: FilterFindAllChannelsInput;
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', banner?: Maybe<any>, customization?: Maybe<any>, description: string, entitlements?: Maybe<any>, geofence?: Maybe<any>, id: string, logo?: Maybe<any>, name: string, organization: string, status: string, thumbnail?: Maybe<any> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, customization?: Maybe<any> }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<string>, description: string, geofence?: Maybe<any>, name: string, thumbnail?: Maybe<any>, customization?: Maybe<any> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<string>, customization?: Maybe<any> }> };
 
 export type CustomFieldsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -7564,6 +7711,46 @@ export function useCreateAccountGdprLgpdMutation(baseOptions?: Apollo.MutationHo
 export type CreateAccountGdprLgpdMutationHookResult = ReturnType<typeof useCreateAccountGdprLgpdMutation>;
 export type CreateAccountGdprLgpdMutationResult = Apollo.MutationResult<CreateAccountGdprLgpdMutation>;
 export type CreateAccountGdprLgpdMutationOptions = Apollo.BaseMutationOptions<CreateAccountGdprLgpdMutation, CreateAccountGdprLgpdMutationVariables>;
+export const ForgetAcountDocument = gql`
+    mutation ForgetAcount($id: ID!, $input: ForgetAccountInput!) {
+  forgetAccount(id: $id, input: $input) {
+    email
+  }
+}
+    `;
+export type ForgetAcountMutationFn = Apollo.MutationFunction<ForgetAcountMutation, ForgetAcountMutationVariables>;
+export type ForgetAcountComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<ForgetAcountMutation, ForgetAcountMutationVariables>, 'mutation'>;
+
+    export const ForgetAcountComponent = (props: ForgetAcountComponentProps) => (
+      <ApolloReactComponents.Mutation<ForgetAcountMutation, ForgetAcountMutationVariables> mutation={ForgetAcountDocument} {...props} />
+    );
+    
+
+/**
+ * __useForgetAcountMutation__
+ *
+ * To run a mutation, you first call `useForgetAcountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useForgetAcountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [forgetAcountMutation, { data, loading, error }] = useForgetAcountMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useForgetAcountMutation(baseOptions?: Apollo.MutationHookOptions<ForgetAcountMutation, ForgetAcountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ForgetAcountMutation, ForgetAcountMutationVariables>(ForgetAcountDocument, options);
+      }
+export type ForgetAcountMutationHookResult = ReturnType<typeof useForgetAcountMutation>;
+export type ForgetAcountMutationResult = Apollo.MutationResult<ForgetAcountMutation>;
+export type ForgetAcountMutationOptions = Apollo.BaseMutationOptions<ForgetAcountMutation, ForgetAcountMutationVariables>;
 export const RefreshTokenDocument = gql`
     mutation RefreshToken {
   refreshToken {
@@ -7985,27 +8172,152 @@ export function useAccountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ac
 export type AccountQueryHookResult = ReturnType<typeof useAccountQuery>;
 export type AccountLazyQueryHookResult = ReturnType<typeof useAccountLazyQuery>;
 export type AccountQueryResult = Apollo.QueryResult<AccountQuery, AccountQueryVariables>;
+export const BillboardDocument = gql`
+    query billboard($target: BillboardTarget!) {
+  billboard(target: $target) {
+    actions {
+      bgColor
+      borderColor
+      icon
+      label
+      route
+      textColor
+    }
+    banner {
+      height
+      id
+      imgPath
+      status
+      type
+      width
+    }
+    cover {
+      height
+      id
+      imgPath
+      status
+      type
+      width
+    }
+    title
+    target
+    sort
+    id
+    description
+    delay
+  }
+}
+    `;
+export type BillboardComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<BillboardQuery, BillboardQueryVariables>, 'query'> & ({ variables: BillboardQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const BillboardComponent = (props: BillboardComponentProps) => (
+      <ApolloReactComponents.Query<BillboardQuery, BillboardQueryVariables> query={BillboardDocument} {...props} />
+    );
+    
+
+/**
+ * __useBillboardQuery__
+ *
+ * To run a query within a React component, call `useBillboardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBillboardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBillboardQuery({
+ *   variables: {
+ *      target: // value for 'target'
+ *   },
+ * });
+ */
+export function useBillboardQuery(baseOptions: Apollo.QueryHookOptions<BillboardQuery, BillboardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BillboardQuery, BillboardQueryVariables>(BillboardDocument, options);
+      }
+export function useBillboardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BillboardQuery, BillboardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BillboardQuery, BillboardQueryVariables>(BillboardDocument, options);
+        }
+export type BillboardQueryHookResult = ReturnType<typeof useBillboardQuery>;
+export type BillboardLazyQueryHookResult = ReturnType<typeof useBillboardLazyQuery>;
+export type BillboardQueryResult = Apollo.QueryResult<BillboardQuery, BillboardQueryVariables>;
+export const GetChannelDocument = gql`
+    query GetChannel($id: ID!) {
+  channel(id: $id) {
+    ... on AvailableChannel {
+      id
+      name
+      description
+      entitlements
+      customization
+      geofence
+      kind
+      banner
+      logo
+      status
+      thumbnail
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      description
+    }
+  }
+}
+    `;
+export type GetChannelComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelQuery, GetChannelQueryVariables>, 'query'> & ({ variables: GetChannelQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetChannelComponent = (props: GetChannelComponentProps) => (
+      <ApolloReactComponents.Query<GetChannelQuery, GetChannelQueryVariables> query={GetChannelDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetChannelQuery__
+ *
+ * To run a query within a React component, call `useGetChannelQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetChannelQuery(baseOptions: Apollo.QueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, options);
+      }
+export function useGetChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelQuery, GetChannelQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChannelQuery, GetChannelQueryVariables>(GetChannelDocument, options);
+        }
+export type GetChannelQueryHookResult = ReturnType<typeof useGetChannelQuery>;
+export type GetChannelLazyQueryHookResult = ReturnType<typeof useGetChannelLazyQuery>;
+export type GetChannelQueryResult = Apollo.QueryResult<GetChannelQuery, GetChannelQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: FilterFindAllChannelsInput!) {
   channels(filter: $filter) {
     ... on AvailableChannel {
-      banner
-      customization
-      description
-      entitlements
-      geofence
       id
-      logo
+      kind
+      description
+      geofence
       name
-      organization
-      status
       thumbnail
+      customization
       __typename
     }
     ... on GeolockedChannel {
       id
       name
       thumbnail
+      kind
       customization
       __typename
     }
