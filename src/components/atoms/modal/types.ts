@@ -24,7 +24,7 @@ export interface Props
   actionButton?: boolean
   cancelButton?: boolean
   loading?: boolean
-  defaultAction?: boolean
+  defaultActions?: boolean
 }
 
 export const defaultProps = { 
@@ -32,5 +32,5 @@ export const defaultProps = {
   cancelButton: true,
   closeButton: true,
   loading: false,
-  defaultAction: true
+  defaultActions: true
 } 

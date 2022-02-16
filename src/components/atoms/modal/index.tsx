@@ -6,6 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Box,
 } from '@chakra-ui/react'
 import { Button } from 'components'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +27,7 @@ const ModalComponent = ({
   closeButton,
   cancelButton,
   actionButton,
-  defaultAction,
+  defaultActions,
   loading,
   ...props
 }: Props) => {
@@ -36,14 +37,16 @@ const ModalComponent = ({
     <MainContent>
       <Modal isOpen={isOpen} onClose={onClose} {...props}>
         <ModalOverlay />
-        <ModalContent paddingTop={3} backgroundColor={colors.cardBg[colorMode]}>
+        <ModalContent marginX={3} paddingTop={3} backgroundColor={colors.cardBg[colorMode]}>
           {children ? (
-            children
+            <Box px={6} py={4}>
+              {children}
+            </Box>
           ) : (
             <>
               <ModalHeader
                 textColor={colors.generalText[colorMode]}
-                fontSize={'24px'}
+                fontSize={'1.5rem'}
                 textAlign={'center'}
                 fontWeight={500}
                 paddingBottom={subtitle ? 1 : 0}
@@ -62,32 +65,34 @@ const ModalComponent = ({
               <ModalBody
                 paddingBottom={4}
                 textColor={colors.secondaryText[colorMode]}
-                fontSize={'18px'}
+                fontSize={'1rem'}
                 textAlign={'center'}
               >
                 {subtitle}
               </ModalBody>
             </>
           )}
-          <ModalFooter display={'flex'} flexDirection={'column'} paddingY={4}>
-            {actionButton && (
-              <Button
-                width={[sizes.loginButtonWidth]}
-                label={actionLabel || t('common.confirm')}
-                onClick={onConfirm}
-                isLoading={loading}
-              />
-            )}
-            {cancelButton && (
-              <Button
-                width={[sizes.loginButtonWidth]}
-                marginTop={2}
-                variant={'ghost'}
-                label={cancelLabel || t('common.cancel')}
-                onClick={onClose}
-              />
-            )}
-          </ModalFooter>
+          {defaultActions && (
+            <ModalFooter display={'flex'} flexDirection={'column'} paddingY={4}>
+              {actionButton && (
+                <Button
+                  width={[sizes.loginButtonWidth]}
+                  label={actionLabel || t('common.confirm')}
+                  onClick={onConfirm}
+                  isLoading={loading}
+                />
+              )}
+              {cancelButton && (
+                <Button
+                  width={[sizes.loginButtonWidth]}
+                  marginTop={2}
+                  variant={'ghost'}
+                  label={cancelLabel || t('common.cancel')}
+                  onClick={onClose}
+                />
+              )}
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
     </MainContent>
