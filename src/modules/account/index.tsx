@@ -5,9 +5,7 @@ import { Box } from '@chakra-ui/layout'
 
 import {
   Container,
-  Modal,
   Select,
-  Button,
   Skeleton,
   AlertComponent,
   ToggleButton,
@@ -20,33 +18,35 @@ import {
   ConfigBox,
   ProfileInfo,
   Navbar,
+  ForgetAccount,
 } from './components'
 
 import { APP_LOCALE } from 'config/constants'
 import {
   MUTATION_UPDATE_ACCOUNT,
   MUTATION_UPDATE_PROFILE,
+  MUTATION_FORGET_ACCOUNT,
 } from 'services/graphql'
 import { sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
-import { useOrganizationStore } from 'services/stores'
+
 import { useAuth } from 'contexts/auth'
 import { useAuthStore } from 'services/stores'
 import { LANGUAGES } from './settings'
 
 import { saveData } from 'services/storage'
 import { useEffect } from 'react'
+import { ForgetAccountInput, UpdatePasswordOnlyInput } from 'generated/graphql'
 
 const AccountPage = () => {
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
-  const { organization } = useOrganizationStore()
-  const { updateAccount, updateUser, getAccount, loadingAccount } = useAuth()
+  const { updateAccount, updateUser, getAccount, loadingAccount, signOut } =
+    useAuth()
   const [updateAccountError, setUpdateAccountError] = useState('')
   const [updateProfileError, setUpdateProfileError] = useState('')
-  const [openDeleteAccountModal, setOpenDeleteAccountModal] = useState(false)
+  const [forgetAccountError, setForgetAccountError] = useState('')
   const { user, account } = useAuthStore()
-  const btnFontSize = '14px'
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -95,6 +95,29 @@ const AccountPage = () => {
       variables: {
         payload: {
           ...value,
+        },
+      },
+    })
+  }
+
+
+  const [forgetAccount, { loading: loadingForgetAccount }] = useMutation(
+    MUTATION_FORGET_ACCOUNT,
+    {
+      onCompleted: async () => {
+        signOut()
+      },
+      onError: async (error) => {
+        setForgetAccountError(error.message)
+      },
+    }
+  )
+
+  const callForgetAccount = (payload: ForgetAccountInput) => {
+    forgetAccount({
+      variables: {
+        payload: {
+          ...payload,
         },
       },
     })
@@ -199,49 +222,13 @@ const AccountPage = () => {
         {...{ colorMode }}
       >
         <ConfigBox>
-          <SingleConfiguration
-            text={t('page.account.password')}
-            children={
-              <Button
-                size="sm"
-                width="auto"
-                fontSize={btnFontSize}
-                variant="link"
-                color="red"
-                label={t('page.account.update_password')}
-              ></Button>
-            }
-            {...{ colorMode }}
-          />
-          <SingleConfiguration
-            text={t('page.account.delete_account')}
-            children={
-              <Button
-                size="sm"
-                width="auto"
-                fontSize={btnFontSize}
-                variant="link"
-                color="red"
-                onClick={() => setOpenDeleteAccountModal(true)}
-                label={t('page.account.delete')}
-              ></Button>
-            }
-            {...{ colorMode }}
-          />
+          <ForgetAccount
+            error={forgetAccountError}
+            isLoading={loadingForgetAccount}
+            forgetAccount={callForgetAccount}
+            dispatchAlert={() => setForgetAccountError('')}
+          ></ForgetAccount>
         </ConfigBox>
-
-        <Modal
-          size="xl"
-          isCentered
-          title={t('page.account.delete_account')}
-          subtitle={t('page.account.delete_account_info', {
-            organization: organization?.name,
-          })}
-          isOpen={openDeleteAccountModal}
-          onClose={() => setOpenDeleteAccountModal(false)}
-          actionLabel={t('page.account.delete')}
-          // onConfirm={forgetAccount}
-        ></Modal>
       </ContentBlock>
       {/* <ContentBlock
           mb={[3, 3, 3, 4]}
