@@ -5,7 +5,7 @@ import {
   PositionProps,
 } from 'styled-system'
 
-type AlertType = 'warning' | 'error' | 'success' | 'info'
+import { AlertType } from 'types/common'
 
 export interface Props
   extends SpaceProps,
