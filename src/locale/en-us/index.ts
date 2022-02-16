@@ -12,6 +12,8 @@ const EN_US = {
           'You must accept the terms and conditions.',
         password_error:
           'Password must contain a min of 8 characters, one uppercase, one lowercase, one number and one special character',
+        same_password_error:
+          'New password must be different of current password',
         confirm_email:
           'Please use the email previously entered during registration',
       },
@@ -62,7 +64,8 @@ const EN_US = {
       },
       error: {
         wrong_credentials: 'Your login credentials are incorrect.',
-        too_many_attempts: 'Number of attempts exceeded. For your security, login is currently not possible. Try again later.'
+        too_many_attempts:
+          'Number of attempts exceeded. For your security, login is currently not possible. Try again later.',
       },
     },
     signup: {
@@ -208,6 +211,10 @@ const EN_US = {
         delete: 'DELETE',
         update: 'UPDATE',
         update_password: 'Update password',
+        new_password: 'New password',
+        current_password: 'Current password',
+        confirm_new_password: 'Confirm new password',
+        password_updated: 'Password updated successfully',
         default: 'DEFAULT',
         pause: 'PAUSE',
         name: 'Your Name',
@@ -225,7 +232,9 @@ const EN_US = {
         account_settings: 'Account Settings',
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
-        delete_account_info: 'Please enter your password to confirm you would like to delete your account and have your personal information deleted. If you have a subscription on any app, you must go to the App Store to cancel your subscription. Deleting your account will not cancel any existing subscription. {{organization}} will send an email confirmation to the email used during registration.',
+        delete_my_account: 'I want to delete my account',
+        delete_account_info:
+          'Please enter your password to confirm you would like to delete your account and have your personal information deleted. If you have a subscription on any app, you must go to the App Store to cancel your subscription. Deleting your account will not cancel any existing subscription. {{organization}} will send an email confirmation to the email used during registration.',
         billing_information: 'Your Billing Information',
         billing_history: 'View Billing History',
         your_subscription: 'Your Subscription',
@@ -242,12 +251,13 @@ const EN_US = {
       live: {
         live: 'Live',
         upcoming: 'Upcoming',
-        past: 'Past'
-      }
+        past: 'Past',
+      },
     },
     cookieConsent: {
       notice: 'Notice.',
-      description_1: 'uses cookies to provide necessary website functionality, improve your experience and analyze our traffic. By using our website, you agree to',
+      description_1:
+        'uses cookies to provide necessary website functionality, improve your experience and analyze our traffic. By using our website, you agree to',
       link: 'our Privacy Policy',
       description_2: 'and our cookies usage.',
       accept: 'Accept',

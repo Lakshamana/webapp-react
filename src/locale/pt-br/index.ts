@@ -12,6 +12,7 @@ const PT_BR = {
           'Você precisa aceitar os Termos e Condições',
         password_error:
           'A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial',
+        same_password_error: 'A nova senha deve ser diferente da senha atual',
         confirm_email:
           'Por favor, digite o mesmo email utilizado para o cadastro.',
       },
@@ -60,7 +61,8 @@ const PT_BR = {
       },
       error: {
         wrong_credentials: 'Suas credenciais de login estão incorretas.',
-        too_many_attempts: 'Número de tentativas de login excedido. Para sua segurança, não é possível fazer o login no momento. Tente novamente mais tarde.'
+        too_many_attempts:
+          'Número de tentativas de login excedido. Para sua segurança, não é possível fazer o login no momento. Tente novamente mais tarde.',
       },
     },
     signup: {
@@ -207,6 +209,10 @@ const PT_BR = {
         delete: 'DELETAR',
         update: 'ATUALIZAR',
         update_password: 'Atualizar senha',
+        new_password: 'Nova senha',
+        current_password: 'Senha atual',
+        confirm_new_password: 'Confirmar nova senha',
+        password_updated: 'Senha atualizada com sucesso',
         default: 'PADRÃO',
         pause: 'PAUSAR',
         name: 'Nome',
@@ -224,7 +230,9 @@ const PT_BR = {
         account_settings: 'Configurações da Conta',
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',
-        delete_account_info: 'Por favor digite sua senha para confirmar que você gostaria de deletar sua conta e ter sua informação pessoal removida. Se você é assinante em qualquer app, você precisa ir até a App Store para cancelar sua assinatura. Deletar sua conta não vai cancelar qualquer assinatura existente. {{organization}} irá enviar uma confirmação para o email usado durante o registro.',
+        delete_my_account: 'Deletar a minha conta',
+        delete_account_info:
+          'Por favor digite sua senha para confirmar que você gostaria de deletar sua conta e ter sua informação pessoal removida. Se você é assinante em qualquer app, você precisa ir até a App Store para cancelar sua assinatura. Deletar sua conta não vai cancelar qualquer assinatura existente. {{organization}} irá enviar uma confirmação para o email usado durante o registro.',
         billing_information: 'Informações de Compra',
         billing_history: 'Ver Histórico de Compra',
         your_subscription: 'Sua Assinatura',
@@ -241,15 +249,16 @@ const PT_BR = {
       live: {
         live: 'Ao Vivo',
         upcoming: 'Próximas transmissões',
-        past: 'Assistir Novamente'
-      }
+        past: 'Assistir Novamente',
+      },
     },
     cookieConsent: {
       notice: 'Aviso prévio.',
-      description_1: 'usa cookies para fornecer a funcionalidade necessária do site, melhorar sua experiência e analisar nosso tráfego. Ao usar nosso site, você concorda com',
+      description_1:
+        'usa cookies para fornecer a funcionalidade necessária do site, melhorar sua experiência e analisar nosso tráfego. Ao usar nosso site, você concorda com',
       link: 'nossa Política de Privacidade',
       description_2: 'e nosso uso de cookies.',
-      accept: 'Aceitar'
+      accept: 'Aceitar',
     },
   },
 }
