@@ -18,6 +18,7 @@ import {
   ConfigBox,
   ProfileInfo,
   Navbar,
+  UpdatePassword,
   ForgetAccount,
 } from './components'
 
@@ -25,6 +26,7 @@ import { APP_LOCALE } from 'config/constants'
 import {
   MUTATION_UPDATE_ACCOUNT,
   MUTATION_UPDATE_PROFILE,
+  MUTATION_UPDATE_PASSWORD_ONLY,
   MUTATION_FORGET_ACCOUNT,
 } from 'services/graphql'
 import { sizes } from 'styles'
@@ -37,6 +39,7 @@ import { LANGUAGES } from './settings'
 import { saveData } from 'services/storage'
 import { useEffect } from 'react'
 import { ForgetAccountInput, UpdatePasswordOnlyInput } from 'generated/graphql'
+import { AlertObjectType } from 'types/common'
 
 const AccountPage = () => {
   const { t, i18n } = useTranslation()
@@ -46,6 +49,8 @@ const AccountPage = () => {
   const [updateAccountError, setUpdateAccountError] = useState('')
   const [updateProfileError, setUpdateProfileError] = useState('')
   const [forgetAccountError, setForgetAccountError] = useState('')
+  const [updatePasswordMsg, setUpdatePasswordMsg] =
+    useState<AlertObjectType | null>()
   const { user, account } = useAuthStore()
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
@@ -100,6 +105,36 @@ const AccountPage = () => {
     })
   }
 
+  const [updatePasswordOnly, { loading: loadingUpdatePassword }] = useMutation(
+    MUTATION_UPDATE_PASSWORD_ONLY,
+    {
+      onCompleted: async (result) => {
+        if (result.updatePasswordOnly.success)
+          setUpdatePasswordMsg({
+            message: t('page.account.password_updated'),
+            type: 'success',
+          })
+        else
+          setUpdatePasswordMsg({
+            message: t('common.error.generic_api_error'),
+            type: 'error',
+          })
+      },
+      onError: (error) => {
+        setUpdatePasswordMsg({ message: error.message, type: 'error' })
+      },
+    }
+  )
+
+  const callUpdatePassword = (payload: UpdatePasswordOnlyInput) => {
+    updatePasswordOnly({
+      variables: {
+        payload: {
+          ...payload,
+        },
+      },
+    })
+  }
 
   const [forgetAccount, { loading: loadingForgetAccount }] = useMutation(
     MUTATION_FORGET_ACCOUNT,
@@ -222,6 +257,12 @@ const AccountPage = () => {
         {...{ colorMode }}
       >
         <ConfigBox>
+          <UpdatePassword
+            updatePassword={callUpdatePassword}
+            alertMessageType={updatePasswordMsg}
+            isLoading={loadingUpdatePassword}
+            dispatchAlert={() => setUpdatePasswordMsg(null)}
+          ></UpdatePassword>
           <ForgetAccount
             error={forgetAccountError}
             isLoading={loadingForgetAccount}
