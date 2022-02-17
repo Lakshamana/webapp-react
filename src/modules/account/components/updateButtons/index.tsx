@@ -11,7 +11,6 @@ const UpdateButtons = ({
   resetValues,
 }: Props) => {
   const { t } = useTranslation()
-  const btnFontSize = '14px'
   return (
     <Flex alignItems="center" justifyContent="end" mt={editFormActive ? 10 : 0} paddingY={'10px'}>
       {editFormActive ? (
@@ -19,7 +18,6 @@ const UpdateButtons = ({
           <Button
             size="sm"
             mr={5}
-            fontSize={btnFontSize}
             iconName={'content-save'}
             width={'auto'}
             variant="link"
@@ -29,7 +27,6 @@ const UpdateButtons = ({
           ></Button>
           <Button
             size="sm"
-            fontSize={btnFontSize}
             width={'auto'}
             variant="link"
             label={t('common.cancel')}
@@ -42,10 +39,9 @@ const UpdateButtons = ({
       ) : (
         <Button
           size="sm"
-          fontSize={btnFontSize}
           width={'auto'}
           variant="link"
-          label="Update"
+          label={t('common.update')}
           onClick={() => handleIsEditing(true)}
         ></Button>
       )}

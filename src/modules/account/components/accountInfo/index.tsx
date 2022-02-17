@@ -37,7 +37,7 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
 
   return (
     <>
-      <Flex width={'100%'} alignItems="left" direction="column">
+      <Flex width={'100%'} pt={2} alignItems="left" direction="column">
         <Text color={colors.secondaryText[colorMode]} py={'10px'}>
           <Label fontSize={pxToRem(16)} fontWeight="500">
             {t(`page.account.email`)}:

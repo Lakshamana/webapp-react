@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
   AuthError,
   fetchSignInMethodsForEmail,
-  linkWithCredential
+  linkWithCredential,
 } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
@@ -30,8 +30,7 @@ const FirebaseAuth = initializeApp(CONFIG, 'Auth')
 const AUTH = getAuth(FirebaseAuth)
 AUTH.tenantId = REACT_APP_FIREBASE_AUTH_TENANT_ID || ''
 
-onAuthStateChanged(AUTH, (user) => {
-})
+onAuthStateChanged(AUTH, (user) => {})
 
 const FB_PROVIDER = new FacebookAuthProvider()
 const GOOGLE_PROVIDER = new GoogleAuthProvider()
@@ -61,12 +60,11 @@ export const SocialSignIn = (
             ? FacebookAuthProvider.credentialFromResult(result)
             : GoogleAuthProvider.credentialFromResult(result)
         if (credential) {
-          const { email, refreshToken } = result.user
+          const { refreshToken } = result.user
           const { accessToken, providerId } = credential
           resolve({
             accessToken: accessToken || '',
             authProvider: providerId,
-            email: email || '',
             refreshToken: refreshToken,
           })
         }
@@ -91,12 +89,11 @@ export const SocialSignIn = (
                           ? FacebookAuthProvider.credentialFromResult(usercred)
                           : GoogleAuthProvider.credentialFromResult(usercred)
                       if (credential) {
-                        const { email, refreshToken } = usercred.user
+                        const { refreshToken } = usercred.user
                         const { accessToken, providerId } = credential
                         resolve({
                           accessToken: accessToken || '',
                           authProvider: providerId,
-                          email: email || '',
                           refreshToken: refreshToken,
                         })
                       }

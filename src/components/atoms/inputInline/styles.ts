@@ -45,11 +45,8 @@ export const Input: any = styled(ChakraInput)<PropsStyle>`
   font-size: 16px;
   width: 100%;
   &::placeholder {
-    font-family: Helvetica;
     color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
-    font-weight: 100;
-    font-style: ${({ placeholderFontStyle }) => placeholderFontStyle};;
-    font-size: 18px;
+    font-size: 1.08rem;
     opacity: 0.5;
   }
 `
