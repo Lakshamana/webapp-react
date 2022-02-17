@@ -1,11 +1,10 @@
 import { Icon } from '@iconify/react'
-import { Flex } from '@chakra-ui/layout'
+import { Flex, Divider } from '@chakra-ui/layout'
 import { Container, Text, Link } from 'components'
 
 import { NavbarProps } from './types'
 
 import { colors } from 'styles'
-import { pxToRem } from 'styles/metrics'
 
 const Navbar = ({ colorMode, text }: NavbarProps) => (
   <Container width={1} mt={1} alignItems="center" mb={2}>
@@ -16,10 +15,17 @@ const Navbar = ({ colorMode, text }: NavbarProps) => (
           width={20}
           color={colors.generalText[colorMode]}
         />
+        <Divider
+          orientation="vertical"
+          height={4}
+          ml={2}
+          mr={3}
+          color={colors.grey['700']}
+        />
         <Text
-          pl={2}
-          fontWeight="500"
-          fontSize={pxToRem(20)}
+          style={{ textTransform: 'uppercase' }}
+          fontWeight={'600'}
+          fontSize={'1.05rem'}
           color={colors.generalText[colorMode]}
         >
           {text}
