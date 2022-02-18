@@ -5,6 +5,7 @@ import { breakpoints, colors } from "styles"
 export const CardWrapper = styled.div`
 	cursor: pointer;
 	position: relative;
+	transition: all .2s ease-in-out;
 
 	&:hover {
 		z-index: 1;
@@ -27,6 +28,7 @@ export const CardWrapper = styled.div`
 			display: flex;
 			border-radius: 0 0 4px 4px;
 			height: 80px;
+			transition: all .2s ease-in-out;
 		}
 	}	
 `

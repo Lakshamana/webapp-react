@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { Box } from "@chakra-ui/react"
 
 export const Title = styled(Box)`
-	font-size: 18px;
+	font-size: 1rem;
 	padding: 16px;
 	height: 75px;
 	width: 100%;

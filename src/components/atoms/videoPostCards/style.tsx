@@ -1,15 +1,16 @@
 import styled from "styled-components"
 import { VideoPostProps } from "./types"
 import { breakpoints, colors } from "styles"
-
+// 		margin-top: -30%;
 export const CardWrapper = styled.div`
 	cursor: pointer;
 	position: relative;
+	transition: all .2s ease-in-out;
 
 	&:hover {
 		z-index: 1;
 		transform: scale(1.3);
-		margin-top: -30%;
+		overflow: hidden;
 
 		.addMyListIcon {
 			display: block !important;
@@ -27,6 +28,7 @@ export const CardWrapper = styled.div`
 			display: flex;
 			border-radius: 0 0 4px 4px;
 			height: 80px;
+			transition: all .2s ease-in-out;
 		}
 	}	
 `
