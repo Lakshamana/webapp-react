@@ -7,15 +7,11 @@ export const Content: any = styled.div`
   height: auto;
   position: relative;
 `
-
+// .swiper-wrapper:hover { z-index: 11; }
 export const SwiperStyled = styled(Swiper)`
   .swiper-container {
     overflow: inherit !important;
     padding: 0 1.3rem !important;
-  }
-
-  .swiper-slide:hover {
-    z-index: 1;
   }
 
   .disabled_swiper_button {

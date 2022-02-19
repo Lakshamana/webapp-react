@@ -39,7 +39,7 @@ const HoverInfoCard = ({ ...props }: HoverInfoCardProps) => {
 				<Flex 
 					color={colors.generalText[colorMode]}
 					display="inline-block" 
-					fontSize="14px" 
+					fontSize="0.7rem" 
 					padding="23px 12px" 
 					width="100%"
 				>
