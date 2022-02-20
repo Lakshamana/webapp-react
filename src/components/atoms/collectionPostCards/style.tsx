@@ -12,12 +12,16 @@ export const CardWrapper = styled.div`
 		transform: scale(1.3);
 		margin-top: -30%;
 
+		.addMyListIconBg,
 		.addMyListIcon {
 			display: block !important;
 		}
 
-		.addMyListIconBg {
-			display: block !important;
+		@media screen and (max-width: ${breakpoints.sm}) {
+			.closeCardMobileIconBg,
+			.closeCardMobileIcon {
+				display: block !important;
+			}
 		}
 
 		.postContent {

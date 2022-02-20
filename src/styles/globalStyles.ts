@@ -166,4 +166,41 @@ body::before {
 .chakra-checkbox__control, .chakra-radio__control {
   box-shadow: none !important;
 }
+
+.livestreamScroller {
+}
+
+.collectionScroller {
+  .swiper-container:hover {
+    z-index: 2;
+  }
+  .swiper-slide.visibleCard:hover {
+    z-index: 2;
+  }
+  .swiper-wrapper {
+    div[class*="visibleCard"]:last-of-type > div:hover {
+      right: 10%;
+    }
+    div[class*="visibleCard"]:first-of-type > div:hover {
+      left: 10%;
+    }
+  }
+}
+
+.ondemandScroller {
+  .swiper-container:hover {
+    z-index: 2;
+  }
+  .swiper-slide.visibleCard:hover {
+    z-index: 2;
+  }
+  .swiper-wrapper {
+    div[class*="visibleCard"]:first-of-type > div:hover {
+      left: 10%;
+    }
+    div[class*="visibleCard"]:last-of-type > div:hover {
+      right: 10%;
+    }
+  }
+}
 `

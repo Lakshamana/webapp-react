@@ -10,18 +10,23 @@ export const CardWrapper = styled.div`
 	&:hover {
 		z-index: 1;
 		transform: scale(1.3);
-		overflow: hidden;
+		margin-top: -15%;
 
+		.postContent {
+			border-radius: 4px 4px 0 0 !important;
+			margin-bottom: -1px;
+		}
+
+		.addMyListIconBg,
 		.addMyListIcon {
 			display: block !important;
 		}
 
-		.addMyListIconBg {
-			display: block !important;
-		}
-
-		.postContent {
-			border-radius: 4px 4px 0 0 !important;
+		@media screen and (max-width: ${breakpoints.sm}) {
+			.closeCardMobileIconBg,
+			.closeCardMobileIcon {
+				display: block !important;
+			}
 		}
 
 		.infoCard {
@@ -40,7 +45,7 @@ export const PostContent = styled.div<VideoPostProps>`
 	height: auto;
 	position: relative;
 	border-radius: 4px;
-	${(props: VideoPostProps) => `background: url('${props.coverImage}');`}
+	${(props: VideoPostProps) => `background: url('${props.coverImage}'), black;`}
 	cursor: pointer;
 	background-position: center;
 	background-repeat: no-repeat;

@@ -41,9 +41,11 @@ const LivestreamScroller = ({
           ''
         )}
       </Header>
-      <CardsScroller type="livestream">
-        <LivestreamList items={items} />
-      </CardsScroller>
+      <div className="livestreamScroller">
+        <CardsScroller type="livestream">
+          <LivestreamList items={items} />
+        </CardsScroller>
+      </div>
     </ContentScroller>
   )
 }

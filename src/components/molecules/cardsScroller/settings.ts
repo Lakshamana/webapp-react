@@ -15,6 +15,8 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   freeModeMomentumBounce: false,
   slidesOffsetAfter: 32,
   slidesOffsetBefore: 32,
+  watchSlidesVisibility: true,
+  slideVisibleClass: 'visibleCard',
   keyboard: {
     enabled: true,
   },
