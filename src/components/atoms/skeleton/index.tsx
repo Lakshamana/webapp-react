@@ -28,7 +28,7 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
                   endColor={colors.skeleton.end[colorMode]}
                   {...props}
                 >
-                  <ChannelCard image={''}></ChannelCard>
+                  {/* <ChannelCard image={''}></ChannelCard>C */}
                 </SkeletonLoading>
               )
             })}
