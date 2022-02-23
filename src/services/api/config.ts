@@ -8,11 +8,14 @@ import {
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
-import { AUTH_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql/mutation/refreshToken'
 
-const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
+const {
+  REACT_APP_API_ENDPOINT,
+  REACT_APP_ORGANIZATION_URL
+} = process.env
 
 const refreshToken = async (token) => {
   try {
@@ -85,12 +88,17 @@ const errorLink = onError(
 
 const authLink = setContext((_, { headers }) => {
   const token = getData(AUTH_TOKEN)
+  const channel = getData(CHANNEL_INFO)
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
       organization: REACT_APP_ORGANIZATION_URL,
+      // TO-DO: REACT_APP_HOME_CHANNEL_ID is a temporary env as we will not have a home channel,
+      // instead we will have a home page with the content of all channels,
+      // so the user can select a specific channel or not. We don't have an API for that yet.
+      channel: channel?.id || '',
     },
   }
 })
