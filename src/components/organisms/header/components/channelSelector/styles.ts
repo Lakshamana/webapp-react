@@ -1,23 +1,23 @@
-import styled, { css } from "styled-components";
-import { layout, space, SpaceProps, LayoutProps } from "styled-system";
-import { StyleContainer } from "components/atoms/container";
+import styled, { css } from 'styled-components'
+import { layout, space, SpaceProps, LayoutProps } from 'styled-system'
+import { StyleContainer } from 'components/atoms/container'
 
 interface IconContainerProps {
-  open: boolean;
+  open: boolean
 }
 
-interface TypeSpaceProps extends SpaceProps, LayoutProps { }
+interface TypeSpaceProps extends SpaceProps, LayoutProps {}
 
 export const CustomContainer = styled(StyleContainer)`
   ${layout}
   align-items: center;
-`;
+`
 
 export const ChannelIcon = styled.img<TypeSpaceProps>`
   ${layout}
   ${space}
   border-radius: 8px;
-`;
+`
 
 export const IconContainer = styled.div<IconContainerProps>`
   ${layout}
@@ -30,7 +30,7 @@ export const IconContainer = styled.div<IconContainerProps>`
       : css`
           transition: ease-in 0.25s;
         `}
-`;
+`
 
 export const ChannelList = styled.ul`
   ${layout}
@@ -40,7 +40,7 @@ export const ChannelList = styled.ul`
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
   }
-`;
+`
 
 export const ChannelItem = styled.li<SpaceProps>`
   ${space}
@@ -48,10 +48,10 @@ export const ChannelItem = styled.li<SpaceProps>`
   user-select: none;
 
   :hover {
-    background: ${({ theme }) => theme.colors.blue["300"]};
+    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
   }
-`;
+`
 
 export const SearchContainer = styled(StyleContainer)`
-  border-bottom: 1px solid ${({ theme }) => theme.colors.grey["700"]};
-`;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey['700']};
+`
