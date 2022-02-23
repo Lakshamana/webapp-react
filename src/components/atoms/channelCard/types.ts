@@ -1,12 +1,5 @@
-import { LayoutProps } from "styled-system";
+import { ChannelProps } from 'types/channel'
 
-export interface ChannelProps extends LayoutProps {
-  id?: string;
-  name?: string;
-  image: string;
-  url?: string;
-  text?: string;
-  isGeolocked?: boolean;
-  isExclusive?: boolean;
-  onClick?: any;
+export interface Props extends ChannelProps {
+  onSelectChannel: (id: string | null) => void
 }
