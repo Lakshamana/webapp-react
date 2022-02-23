@@ -19,7 +19,6 @@ const InputWrapper = ({
   height,
   type = "",
   background = "",
-  placeholderColor = "",
   rightIcon = "",
   leftIcon = "",
   onChangeShowPassword = () => { },

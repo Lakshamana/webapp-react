@@ -17,12 +17,8 @@ export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
   onKeyDown?: any
   onBlur?: any
   name?: string
-
   background?: string
   inverted?: boolean
   color?: string
-  placeholderColor?: string
-  placeholderFontStyle?: string
-
   autocomplete?: string
 }

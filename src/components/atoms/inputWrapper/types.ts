@@ -22,7 +22,6 @@ export interface Props {
   background?: string
   inverted?: boolean
   color?: string
-  placeholderColor?: string
   onChangeShowPassword?: Function
   onEnterPress?: Function
 }
