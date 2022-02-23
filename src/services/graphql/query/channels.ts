@@ -4,23 +4,20 @@ export const QUERY_CHANNELS = gql`
   query Channels($filter: FilterFindAllChannelsInput!) {
     channels(filter: $filter) {
       ... on AvailableChannel {
-        banner
-        customization
-        description
-        entitlements
-        geofence
         id
-        logo
+        kind
+        description
+        geofence
         name
-        organization
-        status
         thumbnail
+        customization
         __typename
       }
       ... on GeolockedChannel {
         id
         name
         thumbnail
+        kind
         customization
         __typename
       }
