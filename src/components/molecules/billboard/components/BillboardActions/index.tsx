@@ -21,10 +21,10 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
     <Actions>
       {actions?.map((action: BillboardItemActions) => {
         return (
-          <ContentButton key={`billboard-action-${action.label}`}>
+          <ContentButton key={`${action.route}`}>
             <Button
               width="auto"
-              height='45px'
+              size='lg'
               backgroundColor={action.bgColor}
               borderColor={action.borderColor}
               iconName={action.icon}
