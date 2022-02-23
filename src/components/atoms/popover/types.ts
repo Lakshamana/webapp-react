@@ -6,4 +6,5 @@ export interface Props extends PopoverProps {
   popoverTrigger: JSX.Element
   background?: string
   hasArrow?: boolean
+  width?: string
 }
