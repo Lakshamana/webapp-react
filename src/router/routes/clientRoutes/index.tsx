@@ -15,21 +15,93 @@ import {
   RecoverPasswordPage,
   VideoPostViewPage,
   LiveChat,
-  LiveEvent
+  LiveEvent,
+  NotFound,
 } from 'modules'
 
-import { MainLayout, LoginLayout } from 'components'
+import { MainLayout, LoginLayout, EmptyLayout } from 'components'
 
 const ClientRoutes = ({ isAccesible }: any) => {
   return (
     <Switch>
-      <Redirect exact from="/" to="/home" />
+      {/* TO-DO temporary redirects. Should not exist when the API returns posts without the need to send a channel */}
+      <Redirect exact from="/" to="/channels" />
+      <ClientRoute
+        isAccesible={isAccesible?.mylist}
+        path="/c/:channel/mylist"
+        component={MyListPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.account}
+        path="/account"
+        component={AccountPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.collections}
+        path="/c/:channel/collections"
+        component={CollectionsPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.search}
+        path="/c/:channel/search"
+        component={SearchPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.feed}
+        path="/c/:channel/feed"
+        component={FeedPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.tags}
+        path="/c/:channel/tags"
+        component={TagPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={true}
+        path="/c/:channel/livestreams"
+        component={LiveEvent}
+        redirectTo="/channels"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.login}
+        path="/video-post"
+        component={VideoPostViewPage}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.livechat}
+        path="/livechat"
+        component={LiveChat}
+        redirectTo="/c/:channel"
+        template={MainLayout}
+      />
       <ClientRoute
         isAccesible={isAccesible?.home}
-        path="/home"
+        path="/c/:channel"
         component={HomePage}
         redirectTo="/login"
         template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.channels}
+        path="/channels"
+        component={ChannelsPage}
+        redirectTo="/login"
+        template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={isAccesible?.signup}
@@ -42,7 +114,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
         isAccesible={isAccesible?.login}
         path="/login"
         component={LoginPage}
-        redirectTo="/home"
+        redirectTo="/"
         template={LoginLayout}
       />
       <ClientRoute
@@ -53,74 +125,9 @@ const ClientRoutes = ({ isAccesible }: any) => {
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.mylist}
-        path="/mylist"
-        component={MyListPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.account}
-        path="/account"
-        component={AccountPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.collections}
-        path="/collections"
-        component={CollectionsPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.search}
-        path="/search"
-        component={SearchPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.channels}
-        path="/channels"
-        component={ChannelsPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.feed}
-        path="/feed"
-        component={FeedPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.tags}
-        path="/tags"
-        component={TagPage}
-        redirectTo="/home"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.login}
-        path="/video-post"
-        component={VideoPostViewPage}
-        redirectTo="/login"
-        template={MainLayout}
-      />
-      <ClientRoute
-        isAccesible={isAccesible?.livechat}
-        path="/livechat"
-        component={LiveChat}
-        redirectTo="/login"
-        template={MainLayout}
-      />
-      <ClientRoute
         isAccesible={true}
-        path="/livestreams"
-        component={LiveEvent}
-        redirectTo="/login"
         template={MainLayout}
+        component={NotFound}
       />
     </Switch>
   )

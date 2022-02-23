@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-
 import { Props } from './types'
 
 const ClientRoute = ({
@@ -25,7 +24,7 @@ const ClientRoute = ({
             <Component />
           </Template>
         ) : (
-          <Redirect to={redirectTo} />
+          <Redirect to={redirectTo || ''} />
         )
       }
     />
