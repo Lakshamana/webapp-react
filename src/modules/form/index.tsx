@@ -12,7 +12,7 @@ const FormModule = () => {
             button={(handleSubmit) => 
               <Button label='Salvar' onClick={handleSubmit} />
             }
-            handleFormSubmit={(data) => console.log('data', data)}
+            handleFormSubmit={(data) =>{}}
           />
         </Center>
       </Container>
