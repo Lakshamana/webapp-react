@@ -156,19 +156,18 @@ const PT_BR = {
     },
     header: {
       tabs: {
-        home: 'Home',
-        live: 'Live',
+        home: 'Início',
+        live: 'Ao vivo',
         feed: 'Feed',
-        collections: 'Collections',
-        my_list: 'My List',
-        settings: 'Settings',
+        collections: 'Categorias',
+        my_list: 'Minha lista',
+        settings: 'Ajustes',
         tags: 'Tags',
-        tools: 'Tools',
-        example: 'Example',
+        tools: 'Ferramentas',
+        example: 'Exemplo',
       },
-      channel_selected: {
-        select: 'Selecionar',
-        channel: 'canal:',
+      channel_selector: {
+        select: 'Selecione o canal',
       },
       channel_search: 'Buscar canal...',
       userPopover: {
@@ -187,7 +186,7 @@ const PT_BR = {
         cardInfoViews: 'Visualizações',
       },
       channels: {
-        title: 'Canais',
+        title: 'Escolha um canal:',
       },
       collection: {
         action: 'Ação',
