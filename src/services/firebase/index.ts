@@ -11,8 +11,7 @@ import {
 } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
-
-export type Social = 'facebook' | 'google'
+import { SocialType } from 'types/common'
 
 const {
   REACT_APP_FIREBASE_AUTH_API_KEY,
@@ -49,7 +48,7 @@ function getProvider(kind: string) {
 }
 
 export const SocialSignIn = (
-  kind: Social
+  kind: SocialType
 ): Promise<CreateAccountSocialSignInDto> => {
   return new Promise(function (resolve, reject) {
     const PROVIDER = getProvider(kind)
