@@ -1,19 +1,14 @@
 import styled from "styled-components";
-import { layout, LayoutProps } from "styled-system";
 import { StyleContainer } from "components";
 import { breakpoints } from "styles";
 
 export const UserContainer = styled(StyleContainer)`
-  user-select: none;
-  cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.blue["300"]};
-  :border-radius: 5px;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 8px;
+  background-color: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+  color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
+
   @media screen and (min-width: ${breakpoints.lg}) {
     display: none;
   }
-`;
-
-export const CircleImage = styled.img<LayoutProps>`
-  ${layout}
-  border-radius: 50%;
 `;
