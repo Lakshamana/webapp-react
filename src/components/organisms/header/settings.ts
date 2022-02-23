@@ -1,64 +1,37 @@
-import { Channel } from './types'
 import i18n from 'config/i18n'
 
-export const MENUTABS = [
+export const MENU_TABS = [
   {
     id: 'home',
     label: i18n.t('header.tabs.home'),
-    url: '/home',
-    style: { mx: '25px' },
+    url: '/c/:channel',
   },
   {
     id: 'live',
     label: i18n.t('header.tabs.live'),
-    url: '/livestreams',
-    style: { mx: '25px' },
+    url: '/c/:channel/livestreams',
   },
   {
     id: 'feed',
     label: i18n.t('header.tabs.feed'),
-    url: '/feed',
-    style: { mx: '25px' },
+    url: '/c/:channel/feed',
   },
   {
     id: 'collections',
     label: i18n.t('header.tabs.collections'),
-    url: '/collections',
-    style: { mx: '25px' },
+    url: '/c/:channel/collections',
   },
   {
     id: 'mylist',
     label: i18n.t('header.tabs.my_list'),
-    url: '/mylist',
-    style: { ml: '25px' },
+    url: '/c/:channel/mylist',
   },
   {
     id: 'tags',
     label: i18n.t('header.tabs.tags'),
-    url: '/tags',
-    style: { ml: '25px' },
-  }
-]
-
-export const CHANNELS: Array<Channel> = [
-  {
-    id: 'channel1',
-    name: 'Channel name 1',
-    url: 'https://www.logodesign.net/logo/abstract-cuboid-building-4519ld.png',
-  },
-  {
-    id: 'channel2',
-    name: 'Channel name 2',
-    url: 'https://www.logodesign.net/logo/abstract-cuboid-building-4519ld.png',
+    url: '/c/:channel/tags',
   },
 ]
-
-export const DEFAULT_USER = {
-  name: 'Bia Silva',
-  id: '11-user',
-  avatar:
-    'https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg',
-}
 
 export const SEARCH_VALUES = [
   {
@@ -84,5 +57,4 @@ export const initialState: any = {
   selected: '',
   openMenu: false,
   openSearch: false,
-  channel: CHANNELS[0],
 }
