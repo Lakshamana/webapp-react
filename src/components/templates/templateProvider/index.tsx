@@ -36,7 +36,7 @@ const TemplateProvider = ({ children }: any) => {
 
   return (
     <ThemeProvider
-      theme={{ ...theme, colorMode, darkMode: colorMode === 'dark' }}
+      theme={{ ...theme, colorMode}}
     >
       <ChakraProvider theme={customTheme}>
         <FlagsProvider>
