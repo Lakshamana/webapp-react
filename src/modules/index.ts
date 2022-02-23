@@ -13,3 +13,4 @@ export * from "./feed";
 export * from "./recoverPassword";
 export * from "./videoPostView";
 export * from "./liveEvent";
+export * from "./errors"
