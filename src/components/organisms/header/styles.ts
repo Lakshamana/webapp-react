@@ -12,11 +12,6 @@ export const HeaderContainer = styled(StyleContainer)`
     padding: 0 ${({ theme }) => theme.sizes.paddingMd};
   }
 `
-
-export const LogoContainer = styled.div`
-  padding: 0 ${({ theme }) => theme.sizes.paddingSm};
-`
-
 export const ChannelContainer = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
