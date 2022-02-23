@@ -7,7 +7,6 @@ export const Content: any = styled.div`
   height: auto;
   position: relative;
 `
-// .swiper-wrapper:hover { z-index: 11; }
 export const SwiperStyled = styled(Swiper)`
   .swiper-container {
     overflow: inherit !important;

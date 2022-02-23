@@ -42,9 +42,11 @@ const CollectionScroller = ({
           ''
         )}
       </Header>
-      <CardsScroller type="collection">
-        <CollectionList items={items} />
-      </CardsScroller>
+      <div className="collectionScroller">
+        <CardsScroller type="collection">
+          <CollectionList items={items} />
+        </CardsScroller>
+      </div>
     </ContentScroller>
   )
 }

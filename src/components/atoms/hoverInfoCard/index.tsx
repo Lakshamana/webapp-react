@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { colors } from 'styles'
 
 import { HoverInfoCardProps } from "./types";
-import { Title } from "./style"
+import { Title, Views } from "./style"
 
 const HoverInfoCard = ({ ...props }: HoverInfoCardProps) => {
   const { t } = useTranslation()
@@ -19,10 +19,29 @@ const HoverInfoCard = ({ ...props }: HoverInfoCardProps) => {
 				width="25"
 				height="25"
 				color={colors.grey['800']}
-				style={{ position: "absolute", zIndex: 3, right: 3, top: 3, display: 'none' }}
+				style={{ position: "absolute", zIndex: 3, left: 3, top: 3, display: 'none' }}
 			/>
       <Box
         className="addMyListIconBg"
+        width="15px" 
+        height="15px" 
+        bgColor={colors.brand.primary.dark} 
+        position="absolute" 
+        top="8px"
+        left="8px"
+        display="none"
+      />
+
+      <Icon
+				className='closeCardMobileIcon'
+				icon="carbon:close-filled"
+				width="25"
+				height="25"
+				color={colors.grey['800']}
+				style={{ position: "absolute", zIndex: 3, right: 3, top: 3, display: 'none' }}
+			/>
+      <Box
+        className="closeCardMobileIconBg"
         width="15px" 
         height="15px" 
         bgColor={colors.brand.primary.dark} 
@@ -36,6 +55,7 @@ const HoverInfoCard = ({ ...props }: HoverInfoCardProps) => {
 				<Title color={colors.generalText[colorMode]}>
           {props.postTitle}
 				</Title>
+        <Views></Views>
 				<Flex 
 					color={colors.generalText[colorMode]}
 					display="inline-block" 
@@ -44,13 +64,13 @@ const HoverInfoCard = ({ ...props }: HoverInfoCardProps) => {
 					width="100%"
 				>
           {props.views && (
-            <Flex
+            <Views
               justifyContent="flex-end"
               alignItems="flex-end"
               height="100%"
             >
               {`${props.views} ${t('page.home.cardInfoViews')}`}
-            </Flex>
+            </Views>
           )}
 				</Flex>
 			</Flex>

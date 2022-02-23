@@ -41,9 +41,11 @@ const OnDemandScroller = ({
           ''
         )}
       </Header>
-      <CardsScroller type="ondemand">
-        <OndemandList items={items} />
-      </CardsScroller>
+      <div className="ondemandScroller">
+        <CardsScroller type="ondemand">
+          <OndemandList items={items} />
+        </CardsScroller>
+      </div>
     </ContentScroller>
   )
 }
