@@ -1,4 +1,5 @@
-import { useState, memo, useReducer } from 'react'
+import { useState, memo, useReducer, useEffect } from 'react'
+import { useMediaQuery } from '@chakra-ui/media-query'
 import { useLocation } from 'react-router-dom'
 import { Divider, Center } from '@chakra-ui/react'
 import { Container, Logo, UserInfo } from 'components'
@@ -12,17 +13,21 @@ import {
 
 import { useThemeStore } from 'services/stores/theme'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
-import { useOrganizationStore } from 'services/stores'
-import { CHANNELS, SEARCH_VALUES, MENUTABS, initialState } from './settings'
-import { Channel, defaultProps, SearchResults } from './types'
+import { useChannelsStore, useOrganizationStore } from 'services/stores'
+import { MENU_TABS, initialState, SEARCH_VALUES } from './settings'
+import { defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
-import { sizes, breakpoints } from 'styles'
-import { HeaderContainer, LogoContainer } from './styles'
+import { sizes, breakpoints, colors } from 'styles'
+import { HeaderContainer } from './styles'
+import { useTabsStore } from 'services/stores/tabs'
 
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
+  const { setTabsList } = useTabsStore()
+  const { activeChannel } = useChannelsStore()
 
   const { organization } = useOrganizationStore()
   const { generateImage } = useThumbor()
@@ -39,15 +44,7 @@ const HeaderComponent = () => {
     selected: getSelectedTab(pathname),
   })
 
-  const [channels, setChannels] = useState<Array<Channel>>(CHANNELS)
-  const [searchValues, setSearchValues] =
-    useState<Array<SearchResults>>(SEARCH_VALUES)
-
-  const handleChannelSearch = (value: any) =>
-    setChannels(CHANNELS.filter((channel) => channel.name.includes(value)))
-
-  const handleChannelSelect = (value: any) =>
-    dispatch({ type: 'channel', value })
+  const [searchValues, setSearchValues] = useState<SearchResults[]>([])
 
   const handleSearch = (evt: any) => {
     dispatch({ type: 'search', value: evt.target.value })
@@ -85,14 +82,13 @@ const HeaderComponent = () => {
     }
   }
 
+  useEffect(() => {
+    setTabsList(MENU_TABS)
+  }, [activeChannel])
+
   return (
     <>
-      <SideMenu
-        open={state.openMenu}
-        data={MENUTABS}
-        selected={state.selected}
-        {...{ colorMode }}
-      >
+      <SideMenu data={[]} open={state.openMenu} {...{ colorMode }}>
         <UserInfo display={'sidebar'} {...{ colorMode, toggleColorMode }} />
       </SideMenu>
       <HeaderContainer
@@ -108,22 +104,16 @@ const HeaderComponent = () => {
       >
         <Container alignItems="center" display={visibleMobile}>
           <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
-          <LogoContainer>
-            <Logo ignoreFallback src={org_logo} width={180} />
-          </LogoContainer>
-          <Center pr={5} height="30px">
-            <Divider orientation="vertical" />
+          <Logo
+            mx={2}
+            ignoreFallback
+            src={org_logo}
+            width={isDesktop ? '180px' : '120px'}
+          />
+          <Center height="30px">
+            <Divider orientation="vertical" color={colors.grey['700']} />
           </Center>
-          {!state.openSearch ? (
-            <ChannelSelector
-              onSelect={handleChannelSelect}
-              onSearch={handleChannelSearch}
-              selected={state.channel}
-              {...{ channels, colorMode }}
-            />
-          ) : (
-            <></>
-          )}
+          {!state.openSearch ? <ChannelSelector /> : null}
         </Container>
         {!state.openSearch ? (
           <Container
@@ -133,18 +123,9 @@ const HeaderComponent = () => {
             alignItems="center"
             display={['none', 'none', 'flex']}
           >
-            <Tabs
-              data={MENUTABS}
-              selected={state.selected}
-              setSelected={(value: any) =>
-                dispatch({ type: 'selected', value })
-              }
-              {...{ colorMode }}
-            />
+            <Tabs />
           </Container>
-        ) : (
-          <></>
-        )}
+        ) : null}
         <Container
           alignItems="center"
           flex={state.openSearch ? 1 : 'none'}

@@ -19,9 +19,7 @@ const commonStyles = `
 interface PropsStyle extends LayoutProps, SpaceProps, FontSizeProps {
   background?: string
   color?: string
-  placeholderColor?: string
-  inverted?: boolean,
-  placeholderFontStyle?: string
+  inverted?: boolean
 }
 
 export const Input: any = styled(ChakraInput)<PropsStyle>`

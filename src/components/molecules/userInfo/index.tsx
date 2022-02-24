@@ -1,11 +1,11 @@
-import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
+import { useDisclosure, useBoolean } from '@chakra-ui/hooks'
 import { useAuth } from 'contexts/auth'
+import { useAuthStore } from 'services/stores'
 import { Container, Popover, Modal } from 'components'
 import { PopoverOption, UserMenu, NotLogged, UserSidebar } from './components'
-import { useAuthStore } from 'services/stores'
 import { PropsUserInfo } from './types'
 import { UserContainer, OptionsList } from './styles'
 import { colors } from 'styles'
@@ -20,12 +20,17 @@ const UserInfo = ({
   const { t } = useTranslation()
   const { signOut } = useAuth()
   const { account, user } = useAuthStore()
-  const [openModal, setOpenModal] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [signoutLoading, setSignoutLoading] = useBoolean()
 
   const avatar_url = user?.avatar_url
 
   if (!account) {
     return <NotLogged {...{ display, colorMode }} />
+  }
+
+  if (display === 'sidebar') {
+    return <UserSidebar {...{ account }} />
   }
 
   return (
@@ -46,10 +51,7 @@ const UserInfo = ({
         popoverTrigger={
           <button>
             <UserContainer {...{ delimited }}>
-              {display === 'menu' && account && (
-                <UserMenu {...{ colorMode, account, avatar_url }} />
-              )}
-              {display === 'sidebar' && <UserSidebar {...{ account }} />}
+              <UserMenu {...{ colorMode, account, avatar_url }} />
             </UserContainer>
           </button>
         }
@@ -92,7 +94,7 @@ const UserInfo = ({
             />
             <PopoverOption
               color={colors.generalText[colorMode]}
-              onClick={() => setOpenModal(true)}
+              onClick={onOpen}
               text={t('header.userPopover.exit')}
               icon={
                 <Icon
@@ -107,12 +109,17 @@ const UserInfo = ({
         </Container>
       </Popover>
       <Modal
+        isCentered
         title={t('common.sign_out')}
         subtitle={t('common.confirm_signout')}
         closeButton={false}
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-        onConfirm={signOut}
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={() => {
+          signOut()
+          setSignoutLoading.on()
+        }}
+        loading={signoutLoading}
       ></Modal>
     </Container>
   )

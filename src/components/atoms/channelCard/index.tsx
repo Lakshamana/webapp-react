@@ -1,11 +1,20 @@
 import { Icon } from '@iconify/react'
-import { ChannelProps } from './types'
+import { Props } from './types'
 import { ChannelContent, BlockedContent } from './styles'
 import { colors } from 'styles'
 
-const ChannelCard = ({ isExclusive, isGeolocked, ...props }: ChannelProps) => {
+const ChannelCard = ({
+  isExclusive,
+  isGeolocked,
+  onSelectChannel,
+  ...props
+}: Props) => {
+  
+  const selectChannel = () => {
+    onSelectChannel(props.id || '')
+  }
   return (
-    <ChannelContent {...props}>
+    <ChannelContent {...props} onClick={selectChannel}>
       {(isExclusive || isGeolocked) && (
         <BlockedContent>
           <Icon

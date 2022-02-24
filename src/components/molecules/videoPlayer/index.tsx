@@ -57,8 +57,6 @@ const VideoPlayer = ({
           showTimestamp: true,
         })
       }
-
-      console.log('PLAYER PLUGINS -', player.activePlugins_)
     })
   };
 

@@ -1,17 +1,11 @@
 import { SpaceProps } from "styled-system";
+import { Channel } from 'generated/graphql'
+import { ColorMode } from 'types/common'
 
 export type User = {
   name: string;
   id: string;
   avatar: string;
-};
-
-type ColorMode = "dark" | "light";
-
-export type Channel = {
-  name: string;
-  id: string;
-  url: string;
 };
 
 export type Tab = {
@@ -31,13 +25,6 @@ export type SearchResults = {
   children: Array<ContentResults>;
 };
 
-export interface PropsTabs {
-  selected: Tab | undefined;
-  setSelected: any;
-  data: Array<Tab>;
-  colorMode: ColorMode;
-}
-
 export interface PropsSearchBar {
   open: boolean;
   onSearch: any;
@@ -49,32 +36,17 @@ export interface PropsSearchBar {
 }
 
 export interface PropsChannels {
-  channels: Array<Channel>;
+  channels: Channel[];
   selected: Channel;
   onSelect: any;
   colorMode: ColorMode;
-}
-
-export interface PropsChannelSearch {
-  search: string;
-  onChange: any;
-  colorMode: ColorMode;
-}
-
-export interface PropsChannelSelected {
-  open: boolean;
-  selected: Channel | null;
-  colorMode: ColorMode;
+  isLoading?: boolean;
 }
 
 export interface PropsSearchPopover {
   data: Array<SearchResults>;
   textColor?: string;
   section?: string;
-}
-
-export interface PropsChannelSelector extends SpaceProps, PropsChannels {
-  onSearch: any;
 }
 
 export interface PropsMenuIcon extends SpaceProps {
@@ -84,8 +56,7 @@ export interface PropsMenuIcon extends SpaceProps {
 
 export interface PropsSideMenu {
   open: boolean;
-  data: Array<Tab>;
-  selected: Tab | undefined;
+  data: [];
   colorMode: ColorMode;
   children: JSX.Element | JSX.Element[]
 }

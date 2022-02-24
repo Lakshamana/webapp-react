@@ -45,11 +45,7 @@ const Router = () => {
     permission()
   }, [kind, accessToken])
 
-  return (
-    <>
-      <ClientRoutes isAccesible={currentPermissions} />
-    </>
-  )
+  return <ClientRoutes isAccesible={currentPermissions} />
 }
 
 const AppRouter = () => (

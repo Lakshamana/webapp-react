@@ -15,7 +15,6 @@ import {
 
 const PollPost = ({ ...props }: Props) => {
 	const { t } = useTranslation()
-	console.log(props);
 	return (
 		<PollContent paddingX={3} paddingY={2}>
 			{props.itensQuestions && props.itensQuestions.map(question=>(

@@ -7,7 +7,8 @@ import {
   MUTATION_SOCIAL_SIGNIN,
   MUTATION_CREATE_ACCOUNT_GDPR,
 } from 'services/graphql'
-import { Social, SocialSignIn } from 'services/firebase'
+import { SocialSignIn } from 'services/firebase'
+import { SocialType } from 'types/common'
 import { saveData } from 'services/storage'
 import {
   GDPRForm,
@@ -46,7 +47,7 @@ const LoginPage = () => {
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
       await updateAccount(result.signIn.account)
 
-      history.push('/home')
+      history.push('/channels')
     },
     onError: (error) => {
       setError(errorMessage(error.message))
@@ -64,7 +65,7 @@ const LoginPage = () => {
           setActiveStep('LGPD')
           setAccount(result.socialSignIn.account.id)
         } else {
-          history.push('/home')
+          history.push('/channels')
         }
       },
       onError: (error) => setError(errorMessage(error.message)),
@@ -98,7 +99,7 @@ const LoginPage = () => {
     })
   }
 
-  const handleSocialSignIn = (kind: Social) => {
+  const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)
       .then((input) => {
         socialSignIn({

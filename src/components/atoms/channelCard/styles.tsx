@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ChannelProps } from './types'
+import { ChannelProps } from 'types/channel'
 import { breakpoints } from 'styles'
 
 export const ChannelContent = styled.div<ChannelProps>`

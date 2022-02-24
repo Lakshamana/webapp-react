@@ -6,7 +6,7 @@ import { SearchPopover } from '..'
 
 import { PropsSearchBar } from '../../types'
 import { SearchContainer, CustomContainer, Section } from './styles'
-import { colors } from 'styles'
+import { colors, sizes } from 'styles'
 
 const SearchBar = ({
   data,
@@ -67,7 +67,11 @@ const SearchBar = ({
             px={[3]}
             flex={1}
             background={colorSchema.results}
-            height={['70px', '70px', '70px', '100px']}
+            height={[
+              sizes.headerMobileHeight,
+              sizes.headerMobileHeight,
+              sizes.headerDesktopHeight,
+            ]}
             ref={triggerRef}
             {...{ open }}
           >
@@ -87,7 +91,6 @@ const SearchBar = ({
               value={search}
               onChange={onSearch}
               color={colorSchema.primary}
-              placeholderFontStyle="italic"
             />
             <Container ml={2} onClick={onClose}>
               <Icon

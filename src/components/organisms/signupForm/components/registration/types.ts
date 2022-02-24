@@ -1,8 +1,8 @@
-import { Social } from 'services/firebase'
+import { SocialType } from 'types/common'
 
 export interface RegistrationProps {
   handleFormSubmit: (formData: any) => void
-  handleSocialSignUp: (kind: Social) => void
+  handleSocialSignUp: (kind: SocialType) => void
   dispatchError: () => void
   error: string
   isLoading: boolean

@@ -1,7 +1,7 @@
 export interface Props {
-  path: string;
+  path?: string;
   component: any;
   isAccesible: boolean;
-  redirectTo: string;
+  redirectTo?: string;
   template: any
 }

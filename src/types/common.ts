@@ -4,3 +4,9 @@ export type AlertObjectType = {
   message: string
   type: AlertType
 }
+
+export type SocialType = 'facebook' | 'google'
+
+export type EntityType = 'public' | 'exclusive' | 'private' | 'geolocked'
+
+export type ColorMode = "dark" | "light";

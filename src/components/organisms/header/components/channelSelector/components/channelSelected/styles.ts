@@ -15,7 +15,7 @@ export const ChannelIcon = styled.img<TypeSpaceProps>`
 `;
 
 export const IconContainer = styled.div<IconContainerProps>`
-  ${layout}
+  padding-left: 2px;
   ${({ open }) =>
     open
       ? css`

@@ -26,6 +26,7 @@ const UpdatePassword = ({
       onClose()
       resetForm()
     }
+  // eslint-disable-next-line
   }, [isLoading])
 
   const {
@@ -84,7 +85,11 @@ const UpdatePassword = ({
         onConfirm={handleSubmit}
       >
         <Flex flexDirection="column" gridGap={2} alignItems={'center'}>
-          <Text mb={3} fontSize={'1.5rem'} color={colors.generalText[colorMode]}>
+          <Text
+            mb={3}
+            fontSize={'1.5rem'}
+            color={colors.generalText[colorMode]}
+          >
             {t('page.account.update_password')}
           </Text>
           <Input

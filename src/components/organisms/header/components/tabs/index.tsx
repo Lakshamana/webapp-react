@@ -1,24 +1,27 @@
+import { useTabsStore, useThemeStore } from 'services/stores'
 import { Tab } from 'components'
-
 import { colors } from 'styles'
 import { TabContainer } from './styles'
-import { PropsTabs } from '../../types'
 
-const Tabs = ({ selected, setSelected, data, colorMode }: PropsTabs) => (
-  <TabContainer display="flex">
-    {data.map((tab: any) => (
-      <Tab
-        key={tab.id}
-        link={tab.url}
-        selected={selected === tab.id}
-        onSelect={() => setSelected(tab.id)}
-        color={colors.secondaryText[colorMode]}
-        {...tab.style}
-      >
-        {tab.label}
-      </Tab>
-    ))}
-  </TabContainer>
-)
+const Tabs = () => {
+  const { colorMode } = useThemeStore()
+  const { activeTab, setActiveTab, tabsList } = useTabsStore()
+  return (
+    <TabContainer display="flex">
+      {tabsList.map((tab: any) => (
+        <Tab
+          key={tab.id}
+          link={tab.url}
+          selected={activeTab?.id === tab.id}
+          onSelect={() => setActiveTab(tab)}
+          color={colors.secondaryText[colorMode]}
+          mx={15}
+        >
+          {tab.label}
+        </Tab>
+      ))}
+    </TabContainer>
+  )
+}
 
 export { Tabs }

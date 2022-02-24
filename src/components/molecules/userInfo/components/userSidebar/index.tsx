@@ -1,32 +1,24 @@
-import { Container, Text, Avatar } from "components";
-import { colors } from "styles";
+import { Container, Text, Avatar } from 'components'
 
-import { PropsUserSidebar } from "./types";
-import { UserContainer, CircleImage } from "./styles";
+import { PropsUserSidebar } from './types'
+import { UserContainer } from './styles'
 
 const UserSidebar = ({ account }: PropsUserSidebar) => (
   <UserContainer
-    py={2}
+    py={'15px'}
+    m={2}
     display="flex"
-    width={273}
+    flexDirection="column"
     justifyContent="center"
     alignItems="center"
   >
-    <Container alignItems="center">
-      <Container ml={2}>
-        {
-          account?.avatar
-            ? <CircleImage width={50} height={50} src={account?.avatar || ''} />
-            : <Avatar width={'45px'} height={'45px'} src={''} />
-        }
-      </Container>
-      <Container px={2}>
-        <Text ellipsis color={colors.white}>
-          {account?.username || account?.display_name}
-        </Text>
-      </Container>
+    <Container ml={2}>
+      <Avatar width={'45px'} height={'45px'} src={account?.avatar} />
+    </Container>
+    <Container px={2} mt={2} fontSize={'1.1rem'} fontWeight={'bolder'}>
+      <Text ellipsis>{account?.username || account?.display_name}</Text>
     </Container>
   </UserContainer>
 )
 
-export { UserSidebar };
+export { UserSidebar }

@@ -168,9 +168,8 @@ const EN_US = {
         tools: 'Tools',
         example: 'Example',
       },
-      channel_selected: {
-        select: 'Select',
-        channel: 'channel:',
+      channel_selector: {
+        select: 'Select a channel',
       },
       channel_search: 'Search channel...',
       userPopover: {
@@ -189,7 +188,7 @@ const EN_US = {
         cardInfoViews: 'Views',
       },
       channels: {
-        title: 'Channels',
+        title: 'Choose a channel:',
       },
       collection: {
         action: 'Action',

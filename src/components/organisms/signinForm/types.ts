@@ -1,10 +1,10 @@
-import { Social } from 'services/firebase'
+import { SocialType } from 'types/common'
 
 export interface Props {
-	errors?: any
-	handleFormSubmit: (formData: any) => void
-	handleSocialSubmit: (kind: Social) => void
-	dispatchError: () => void
-	isLoading: boolean
-	error: string
+  errors?: any
+  handleFormSubmit: (formData: any) => void
+  handleSocialSubmit: (kind: SocialType) => void
+  dispatchError: () => void
+  isLoading: boolean
+  error: string
 }

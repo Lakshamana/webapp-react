@@ -13,9 +13,7 @@ const InputInline = ({
   onKeyDown = () => { },
   background = "#444444",
   color = "",
-  placeholderColor = "",
   inverted = false,
-  placeholderFontStyle = 'normal',
   ...props
 }: Props) => {
   const ref: any = React.useRef(null);
@@ -38,10 +36,8 @@ const InputInline = ({
         onKeyDown,
         onBlur,
         color,
-        placeholderColor,
         background,
-        inverted,
-        placeholderFontStyle
+        inverted
       }}
     />
   );

@@ -2,6 +2,7 @@ import { SwiperOptions } from 'swiper'
 
 export const Params: SwiperOptions = {
     speed: 800,
+    preloadImages: false,
     lazy: {
         loadPrevNext: true,
         loadPrevNextAmount: 1,

@@ -29,9 +29,5 @@ export const StyleContainer = styled.div<Props>`
       padding: 0 ${({ theme }) => theme.sizes.paddingMd};
       height: ${({ theme }) => theme.sizes.footerDesktopHeight};
     }
-
-    @media screen and (min-width: ${breakpoints.lg}) {
-      padding: 0 ${({ theme }) => theme.sizes.paddingLg};
-    }
   }
 `

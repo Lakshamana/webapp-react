@@ -1,1 +1,2 @@
-export * from "./helper-functions"
+export * from './helperFunctions'
+export * from './kindVerifications'
