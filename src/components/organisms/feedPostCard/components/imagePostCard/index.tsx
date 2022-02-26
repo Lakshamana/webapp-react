@@ -1,7 +1,7 @@
-import { Props } from '../../types';
+import { FeedPostCardProps } from '../../types';
 import { ImageContent, ExclusiveBlocked, GeolockedBlocked} from './style';
 
-const ImagePost = ({ ...props }: Props) => (
+const ImagePost = ({ ...props }: FeedPostCardProps) => (
   <ImageContent {...props}>
     {props.isExclusive ? <ExclusiveBlocked /> : '' || props.isGeolocked ? <GeolockedBlocked /> : ''}
   </ImageContent>

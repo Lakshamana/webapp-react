@@ -3,7 +3,7 @@ import { Divider, Flex } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
 import { Text } from "components"
 import { abbreviateNumber } from "../../utils"
-import { Props } from "../../types"
+import { FeedPostCardProps } from "../../types"
 import { colors } from "styles"
 import {
 	PollContent,
@@ -13,7 +13,7 @@ import {
 	ProgressBar
 } from "./style"
 
-const PollPost = ({ ...props }: Props) => {
+const PollPost = ({ ...props }: FeedPostCardProps) => {
 	const { t } = useTranslation()
 	return (
 		<PollContent paddingX={3} paddingY={2}>
