@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { Container } from 'components'
-import { BillboardScroller, CollectionScroller } from 'components/molecules'
+import { BillboardScroller, CategoriesScroller } from 'components/molecules'
 import billboardData from './billboard.json'
 import collectionsData from './collections.json'
 
@@ -14,21 +14,21 @@ const CollectionsPage = () => {
         customButtons={false}
       ></BillboardScroller>
       <Flex pb={10} gridGap={10} flexDirection={'column'}>
-        <CollectionScroller
+        <CategoriesScroller
           items={collectionsData}
           sectionTitle={t('page.collection.action')}
           hasMoreLink={true}
-        ></CollectionScroller>
-        <CollectionScroller
+        ></CategoriesScroller>
+        <CategoriesScroller
           items={collectionsData}
           sectionTitle={t('page.collection.drama')}
           hasMoreLink={true}
-        ></CollectionScroller>
-        <CollectionScroller
+        ></CategoriesScroller>
+        <CategoriesScroller
           items={collectionsData}
           sectionTitle={t('page.collection.family')}
           hasMoreLink={true}
-        ></CollectionScroller>
+        ></CategoriesScroller>
       </Flex>
     </Container>
   )
