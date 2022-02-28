@@ -2,7 +2,7 @@ import { Divider } from '@chakra-ui/react'
 import {
   Container,
   GridCards,
-  CollectionPostCard,
+  CategoryPostCard,
   VideoPostCard,
 } from 'components'
 import { colors } from 'styles'
@@ -25,17 +25,17 @@ const SearchPage = () => {
         sm={2}
         ssm={2}
       >
-        <CollectionPostCard
+        <CategoryPostCard
           id="656321515"
-          coverImage="https://portalfamosos.com.br/wp-content/uploads/2021/04/coldplay-high-power-novo-single-max-martin-destaque-portal-famosos.png"
+          thumbnail="https://portalfamosos.com.br/wp-content/uploads/2021/04/coldplay-high-power-novo-single-max-martin-destaque-portal-famosos.png"
         />
-        <CollectionPostCard
+        <CategoryPostCard
           id="98954521231"
-          coverImage="https://www.sagrado.edu/wp-content/uploads/bb-plugin/cache/radio-visual-panorama.jpg"
+          thumbnail="https://www.sagrado.edu/wp-content/uploads/bb-plugin/cache/radio-visual-panorama.jpg"
         />
-        <CollectionPostCard
+        <CategoryPostCard
           id="0540687401"
-          coverImage="https://i.pinimg.com/originals/23/e5/59/23e5598550fd2f7492ed7527a1eb0dde.jpg"
+          thumbnail="https://i.pinimg.com/originals/23/e5/59/23e5598550fd2f7492ed7527a1eb0dde.jpg"
         />
       </GridCards>
       <Divider
@@ -58,7 +58,8 @@ const SearchPage = () => {
       >
         <VideoPostCard
           id="45645646464646"
-          coverImage="https://adnews.com.br/wp-content/uploads/2021/07/HBO-Max-desconto.jpg"
+          title="teste"
+          thumbnail="https://adnews.com.br/wp-content/uploads/2021/07/HBO-Max-desconto.jpg"
         />
       </GridCards>
       <Divider
@@ -81,7 +82,8 @@ const SearchPage = () => {
       >
         <VideoPostCard
           id="45645646464646"
-          coverImage="https://t.ctcdn.com.br/cB7urePjkV77fdC_mr2gd6XVL2Y=/512x288/smart/i519239.png"
+          title="teste"
+          thumbnail="https://t.ctcdn.com.br/cB7urePjkV77fdC_mr2gd6XVL2Y=/512x288/smart/i519239.png"
         />
       </GridCards>
       <Divider
