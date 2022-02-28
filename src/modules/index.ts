@@ -12,5 +12,5 @@ export * from "./channels";
 export * from "./feed";
 export * from "./recoverPassword";
 export * from "./videoPostView";
-export * from "./liveEvent";
+export * from "./livestreams";
 export * from "./errors"
