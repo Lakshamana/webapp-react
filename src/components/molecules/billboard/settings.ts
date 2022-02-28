@@ -14,7 +14,6 @@ export const Params: SwiperOptions = {
     },
     pagination: {
         el: '.billboard-pagination',
-        clickable: true,
-        bulletElement: 'button'
+        clickable: true
     },
 }

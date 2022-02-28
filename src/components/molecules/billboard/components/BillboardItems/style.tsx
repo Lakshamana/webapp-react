@@ -75,7 +75,7 @@ export const Info = styled.div`
   }
 
   @media screen and (max-width: ${breakpoints.sm}) {
-    padding: 0 15px 100px 15px;
+    padding: 0 15px 60px 15px;
   }
 `
 
