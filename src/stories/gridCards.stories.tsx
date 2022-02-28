@@ -1,13 +1,13 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { GridCards } from 'components/molecules';
-import { VideoPostCard, CollectionPostCard } from 'components';
+import { VideoPostCard, CategoryPostCard } from 'components';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: 'WEBAPP/GridCards',
   component: GridCards,
-  subcomponents: { VideoPostCard, CollectionPostCard }
+  subcomponents: { VideoPostCard, CategoryPostCard }
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 //   argTypes: {
 //     backgroundColor: { control: 'color' },
@@ -19,9 +19,9 @@ export const Template: ComponentStory<typeof GridCards> = (args) => <GridCards {
 
 export const OneItem  = (args: any) => (
   <GridCards {...args}>
-    <CollectionPostCard id='154541' coverImage='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
-    <CollectionPostCard id='154541' coverImage='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
-    <CollectionPostCard id='154541' coverImage='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
-    <CollectionPostCard id='154541' coverImage='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
+    <CategoryPostCard id='154541' thumbnail='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
+    <CategoryPostCard id='154541' thumbnail='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
+    <CategoryPostCard id='154541' thumbnail='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
+    <CategoryPostCard id='154541' thumbnail='https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png' />
   </GridCards>
 );
