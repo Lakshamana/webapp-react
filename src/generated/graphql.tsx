@@ -7540,6 +7540,13 @@ export type UpdatePasswordMutationVariables = Exact<{
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'PasswordChanged', success: boolean } };
 
+export type UpdatePasswordOnlyMutationVariables = Exact<{
+  payload: UpdatePasswordOnlyInput;
+}>;
+
+
+export type UpdatePasswordOnlyMutation = { __typename?: 'Mutation', updatePasswordOnly: { __typename?: 'PasswordOnlyChanged', success: boolean } };
+
 export type UpdateMyProfileMutationVariables = Exact<{
   payload: UpdateProfileInput;
 }>;
@@ -7568,6 +7575,19 @@ export type BillboardQueryVariables = Exact<{
 
 export type BillboardQuery = { __typename?: 'Query', billboard?: Maybe<Array<Maybe<{ __typename?: 'Billboard', title?: Maybe<string>, target?: Maybe<BillboardTarget>, sort?: Maybe<number>, id?: Maybe<string>, description?: Maybe<string>, delay?: Maybe<number>, actions?: Maybe<Array<Maybe<{ __typename?: 'BillboardAction', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>>>, banner?: Maybe<{ __typename?: 'MediaPhoto', height?: Maybe<number>, id?: Maybe<string>, imgPath?: Maybe<string>, status?: Maybe<string>, type?: Maybe<MediaType>, width?: Maybe<number> }>, cover?: Maybe<{ __typename?: 'MediaPhoto', height?: Maybe<number>, id?: Maybe<string>, imgPath?: Maybe<string>, status?: Maybe<string>, type?: Maybe<MediaType>, width?: Maybe<number> }> }>>> };
 
+export type GetFeaturedCategoriesScrollerQueryVariables = Exact<{
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetFeaturedCategoriesScrollerQuery = { __typename?: 'Query', categories?: Maybe<Array<Maybe<{ __typename?: 'Category', id?: Maybe<string>, name?: Maybe<string>, description?: Maybe<string>, parentId?: Maybe<string>, createdAt?: Maybe<any>, featuredAt?: Maybe<any>, pinnedAt?: Maybe<any>, image?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, cover?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, banner?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> }>>> };
+
+export type GetPinnedCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPinnedCategoriesQuery = { __typename?: 'Query', pinnedCategories?: Maybe<Array<Maybe<{ __typename?: 'Category', id?: Maybe<string>, name?: Maybe<string>, description?: Maybe<string>, parentId?: Maybe<string>, createdAt?: Maybe<any>, featuredAt?: Maybe<any>, pinnedAt?: Maybe<any>, image?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, cover?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, banner?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> }>>> };
+
 export type GetChannelQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -7587,6 +7607,16 @@ export type CustomFieldsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CustomFieldsQuery = { __typename?: 'Query', customFields: Array<{ __typename?: 'ResponseCustomFieldsOutput', fields: Array<{ __typename?: 'ResponseFieldOutput', id: string, name: string, required: boolean, type: CustomFieldTypesEnum }> }> };
 
+export type GetLivestreamsScrollerQueryVariables = Exact<{
+  filter?: Maybe<LivestreamFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<Maybe<LivestreamTypeSortDirective>> | Maybe<LivestreamTypeSortDirective>>;
+}>;
+
+
+export type GetLivestreamsScrollerQuery = { __typename?: 'Query', livestreams?: Maybe<Array<Maybe<{ __typename?: 'LivestreamEvent', id?: Maybe<string>, access?: Maybe<AccessFlag>, title?: Maybe<string>, description?: Maybe<string>, status?: Maybe<LivestreamStatus>, scheduledStartAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'RedactedLivestreamEvent', id?: Maybe<string>, access?: Maybe<AccessFlag>, title?: Maybe<string>, description?: Maybe<string>, status?: Maybe<LivestreamStatus>, scheduledStartAt?: Maybe<any>, reason?: Maybe<RedactReason>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> }>>> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -7605,6 +7635,21 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 
 
 export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'ResponseOrganizationPublicOutput', id: string, name?: Maybe<string>, kind?: Maybe<string>, status?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
+
+export type GetPinnedPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPinnedPostsQuery = { __typename?: 'Query', pinnedPosts?: Maybe<Array<Maybe<{ __typename?: 'AudioPost' } | { __typename?: 'OnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaLivestream', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> } | { __typename?: 'PhotoPost' } | { __typename?: 'Poll' } | { __typename?: 'RedactedAudioPost' } | { __typename?: 'RedactedOnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'RedactedPhotoPost' } | { __typename?: 'RedactedPoll' } | { __typename?: 'RedactedTextPost' } | { __typename?: 'RedactedVideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'TextPost' } | { __typename?: 'VideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaVideo', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> }>>> };
+
+export type GetPostsScrollerQueryVariables = Exact<{
+  filter?: Maybe<PostFilter>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<Maybe<PostTypeSortDirective>> | Maybe<PostTypeSortDirective>>;
+}>;
+
+
+export type GetPostsScrollerQuery = { __typename?: 'Query', posts?: Maybe<Array<Maybe<{ __typename?: 'AudioPost' } | { __typename?: 'OnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, description?: Maybe<string>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaLivestream', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> } | { __typename?: 'PhotoPost' } | { __typename?: 'Poll' } | { __typename?: 'RedactedAudioPost' } | { __typename?: 'RedactedOnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'RedactedPhotoPost' } | { __typename?: 'RedactedPoll' } | { __typename?: 'RedactedTextPost' } | { __typename?: 'RedactedVideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'TextPost' } | { __typename?: 'VideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, description?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaVideo', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> }>>> };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
@@ -8044,6 +8089,45 @@ export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
 export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export const UpdatePasswordOnlyDocument = gql`
+    mutation UpdatePasswordOnly($payload: UpdatePasswordOnlyInput!) {
+  updatePasswordOnly(payload: $payload) {
+    success
+  }
+}
+    `;
+export type UpdatePasswordOnlyMutationFn = Apollo.MutationFunction<UpdatePasswordOnlyMutation, UpdatePasswordOnlyMutationVariables>;
+export type UpdatePasswordOnlyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdatePasswordOnlyMutation, UpdatePasswordOnlyMutationVariables>, 'mutation'>;
+
+    export const UpdatePasswordOnlyComponent = (props: UpdatePasswordOnlyComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdatePasswordOnlyMutation, UpdatePasswordOnlyMutationVariables> mutation={UpdatePasswordOnlyDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdatePasswordOnlyMutation__
+ *
+ * To run a mutation, you first call `useUpdatePasswordOnlyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePasswordOnlyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePasswordOnlyMutation, { data, loading, error }] = useUpdatePasswordOnlyMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useUpdatePasswordOnlyMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordOnlyMutation, UpdatePasswordOnlyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePasswordOnlyMutation, UpdatePasswordOnlyMutationVariables>(UpdatePasswordOnlyDocument, options);
+      }
+export type UpdatePasswordOnlyMutationHookResult = ReturnType<typeof useUpdatePasswordOnlyMutation>;
+export type UpdatePasswordOnlyMutationResult = Apollo.MutationResult<UpdatePasswordOnlyMutation>;
+export type UpdatePasswordOnlyMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordOnlyMutation, UpdatePasswordOnlyMutationVariables>;
 export const UpdateMyProfileDocument = gql`
     mutation UpdateMyProfile($payload: UpdateProfileInput!) {
   updateMyProfile(payload: $payload) {
@@ -8242,6 +8326,124 @@ export function useBillboardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type BillboardQueryHookResult = ReturnType<typeof useBillboardQuery>;
 export type BillboardLazyQueryHookResult = ReturnType<typeof useBillboardLazyQuery>;
 export type BillboardQueryResult = Apollo.QueryResult<BillboardQuery, BillboardQueryVariables>;
+export const GetFeaturedCategoriesScrollerDocument = gql`
+    query GetFeaturedCategoriesScroller($limit: Int, $skip: Int) {
+  categories(filter: {featuredAtExists: true}, limit: $limit, skip: $skip) {
+    id
+    name
+    description
+    image {
+      id
+      imgPath
+    }
+    cover {
+      id
+      imgPath
+    }
+    banner {
+      id
+      imgPath
+    }
+    parentId
+    createdAt
+    featuredAt
+    pinnedAt
+  }
+}
+    `;
+export type GetFeaturedCategoriesScrollerComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables>, 'query'>;
+
+    export const GetFeaturedCategoriesScrollerComponent = (props: GetFeaturedCategoriesScrollerComponentProps) => (
+      <ApolloReactComponents.Query<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables> query={GetFeaturedCategoriesScrollerDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetFeaturedCategoriesScrollerQuery__
+ *
+ * To run a query within a React component, call `useGetFeaturedCategoriesScrollerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFeaturedCategoriesScrollerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFeaturedCategoriesScrollerQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetFeaturedCategoriesScrollerQuery(baseOptions?: Apollo.QueryHookOptions<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables>(GetFeaturedCategoriesScrollerDocument, options);
+      }
+export function useGetFeaturedCategoriesScrollerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables>(GetFeaturedCategoriesScrollerDocument, options);
+        }
+export type GetFeaturedCategoriesScrollerQueryHookResult = ReturnType<typeof useGetFeaturedCategoriesScrollerQuery>;
+export type GetFeaturedCategoriesScrollerLazyQueryHookResult = ReturnType<typeof useGetFeaturedCategoriesScrollerLazyQuery>;
+export type GetFeaturedCategoriesScrollerQueryResult = Apollo.QueryResult<GetFeaturedCategoriesScrollerQuery, GetFeaturedCategoriesScrollerQueryVariables>;
+export const GetPinnedCategoriesDocument = gql`
+    query GetPinnedCategories {
+  pinnedCategories(orderBy: {name: sort, direction: ASC}, limit: 0) {
+    id
+    name
+    description
+    image {
+      id
+      imgPath
+    }
+    cover {
+      id
+      imgPath
+    }
+    banner {
+      id
+      imgPath
+    }
+    parentId
+    createdAt
+    featuredAt
+    pinnedAt
+  }
+}
+    `;
+export type GetPinnedCategoriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables>, 'query'>;
+
+    export const GetPinnedCategoriesComponent = (props: GetPinnedCategoriesComponentProps) => (
+      <ApolloReactComponents.Query<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables> query={GetPinnedCategoriesDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPinnedCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetPinnedCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPinnedCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPinnedCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPinnedCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables>(GetPinnedCategoriesDocument, options);
+      }
+export function useGetPinnedCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables>(GetPinnedCategoriesDocument, options);
+        }
+export type GetPinnedCategoriesQueryHookResult = ReturnType<typeof useGetPinnedCategoriesQuery>;
+export type GetPinnedCategoriesLazyQueryHookResult = ReturnType<typeof useGetPinnedCategoriesLazyQuery>;
+export type GetPinnedCategoriesQueryResult = Apollo.QueryResult<GetPinnedCategoriesQuery, GetPinnedCategoriesQueryVariables>;
 export const GetChannelDocument = gql`
     query GetChannel($id: ID!) {
   channel(id: $id) {
@@ -8403,6 +8605,74 @@ export function useCustomFieldsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type CustomFieldsQueryHookResult = ReturnType<typeof useCustomFieldsQuery>;
 export type CustomFieldsLazyQueryHookResult = ReturnType<typeof useCustomFieldsLazyQuery>;
 export type CustomFieldsQueryResult = Apollo.QueryResult<CustomFieldsQuery, CustomFieldsQueryVariables>;
+export const GetLivestreamsScrollerDocument = gql`
+    query GetLivestreamsScroller($filter: LivestreamFilter, $limit: Int, $skip: Int, $orderBy: [LivestreamTypeSortDirective]) {
+  livestreams(filter: $filter, limit: $limit, skip: $skip, orderBy: $orderBy) {
+    ... on LivestreamEvent {
+      id
+      access
+      title
+      description
+      status
+      scheduledStartAt
+      thumbnail {
+        id
+        imgPath
+      }
+    }
+    ... on RedactedLivestreamEvent {
+      id
+      access
+      title
+      description
+      status
+      scheduledStartAt
+      reason
+      thumbnail {
+        id
+        imgPath
+      }
+    }
+  }
+}
+    `;
+export type GetLivestreamsScrollerComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables>, 'query'>;
+
+    export const GetLivestreamsScrollerComponent = (props: GetLivestreamsScrollerComponentProps) => (
+      <ApolloReactComponents.Query<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables> query={GetLivestreamsScrollerDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetLivestreamsScrollerQuery__
+ *
+ * To run a query within a React component, call `useGetLivestreamsScrollerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLivestreamsScrollerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLivestreamsScrollerQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetLivestreamsScrollerQuery(baseOptions?: Apollo.QueryHookOptions<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables>(GetLivestreamsScrollerDocument, options);
+      }
+export function useGetLivestreamsScrollerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables>(GetLivestreamsScrollerDocument, options);
+        }
+export type GetLivestreamsScrollerQueryHookResult = ReturnType<typeof useGetLivestreamsScrollerQuery>;
+export type GetLivestreamsScrollerLazyQueryHookResult = ReturnType<typeof useGetLivestreamsScrollerLazyQuery>;
+export type GetLivestreamsScrollerQueryResult = Apollo.QueryResult<GetLivestreamsScrollerQuery, GetLivestreamsScrollerQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -8546,6 +8816,270 @@ export function useOrganizationPublicSettingsLazyQuery(baseOptions?: Apollo.Lazy
 export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsQuery>;
 export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
 export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
+export const GetPinnedPostsDocument = gql`
+    query GetPinnedPosts {
+  pinnedPosts(orderBy: {name: publishedAt, direction: ASC}, limit: 0) {
+    ... on VideoPost {
+      id
+      type
+      title
+      status
+      publishedAt
+      access
+      thumbnail {
+        id
+        imgPath
+      }
+      media {
+        id
+        imgPath
+        duration
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      pinnedAt
+    }
+    ... on OnDemandPost {
+      id
+      type
+      title
+      status
+      access
+      publishedAt
+      thumbnail {
+        id
+        imgPath
+      }
+      media {
+        id
+        imgPath
+        duration
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      pinnedAt
+    }
+    ... on RedactedVideoPost {
+      id
+      type
+      title
+      status
+      access
+      reason
+      publishedAt
+      media {
+        id
+        duration
+        imgPath
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      thumbnail {
+        id
+        imgPath
+      }
+      pinnedAt
+    }
+    ... on RedactedOnDemandPost {
+      id
+      type
+      title
+      status
+      publishedAt
+      access
+      reason
+      media {
+        id
+        duration
+        imgPath
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      thumbnail {
+        id
+        imgPath
+      }
+      pinnedAt
+    }
+  }
+}
+    `;
+export type GetPinnedPostsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPinnedPostsQuery, GetPinnedPostsQueryVariables>, 'query'>;
+
+    export const GetPinnedPostsComponent = (props: GetPinnedPostsComponentProps) => (
+      <ApolloReactComponents.Query<GetPinnedPostsQuery, GetPinnedPostsQueryVariables> query={GetPinnedPostsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPinnedPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPinnedPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPinnedPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPinnedPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPinnedPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPinnedPostsQuery, GetPinnedPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPinnedPostsQuery, GetPinnedPostsQueryVariables>(GetPinnedPostsDocument, options);
+      }
+export function useGetPinnedPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPinnedPostsQuery, GetPinnedPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPinnedPostsQuery, GetPinnedPostsQueryVariables>(GetPinnedPostsDocument, options);
+        }
+export type GetPinnedPostsQueryHookResult = ReturnType<typeof useGetPinnedPostsQuery>;
+export type GetPinnedPostsLazyQueryHookResult = ReturnType<typeof useGetPinnedPostsLazyQuery>;
+export type GetPinnedPostsQueryResult = Apollo.QueryResult<GetPinnedPostsQuery, GetPinnedPostsQueryVariables>;
+export const GetPostsScrollerDocument = gql`
+    query GetPostsScroller($filter: PostFilter, $limit: Int, $skip: Int, $orderBy: [PostTypeSortDirective]) {
+  posts(filter: $filter, limit: $limit, skip: $skip, orderBy: $orderBy) {
+    ... on VideoPost {
+      id
+      type
+      title
+      description
+      status
+      publishedAt
+      access
+      thumbnail {
+        id
+        imgPath
+      }
+      media {
+        id
+        imgPath
+        duration
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      pinnedAt
+    }
+    ... on OnDemandPost {
+      id
+      type
+      title
+      status
+      access
+      description
+      publishedAt
+      thumbnail {
+        id
+        imgPath
+      }
+      media {
+        id
+        imgPath
+        duration
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      pinnedAt
+    }
+    ... on RedactedVideoPost {
+      id
+      type
+      title
+      status
+      access
+      reason
+      publishedAt
+      media {
+        id
+        duration
+        imgPath
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      thumbnail {
+        id
+        imgPath
+      }
+      pinnedAt
+    }
+    ... on RedactedOnDemandPost {
+      id
+      type
+      title
+      status
+      publishedAt
+      access
+      reason
+      media {
+        id
+        duration
+        imgPath
+      }
+      counts {
+        id
+        countViewsTotal
+      }
+      thumbnail {
+        id
+        imgPath
+      }
+      pinnedAt
+    }
+  }
+}
+    `;
+export type GetPostsScrollerComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostsScrollerQuery, GetPostsScrollerQueryVariables>, 'query'>;
+
+    export const GetPostsScrollerComponent = (props: GetPostsScrollerComponentProps) => (
+      <ApolloReactComponents.Query<GetPostsScrollerQuery, GetPostsScrollerQueryVariables> query={GetPostsScrollerDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPostsScrollerQuery__
+ *
+ * To run a query within a React component, call `useGetPostsScrollerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostsScrollerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostsScrollerQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetPostsScrollerQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsScrollerQuery, GetPostsScrollerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPostsScrollerQuery, GetPostsScrollerQueryVariables>(GetPostsScrollerDocument, options);
+      }
+export function useGetPostsScrollerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsScrollerQuery, GetPostsScrollerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPostsScrollerQuery, GetPostsScrollerQueryVariables>(GetPostsScrollerDocument, options);
+        }
+export type GetPostsScrollerQueryHookResult = ReturnType<typeof useGetPostsScrollerQuery>;
+export type GetPostsScrollerLazyQueryHookResult = ReturnType<typeof useGetPostsScrollerLazyQuery>;
+export type GetPostsScrollerQueryResult = Apollo.QueryResult<GetPostsScrollerQuery, GetPostsScrollerQueryVariables>;
 export const ProfileDocument = gql`
     query Profile($account: ID!) {
   profile(account: $account) {
