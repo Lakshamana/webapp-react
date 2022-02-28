@@ -1,36 +1,34 @@
-import { VideoPostProps, defaultProps } from './types'
-import {
-  CardWrapper,
-  PostContent,
-  ExclusiveBlocked,
-  GeolockedBlocked,
-} from './style'
+import { VideoPostCardProps } from 'types/posts'
+import { useHistory } from 'react-router'
+import { CardWrapper, PostContent, BlockedContent } from './style'
 
 import { Icon } from '@iconify/react'
+import { colors } from 'styles'
 import { HoverInfoCard } from '../hoverInfoCard'
 
-const VideoPostCard = ({ ...props }: VideoPostProps) => {
+const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
+  const history = useHistory()
+
+  const selectPost = () => {
+    history.push(`${props.url}`)
+  }
+
   return (
-    <CardWrapper>
+    <CardWrapper onClick={selectPost}>
       <PostContent className="postContent" {...props}>
-        {props.isExclusive ? (
-          <ExclusiveBlocked>
-            <Icon width={20} icon={`mdi:lock`} color={'white'}></Icon>
-          </ExclusiveBlocked>
-        ) : '' || props.isGeolocked ? (
-          <GeolockedBlocked>
-            <Icon width={24} icon={`mdi:earth`} color={'white'}></Icon>
-          </GeolockedBlocked>
-        ) : (
-          ''
+        {(props.isExclusive || props.isGeolocked) && (
+          <BlockedContent>
+            <Icon
+              width={20}
+              color={colors.white}
+              icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
+            ></Icon>
+          </BlockedContent>
         )}
       </PostContent>
-
-      <HoverInfoCard {...props} />
+      {/* <HoverInfoCard postTitle={props.title} views={props.countViews}  /> */}
     </CardWrapper>
   )
 }
-
-VideoPostCard.defaultProps = defaultProps
 
 export { VideoPostCard }
