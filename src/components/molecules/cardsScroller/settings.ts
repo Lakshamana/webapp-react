@@ -1,18 +1,19 @@
 import { SwiperOptions } from 'swiper'
 
 export const SWIPPER_PARAMS: SwiperOptions = {
-  initialSlide: 0,
   spaceBetween: 15,
+  observer: true,
+  preloadImages: true,
+  resizeObserver: true,
   speed: 800,
-  setWrapperSize: true,
+  setWrapperSize: false,
   roundLengths: false,
   watchOverflow: true,
+  autoplay: false,
   lazy: true,
   touchMoveStopPropagation: true,
   touchStartPreventDefault: true,
-  freeModeMomentum: false,
-  grabCursor: true,
-  freeModeMomentumBounce: false,
+  grabCursor: false,
   slidesOffsetAfter: 32,
   slidesOffsetBefore: 32,
   watchSlidesVisibility: true,
@@ -22,28 +23,33 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   },
   breakpoints: {
     1440: {
-      slidesPerView: 5,
+      slidesPerView: 5.2,
       slidesPerGroup: 5,
     },
     1024: {
-      slidesPerView: 4,
+      slidesPerView: 4.2,
       slidesPerGroup: 4,
     },
     768: {
-      slidesPerView: 3,
+      slidesPerView: 3.2,
       slidesPerGroup: 3,
     },
     425: {
-      slidesPerView: 2,
+      slidesPerView: 2.2,
       slidesPerGroup: 2,
+      spaceBetween: 5,
+      slidesOffsetAfter: 16,
+      slidesOffsetBefore: 16,
     },
     320: {
-      slidesPerView: 2,
+      slidesPerView: 2.2,
       slidesPerGroup: 2,
+      spaceBetween: 5,
+      slidesOffsetAfter: 16,
+      slidesOffsetBefore: 16,
     },
   },
   pagination: {
     el: '.cards-scroller-pagination',
-    clickable: true,
   },
 }

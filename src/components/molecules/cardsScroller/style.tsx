@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Swiper } from 'swiper/react'
-import { sizes } from 'styles'
+import { sizes, breakpoints } from 'styles'
 
 export const Content: any = styled.div`
   width: 100vw;
@@ -19,25 +19,26 @@ export const SwiperStyled = styled(Swiper)`
     pointer-events: none;
   }
 
-  .swiper-button-disabled {
-    opacity: 0 !important;
-  }
-
   .cards-scroller-pagination {
     z-index: 10;
     text-align: right;
     padding-right: ${sizes.paddingMd};
     height: 20px;
+
+    @media screen and (max-width: ${breakpoints.sm}) {
+      padding-right: ${sizes.paddingSm};
+    }
   }
 
   .cards-scroller-pagination .swiper-pagination-bullet {
     width: 15px;
     height: 4px;
-    background: #ffffff;
+    background: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
     border: 0;
     opacity: 0.64;
     border-radius: 0;
     cursor: pointer;
+    margin: 0 1px;
   }
 
   .cards-scroller-pagination .swiper-pagination-bullet-active {
