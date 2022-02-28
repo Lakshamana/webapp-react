@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
-import { Button, Form, Text } from 'components'
+import { Button, CustomForm, Text } from 'components'
 
 import { RegistrationProps } from './types'
 import { colors, fonts, sizes } from 'styles'
@@ -35,7 +35,7 @@ const CustomFieldsForm = ({
         {t('signup.custom_fields.subtitle')}
       </Text>
 
-      <Form
+      <CustomForm
         fields={fields}
         button={({ dirty, isValid, handleSubmit }) => (
           <Button
