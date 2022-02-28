@@ -10,7 +10,7 @@ export const CardWrapper = styled.div`
 	&:hover {
 		z-index: 1;
 		transform: scale(1.3);
-		margin-top: -15%;
+		margin-top: -30%;
 
 		.postContent {
 			border-radius: 4px 4px 0 0 !important;
