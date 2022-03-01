@@ -1,6 +1,6 @@
-import { ChannelProps } from 'types/channel'
+import { Channel } from 'generated/graphql'
 
 export interface Props {
-    channelsList: ChannelProps[]
-    channelSelected: (id: string) => void
+    channelsList: Channel[]
+    channelSelected: (id: string | null) => void
 }
