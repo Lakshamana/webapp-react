@@ -84,7 +84,7 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     setTabsList(MENU_TABS)
-    let home_tab = MENU_TABS.find((tab) => tab.id === 'home')
+    const home_tab = MENU_TABS.find((tab) => tab.id === 'home')
     if (home_tab) setActiveTab(home_tab)
     // eslint-disable-next-line
   }, [activeChannel])
