@@ -26,7 +26,7 @@ const HeaderComponent = () => {
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
-  const { setTabsList } = useTabsStore()
+  const { setTabsList, setActiveTab } = useTabsStore()
   const { activeChannel } = useChannelsStore()
 
   const { organization } = useOrganizationStore()
@@ -84,6 +84,9 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     setTabsList(MENU_TABS)
+    const home_tab = MENU_TABS.find((tab) => tab.id === 'home')
+    if (home_tab) setActiveTab(home_tab)
+    // eslint-disable-next-line
   }, [activeChannel])
 
   return (

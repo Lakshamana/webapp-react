@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react"
 import { Text } from "components"
-import { Props } from "../../types"
+import { FeedPostCardProps } from "../../types"
 import { abbreviateNumber } from "../../utils"
 import {
 	AudioContent,
@@ -15,7 +15,7 @@ import {
 } from "./style"
 import { colors } from "styles"
 
-const AudioPost = ({ ...props }: Props) => (
+const AudioPost = ({ ...props }: FeedPostCardProps) => (
 	<AudioContent {...props}>
 		<PlayContent {...props}>
 			<VideoItemPlay>

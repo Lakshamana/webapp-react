@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react"
-import { Props } from "../../types"
+import { FeedPostCardProps } from "../../types"
 import { abbreviateNumber } from "../../utils"
 import {
 	VideoContent,
@@ -10,7 +10,7 @@ import {
 	MediaLength
 } from "./style"
 
-const VideoPost = ({ ...props }: Props) => (
+const VideoPost = ({ ...props }: FeedPostCardProps) => (
 	<VideoContent {...props}>
 		<VideoItemPlay>
 			<Icon width={38} icon='mdi:play'></Icon>

@@ -1,60 +1,43 @@
+import { useQuery } from '@apollo/client'
 import { Divider } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import {
-  Container,
-  GridCards,
-  CollectionPostCard,
-  VideoPostCard,
-} from 'components'
+import { QUERY_PINNED_CATEGORIES, QUERY_PINNED_POSTS } from 'services/graphql'
+import { Container } from 'components'
 import { colors } from 'styles'
+import { PostsGrid, CategoriesGrid } from './components'
 
 const MyListPage = () => {
   const { t } = useTranslation()
+
+  // TO-DO: Implement infinite loading on Cards Scroller
+  const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
+    useQuery(QUERY_PINNED_CATEGORIES, {
+      variables: {},
+    })
+
+  const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
+    QUERY_PINNED_POSTS,
+    {
+      variables: {},
+    }
+  )
+
   return (
-    <Container
-      flexDirection={'column'}
-      py={32}
-      px={[4, 32, 32, 62]}
-      width={'100%'}
-    >
-      <GridCards
-        headerTitle={t('page.my_list.my_list')}
-        rowGap={24}
-        columnGap={16}
-        xl={4}
-        lg={3}
-        md={3}
-        sm={2}
-        ssm={2}
-      >
-        <CollectionPostCard
-          id="656321515"
-          coverImage="https://portalfamosos.com.br/wp-content/uploads/2021/04/coldplay-high-power-novo-single-max-martin-destaque-portal-famosos.png"
-          isGeolocked={true}
-        />
-      </GridCards>
-      <Divider
-        orientation="horizontal"
-        height={2}
-        width={'100%'}
-        my={4}
-        color={colors.grey['800']}
-      />
-      <GridCards
-        headerTitle={t('page.my_list.collection')}
-        rowGap={8}
-        columnGap={8}
-        xl={4}
-        lg={3}
-        md={3}
-        sm={2}
-        ssm={2}
-      >
-        <VideoPostCard
-          id="45645646464646"
-          coverImage="https://adnews.com.br/wp-content/uploads/2021/07/HBO-Max-desconto.jpg"
-        />
-      </GridCards>
+    <Container flexDirection={'column'} width={'100vw'} defaultPadding my={15}>
+      {pinnedCategoriesData?.pinnedCategories?.length &&
+        !loadingPinnedCategories && (
+          <CategoriesGrid
+            sectionTitle={t('page.my_list.pinned_categories')}
+            items={pinnedCategoriesData.pinnedCategories}
+          ></CategoriesGrid>
+        )}
+      <Divider orientation="horizontal" my={5} color={colors.grey['700']} />
+      {pinnedPostsData?.pinnedPosts?.length && !loadingPinnedPosts && (
+        <PostsGrid
+          sectionTitle={t('page.my_list.pinned_videos')}
+          items={pinnedPostsData.pinnedPosts}
+        ></PostsGrid>
+      )}
     </Container>
   )
 }

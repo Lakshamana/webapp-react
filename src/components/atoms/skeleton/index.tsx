@@ -1,10 +1,10 @@
 import { Skeleton as SkeletonLoading } from '@chakra-ui/react'
 import { SimpleGrid } from '@chakra-ui/react'
-import { ChannelCard } from 'components'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 import { RANDOM_ID } from 'utils'
 import { Props, defaultProps } from './types'
+import { PostCard } from './styles'
 
 const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
   const { colorMode } = useThemeStore()
@@ -28,7 +28,7 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
                   endColor={colors.skeleton.end[colorMode]}
                   {...props}
                 >
-                  {/* <ChannelCard image={''}></ChannelCard>C */}
+                  <PostCard>{}</PostCard>
                 </SkeletonLoading>
               )
             })}
@@ -47,7 +47,7 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
           </SkeletonLoading>
         )
       default:
-        return <div></div>
+        return null
     }
   }
   return renderSkeleton()

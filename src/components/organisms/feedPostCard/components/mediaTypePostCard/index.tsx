@@ -1,7 +1,7 @@
 import { ImagePost, VideoPost, AudioPost, PollPost } from '../../components'
-import { Props } from "../../types"
+import { FeedPostCardProps } from "../../types"
 
-const SetMediaType = ({ ...props }: Props) => {
+const SetMediaType = ({ ...props }: FeedPostCardProps) => {
 	const GetMediaType = () => {
 		switch (props.type) {
 			case "Blog":
