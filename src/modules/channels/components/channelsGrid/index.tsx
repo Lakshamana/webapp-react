@@ -8,7 +8,6 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const { generateImage } = useThumbor()
 
   const getImageUrl = (channel: Channel) => {
-    console.log(channel.customization.thumbnail.img_path)
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
