@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { SpaceProps, space } from "styled-system"
-import { Props, itensQuestions } from "../../types"
+import { FeedPostCardProps, itensQuestions } from "../../types"
 import { colors } from "styles"
 
 export const PollContent = styled.div<SpaceProps>`
@@ -16,7 +16,7 @@ export const PollStatus = styled.div<SpaceProps>`
 	align-items: center;
 `
 
-export const PollItem = styled.div<Props>`
+export const PollItem = styled.div<FeedPostCardProps>`
 	${space}
 
 	position: relative;
@@ -26,7 +26,7 @@ export const PollItem = styled.div<Props>`
 	overflow: hidden;
 	font-size: 14px;
 	&:hover {
-		border: ${(props: Props) =>
+		border: ${(props: FeedPostCardProps) =>
 			props.voted ? `2px solid ${colors.blue["300"]}` : ""};
 	}
 `

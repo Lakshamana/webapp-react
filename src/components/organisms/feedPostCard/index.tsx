@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Text, ReactionBar, Participants } from "components";
 import { SetMediaType } from "./components";
 import { useThemeStore } from "services/stores/theme"
-import { Props, defaultProps } from "./types";
+import { FeedPostCardProps, defaultProps } from "./types";
 import { abbreviateNumber } from "./utils";
 import { colors } from "styles";
 import {
@@ -16,7 +16,7 @@ import {
 	CountMessage,
 } from "./style";
 
-const FeedPostCard = ({ ...props }: Props) => {
+const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
 	const { t } = useTranslation()
 	const { colorMode } = useThemeStore()
 	const reactions = [

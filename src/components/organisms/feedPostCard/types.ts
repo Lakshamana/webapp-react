@@ -5,7 +5,7 @@ import {
 	FlexboxProps
 } from "styled-system"
 
-export interface Props extends SpaceProps, LayoutProps, TypographyProps, FlexboxProps {
+export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyProps, FlexboxProps {
 	postTitle: string
 	postDescription: string
 	date: string
