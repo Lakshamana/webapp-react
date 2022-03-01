@@ -15,7 +15,7 @@ import {
   RecoverPasswordPage,
   VideoPostViewPage,
   LiveChat,
-  LiveEvent,
+  Livestreams,
   NotFound,
 } from 'modules'
 
@@ -71,7 +71,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
       <ClientRoute
         isAccesible={true}
         path="/c/:channel/livestreams"
-        component={LiveEvent}
+        component={Livestreams}
         redirectTo="/channels"
         template={MainLayout}
       />
