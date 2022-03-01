@@ -1,63 +1,32 @@
 import { useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
-import { isExclusive, convertCamelCaseToDash } from 'utils'
+import { convertCamelCaseToDash } from 'utils'
 import { Channel } from 'generated/graphql'
 import { QUERY_CHANNELS } from 'services/graphql'
 import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { Container, Text, Skeleton } from 'components'
 import { ChannelsGrid } from './components'
 import { colors } from 'styles'
-import { useEffect } from 'react'
 
 const ChannelsPage = () => {
   const { t } = useTranslation()
   const history = useHistory()
   const { colorMode } = useThemeStore()
-  const { generateImage } = useThumbor()
   const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
 
   const { data, loading } = useQuery(QUERY_CHANNELS, {
     variables: {
       filter: {},
     },
+    onCompleted: (result) => {
+      setChannelsList(result.channels)
+    }
   })
 
-  const generateChannelThumb = (path: string, isExclusive: boolean) => {
-    const imageOptions: ThumborParams = {
-      size: {
-        height: 800,
-      },
-    }
-    if (isExclusive) {
-      imageOptions.blur = 20
-    }
-    return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
-  }
-
-  useEffect(() => {
-    const channels = data?.channels?.reduce((memo, curr: Channel) => {
-      const exclusive = isExclusive(curr.kind)
-      const thumbnail = generateChannelThumb(
-        curr.customization.thumbnail.img_path,
-        exclusive
-      )
-      memo.push({
-        ...curr,
-        thumbnail,
-        isExclusive: exclusive,
-      })
-      return memo
-    }, [])
-
-    setChannelsList(channels)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
-
-  const selectChannel = async (channelId: string) => {
-    let selected = channelsList.filter((channel) => channel.id === channelId)
+  const selectChannel = async (channelId: string | null) => {
+    let selected = channelsList.filter((channel: Channel) => channel.id === channelId)
     let channelRoute = convertCamelCaseToDash(selected[0].name)
     await setActiveChannel(selected[0])
     history.push(`/c/${channelRoute}`)
@@ -74,11 +43,11 @@ const ChannelsPage = () => {
       >
         {t('page.channels.title')}
       </Text>
-      {loading && <Skeleton numberOfCards={5}></Skeleton>}
-      {channelsList && (
+      {loading && <Skeleton kind='cards' numberOfCards={5}></Skeleton>}
+      {!!data?.channels?.length && !loading && (
         <ChannelsGrid
           channelSelected={selectChannel}
-          channelsList={channelsList}
+          channelsList={data.channels}
         ></ChannelsGrid>
       )}
     </Container>
