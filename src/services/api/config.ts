@@ -12,10 +12,7 @@ import { AUTH_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql/mutation/refreshToken'
 
-const {
-  REACT_APP_API_ENDPOINT,
-  REACT_APP_ORGANIZATION_URL
-} = process.env
+const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
 
 const refreshToken = async (token) => {
   try {
@@ -39,43 +36,63 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
-        if (!err.extensions.response) {
+        if (!err.extensions.code) {
           clearData()
           window.location.href = '/'
           return
         }
 
-        switch (err.extensions.response.message) {
-          case 'INVALID_TOKEN':
-            try {
-              const token = getData(AUTH_TOKEN)
-              const result = fromPromise(refreshToken(token))
-              result.subscribe((data) => {
-                const accessToken =
-                  data?.data?.data?.refreshToken?.refreshToken?.accessToken
+        // TO-DO: CREATE FILE TO HANDLE API ERRORS
 
-                if (!accessToken) {
-                  clearData()
-                  window.location.href = '/'
-                  return
+        switch (err.extensions.code) {
+          case 'UNAUTHENTICATED':
+            switch (err.message) {
+              case 'INVALID_TOKEN':
+                try {
+                  const token = getData(AUTH_TOKEN)
+                  const result = fromPromise(refreshToken(token))
+                  result.subscribe((data) => {
+                    const accessToken =
+                      data?.data?.data?.refreshToken?.refreshToken?.accessToken
+
+                    if (!accessToken) {
+                      clearData()
+                      window.location.href = '/'
+                      return
+                    }
+
+                    saveData(AUTH_TOKEN, accessToken)
+
+                    const authorization = accessToken
+                      ? `Bearer ${accessToken}`
+                      : ''
+                    const headers = operation.getContext().headers
+                    operation.setContext({
+                      headers: {
+                        ...headers,
+                        authorization,
+                      },
+                    })
+                    forward(operation)
+                    return
+                  })
+                } catch (error) {
+                  console.warn('error on refresh token', error)
                 }
-
-                saveData(AUTH_TOKEN, accessToken)
-
-                const authorization = accessToken ? `Bearer ${accessToken}` : ''
-                const headers = operation.getContext().headers
-                operation.setContext({
-                  headers: {
-                    ...headers,
-                    authorization,
-                  },
-                })
-
-                return forward(operation)
-              })
-            } catch (error) {
-              console.warn('error on refresh token', error)
+                break
+              // TO-DO: backend needs to remove exception:
+              case 'exception:PASSWORD_MISMATCH':
+                break
+              default:
+                clearData()
+                window.location.href = '/'
             }
+            break
+          case 'FORBIDDEN':
+            console.log(
+              'User dont have permission to execute this action -> ',
+              operation
+            )
         }
       }
     }
