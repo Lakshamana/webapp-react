@@ -26,11 +26,11 @@ export const MENU_TABS = [
     label: i18n.t('header.tabs.my_list'),
     url: '/c/:channel/mylist',
   },
-  {
-    id: 'tags',
-    label: i18n.t('header.tabs.tags'),
-    url: '/c/:channel/tags',
-  },
+  // {
+  //   id: 'tags',
+  //   label: i18n.t('header.tabs.tags'),
+  //   url: '/c/:channel/tags',
+  // },
 ]
 
 export const SEARCH_VALUES = [
