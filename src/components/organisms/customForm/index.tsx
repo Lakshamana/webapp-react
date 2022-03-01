@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import { Input } from 'components'
 import { Props } from './types'
 
-const Form = ({ handleFormSubmit, fields, button, initialValues }: Props) => {
+const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) => {
   const shape = fields.reduce((memo, curr) => {
     if (curr.required) {
       switch (curr.type) {
@@ -68,4 +68,4 @@ const Form = ({ handleFormSubmit, fields, button, initialValues }: Props) => {
   )
 }
 
-export { Form }
+export { CustomForm }

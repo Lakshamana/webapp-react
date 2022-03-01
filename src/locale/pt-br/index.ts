@@ -181,7 +181,8 @@ const PT_BR = {
     page: {
       home: {
         live: 'Ao vivo',
-        most_recent: 'Mais Recentes',
+        featured_posts: 'Destaques',
+        featured_categories: 'Categorias em destaque',
         popular: 'Popular',
         cardInfoViews: 'Visualizações',
       },
@@ -197,7 +198,8 @@ const PT_BR = {
       },
       my_list: {
         my_list: 'Minha Lista',
-        collection: 'Coleção',
+        pinned_categories: 'Categorias favoritas',
+        pinned_videos: 'Vídeos favoritos'
       },
       account: {
         push_notifications: 'Notificações Push',

@@ -9,5 +9,4 @@ export const Header: any = styled.div`
 export const ContentScroller: any = styled.div`
     height: auto;
     width: auto;
-    cursor: pointer;
 `;

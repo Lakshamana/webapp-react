@@ -183,7 +183,8 @@ const EN_US = {
     page: {
       home: {
         live: 'Live',
-        most_recent: 'Most Recents',
+        featured_posts: 'Featured',
+        featured_categories: 'Featured categories',
         popular: 'Popular',
         cardInfoViews: 'Views',
       },
@@ -199,7 +200,8 @@ const EN_US = {
       },
       my_list: {
         my_list: 'My List',
-        collection: 'Collection',
+        pinned_categories: 'Favorite Categories',
+        pinned_videos: 'Favorite Videos'
       },
       account: {
         push_notifications: 'Push Notifications',

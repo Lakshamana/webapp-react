@@ -19,11 +19,11 @@ export const Component = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Component.args = {
   id: '5451321230',
-  postTitle: 'Test',
-  postUrl:'',
-  coverImage: 'https://www.sagrado.edu/wp-content/uploads/bb-plugin/cache/radio-visual-panorama.jpg',
+  title: 'Test',
+  url:'',
+  thumbnail: 'https://www.sagrado.edu/wp-content/uploads/bb-plugin/cache/radio-visual-panorama.jpg',
   mediaLength: 45,
-  views: 30,
+  countViews: 30,
   isExclusive: false,
   isGeolocked: false,
 };
