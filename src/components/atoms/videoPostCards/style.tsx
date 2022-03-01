@@ -7,35 +7,35 @@ export const CardWrapper = styled.div`
   position: relative;
   transition: all 0.2s ease-in-out;
 
-  // &:hover {
-  // 	z-index: 1;
-  // 	transform: scale(1.3);
-  // 	margin-top: -15%;
+	&:hover {
+		z-index: 1;
+		transform: scale(1.3);
+		margin-top: -30%;
 
-  // 	.postContent {
-  // 		border-radius: 4px 4px 0 0 !important;
-  // 		margin-bottom: -1px;
-  // 	}
+  .postContent {
+   	border-radius: 4px 4px 0 0 !important;
+   	margin-bottom: -1px;
+  }
 
-  // 	.addMyListIconBg,
-  // 	.addMyListIcon {
-  // 		display: block !important;
-  // 	}
+  .addMyListIconBg,
+  .addMyListIcon {
+    display: block !important;
+  }
 
-  // 	@media screen and (max-width: ${breakpoints.sm}) {
-  // 		.closeCardMobileIconBg,
-  // 		.closeCardMobileIcon {
-  // 			display: block !important;
-  // 		}
-  // 	}
+  @media screen and (max-width: ${breakpoints.sm}) {
+    .closeCardMobileIconBg,
+    .closeCardMobileIcon {
+      display: block !important;
+    }
+  }
 
-  // 	.infoCard {
-  // 		display: flex;
-  // 		border-radius: 0 0 4px 4px;
-  // 		height: 80px;
-  // 		transition: all .2s ease-in-out;
-  // 	}
-  // }
+  .infoCard {
+    display: flex;
+    border-radius: 0 0 4px 4px;
+    height: 80px;
+    transition: all .2s ease-in-out;
+    }
+  }
 `
 
 export const PostContent = styled.div<VideoPostCardProps>`
