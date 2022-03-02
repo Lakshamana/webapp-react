@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const QUERY_POSTS = gql`
+export const QUERY_FEED_POSTS = gql`
   query posts($limit: Int, $orderBy: [PostTypeSortDirective], $skip: Int) {
     posts(limit: $limit, orderBy: $orderBy, skip: $skip) {
       ... on PostCommon {
