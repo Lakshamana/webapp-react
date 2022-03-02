@@ -1,7 +1,7 @@
 import { Container, FeedPostCard, Select } from "components"
 import { useEffect, useState } from "react"
 import { formatDistance, intervalToDuration } from 'date-fns'
-import { QUERY_POSTS } from "services/graphql/query/posts"
+import { QUERY_FEED_POSTS } from "services/graphql"
 import { useLazyQuery } from "@apollo/client"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
 import { useChannelsStore } from 'services/stores'
@@ -52,7 +52,7 @@ const FeedPage = () => {
     SetFilterBy(value)
   }
 
-  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_POSTS)
+  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_FEED_POSTS)
 
   const loadMorePosts = () => {
     loadPosts({
