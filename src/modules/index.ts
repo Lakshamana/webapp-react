@@ -14,3 +14,4 @@ export * from "./recoverPassword";
 export * from "./videoPostView";
 export * from "./livestreams";
 export * from "./errors"
+export * from "./checkout"
