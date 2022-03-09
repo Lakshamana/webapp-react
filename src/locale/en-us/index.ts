@@ -254,6 +254,19 @@ const EN_US = {
         upcoming: 'Upcoming',
         past: 'Past',
       },
+      checkout: {
+        login: {
+          title: 'Payment',
+          subtitle: 'Please complete your purchase and enjoy your content',
+          continue_with: 'Continue with',
+          or: 'or',
+          input_label_fullname: 'Full Name',
+          input_label_email: 'Email',
+          term_service: 'By signing up, I agree to the FanHero Privacy and Policy of Term of Service.',
+          signup_btn: 'Sign up',
+          already_have_account: 'Already have an account? Log in here'
+        },
+      },
     },
     cookieConsent: {
       notice: 'Notice.',

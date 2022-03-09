@@ -252,6 +252,19 @@ const PT_BR = {
         upcoming: 'Próximas transmissões',
         past: 'Assistir Novamente',
       },
+      checkout: {
+        login: {
+          title: 'Pagamento',
+          subtitle: 'Por favor, complete sua compra e aproveite seu conteúdo',
+          continue_with: 'Continue com',
+          or: 'ou',
+          input_label_fullname: 'Nome Completo',
+          input_label_email: 'Email',
+          term_service: 'Ao se inscrever, concordo com a Política de Privacidade e Termos de Serviço do FanHero.',
+          signup_btn: 'inscrever-se',
+          already_have_account: 'já tem uma conta? Entre aqui'
+        },
+      },
     },
     cookieConsent: {
       notice: 'Aviso prévio.',
