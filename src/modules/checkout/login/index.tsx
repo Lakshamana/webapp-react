@@ -14,25 +14,58 @@ export const CheckoutLogin = () => {
         fontSize="32px"
         fontWeight="700"
         mt="30px"
+        textAlign="center"
         color={colors.generalText[colorMode]}
       >{t('page.checkout.login.title')}</Text>
       <Text
         fontSize="16px"
         fontWeight="400"
         mb="40px"
+        textAlign="center"
         color={colors.generalText[colorMode]}
         >{t('page.checkout.login.subtitle')}</Text>
 
       <Flex
-        w="980px"
-        h="609px"
+        w={[
+          'auto',
+          'auto',
+          'auto',
+          'auto',
+          '980px'
+        ]}
         borderRadius="8px"
-        boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+        boxShadow={[
+          "none",
+          "none",
+          "none",
+          "none",
+          "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        ]}
+        flexDir={[
+          'column',
+          'column',
+          'column',
+          'column',
+          'row',
+        ]}
+        p={[
+          "1em",
+          "1em",
+          "1em",
+          "1em",
+          "0",
+        ]}
       >
         <Flex
           maxW="490px"
           w="100%"
-          borderRadius="8px 0 0 8px"
+          borderRadius={[
+            "8px",
+            "8px",
+            "8px",
+            "8px",
+            "8px 0 0 8px"
+          ]}
           flexDirection="column"
           justifyContent="flex-end"
           padding="32px"
@@ -41,6 +74,13 @@ export const CheckoutLogin = () => {
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
           color="#fff"
+          mb={[
+            '1em',
+            '1em',
+            '1em',
+            '1em',
+            '0'
+          ]}
         >
           <Text fontSize="30px" fontWeight="400">
             ABS Monthly Plan Lorem ipsum
@@ -67,7 +107,13 @@ export const CheckoutLogin = () => {
         </Flex>
         <Flex
           flex="1"
-          borderRadius="0 8px 8px 0"
+          borderRadius={[
+            "8px",
+            "8px",
+            "8px",
+            "8px",
+            "0 8px 8px 0"
+          ]}
           alignItems="center"
           justifyContent="center"
           flexDirection="column"
