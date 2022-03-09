@@ -17,6 +17,7 @@ import {
   LiveChat,
   Livestreams,
   NotFound,
+  CheckoutLogin,
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -39,6 +40,13 @@ const ClientRoutes = ({ isAccesible }: any) => {
         component={AccountPage}
         redirectTo="/c/:channel"
         template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkoutLogin}
+        path="/checkout/login"
+        component={CheckoutLogin}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={isAccesible?.collections}

@@ -11,7 +11,8 @@ export const publicPermissionUnauthenticated = {
   channels: true,
   feed: true,
   signup: true,
-  recoverPassword: true
+  recoverPassword: true,
+  checkoutLogin: true,
 };
 
 export const publicPermissionAuthenticated = {
@@ -27,7 +28,8 @@ export const publicPermissionAuthenticated = {
   channels: true,
   feed: true,
   signup: true,
-  recoverPassword: true
+  recoverPassword: true,
+  checkoutLogin: true,
 };
 
 export const exclusivePermissionUnauthenticated = {
@@ -43,7 +45,8 @@ export const exclusivePermissionUnauthenticated = {
   channels: false,
   feed: false,
   signup: true,
-  recoverPassword: true
+  recoverPassword: true,
+  checkoutLogin: true,
 };
 
 export const exclusivePermissionAuthenticated = {
@@ -59,7 +62,8 @@ export const exclusivePermissionAuthenticated = {
   channels: true,
   feed: true,
   signup: false,
-  recoverPassword: false
+  recoverPassword: false,
+  checkoutLogin: true,
 };
 
 export const defaultPermission = {
@@ -75,5 +79,6 @@ export const defaultPermission = {
   channels: true,
   feed: true,
   signup: true,
-  recoverPassword: true
+  recoverPassword: true,
+  checkoutLogin: true,
 };
