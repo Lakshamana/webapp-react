@@ -2,6 +2,7 @@ import { Divider, Flex, Text } from '@chakra-ui/react'
 import imageBg from 'assets/background/bg-checkout-login.png'
 import { Button, Input, SocialSigninButton } from 'components'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 
@@ -151,11 +152,13 @@ export const CheckoutLogin = () => {
           >
             {t('page.checkout.login.term_service')}
           </Text>
-          <Button
-            height="56px"
-            width="236px"
-            label={t('page.checkout.login.signup_btn')}
-          ></Button>
+          <Link to="/checkout/more-info">
+            <Button
+              height="56px"
+              width="236px"
+              label={t('page.checkout.login.signup_btn')}
+            ></Button>
+          </Link>
           <Text
             textAlign="center"
             maxW="300px"
