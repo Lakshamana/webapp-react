@@ -58,30 +58,14 @@ export const VideoJS = (props: any): ReactElement => {
   } vjs-big-play-centered`
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-      }}
-    >
-      {/* <Flex position={'absolute'} right={0} zIndex={100} flexDirection={'column'}>
-        <VideoBadge kind={'social'}>
-          <Icon icon="bx:bxl-telegram" color="white" width="21" height="24" />
-        </VideoBadge>
-        <VideoBadge kind={'social-end'}>
-          <Icon icon="bx:bxs-share-alt" color="white" width="21" height="24" />
-        </VideoBadge>
-      </Flex> */}
-      <div data-vjs-player>
-        <video
-          ref={videoRef}
-          className={classes}
-          style={{
-            borderRadius: 0,
-          }}
-        />
-      </div>
+    <div data-vjs-player>
+      <video
+        ref={videoRef}
+        className={classes}
+        style={{
+          borderRadius: 0,
+        }}
+      />
     </div>
   )
 }

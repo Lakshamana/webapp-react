@@ -1,38 +1,37 @@
-import { Icon } from "@iconify/react";
-import { useHistory } from 'react-router-dom';
-import {
-  List,
-  Wrapper,
-  VideoThumb,
-  InfoBox,
-  Title,
-  Subtitle
-} from './style'
-import { PlaylistPostCardProps } from "./types";
+import { useHistory } from 'react-router-dom'
+import { AspectRatio, Image } from '@chakra-ui/react'
+import { Wrapper, InfoBox, Title, Subtitle } from './style'
+import { VideoPostCardProps } from 'types/posts'
 
-const PlaylistPostCard = ({ videos }: PlaylistPostCardProps) => {
-  const history = useHistory();
+const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
+  const history = useHistory()
+
+  const selectPost = () => {
+    history.push(`${props.url}`)
+  }
 
   return (
-    <List>
-      {videos && videos.map(({ id, title, subtitle, image_url }) => (
-        <Wrapper onClick={() => history.push(`/video/${id}`)}>
-          <VideoThumb image={image_url}>
-            <Icon 
-              icon="ant-design:play-circle-twotone"
-              width="34px"
-              color="white"
-            />
-          </VideoThumb>
-
-          <InfoBox>
-            <Title>{title}</Title>
-            <Subtitle>{subtitle}</Subtitle>
-          </InfoBox>
-        </Wrapper>
-      ))}
-    </List>
+    <Wrapper p={1} my={1} onClick={selectPost}>
+      <AspectRatio w={['0px', '0px', '140px', '180px', '180px']} ratio={16 / 9}>
+        <Image
+          borderRadius="3px"
+          src={props.thumbnail}
+          alt={props.title}
+          objectFit="cover"
+        />
+      </AspectRatio>
+      <InfoBox>
+        <Title>{props.title}</Title>
+        {props?.description && <Subtitle>
+          <span
+           dangerouslySetInnerHTML={{
+            __html: `${props?.description}`,
+          }}
+          ></span>
+        </Subtitle>}
+      </InfoBox>
+    </Wrapper>
   )
 }
 
-export { PlaylistPostCard };
+export { PlaylistPostCard }

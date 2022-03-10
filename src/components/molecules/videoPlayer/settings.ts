@@ -6,7 +6,7 @@ export const getDefaultConfigs = (
 ) => ({
   autoplay: true,
   controls: true,
-  muted: false,
+  muted: true,
   responsive: true,
   fill: true,
   fluid: false,

@@ -2,7 +2,7 @@ type VoteType = 'upvote' | 'downvote';
 
 export interface VoteProps {
   type: VoteType,
-  votes: string
+  votes: number
 }
 
 export const defaultProps = {

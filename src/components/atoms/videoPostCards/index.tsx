@@ -26,7 +26,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
           </BlockedContent>
         )}
       </PostContent>
-      {/* <HoverInfoCard postTitle={props.title} views={props.countViews}  /> */}
+      <HoverInfoCard postTitle={props.title} views={props.countViews}  />
     </CardWrapper>
   )
 }

@@ -19,5 +19,5 @@ export const Component = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Component.args = {
   type: 'upvote',
-  votes: '30'
+  votes: 30
 };

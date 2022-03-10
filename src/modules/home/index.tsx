@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Flex } from '@chakra-ui/layout'
+import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { Container, Text } from 'components'
+import { Container, Skeleton } from 'components'
 import {
   BillboardScroller,
   CategoriesScroller,
@@ -29,6 +29,7 @@ import {
   QUERY_LIVESTREAMS_SCROLLER,
 } from 'services/graphql/query'
 import { useChannelsStore } from 'services/stores'
+import { sizes } from 'styles'
 
 const HomePage = () => {
   const { t } = useTranslation()
@@ -43,8 +44,10 @@ const HomePage = () => {
     loading: loadingBillboard,
   } = useQuery(QUERY_BILLBOARD, {
     variables: { target: 'HOME' },
+    skip: !activeChannel,
   })
 
+  // TO-DO: Implement infinite loading on Cards Scroller
   const {
     data: livestreamsData,
     refetch: refetchLivestreams,
@@ -65,8 +68,10 @@ const HomePage = () => {
         },
       ],
     },
+    skip: !activeChannel,
   })
 
+  // TO-DO: Implement infinite loading on Cards Scroller
   const {
     data: featuredPostsData,
     refetch: refetchFeaturedPosts,
@@ -86,6 +91,7 @@ const HomePage = () => {
         },
       ],
     },
+    skip: !activeChannel,
   })
 
   // TO-DO: Implement infinite loading on Cards Scroller
@@ -95,21 +101,30 @@ const HomePage = () => {
     loading: loadingFeaturedCategories,
   } = useQuery(QUERY_FEATURED_CATEGORIES_SCROLLER, {
     variables: {},
+    skip: !activeChannel,
   })
 
-  const isEmpty =
-    !livestreamsData &&
-    !loadingLivestreams &&
-    !featuredPostsData &&
-    !loadingFeaturedPosts &&
-    !featuredCategoriesData &&
-    !loadingFeaturedCategories
+  const isLoading =
+    loadingBillboard ||
+    loadingLivestreams ||
+    loadingFeaturedCategories ||
+    loadingFeaturedPosts
+
+  const hasResults =
+    billboardData?.billboard?.length ||
+    livestreamsData?.livestreams?.length ||
+    featuredPostsData?.posts?.length ||
+    featuredCategoriesData?.categories?.length
+
+  const isEmpty = !isLoading && !hasResults
 
   useEffect(() => {
-    refetchBillboard()
-    refetchLivestreams()
-    refetchFeaturedPosts()
-    refetchFeaturedCategories()
+    if (activeChannel) {
+      refetchBillboard()
+      refetchLivestreams()
+      refetchFeaturedPosts()
+      refetchFeaturedCategories()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChannel])
 
@@ -128,6 +143,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
+    setBillboardItems([])
     const reduced = billboardData?.billboard?.reduce((memo, curr) => {
       const cover = getImageUrl(curr)
       const banner = getImageUrl(curr)
@@ -150,51 +166,69 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billboardData])
 
-  return (
-    // TO-DO: Show scrollers based on remote config file
-    // TO-DO: Show categories on Home based on remote config file
-    <Container flexDirection={'column'} display={'flex'}>
-      {billboardItems && !!billboardItems?.length && !loadingBillboard && (
-        <BillboardScroller items={billboardItems} customButtons={true} />
-      )}
+  const renderBillboard = () => {
+    return <BillboardScroller items={billboardItems} customButtons={true} />
+  }
 
-      <Flex
-        gridGap={5}
-        flexDirection={'column'}
-        mt={billboardItems ? 0 : 7}
-        w={'100vw'}
-      >
-        {!!livestreamsData?.livestreams?.length && (
-          <LivestreamScroller
-            items={livestreamsData.livestreams}
-            sectionTitle={t('page.home.live')}
-            hasMoreLink={true}
-          />
-        )}
-        {!!featuredPostsData?.posts?.length && (
-          <VideosScroller
-            items={featuredPostsData.posts}
-            sectionTitle={t('page.home.featured_posts')}
-            hasMoreLink={true}
-          />
-        )}
-        {!!featuredCategoriesData?.categories?.length && (
-          <CategoriesScroller
-            items={featuredCategoriesData.categories}
-            sectionTitle={t('page.home.featured_categories')}
-            hasMoreLink={true}
-          />
-        )}
-        {/* TO-DO: Build Empty State component */}
-        <Flex alignItems="center" justifyContent="center">
-          {isEmpty && (
-            <Text color={'white'} fontSize={'32px'}>
-              Home is empty
-            </Text>
-          )}
-        </Flex>
-      </Flex>
-    </Container>
+  const renderLivestreamsScroller = () => {
+    return (
+      <LivestreamScroller
+        items={livestreamsData?.livestreams}
+        sectionTitle={t('page.home.live')}
+        hasMoreLink={true}
+      />
+    )
+  }
+
+  const renderFeaturedPostsScroller = () => {
+    return (
+      <VideosScroller
+        items={featuredPostsData?.posts}
+        sectionTitle={t('page.home.featured_posts')}
+        hasMoreLink={true}
+      />
+    )
+  }
+
+  const renderFeaturedCategoriesScroller = () => {
+    return (
+      <CategoriesScroller
+        items={featuredCategoriesData?.categories}
+        sectionTitle={t('page.home.featured_categories')}
+        hasMoreLink={true}
+      />
+    )
+  }
+
+  return (
+    <>
+      {isLoading ? (
+        <Box p={sizes.paddingSm} width="100%">
+          <Skeleton kind="cards" numberOfCards={4} />
+        </Box>
+      ) : (
+        <Container flexDirection={'column'} display={'flex'}>
+          {billboardItems?.length ? renderBillboard() : ''}
+          <Flex
+            gridGap={5}
+            flexDirection={'column'}
+            mt={billboardItems ? 0 : 7}
+            w={'100vw'}
+          >
+            {livestreamsData?.livestreams?.length ? renderLivestreamsScroller() : ''}
+            {featuredPostsData?.posts?.length ? renderFeaturedPostsScroller() : ''}
+            {featuredCategoriesData?.categories?.length ? renderFeaturedCategoriesScroller() : ''}
+
+            {/* TO-DO: built a empty state component */}
+            {isEmpty && (
+              <Flex w={'100vw'} justifyContent="center" color="white">
+                Page empty! We need to create an empty state component.
+              </Flex>
+            )}
+          </Flex>
+        </Container>
+      )}
+    </>
   )
 }
 

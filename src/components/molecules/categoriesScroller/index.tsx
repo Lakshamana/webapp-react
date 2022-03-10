@@ -45,24 +45,22 @@ const CategoriesScroller = ({
   }
 
   useEffect(() => {
-    if (items && items?.length) {
-      const mappedArr = items?.map((item: Category) => {
-        const thumbnail = getImageUrl(item)
-        const url = getPostUrl(`${item.id}`)
-        return {
-          id: `${item.id}`,
-          title: `${item.name}`,
-          url: url,
-          thumbnail: thumbnail,
-        }
-      })
-      setScrollerItems(mappedArr)
-    }
+    const mappedArr = items?.map((item: Category) => {
+      const thumbnail = getImageUrl(item)
+      const url = getPostUrl(`${item.id}`)
+      return {
+        id: `${item.id}`,
+        title: `${item.name}`,
+        url: url,
+        thumbnail: thumbnail,
+      }
+    })
+    setScrollerItems(mappedArr?.length ? mappedArr : [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  return (
-    <ContentScroller>
+  const renderHeader = () => {
+    return (
       <Header>
         <Text
           color={colors.generalText[colorMode]}
@@ -83,16 +81,29 @@ const CategoriesScroller = ({
           </Link>
         )}
       </Header>
-      {scrollerItems && scrollerItems.length && (
-        <CardsScroller>
-          {scrollerItems.map((category: CategoryPostCardProps) => {
-            return (
-              <SwiperSlide key={`slide-${category.id}`}>
-                <CategoryPostCard {...category} />
-              </SwiperSlide>
-            )
-          })}
-        </CardsScroller>
+    )
+  }
+
+  const renderScroller = () => (
+    <CardsScroller>
+      {scrollerItems?.map((category: CategoryPostCardProps) => {
+        return (
+          <SwiperSlide key={`slide-${category.id}`}>
+            <CategoryPostCard {...category} />
+          </SwiperSlide>
+        )
+      })}
+    </CardsScroller>
+  )
+
+
+  return (
+    <ContentScroller>
+      {scrollerItems?.length && (
+        <>
+          {sectionTitle && renderHeader()}
+          {renderScroller()}
+        </>
       )}
     </ContentScroller>
   )

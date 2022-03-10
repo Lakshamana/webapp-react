@@ -50,11 +50,10 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
 				<CardDescription fontSize={15}>{props.postDescription}</CardDescription>
 				{props.type === "Poll" ? <SetMediaType {...props} /> : ""}
 				<CardReactions>
-					<ReactionBar reactions={reactions} totalReactions={2500} reactionsTitle='reactions' />
+					<ReactionBar/>
 				</CardReactions>
 				<CardFooter>
 					<Participants
-						totalParticipants={9900}
 						participants={[
 							{
 								id: 1,
