@@ -18,6 +18,7 @@ import {
   Livestreams,
   NotFound,
   CheckoutLogin,
+  CheckoutCustomField,
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -45,6 +46,13 @@ const ClientRoutes = ({ isAccesible }: any) => {
         isAccesible={isAccesible?.checkoutLogin}
         path="/checkout/login"
         component={CheckoutLogin}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkoutmoreinfo}
+        path="/checkout/more-info"
+        component={CheckoutCustomField}
         redirectTo="/c/:channel"
         template={EmptyLayout}
       />
