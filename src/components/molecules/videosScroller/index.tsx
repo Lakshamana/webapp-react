@@ -11,6 +11,8 @@ import {
 } from 'types/posts'
 import { RedactReason } from 'generated/graphql'
 import { useThemeStore } from 'services/stores/theme'
+import { useChannelsStore } from 'services/stores'
+import { convertCamelCaseToDash } from 'utils'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { Text, CardsScroller, VideoPostCard } from 'components'
 import { Header, ContentScroller } from './styles'
@@ -18,7 +20,7 @@ import { colors, sizes, breakpoints } from 'styles'
 
 const VideosScroller = ({
   items,
-  sectionTitle, 
+  sectionTitle,
   sectionUrl,
   hasMoreLink,
 }: VideosScrollerProps) => {
@@ -27,6 +29,7 @@ const VideosScroller = ({
   const { generateImage } = useThumbor()
   const [scrollerItems, setScrollerItems] = useState<VideoPostCardProps[]>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
+  const { activeChannel } = useChannelsStore()
 
   const getImageUrl = (post: VideoPostProps) => {
     const imageOptions: ThumborParams = {
@@ -49,7 +52,7 @@ const VideosScroller = ({
   }
 
   const getPostUrl = (id: string) => {
-    return `post/${id}`
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
   }
 
   const isRedacted = (post: VideoPostProps) => {
@@ -76,28 +79,27 @@ const VideosScroller = ({
   }
 
   useEffect(() => {
-    if (items && items?.length) {
-      const mappedArr = items?.map((item: VideoPostProps) => {
-        const thumbnail = getImageUrl(item)
-        const url = getPostUrl(`${item.id}`)
-        return {
-          id: `${item.id}`,
-          title: `${item.title}`,
-          url: url,
-          thumbnail: thumbnail,
-          mediaLength: item.media?.duration || undefined,
-          countViews: item.counts?.countViews || undefined,
-          isExclusive: isExclusive(item),
-          isGeolocked: isGeolocked(item),
-        }
-      })
-      setScrollerItems(mappedArr)
-    }
+    const mappedArr = items?.map((item: VideoPostProps) => {
+      const thumbnail = getImageUrl(item)
+      const url = getPostUrl(`${item.id}`)
+      return {
+        id: `${item.id}`,
+        title: `${item.title}`,
+        url: url,
+        thumbnail: thumbnail,
+        mediaLength: item.media?.duration || undefined,
+        countViews: item.counts?.countViews || undefined,
+        isExclusive: isExclusive(item),
+        isGeolocked: isGeolocked(item),
+      }
+    })
+    setScrollerItems(mappedArr?.length ? mappedArr : [])
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  return (
-    <ContentScroller>
+  const renderHeader = () => {
+    return (
       <Header>
         <Text
           color={colors.generalText[colorMode]}
@@ -118,16 +120,29 @@ const VideosScroller = ({
           </Link>
         )}
       </Header>
-      {scrollerItems && scrollerItems.length && (
-        <CardsScroller>
-          {scrollerItems?.map((item: VideoPostCardProps) => {
-            return (
-              <SwiperSlide key={`slide-${item.id}`}>
-                <VideoPostCard {...item} />
-              </SwiperSlide>
-            )
-          })}
-        </CardsScroller>
+    )
+  }
+  const renderScroller = () => {
+    return (
+      <CardsScroller>
+        {scrollerItems?.map((item: VideoPostCardProps) => {
+          return (
+            <SwiperSlide key={`slide-${item.id}`}>
+              <VideoPostCard {...item} />
+            </SwiperSlide>
+          )
+        })}
+      </CardsScroller>
+    )
+  }
+
+  return (
+    <ContentScroller>
+      {scrollerItems?.length && (
+        <>
+          {sectionTitle && renderHeader()}
+          {renderScroller()}
+        </>
       )}
     </ContentScroller>
   )
