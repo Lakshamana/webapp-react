@@ -11,4 +11,5 @@ export interface AuthTypes {
   updateUser: (user: Profile) => Promise<void>
   updateAccount: (account: Account) => Promise<void>
   getAccount: () => Promise<void>
+  updateActiveChannel: (channel?: string) => Promise<void>
 }
