@@ -71,7 +71,7 @@ export const CheckoutLogin = () => {
           justifyContent="flex-end"
           padding="32px"
           backgroundImage={`url(${imageBg})`}
-          backgroundSize="100%"
+          backgroundSize="cover"
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
           color="#fff"
