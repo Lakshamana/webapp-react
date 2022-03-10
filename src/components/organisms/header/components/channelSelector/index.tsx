@@ -30,17 +30,14 @@ const ChannelSelector = () => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const history = useHistory()
 
-  const [getChannels, { data: channelsData, loading }] = useLazyQuery(
-    QUERY_CHANNELS,
-    {
-      variables: {
-        filter: {},
-      },
-      onCompleted: (result) => {
-        setChannelsList(result.channels)
-      },
-    }
-  )
+  const [getChannels, { data, loading }] = useLazyQuery(QUERY_CHANNELS, {
+    variables: {
+      filter: {},
+    },
+    onCompleted: (result) => {
+      setChannelsList(result.channels)
+    },
+  })
 
   const openChannelsList = () => {
     if (!channelsList.length) {
