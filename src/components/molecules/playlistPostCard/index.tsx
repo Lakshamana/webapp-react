@@ -6,8 +6,6 @@ import { VideoPostCardProps } from 'types/posts'
 const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
   const history = useHistory()
 
-  console.log(props)
-
   const selectPost = () => {
     history.push(`${props.url}`)
   }

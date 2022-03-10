@@ -6,7 +6,6 @@ import { pxToRem } from 'styles/metrics'
 
 const CommentReplies = ({ count }) => {
   const [openComments, setOpenComments] = useState(false)
-  console.log(count)
   return (
     <>
       {count && (
