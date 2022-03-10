@@ -6,4 +6,5 @@ export const THEME = '@App:theme'
 export const ORGANIZATION_INFO = '@App:organization'
 export const CHANNEL_INFO = '@App:channel'
 export const MAX_CARDS_SCROLLER_RESULTS = 10
-export const DEFAULT_POLLING_INTERVAL = 30 * 1000;
+export const DEFAULT_POLLING_INTERVAL = 30 * 1000
+export const DEFAULT_LIMIT_QUERY = 20
