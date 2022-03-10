@@ -254,6 +254,16 @@ const EN_US = {
         upcoming: 'Upcoming',
         past: 'Past',
       },
+      post: {
+        participants: 'Participants:',
+        reactions: 'Reactions',
+        comments: 'Comments',
+        live: {
+          live_chat: {
+            title: 'Live Chat'
+          }
+        }
+      }
     },
     cookieConsent: {
       notice: 'Notice.',
