@@ -33,7 +33,9 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
             src={channelImg}
           />
         </Container>
-      ) : null}
+      ) : (
+        <></>
+      )}
       <IconContainer {...{ open }}>
         <Icon
           width={20}

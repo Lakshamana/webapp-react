@@ -1,14 +1,14 @@
 import create from 'zustand'
-import { ResponseOrganizationOutput } from 'generated/graphql'
+import { OrganizationPublic } from 'generated/graphql'
 
 interface OrganizationState {
-  organization: ResponseOrganizationOutput | null
-  setOrganization: (organization: ResponseOrganizationOutput) => void
+  organization: OrganizationPublic | null
+  setOrganization: (organization: OrganizationPublic) => void
 }
 
 export const useOrganizationStore = create<OrganizationState>((set) => ({
   organization: null,
-  setOrganization: (organization: ResponseOrganizationOutput) => {
+  setOrganization: (organization: OrganizationPublic) => {
     return set({ organization })
   },
 }))

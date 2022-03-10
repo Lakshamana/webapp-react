@@ -4,13 +4,19 @@ import {
   QUERY_ORGANIZATION_PUBLIC_SETTINGS,
   QUERY_ME,
   MUTATION_SIGNOUT,
+  QUERY_CHANNELS,
 } from 'services/graphql'
-import { useAuthStore, useOrganizationStore } from 'services/stores'
+import {
+  useAuthStore,
+  useOrganizationStore,
+  useChannelsStore,
+} from 'services/stores'
 import {
   USER_INFO,
   ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
+  CHANNEL_INFO,
 } from 'config/constants'
 
 import { saveData, getData, clearData } from 'services/storage'
@@ -30,6 +36,9 @@ export const AuthProvider = ({ children }) => {
   const { organization, setOrganization } = useOrganizationStore()
   const [loading, setLoading] = useState(true)
   const [loadingAccount, setLoadingAcount] = useState(false)
+  const { setActiveChannel, activeChannel } = useChannelsStore()
+
+  const storedChannel = getData(CHANNEL_INFO)
 
   const client = useApolloClient()
 
@@ -65,6 +74,23 @@ export const AuthProvider = ({ children }) => {
       return
     }
     if (accessToken) await getAccount()
+  }
+
+  const updateActiveChannel = async (channel?: string) => {
+    setLoading(true)
+    const { data } = await client.query({
+      query: QUERY_CHANNELS,
+      variables: {
+        filter: {
+          name__exact: channel || storedChannel?.name,
+        },
+      },
+    })
+    if (data?.channels.length) {
+      setActiveChannel(data.channels[0])
+      setLoading(false)
+    }
+    setLoading(false)
   }
 
   const getAccount = () => {
@@ -162,6 +188,7 @@ export const AuthProvider = ({ children }) => {
         updateAccount,
         updateUser,
         getAccount,
+        updateActiveChannel,
         signed,
         kind,
         loadingAccount,

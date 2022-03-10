@@ -51,7 +51,7 @@ const Channels = ({
                         icon="mdi:check"
                         color={colors.generalText[colorMode]}
                       />
-                    ) : null}
+                    ) : <></>}
                   </Container>
                   <Avatar
                     ml={1}
