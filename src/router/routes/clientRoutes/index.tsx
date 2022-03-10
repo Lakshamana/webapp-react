@@ -19,6 +19,7 @@ import {
   NotFound,
   CheckoutLogin,
   CheckoutCustomField,
+  CardInfo,
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -43,16 +44,23 @@ const ClientRoutes = ({ isAccesible }: any) => {
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.checkoutLogin}
+        isAccesible={isAccesible?.checkout}
         path="/checkout/login"
         component={CheckoutLogin}
         redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.checkoutmoreinfo}
+        isAccesible={isAccesible?.checkout}
         path="/checkout/more-info"
         component={CheckoutCustomField}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkout}
+        path="/checkout/card-info"
+        component={CardInfo}
         redirectTo="/c/:channel"
         template={EmptyLayout}
       />
