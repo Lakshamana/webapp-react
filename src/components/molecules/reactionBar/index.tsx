@@ -1,68 +1,65 @@
 import { useThemeStore } from 'services/stores/theme'
-import { Container, Text, Popover } from 'components'
-import { Icon } from '@iconify/react'
-import { Props } from './types'
-import { availableReactions } from './settings'
-import { Reaction, EmoticonReaction } from './styles'
-import { colors } from 'styles'
+import { useTranslation } from 'react-i18next'
 import { formatNumber } from 'utils'
+import { Container, Text } from 'components'
+import { availableReactions } from './settings'
+import { Reaction } from './styles'
+import { colors } from 'styles'
+import { AddReactionButton } from './components'
+import { ReactionsCount, ReactionType } from './types'
+import { useEffect, useState } from 'react'
 
 const ReactionBar = ({
-  reactions = [],
+  myReactions,
+  reactions,
   totalReactions,
-  reactionsTitle,
-}: Props) => {
+}: ReactionsCount) => {
   const { colorMode } = useThemeStore()
+  const { t } = useTranslation()
+  const [filteredReactions, setFilteredReactions] = useState<ReactionType[]>()
+  const [myActiveReactions, setMyActiveReactions] = useState<ReactionType[]>()
+
+  useEffect(() => {
+    reactions?.sort((a, b) => {
+      return b.count - a.count
+    })
+    let result = reactions?.slice(0, 3)
+    setFilteredReactions(result)
+  }, [reactions])
+
+  useEffect(() => {
+    const arr = myReactions?.filter((item) => item.count > 0)
+    setMyActiveReactions(arr)
+  }, [myReactions])
 
   return (
     <Container alignItems="center">
       <Container>
-        <Container>
-          {reactions.map((reaction) => (
-            <Reaction
-              key={`${reaction.value}-reaction`}
-              p={1}
-              mr={1}
-              minHeight={32}
-            >
-              <div>{reaction.value}</div>
-              <Text kind="regular">{formatNumber(reaction.count, 1)}</Text>
-            </Reaction>
-          ))}
-        </Container>
-        <Container>
-          <Popover
-            popoverTrigger={
-              <Reaction>
-                <Icon
-                  width={20}
-                  height={20}
-                  icon="mdi:emoticon-happy-outline"
-                />
-                <Icon width={20} height={20} icon="mdi:plus" />
+        {filteredReactions?.length &&
+          filteredReactions?.map((reaction) => {
+            const reactionValue = availableReactions.find(
+              (item) => item.name === reaction?.name
+            )
+            return (
+              <Reaction
+                key={`${reaction?.name}-reaction`}
+                p={1}
+                mr={1}
+                minHeight={32}
+              >
+                {reactionValue?.value}
+                <Text ml={2}>{formatNumber(reaction?.count || 0, 1)}</Text>
               </Reaction>
-            }
-          >
-            <Container
-              display={'grid'}
-              gridTemplateColumns={'repeat(6, 1fr)'}
-              justifyItems={'center'}
-            >
-              {availableReactions.map((reaction) => (
-                <EmoticonReaction key={`${reaction.value}-popover`} p={1} m={1}>
-                  {reaction.value}
-                </EmoticonReaction>
-              ))}
-            </Container>
-          </Popover>
-        </Container>
+            )
+          })}
       </Container>
+      <AddReactionButton></AddReactionButton>
       <Container ml={2}>
-        <Text
-          kind="regular"
-          fontWeight={500}
-          color={colors.generalText[colorMode]}
-        >{`${formatNumber(totalReactions, 1)} ${reactionsTitle}`}</Text>
+        {totalReactions && (
+          <Text color={colors.secondaryText[colorMode]}>
+            {totalReactions} {t('page.post.reactions')}
+          </Text>
+        )}
       </Container>
     </Container>
   )
