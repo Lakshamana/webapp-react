@@ -59,3 +59,30 @@ export const convertCamelCaseToDash = (str: string | undefined) => {
   }
   return ''
 }
+
+export const convertDashToCamel = (str: string | undefined) => {
+  if (str) {
+    return str
+      .toLowerCase()
+      .replace(/-/g, ' ')
+      .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
+  }
+  return ''
+}
+
+export const buildUrlFromPath = (
+  base: string,
+  path: string,
+  protocol?: string
+): string => {
+  if (!base || !path) {
+    return ''
+  }
+  const baseUrl = protocol
+    ? `${protocol}://${base.replace(/(^\w+:|^)\/\//, '')}`
+    : base
+
+  const url = new URL(path, baseUrl)
+
+  return url.href
+}
