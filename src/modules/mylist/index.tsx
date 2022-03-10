@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client'
-import { Divider } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { QUERY_PINNED_CATEGORIES, QUERY_PINNED_POSTS } from 'services/graphql'
-import { Container } from 'components'
-import { colors } from 'styles'
+import { Container, Skeleton } from 'components'
 import { PostsGrid, CategoriesGrid } from './components'
 
 const MyListPage = () => {
@@ -15,28 +14,49 @@ const MyListPage = () => {
       variables: {},
     })
 
+  // TO-DO: Implement infinite loading on Cards Scroller
   const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
     QUERY_PINNED_POSTS,
     {
       variables: {},
     }
   )
+  const isLoading = loadingPinnedCategories || loadingPinnedPosts
+
+  const hasResults =
+    pinnedCategoriesData?.pinnedCategories?.length ||
+    pinnedPostsData?.pinnedPosts?.length
+
+  const isEmpty = !isLoading && !hasResults
+
+  const renderCategoriesGrid = () => {
+    return (
+      <CategoriesGrid
+        sectionTitle={t('page.my_list.pinned_categories')}
+        items={pinnedCategoriesData?.pinnedCategories}
+      ></CategoriesGrid>
+    )
+  }
+
+  const renderPostsGrid = () => {
+    return (
+      <PostsGrid
+        sectionTitle={t('page.my_list.pinned_videos')}
+        items={pinnedPostsData?.pinnedPosts}
+      ></PostsGrid>
+    )
+  }
 
   return (
     <Container flexDirection={'column'} width={'100vw'} defaultPadding my={15}>
-      {pinnedCategoriesData?.pinnedCategories?.length &&
-        !loadingPinnedCategories && (
-          <CategoriesGrid
-            sectionTitle={t('page.my_list.pinned_categories')}
-            items={pinnedCategoriesData.pinnedCategories}
-          ></CategoriesGrid>
-        )}
-      <Divider orientation="horizontal" my={5} color={colors.grey['700']} />
-      {pinnedPostsData?.pinnedPosts?.length && !loadingPinnedPosts && (
-        <PostsGrid
-          sectionTitle={t('page.my_list.pinned_videos')}
-          items={pinnedPostsData.pinnedPosts}
-        ></PostsGrid>
+      {isLoading && <Skeleton kind="cards" numberOfCards={4} />}
+      {pinnedCategoriesData?.pinnedCategories?.length ? renderCategoriesGrid() : ''}
+      {pinnedPostsData?.pinnedPosts?.length ? renderPostsGrid() : ''}
+      {/* TO-DO: built a empty state component */}
+      {isEmpty && (
+        <Flex w={'100vw'} justifyContent="center" color="white">
+          Page empty! We need to create an empty state component.
+        </Flex>
       )}
     </Container>
   )
