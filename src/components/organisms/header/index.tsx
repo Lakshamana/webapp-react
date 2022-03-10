@@ -116,7 +116,7 @@ const HeaderComponent = () => {
           <Center height="30px">
             <Divider orientation="vertical" color={colors.grey['700']} />
           </Center>
-          {!state.openSearch ? <ChannelSelector /> : null}
+          {!state.openSearch ? <ChannelSelector /> : <></>}
         </Container>
         {!state.openSearch ? (
           <Container
@@ -128,7 +128,7 @@ const HeaderComponent = () => {
           >
             <Tabs />
           </Container>
-        ) : null}
+        ) : <></>}
         <Container
           alignItems="center"
           flex={state.openSearch ? 1 : 'none'}
