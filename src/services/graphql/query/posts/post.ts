@@ -8,6 +8,9 @@ export const QUERY_POST = gql`
       }
       ... on VideoPost {
         description
+        categories {
+          id
+        }
         media {
           baseUrl
           duration
@@ -47,6 +50,7 @@ export const QUERY_POST = gql`
         createdAt
       }
       ... on RedactedVideoPost {
+        title
         entitlements {
           prices {
             badge
