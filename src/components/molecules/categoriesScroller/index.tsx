@@ -84,19 +84,18 @@ const CategoriesScroller = ({
     )
   }
 
-  const renderScroller = () => {
-    return (
-      <CardsScroller>
-        {scrollerItems?.map((category: CategoryPostCardProps) => {
-          return (
-            <SwiperSlide key={`slide-${category.id}`}>
-              <CategoryPostCard {...category} />
-            </SwiperSlide>
-          )
-        })}
-      </CardsScroller>
-    )
-  }
+  const renderScroller = () => (
+    <CardsScroller>
+      {scrollerItems?.map((category: CategoryPostCardProps) => {
+        return (
+          <SwiperSlide key={`slide-${category.id}`}>
+            <CategoryPostCard {...category} />
+          </SwiperSlide>
+        )
+      })}
+    </CardsScroller>
+  )
+
 
   return (
     <ContentScroller>
