@@ -266,6 +266,20 @@ const EN_US = {
           signup_btn: 'Sign up',
           already_have_account: 'Already have an account? Log in here'
         },
+        more_info: {
+          title: 'Custom Field',
+          subtitle: '{fullName} we need a little more information about you',
+          inputName: 'Name',
+          inputEmail: 'Email',
+          inputGender: 'Gender',
+          inputAddress: 'Address',
+          inputCity: 'City',
+          inputState: 'State',
+          inputZip: 'ZIP',
+          buttonNext: 'Next',
+          textWrongAccount: 'Wrong account? ',
+          textLogin: 'Log in',
+        },
       },
     },
     cookieConsent: {

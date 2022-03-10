@@ -264,6 +264,20 @@ const PT_BR = {
           signup_btn: 'inscrever-se',
           already_have_account: 'já tem uma conta? Entre aqui'
         },
+        more_info: {
+          title: 'Campo customizado',
+          subtitle: '{fullName} precisamos de um pouco mais de informações sobre você',
+          inputName: 'Nome',
+          inputEmail: 'Email',
+          inputGender: 'Gênero',
+          inputAddress: 'Endereço',
+          inputCity: 'Cidade',
+          inputState: 'Estado',
+          inputZip: 'CEP',
+          buttonNext: 'Próximo',
+          textWrongAccount: 'Conta errada? ',
+          textLogin: 'Conecte-se',
+        },
       },
     },
     cookieConsent: {
