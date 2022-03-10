@@ -17,7 +17,7 @@ const EmptyHeader = () => {
 
   const org_logo = generateImage(
     ThumborInstanceTypes.IMAGE,
-    organization?.customization.logo,
+    organization?.customization?.logo,
     {
       size: { height: 80 },
     }
