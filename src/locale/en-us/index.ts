@@ -307,6 +307,12 @@ const EN_US = {
             close: "Retry"
           },
         },
+        password: {
+          title: "You are almos there",
+          subtitle: "Your account is almost ready. Please choose a password for your account and enjoy the show.",
+          password_input: "Password",
+          saveandcontinue: "Save and continue"
+        },
       },
     },
     cookieConsent: {

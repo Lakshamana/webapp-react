@@ -305,6 +305,12 @@ const PT_BR = {
             close: "Repetir"
           },
         },
+        password: {
+          title: "Você está quase lá",
+          subtitle: "Sua conta está quase pronta. Escolha uma senha para sua conta e aproveite o show.",
+          password_input: "Senha",
+          saveandcontinue: "Salve e continue"
+        },
       },
     },
     cookieConsent: {
