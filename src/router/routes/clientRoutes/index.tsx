@@ -20,6 +20,7 @@ import {
   CheckoutLogin,
   CheckoutCustomField,
   CardInfo,
+  Password,
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -61,6 +62,13 @@ const ClientRoutes = ({ isAccesible }: any) => {
         isAccesible={isAccesible?.checkout}
         path="/checkout/card-info"
         component={CardInfo}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkout}
+        path="/checkout/password"
+        component={Password}
         redirectTo="/c/:channel"
         template={EmptyLayout}
       />
