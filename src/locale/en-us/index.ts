@@ -295,6 +295,18 @@ const EN_US = {
           authorize: 'I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
           place_you_order: 'Place your order',
         },
+        modal: {
+          success: {
+            title : "Payment Success",
+            subtitle: "Your payment has been successfully processed. ",
+            close: "Enjoy your content"
+          },
+          failure: {
+            title: "Something went worng!",
+            subtitle: "We are going to fix it. Try later.",
+            close: "Retry"
+          },
+        },
       },
     },
     cookieConsent: {
