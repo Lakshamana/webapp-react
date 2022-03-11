@@ -314,6 +314,16 @@ const EN_US = {
           saveandcontinue: "Save and continue"
         },
       },
+      post: {
+        participants: 'Participants:',
+        reactions: 'Reactions',
+        comments: 'Comments',
+        live: {
+          live_chat: {
+            title: 'Live Chat'
+          }
+        }
+      },
     },
     cookieConsent: {
       notice: 'Notice.',

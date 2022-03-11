@@ -1,6 +1,6 @@
 import { ReactElement, useRef } from 'react'
 
-import VideoJS from "components/molecules/videoJs"
+import VideoJS from 'components/molecules/videoJs'
 
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
@@ -18,37 +18,36 @@ import 'videojs-mux'
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
 
-const VideoPlayer = ({ 
-  src, 
-  title, 
+const VideoPlayer = ({
+  src,
+  title,
   isLiveStream,
-  subtitle, 
-  vttSrc, 
-  overlays, 
-  muxConfig, 
+  subtitle,
+  vttSrc,
+  overlays,
+  muxConfig,
   skin,
-  options 
+  options,
 }: VideoPlayerProps): ReactElement => {
-
-  const playerRef = useRef(null);
+  const playerRef = useRef(null)
 
   const defaultOptions = getDefaultConfigs(src, muxConfig, title, subtitle)
 
   const handlePlayerReady = (player: any) => {
-    playerRef.current = player;
+    playerRef.current = player
 
     player?.on('dispose', () => {
       player.registerPlugin('qualityLevel', videoJsContribQualityLevels)
       player.registerPlugin('hlsQualitySelector', videoJsHlsQualitySelector)
       player.registerPlugin('overlay', overlay)
       player.registerPlugin('vttThumbnails', videoJsVttThumbnails)
-    });
+    })
 
     player?.on('ready', () => {
-      player.chromecast();
+      player.chromecast()
 
       player.overlay({
-        overlays: [...(overlays || [])]
+        overlays: [...(overlays || [])],
       })
 
       if (vttSrc) {
@@ -58,21 +57,21 @@ const VideoPlayer = ({
         })
       }
     })
-  };
+  }
 
-  return (
-    src
-      ? <VideoJS 
-          options={{
-            ...defaultOptions, 
-            ...(isLiveStream ? { playbackRates: undefined } : {}), 
-            ...options
-          }} 
-          skin={skin} 
-          onReady={handlePlayerReady} 
-        />
-      : <></>
-  );
+  return src ? (
+    <VideoJS
+      options={{
+        ...defaultOptions,
+        ...(isLiveStream ? { playbackRates: undefined } : {}),
+        ...options,
+      }}
+      skin={skin}
+      onReady={handlePlayerReady}
+    />
+  ) : (
+    <></>
+  )
 }
 
 export { VideoPlayer }

@@ -1,7 +1,7 @@
-import { VideoProps } from '../playlistPostCard/types'
+import { AvailableVideoPost } from 'types/posts'
 
 export interface VideoPlaylistProps {
-  title?: string;
-  autoplay?: boolean;
-  videos?: Array<VideoProps>
+  title?: string
+  autoplay?: boolean
+  videos?: AvailableVideoPost[]
 }

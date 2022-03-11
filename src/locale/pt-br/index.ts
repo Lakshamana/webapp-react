@@ -199,7 +199,7 @@ const PT_BR = {
       my_list: {
         my_list: 'Minha Lista',
         pinned_categories: 'Categorias favoritas',
-        pinned_videos: 'Vídeos favoritos'
+        pinned_videos: 'Vídeos favoritos',
       },
       account: {
         push_notifications: 'Notificações Push',
@@ -311,6 +311,16 @@ const PT_BR = {
           password_input: "Senha",
           saveandcontinue: "Salve e continue"
         },
+      },
+      post: {
+        participants: 'Participantes:',
+        reactions: 'Reações',
+        comments: 'Comentários',
+        live: {
+          live_chat: {
+            title: 'Chat ao Vivo'
+          }
+        }
       },
     },
     cookieConsent: {

@@ -1,21 +1,33 @@
-import { Container } from 'components'
+import { AvatarGroup, Avatar, Flex } from '@chakra-ui/react'
+import { useMediaQuery } from '@chakra-ui/media-query'
+import { useThemeStore } from 'services/stores'
+import { useTranslation } from 'react-i18next'
+import { Text } from 'components'
+import { colors, breakpoints } from 'styles'
+import { Props } from './types'
 
-import { getParticipants } from './utils'
-import { Props, TypeParticipant, defaultProps } from './types'
-import { Participant, Button } from './styles'
-import { formatNumber } from 'utils'
-
-const Participants = ({ participants, totalParticipants }: Props) => (
-  <Container alignItems="center">
-    {getParticipants(participants).map(({ id, img }: TypeParticipant) => (
-      <Participant key={id} src={img} />
-    ))}
-    {totalParticipants > 3 && (
-      <Button>+ {formatNumber(totalParticipants, 1)}</Button>
-    )}
-  </Container>
-)
-
-Participants.defaultProps = defaultProps
+const Participants = ({ participants }: Props) => {
+  const { colorMode } = useThemeStore()
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
+  const { t } = useTranslation()
+  return (
+    <Flex alignItems="center">
+      <Text color={colors.secondaryText[colorMode]} mr={2}>
+        {t('page.post.participants')}
+      </Text>
+      <AvatarGroup size={isDesktop ? 'md' : 'sm'} max={2}>
+        {/* TO-DO: Integrate API. (API has a problem) */}
+        {/* {participants?.map((item) => {
+          return <Avatar showBorder key={item.id} src={item.img} />
+        })} */}
+        <Avatar name="Ryan Florence" src="https://bit.ly/ryan-florence" />
+        <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
+        <Avatar name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
+        <Avatar name="Prosper Otemuyiwa" src="https://bit.ly/prosper-baba" />
+        <Avatar name="Christian Nwamba" src="https://bit.ly/code-beast" />
+      </AvatarGroup>
+    </Flex>
+  )
+}
 
 export { Participants }

@@ -12,7 +12,6 @@ const Popover = ({
   popoverTrigger,
   background,
   hasArrow,
-  width,
   ...props
 }: Props) => {
   const { colorMode } = useThemeStore()

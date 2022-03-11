@@ -1,12 +1,13 @@
 export interface CommentType {
-  userName: string,
+  username: string,
   createdAt: string,
   comment: string,
+  userAvatar: string,
   answers?: CommentType[] | undefined
 }
 
 export const defaultProps = {
-  userName: '',
+  username: '',
   createdAt: '',
   comment: '',
   answers: [],

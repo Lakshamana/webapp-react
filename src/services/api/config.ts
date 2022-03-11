@@ -36,6 +36,7 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
+        
         if (!err.extensions.code) {
           clearData()
           window.location.href = '/'
@@ -43,7 +44,6 @@ const errorLink = onError(
         }
 
         // TO-DO: CREATE FILE TO HANDLE API ERRORS
-
         switch (err.extensions.code) {
           case 'UNAUTHENTICATED':
             switch (err.message) {
@@ -89,14 +89,13 @@ const errorLink = onError(
             }
             break
           case 'FORBIDDEN':
-            console.log(
+            console.warn(
               'User dont have permission to execute this action -> ',
               operation
             )
         }
       }
     }
-
     if (networkError) {
       console.log(`[Network error]: ${networkError}`)
     }

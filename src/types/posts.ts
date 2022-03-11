@@ -29,9 +29,12 @@ export type VideoPostCardProps = {
   id: string
   title: string
   url?: string
+  description?: string
   thumbnail?: string
   mediaLength?: number
   countViews?: number
   isExclusive?: boolean
   isGeolocked?: boolean
 }
+
+export type AvailableVideoPost = VideoPost | OnDemandPost

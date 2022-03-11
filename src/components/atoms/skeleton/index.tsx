@@ -15,7 +15,8 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
           <SimpleGrid
             width={'100%'}
             columns={[1, 2, 2, 3, 3, 4, 5]}
-            spacing={3}
+            spacingX={4}
+            spacingY={3}
           >
             {Array.from(Array(numberOfCards).keys()).map(() => {
               return (
@@ -46,8 +47,6 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
             {children}
           </SkeletonLoading>
         )
-      default:
-        return null
     }
   }
   return renderSkeleton()

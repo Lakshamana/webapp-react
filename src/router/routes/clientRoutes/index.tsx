@@ -11,6 +11,7 @@ import {
   TagPage,
   SearchPage,
   ChannelsPage,
+  VideoPostView,
   FeedPage,
   RecoverPasswordPage,
   VideoPostViewPage,
@@ -115,10 +116,10 @@ const ClientRoutes = ({ isAccesible }: any) => {
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.livechat}
-        path="/livechat"
-        component={LiveChat}
-        redirectTo="/c/:channel"
+        isAccesible={true}
+        path="/c/:channel/post/:id"
+        component={VideoPostView}
+        redirectTo="/channels"
         template={MainLayout}
       />
       <ClientRoute

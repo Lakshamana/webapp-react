@@ -26,7 +26,6 @@ const FeedPage = () => {
   const [hasMore, setHasMore] = useState(true)
 
   const getOrderBy = () => {
-    console.log('filter', filterBy)
     if (filterBy === 'popular')
       return [{ name: "popular", direction: "DESC" }]
 

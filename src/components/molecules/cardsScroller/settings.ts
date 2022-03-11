@@ -23,15 +23,15 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   },
   breakpoints: {
     1440: {
-      slidesPerView: 5.2,
+      slidesPerView: 5.3,
       slidesPerGroup: 5,
     },
     1024: {
-      slidesPerView: 4.2,
+      slidesPerView: 4.3,
       slidesPerGroup: 4,
     },
     768: {
-      slidesPerView: 3.2,
+      slidesPerView: 3.3,
       slidesPerGroup: 3,
     },
     425: {
