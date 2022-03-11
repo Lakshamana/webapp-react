@@ -16,6 +16,7 @@ export const CheckoutCustomField = () => {
       justifyContent="center"
       alignItems="center"
       w="100%"
+      px="1em"
     >
       <Text
         fontSize="32px"
