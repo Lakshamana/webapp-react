@@ -1,14 +1,24 @@
-import { Checkbox, Divider, Flex, Text } from '@chakra-ui/react'
+import {
+  Checkbox,
+  Divider,
+  Flex,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import imageBg from 'assets/background/bg-checkout-login.png'
 import { Button, Input, SelectInputStyle } from 'components'
+import { ModalNotification, ModalType } from '../components/notification'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { useState } from 'react'
 
 export const CardInfo = () => {
+  const [ modalType, setmodalType ] = useState(ModalType.success)
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Flex flexDirection="column" alignItems="center">
       <Text
@@ -172,6 +182,21 @@ export const CardInfo = () => {
           </Link>
         </Flex>
       </Flex>
+      {/* ==== EXEMPLO DE USO DO MODAL ==== */}
+      {/* <Flex mt="1em" gridGap="1em">
+        <Button
+          onClick={()=>{
+            setmodalType(ModalType.success);
+            onOpen();
+          }}
+          label="Modal Success"
+        />
+        <Button onClick={()=>{
+          setmodalType(ModalType.failure);
+          onOpen();
+        }} label="Modal Failure" />
+      </Flex> */}
+      <ModalNotification {...{ isOpen, onOpen, onClose, modalType }} />
     </Flex>
   )
 }
