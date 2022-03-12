@@ -16,6 +16,10 @@ import {
   RecoverPasswordPage,
   Livestreams,
   NotFound,
+  CheckoutLogin,
+  CheckoutCustomField,
+  CardInfo,
+  Password,
   LiveChat
 } from 'modules'
 
@@ -39,6 +43,34 @@ const ClientRoutes = ({ isAccesible }: any) => {
         component={AccountPage}
         redirectTo="/c/:channel"
         template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkout}
+        path="/checkout/login"
+        component={CheckoutLogin}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkout}
+        path="/checkout/more-info"
+        component={CheckoutCustomField}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkout}
+        path="/checkout/card-info"
+        component={CardInfo}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
+      />
+      <ClientRoute
+        isAccesible={isAccesible?.checkout}
+        path="/checkout/password"
+        component={Password}
+        redirectTo="/c/:channel"
+        template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={isAccesible?.collections}

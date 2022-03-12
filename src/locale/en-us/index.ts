@@ -254,6 +254,66 @@ const EN_US = {
         upcoming: 'Upcoming',
         past: 'Past',
       },
+      checkout: {
+        login: {
+          title: 'Payment',
+          subtitle: 'Please complete your purchase and enjoy your content',
+          continue_with: 'Continue with',
+          or: 'or',
+          input_label_fullname: 'Full Name',
+          input_label_email: 'Email',
+          term_service: 'By signing up, I agree to the FanHero Privacy and Policy of Term of Service.',
+          signup_btn: 'Sign up',
+          already_have_account: 'Already have an account? Log in here'
+        },
+        more_info: {
+          title: 'Custom Field',
+          subtitle: '{fullName} we need a little more information about you',
+          inputName: 'Name',
+          inputEmail: 'Email',
+          inputGender: 'Gender',
+          inputAddress: 'Address',
+          inputCity: 'City',
+          inputState: 'State',
+          inputZip: 'ZIP',
+          buttonNext: 'Next',
+          textWrongAccount: 'Wrong account? ',
+          textLogin: 'Log in',
+        },
+        card_info: {
+          title: 'Card Info',
+          subtitle: 'Please complete your purchase and enjoy your content',
+          card_name: 'Name on Card',
+          card_number: 'Card number',
+          date: 'MM/AA',
+          cvv: 'CVV',
+          country: 'Country',
+          installments: 'Installments',
+          full_name: 'Full Name',
+          email: 'E-mail',
+          CPF: 'CPF',
+          authorize: 'I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
+          place_you_order: 'Place your order',
+        },
+        modal: {
+          success: {
+            title : "Payment Success",
+            subtitle: "Your payment has been successfully processed. ",
+            close: "Enjoy your content"
+          },
+          failure: {
+            title: "Something went worng!",
+            subtitle: "We are going to fix it. Try later.",
+            close: "Retry"
+          },
+        },
+        password: {
+          title: "You are almos there",
+          subtitle: "Your account is almost ready. Please choose a password for your account and enjoy the show.",
+          password_input: "Password",
+          saveandcontinue: "Save and continue"
+        },
+      },
       post: {
         participants: 'Participants:',
         reactions: 'Reactions',
@@ -263,7 +323,7 @@ const EN_US = {
             title: 'Live Chat'
           }
         }
-      }
+      },
     },
     cookieConsent: {
       notice: 'Notice.',

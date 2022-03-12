@@ -252,6 +252,66 @@ const PT_BR = {
         upcoming: 'Próximas transmissões',
         past: 'Assistir Novamente',
       },
+      checkout: {
+        login: {
+          title: 'Pagamento',
+          subtitle: 'Por favor, complete sua compra e aproveite seu conteúdo',
+          continue_with: 'Continue com',
+          or: 'ou',
+          input_label_fullname: 'Nome Completo',
+          input_label_email: 'Email',
+          term_service: 'Ao se inscrever, concordo com a Política de Privacidade e Termos de Serviço do FanHero.',
+          signup_btn: 'inscrever-se',
+          already_have_account: 'já tem uma conta? Entre aqui'
+        },
+        more_info: {
+          title: 'Campo customizado',
+          subtitle: '{fullName} precisamos de um pouco mais de informações sobre você',
+          inputName: 'Nome',
+          inputEmail: 'Email',
+          inputGender: 'Gênero',
+          inputAddress: 'Endereço',
+          inputCity: 'Cidade',
+          inputState: 'Estado',
+          inputZip: 'CEP',
+          buttonNext: 'Próximo',
+          textWrongAccount: 'Conta errada? ',
+          textLogin: 'Conecte-se',
+        },
+        card_info: {
+          title: 'Informações do cartão',
+          subtitle: 'Finalize o pagamento e aproveite o conteúdo.',
+          card_name: 'Nome no Cartão',
+          card_number: 'Número do Cartão',
+          date: 'MM/AA',
+          cvv: 'CVV',
+          country: 'Country',
+          installments: 'Parcelas',
+          full_name: 'Nome Completo',
+          email: 'E-mail',
+          CPF: 'CPF',
+          authorize: 'Autorizo ​​a FanHero LLC, a enviar instruções à instituição financeira que emitiu meu cartão para receber pagamentos da conta do cartão, de acordo com os termos do meu contrato com você.',
+          place_you_order: 'Faça seu pedido',
+        },
+        modal: {
+          success: {
+            title : "Pago com sucesso",
+            subtitle: "Seu pagamento foi processado com sucesso.",
+            close: "Aproveite seu conteúdo"
+          },
+          failure: {
+            title: "Alguma coisa deu errado!",
+            subtitle: "Nós vamos corrigi-lo. Tente depois.",
+            close: "Repetir"
+          },
+        },
+        password: {
+          title: "Você está quase lá",
+          subtitle: "Sua conta está quase pronta. Escolha uma senha para sua conta e aproveite o show.",
+          password_input: "Senha",
+          saveandcontinue: "Salve e continue"
+        },
+      },
       post: {
         participants: 'Participantes:',
         reactions: 'Reações',
