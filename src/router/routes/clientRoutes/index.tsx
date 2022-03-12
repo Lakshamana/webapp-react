@@ -14,10 +14,9 @@ import {
   VideoPostView,
   FeedPage,
   RecoverPasswordPage,
-  VideoPostViewPage,
-  LiveChat,
   Livestreams,
   NotFound,
+  LiveChat
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
