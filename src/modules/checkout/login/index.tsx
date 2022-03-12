@@ -125,9 +125,9 @@ export const CheckoutLogin = () => {
             {t('page.checkout.login.continue_with')}
           </Text>
           <Flex gridGap={7} marginY={30} justifyContent={'center'}>
-            <SocialSigninButton kind={'google'}></SocialSigninButton>
-            <SocialSigninButton kind={'facebook'}></SocialSigninButton>
-            <SocialSigninButton kind={'apple'}></SocialSigninButton>
+            <SocialSigninButton kind={'google'} colorful={true}/>
+            <SocialSigninButton kind={'facebook'} colorful={true}/>
+            <SocialSigninButton kind={'apple'} colorful={true}/>
           </Flex>
           <Text fontSize="16px" color={colors.generalText[colorMode]} mb="24px">
             {t('page.checkout.login.or')}

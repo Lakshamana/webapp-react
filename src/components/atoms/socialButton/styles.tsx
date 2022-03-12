@@ -10,7 +10,7 @@ export const BoxButton = styled.button`
     width: 56px;
     height: 56px;
     color: white;
-    background: #444444 ${({ theme })=>(theme.colors.inputBg[theme.colorMode])};
+    background: ${({ theme })=>(theme.colors.inputBg[theme.colorMode])};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
     ${space}
