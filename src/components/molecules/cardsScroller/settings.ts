@@ -1,7 +1,7 @@
 import { SwiperOptions } from 'swiper'
 
 export const SWIPPER_PARAMS: SwiperOptions = {
-  spaceBetween: 15,
+  spaceBetween: 10,
   observer: true,
   preloadImages: true,
   resizeObserver: true,
@@ -11,6 +11,7 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   watchOverflow: true,
   autoplay: false,
   lazy: true,
+  allowTouchMove: false,
   touchMoveStopPropagation: true,
   touchStartPreventDefault: true,
   grabCursor: false,
