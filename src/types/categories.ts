@@ -18,4 +18,5 @@ export type CategoryPostCardProps = {
   thumbnail?: string
   title?: string
   isNew?: string
+  isPinned?: boolean
 }
