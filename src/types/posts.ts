@@ -35,6 +35,7 @@ export type VideoPostCardProps = {
   countViews?: number
   isExclusive?: boolean
   isGeolocked?: boolean
+  isPinned?: boolean
 }
 
 export type AvailableVideoPost = VideoPost | OnDemandPost

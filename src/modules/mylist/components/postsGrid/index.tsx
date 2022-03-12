@@ -10,6 +10,7 @@ import {
   VideosGridProps,
 } from 'types/posts'
 import { colors, breakpoints } from 'styles'
+import { Wrapper } from './style'
 
 const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const { generateImage } = useThumbor()
@@ -67,7 +68,9 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
       </Text>
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
-          <VideoPostCard {...item}></VideoPostCard>
+          <Wrapper>
+            <VideoPostCard {...item}></VideoPostCard>
+          </Wrapper>
         ))}
       </SimpleGrid>
     </Flex>

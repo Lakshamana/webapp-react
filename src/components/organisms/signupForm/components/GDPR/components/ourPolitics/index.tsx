@@ -7,33 +7,35 @@ import { useThemeStore } from 'services/stores/theme'
 import { useFlags } from 'contexts/flags'
 import { colors, sizes } from 'styles'
 
-const OurPolitics = ({ handleFormSubmit, isLoading, onCancel }: ConfirmAgeProps) => {
+const OurPolitics = ({
+  handleFormSubmit,
+  isLoading,
+  onCancel,
+}: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { ORGANIZATION } = useFlags()
 
   const [terms, setTerms] = useState(false)
 
-  const renderCheckboxLabel = () => {
-    return (
-      <>
-        {t('signup.our_politics.agree')}
-        <Link
-          paddingX={1}
-          to={ORGANIZATION.TERMS_URL}
-          label={t('common.terms')}
-          isExternal
-        />
-        {t('common.and')}
-        <Link
-          paddingX={1}
-          to={ORGANIZATION.PRIVACY_URL}
-          label={t('common.privacy')}
-          isExternal
-        />
-      </>
-    )
-  }
+  const renderCheckboxLabel = () => (
+    <>
+      {t('signup.our_politics.agree')}
+      <Link
+        paddingX={1}
+        to={ORGANIZATION.TERMS_URL}
+        label={t('common.terms')}
+        isExternal
+      />
+      {t('common.and')}
+      <Link
+        paddingX={1}
+        to={ORGANIZATION.PRIVACY_URL}
+        label={t('common.privacy')}
+        isExternal
+      />
+    </>
+  )
 
   return (
     <Flex alignItems={'center'} flexDirection={'column'} gridGap={5}>
@@ -59,7 +61,7 @@ const OurPolitics = ({ handleFormSubmit, isLoading, onCancel }: ConfirmAgeProps)
       >
         {t('signup.our_politics.confirm_you_read')}
       </Text>
-      <Container width={1} mb={20} justifyContent={'left'}>
+      <Container width={1} mb={10} justifyContent={'left'}>
         <Checkbox
           onChange={(e) => setTerms(e.target.checked)}
           name={'createAccount.terms_of_service'}
@@ -67,19 +69,27 @@ const OurPolitics = ({ handleFormSubmit, isLoading, onCancel }: ConfirmAgeProps)
           label={renderCheckboxLabel()}
         ></Checkbox>
       </Container>
-      <Button
-        width={[sizes.loginButtonWidth]}
-        isDisabled={!terms}
-        label={t('signup.actions.register')}
-        onClick={() => handleFormSubmit()}
-        isLoading={isLoading}
-      ></Button>
-      <Button
-        width={[sizes.loginButtonWidth]}
-        variant="ghost"
-        label={t('signup.actions.cancel')}
-        onClick={onCancel}
-      ></Button>
+      <Flex
+        width={1}
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      >
+        <Button
+          width={[sizes.loginButtonWidth]}
+          isDisabled={!terms}
+          label={t('signup.actions.register')}
+          onClick={() => handleFormSubmit()}
+          isLoading={isLoading}
+          mb={3}
+        ></Button>
+        <Button
+          width={[sizes.loginButtonWidth]}
+          variant="ghost"
+          label={t('signup.actions.cancel')}
+          onClick={onCancel}
+        ></Button>
+      </Flex>
     </Flex>
   )
 }

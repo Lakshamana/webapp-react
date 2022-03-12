@@ -13,6 +13,26 @@ export const SwiperStyled = styled(Swiper)`
     padding: 0 1.3rem !important;
   }
 
+  .swiper-slide {
+    &:hover {
+      transition: all 250ms ease-out;
+      -webkit-transition: all 250ms ease-out;
+      margin-top: -30px;
+      transform: scale(1.2);
+      z-index: 9999;
+    }
+
+    &:first-child:hover {
+      margin-left: 30px;
+    }
+  }
+
+  .swiper-slide-active {
+    &:hover {
+      margin-left: 30px;
+    }
+  }
+
   .disabled_swiper_button {
     opacity: 0;
     cursor: auto;
@@ -32,7 +52,7 @@ export const SwiperStyled = styled(Swiper)`
 
   .cards-scroller-pagination .swiper-pagination-bullet {
     width: 15px;
-    height: 4px;
+    height: 2px;
     background: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
     border: 0;
     opacity: 0.64;
