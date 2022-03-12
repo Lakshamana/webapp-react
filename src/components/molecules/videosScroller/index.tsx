@@ -88,9 +88,10 @@ const VideosScroller = ({
         url: url,
         thumbnail: thumbnail,
         mediaLength: item.media?.duration || undefined,
-        countViews: item.counts?.countViews || undefined,
+        countViews: item.counts?.countViewsTotal || undefined,
         isExclusive: isExclusive(item),
         isGeolocked: isGeolocked(item),
+        isPinned: !!item.pinnedAt
       }
     })
     setScrollerItems(mappedArr?.length ? mappedArr : [])

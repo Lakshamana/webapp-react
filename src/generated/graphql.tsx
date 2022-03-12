@@ -7509,6 +7509,20 @@ export type ForgetAcountMutationVariables = Exact<{
 
 export type ForgetAcountMutation = { __typename?: 'Mutation', forgetAccount: { __typename?: 'Account', email?: Maybe<string> } };
 
+export type PinCategoryMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+}>;
+
+
+export type PinCategoryMutation = { __typename?: 'Mutation', unpinCategory?: Maybe<{ __typename?: 'Category', id?: Maybe<string>, pinnedAt?: Maybe<any> }> };
+
+export type PinPostMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type PinPostMutation = { __typename?: 'Mutation', pinPost?: Maybe<{ __typename?: 'AudioPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'OnDemandPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'PhotoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'Poll', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedAudioPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedOnDemandPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedPhotoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedPoll', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedTextPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedVideoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'TextPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'VideoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> }> };
+
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -7541,6 +7555,20 @@ export type SocialSignInMutationVariables = Exact<{
 
 
 export type SocialSignInMutation = { __typename?: 'Mutation', socialSignIn: { __typename?: 'SingIn', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, username?: Maybe<string>, status?: Maybe<{ __typename?: 'AccountStatus', gdpr?: Maybe<boolean> }> }, token: { __typename?: 'AccessToken', accessToken: string } } };
+
+export type UnpinCategoryMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+}>;
+
+
+export type UnpinCategoryMutation = { __typename?: 'Mutation', unpinCategory?: Maybe<{ __typename?: 'Category', id?: Maybe<string>, pinnedAt?: Maybe<any> }> };
+
+export type UnpinPostMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type UnpinPostMutation = { __typename?: 'Mutation', unpinPost?: Maybe<{ __typename?: 'AudioPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'OnDemandPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'PhotoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'Poll', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedAudioPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedOnDemandPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedPhotoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedPoll', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedTextPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'RedactedVideoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'TextPost', id?: Maybe<string>, pinnedAt?: Maybe<any> } | { __typename?: 'VideoPost', id?: Maybe<string>, pinnedAt?: Maybe<any> }> };
 
 export type UpdateMyAccountMutationVariables = Exact<{
   payload: UpdateAccountInput;
@@ -7590,6 +7618,14 @@ export type BillboardQueryVariables = Exact<{
 
 
 export type BillboardQuery = { __typename?: 'Query', billboard?: Maybe<Array<Maybe<{ __typename?: 'Billboard', title?: Maybe<string>, target?: Maybe<BillboardTarget>, sort?: Maybe<number>, id?: Maybe<string>, description?: Maybe<string>, delay?: Maybe<number>, actions?: Maybe<Array<Maybe<{ __typename?: 'BillboardAction', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>>>, banner?: Maybe<{ __typename?: 'MediaPhoto', height?: Maybe<number>, id?: Maybe<string>, imgPath?: Maybe<string>, status?: Maybe<string>, type?: Maybe<MediaType>, width?: Maybe<number> }>, cover?: Maybe<{ __typename?: 'MediaPhoto', height?: Maybe<number>, id?: Maybe<string>, imgPath?: Maybe<string>, status?: Maybe<string>, type?: Maybe<MediaType>, width?: Maybe<number> }> }>>> };
+
+export type GetFeaturedCategoriesBillboardQueryVariables = Exact<{
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetFeaturedCategoriesBillboardQuery = { __typename?: 'Query', categories?: Maybe<Array<Maybe<{ __typename?: 'Category', id?: Maybe<string>, name?: Maybe<string>, description?: Maybe<string>, parentId?: Maybe<string>, createdAt?: Maybe<any>, featuredAt?: Maybe<any>, pinnedAt?: Maybe<any>, image?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, cover?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, banner?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> }>>> };
 
 export type GetFeaturedCategoriesScrollerQueryVariables = Exact<{
   limit?: Maybe<Scalars['Int']>;
@@ -7699,7 +7735,7 @@ export type GetPostsScrollerQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsScrollerQuery = { __typename?: 'Query', posts?: Maybe<Array<Maybe<{ __typename?: 'AudioPost' } | { __typename?: 'OnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, description?: Maybe<string>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaLivestream', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> } | { __typename?: 'PhotoPost' } | { __typename?: 'Poll' } | { __typename?: 'RedactedAudioPost' } | { __typename?: 'RedactedOnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'RedactedPhotoPost' } | { __typename?: 'RedactedPoll' } | { __typename?: 'RedactedTextPost' } | { __typename?: 'RedactedVideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'TextPost' } | { __typename?: 'VideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, description?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaVideo', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> }>>> };
+export type GetPostsScrollerQuery = { __typename?: 'Query', posts?: Maybe<Array<Maybe<{ __typename?: 'AudioPost' } | { __typename?: 'OnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaLivestream', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> } | { __typename?: 'PhotoPost' } | { __typename?: 'Poll' } | { __typename?: 'RedactedAudioPost' } | { __typename?: 'RedactedOnDemandPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'RedactedPhotoPost' } | { __typename?: 'RedactedPoll' } | { __typename?: 'RedactedTextPost' } | { __typename?: 'RedactedVideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, access?: Maybe<AccessFlag>, reason?: Maybe<RedactReason>, publishedAt?: Maybe<any>, pinnedAt?: Maybe<any>, media?: Maybe<{ __typename?: 'MediaThumbStub', id?: Maybe<string>, duration?: Maybe<number>, imgPath?: Maybe<string> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }> } | { __typename?: 'TextPost' } | { __typename?: 'VideoPost', id?: Maybe<string>, type?: Maybe<string>, title?: Maybe<string>, status?: Maybe<PostStatus>, publishedAt?: Maybe<any>, access?: Maybe<AccessFlag>, pinnedAt?: Maybe<any>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', id?: Maybe<string>, imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaVideo', id?: Maybe<string>, imgPath?: Maybe<string>, duration?: Maybe<number> }>, counts?: Maybe<{ __typename?: 'CountMeta', id?: Maybe<string>, countViewsTotal?: Maybe<number> }> }>>> };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
@@ -7846,6 +7882,132 @@ export function useForgetAcountMutation(baseOptions?: Apollo.MutationHookOptions
 export type ForgetAcountMutationHookResult = ReturnType<typeof useForgetAcountMutation>;
 export type ForgetAcountMutationResult = Apollo.MutationResult<ForgetAcountMutation>;
 export type ForgetAcountMutationOptions = Apollo.BaseMutationOptions<ForgetAcountMutation, ForgetAcountMutationVariables>;
+export const PinCategoryDocument = gql`
+    mutation PinCategory($categoryId: String!) {
+  unpinCategory(categoryId: $categoryId) {
+    id
+    pinnedAt
+  }
+}
+    `;
+export type PinCategoryMutationFn = Apollo.MutationFunction<PinCategoryMutation, PinCategoryMutationVariables>;
+export type PinCategoryComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<PinCategoryMutation, PinCategoryMutationVariables>, 'mutation'>;
+
+    export const PinCategoryComponent = (props: PinCategoryComponentProps) => (
+      <ApolloReactComponents.Mutation<PinCategoryMutation, PinCategoryMutationVariables> mutation={PinCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __usePinCategoryMutation__
+ *
+ * To run a mutation, you first call `usePinCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePinCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pinCategoryMutation, { data, loading, error }] = usePinCategoryMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function usePinCategoryMutation(baseOptions?: Apollo.MutationHookOptions<PinCategoryMutation, PinCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PinCategoryMutation, PinCategoryMutationVariables>(PinCategoryDocument, options);
+      }
+export type PinCategoryMutationHookResult = ReturnType<typeof usePinCategoryMutation>;
+export type PinCategoryMutationResult = Apollo.MutationResult<PinCategoryMutation>;
+export type PinCategoryMutationOptions = Apollo.BaseMutationOptions<PinCategoryMutation, PinCategoryMutationVariables>;
+export const PinPostDocument = gql`
+    mutation PinPost($postId: String!) {
+  pinPost(postId: $postId) {
+    ... on VideoPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedVideoPost {
+      id
+      pinnedAt
+    }
+    ... on OnDemandPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedOnDemandPost {
+      id
+      pinnedAt
+    }
+    ... on AudioPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedAudioPost {
+      id
+      pinnedAt
+    }
+    ... on PhotoPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedPhotoPost {
+      id
+      pinnedAt
+    }
+    ... on TextPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedTextPost {
+      id
+      pinnedAt
+    }
+    ... on Poll {
+      id
+      pinnedAt
+    }
+    ... on RedactedPoll {
+      id
+      pinnedAt
+    }
+  }
+}
+    `;
+export type PinPostMutationFn = Apollo.MutationFunction<PinPostMutation, PinPostMutationVariables>;
+export type PinPostComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<PinPostMutation, PinPostMutationVariables>, 'mutation'>;
+
+    export const PinPostComponent = (props: PinPostComponentProps) => (
+      <ApolloReactComponents.Mutation<PinPostMutation, PinPostMutationVariables> mutation={PinPostDocument} {...props} />
+    );
+    
+
+/**
+ * __usePinPostMutation__
+ *
+ * To run a mutation, you first call `usePinPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePinPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pinPostMutation, { data, loading, error }] = usePinPostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function usePinPostMutation(baseOptions?: Apollo.MutationHookOptions<PinPostMutation, PinPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PinPostMutation, PinPostMutationVariables>(PinPostDocument, options);
+      }
+export type PinPostMutationHookResult = ReturnType<typeof usePinPostMutation>;
+export type PinPostMutationResult = Apollo.MutationResult<PinPostMutation>;
+export type PinPostMutationOptions = Apollo.BaseMutationOptions<PinPostMutation, PinPostMutationVariables>;
 export const RefreshTokenDocument = gql`
     mutation RefreshToken {
   refreshToken {
@@ -8057,6 +8219,132 @@ export function useSocialSignInMutation(baseOptions?: Apollo.MutationHookOptions
 export type SocialSignInMutationHookResult = ReturnType<typeof useSocialSignInMutation>;
 export type SocialSignInMutationResult = Apollo.MutationResult<SocialSignInMutation>;
 export type SocialSignInMutationOptions = Apollo.BaseMutationOptions<SocialSignInMutation, SocialSignInMutationVariables>;
+export const UnpinCategoryDocument = gql`
+    mutation UnpinCategory($categoryId: String!) {
+  unpinCategory(categoryId: $categoryId) {
+    id
+    pinnedAt
+  }
+}
+    `;
+export type UnpinCategoryMutationFn = Apollo.MutationFunction<UnpinCategoryMutation, UnpinCategoryMutationVariables>;
+export type UnpinCategoryComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>, 'mutation'>;
+
+    export const UnpinCategoryComponent = (props: UnpinCategoryComponentProps) => (
+      <ApolloReactComponents.Mutation<UnpinCategoryMutation, UnpinCategoryMutationVariables> mutation={UnpinCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __useUnpinCategoryMutation__
+ *
+ * To run a mutation, you first call `useUnpinCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpinCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unpinCategoryMutation, { data, loading, error }] = useUnpinCategoryMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useUnpinCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnpinCategoryMutation, UnpinCategoryMutationVariables>(UnpinCategoryDocument, options);
+      }
+export type UnpinCategoryMutationHookResult = ReturnType<typeof useUnpinCategoryMutation>;
+export type UnpinCategoryMutationResult = Apollo.MutationResult<UnpinCategoryMutation>;
+export type UnpinCategoryMutationOptions = Apollo.BaseMutationOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>;
+export const UnpinPostDocument = gql`
+    mutation UnpinPost($postId: String!) {
+  unpinPost(postId: $postId) {
+    ... on VideoPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedVideoPost {
+      id
+      pinnedAt
+    }
+    ... on OnDemandPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedOnDemandPost {
+      id
+      pinnedAt
+    }
+    ... on AudioPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedAudioPost {
+      id
+      pinnedAt
+    }
+    ... on PhotoPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedPhotoPost {
+      id
+      pinnedAt
+    }
+    ... on TextPost {
+      id
+      pinnedAt
+    }
+    ... on RedactedTextPost {
+      id
+      pinnedAt
+    }
+    ... on Poll {
+      id
+      pinnedAt
+    }
+    ... on RedactedPoll {
+      id
+      pinnedAt
+    }
+  }
+}
+    `;
+export type UnpinPostMutationFn = Apollo.MutationFunction<UnpinPostMutation, UnpinPostMutationVariables>;
+export type UnpinPostComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UnpinPostMutation, UnpinPostMutationVariables>, 'mutation'>;
+
+    export const UnpinPostComponent = (props: UnpinPostComponentProps) => (
+      <ApolloReactComponents.Mutation<UnpinPostMutation, UnpinPostMutationVariables> mutation={UnpinPostDocument} {...props} />
+    );
+    
+
+/**
+ * __useUnpinPostMutation__
+ *
+ * To run a mutation, you first call `useUnpinPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnpinPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unpinPostMutation, { data, loading, error }] = useUnpinPostMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useUnpinPostMutation(baseOptions?: Apollo.MutationHookOptions<UnpinPostMutation, UnpinPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnpinPostMutation, UnpinPostMutationVariables>(UnpinPostDocument, options);
+      }
+export type UnpinPostMutationHookResult = ReturnType<typeof useUnpinPostMutation>;
+export type UnpinPostMutationResult = Apollo.MutationResult<UnpinPostMutation>;
+export type UnpinPostMutationOptions = Apollo.BaseMutationOptions<UnpinPostMutation, UnpinPostMutationVariables>;
 export const UpdateMyAccountDocument = gql`
     mutation UpdateMyAccount($payload: UpdateAccountInput!) {
   updateMyAccount(payload: $payload) {
@@ -8376,6 +8664,66 @@ export function useBillboardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type BillboardQueryHookResult = ReturnType<typeof useBillboardQuery>;
 export type BillboardLazyQueryHookResult = ReturnType<typeof useBillboardLazyQuery>;
 export type BillboardQueryResult = Apollo.QueryResult<BillboardQuery, BillboardQueryVariables>;
+export const GetFeaturedCategoriesBillboardDocument = gql`
+    query GetFeaturedCategoriesBillboard($limit: Int, $skip: Int) {
+  categories(filter: {featuredAtExists: true}, limit: $limit, skip: $skip) {
+    id
+    name
+    description
+    image {
+      id
+      imgPath
+    }
+    cover {
+      id
+      imgPath
+    }
+    banner {
+      id
+      imgPath
+    }
+    parentId
+    createdAt
+    featuredAt
+    pinnedAt
+  }
+}
+    `;
+export type GetFeaturedCategoriesBillboardComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables>, 'query'>;
+
+    export const GetFeaturedCategoriesBillboardComponent = (props: GetFeaturedCategoriesBillboardComponentProps) => (
+      <ApolloReactComponents.Query<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables> query={GetFeaturedCategoriesBillboardDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetFeaturedCategoriesBillboardQuery__
+ *
+ * To run a query within a React component, call `useGetFeaturedCategoriesBillboardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFeaturedCategoriesBillboardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFeaturedCategoriesBillboardQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetFeaturedCategoriesBillboardQuery(baseOptions?: Apollo.QueryHookOptions<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables>(GetFeaturedCategoriesBillboardDocument, options);
+      }
+export function useGetFeaturedCategoriesBillboardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables>(GetFeaturedCategoriesBillboardDocument, options);
+        }
+export type GetFeaturedCategoriesBillboardQueryHookResult = ReturnType<typeof useGetFeaturedCategoriesBillboardQuery>;
+export type GetFeaturedCategoriesBillboardLazyQueryHookResult = ReturnType<typeof useGetFeaturedCategoriesBillboardLazyQuery>;
+export type GetFeaturedCategoriesBillboardQueryResult = Apollo.QueryResult<GetFeaturedCategoriesBillboardQuery, GetFeaturedCategoriesBillboardQueryVariables>;
 export const GetFeaturedCategoriesScrollerDocument = gql`
     query GetFeaturedCategoriesScroller($limit: Int, $skip: Int) {
   categories(filter: {featuredAtExists: true}, limit: $limit, skip: $skip) {
@@ -9383,7 +9731,6 @@ export const GetPostsScrollerDocument = gql`
       id
       type
       title
-      description
       status
       publishedAt
       access
@@ -9408,7 +9755,6 @@ export const GetPostsScrollerDocument = gql`
       title
       status
       access
-      description
       publishedAt
       thumbnail {
         id

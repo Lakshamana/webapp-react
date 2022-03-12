@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Flex } from '@chakra-ui/layout'
+import { Flex, Box } from '@chakra-ui/layout'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import {
@@ -17,8 +17,9 @@ import {
   QUERY_LIVESTREAMS_SCROLLER,
   QUERY_POSTS_SCROLLER,
 } from 'services/graphql'
-import { Container } from 'components'
+import { Container, Skeleton } from 'components'
 import { LivestreamScroller, VideosScroller } from 'components/molecules'
+import { sizes } from 'styles'
 
 const Livestreams = () => {
   const { t } = useTranslation()
@@ -45,7 +46,7 @@ const Livestreams = () => {
       ],
     },
     pollInterval: DEFAULT_POLLING_INTERVAL,
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   })
   // TO-DO: Add skeleton loading
   // TO-DO: Add billboard (waiting for API)
@@ -70,7 +71,7 @@ const Livestreams = () => {
         },
       ],
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
@@ -83,7 +84,7 @@ const Livestreams = () => {
     const live = livestreamsData?.livestreams?.filter((live: Livestream) => {
       return live.status === LivestreamStatus.Active
     })
-    setLiveItems(live && live.length ? live : null)
+    setLiveItems(live?.length ? live : null)
 
     const upcoming = livestreamsData?.livestreams?.filter(
       (live: Livestream) => {
@@ -93,30 +94,54 @@ const Livestreams = () => {
         )
       }
     )
-    setUpcomingItems(upcoming && upcoming.length ? upcoming : null)
+    setUpcomingItems(upcoming?.length ? upcoming : null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livestreamsData])
+
+  const isLoading = loadingLivestreams || loadingOnDemandPostsData
+
+  const hasResults =
+    livestreamsData?.livestreams?.length || onDemandPostsData?.posts?.length
+
+  const isEmpty = !isLoading && !hasResults
 
   return (
     <Container defaultPadding marginTop={15}>
       <Flex gridGap={5} flexDirection={'column'} w={'100vw'}>
-        {!!liveItems?.length && !loadingLivestreams && (
+        {isLoading && (
+          <Box p={sizes.paddingSm} width="100%">
+            <Skeleton my={4} kind="cards" numberOfCards={4} />
+          </Box>
+        )}
+        {liveItems?.length ? (
           <LivestreamScroller
             items={liveItems}
             sectionTitle={t('page.live.live')}
           ></LivestreamScroller>
+        ) : (
+          ''
         )}
-        {!!upcomingItems?.length && !loadingLivestreams && (
+        {upcomingItems?.length ? (
           <LivestreamScroller
             items={upcomingItems}
             sectionTitle={t('page.live.upcoming')}
           ></LivestreamScroller>
+        ) : (
+          ''
         )}
-        {!!onDemandPostsData?.posts?.length && !loadingOnDemandPostsData && (
+        {onDemandPostsData?.posts?.length ? (
           <VideosScroller
             items={onDemandPostsData.posts}
             sectionTitle={t('page.live.past')}
           ></VideosScroller>
+        ) : (
+          ''
+        )}
+        {/* TO-DO: built a empty state component */}
+        {isEmpty && (
+          <Flex w={'100vw'} justifyContent="center" color="white">
+            Page empty! We need to create an empty state component.
+          </Flex>
         )}
       </Flex>
     </Container>
