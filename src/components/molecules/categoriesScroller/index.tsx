@@ -53,6 +53,7 @@ const CategoriesScroller = ({
         title: `${item.name}`,
         url: url,
         thumbnail: thumbnail,
+        isPinned: !!item.pinnedAt
       }
     })
     setScrollerItems(mappedArr?.length ? mappedArr : [])
