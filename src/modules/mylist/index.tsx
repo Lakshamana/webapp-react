@@ -8,13 +8,13 @@ import { PostsGrid, CategoriesGrid } from './components'
 const MyListPage = () => {
   const { t } = useTranslation()
 
-  // TO-DO: Implement infinite loading on Cards Scroller
+  // TO-DO: Implement infinite loading on Cards Grid
   const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
     useQuery(QUERY_PINNED_CATEGORIES, {
       variables: {},
     })
 
-  // TO-DO: Implement infinite loading on Cards Scroller
+  // TO-DO: Implement infinite loading on Cards Grid
   const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
     QUERY_PINNED_POSTS,
     {
@@ -50,8 +50,12 @@ const MyListPage = () => {
   return (
     <Container flexDirection={'column'} width={'100vw'} defaultPadding my={15}>
       {isLoading && <Skeleton kind="cards" numberOfCards={4} />}
-      {pinnedCategoriesData?.pinnedCategories?.length ? renderCategoriesGrid() : ''}
-      {pinnedPostsData?.pinnedPosts?.length ? renderPostsGrid() : ''}
+      {pinnedCategoriesData?.pinnedCategories?.length ? (
+        renderCategoriesGrid()
+      ) : (
+        <></>
+      )}
+      {pinnedPostsData?.pinnedPosts?.length ? renderPostsGrid() : <></>}
       {/* TO-DO: built a empty state component */}
       {isEmpty && (
         <Flex w={'100vw'} justifyContent="center" color="white">
