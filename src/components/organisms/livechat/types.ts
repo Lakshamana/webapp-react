@@ -4,6 +4,7 @@ export interface Props {
   onPressEnter?: any;
   onChangeChat?: any;
   onCloseChat?: any;
+  entityId: string
 }
 
 interface Chat {
