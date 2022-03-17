@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { color, flexbox, layout } from "styled-system";
-import { breakpoints } from "styles";
-import { Container } from "@chakra-ui/react";
-import { Theme } from "./types";
+import styled from 'styled-components'
+import { color, flexbox, layout } from 'styled-system'
+import { breakpoints } from 'styles'
+import { Container } from '@chakra-ui/react'
+import { Theme } from './types'
 
 export const BoxChatMain: any = styled.div`
   ${flexbox}
@@ -11,13 +11,7 @@ export const BoxChatMain: any = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
-
-export const AvatarContainer: any = styled.div`
-  @media screen and (max-width: ${breakpoints.lg}) {
-    display: none
-  }
-`;
+`
 
 export const MainContainer: any = styled.div`
   ${layout}
@@ -25,19 +19,24 @@ export const MainContainer: any = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-`;
+`
 
-export const DateContainer: any = styled.div` 
-`;
+export const DateText: any = styled.div`
+  ${({ theme }) => `color: ${theme.colors.secondaryText[theme.colorMode]};`}
+  font-size: 0.75rem;
+  margin: 3px 12px;
+`
 
 export const NameUserText: any = styled.div`
-${({ theme: { colors, colorMode } }: Theme) => `color: ${colors.livechatText[colorMode]};`}
-  font-size: 12px;
-  font-weight: 500;
+  color: ${({ isOwnUser }: Theme) => (isOwnUser ? 'white' : 'black')};
+  font-size: 0.8rem;
+  font-weight: bolder;
+  margin-top: 5px;
   display: flex;
   flex-direction: row;
-  justify-content: ${ ({ isOwnUser }: Theme) => (isOwnUser ? 'flex-end' : 'flex-start') };
-`;
+  justify-content: ${({ isOwnUser }: Theme) =>
+    isOwnUser ? 'flex-end' : 'flex-start'};
+`
 
 export const BoxContainer: any = styled.div`
   ${layout}
@@ -48,16 +47,15 @@ export const BoxContainer: any = styled.div`
     return `background: ${colors.livechatBg[defineColor]};`
   }}
   border-radius: 8px;
-  padding: 12px;
+  padding: 7px 12px;
   min-height: 0;
-`;
+`
 
 export const MessageText: any = styled.span`
-  font-size: 12px;
-  font-weight: 300;
-  color: ${ ({ isOwnUser }: Theme) => (isOwnUser ? "#fff" : "#444") };
-  text-align: ${ ({ isOwnUser }: Theme) => (isOwnUser ? "end" : "start") };
-`;
+  font-size: 0.9rem;
+  color: ${({ isOwnUser }: Theme) => (isOwnUser ? 'white' : 'black')};
+  text-align: ${({ isOwnUser }: Theme) => (isOwnUser ? 'end' : 'start')};
+`
 
 export const ContainerCustom = styled(Container)`
   max-width: 100%;
