@@ -1,14 +1,16 @@
+import { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
+
+import { useChannelsStore } from 'services/stores'
+import { QUERY_CATEGORIES } from 'services/graphql'
+import { Category } from 'generated/graphql'
+
 import { Container, Skeleton } from 'components'
 import { BillboardScroller, CategoriesScroller } from 'components/molecules'
-import { useQuery } from '@apollo/client'
-import { useEffect, useState } from 'react'
-import { QUERY_CATEGORIES } from 'services/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
-import { useChannelsStore } from 'services/stores'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { sizes } from 'styles'
-import { Category } from 'generated/graphql'
 
 const CategoriesPage = () => {
   const { t } = useTranslation()
@@ -41,19 +43,17 @@ const CategoriesPage = () => {
     }
   )
 
-  const getImageUrl = (obj) => {
-    const image = generateImage(ThumborInstanceTypes.IMAGE, obj?.imgPath, {
+  const getImageUrl = (obj) =>
+    generateImage(ThumborInstanceTypes.IMAGE, obj?.imgPath, {
       size: {
         height: obj?.height || undefined,
         width: obj?.width || undefined,
       },
     })
-    return image
-  }
 
   useEffect(() => {
     setCategoriesBillboardItems([])
-    const reduced = featuredCategoriesData?.categories?.reduce(
+    const billboardItems = featuredCategoriesData?.categories?.reduce(
       (memo, curr: Category) => {
         const cover = getImageUrl(curr?.cover)
         const banner = getImageUrl(curr?.banner)
@@ -70,22 +70,21 @@ const CategoriesPage = () => {
       },
       []
     )
-
-    setCategoriesBillboardItems(reduced && reduced.length ? reduced : null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setCategoriesBillboardItems(
+      !!billboardItems?.length ? billboardItems : null
+    )
+    // eslint-disable-next-line
   }, [featuredCategoriesData])
 
   useEffect(() => {
     if (categoriesData?.categories.length) {
-      const categoriesWithChildren =
-        categoriesData?.categories.filter(
-          (category) => category.children && !!category.children.length
-        ) || []
+      const categoriesWithChildren = categoriesData?.categories.filter(
+        (category) => category.children && !!category.children.length
+      )
 
-      const noChildren =
-        categoriesData?.categories.filter(
-          (category) => category.children && !category.children.length
-        ) || []
+      const noChildren = categoriesData?.categories.filter(
+        (category) => category.children && !category.children.length
+      )
 
       setCategoriesWithChildren(categoriesWithChildren)
       setCategoriesWithouChildren(noChildren)
@@ -96,37 +95,34 @@ const CategoriesPage = () => {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
           <Skeleton kind="cards" numberOfCards={4} />
         </Box>
-      ) : (
+      )}
+      {!isLoading && (
         <Container flexDirection={'column'} width={'100%'}>
           <BillboardScroller
             items={categoriesBillboardItems}
             customButtons={false}
-          ></BillboardScroller>
+          />
           <Flex pb={10} gridGap={10} flexDirection={'column'}>
-            {categoriesWithoutChildren?.length ? (
+            {!!categoriesWithoutChildren?.length && (
               <CategoriesScroller
                 items={categoriesWithoutChildren}
                 sectionTitle={t('page.collection.more_categories')}
                 hasMoreLink={true}
-              ></CategoriesScroller>
-            ) : (
-              <></>
+              />
             )}
-            {categoriesWithChildren?.map((category: Category) => {
-              const childrenArr = category.children
-              return (
+            {!!categoriesWithChildren?.length &&
+              categoriesWithChildren?.map((category: Category) => (
                 <CategoriesScroller
-                  items={childrenArr as Category[]}
+                  items={category.children as Category[]}
                   sectionTitle={category?.name || ''}
                   hasMoreLink={true}
                   sectionUrl={`/c/${activeChannel}/category/${category.id}`}
-                ></CategoriesScroller>
-              )
-            })}
+                />
+              ))}
           </Flex>
         </Container>
       )}
