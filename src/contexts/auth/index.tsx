@@ -11,6 +11,7 @@ import {
   useOrganizationStore,
   useChannelsStore,
 } from 'services/stores'
+import { signOutFB } from 'services/firebase'
 import {
   USER_INFO,
   ORGANIZATION_INFO,
@@ -164,6 +165,7 @@ export const AuthProvider = ({ children }) => {
         },
       })
     }
+    await signOutFB()
     await clearData()
     // TO-DO: Redirect based on Org kind (public, private, exclusive)
     window.location.href = '/login'
