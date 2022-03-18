@@ -13,6 +13,7 @@ export const MUTATION_SOCIAL_SIGNIN = gql`
       }
       token {
         accessToken
+        firebaseToken
       }
     }
   }
