@@ -19,7 +19,7 @@ export const MENU_TABS = [
   {
     id: 'collections',
     label: i18n.t('header.tabs.collections'),
-    url: '/c/:channel/collections',
+    url: '/c/:channel/categories',
   },
   {
     id: 'mylist',
