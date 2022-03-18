@@ -1,15 +1,17 @@
-import { useState } from 'react'
-import { Flex } from '@chakra-ui/react'
-import { useThemeStore, useChannelsStore } from 'services/stores'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text, ToggleButton, PlaylistPostCard } from 'components'
+import { Flex } from '@chakra-ui/react'
+
+import { useThemeStore, useChannelsStore } from 'services/stores'
+import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { RedactReason } from 'generated/graphql'
+
+import { Text, ToggleButton, PlaylistPostCard } from 'components'
+import { VideoPostCardProps, VideoPostProps, RedactedVideo } from 'types/posts'
 import { VideoPlaylistProps } from './types'
 import { theme } from 'styles/theme'
 import { colors } from 'styles'
-import { useEffect } from 'react'
-import { VideoPostCardProps, VideoPostProps, RedactedVideo } from 'types/posts'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
+
 import { convertCamelCaseToDash } from 'utils'
 
 const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
@@ -17,7 +19,6 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { t } = useTranslation()
-
   const [checked, setChecked] = useState(true)
   const [playlist, setPlaylist] = useState<VideoPostCardProps[]>()
 
@@ -41,32 +42,22 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
     return image
   }
 
-  const getPostUrl = (id: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
-  }
+  const getPostUrl = (id: string) =>
+    `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
 
-  const isRedacted = (post: VideoPostProps) => {
-    return (
-      post.__typename === 'RedactedOnDemandPost' ||
-      post.__typename === 'RedactedVideoPost'
-    )
-  }
+  const isRedacted = (post: VideoPostProps) =>
+    post.__typename === 'RedactedOnDemandPost' ||
+    post.__typename === 'RedactedVideoPost'
 
-  const isExclusive = (post: VideoPostProps) => {
-    return (
-      (isRedacted(post) &&
-        (post as RedactedVideo).reason === RedactReason.Exclusive) ||
-      false
-    )
-  }
+  const isExclusive = (post: VideoPostProps) =>
+    (isRedacted(post) &&
+      (post as RedactedVideo).reason === RedactReason.Exclusive) ||
+    false
 
-  const isGeolocked = (post: VideoPostProps) => {
-    return (
-      (isRedacted(post) &&
-        (post as RedactedVideo).reason === RedactReason.Geofence) ||
-      false
-    )
-  }
+  const isGeolocked = (post: VideoPostProps) =>
+    (isRedacted(post) &&
+      (post as RedactedVideo).reason === RedactReason.Geofence) ||
+    false
 
   useEffect(() => {
     const mapped = videos?.map((item) => {
@@ -83,24 +74,22 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       }
     })
     setPlaylist(mapped)
+    //eslint-disable-next-line
   }, [videos])
 
-  const renderPlaylist = () => {
-    return playlist?.map((item) => <PlaylistPostCard key={item.id} {...item} />)
-  }
+  const renderPlaylist = () =>
+    playlist?.map((item) => <PlaylistPostCard key={item.id} {...item} />)
 
   return (
     <Flex flexDirection="column" mb={5}>
-      {title && (
-        <Text
-          fontWeight="bolder"
-          fontSize="1.4rem"
-          mb={2}
-          color={colors.generalText[colorMode]}
-        >
-          {title}
-        </Text>
-      )}
+      <Text
+        fontWeight="bolder"
+        fontSize="1.4rem"
+        mb={2}
+        color={colors.generalText[colorMode]}
+      >
+        {title}
+      </Text>
       <Flex alignItems="center" mb={2}>
         <ToggleButton
           checked={!!checked}
@@ -113,7 +102,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
           {t('page.post.autoplay')}
         </Text>
       </Flex>
-      {playlist?.length && renderPlaylist()}
+      {!!playlist?.length && renderPlaylist()}
     </Flex>
   )
 }
