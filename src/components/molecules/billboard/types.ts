@@ -4,10 +4,12 @@ export interface BillboardItem {
     id: string,
     banner: string
     cover: string
+    image?: string
+    isPinned?: boolean
     delay?: number
     title: string
     description: string
-    infoColor: string
+    infoColor?: string
     actions?: Array<BillboardItemActions>
     live?: boolean
 }
@@ -15,7 +17,7 @@ export interface BillboardItem {
 export interface BillboardItemActions extends ButtonProps {
     action?: (e: Event) => void,
     bgColor: string,
-    borderColor: string,
+    borderColor?: string,
     icon?: string,
     label: string,
     route?: string,
