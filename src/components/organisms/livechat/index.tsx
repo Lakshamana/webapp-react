@@ -4,20 +4,12 @@ import {
   collection,
   query,
   orderBy,
-  startAfter,
   limitToLast,
   addDoc,
-  serverTimestamp,
 } from '@firebase/firestore'
 
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import {
-  timestampFromDate,
-  timestampNow,
-  parseResultSnapshot,
-} from 'utils/firebase'
-
-import { FBAuthWithCustomToken } from 'services/firebase'
+import { timestampNow } from 'utils/firebase'
 
 import { Flex } from '@chakra-ui/react'
 import { LivechatFooter, LivechatHeader, LivechatBody } from './components'
@@ -55,8 +47,7 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
   }
 
   useEffect(() => {
-    FBAuthWithCustomToken()
-    // sendMessage()
+    sendMessage()
   }, [])
 
   useEffect(() => {}, [messages])
