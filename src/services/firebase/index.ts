@@ -112,8 +112,13 @@ export const SocialSignIn = (
   })
 }
 
-export const signOutSocial = () => {
+export const signOutFB = () => {
   signOut(AUTH)
-    .then((result) => {})
-    .catch((error) => {})
+    .then(() => {
+      // Sign-out successful.
+    })
+    .catch((error) => {
+      // An error happened.
+    })
+}
 }
