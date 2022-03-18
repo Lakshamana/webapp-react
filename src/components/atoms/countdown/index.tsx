@@ -39,6 +39,7 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
     if (!isCountdownRunning) {
       window.clearInterval(intervalId)
     }
+    // eslint-disable-next-line
   }, [isCountdownRunning])
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
   const renderText = (value: string) => (
     <Text
       fontSize={{ base: '1.5rem', sm: '2rem', lg: '2.8rem' }}
-      fontWeight='bolder'
+      fontWeight="bolder"
       color="white"
       textAlign="center"
     >
@@ -70,6 +71,18 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
     return value
   }
 
+  const renderCountdown = () => (
+    <div>
+      <Box>{renderText(t('page.post.live.will_start_in'))}</Box>
+      <Box display="flex">
+        {!!hours.length && <Box mr={4}>{renderText(`${days()}d`)}</Box>}
+        {renderText(`${hours()}h:`)}
+        {renderText(`${minutes()}m:`)}
+        {renderText(`${seconds()}s`)}
+      </Box>
+    </div>
+  )
+
   return (
     <Flex
       direction="column"
@@ -81,23 +94,7 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
       margin="auto"
       padding={5}
     >
-      {isCountdownRunning ? (
-        <>
-          <Box>{renderText(t('page.post.live.will_start_in'))}</Box>
-          <Box display="flex">
-            {hours.length ? (
-              <Box mr={4}>{renderText(`${days()}d`)}</Box>
-            ) : (
-              <></>
-            )}
-            {renderText(`${hours()}h:`)}
-            {renderText(`${minutes()}m:`)}
-            {renderText(`${seconds()}s`)}
-          </Box>
-        </>
-      ) : (
-        renderText(fallbackMessage)
-      )}
+      {isCountdownRunning ? renderCountdown : renderText(fallbackMessage)}
     </Flex>
   )
 }

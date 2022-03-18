@@ -197,12 +197,12 @@ const EN_US = {
         family: 'Family',
         watch_now: 'Watch Now',
         my_list: 'My List',
-        more_categories: 'More categories'
+        more_categories: 'More categories',
       },
       my_list: {
         my_list: 'My List',
         pinned_categories: 'Favorite Categories',
-        pinned_videos: 'Favorite Videos'
+        pinned_videos: 'Favorite Videos',
       },
       account: {
         push_notifications: 'Push Notifications',
@@ -263,9 +263,10 @@ const EN_US = {
           or: 'or',
           input_label_fullname: 'Full Name',
           input_label_email: 'Email',
-          term_service: 'By signing up, I agree to the FanHero Privacy and Policy of Term of Service.',
+          term_service:
+            'By signing up, I agree to the FanHero Privacy and Policy of Term of Service.',
           signup_btn: 'Sign up',
-          already_have_account: 'Already have an account? Log in here'
+          already_have_account: 'Already have an account? Log in here',
         },
         more_info: {
           title: 'Custom Field',
@@ -293,26 +294,28 @@ const EN_US = {
           full_name: 'Full Name',
           email: 'E-mail',
           CPF: 'CPF',
-          authorize: 'I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
+          authorize:
+            'I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
           place_you_order: 'Place your order',
         },
         modal: {
           success: {
-            title : "Payment Success",
-            subtitle: "Your payment has been successfully processed. ",
-            close: "Enjoy your content"
+            title: 'Payment Success',
+            subtitle: 'Your payment has been successfully processed. ',
+            close: 'Enjoy your content',
           },
           failure: {
-            title: "Something went worng!",
-            subtitle: "We are going to fix it. Try later.",
-            close: "Retry"
+            title: 'Something went worng!',
+            subtitle: 'We are going to fix it. Try later.',
+            close: 'Retry',
           },
         },
         password: {
-          title: "You are almos there",
-          subtitle: "Your account is almost ready. Please choose a password for your account and enjoy the show.",
-          password_input: "Password",
-          saveandcontinue: "Save and continue"
+          title: 'You are almos there',
+          subtitle:
+            'Your account is almost ready. Please choose a password for your account and enjoy the show.',
+          password_input: 'Password',
+          saveandcontinue: 'Save and continue',
         },
       },
       post: {
@@ -321,13 +324,14 @@ const EN_US = {
         comments: 'Comments',
         autoplay: 'Autoplay next video',
         related_videos: 'Related videos',
+        views: 'views',
         live: {
           live_chat: {
-            title: 'Live Chat'
+            title: 'Live Chat',
           },
           will_start_in: 'Transmission will start in',
-          will_start_soon: 'Transmission will start soon'
-        }
+          will_start_soon: 'Transmission will start soon',
+        },
       },
     },
     cookieConsent: {

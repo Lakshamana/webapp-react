@@ -1,17 +1,23 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { VideoPostCardProps } from 'types/posts'
 import { useMutation } from '@apollo/client'
-import { Icon } from '@iconify/react'
 import { Flex, Text, Box, Spacer, Spinner, Divider } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
+
+import { useTranslation } from 'react-i18next'
+
 import { useThemeStore } from 'services/stores'
+import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
+
 import { CardWrapper, PostContent, BlockedContent } from './style'
 import { colors } from 'styles'
-import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
+
 import { formattedSeconds, stripHTML } from 'utils/helperFunctions'
+import { VideoPostCardProps } from 'types/posts'
 
 const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
   const history = useHistory()
+  const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
 
@@ -24,9 +30,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
     }
   )
 
-  const selectPost = () => {
-    history.push(`${props.url}`)
-  }
+  const selectPost = () => history.push(`${props.url}`)
 
   const renderAddToMyListIcon = () => (
     <Box
@@ -40,14 +44,15 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       justifyContent="center"
       onClick={() => pinPost()}
     >
-      {loading ? (
+      {loading && (
         <Spinner
           thickness="1px"
           width="15px"
           height="15px"
           color={colors.brand.primary[colorMode]}
         ></Spinner>
-      ) : (
+      )}
+      {!loading && (
         <Icon
           icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
           color={
@@ -56,6 +61,60 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
               : colors.generalText[colorMode]
           }
         ></Icon>
+      )}
+    </Box>
+  )
+
+  const renderInfo = () => (
+    <Box
+      position="absolute"
+      padding="0.6rem"
+      borderBottomLeftRadius="4px"
+      borderBottomRightRadius="4px"
+      w={'100%'}
+      background={colors.footerBg[colorMode]}
+    >
+      <Flex>
+        <Text
+          fontSize="0.85rem"
+          noOfLines={2}
+          fontWeight="bolder"
+          color={colors.generalText[colorMode]}
+        >
+          {stripHTML(props.title)}
+        </Text>
+        <Text
+          fontSize="0.85rem"
+          noOfLines={2}
+          fontWeight="bolder"
+          color={colors.generalText[colorMode]}
+        >
+          {stripHTML(props.description || '')}
+        </Text>
+        <Spacer px={1} />
+        {renderAddToMyListIcon()}
+      </Flex>
+      <Text
+        display="flex"
+        alignItems="center"
+        fontSize="0.7rem"
+        color={colors.secondaryText[colorMode]}
+      >
+        <Icon icon={`mdi:eye-outline`}></Icon>
+        <Divider orientation="vertical" px={'2px'}></Divider>
+        {props.countViews} {t('page.post.views')}
+      </Text>
+      {!!props.mediaLength && (
+        <Text
+          display="flex"
+          alignItems="center"
+          fontSize="0.7rem"
+          color={colors.secondaryText[colorMode]}
+        >
+          <Icon icon={`mdi:clock-outline`}></Icon>
+          <Divider orientation="vertical" px={'2px'}></Divider>
+          {formattedSeconds(props?.mediaLength)}
+        </Text>
       )}
     </Box>
   )
@@ -76,67 +135,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
           </BlockedContent>
         )}
       </PostContent>
-      {hover ? (
-        <Box
-          position="absolute"
-          padding="0.6rem"
-          borderBottomLeftRadius="4px"
-          borderBottomRightRadius="4px"
-          w={'100%'}
-          background={colors.footerBg[colorMode]}
-        >
-          <Flex>
-            <Text
-              fontSize="0.85rem"
-              noOfLines={2}
-              fontWeight="bolder"
-              color={colors.generalText[colorMode]}
-            >
-              {stripHTML(props.title)}
-            </Text>
-            {props.description ? (
-              <Text
-                fontSize="0.85rem"
-                noOfLines={2}
-                fontWeight="bolder"
-                color={colors.generalText[colorMode]}
-              >
-                {stripHTML(props.description)}
-              </Text>
-            ) : (
-              ''
-            )}
-            <Spacer px={1}></Spacer>
-            {renderAddToMyListIcon()}
-          </Flex>
-          <Text
-            display="flex"
-            alignItems="center"
-            fontSize="0.7rem"
-            color={colors.secondaryText[colorMode]}
-          >
-            <Icon icon={`mdi:eye-outline`}></Icon>
-            <Divider orientation="vertical" px={'2px'}></Divider>
-            {props.countViews} views
-          </Text>
-          {props.mediaLength ? (
-            <Text
-              display="flex"
-              alignItems="center"
-              fontSize="0.7rem"
-              color={colors.secondaryText[colorMode]}
-            >
-              <Icon icon={`mdi:clock-outline`}></Icon>
-              <Divider orientation="vertical" px={'2px'}></Divider>
-              {formattedSeconds(props?.mediaLength)}
-            </Text>
-          ) : (
-            <></>
-          )}
-        </Box>
-      ) : (
-        <></>
-      )}
+      {hover && renderInfo()}
     </CardWrapper>
   )
 }

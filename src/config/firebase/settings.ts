@@ -6,6 +6,7 @@ const {
   REACT_APP_FIREBASE_BUCKET = '',
   REACT_APP_FIREBASE_SENDER = '',
   REACT_APP_FIREBASE_APP_ID = '',
+  REACT_APP_FIREBASE_MEASUREMENT_ID = '',
 } = process.env
 
 export const FIREBASE_CONFIG = Object.freeze({
@@ -16,4 +17,5 @@ export const FIREBASE_CONFIG = Object.freeze({
   storageBucket: REACT_APP_FIREBASE_BUCKET,
   messagingSenderId: REACT_APP_FIREBASE_SENDER,
   appId: REACT_APP_FIREBASE_APP_ID,
+  measurementId: REACT_APP_FIREBASE_MEASUREMENT_ID,
 })

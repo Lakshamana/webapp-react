@@ -6,7 +6,8 @@ import {
   LoginPage,
   SignupPage,
   AccountPage,
-  CollectionsPage,
+  CategoriesPage,
+  CategoryPage,
   MyListPage,
   TagPage,
   SearchPage,
@@ -74,9 +75,16 @@ const ClientRoutes = ({ isAccesible }: any) => {
       />
       <ClientRoute
         isAccesible={isAccesible?.collections}
-        path="/c/:channel/collections"
-        component={CollectionsPage}
+        path="/c/:channel/categories"
+        component={CategoriesPage}
         redirectTo="/c/:channel"
+        template={MainLayout}
+      />
+       <ClientRoute
+        isAccesible={true}
+        path="/c/:channel/category/:id"
+        component={CategoryPage}
+        redirectTo="/c/:channel/categories"
         template={MainLayout}
       />
       <ClientRoute

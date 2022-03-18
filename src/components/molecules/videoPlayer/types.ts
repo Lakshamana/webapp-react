@@ -8,4 +8,5 @@ export interface VideoPlayerProps {
   muxConfig?: Object | undefined;
   options?: Object | undefined;
   skin?: string | undefined;
+  poster?: string
 }

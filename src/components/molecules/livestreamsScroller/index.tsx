@@ -2,24 +2,25 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwiperSlide } from 'swiper/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
+import { compareAsc } from 'date-fns'
 import { Link } from '@chakra-ui/react'
-import { useThemeStore } from 'services/stores/theme'
+
+import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
+import { useThemeStore } from 'services/stores'
 import { convertCamelCaseToDash } from 'utils'
 import { useChannelsStore } from 'services/stores'
-import { compareAsc } from 'date-fns'
-
-import { CardsScroller, LivestreamPostCard } from 'components'
-import { Text } from 'components'
-import { Header, ContentScroller } from './style'
-import { colors, sizes, breakpoints } from 'styles'
-
 import {
   Livestream,
   LivestreamStatus,
   RedactedLivestreamEvent,
   RedactReason,
 } from 'generated/graphql'
+
+import { CardsScroller, LivestreamPostCard } from 'components'
+import { Text } from 'components'
+
+import { Header, ContentScroller } from './style'
+import { colors, sizes, breakpoints } from 'styles'
 
 import {
   LivestreamPostCardProps,
@@ -38,6 +39,7 @@ const LivestreamScroller = ({
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] =
     useState<LivestreamPostCardProps[]>()
+
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const getImageUrl = (post: Livestream) => {
@@ -109,50 +111,46 @@ const LivestreamScroller = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  const renderHeader = () => {
-    return (
-      <Header>
-        <Text
-          color={colors.generalText[colorMode]}
-          fontSize={isDesktop ? '1.55rem' : '1.3rem'}
-          paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd]}
-          fontWeight={'bolder'}
-          marginRight={'10px'}
+  const renderHeader = () => (
+    <Header>
+      <Text
+        color={colors.generalText[colorMode]}
+        fontSize={isDesktop ? '1.55rem' : '1.3rem'}
+        paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd]}
+        fontWeight={'bolder'}
+        marginRight={'10px'}
+      >
+        {sectionTitle}
+      </Text>
+      {hasMoreLink && (
+        <Link
+          color={colors.brand.primary[colorMode]}
+          fontSize={isDesktop ? '1.27rem' : '1.1rem'}
+          to={sectionUrl}
         >
-          {sectionTitle}
-        </Text>
-        {hasMoreLink && (
-          <Link
-            color={colors.brand.primary[colorMode]}
-            fontSize={isDesktop ? '1.27rem' : '1.1rem'}
-            to={sectionUrl}
-          >
-            {t('common.more')}
-          </Link>
-        )}
-      </Header>
-    )
-  }
+          {t('common.more')}
+        </Link>
+      )}
+    </Header>
+  )
 
-  const renderScroller = () => {
-    return (
-      <CardsScroller>
-        {scrollerItems?.map((item: LivestreamPostCardProps) => {
-          return (
-            <SwiperSlide key={`slide-${item.id}-livestream`}>
-              <LivestreamPostCard {...item} />
-            </SwiperSlide>
-          )
-        })}
-      </CardsScroller>
-    )
-  }
+  const renderScroller = () => (
+    <CardsScroller>
+      {scrollerItems?.map((item: LivestreamPostCardProps) => {
+        return (
+          <SwiperSlide key={`slide-${item.id}-livestream`}>
+            <LivestreamPostCard {...item} />
+          </SwiperSlide>
+        )
+      })}
+    </CardsScroller>
+  )
 
   return (
     <ContentScroller>
-      {scrollerItems?.length && (
+      {!!scrollerItems?.length && (
         <>
-          {sectionTitle && renderHeader()}
+          {renderHeader()}
           {renderScroller()}
         </>
       )}
