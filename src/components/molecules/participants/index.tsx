@@ -10,13 +10,14 @@ const Participants = ({ participants }: Props) => {
   const { colorMode } = useThemeStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { t } = useTranslation()
+  
   return (
     <Flex alignItems="center">
       <Text color={colors.secondaryText[colorMode]} mr={2}>
         {t('page.post.participants')}
       </Text>
       <AvatarGroup size={isDesktop ? 'md' : 'sm'} max={2}>
-        {/* TO-DO: Integrate API. (API has a problem) */}
+        {/*TODO: Integrate with API.*/}
         {/* {participants?.map((item) => {
           return <Avatar showBorder key={item.id} src={item.img} />
         })} */}
