@@ -12,6 +12,7 @@ import {
   SearchPage,
   ChannelsPage,
   VideoPostView,
+  LivePostView,
   FeedPage,
   RecoverPasswordPage,
   Livestreams,
@@ -20,7 +21,6 @@ import {
   CheckoutCustomField,
   CardInfo,
   Password,
-  LiveChat
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -105,6 +105,13 @@ const ClientRoutes = ({ isAccesible }: any) => {
         path="/c/:channel/livestreams"
         component={Livestreams}
         redirectTo="/channels"
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={true}
+        path="/c/:channel/live/:id"
+        component={LivePostView}
+        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute

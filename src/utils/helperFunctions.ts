@@ -1,3 +1,5 @@
+import { addSeconds, format } from 'date-fns'
+
 export const RANDOM_ID = () => {
   return `${Math.random().toString(36).slice(2, 12)}`
 }
@@ -85,6 +87,11 @@ export const buildUrlFromPath = (
   const url = new URL(path, baseUrl)
 
   return url.href
+}
+
+export const formattedSeconds = (seconds: number) => {
+  let helperDate = addSeconds(new Date(0), seconds)
+  return format(helperDate, 'mm:ss')
 }
 
 export function stripHTML(text: string) {
