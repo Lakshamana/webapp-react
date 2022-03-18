@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { useThemeStore, useChannelsStore } from 'services/stores'
+import { useTranslation } from 'react-i18next'
 import { Text, ToggleButton, PlaylistPostCard } from 'components'
 import { RedactReason } from 'generated/graphql'
 import { VideoPlaylistProps } from './types'
@@ -15,6 +16,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
+  const { t } = useTranslation()
 
   const [checked, setChecked] = useState(true)
   const [playlist, setPlaylist] = useState<VideoPostCardProps[]>()
@@ -70,9 +72,9 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
     const mapped = videos?.map((item) => {
       return {
         id: `${item.id}`,
-        title: `${item.title}`,
+        title: item?.title || '',
         url: getPostUrl(item.id || ''),
-        description: `${item.description}`,
+        description: item?.description || '',
         thumbnail: getImageUrl(item),
         mediaLength: item.media?.duration || 0,
         countviews: item.counts?.countViewsTotal || 0,
@@ -84,7 +86,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   }, [videos])
 
   const renderPlaylist = () => {
-    return playlist?.map((item) => <PlaylistPostCard {...item} />)
+    return playlist?.map((item) => <PlaylistPostCard key={item.id} {...item} />)
   }
 
   return (
@@ -108,7 +110,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
           ml={theme.pxToRem(12)}
           color={theme.colors.generalText[colorMode]}
         >
-          Autoplay next video
+          {t('page.post.autoplay')}
         </Text>
       </Flex>
       {playlist?.length && renderPlaylist()}
