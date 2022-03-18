@@ -3,7 +3,8 @@ import {
   ACCOUNT_INFO,
   ORGANIZATION_INFO,
   CHANNEL_INFO,
-  AUTH_TOKEN
+  AUTH_TOKEN,
+  FIREBASE_TOKEN
 } from 'config/constants'
 
 export const saveData = (key: string, data: any) => {
@@ -33,6 +34,7 @@ export const clearData = () => {
     localStorage.removeItem(ORGANIZATION_INFO)
     localStorage.removeItem(CHANNEL_INFO)
     localStorage.removeItem(AUTH_TOKEN)
+    localStorage.removeItem(FIREBASE_TOKEN)
   } catch (error) {
     console.error(`ERROR ON CLEAR DATA`, error)
   }
