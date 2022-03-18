@@ -18,7 +18,7 @@ import {
 } from './components'
 import { saveData } from 'services/storage'
 import { SocialSignIn } from 'services/firebase'
-import { AUTH_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { AlertComponent } from 'components'
 import { SignUpSteps } from './types'
 import { CreateAccountInput } from 'generated/graphql'
@@ -76,6 +76,7 @@ const SignupForm = () => {
         }
 
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
+        await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)
 
