@@ -86,3 +86,7 @@ export const buildUrlFromPath = (
 
   return url.href
 }
+
+export function stripHTML(text: string) {
+  return text.replace(/(<([^>]+)>)/gi, "");
+}
