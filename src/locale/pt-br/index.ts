@@ -319,6 +319,7 @@ const PT_BR = {
         comments: 'Comentários',
         autoplay: 'Reproduzir automaticamente',
         related_videos: 'Próximos vídeos',
+        views: 'visualizações',
         live: {
           live_chat: {
             title: 'Chat ao Vivo',
