@@ -2,24 +2,19 @@ import { useEffect, useState } from 'react'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useLazyQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
+import { QUERY_LIVESTREAMS_SCROLLER, QUERY_POSTS } from 'services/graphql'
 import {
   LivestreamFilter,
   LivestreamStatus,
   LivestreamTypeSortEnum,
   SortDirection,
   PostType,
-  PostFilter,
-  PostTypeSortEnum,
   Livestream,
 } from 'generated/graphql'
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
-import {
-  QUERY_LIVESTREAMS_SCROLLER,
-  QUERY_POSTS_SCROLLER,
-} from 'services/graphql'
-import { Container, Skeleton } from 'components'
+import { Container, Skeleton } from 'components/atoms'
 import { LivestreamScroller, VideosScroller } from 'components/molecules'
 import { sizes } from 'styles'
+import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 
 const Livestreams = () => {
   const { t } = useTranslation()
@@ -46,38 +41,31 @@ const Livestreams = () => {
       ],
     },
     pollInterval: DEFAULT_POLLING_INTERVAL,
-    fetchPolicy: 'network-only',
   })
-  // TO-DO: Add skeleton loading
-  // TO-DO: Add billboard (waiting for API)
 
-  // TO-DO: Implement infinite loading on Cards Scroller
-  // limit: MAX_CARDS_SCROLLER_RESULTS,
+  //TODO: Add billboard (waiting for API)
+
+  //TODO: Implement infinite loading on Cards Scroller
+
   const [
     getOnDemandPostsData,
     { data: onDemandPostsData, loading: loadingOnDemandPostsData },
-  ] = useLazyQuery(QUERY_POSTS_SCROLLER, {
+  ] = useLazyQuery(QUERY_POSTS, {
     variables: {
-      filter: {
-        featuredAtExists: true,
+      filters: {
         typeIn: [PostType.OnDemand],
-      } as PostFilter,
-      // TO-DO: Implement infinite loading on Cards Scroller
-      // limit: MAX_CARDS_SCROLLER_RESULTS,
-      orderBy: [
-        {
-          name: PostTypeSortEnum.PublishedAt,
-          direction: SortDirection.Desc,
-        },
-      ],
+      },
+      sort: {
+        field: 'publishedAt',
+        direction: SortDirection.Desc,
+      },
     },
-    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
     getLivestreamsScroler()
     getOnDemandPostsData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [])
 
   useEffect(() => {
@@ -95,7 +83,7 @@ const Livestreams = () => {
       }
     )
     setUpcomingItems(upcoming?.length ? upcoming : null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [livestreamsData])
 
   const isLoading = loadingLivestreams || loadingOnDemandPostsData
@@ -107,43 +95,39 @@ const Livestreams = () => {
 
   return (
     <Container defaultPadding marginTop={15}>
-      <Flex gridGap={5} flexDirection={'column'} w={'100vw'}>
-        {isLoading && (
-          <Box p={sizes.paddingSm} width="100%">
-            <Skeleton my={4} kind="cards" numberOfCards={4} />
-          </Box>
-        )}
-        {liveItems?.length ? (
-          <LivestreamScroller
-            items={liveItems}
-            sectionTitle={t('page.live.live')}
-          ></LivestreamScroller>
-        ) : (
-          ''
-        )}
-        {upcomingItems?.length ? (
-          <LivestreamScroller
-            items={upcomingItems}
-            sectionTitle={t('page.live.upcoming')}
-          ></LivestreamScroller>
-        ) : (
-          ''
-        )}
-        {onDemandPostsData?.posts?.length ? (
-          <VideosScroller
-            items={onDemandPostsData.posts}
-            sectionTitle={t('page.live.past')}
-          ></VideosScroller>
-        ) : (
-          ''
-        )}
-        {/* TO-DO: built a empty state component */}
-        {isEmpty && (
-          <Flex w={'100vw'} justifyContent="center" color="white">
-            Page empty! We need to create an empty state component.
-          </Flex>
-        )}
-      </Flex>
+      {isLoading && (
+        <Box p={sizes.paddingSm} width="100%">
+          <Skeleton my={4} kind="cards" numberOfCards={4} />
+        </Box>
+      )}
+      {!isLoading && (
+        <Flex gridGap={5} flexDirection={'column'} w={'100vw'}>
+          {!!liveItems?.length && (
+            <LivestreamScroller
+              items={liveItems}
+              sectionTitle={t('page.live.live')}
+            ></LivestreamScroller>
+          )}
+          {!!upcomingItems?.length && (
+            <LivestreamScroller
+              items={upcomingItems}
+              sectionTitle={t('page.live.upcoming')}
+            ></LivestreamScroller>
+          )}
+          {!!onDemandPostsData?.posts?.length && (
+            <VideosScroller
+              items={onDemandPostsData.posts}
+              sectionTitle={t('page.live.past')}
+            ></VideosScroller>
+          )}
+          {/* TODO: built a empty state component */}
+          {isEmpty && (
+            <Flex w={'100vw'} justifyContent="center" color="white">
+              Page empty! We need to create an empty state component.
+            </Flex>
+          )}
+        </Flex>
+      )}
     </Container>
   )
 }
