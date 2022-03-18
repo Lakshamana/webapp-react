@@ -88,6 +88,7 @@ export const buildUrlFromPath = (
 
   return url.href
 }
+
 export const formattedSeconds = (seconds: number) => {
   let helperDate = addSeconds(new Date(0), seconds)
   return format(helperDate, 'mm:ss')

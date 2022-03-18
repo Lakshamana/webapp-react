@@ -6,6 +6,7 @@ import { breakpoints } from 'styles'
 export const Wrapper: any = styled(Flex)`
   border-radius: 3px;
   cursor: pointer;
+  position: relative;
 
   &:hover {
     background-color: ${({ theme }) =>
@@ -52,5 +53,45 @@ export const Subtitle: any = styled(Flex)`
 
   @media screen and (max-width: ${breakpoints.sm}) {
     font-size: 0.9rem;
+  }
+`
+
+export const BlockedContent: any = styled.div`
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 41px;
+  height: 40px;
+  border-radius: 50%;
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: ${({ theme }) =>
+    theme.colors.brand.indicator[theme.colorMode]};
+
+  @media screen and (max-width: ${breakpoints.sm}) {
+    width: 41px;
+    height: 40px;
+  }
+`
+
+export const PlayIcon: any = styled.div`
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 51px;
+  height: 50px;
+  border-radius: 50%;
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  @media screen and (max-width: ${breakpoints.sm}) {
+    width: 41px;
+    height: 40px;
   }
 `
