@@ -5,6 +5,7 @@ import { Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { QUERY_POST, QUERY_POSTS_SCROLLER } from 'services/graphql'
 import { useThemeStore } from 'services/stores/theme'
+import { useTranslation } from 'react-i18next'
 import {
   VideoPlayer,
   ReactionBar,
@@ -23,6 +24,7 @@ import { VideoPost } from 'generated/graphql'
 const VideoPostView = () => {
   const { colorMode } = useThemeStore()
   const { id } = useParams<{ channel: string; id: string }>()
+  const { t } = useTranslation()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [postData, setPostData] = useState<AvailableVideoPost>()
   const [relatedVideosData, setRelatedVideosData] = useState<VideoPost[]>()
@@ -51,10 +53,10 @@ const VideoPostView = () => {
       getRelatedPosts({
         variables: {
           filter: {
-            categoryId: postData.categories[0]?.id
+            categoryId: postData.categories[0]?.id,
           },
-          limit: 10
-        }
+          limit: 10,
+        },
       })
     }
   }, [postData])
@@ -126,7 +128,7 @@ const VideoPostView = () => {
               {relatedVideosData?.length && (
                 <Box w={{ sm: '100%', md: '45%', lg: '40%', xl: '30%' }}>
                   <VideoPlaylist
-                    title="Related Videos"
+                    title={t('page.post.related_videos')}
                     videos={[...relatedVideosData]}
                   ></VideoPlaylist>
                 </Box>
