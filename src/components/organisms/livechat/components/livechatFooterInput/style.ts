@@ -6,7 +6,7 @@ export const InputCustom = styled(Input)`
   background: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
   color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
   border: none;
-  font-size: 0.8em;
+  font-size: 1rem;
 `
 
 export const CharacterCounter = styled(Text)`
@@ -14,8 +14,8 @@ export const CharacterCounter = styled(Text)`
 `
 
 export const IconCustom = styled(Icon)`
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.blue['300']};
 `

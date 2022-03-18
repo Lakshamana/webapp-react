@@ -13,5 +13,4 @@ export * from './recoverPassword'
 export * from './livestreams'
 export * from './errors'
 export * from './posts'
-export * from './livechat'
-export * from "./checkout"
+export * from './checkout'

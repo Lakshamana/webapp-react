@@ -8,9 +8,10 @@ const LivechatFooterInput = ({
   onEnter = () => {},
 }: Props) => {
   return (
-    <InputGroup size="md">
+    <InputGroup size="lg">
       <InputCustom
-        pr="4.5rem"
+        focusBorderColor="none"
+        pr="4rem"
         type="text"
         placeholder="Say something..."
         value={value}
@@ -25,7 +26,7 @@ const LivechatFooterInput = ({
         width="auto"
         gridGap="0.5em"
         justifyContent="flex-end"
-        px="1em"
+        pr={'10px'}
       >
         {value.length !== 0 && (
           <CharacterCounter fontSize="xs">
@@ -33,7 +34,7 @@ const LivechatFooterInput = ({
           </CharacterCounter>
         )}
         <IconCustom
-          icon="fluent:send-28-filled"
+          icon="mdi:send"
           onClick={() => onEnter()}
         />
       </InputRightElement>

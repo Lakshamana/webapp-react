@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import { StyledProps } from './types'
 
-export const MainChatBody = styled.div<StyledProps>`
+export const MainChatBody = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -10,5 +9,5 @@ export const MainChatBody = styled.div<StyledProps>`
   gap: 1em;
   overflow-y: scroll;
   scroll-snap-align: end;
-  background: ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
+  background: ${({ theme }) => theme.colorMode === 'dark' ? 'black': 'white'};
 `
