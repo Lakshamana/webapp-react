@@ -17,19 +17,32 @@ export const SwiperStyled = styled(Swiper)`
     &:hover {
       transition: all 250ms ease-out;
       -webkit-transition: all 250ms ease-out;
-      margin-top: -30px;
-      transform: scale(1.2);
+      transition-delay: 250ms;
+      margin-top: -60px;
+      transform: scale(1.3);
       z-index: 9999;
+
+      @media screen and (max-width: ${breakpoints.md}) {
+        transform: scale(1.2);
+      }
     }
 
     &:first-child:hover {
-      margin-left: 30px;
+      margin-left: ${sizes.paddingMd};
+
+      @media screen and (min-width: ${breakpoints.lg}) {
+        margin-left: 40px;
+      }
     }
   }
 
   .swiper-slide-active {
     &:hover {
-      margin-left: 30px;
+      margin-left: ${sizes.paddingMd};
+
+      @media screen and (min-width: ${breakpoints.lg}) {
+        margin-left: 40px;
+      }
     }
   }
 
