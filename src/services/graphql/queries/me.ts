@@ -4,6 +4,7 @@ export const QUERY_ME = gql`
   query Me {
     me {
       account {
+        id
         display_name
         email
         first_name
@@ -11,6 +12,7 @@ export const QUERY_ME = gql`
         username
       }
       profile {
+        id
         address
         avatar_url
         birthday

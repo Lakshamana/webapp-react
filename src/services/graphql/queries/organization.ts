@@ -15,6 +15,7 @@ export const QUERY_ORGANIZATION_PUBLIC_SETTINGS = gql`
       name
       kind
       status
+      tenant_id
       customization
       avatarCdnBaseUrl
       audioCdnBaseUrl

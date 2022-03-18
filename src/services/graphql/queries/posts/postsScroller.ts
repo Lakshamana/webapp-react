@@ -12,6 +12,7 @@ export const QUERY_POSTS_SCROLLER = gql`
         id
         type
         title
+        description
         status
         publishedAt
         access
@@ -34,6 +35,7 @@ export const QUERY_POSTS_SCROLLER = gql`
         id
         type
         title
+        description
         status
         access
         publishedAt
