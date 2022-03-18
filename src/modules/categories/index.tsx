@@ -117,6 +117,7 @@ const CategoriesPage = () => {
             {!!categoriesWithChildren?.length &&
               categoriesWithChildren?.map((category: Category) => (
                 <CategoriesScroller
+                  key={category.id}
                   items={category.children as Category[]}
                   sectionTitle={category?.name || ''}
                   hasMoreLink={true}
