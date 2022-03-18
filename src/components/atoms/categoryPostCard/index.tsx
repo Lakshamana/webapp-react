@@ -30,6 +30,38 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
     history.push(`${props.url}`)
   }
 
+  const renderAddToMyListIcon = () => (
+    <Box
+      borderColor="red"
+      backgroundColor={colors.cardBg[colorMode]}
+      borderRadius="100%"
+      width="25px"
+      height="25px"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      onClick={() => pinCategory()}
+    >
+      {loading ? (
+        <Spinner
+          thickness="1px"
+          width="15px"
+          height="15px"
+          color={colors.brand.primary[colorMode]}
+        ></Spinner>
+      ) : (
+        <Icon
+          icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
+          color={
+            props.isPinned
+              ? colors.brand.primary[colorMode]
+              : colors.generalText[colorMode]
+          }
+        ></Icon>
+      )}
+    </Box>
+  )
+
   return (
     <CardWrapper
       onMouseLeave={() => setHover(false)}
@@ -43,47 +75,28 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
           borderBottomLeftRadius="4px"
           borderBottomRightRadius="4px"
           w={'100%'}
-          background={colors.cardBg[colorMode]}
+          background={colors.footerBg[colorMode]}
         >
           <Flex>
-            <Text
-              fontSize="0.85rem"
-              noOfLines={1}
-              fontWeight="bolder"
-              color={colors.generalText[colorMode]}
-            >
-              {props.title}
-            </Text>
-            <Spacer></Spacer>
-            <Box
-              borderColor="red"
-              backgroundColor={colors.footerBg[colorMode]}
-              borderRadius="100%"
-              width="25px"
-              height="25px"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              onClick={() => pinCategory()}
-            >
-              {loading ? (
-                <Spinner
-                  thickness="1px"
-                  width="15px"
-                  height="15px"
-                  color={colors.brand.primary[colorMode]}
-                ></Spinner>
-              ) : (
-                <Icon
-                  icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
-                  color={
-                    props.isPinned
-                      ? colors.brand.primary[colorMode]
-                      : colors.generalText[colorMode]
-                  }
-                ></Icon>
-              )}
+            <Box display='flex' flexDirection='column'>
+              <Text
+                fontSize="0.85rem"
+                noOfLines={1}
+                fontWeight="bolder"
+                color={colors.generalText[colorMode]}
+              >
+                {props.title}
+              </Text>
+              <Text
+                fontSize="0.75rem"
+                noOfLines={2}
+                color={colors.secondaryText[colorMode]}
+              >
+                {props.description}
+              </Text>
             </Box>
+            <Spacer px={1}></Spacer>
+            {renderAddToMyListIcon()}
           </Flex>
         </Box>
       ) : (

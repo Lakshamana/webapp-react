@@ -1,4 +1,5 @@
-import { useEffect, useState, memo } from 'react'
+import { memo } from 'react'
+import { useMediaQuery } from '@chakra-ui/media-query'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Autoplay, Pagination, EffectFade } from 'swiper'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +19,7 @@ import {
   BoxButtons,
   ContentButton,
 } from './style'
-import { colors } from 'styles'
+import { colors, breakpoints } from 'styles'
 import './style.css'
 import 'swiper/swiper-bundle.min.css'
 import { Badge } from 'components/atoms'
@@ -26,19 +27,7 @@ import { Badge } from 'components/atoms'
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
 const SwiperSlideList = ({ items, customButtons }: Props) => {
-  const [size, setSize] = useState({
-    x: window.innerWidth,
-    y: window.innerHeight,
-  })
-
-  const getSize = () => {
-    setSize({
-      x: window.innerWidth,
-      y: window.innerHeight,
-    })
-  }
-
-  useEffect(() => (window.onresize = getSize), [])
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const { t } = useTranslation()
 
@@ -52,7 +41,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
             <HeroImageWrapper>
               <HeroImg
                 className="swiper-lazy"
-                src={size.x >= 640 ? item.banner : item.cover}
+                src={isDesktop ? item.banner || item.image : item.cover || item.image}
               />
             </HeroImageWrapper>
             <Info style={{ color: item.infoColor }}>
@@ -68,10 +57,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                   <BoxButtons>
                     <ContentButton>
                       <Button
-                        backgroundColor={`${colors.blue['300']}`}
-                        borderColor={`${colors.blue['300']}`}
                         iconName={'play'}
-                        color={`${colors.white}`}
                         label={t('page.collection.watch_now')}
                         width={'100%'}
                         height={'100%'}
@@ -80,8 +66,8 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                     <ContentButton>
                       <Button
                         backgroundColor={`${colors.grey['800']}`}
-                        borderColor={`${colors.grey['800']}`}
-                        iconName={'plus-circle'}
+                        variant={'unstyled'}
+                        iconName={item.isPinned ? 'check' : 'plus-circle'}
                         color={`${colors.white}`}
                         label={t('page.collection.my_list')}
                         width={'100%'}

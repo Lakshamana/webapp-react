@@ -16,3 +16,8 @@ export type LivestreamPostCardProps = {
   isExclusive?: boolean
   isGeolocked?: boolean
 }
+
+export type LivestreamBadge = {
+  label: string
+  color: string
+}

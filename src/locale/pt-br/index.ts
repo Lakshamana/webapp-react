@@ -195,6 +195,7 @@ const PT_BR = {
         family: 'Família',
         watch_now: 'Assistir agora',
         my_list: 'Minha Lista',
+        more_categories: 'Mais categorias'
       },
       my_list: {
         my_list: 'Minha Lista',
@@ -316,11 +317,15 @@ const PT_BR = {
         participants: 'Participantes:',
         reactions: 'Reações',
         comments: 'Comentários',
+        autoplay: 'Reproduzir automaticamente',
+        related_videos: 'Próximos vídeos',
         live: {
           live_chat: {
-            title: 'Chat ao Vivo'
-          }
-        }
+            title: 'Chat ao Vivo',
+          },
+          will_start_in: 'A transmissão irá começar em',
+          will_start_soon: 'A transmissão irá começar em breve',
+        },
       },
     },
     cookieConsent: {

@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { LivestreamStatus } from 'generated/graphql'
 import { useThemeStore } from 'services/stores'
-import { LivestreamPostCardProps } from 'types/livestreams'
-import { Flex, Box } from '@chakra-ui/layout'
-import { Text } from 'components'
 import { Icon } from '@iconify/react'
+import { Flex, Box } from '@chakra-ui/layout'
+import { LivestreamStatus } from 'generated/graphql'
+import { LivestreamPostCardProps } from 'types/livestreams'
+import { Text } from 'components'
 import { PostContent, BlockedContent, Live, CardWrapper } from './style'
 import { colors } from 'styles'
 
@@ -54,7 +54,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
           borderBottomLeftRadius="4px"
           borderBottomRightRadius="4px"
           w={'100%'}
-          background={colors.cardBg[colorMode]}
+          background={colors.footerBg[colorMode]}
         >
           <Flex>
             <Text
@@ -68,6 +68,17 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
         </Box>
       ) : (
         <></>
+      )}
+      {isLive && (
+        <Live>
+          <Text
+            kind="headline"
+            children={'Live'}
+            textAlign={'center'}
+            fontSize={12}
+            color={`${colors.white}`}
+          ></Text>
+        </Live>
       )}
     </CardWrapper>
   )

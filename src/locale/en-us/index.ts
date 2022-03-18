@@ -197,6 +197,7 @@ const EN_US = {
         family: 'Family',
         watch_now: 'Watch Now',
         my_list: 'My List',
+        more_categories: 'More categories'
       },
       my_list: {
         my_list: 'My List',
@@ -318,10 +319,14 @@ const EN_US = {
         participants: 'Participants:',
         reactions: 'Reactions',
         comments: 'Comments',
+        autoplay: 'Autoplay next video',
+        related_videos: 'Related videos',
         live: {
           live_chat: {
             title: 'Live Chat'
-          }
+          },
+          will_start_in: 'Transmission will start in',
+          will_start_soon: 'Transmission will start soon'
         }
       },
     },

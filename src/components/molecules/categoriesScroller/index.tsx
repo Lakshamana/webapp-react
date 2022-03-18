@@ -51,6 +51,7 @@ const CategoriesScroller = ({
       return {
         id: `${item.id}`,
         title: `${item.name}`,
+        description: `${item.description}`,
         url: url,
         thumbnail: thumbnail,
         isPinned: !!item.pinnedAt

@@ -5,6 +5,9 @@ import { useMediaQuery } from '@chakra-ui/media-query'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { Link } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
+import { convertCamelCaseToDash } from 'utils'
+import { useChannelsStore } from 'services/stores'
+import { compareAsc } from 'date-fns'
 
 import { CardsScroller, LivestreamPostCard } from 'components'
 import { Text } from 'components'
@@ -32,6 +35,7 @@ const LivestreamScroller = ({
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
+  const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] =
     useState<LivestreamPostCardProps[]>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -59,52 +63,54 @@ const LivestreamScroller = ({
     return image
   }
 
-  const getLivestreamUrl = (id: string) => {
-    return `live/${id}`
-  }
+  const getLivestreamUrl = (id: string) =>
+    `/c/${convertCamelCaseToDash(activeChannel?.name)}/live/${id}`
 
-  const isRedacted = (post: Livestream) => {
-    return post.__typename === 'RedactedLivestreamEvent'
-  }
+  const isRedacted = (post: Livestream) =>
+    post.__typename === 'RedactedLivestreamEvent'
 
-  const isExclusive = (post: Livestream) => {
-    return (
-      (isRedacted(post) &&
-        (post as RedactedLivestreamEvent).reason === RedactReason.Exclusive) ||
-      false
-    )
-  }
+  const isExclusive = (post: Livestream) =>
+    (isRedacted(post) &&
+      (post as RedactedLivestreamEvent).reason === RedactReason.Exclusive) ||
+    false
 
-  const isGeolocked = (post: Livestream) => {
-    return (
-      (isRedacted(post) &&
-        (post as RedactedLivestreamEvent).reason === RedactReason.Geofence) ||
-      false
-    )
-  }
+  const isGeolocked = (post: Livestream) =>
+    (isRedacted(post) &&
+      (post as RedactedLivestreamEvent).reason === RedactReason.Geofence) ||
+    false
+
+  const isLive = (post: Livestream) => post.status === LivestreamStatus.Active
 
   useEffect(() => {
-    if (items && items?.length) {
-      const mappedArr = items?.map((item: Livestream) => {
-        const thumbnail = getImageUrl(item)
-        const url = getLivestreamUrl(`${item.id}`)
-        return {
-          id: `${item.id}`,
-          title: `${item.title}`,
-          url: url,
-          status: item.status,
-          thumbnail: thumbnail,
-          isExclusive: isExclusive(item),
-          isGeolocked: isGeolocked(item),
-        }
-      })
-      setScrollerItems(mappedArr)
-    }
+    const arrForSort = [...items!]
+    arrForSort.sort((a, b) => {
+      const liveA = isLive(a)
+      const liveB = isLive(b)
+      return !liveA && liveB
+        ? 1
+        : liveA && !liveB
+        ? -1
+        : compareAsc(a.scheduledStartAt, b.scheduledStartAt)
+    })
+    const mappedArr = arrForSort?.map((item: Livestream) => {
+      const thumbnail = getImageUrl(item)
+      const url = getLivestreamUrl(`${item.id}`)
+      return {
+        id: `${item.id}`,
+        title: `${item.title}`,
+        url: url,
+        status: item.status,
+        thumbnail: thumbnail,
+        isExclusive: isExclusive(item),
+        isGeolocked: isGeolocked(item),
+      }
+    })
+    setScrollerItems(mappedArr?.length ? mappedArr : [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  return (
-    <ContentScroller>
+  const renderHeader = () => {
+    return (
       <Header>
         <Text
           color={colors.generalText[colorMode]}
@@ -125,16 +131,30 @@ const LivestreamScroller = ({
           </Link>
         )}
       </Header>
-      {scrollerItems && scrollerItems.length && (
-        <CardsScroller>
-          {scrollerItems.map((item: LivestreamPostCardProps) => {
-            return (
-              <SwiperSlide key={`slide-${item.id}-livestream`}>
-                <LivestreamPostCard {...item} />
-              </SwiperSlide>
-            )
-          })}
-        </CardsScroller>
+    )
+  }
+
+  const renderScroller = () => {
+    return (
+      <CardsScroller>
+        {scrollerItems?.map((item: LivestreamPostCardProps) => {
+          return (
+            <SwiperSlide key={`slide-${item.id}-livestream`}>
+              <LivestreamPostCard {...item} />
+            </SwiperSlide>
+          )
+        })}
+      </CardsScroller>
+    )
+  }
+
+  return (
+    <ContentScroller>
+      {scrollerItems?.length && (
+        <>
+          {sectionTitle && renderHeader()}
+          {renderScroller()}
+        </>
       )}
     </ContentScroller>
   )
