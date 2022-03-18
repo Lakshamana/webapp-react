@@ -18,8 +18,9 @@ import { Card, SigninForm } from 'components'
 import { Container } from './styles'
 import { sizes } from 'styles'
 import { useAuth } from 'contexts/auth'
-import { AUTH_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { SignInSteps } from './types'
+import { FBAuthWithCustomToken } from 'services/firebase'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -45,6 +46,8 @@ const LoginPage = () => {
   const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
+      await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
+      await FBAuthWithCustomToken()
       await updateAccount(result.signIn.account)
 
       history.push('/channels')
@@ -59,6 +62,7 @@ const LoginPage = () => {
     {
       onCompleted: async (result) => {
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
+        await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
 
         if (!result?.socialSignIn.account.status.gdpr) {
