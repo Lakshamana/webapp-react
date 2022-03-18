@@ -21,7 +21,6 @@ import {
   CheckoutCustomField,
   CardInfo,
   Password,
-  LiveChat
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
