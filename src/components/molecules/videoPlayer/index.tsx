@@ -24,6 +24,7 @@ const VideoPlayer = ({
   isLiveStream,
   subtitle,
   vttSrc,
+  poster,
   overlays,
   muxConfig,
   skin,
@@ -64,8 +65,10 @@ const VideoPlayer = ({
       options={{
         ...defaultOptions,
         ...(isLiveStream ? { playbackRates: undefined } : {}),
+        ...(isLiveStream ? { liveui: true } : {}),
         ...options,
       }}
+      islivestream
       skin={skin}
       onReady={handlePlayerReady}
     />
