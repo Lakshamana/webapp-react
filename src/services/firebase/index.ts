@@ -4,7 +4,6 @@ import {
   getAuth,
   signInWithPopup,
   signOut,
-  onAuthStateChanged,
   AuthError,
   fetchSignInMethodsForEmail,
   linkWithCredential,
@@ -15,27 +14,38 @@ import { CreateAccountSocialSignInDto } from 'generated/graphql'
 import { SocialType } from 'types/common'
 import { getData } from 'services/storage'
 import { FIREBASE_TOKEN, ORGANIZATION_INFO } from 'config/constants'
-
-const { REACT_APP_FIREBASE_AUTH_API_KEY, REACT_APP_FIREBASE_AUTH_DOMAIN } =
-  process.env
+import { firebaseApp } from 'config/firebase'
 
 const OrganizationData = getData(ORGANIZATION_INFO)
-const FirebaseToken = getData(FIREBASE_TOKEN)
 
-const CONFIG = {
+const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
+
+export const FBAuthWithCustomToken = (): Promise<boolean> => {
+  const FirebaseToken = getData(FIREBASE_TOKEN)
+  return new Promise(function (resolve, reject) {
+    signInWithCustomToken(CUSTOM_TOKEN_AUTH, FirebaseToken)
+      .then((userCredential) => {
+        const user = userCredential.user
+        resolve(!!user)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+// FB SOCIAL AUTH CONFIG
+const { REACT_APP_FIREBASE_AUTH_DOMAIN, REACT_APP_FIREBASE_AUTH_API_KEY } =
+  process.env
+
+const AUTH_CONFIG = {
   apiKey: REACT_APP_FIREBASE_AUTH_API_KEY,
   authDomain: REACT_APP_FIREBASE_AUTH_DOMAIN,
 }
 
-// AUTH
-const FirebaseAuth = initializeApp(CONFIG, 'Auth')
-
+const FirebaseAuth = initializeApp(AUTH_CONFIG, 'Auth')
 const AUTH = getAuth(FirebaseAuth)
-
 AUTH.tenantId = OrganizationData?.tenant_id || ''
-
-//TODO: Handle auth state changed
-onAuthStateChanged(AUTH, (user) => {})
 
 const FB_PROVIDER = new FacebookAuthProvider()
 const GOOGLE_PROVIDER = new GoogleAuthProvider()
@@ -131,18 +141,4 @@ export const signOutFB = () => {
 
 export const isUserLoggedFB = (): boolean => {
   return !!AUTH.currentUser
-}
-
-// TODO: Improve this code, it's a example
-export const FBAuthWithCustomToken = (): Promise<boolean> => {
-  return new Promise(function (resolve, reject) {
-    signInWithCustomToken(AUTH, FirebaseToken)
-      .then((userCredential) => {
-        const user = userCredential.user
-        resolve(!!user)
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
 }
