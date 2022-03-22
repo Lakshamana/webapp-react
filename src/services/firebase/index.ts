@@ -1,6 +1,7 @@
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
+  TwitterAuthProvider,
   getAuth,
   signInWithPopup,
   signOut,
@@ -15,8 +16,6 @@ import { SocialType } from 'types/common'
 import { getData } from 'services/storage'
 import { FIREBASE_TOKEN, ORGANIZATION_INFO } from 'config/constants'
 import { firebaseApp } from 'config/firebase'
-
-const OrganizationData = getData(ORGANIZATION_INFO)
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
@@ -48,6 +47,7 @@ const AUTH = getAuth(FirebaseAuth)
 
 const FB_PROVIDER = new FacebookAuthProvider()
 const GOOGLE_PROVIDER = new GoogleAuthProvider()
+const TWITER_PROVIDER = new TwitterAuthProvider()
 
 function getProvider(kind: string) {
   switch (kind) {
@@ -57,28 +57,53 @@ function getProvider(kind: string) {
     case 'google':
     case 'google.com':
       return GOOGLE_PROVIDER
+    case 'twitter':
+    case 'twitter.com':
+      return TWITER_PROVIDER
     default:
       throw new Error(`No provider implemented for ${kind}`)
   }
 }
 
+const generateCredential = (kind: SocialType, result: any) => {
+  const Credential = {
+    facebook: FacebookAuthProvider.credentialFromResult(result),
+    google: GoogleAuthProvider.credentialFromResult(result),
+    twitter: TwitterAuthProvider.credentialFromResult(result),
+  }
+
+  return Credential[kind]
+}
+
+const generatePendingCredential = (kind: SocialType, err: any) => {
+  const Credential = {
+    facebook: FacebookAuthProvider.credentialFromError(err),
+    google: GoogleAuthProvider.credentialFromError(err),
+    twitter: TwitterAuthProvider.credentialFromError(err),
+  }
+
+  return Credential[kind]
+}
+
 export const SocialSignIn = (
   kind: SocialType
 ): Promise<CreateAccountSocialSignInDto> => {
+  const OrganizationData = getData(ORGANIZATION_INFO)
   AUTH.tenantId = OrganizationData?.tenant_id
+  const PROVIDER = getProvider(kind)
   return new Promise(function (resolve, reject) {
-    const PROVIDER = getProvider(kind)
     signInWithPopup(AUTH, PROVIDER)
-      .then((result) => {
-        const credential =
-          kind === 'facebook'
-            ? FacebookAuthProvider.credentialFromResult(result)
-            : GoogleAuthProvider.credentialFromResult(result)
+      .then((result: any) => {
+        const credential = generateCredential(kind, result)
+
+        console.log(result.user)
+
         if (credential) {
-          const { refreshToken } = result.user
-          const { accessToken, providerId } = credential
+          const { refreshToken, accessToken } = result.user['stsTokenManager']
+          const { providerId } = credential
+
           resolve({
-            accessToken: accessToken || '',
+            accessToken: accessToken,
             authProvider: providerId,
             refreshToken: refreshToken,
           })
@@ -86,10 +111,7 @@ export const SocialSignIn = (
       })
       .catch(function (err: AuthError) {
         const email = err.customData?.email || ''
-        const pendingCred =
-          kind === 'facebook'
-            ? FacebookAuthProvider.credentialFromError(err)
-            : GoogleAuthProvider.credentialFromError(err)
+        const pendingCred = generatePendingCredential(kind, err)
 
         if (err.code === 'auth/account-exists-with-different-credential') {
           fetchSignInMethodsForEmail(AUTH, email).then((methods) => {
@@ -99,13 +121,11 @@ export const SocialSignIn = (
                 if (pendingCred) {
                   linkWithCredential(result.user, pendingCred)
                     .then((usercred) => {
-                      const credential =
-                        kind === 'facebook'
-                          ? FacebookAuthProvider.credentialFromResult(usercred)
-                          : GoogleAuthProvider.credentialFromResult(usercred)
+                      const credential = generateCredential(kind, usercred)
                       if (credential) {
-                        const { refreshToken } = usercred.user
-                        const { accessToken, providerId } = credential
+                        const { refreshToken, accessToken } =
+                          usercred.user['stsTokenManager']
+                        const { providerId } = credential
                         resolve({
                           accessToken: accessToken || '',
                           authProvider: providerId,
