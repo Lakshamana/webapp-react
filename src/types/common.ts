@@ -5,7 +5,7 @@ export type AlertObjectType = {
   type: AlertType
 }
 
-export type SocialType = 'facebook' | 'google'
+export type SocialType = 'facebook' | 'google' | 'twitter'
 
 export type EntityType = 'public' | 'exclusive' | 'private' | 'geolocked'
 
