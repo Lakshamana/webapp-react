@@ -45,7 +45,6 @@ const AUTH_CONFIG = {
 
 const FirebaseAuth = initializeApp(AUTH_CONFIG, 'Auth')
 const AUTH = getAuth(FirebaseAuth)
-AUTH.tenantId = OrganizationData?.tenant_id || ''
 
 const FB_PROVIDER = new FacebookAuthProvider()
 const GOOGLE_PROVIDER = new GoogleAuthProvider()
@@ -66,6 +65,7 @@ function getProvider(kind: string) {
 export const SocialSignIn = (
   kind: SocialType
 ): Promise<CreateAccountSocialSignInDto> => {
+  AUTH.tenantId = OrganizationData?.tenant_id
   return new Promise(function (resolve, reject) {
     const PROVIDER = getProvider(kind)
     signInWithPopup(AUTH, PROVIDER)
