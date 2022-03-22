@@ -27,10 +27,11 @@ const CategoriesScroller = ({
   const [scrollerItems, setScrollerItems] = useState<CategoryPostCardProps[]>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const getImageUrl = (category: Category) => {
+  // TODO: Change this ANY type when generate graphql fragments work
+  const getImageUrl = (category: any) => {
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      category.image?.imgPath || '',
+      category?.customization?.thumbnail,
       {
         size: {
           height: 400,
@@ -45,20 +46,20 @@ const CategoriesScroller = ({
   }
 
   useEffect(() => {
-    const mappedArr = items?.map((item: Category) => {
+    const categoriesItems = items?.map((item: Category) => {
       const thumbnail = getImageUrl(item)
       const url = getPostUrl(`${item.id}`)
       return {
-        id: `${item.id}`,
-        title: `${item.name}`,
-        description: `${item.description}`,
+        id: item.id || '',
+        title: item.name || '',
+        description: item.description || '',
         url: url,
         thumbnail: thumbnail,
-        isPinned: !!item.pinnedAt
+        isPinned: !!item.pinnedAt,
       }
     })
-    setScrollerItems(mappedArr?.length ? mappedArr : [])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setScrollerItems(categoriesItems)
+    // eslint-disable-next-line
   }, [items])
 
   const renderHeader = () => {
@@ -97,7 +98,6 @@ const CategoriesScroller = ({
       })}
     </CardsScroller>
   )
-
 
   return (
     <ContentScroller>
