@@ -71,6 +71,10 @@ const SigninForm = ({
           onClick={() => handleSocialSubmit('facebook')}
           kind={'facebook'}
         ></SocialSigninButton>
+        <SocialSigninButton
+          onClick={() => handleSocialSubmit('twitter')}
+          kind={'twitter'}
+        ></SocialSigninButton>
       </Flex>
 
       <Text
