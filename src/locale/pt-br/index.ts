@@ -45,7 +45,7 @@ const PT_BR = {
       accept_all: 'Eu aceito todos os',
     },
     signin: {
-      title: 'Acesse Fanhero agora',
+      title: 'Acesse {{org}} agora',
       subtitle: 'Por favor acesse a sua conta agora',
       or: 'ou',
       label: {
@@ -60,7 +60,7 @@ const PT_BR = {
         forgot_password: 'Esqueceu a senha?',
       },
       error: {
-        wrong_credentials: 'Suas credenciais de login estão incorretas.',
+        wrong_credentials: 'Você digitou um nome de usuário ou senha inválidos.',
         too_many_attempts:
           'Número de tentativas de login excedido. Para sua segurança, não é possível fazer o login no momento. Tente novamente mais tarde.',
       },
