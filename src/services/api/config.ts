@@ -13,6 +13,30 @@ import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql/mutation/refreshToken'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
+const httpLink = createHttpLink({
+  uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
+})
+
+let isRefreshing = false
+let pendingRequests: any[] = []
+
+const setIsRefreshing = (value) => {
+  isRefreshing = value
+}
+
+const addPendingRequest = (pendingRequest: Function) => {
+  pendingRequests.push(pendingRequest)
+}
+
+const resolvePendingRequests = () => {
+  pendingRequests.map((callback: any) => callback())
+  pendingRequests = []
+}
+
+const invalidData = () => {
+  clearData()
+  window.location.href = '/'
+}
 
 const refreshToken = async (token) => {
   try {
@@ -28,71 +52,71 @@ const refreshToken = async (token) => {
   }
 }
 
-const httpLink = createHttpLink({
-  uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
-})
-
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
-        
         if (!err.extensions.code) {
-          clearData()
-          window.location.href = '/'
+          invalidData()
           return
         }
-
-        // TO-DO: CREATE FILE TO HANDLE API ERRORS
-        switch (err.extensions.code) {
-          case 'UNAUTHENTICATED':
-            switch (err.message) {
-              case 'INVALID_TOKEN':
+        if (err.extensions.code === 'UNAUTHENTICATED') {
+          switch (err.message) {
+            case 'INVALID_TOKEN':
+              if (!isRefreshing) {
+                setIsRefreshing(true)
                 try {
                   const token = getData(AUTH_TOKEN)
-                  const result = fromPromise(refreshToken(token))
-                  result.subscribe((data) => {
-                    const accessToken =
-                      data?.data?.data?.refreshToken?.refreshToken?.accessToken
-
-                    if (!accessToken) {
-                      clearData()
-                      window.location.href = '/'
-                      return
-                    }
-
-                    saveData(AUTH_TOKEN, accessToken)
-
-                    const authorization = accessToken
-                      ? `Bearer ${accessToken}`
-                      : ''
-                    const headers = operation.getContext().headers
-                    operation.setContext({
-                      headers: {
-                        ...headers,
-                        authorization,
-                      },
-                    })
-                    forward(operation)
-                    return
+                  return fromPromise(
+                    refreshToken(token)
+                      .then(({ data }: any) => {
+                        const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
+                        if (!accessToken) {
+                          invalidData()
+                          return
+                        }
+                        saveData(AUTH_TOKEN, accessToken)
+                        const headers = operation.getContext().headers
+                        operation.setContext({
+                          headers: {
+                            ...headers,
+                            authorization: `Bearer ${accessToken}`,
+                          },
+                        })
+                        return forward(operation)
+                      })
+                      .catch(() => invalidData())
+                  ).flatMap(() => {
+                    resolvePendingRequests()
+                    setIsRefreshing(false)
+                    return forward(operation)
                   })
                 } catch (error) {
-                  console.warn('error on refresh token', error)
+                  console.warn('error on refresh token')
                 }
-                break
-              // TO-DO: backend needs to remove exception:
-              case 'exception:PASSWORD_MISMATCH':
-                break
-              default:
-                clearData()
-                window.location.href = '/'
-            }
-            break
-          case 'FORBIDDEN':
+              }
+              else {
+                return fromPromise(
+                  new Promise((resolve) => {
+                    console.log('PROMISE >>>>>>>>>>>')
+                    // addPendingRequest(() => resolve())
+                  })
+                ).flatMap(() => {
+                  return forward(operation)
+                })
+              }
+              break
+            case 'exception:PASSWORD_MISMATCH':
+              break
+            default:
+              invalidData()
+          }
+          if (err.extensions.code === 'FORBIDDEN') {
             console.warn(
               'User dont have permission to execute this action -> ',
               operation
             )
+          }
         }
       }
     }
@@ -105,7 +129,6 @@ const errorLink = onError(
 const authLink = setContext((_, { headers }) => {
   const token = getData(AUTH_TOKEN)
   const channel = getData(CHANNEL_INFO)
-  // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
