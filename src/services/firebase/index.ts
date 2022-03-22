@@ -101,9 +101,9 @@ export const SocialSignIn = (
           const { providerId } = credential
 
           resolve({
-            accessToken: accessToken,
+            accessToken,
             authProvider: providerId,
-            refreshToken: refreshToken,
+            refreshToken,
           })
         }
       })
@@ -125,9 +125,9 @@ export const SocialSignIn = (
                           usercred.user['stsTokenManager']
                         const { providerId } = credential
                         resolve({
-                          accessToken: accessToken || '',
+                          accessToken,
                           authProvider: providerId,
-                          refreshToken: refreshToken,
+                          refreshToken,
                         })
                       }
                     })
