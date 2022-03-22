@@ -39,7 +39,7 @@ export const HeroImg = styled.img`
   min-width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: right bottom;
+  object-position: right top;
 
   &:after {
     display: block;
@@ -53,7 +53,7 @@ export const HeroImg = styled.img`
   }
 
   @media screen and (max-width: ${breakpoints.md}) {
-    object-position: center center;
+    object-position: center top;
   }
 `
 
