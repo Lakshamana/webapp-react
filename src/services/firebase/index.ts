@@ -96,8 +96,6 @@ export const SocialSignIn = (
       .then((result: any) => {
         const credential = generateCredential(kind, result)
 
-        console.log(result.user)
-
         if (credential) {
           const { refreshToken, accessToken } = result.user['stsTokenManager']
           const { providerId } = credential
