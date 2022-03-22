@@ -5,4 +5,4 @@ export interface SocialSigninButtonProps extends ButtonProps {
   colorful?: boolean
 }
 
-type ButtonType = 'facebook' | 'google' | 'apple' | 'linkedin'
+type ButtonType = 'facebook' | 'google' | 'apple' | 'linkedin' | 'twitter'

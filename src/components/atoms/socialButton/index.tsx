@@ -17,6 +17,7 @@ const SocialSigninButton = ({
     facebook: 'fa-brands:facebook-square',
     apple: 'fa-brands:apple',
     google: 'fa-brands:google',
+    twitter: 'fa-brands:twitter'
   }
   const iconsCustom: any = {
     facebook: <FacebookIcon width={24} />,
