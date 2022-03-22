@@ -1,7 +1,10 @@
 import { Flex, Box } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useFormik } from 'formik'
-import { useThemeStore } from 'services/stores/theme'
+import {
+  useThemeStore,
+  useOrganizationStore,
+} from 'services/stores'
 import {
   Button,
   Input,
@@ -23,6 +26,7 @@ const SigninForm = ({
 }: Props) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { organization } = useOrganizationStore()
 
   const {
     values,
@@ -52,7 +56,7 @@ const SigninForm = ({
         fontWeight={'bolder'}
         color={colors.generalText[colorMode]}
       >
-        {t('signin.title')}
+        {t('signin.title', { org: organization?.name })}
       </Text>
       <Text
         fontSize={16}
