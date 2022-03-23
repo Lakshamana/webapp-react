@@ -136,18 +136,8 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [activeChannel])
 
-  const getImageUrl = (obj) => {
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      obj.banner.imgPath,
-      {
-        size: {
-          height: obj.banner.height || undefined,
-          width: obj.banner.width || undefined,
-        },
-      }
-    )
-    return image
+  const getImageUrl = (path: string) => {
+    return generateImage(ThumborInstanceTypes.IMAGE, path)
   }
 
   useEffect(() => {
@@ -170,7 +160,8 @@ const HomePage = () => {
     }, [])
 
     setBillboardItems(billboardItems)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line
   }, [billboardData])
 
   const renderBillboard = () => (
