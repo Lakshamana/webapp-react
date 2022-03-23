@@ -218,7 +218,7 @@ const HomePage = () => {
 
           {/* TODO: Built a empty state component */}
           {isEmpty && (
-            <Flex w={'100vw'} justifyContent="center" color="white">
+            <Flex w={'100vw'} py={20} justifyContent="center" color="white">
               Page empty! We need to create an empty state component.
             </Flex>
           )}
