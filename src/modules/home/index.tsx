@@ -137,8 +137,7 @@ const HomePage = () => {
   }, [activeChannel])
 
   const getImageUrl = (path: string) => {
-    const image = generateImage(ThumborInstanceTypes.IMAGE, path)
-    return image
+    return generateImage(ThumborInstanceTypes.IMAGE, path)
   }
 
   useEffect(() => {
