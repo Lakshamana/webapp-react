@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
@@ -7,6 +7,7 @@ import {
   MUTATION_SOCIAL_SIGNIN,
   MUTATION_CREATE_ACCOUNT_GDPR,
 } from 'services/graphql'
+import { useCommonStore } from 'services/stores'
 import { SocialSignIn } from 'services/firebase'
 import { SocialType } from 'types/common'
 import { saveData } from 'services/storage'
@@ -29,7 +30,12 @@ const LoginPage = () => {
 
   const [error, setError] = useState('')
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
-  const [account, setAccount] = useState('')
+  const { setPageTitle } = useCommonStore()
+
+  useEffect(() => {
+    setPageTitle(t('signin.actions.login'))
+    //eslint-disable-next-line
+  }, [])
 
   const errorMessage = (type: string) => {
     const Error = {
