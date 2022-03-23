@@ -20,16 +20,15 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      channel.customization?.thumbnail?.img_path || '',
+      channel.customization?.thumbnail,
       imageOptions
     )
 
     return image
   }
 
-  const isGeolocked = (channel: Channel) => {
-    return channel.__typename === 'GeolockedChannel'
-  }
+  const isGeolocked = (channel: Channel) =>
+    channel.__typename === 'GeolockedChannel'
 
   return (
     <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
@@ -37,8 +36,9 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
         <ChannelCard
           id={item.id}
           name={item.name}
+          description={item.description}
           key={item.id}
-          onSelectChannel={(value) => channelSelected(value)}
+          onClick={(value) => channelSelected(value)}
           isGeolocked={isGeolocked(item)}
           image={getImageUrl(item)}
         ></ChannelCard>

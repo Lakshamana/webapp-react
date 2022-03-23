@@ -47,7 +47,7 @@ const HomePage = () => {
   } = useQuery(QUERY_BILLBOARDS, {
     variables: {
       filter: {
-        target: 'HOME',
+        target: 'home',
       },
     },
     skip: !activeChannel,
@@ -161,6 +161,7 @@ const HomePage = () => {
     }, [])
 
     setBillboardItems(billboardItems)
+
     // eslint-disable-next-line
   }, [billboardData])
 

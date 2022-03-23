@@ -48,7 +48,7 @@ const EN_US = {
       cancel_registration: 'Cancel registration',
     },
     signin: {
-      title: 'Access Fanhero now',
+      title: 'Access {{org}} now',
       subtitle: 'Please log into your account now',
       or: 'or',
       label: {
@@ -63,7 +63,7 @@ const EN_US = {
         forgot_password: 'Forgot password?',
       },
       error: {
-        wrong_credentials: 'Your login credentials are incorrect.',
+        wrong_credentials: 'You have entered an invalid username or password.',
         too_many_attempts:
           'Number of attempts exceeded. For your security, login is currently not possible. Try again later.',
       },
@@ -264,7 +264,7 @@ const EN_US = {
           input_label_fullname: 'Full Name',
           input_label_email: 'Email',
           term_service:
-            'By signing up, I agree to the FanHero Privacy and Policy of Term of Service.',
+            'By signing up, I agree to the {{org}} Privacy and Policy of Term of Service.',
           signup_btn: 'Sign up',
           already_have_account: 'Already have an account? Log in here',
         },
@@ -295,7 +295,7 @@ const EN_US = {
           email: 'E-mail',
           CPF: 'CPF',
           authorize:
-            'I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
+            'I authorize {{org}} LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
           place_you_order: 'Place your order',
         },
         modal: {

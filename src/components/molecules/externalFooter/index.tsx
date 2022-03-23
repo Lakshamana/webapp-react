@@ -29,7 +29,7 @@ const ExternalFooter = () => {
             isExternal
           />
           <Text mx={1} fontSize={[16]}>
-            &
+            {`&`}
           </Text>
           <Link
             to={ORGANIZATION.PRIVACY_URL}
@@ -48,9 +48,9 @@ const ExternalFooter = () => {
             alignItems={'center'}
             justifyContent={'right'}
             ignoreFallback
-            src={org_logo}
+            src={'https://d1k5o3ezm3npyz.cloudfront.net/61ba2606c1805142c289377f/public/footer-logo.svg'}
             mb={[6, 6, 6, 6, 0]}
-            width={180}
+            width={120}
           />
         </Container>
       </FooterItems>

@@ -29,7 +29,7 @@ import { MainLayout, LoginLayout, EmptyLayout } from 'components'
 const ClientRoutes = ({ isAccesible }: any) => {
   return (
     <Switch>
-      {/* TO-DO temporary redirects. Should not exist when the API returns posts without the need to send a channel */}
+      {/* TODO temporary redirects. Should not exist when the API returns posts without the need to send a channel */}
       <Redirect exact from="/" to="/channels" />
       <ClientRoute
         isAccesible={isAccesible?.mylist}

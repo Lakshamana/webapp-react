@@ -15,7 +15,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
 
   const channelImg = generateImage(
     ThumborInstanceTypes.IMAGE,
-    activeChannel?.customization.thumbnail.img_path,
+    activeChannel?.customization?.icon[colorMode],
     {
       size: { height: 80 },
     }
@@ -23,7 +23,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
 
   return (
     <Container alignItems="center">
-      {activeChannel ? (
+      {activeChannel && (
         <Container alignItems="center">
           <Avatar
             name={activeChannel.name}
@@ -33,8 +33,6 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
             src={channelImg}
           />
         </Container>
-      ) : (
-        <></>
       )}
       <IconContainer {...{ open }}>
         <Icon

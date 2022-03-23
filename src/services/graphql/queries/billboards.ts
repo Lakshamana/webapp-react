@@ -15,10 +15,10 @@ export const QUERY_BILLBOARDS = gql`
         textColor
       }
       customization {
-        banner {
+        desktop {
           imgPath
         }
-        cover {
+        mobile {
           imgPath
         }
       }

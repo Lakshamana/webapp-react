@@ -10,7 +10,7 @@ import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import { AUTH_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
-import { MUTATION_REFRESH_TOKEN } from 'services/graphql/mutation/refreshToken'
+import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
 const httpLink = createHttpLink({
