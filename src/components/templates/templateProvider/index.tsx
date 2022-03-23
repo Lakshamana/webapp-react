@@ -43,7 +43,7 @@ const TemplateProvider = ({ children }: any) => {
     colors,
   })
 
-  const pageTitleConfigured = `${pageTitle}${!!pageTitle && ' - '}${activeChannel?.name || organization?.name}`
+  const pageTitleConfigured = `${pageTitle}${!!pageTitle ? ' - ' : ''}${activeChannel?.name || organization?.name || ''}`
 
   return (
     <ThemeProvider theme={{ ...theme, colorMode }}>
