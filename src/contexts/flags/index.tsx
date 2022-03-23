@@ -4,7 +4,8 @@ import { fetchAndActivate } from 'firebase/remote-config'
 import * as crypto from 'crypto-js'
 import { firebaseRemoteConfig } from 'config/firebase'
 import { LoadingScreen } from 'components'
-import { FlagTypes, defaultProps } from './types'
+import { defaultProps } from './types'
+import { FlagTypes } from 'types/flags'
 import { APP_LOCALE } from 'config/constants'
 import { getData, saveData } from 'services/storage'
 
@@ -25,7 +26,7 @@ export const FlagsProvider = ({ children }) => {
   React.useEffect(() => {
     fetchAndActivate(firebaseRemoteConfig)
       .then(() => {
-        return getValue(firebaseRemoteConfig, 'configuration_react').asString()
+        return getValue(firebaseRemoteConfig, 'configuration').asString()
       })
       .then((remoteFlags: string) => {
         const decryptedEnv = crypto.AES.decrypt(remoteFlags, configSecret)
@@ -45,11 +46,9 @@ export const FlagsProvider = ({ children }) => {
       .finally(() => setLoading(false))
   }, [])
 
-  return loading ? (
-    <LoadingScreen />
-  ) : (
-    <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
-  )
+  if (loading) return <LoadingScreen />
+
+  return <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
 }
 
 export default FlagsProvider
