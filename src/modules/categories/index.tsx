@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 
-import { useChannelsStore } from 'services/stores'
+import { useChannelsStore, useCommonStore } from 'services/stores'
 import { QUERY_CATEGORIES } from 'services/graphql'
 import { Category } from 'generated/graphql'
 
@@ -14,6 +14,7 @@ import { sizes } from 'styles'
 
 const CategoriesPage = () => {
   const { t } = useTranslation()
+  const { setPageTitle } = useCommonStore()
   const { activeChannel } = useChannelsStore()
   const [categoriesBillboardItems, setCategoriesBillboardItems] = useState([])
   const [categoriesWithoutChildren, setCategoriesWithouChildren] =
@@ -90,6 +91,10 @@ const CategoriesPage = () => {
       setCategoriesWithouChildren(noChildren)
     }
   }, [categoriesData])
+
+  useEffect(() => {
+    setPageTitle(t('header.tabs.collections'))
+  }, [])
 
   const isLoading = loadingFeaturedCategories || loadingCategories
 
