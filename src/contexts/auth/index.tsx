@@ -6,10 +6,12 @@ import {
   MUTATION_SIGNOUT,
   QUERY_CHANNELS,
 } from 'services/graphql'
+import { useFlags } from 'contexts/flags'
 import {
   useAuthStore,
   useOrganizationStore,
   useChannelsStore,
+  useCustomizationStore,
 } from 'services/stores'
 import { signOutFB } from 'services/firebase'
 import {
@@ -35,9 +37,11 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
+  const { setActiveChannelConfig, setOrganizationConfig } = useCustomizationStore()
   const [loading, setLoading] = useState(true)
   const [loadingAccount, setLoadingAcount] = useState(false)
   const { setActiveChannel, activeChannel } = useChannelsStore()
+  const { CHANNELS, ORGANIZATION } = useFlags()
 
   const storedChannel = getData(CHANNEL_INFO)
 
@@ -167,7 +171,7 @@ export const AuthProvider = ({ children }) => {
     }
     await signOutFB()
     await clearData()
-    // TO-DO: Redirect based on Org kind (public, private, exclusive)
+    // TODO: Redirect based on Org kind (public, private, exclusive)
     window.location.href = '/login'
   }
 
@@ -177,13 +181,21 @@ export const AuthProvider = ({ children }) => {
   }, [accessToken])
 
   useEffect(() => {
+    if (activeChannel?.id) {
+      setActiveChannelConfig(CHANNELS[activeChannel.id])
+    }
+    // eslint-disable-next-line
+  }, [activeChannel])
+
+  useEffect(() => {
     loadOrganization()
+    setOrganizationConfig(ORGANIZATION)
     // eslint-disable-next-line
   }, [])
 
-  return loading ? (
-    <LoadingScreen />
-  ) : (
+  if (loading) return <LoadingScreen />
+
+  return (
     <AuthContext.Provider
       value={{
         signOut,
