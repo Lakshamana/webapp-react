@@ -2,7 +2,7 @@ import create from 'zustand'
 import { OrganizationPublic } from 'generated/graphql'
 
 interface OrganizationState {
-  organization: OrganizationPublic | null
+  organization: Maybe<OrganizationPublic>
   setOrganization: (organization: OrganizationPublic) => void
 }
 

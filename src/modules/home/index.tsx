@@ -47,7 +47,7 @@ const HomePage = () => {
   } = useQuery(QUERY_BILLBOARDS, {
     variables: {
       filter: {
-        target: 'HOME',
+        target: 'home',
       },
     },
     skip: !activeChannel,
@@ -151,10 +151,9 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    setBillboardItems([])
-    const reduced = billboardData?.billboard?.reduce((memo, curr) => {
-      const cover = getImageUrl(curr)
-      const banner = getImageUrl(curr)
+    const billboardItems = billboardData?.billboards?.reduce((memo, curr) => {
+      const cover = getImageUrl(curr.customization?.mobile?.imgPath)
+      const banner = getImageUrl(curr.customization?.desktop?.imgPath)
 
       memo.push({
         ...curr,
@@ -170,7 +169,7 @@ const HomePage = () => {
       return memo
     }, [])
 
-    setBillboardItems(reduced && reduced.length ? reduced : null)
+    setBillboardItems(billboardItems)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billboardData])
 

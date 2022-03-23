@@ -34,10 +34,11 @@ const LoginPage = () => {
   const errorMessage = (type: string) => {
     const Error = {
       'exception:PASSWORD_MISMATCH': t('signin.error.wrong_credentials'),
+      'exception:ACCOUNT_NOT_FOUND': t('signin.error.wrong_credentials'),
       'exception:TOO_MANY_ATTEMPTS_TRY_LATER': t(
         'signin.error.too_many_attempts'
       ),
-      default: t('signin.error.generic_api_error'),
+      default: t('common.error.generic_api_error'),
     }
 
     return Error[type] || Error.default

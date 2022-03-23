@@ -8,13 +8,12 @@ import { PostsGrid, CategoriesGrid } from './components'
 const MyListPage = () => {
   const { t } = useTranslation()
 
-  // TO-DO: Implement infinite loading on Cards Grid
   const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
     useQuery(QUERY_PINNED_CATEGORIES, {
       variables: {},
     })
 
-  // TO-DO: Implement infinite loading on Cards Grid
+  // TODO: Implement infinite loading on Cards Grid
   const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
     QUERY_PINNED_POSTS,
     {
@@ -29,34 +28,27 @@ const MyListPage = () => {
 
   const isEmpty = !isLoading && !hasResults
 
-  const renderCategoriesGrid = () => {
-    return (
-      <CategoriesGrid
-        sectionTitle={t('page.my_list.pinned_categories')}
-        items={pinnedCategoriesData?.pinnedCategories}
-      ></CategoriesGrid>
-    )
-  }
+  const renderCategoriesGrid = () => (
+    <CategoriesGrid
+      sectionTitle={t('page.my_list.pinned_categories')}
+      items={pinnedCategoriesData?.pinnedCategories}
+    ></CategoriesGrid>
+  )
 
-  const renderPostsGrid = () => {
-    return (
-      <PostsGrid
-        sectionTitle={t('page.my_list.pinned_videos')}
-        items={pinnedPostsData?.pinnedPosts}
-      ></PostsGrid>
-    )
-  }
+  const renderPostsGrid = () => (
+    <PostsGrid
+      sectionTitle={t('page.my_list.pinned_videos')}
+      items={pinnedPostsData?.pinnedPosts}
+    ></PostsGrid>
+  )
 
   return (
     <Container flexDirection={'column'} width={'100vw'} defaultPadding my={15}>
       {isLoading && <Skeleton kind="cards" numberOfCards={4} />}
-      {pinnedCategoriesData?.pinnedCategories?.length ? (
-        renderCategoriesGrid()
-      ) : (
-        <></>
-      )}
-      {pinnedPostsData?.pinnedPosts?.length ? renderPostsGrid() : <></>}
-      {/* TO-DO: built a empty state component */}
+      {!!pinnedCategoriesData?.pinnedCategories?.length &&
+        renderCategoriesGrid()}
+      {!!pinnedPostsData?.pinnedPosts?.length && renderPostsGrid()}
+      {/* TODO: built a empty state component */}
       {isEmpty && (
         <Flex w={'100vw'} justifyContent="center" color="white">
           Page empty! We need to create an empty state component.

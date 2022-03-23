@@ -29,7 +29,7 @@ const InternalFooter = () => {
             isExternal
           />
           <Text mx={1} fontSize={[16]}>
-            &
+            {`&`}
           </Text>
           <Link
             to={ORGANIZATION.PRIVACY_URL}
@@ -44,8 +44,8 @@ const InternalFooter = () => {
           justifyContent={'right'}
           marginLeft={['none', 'none', 'none', 'none', 'auto']}
           mb={[6, 6, 6, 6, 0]}
-          width={180}
-          src={org_logo}
+          width={120}
+          src={'https://d1k5o3ezm3npyz.cloudfront.net/61ba2606c1805142c289377f/public/footer-logo.svg'}
           ignoreFallback
         />
       </FooterItems>

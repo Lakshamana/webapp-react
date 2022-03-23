@@ -44,23 +44,23 @@ const Channels = ({
               >
                 <Container alignItems="center">
                   <Container width="25px" justifyContent="center">
-                    {selected?.id === channel.id ? (
+                    {selected?.id === channel.id && (
                       <Icon
                         width={15}
                         height={15}
                         icon="mdi:check"
                         color={colors.generalText[colorMode]}
                       />
-                    ) : <></>}
+                    )}
                   </Container>
                   <Avatar
                     ml={1}
-                    name={channel.name || ''}
+                    name={channel?.name}
                     borderRadius={'8px'}
                     height={10}
                     width={10}
                     src={generateChannelImage(
-                      channel.customization.thumbnail.img_path
+                      channel?.customization?.icon[colorMode]
                     )}
                   />
                   <Text

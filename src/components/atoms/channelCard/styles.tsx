@@ -10,6 +10,7 @@ export const ChannelContent = styled.div<ChannelProps>`
   position: relative;
   border-radius: 4px;
   ${({ image }: ChannelProps) => `background: url('${image}');`}
+  background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
   cursor: pointer;
   background-position: center;
   background-repeat: no-repeat;
