@@ -136,25 +136,15 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [activeChannel])
 
-  const getImageUrl = (obj) => {
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      obj.banner.imgPath,
-      {
-        size: {
-          height: obj.banner.height || undefined,
-          width: obj.banner.width || undefined,
-        },
-      }
-    )
+  const getImageUrl = (path: string) => {
+    const image = generateImage(ThumborInstanceTypes.IMAGE, path)
     return image
   }
 
   useEffect(() => {
-    setBillboardItems([])
-    const reduced = billboardData?.billboard?.reduce((memo, curr) => {
-      const cover = getImageUrl(curr)
-      const banner = getImageUrl(curr)
+    const billboardItems = billboardData?.billboards?.reduce((memo, curr) => {
+      const cover = getImageUrl(curr.customization?.mobile?.imgPath)
+      const banner = getImageUrl(curr.customization?.desktop?.imgPath)
 
       memo.push({
         ...curr,
@@ -170,8 +160,8 @@ const HomePage = () => {
       return memo
     }, [])
 
-    setBillboardItems(reduced && reduced.length ? reduced : null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setBillboardItems(billboardItems)
+    // eslint-disable-next-line
   }, [billboardData])
 
   const renderBillboard = () => (
