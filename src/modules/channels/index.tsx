@@ -28,18 +28,18 @@ const ChannelsPage = () => {
   })
 
   const selectChannel = async (channelId: string | null) => {
-    let selected = channelsList?.filter(
+    const selected = channelsList?.filter(
       (channel: Channel) => channel.id === channelId
     )
     if (selected?.length) {
-      let channelRoute = convertCamelCaseToDash(selected[0].name)
+      const channelRoute = convertCamelCaseToDash(selected[0].name)
       await setActiveChannel(selected[0])
       history.push(`/c/${channelRoute}`)
     }
   }
 
   useEffect(() => {
-    setPageTitle(t('page.channels.title'))
+    setPageTitle(t('page.channels.page_title'))
     //eslint-disable-next-line
   }, [])
 
