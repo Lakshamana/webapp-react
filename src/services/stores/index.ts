@@ -4,3 +4,5 @@ export * from './organization'
 export * from './channels'
 export * from './tabs'
 export * from './common'
+export * from './customization'
+

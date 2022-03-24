@@ -1,20 +1,23 @@
-export const colors = {
+import { ColorFlags } from 'types/flags'
+import { toLowerKeys } from 'utils/helperFunctions'
+
+const defaultColors: any = {
   brand: {
     primary: {
-      light: '#0660F9',
-      dark: '#0660F9',
+      light: '',
+      dark: '',
     },
     secondary: {
-      light: '#2B3038',
-      dark: '#2B3038',
+      light: '',
+      dark: '',
     },
     accent: {
-      light: '#0660F9',
-      dark: '#0660F9',
+      light: '',
+      dark: '',
     },
     indicator: {
-      light: '#0660F9',
-      dark: '#0660F9',
+      light: '',
+      dark: '',
     },
   },
   generalText: {
@@ -64,7 +67,7 @@ export const colors = {
   livechatBg: {
     light: '#E2E9E9',
     dark: '#ffffff',
-    me: '#0660F9'
+    me: '#0660F9',
   },
   billboardText: {
     light: '#444444',
@@ -99,18 +102,18 @@ export const colors = {
     },
     end: {
       light: '#F1EEEE',
-      dark: '#2F2D2D'
-    }
+      dark: '#2F2D2D',
+    },
   },
   search: {
     result: {
       light: '#FFFFFF',
-      dark:  '#222222'
+      dark: '#222222',
     },
     section: {
       light: '#E2E9E9',
-      dark:  '#000000'
-    }
+      dark: '#000000',
+    },
   },
   channel: {
     background: {
@@ -128,21 +131,21 @@ export const colors = {
     checkIcon: {
       light: '#000000',
       dark: '#FFFFFF',
-    }
+    },
   },
   reaction: {
     background: {
       light: '#d8d3d3',
-      dark:  '#313030'
+      dark: '#313030',
     },
     color: {
       light: '#747474',
-      dark:  '#747474'
+      dark: '#747474',
     },
     hover: {
       background: '#0469FF',
-      color: 'white'
-    }
+      color: 'white',
+    },
   },
   white: '#FFFFFF',
   black: '#000000',
@@ -205,31 +208,12 @@ export const colors = {
   bgOverlay: 'rgba(45, 43, 89, 0.2)',
 }
 
-//Esse comentário aqui é pra deixar salvo pra quando for transformar o input em dark ou light mode.
+export function setColor(BRAND_COLORS: ColorFlags) {
+  defaultColors.brand = toLowerKeys(BRAND_COLORS)
+  defaultColors.brand.primary = toLowerKeys(defaultColors.brand.primary)
+  defaultColors.brand.secondary = toLowerKeys(defaultColors.brand.secondary)
+  defaultColors.brand.accent = toLowerKeys(defaultColors.brand.accent)
+  defaultColors.brand.indicator = toLowerKeys(defaultColors.brand.indicator)
+}
 
-// export const componentsColors = {
-//   light: {
-//     input: {
-//       background: "#fff",
-//       color: "#000",
-//       placeholderColor: "#666666",
-//     },
-//     select: {
-//       background: "",
-//       color: "#000",
-//       placeholderColor: "#ccc",
-//     },
-//   },
-//   dark: {
-//     input: {
-//       background: "#262626",
-//       color: "#fff",
-//       placeholderColor: "#6f6f6f",
-//     },
-//     select: {
-//       background: "#fff",
-//       color: "#262626",
-//       placeholderColor: "#6f6f6f",
-//     },
-//   },
-// };
+export const colors = defaultColors

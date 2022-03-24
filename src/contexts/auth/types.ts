@@ -5,7 +5,7 @@ type KindType = 'public' | 'exclusive'
 export interface AuthTypes {
   signed: boolean
   kind: KindType
-  user: object | null
+  user?: object
   loadingAccount: boolean
   signOut: () => Promise<void>
   updateUser: (user: Profile) => Promise<void>

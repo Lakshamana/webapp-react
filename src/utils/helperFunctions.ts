@@ -97,3 +97,10 @@ export const formattedSeconds = (seconds: number) => {
 export function stripHTML(text: string) {
   return text.replace(/(<([^>]+)>)/gi, "");
 }
+
+export function toLowerKeys(obj: Object) {
+  return Object.keys(obj).reduce((accumulator, key) => {
+    accumulator[key.toLowerCase()] = obj[key];
+    return accumulator;
+  }, {});
+}
