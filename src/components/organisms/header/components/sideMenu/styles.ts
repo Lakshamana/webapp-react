@@ -21,6 +21,10 @@ export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
       ? css`
           width: 350px;
           transition: ease-in 0.25s;
+
+          @media (max-width: ${breakpoints.sm}) {
+            width: 100%;
+          }
         `
       : `
       width: 0px;
