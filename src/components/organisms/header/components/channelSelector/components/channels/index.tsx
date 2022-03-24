@@ -60,7 +60,7 @@ const Channels = ({
                     height={10}
                     width={10}
                     src={generateChannelImage(
-                      channel?.customization?.icon[colorMode]
+                      channel?.customization?.logo[colorMode]
                     )}
                   />
                   <Text
