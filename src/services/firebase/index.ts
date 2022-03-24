@@ -10,16 +10,23 @@ import {
   linkWithCredential,
   signInWithCustomToken,
 } from 'firebase/auth'
+import { requestGraphql } from 'services/api/request'
 import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
 import { SocialType } from 'types/common'
-import { getData } from 'services/storage'
+import { getData, saveData } from 'services/storage'
+import { AUTH_TOKEN } from 'config/constants'
 import { FIREBASE_TOKEN, ORGANIZATION_INFO } from 'config/constants'
 import { firebaseApp } from 'config/firebase'
+import { MUTATION_REFRESH_FIREBASE_TOKEN } from 'services/graphql'
+
+const { REACT_APP_ORGANIZATION_URL } = process.env
+
+const accessToken = getData(AUTH_TOKEN)
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
-export const FBAuthWithCustomToken = (): Promise<boolean> => {
+export const authWithCustomToken = (): Promise<boolean> => {
   const FirebaseToken = getData(FIREBASE_TOKEN)
   return new Promise(function (resolve, reject) {
     signInWithCustomToken(CUSTOM_TOKEN_AUTH, FirebaseToken)
@@ -27,10 +34,30 @@ export const FBAuthWithCustomToken = (): Promise<boolean> => {
         const user = userCredential.user
         resolve(!!user)
       })
-      .catch((error) => {
-        reject(error)
+      .catch(() => {
+        refreshFirebaseToken().then(({ data }: any) => {
+          console.log(data?.data?.refreshToken?.refreshToken?.firebaseToken)
+          const newFirebaseToken =
+            data?.data?.refreshToken?.refreshToken?.firebaseToken
+          saveData(FIREBASE_TOKEN, newFirebaseToken)
+          signInWithCustomToken(CUSTOM_TOKEN_AUTH, newFirebaseToken)
+        })
       })
   })
+}
+
+const refreshFirebaseToken = async () => {
+  try {
+    return requestGraphql({
+      query: MUTATION_REFRESH_FIREBASE_TOKEN,
+      headers: {
+        authorization: accessToken ? `Bearer ${accessToken}` : '',
+        organization: REACT_APP_ORGANIZATION_URL,
+      },
+    })
+  } catch (error) {
+    console.warn(`refresh firebase token error -> `, error)
+  }
 }
 
 // FB SOCIAL AUTH CONFIG
@@ -146,17 +173,10 @@ export const SocialSignIn = (
   })
 }
 
-//TODO: Handle errors in signOut
 export const signOutFB = () => {
-  signOut(AUTH)
-    .then(() => {
-      // Sign-out successful.
-    })
-    .catch((error) => {
-      // An error happened.
-    })
+  signOut(CUSTOM_TOKEN_AUTH)
 }
 
 export const isUserLoggedFB = (): boolean => {
-  return !!AUTH.currentUser
+  return !!CUSTOM_TOKEN_AUTH.currentUser
 }
