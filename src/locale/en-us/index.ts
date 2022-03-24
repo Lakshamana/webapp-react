@@ -161,7 +161,7 @@ const EN_US = {
         home: 'Home',
         live: 'Live',
         feed: 'Feed',
-        collections: 'Collections',
+        collections: 'Categories',
         my_list: 'My List',
         settings: 'Settings',
         tags: 'Tags',
@@ -205,6 +205,7 @@ const EN_US = {
         pinned_videos: 'Favorite Videos',
       },
       account: {
+        title: 'My Account',
         push_notifications: 'Push Notifications',
         security: 'Security',
         back: 'Back',
