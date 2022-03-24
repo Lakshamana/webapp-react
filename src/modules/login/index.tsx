@@ -31,6 +31,7 @@ const LoginPage = () => {
   const [error, setError] = useState('')
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
   const { setPageTitle } = useCommonStore()
+  const [account, setAccount] = useState('')
 
   useEffect(() => {
     setPageTitle(t('signin.actions.login'))
