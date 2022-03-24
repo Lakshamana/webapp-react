@@ -29,10 +29,10 @@ export const QUERY_CHANNELS = gql`
         thumbnail
         kind
         customization {
-					thumbnail {
-						img_path
-					}
-				}
+          thumbnail {
+            img_path
+          }
+        }
         __typename
       }
     }
