@@ -21,7 +21,6 @@ import { sizes } from 'styles'
 import { useAuth } from 'contexts/auth'
 import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { SignInSteps } from './types'
-import { FBAuthWithCustomToken } from 'services/firebase'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -55,7 +54,6 @@ const LoginPage = () => {
     onCompleted: async (result) => {
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
       await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
-      await FBAuthWithCustomToken()
       await updateAccount(result.signIn.account)
 
       history.push('/channels')
