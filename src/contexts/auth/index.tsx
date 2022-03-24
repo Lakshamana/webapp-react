@@ -13,13 +13,18 @@ import {
   useChannelsStore,
   useCustomizationStore,
 } from 'services/stores'
-import { signOutFB } from 'services/firebase'
+import {
+  signOutFB,
+  authWithCustomToken,
+  isUserLoggedFB,
+} from 'services/firebase'
 import {
   USER_INFO,
   ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
   CHANNEL_INFO,
+  FIREBASE_TOKEN,
 } from 'config/constants'
 
 import { saveData, getData, clearData } from 'services/storage'
@@ -37,7 +42,8 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
-  const { setActiveChannelConfig, setOrganizationConfig } = useCustomizationStore()
+  const { setActiveChannelConfig, setOrganizationConfig } =
+    useCustomizationStore()
   const [loading, setLoading] = useState(true)
   const [loadingAccount, setLoadingAcount] = useState(false)
   const { setActiveChannel, activeChannel } = useChannelsStore()
@@ -51,6 +57,7 @@ export const AuthProvider = ({ children }) => {
   const [kind, setKind] = useState('public')
 
   const accessToken = getData(AUTH_TOKEN)
+  const firebaseToken = getData(FIREBASE_TOKEN)
 
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
@@ -179,6 +186,11 @@ export const AuthProvider = ({ children }) => {
     loadAccount()
     // eslint-disable-next-line
   }, [accessToken])
+
+  useEffect(() => {
+    if (accessToken && !isUserLoggedFB()) authWithCustomToken()
+    //eslint-disable-next-line
+  }, [firebaseToken])
 
   useEffect(() => {
     if (activeChannel?.id) {
