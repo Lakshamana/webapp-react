@@ -190,6 +190,7 @@ const EN_US = {
       },
       channels: {
         title: 'Choose a channel:',
+        page_title: 'Channels'
       },
       collection: {
         action: 'Action',

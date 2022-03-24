@@ -12,7 +12,7 @@ import {
 } from 'generated/graphql'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { useChannelsStore } from 'services/stores'
+import { useChannelsStore, useCommonStore } from 'services/stores'
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
@@ -36,6 +36,7 @@ import { sizes } from 'styles'
 const HomePage = () => {
   const { t } = useTranslation()
   const { generateImage } = useThumbor()
+  const { setPageTitle } = useCommonStore()
 
   const { activeChannel } = useChannelsStore()
   const [billboardItems, setBillboardItems] = useState([])
@@ -141,6 +142,8 @@ const HomePage = () => {
   }
 
   useEffect(() => {
+    setPageTitle(t('header.tabs.home'))
+
     const billboardItems = billboardData?.billboards?.reduce((memo, curr) => {
       const cover = getImageUrl(curr.customization?.mobile?.imgPath)
       const banner = getImageUrl(curr.customization?.desktop?.imgPath)
@@ -215,7 +218,7 @@ const HomePage = () => {
 
           {/* TODO: Built a empty state component */}
           {isEmpty && (
-            <Flex w={'100vw'} justifyContent="center" color="white">
+            <Flex w={'100vw'} py={20} justifyContent="center" color="white">
               Page empty! We need to create an empty state component.
             </Flex>
           )}

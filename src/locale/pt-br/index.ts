@@ -188,6 +188,7 @@ const PT_BR = {
       },
       channels: {
         title: 'Escolha um canal:',
+        page_title: 'Canais'
       },
       collection: {
         action: 'Ação',

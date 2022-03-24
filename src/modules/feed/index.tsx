@@ -1,19 +1,21 @@
-import { Container, FeedPostCard, Select } from "components"
 import { useEffect, useState } from "react"
-import { formatDistance, intervalToDuration } from 'date-fns'
-import { QUERY_FEED_POSTS } from "services/graphql"
+import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from "@apollo/client"
-import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
-import { useChannelsStore } from 'services/stores'
-import { colors } from 'styles'
+import { formatDistance, intervalToDuration } from 'date-fns'
 import { Center, Spinner } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { QUERY_FEED_POSTS } from "services/graphql"
+import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
+import { useChannelsStore, useCommonStore } from 'services/stores'
+import { Container, FeedPostCard, Select } from "components"
+import { colors } from 'styles'
 
 const FeedPage = () => {
   const limit = 10
-
+  const { t } = useTranslation()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
+  const { setPageTitle } = useCommonStore()
 
   const filterList = [
 		{ value: 'recent', label: 'Most Recent' },
@@ -34,6 +36,12 @@ const FeedPage = () => {
 
     return [{ name: "publishedAt", direction: "DESC" }]
   }
+
+  useEffect(() => {
+    setPageTitle(t('header.tabs.feed'))
+    //eslint-disable-next-line
+  }, [])
+
 
   useEffect(() => {
     setPosts([])

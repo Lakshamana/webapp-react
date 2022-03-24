@@ -4,9 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { QUERY_PINNED_CATEGORIES, QUERY_PINNED_POSTS } from 'services/graphql'
 import { Container, Skeleton } from 'components'
 import { PostsGrid, CategoriesGrid } from './components'
+import { useCommonStore } from 'services/stores'
+import { useEffect } from 'react'
 
 const MyListPage = () => {
   const { t } = useTranslation()
+  const { setPageTitle } = useCommonStore()
 
   const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
     useQuery(QUERY_PINNED_CATEGORIES, {
@@ -27,6 +30,10 @@ const MyListPage = () => {
     pinnedPostsData?.pinnedPosts?.length
 
   const isEmpty = !isLoading && !hasResults
+
+  useEffect(() => {
+    setPageTitle(t('header.tabs.my_list'))
+  }, [])
 
   const renderCategoriesGrid = () => (
     <CategoriesGrid
