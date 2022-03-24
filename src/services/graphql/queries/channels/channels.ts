@@ -10,7 +10,17 @@ export const QUERY_CHANNELS = gql`
         geofence
         name
         thumbnail
-        customization
+        customization {
+          banner {
+            img_path
+          }
+          logo {
+            img_path
+          }
+          thumbnail {
+            img_path
+          }
+        }
         __typename
       }
       ... on GeolockedChannel {
@@ -18,7 +28,11 @@ export const QUERY_CHANNELS = gql`
         name
         thumbnail
         kind
-        customization
+        customization {
+					thumbnail {
+						img_path
+					}
+				}
         __typename
       }
     }
