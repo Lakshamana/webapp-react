@@ -22,14 +22,18 @@ const ChannelsPage = () => {
     },
     onCompleted: (result) => {
       setChannelsList(result.channels)
-    }
+    },
   })
 
   const selectChannel = async (channelId: string | null) => {
-    let selected = channelsList.filter((channel: Channel) => channel.id === channelId)
-    let channelRoute = convertCamelCaseToDash(selected[0].name)
-    await setActiveChannel(selected[0])
-    history.push(`/c/${channelRoute}`)
+    let selected = channelsList?.filter(
+      (channel: Channel) => channel.id === channelId
+    )
+    if (selected?.length) {
+      let channelRoute = convertCamelCaseToDash(selected[0].name)
+      await setActiveChannel(selected[0])
+      history.push(`/c/${channelRoute}`)
+    }
   }
 
   return (
@@ -43,7 +47,7 @@ const ChannelsPage = () => {
       >
         {t('page.channels.title')}
       </Text>
-      {loading && <Skeleton kind='cards' numberOfCards={5}></Skeleton>}
+      {loading && <Skeleton kind="cards" numberOfCards={5}></Skeleton>}
       {!!data?.channels?.length && !loading && (
         <ChannelsGrid
           channelSelected={selectChannel}
