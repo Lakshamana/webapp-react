@@ -33,7 +33,7 @@ import { sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
 
 import { useAuth } from 'contexts/auth'
-import { useAuthStore } from 'services/stores'
+import { useAuthStore, useCommonStore } from 'services/stores'
 import { LANGUAGES } from './settings'
 
 import { saveData } from 'services/storage'
@@ -52,6 +52,7 @@ const AccountPage = () => {
   const [updatePasswordMsg, setUpdatePasswordMsg] =
     useState<AlertObjectType | null>()
   const { user, account } = useAuthStore()
+  const { setPageTitle } = useCommonStore()
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -160,6 +161,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     getAccount()
+    setPageTitle(t('page.account.title'))
     // eslint-disable-next-line
   }, [])
 

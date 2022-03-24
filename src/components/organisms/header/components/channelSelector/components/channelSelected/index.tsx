@@ -15,7 +15,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
 
   const channelImg = generateImage(
     ThumborInstanceTypes.IMAGE,
-    activeChannel?.customization?.icon[colorMode],
+    activeChannel?.customization?.logo[colorMode],
     {
       size: { height: 80 },
     }

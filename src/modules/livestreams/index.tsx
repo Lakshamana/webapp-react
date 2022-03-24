@@ -15,9 +15,11 @@ import { Container, Skeleton } from 'components/atoms'
 import { LivestreamScroller, VideosScroller } from 'components/molecules'
 import { sizes } from 'styles'
 import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
+import { useCommonStore } from 'services/stores'
 
 const Livestreams = () => {
   const { t } = useTranslation()
+  const { setPageTitle } = useCommonStore()
   const [liveItems, setLiveItems] = useState<Livestream[]>()
   const [upcomingItems, setUpcomingItems] = useState<Livestream[]>()
 
@@ -63,6 +65,7 @@ const Livestreams = () => {
   })
 
   useEffect(() => {
+    setPageTitle(t('header.tabs.live'))
     getLivestreamsScroler()
     getOnDemandPostsData()
     // eslint-disable-next-line
