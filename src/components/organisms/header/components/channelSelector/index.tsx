@@ -40,15 +40,13 @@ const ChannelSelector = () => {
   })
 
   const openChannelsList = () => {
-    if (!channelsList.length) {
+    if (!channelsList?.length) {
       getChannels()
     }
     setOpen(true)
   }
 
-  const handleSearch = (e: any) => {
-    setSearch(e.target.value)
-  }
+  const handleSearch = (e: any) => setSearch(e.target.value)
 
   const handleSelect = (channel: Channel) => {
     let homeTab = tabsList.filter((item) => item.id === 'home')
@@ -93,7 +91,7 @@ const ChannelSelector = () => {
           /> */}
             <Channels
               selected={activeChannel}
-              channels={channelsList}
+              channels={channelsList || []}
               isLoading={loading}
               onSelect={handleSelect}
               {...{ colorMode }}
