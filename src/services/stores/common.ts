@@ -7,7 +7,5 @@ type CommonState = {
 
 export const useCommonStore = create<CommonState>((set) => ({
   pageTitle: '',
-  setPageTitle: (pageTitle: string) => {
-    return set({ pageTitle })
-  },
+  setPageTitle: (pageTitle: string) => set({ pageTitle })
 }))
