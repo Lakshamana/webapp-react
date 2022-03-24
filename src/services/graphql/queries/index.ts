@@ -6,5 +6,6 @@ export * from './posts'
 export * from './billboards'
 export * from './comments'
 export * from './organization'
+export * from './menus'
 
 
