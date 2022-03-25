@@ -109,6 +109,7 @@ const SigninForm = ({
           onBlur={handleBlur}
           type="text"
           value={values.payload.email}
+          onEnterPress={handleSubmit}
           placeholder={t('signin.label.email')}
           errorMessage={errors.payload?.email}
           error={!!errors.payload?.email && touched.payload?.email}
@@ -120,6 +121,7 @@ const SigninForm = ({
           onBlur={handleBlur}
           value={values.payload.password}
           placeholder={t('signin.label.password')}
+          onEnterPress={handleSubmit}
           errorMessage={errors.payload?.password}
           error={!!errors.payload?.password && touched.payload?.password}
         />
