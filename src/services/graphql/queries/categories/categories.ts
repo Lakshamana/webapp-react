@@ -6,9 +6,15 @@ export const QUERY_CATEGORIES = gql`
       access
       createdAt
       customization {
-        banner
-        cover
-        thumbnail
+        desktop {
+          imgPath
+        }
+        mobile {
+          imgPath
+        }
+        thumbnail {
+          imgPath
+        }
       }
       children(pagination: { limit: 10 }) {
         description
@@ -16,13 +22,13 @@ export const QUERY_CATEGORIES = gql`
         geoFence
         id
         name
+        customization {
+        thumbnail {
+          imgPath
+        }
+      }
         description
         tag
-        customization {
-          banner
-          cover
-          thumbnail
-        }
       }
       description
       featuredAt
