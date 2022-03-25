@@ -42,10 +42,9 @@ const HeaderComponent = () => {
     }
   )
 
-  const [getMenus, { data, loading }] = useLazyQuery(QUERY_MENUS, {
-    onCompleted: (result) => {
-      setActiveChannelMenu(result.menus)
-    },
+  const [getMenus] = useLazyQuery(QUERY_MENUS, {
+    fetchPolicy: "network-only",
+    onCompleted: (result) => setActiveChannelMenu(result.menus)
   })
 
   const [state, dispatch] = useReducer(reducer, {
@@ -101,7 +100,9 @@ const HeaderComponent = () => {
   }, [activeChannel])
 
   useEffect(() => {
-    if (state.openMenu) if (!activeChannelMenu.length) getMenus()
+    if (state.openMenu && !activeChannelMenu.length) {
+      getMenus()
+    }
     //eslint-disable-next-line
   }, [state.openMenu])
 
