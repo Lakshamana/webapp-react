@@ -24,6 +24,11 @@ export const QUERY_CATEGORY = gql`
         name
         description
         tag
+        customization {
+          thumbnail {
+            imgPath
+          }
+        }
       }
       description
       featuredAt
