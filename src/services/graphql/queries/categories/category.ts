@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
-export const QUERY_CATEGORIES = gql`
-  query GetCategories($filter: CategoryFilter, $pagination: PaginationArgs!) {
-    categories(filter: $filter, pagination: $pagination) {
+export const QUERY_CATEGORY = gql`
+  query GetCategory($id: String!) {
+    category(id: $id) {
       access
       createdAt
       customization {
@@ -22,13 +22,13 @@ export const QUERY_CATEGORIES = gql`
         geoFence
         id
         name
-        customization {
-        thumbnail {
-          imgPath
-        }
-      }
         description
         tag
+        customization {
+          thumbnail {
+            imgPath
+          }
+        }
       }
       description
       featuredAt

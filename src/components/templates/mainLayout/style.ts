@@ -10,6 +10,5 @@ export const LayoutContainer = styled(StyleContainer)`
   flex-direction: column;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
-  overflow-x: hidden;
   min-height: 100vh;
 `

@@ -19,6 +19,9 @@ export * from './userInfo'
 export * from './playlistPostCard'
 export * from './videoPlaylist'
 export * from './emptyHeader'
+export * from './categoriesGrid'
+export * from './postsGrid'
+export * from './heroBanner'
 
 // Scrollers
 export * from './videosScroller'
