@@ -32,6 +32,7 @@ const CategoriesPage = () => {
             eq: null,
           },
         },
+        pagination: {},
       },
       skip: !activeChannel,
     })
@@ -39,41 +40,40 @@ const CategoriesPage = () => {
   const { data: categoriesData, loading: loadingCategories } = useQuery(
     QUERY_CATEGORIES,
     {
-      variables: {},
+      variables: {
+        filter: {
+          featuredAt: {
+            eq: null,
+          },
+        },
+        pagination: {},
+      },
       skip: !activeChannel,
     }
   )
 
-  const getImageUrl = (obj) =>
-    generateImage(ThumborInstanceTypes.IMAGE, obj?.imgPath, {
-      size: {
-        height: obj?.height || undefined,
-        width: obj?.width || undefined,
-      },
-    })
+  //TODO: API has to return width and height
+  const getImageUrl = (path: string) =>
+    generateImage(ThumborInstanceTypes.IMAGE, path)
 
   useEffect(() => {
     setCategoriesBillboardItems([])
     const billboardItems = featuredCategoriesData?.categories?.reduce(
-      (memo, curr: Category) => {
-        const cover = getImageUrl(curr?.cover)
-        const banner = getImageUrl(curr?.banner)
-        const image = getImageUrl(curr?.image)
+      (memo, curr) => {
+        const cover = getImageUrl(curr?.customization?.mobile?.imgPath)
+        const banner = getImageUrl(curr?.customization?.desktop?.imgPath)
 
         memo.push({
           ...curr,
           title: curr.name,
           cover,
           banner,
-          image,
         })
         return memo
       },
       []
     )
-    setCategoriesBillboardItems(
-      !!billboardItems?.length ? billboardItems : null
-    )
+    setCategoriesBillboardItems(billboardItems)
     // eslint-disable-next-line
   }, [featuredCategoriesData])
 
@@ -94,6 +94,7 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.collections'))
+    //eslint-disable-next-line
   }, [])
 
   const isLoading = loadingFeaturedCategories || loadingCategories
