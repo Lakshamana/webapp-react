@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Flex, Box } from '@chakra-ui/layout'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
-import { QUERY_LIVESTREAMS_SCROLLER, QUERY_POSTS } from 'services/graphql'
+import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
+import {
+  QUERY_LIVESTREAMS_SCROLLER,
+  QUERY_POSTS,
+  QUERY_BILLBOARDS,
+} from 'services/graphql'
 import {
   LivestreamFilter,
   LivestreamStatus,
@@ -12,16 +17,23 @@ import {
   Livestream,
 } from 'generated/graphql'
 import { Container, Skeleton } from 'components/atoms'
-import { LivestreamScroller, VideosScroller } from 'components/molecules'
+import {
+  LivestreamScroller,
+  VideosScroller,
+  BillboardScroller,
+} from 'components/molecules'
 import { sizes } from 'styles'
 import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { useCommonStore } from 'services/stores'
+import { convertToValidColor } from 'utils'
 
 const Livestreams = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
+  const { generateImage } = useThumbor()
   const [liveItems, setLiveItems] = useState<Livestream[]>()
   const [upcomingItems, setUpcomingItems] = useState<Livestream[]>()
+  const [billboardItems, setBillboardItems] = useState([])
 
   const [
     getLivestreamsScroler,
@@ -45,10 +57,48 @@ const Livestreams = () => {
     pollInterval: DEFAULT_POLLING_INTERVAL,
   })
 
-  //TODO: Add billboard (waiting for API)
+  const { data: billboardData } = useQuery(
+    QUERY_BILLBOARDS,
+    {
+      variables: {
+        filter: {
+          target: 'live',
+        },
+      },
+    }
+  )
+
+  const getImageUrl = (path: string) => {
+    return generateImage(ThumborInstanceTypes.IMAGE, path)
+  }
+
+  useEffect(() => {
+    setPageTitle(t('header.tabs.home'))
+
+    const billboardItems = billboardData?.billboards?.reduce((memo, curr) => {
+      const cover = getImageUrl(curr.customization?.mobile?.imgPath)
+      const banner = getImageUrl(curr.customization?.desktop?.imgPath)
+
+      memo.push({
+        ...curr,
+        actions: curr.actions.map((action) => ({
+          ...action,
+          bgColor: convertToValidColor(action.bgColor),
+          borderColor: convertToValidColor(action.borderColor),
+          textColor: convertToValidColor(action.textColor),
+        })),
+        cover,
+        banner,
+      })
+      return memo
+    }, [])
+
+    setBillboardItems(billboardItems)
+
+    // eslint-disable-next-line
+  }, [billboardData])
 
   //TODO: Implement infinite loading on Cards Scroller
-
   const [
     getOnDemandPostsData,
     { data: onDemandPostsData, loading: loadingOnDemandPostsData },
@@ -96,8 +146,13 @@ const Livestreams = () => {
 
   const isEmpty = !isLoading && !hasResults
 
+  const renderBillboard = () => (
+    <BillboardScroller items={billboardItems} customButtons={true} />
+  )
+
   return (
-    <Container defaultPadding marginTop={15}>
+    <Container flexDirection={'column'} display={'flex'}>
+      {!!billboardItems?.length && renderBillboard()}
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
           <Skeleton my={4} kind="cards" numberOfCards={4} />
