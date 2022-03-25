@@ -9,4 +9,12 @@ export type SocialType = 'facebook' | 'google' | 'twitter'
 
 export type EntityType = 'public' | 'exclusive' | 'private' | 'geolocked'
 
-export type ColorMode = "dark" | "light";
+export type ColorMode = 'dark' | 'light'
+
+export type HeroBannerProps = {
+  title?: string
+  description?: string
+  desktopImage?: string
+  mobileImage?: string
+  children?: JSX.Element | JSX.Element[]
+}
