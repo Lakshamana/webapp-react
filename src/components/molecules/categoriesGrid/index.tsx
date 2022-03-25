@@ -3,10 +3,9 @@ import { SimpleGrid, Flex } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useThemeStore } from 'services/stores/theme'
-import { Category } from 'generated/graphql'
 import { CategoriesGridProps, CategoryPostCardProps } from 'types/categories'
 import { CategoryPostCard, Text } from 'components'
-import { colors, breakpoints } from 'styles'
+import { colors, breakpoints, sizes } from 'styles'
 
 const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
   const { generateImage } = useThumbor()
@@ -14,16 +13,12 @@ const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { colorMode } = useThemeStore()
 
-  const getImageUrl = (category: Category) => {
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      category.image?.imgPath || '',
-      {
-        size: {
-          height: 400,
-        },
-      }
-    )
+  const getImageUrl = (path: string) => {
+    const image = generateImage(ThumborInstanceTypes.IMAGE, path, {
+      size: {
+        height: 400,
+      },
+    })
     return image
   }
 
@@ -32,14 +27,14 @@ const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
   }
   useEffect(() => {
     if (items && items?.length) {
-      const mappedArr = items?.map((item: Category) => {
-        const thumbnail = getImageUrl(item)
+      const mappedArr = items?.map((item: any) => {
+        const thumbnail = getImageUrl(item.customization?.thumbnail?.imgPath)
         const url = getPostUrl(`${item.id}`)
         return {
-          id: `${item.id}`,
-          title: `${item.name}`,
-          url: url,
-          thumbnail: thumbnail,
+          id: item.id,
+          title: item.name,
+          url,
+          thumbnail,
         }
       })
       setGridItems(mappedArr)
@@ -48,7 +43,12 @@ const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
   }, [items])
 
   return (
-    <Flex alignItems={'left'} flexDirection={'column'} w={'100vw'}>
+    <Flex
+      paddingX={{ base: sizes.paddingSm, md: sizes.paddingMd }}
+      alignItems={'left'}
+      flexDirection={'column'}
+      w={'100vw'}
+    >
       <Text
         marginBottom={'10px'}
         color={colors.generalText[colorMode]}
