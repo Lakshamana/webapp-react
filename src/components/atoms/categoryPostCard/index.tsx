@@ -4,13 +4,13 @@ import { useMutation } from '@apollo/client'
 import { Icon } from '@iconify/react'
 import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores'
-import { CategoryPostCardProps } from 'types/categories'
-import { CardWrapper, PostContent } from './style'
-import { colors } from 'styles'
 import {
   MUTATION_PIN_CATEGORY,
   MUTATION_UNPIN_CATEGORY,
 } from 'services/graphql'
+import { CategoryPostCardProps } from 'types/categories'
+import { colors } from 'styles'
+import { CardWrapper, PostContent } from './style'
 
 const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
   const history = useHistory()
@@ -26,9 +26,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
     }
   )
 
-  const selectCategory = () => {
-    history.push(`${props.url}`)
-  }
+  const selectCategory = () => history.push(`${props.url}`)
 
   const renderAddToMyListIcon = () => (
     <Box
@@ -48,7 +46,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
           width="15px"
           height="15px"
           color={colors.brand.primary[colorMode]}
-        ></Spinner>
+        />
       ) : (
         <Icon
           icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
@@ -57,7 +55,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
               ? colors.brand.primary[colorMode]
               : colors.generalText[colorMode]
           }
-        ></Icon>
+        />
       )}
     </Box>
   )
@@ -68,7 +66,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
       onMouseEnter={() => setHover(true)}
     >
       <PostContent onClick={selectCategory} {...props} />
-      {hover ? (
+      {hover && (
         <Box
           position="absolute"
           padding="0.6rem"
@@ -78,7 +76,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
           background={colors.footerBg[colorMode]}
         >
           <Flex>
-            <Box display='flex' flexDirection='column'>
+            <Box display="flex" flexDirection="column">
               <Text
                 fontSize="0.85rem"
                 noOfLines={1}
@@ -99,8 +97,6 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
             {renderAddToMyListIcon()}
           </Flex>
         </Box>
-      ) : (
-        <></>
       )}
     </CardWrapper>
   )
