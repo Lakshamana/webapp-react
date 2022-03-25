@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import { Link } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
-import { useMediaQuery } from '@chakra-ui/media-query'
 import { useTranslation } from 'react-i18next'
 import { CardsScroller } from 'components'
 import { Text } from 'components'
 import { CategoriesScrollerProps } from 'types/categories'
 import { Header, ContentScroller } from './style'
-import { colors, sizes, breakpoints } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
+import { colors, sizes } from 'styles'
+import { useThemeStore, useChannelsStore } from 'services/stores'
 import { CategoryPostCardProps } from 'types/categories'
 import { CategoryPostCard } from 'components/atoms'
 import { useEffect } from 'react'
 import { Category } from 'generated/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { convertCamelCaseToDash } from 'utils/helperFunctions'
 
 const CategoriesScroller = ({
   items,
@@ -24,14 +24,14 @@ const CategoriesScroller = ({
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
+  const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] = useState<CategoryPostCardProps[]>()
-  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   // TODO: Change this ANY type when generate graphql fragments work
   const getImageUrl = (category: any) => {
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      category?.customization?.thumbnail,
+      category?.customization?.thumbnail.imgPath,
       {
         size: {
           height: 400,
@@ -42,7 +42,7 @@ const CategoriesScroller = ({
   }
 
   const getPostUrl = (id: string) => {
-    return `category/${id}`
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/category/${id}`
   }
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const CategoriesScroller = ({
       <Header>
         <Text
           color={colors.generalText[colorMode]}
-          fontSize={isDesktop ? '1.55rem' : '1.3rem'}
+          fontSize={{ sm: '1.3rem', md: '1.55rem' }}
           paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd]}
           marginRight={'10px'}
           fontWeight={'bolder'}
