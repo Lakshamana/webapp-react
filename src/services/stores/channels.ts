@@ -9,24 +9,26 @@ type ChannelStorageData = {
 }
 
 type ChannelsState = {
-  activeChannel: Channel | null
-  channelsList: Channel[] | []
+  activeChannel: Maybe<Channel>
+  activeChannelMenu: []
+  channelsList: Maybe<Channel[]>
   setActiveChannel: (channel: Channel) => void
+  setActiveChannelMenu: (menu: []) => void
   setChannelsList: (channelsList: Channel[]) => void
 }
 
 export const useChannelsStore = create<ChannelsState>((set) => ({
   activeChannel: null,
   setActiveChannel: (activeChannel: Channel) => {
-    let storageData: ChannelStorageData = {
+    const storageData: ChannelStorageData = {
       id: activeChannel.id,
-      name: activeChannel.name
+      name: activeChannel.name,
     }
     saveData(CHANNEL_INFO, storageData)
     return set({ activeChannel })
   },
   channelsList: [],
-  setChannelsList: (channelsList: Channel[]) => {
-    return set({ channelsList })
-  },
+  setChannelsList: (channelsList: Channel[]) => set({ channelsList }),
+  activeChannelMenu: [],
+  setActiveChannelMenu: (activeChannelMenu: []) => set({ activeChannelMenu }),
 }))

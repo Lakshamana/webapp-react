@@ -204,6 +204,7 @@ const PT_BR = {
         pinned_videos: 'Vídeos favoritos',
       },
       account: {
+        title: 'Minha conta',
         push_notifications: 'Notificações Push',
         security: 'Segurança',
         back: 'Voltar',

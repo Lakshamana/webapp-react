@@ -54,7 +54,7 @@ const ChannelsPage = () => {
       >
         {t('page.channels.title')}
       </Text>
-      {loading && <Skeleton kind="cards" numberOfCards={5}></Skeleton>}
+      {loading && <Skeleton kind="cards" numberOfCards={5} />}
       {!!data?.channels?.length && !loading && (
         <ChannelsGrid
           channelSelected={selectChannel}

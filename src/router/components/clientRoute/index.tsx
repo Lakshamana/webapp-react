@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
 import { Props } from './types'
-import { convertDashToCamel } from 'utils'
+import { getChannelNameInPath } from 'utils'
 import { useChannelsStore } from 'services/stores'
 import { useAuth } from 'contexts/auth'
 
@@ -20,18 +20,9 @@ const ClientRoute = ({
   useEffect(() => {
     if (!activeChannel) {
       const channelUrl = location.pathname
-      const hasChannelInRoute = channelUrl.indexOf('/c/')
-      if (hasChannelInRoute !== -1) {
-        const channelInRoute = channelUrl?.substring(
-          channelUrl.indexOf('c/') + 2
-        )
-        const hasSlash = channelInRoute.indexOf('/')
-        const channelName =
-          hasSlash > -1
-            ? channelInRoute.substring(0, channelInRoute.indexOf('/'))
-            : channelInRoute
-
-        updateActiveChannel(convertDashToCamel(channelName))
+      const channelName = getChannelNameInPath(channelUrl)
+      if (channelName) {
+        updateActiveChannel(channelName)
       }
     }
   }, [activeChannel])

@@ -7,7 +7,7 @@ interface PropsSideContainer {
   open: boolean
 }
 
-export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
+export const SideContainer = styled(StyleContainer) <PropsSideContainer>`
   position: absolute;
   top: ${sizes.headerMobileHeight};
   z-index: 1000;
@@ -21,6 +21,10 @@ export const SideContainer = styled(StyleContainer)<PropsSideContainer>`
       ? css`
           width: 350px;
           transition: ease-in 0.25s;
+
+          @media (max-width: ${breakpoints.sm}) {
+            width: 100%;
+          }
         `
       : `
       width: 0px;
@@ -48,6 +52,11 @@ export const ScrollContainer = styled(StyleContainer)`
       display: none;
     }
   }
+`
+
+export const ChannelsContainer = styled(StyleContainer)`
+  overflow-y: auto;
+  overflow-x: hidden;
 `
 
 export const ExitContainer = styled(StyleContainer)`

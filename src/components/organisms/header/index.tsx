@@ -1,6 +1,8 @@
 import { useState, memo, useReducer, useEffect } from 'react'
-import { useMediaQuery } from '@chakra-ui/media-query'
 import { useLocation } from 'react-router-dom'
+import { useLazyQuery } from '@apollo/client'
+import { QUERY_MENUS } from 'services/graphql'
+import { useMediaQuery } from '@chakra-ui/media-query'
 import { Divider, Center } from '@chakra-ui/react'
 import { Container, Logo, UserInfo } from 'components'
 import {
@@ -27,7 +29,8 @@ const HeaderComponent = () => {
   const { pathname } = useLocation()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { setTabsList, setActiveTab } = useTabsStore()
-  const { activeChannel } = useChannelsStore()
+  const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
+    useChannelsStore()
 
   const { organization } = useOrganizationStore()
   const { generateImage } = useThumbor()
@@ -38,6 +41,11 @@ const HeaderComponent = () => {
       size: { height: 80 },
     }
   )
+
+  const [getMenus] = useLazyQuery(QUERY_MENUS, {
+    fetchPolicy: "network-only",
+    onCompleted: (result) => setActiveChannelMenu(result.menus)
+  })
 
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -84,14 +92,27 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     setTabsList(MENU_TABS)
+    dispatch({ type: 'openMenu', value: false })
+    setActiveChannelMenu([])
     const home_tab = MENU_TABS.find((tab) => tab.id === 'home')
     if (home_tab) setActiveTab(home_tab)
     // eslint-disable-next-line
   }, [activeChannel])
 
+  useEffect(() => {
+    if (state.openMenu && !activeChannelMenu.length) {
+      getMenus()
+    }
+    //eslint-disable-next-line
+  }, [state.openMenu])
+
   return (
     <>
-      <SideMenu data={[]} open={state.openMenu} {...{ colorMode }}>
+      <SideMenu
+        data={activeChannelMenu}
+        open={state.openMenu}
+        {...{ colorMode }}
+      >
         <UserInfo display={'sidebar'} {...{ colorMode, toggleColorMode }} />
       </SideMenu>
       <HeaderContainer
@@ -116,9 +137,9 @@ const HeaderComponent = () => {
           <Center height="30px">
             <Divider orientation="vertical" color={colors.grey['700']} />
           </Center>
-          {!state.openSearch ? <ChannelSelector /> : <></>}
+          {!state.openSearch && <ChannelSelector />}
         </Container>
-        {!state.openSearch ? (
+        {!state.openSearch && (
           <Container
             flex={1}
             ml={2}
@@ -128,7 +149,7 @@ const HeaderComponent = () => {
           >
             <Tabs />
           </Container>
-        ) : <></>}
+        )}
         <Container
           alignItems="center"
           flex={state.openSearch ? 1 : 'none'}
