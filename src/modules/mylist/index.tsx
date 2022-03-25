@@ -3,7 +3,7 @@ import { Flex } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { QUERY_PINNED_CATEGORIES, QUERY_PINNED_POSTS } from 'services/graphql'
 import { Container, Skeleton } from 'components'
-import { PostsGrid, CategoriesGrid } from './components'
+import { PostsGrid, CategoriesGrid } from 'components'
 import { useCommonStore } from 'services/stores'
 import { useEffect } from 'react'
 
@@ -33,6 +33,7 @@ const MyListPage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.my_list'))
+    //eslint-disable-next-line
   }, [])
 
   const renderCategoriesGrid = () => (
