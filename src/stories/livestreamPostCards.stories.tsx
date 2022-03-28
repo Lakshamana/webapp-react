@@ -1,7 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import { LivestreamPostCard } from 'components'
-import { LivestreamStatus } from 'generated/graphql'
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -26,7 +25,7 @@ Component.args = {
   url: '',
   thumbnail:
     'https://multiversomais.com/wp-content/uploads/2021/07/hbo-max-preco-data-brasil_se2f.h720.png',
-  status: LivestreamStatus.Active,
+  status: 'active',
   isExclusive: false,
   isGeolocked: false,
 }
