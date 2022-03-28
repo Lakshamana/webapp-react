@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_CHANNELS = gql`
-  query Channels($filter: FilterFindAllChannelsInput!) {
+  query Channels($filter: ChannelFindAllFilter!) {
     channels(filter: $filter) {
       ... on AvailableChannel {
         id
@@ -9,16 +9,25 @@ export const QUERY_CHANNELS = gql`
         description
         geofence
         name
-        thumbnail
         customization {
-          banner {
-            img_path
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
           }
           logo {
-            img_path
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
           }
           thumbnail {
-            img_path
+            imgPath
           }
         }
         __typename
@@ -30,7 +39,7 @@ export const QUERY_CHANNELS = gql`
         kind
         customization {
           thumbnail {
-            img_path
+            imgPath
           }
         }
         __typename
