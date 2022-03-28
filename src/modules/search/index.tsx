@@ -2,8 +2,7 @@ import { Divider } from '@chakra-ui/react'
 import {
   Container,
   GridCards,
-  CategoryPostCard,
-  VideoPostCard,
+  CategoryPostCard
 } from 'components'
 import { colors } from 'styles'
 
@@ -55,13 +54,7 @@ const SearchPage = () => {
         md={3}
         sm={2}
         ssm={2}
-      >
-        <VideoPostCard
-          id="45645646464646"
-          title="teste"
-          thumbnail="https://adnews.com.br/wp-content/uploads/2021/07/HBO-Max-desconto.jpg"
-        />
-      </GridCards>
+      ></GridCards>
       <Divider
         orientation="horizontal"
         height={2}
@@ -79,13 +72,7 @@ const SearchPage = () => {
         md={3}
         sm={2}
         ssm={2}
-      >
-        <VideoPostCard
-          id="45645646464646"
-          title="teste"
-          thumbnail="https://t.ctcdn.com.br/cB7urePjkV77fdC_mr2gd6XVL2Y=/512x288/smart/i519239.png"
-        />
-      </GridCards>
+      ></GridCards>
       <Divider
         orientation="horizontal"
         height={2}
