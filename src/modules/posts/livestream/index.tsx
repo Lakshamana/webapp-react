@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Box, Flex } from '@chakra-ui/react'
 
 import { useThemeStore } from 'services/stores/theme'
-import { QUERY_LIVESTREAM } from 'services/graphql'
-import { LivestreamEvent, LivestreamStatus } from 'generated/graphql'
 
 import { Container, Text, Badge, Countdown, Skeleton } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
@@ -23,20 +21,20 @@ const LivePostView = () => {
   const { colorMode } = useThemeStore()
   const [livechatState, setlivechatState] = useState(true)
   const { id } = useParams<{ channel: string; id: string }>()
-  const [livestream, setLivestream] = useState<LivestreamEvent>()
+  const [livestream, setLivestream] = useState<any>()
 
-  const { data, loading } = useQuery(QUERY_LIVESTREAM, {
-    variables: {
-      id: id,
-    },
-    onCompleted: (result) => {
-      setLivestream(result.livestream)
-    },
-  })
+  // const { data, loading } = useQuery(QUERY_LIVESTREAM, {
+  //   variables: {
+  //     id: id,
+  //   },
+  //   onCompleted: (result) => {
+  //     setLivestream(result.livestream)
+  //   },
+  // })
+  const loading = false
+  const isLive = livestream?.status === 'active'
 
-  const isLive = livestream?.status === LivestreamStatus.Active
-
-  const statusBadge = (status: LivestreamStatus): LivestreamBadge => {
+  const statusBadge = (status: any): LivestreamBadge => {
     const Badge = {
       ACTIVE: { label: 'LIVE', color: colors.brand.primary[colorMode] },
       SCHEDULED: { label: 'UPCOMING', color: colors.brand.accent[colorMode] },
@@ -47,7 +45,7 @@ const LivePostView = () => {
     return Badge[status] || Badge.default
   }
   useEffect(() => {
-    setLiveBadge(statusBadge(livestream?.status || LivestreamStatus.Scheduled))
+    setLiveBadge(statusBadge(livestream?.status || 'scheduled'))
     // eslint-disable-next-line
   }, [livestream])
 

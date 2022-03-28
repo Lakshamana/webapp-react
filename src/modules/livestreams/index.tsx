@@ -3,18 +3,10 @@ import { Flex, Box } from '@chakra-ui/layout'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
+import { QUERY_POSTS, QUERY_BILLBOARDS } from 'services/graphql'
 import {
-  QUERY_LIVESTREAMS_SCROLLER,
-  QUERY_POSTS,
-  QUERY_BILLBOARDS,
-} from 'services/graphql'
-import {
-  LivestreamFilter,
-  LivestreamStatus,
-  LivestreamTypeSortEnum,
   SortDirection,
   PostType,
-  Livestream,
 } from 'generated/graphql'
 import { Container, Skeleton } from 'components/atoms'
 import {
@@ -23,7 +15,6 @@ import {
   BillboardScroller,
 } from 'components/molecules'
 import { sizes } from 'styles'
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { useCommonStore } from 'services/stores'
 import { convertToValidColor } from 'utils'
 
@@ -31,42 +22,41 @@ const Livestreams = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { generateImage } = useThumbor()
-  const [liveItems, setLiveItems] = useState<Livestream[]>()
-  const [upcomingItems, setUpcomingItems] = useState<Livestream[]>()
+  const [liveItems, setLiveItems] = useState<any[]>()
+  const [upcomingItems, setUpcomingItems] = useState<any[]>()
   const [billboardItems, setBillboardItems] = useState([])
 
-  const [
-    getLivestreamsScroler,
-    { data: livestreamsData, loading: loadingLivestreams },
-  ] = useLazyQuery(QUERY_LIVESTREAMS_SCROLLER, {
+  //TODO: ALL comments in this page is because we need to wait for API to list Livestreams Events
+
+  // const [
+  //   getLivestreamsScroler,
+  //   { data: livestreamsData, loading: loadingLivestreams },
+  // ] = useLazyQuery(QUERY_LIVESTREAMS_SCROLLER, {
+  //   variables: {
+  //     filter: {
+  //       statusIn: [
+  //         LivestreamStatus.Active,
+  //         LivestreamStatus.Preparing,
+  //         LivestreamStatus.Scheduled,
+  //       ],
+  //     } as LivestreamFilter,
+  //     orderBy: [
+  //       {
+  //         name: LivestreamTypeSortEnum.StartedAt,
+  //         direction: SortDirection.Asc,
+  //       },
+  //     ],
+  //   },
+  //   pollInterval: DEFAULT_POLLING_INTERVAL,
+  // })
+
+  const { data: billboardData } = useQuery(QUERY_BILLBOARDS, {
     variables: {
       filter: {
-        statusIn: [
-          LivestreamStatus.Active,
-          LivestreamStatus.Preparing,
-          LivestreamStatus.Scheduled,
-        ],
-      } as LivestreamFilter,
-      orderBy: [
-        {
-          name: LivestreamTypeSortEnum.StartedAt,
-          direction: SortDirection.Asc,
-        },
-      ],
-    },
-    pollInterval: DEFAULT_POLLING_INTERVAL,
-  })
-
-  const { data: billboardData } = useQuery(
-    QUERY_BILLBOARDS,
-    {
-      variables: {
-        filter: {
-          target: 'live',
-        },
+        target: 'live',
       },
-    }
-  )
+    },
+  })
 
   const getImageUrl = (path: string) => {
     return generateImage(ThumborInstanceTypes.IMAGE, path)
@@ -116,33 +106,32 @@ const Livestreams = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.live'))
-    getLivestreamsScroler()
+    // getLivestreamsScroler()
     getOnDemandPostsData()
     // eslint-disable-next-line
   }, [])
 
-  useEffect(() => {
-    const live = livestreamsData?.livestreams?.filter((live: Livestream) => {
-      return live.status === LivestreamStatus.Active
-    })
-    setLiveItems(live?.length ? live : null)
+  // useEffect(() => {
+  //   const live = livestreamsData?.livestreams?.filter((live: Livestream) => {
+  //     return live.status === LivestreamStatus.Active
+  //   })
+  //   setLiveItems(live?.length ? live : null)
 
-    const upcoming = livestreamsData?.livestreams?.filter(
-      (live: Livestream) => {
-        return (
-          live.status === LivestreamStatus.Scheduled ||
-          live.status === LivestreamStatus.Preparing
-        )
-      }
-    )
-    setUpcomingItems(upcoming?.length ? upcoming : null)
-    // eslint-disable-next-line
-  }, [livestreamsData])
+  //   const upcoming = livestreamsData?.livestreams?.filter(
+  //     (live: Livestream) => {
+  //       return (
+  //         live.status === LivestreamStatus.Scheduled ||
+  //         live.status === LivestreamStatus.Preparing
+  //       )
+  //     }
+  //   )
+  //   setUpcomingItems(upcoming?.length ? upcoming : null)
+  //   // eslint-disable-next-line
+  // }, [livestreamsData])
 
-  const isLoading = loadingLivestreams || loadingOnDemandPostsData
+  const isLoading = loadingOnDemandPostsData
 
-  const hasResults =
-    livestreamsData?.livestreams?.length || onDemandPostsData?.posts?.length
+  const hasResults = onDemandPostsData?.posts?.length
 
   const isEmpty = !isLoading && !hasResults
 

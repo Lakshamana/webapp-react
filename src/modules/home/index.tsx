@@ -5,10 +5,7 @@ import { useQuery } from '@apollo/client'
 
 import {
   PostType,
-  SortDirection,
-  LivestreamStatus,
-  LivestreamFilter,
-  LivestreamTypeSortEnum,
+  SortDirection
 } from 'generated/graphql'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
@@ -17,7 +14,6 @@ import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
   QUERY_POSTS,
-  QUERY_LIVESTREAMS_SCROLLER,
 } from 'services/graphql'
 
 import { Container, Skeleton } from 'components/atoms'
@@ -25,11 +21,9 @@ import { Container, Skeleton } from 'components/atoms'
 import {
   BillboardScroller,
   CategoriesScroller,
-  LivestreamScroller,
   VideosScroller,
 } from 'components/molecules'
 
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { convertToValidColor } from 'utils'
 import { sizes } from 'styles'
 
@@ -54,31 +48,6 @@ const HomePage = () => {
     skip: !activeChannel,
   })
 
-  // TODO: Implement infinite loading on Cards Scroller and API calls
-  const {
-    data: livestreamsData,
-    refetch: refetchLivestreams,
-    loading: loadingLivestreams,
-  } = useQuery(QUERY_LIVESTREAMS_SCROLLER, {
-    variables: {
-      filter: {
-        statusIn: [
-          LivestreamStatus.Active,
-          LivestreamStatus.Preparing,
-          LivestreamStatus.Scheduled,
-        ],
-      } as LivestreamFilter,
-      orderBy: [
-        {
-          name: LivestreamTypeSortEnum.StartedAt,
-          direction: SortDirection.Asc,
-        },
-      ],
-    },
-    pollInterval: DEFAULT_POLLING_INTERVAL,
-    skip: !activeChannel,
-  })
-
   const {
     data: featuredPostsData,
     refetch: refetchFeaturedPosts,
@@ -88,10 +57,10 @@ const HomePage = () => {
       filters: {
         featured: true,
         typeIn: [PostType.Video, PostType.OnDemand],
-      },
-      sort: {
-        field: 'publishedAt',
-        direction: SortDirection.Desc,
+        sort: {
+          field: 'publishedAt',
+          direction: SortDirection.Desc,
+        },
       },
     },
     skip: !activeChannel,
@@ -104,24 +73,17 @@ const HomePage = () => {
   } = useQuery(QUERY_CATEGORIES, {
     variables: {
       filter: {
-        featuredAt: {
-          eq: null,
-        },
+        featuredAt: {},
       },
-      pagination: {},
     },
     skip: !activeChannel,
   })
 
   const isLoading =
-    loadingBillboard ||
-    loadingLivestreams ||
-    loadingFeaturedCategories ||
-    loadingFeaturedPosts
+    loadingBillboard || loadingFeaturedCategories || loadingFeaturedPosts
 
   const hasResults =
     billboardData?.billboard?.length ||
-    livestreamsData?.livestreams?.length ||
     featuredPostsData?.posts?.length ||
     featuredCategoriesData?.categories?.length
 
@@ -130,7 +92,6 @@ const HomePage = () => {
   useEffect(() => {
     if (activeChannel) {
       refetchBillboard()
-      refetchLivestreams()
       refetchFeaturedPosts()
       refetchFeaturedCategories()
     }
@@ -171,14 +132,6 @@ const HomePage = () => {
     <BillboardScroller items={billboardItems} customButtons={true} />
   )
 
-  const renderLivestreamsScroller = () => (
-    <LivestreamScroller
-      items={livestreamsData?.livestreams}
-      sectionTitle={t('page.home.live')}
-      hasMoreLink={true}
-    />
-  )
-
   const renderFeaturedPostsScroller = () => (
     <VideosScroller
       items={featuredPostsData?.posts}
@@ -210,8 +163,6 @@ const HomePage = () => {
           mt={billboardItems ? 0 : 7}
           w={'100vw'}
         >
-          {!!livestreamsData?.livestreams?.length &&
-            renderLivestreamsScroller()}
           {!!featuredPostsData?.posts?.length && renderFeaturedPostsScroller()}
           {!!featuredCategoriesData?.categories?.length &&
             renderFeaturedCategoriesScroller()}
