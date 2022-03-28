@@ -4,10 +4,10 @@ import { Flex } from '@chakra-ui/react'
 
 import { useThemeStore, useChannelsStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { RedactReason } from 'generated/graphql'
 
 import { Text, ToggleButton, PlaylistPostCard } from 'components'
-import { VideoPostCardProps, VideoPostProps, RedactedVideo } from 'types/posts'
+import { VideoPostCardProps } from 'types/posts'
+import { Post } from 'generated/graphql'
 import { VideoPlaylistProps } from './types'
 import { theme } from 'styles/theme'
 import { colors } from 'styles'
@@ -22,14 +22,14 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   const [checked, setChecked] = useState(true)
   const [playlist, setPlaylist] = useState<VideoPostCardProps[]>()
 
-  const getImageUrl = (post: VideoPostProps) => {
+  const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
       },
     }
 
-    if (isExclusive(post) || isGeolocked(post)) {
+    if (isExclusive(post)) {
       imageOptions.blur = 20
     }
 
@@ -45,19 +45,9 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   const getPostUrl = (id: string) =>
     `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
 
-  const isRedacted = (post: VideoPostProps) =>
-    post.__typename === 'RedactedOnDemandPost' ||
-    post.__typename === 'RedactedVideoPost'
+  const isExclusive = (post: Post) => post.kind === 'exclusive'
 
-  const isExclusive = (post: VideoPostProps) =>
-    (isRedacted(post) &&
-      (post as RedactedVideo).reason === RedactReason.Exclusive) ||
-    false
-
-  const isGeolocked = (post: VideoPostProps) =>
-    (isRedacted(post) &&
-      (post as RedactedVideo).reason === RedactReason.Geofence) ||
-    false
+  //TODO: Implement isGeolocked
 
   useEffect(() => {
     const mapped = videos?.map((item) => {
@@ -67,10 +57,14 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
         url: getPostUrl(item.id || ''),
         description: item?.description || '',
         thumbnail: getImageUrl(item),
-        mediaLength: item.media?.duration || 0,
-        countviews: item.counts?.countViewsTotal || 0,
+        mediaLength:
+          item.media?.__typename === 'MediaVideo'
+            ? item.media?.duration
+            : undefined,
+        //TODO: Verify if countViews exists on API
+        countViews: undefined,
         isExclusive: isExclusive(item),
-        isGeolocked: isGeolocked(item),
+        isGeolocked: false,
       }
     })
     setPlaylist(mapped)
