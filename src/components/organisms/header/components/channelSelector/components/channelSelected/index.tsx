@@ -13,13 +13,19 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
   const { generateImage } = useThumbor()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const channelImg = generateImage(
-    ThumborInstanceTypes.IMAGE,
-    activeChannel?.customization?.logo[colorMode],
-    {
-      size: { height: 80 },
-    }
-  )
+  const generateChannelImage = () => {
+    const imgPath = activeChannel?.customization?.logo
+      ? activeChannel?.customization?.logo[colorMode]
+      : ''
+    const channel_img = generateImage(
+      ThumborInstanceTypes.IMAGE,
+      imgPath as string,
+      {
+        size: { height: 80 },
+      }
+    )
+    return channel_img
+  }
 
   return (
     <Container alignItems="center">
@@ -30,7 +36,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
             height={isDesktop ? '45px' : '38px'}
             width={isDesktop ? '45px' : '38px'}
             borderRadius={'8px'}
-            src={channelImg}
+            src={generateChannelImage()}
           />
         </Container>
       )}

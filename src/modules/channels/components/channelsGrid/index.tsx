@@ -20,7 +20,7 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      channel.customization?.thumbnail?.img_path,
+      channel.customization?.thumbnail?.imgPath as string,
       imageOptions
     )
 
