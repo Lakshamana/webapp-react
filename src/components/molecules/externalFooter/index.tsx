@@ -2,24 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { useFlags } from 'contexts/flags'
 import { Logo, Text, Container, Link } from 'components/atoms'
 import { BoxFooter, FooterItems, TextFooter } from './style'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
-import { useOrganizationStore } from 'services/stores'
 
 const ExternalFooter = () => {
   const { t } = useTranslation()
   const { ORGANIZATION } = useFlags()
-  const { organization } = useOrganizationStore()
-  const { generateImage } = useThumbor()
-  const org_logo = generateImage(
-    ThumborInstanceTypes.IMAGE,
-    organization?.customization.logo,
-    {
-      size: { height: 80 },
-    }
-  )
+
   return (
     <BoxFooter display={'flex'} alignItems={'center'}>
-      <FooterItems width={1} py={20}>
+      <FooterItems width={1} py={10}>
         <TextFooter>
           <Link
             fontSize={[16]}
@@ -48,7 +38,9 @@ const ExternalFooter = () => {
             alignItems={'center'}
             justifyContent={'right'}
             ignoreFallback
-            src={'https://d1k5o3ezm3npyz.cloudfront.net/61ba2606c1805142c289377f/public/footer-logo.svg'}
+            src={
+              'https://d1k5o3ezm3npyz.cloudfront.net/61ba2606c1805142c289377f/public/footer-logo.svg'
+            }
             mb={[6, 6, 6, 6, 0]}
             width={120}
           />
