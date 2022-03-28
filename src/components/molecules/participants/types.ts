@@ -1,9 +1,9 @@
 export interface TypeParticipant {
-  id: number;
-  img: string;
+  name: string;
+  avatar: string;
 }
 
 export interface Props {
-  participants: Array<TypeParticipant>;
+  participants: TypeParticipant[];
 }
 
