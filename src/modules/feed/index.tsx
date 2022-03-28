@@ -4,7 +4,7 @@ import { useLazyQuery } from "@apollo/client"
 import { formatDistance, intervalToDuration } from 'date-fns'
 import { Center, Spinner } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { QUERY_FEED_POSTS } from "services/graphql"
+import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
 import { useChannelsStore, useCommonStore } from 'services/stores'
 import { Container, FeedPostCard, Select } from "components"
@@ -59,7 +59,7 @@ const FeedPage = () => {
     SetFilterBy(value)
   }
 
-  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_FEED_POSTS)
+  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_POSTS)
 
   const loadMorePosts = () => {
     loadPosts({
