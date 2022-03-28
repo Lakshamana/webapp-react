@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { Flex } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { QUERY_PINNED_CATEGORIES, QUERY_PINNED_POSTS } from 'services/graphql'
+import { QUERY_CATEGORIES, QUERY_POSTS } from 'services/graphql'
 import { Container, Skeleton } from 'components'
 import { PostsGrid, CategoriesGrid } from 'components'
 import { useCommonStore } from 'services/stores'
@@ -11,14 +11,16 @@ const MyListPage = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
 
+  //TODO: Waiting for API to list pinned posts and categories
+
   const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
-    useQuery(QUERY_PINNED_CATEGORIES, {
+    useQuery(QUERY_CATEGORIES, {
       variables: {},
     })
 
   // TODO: Implement infinite loading on Cards Grid
   const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
-    QUERY_PINNED_POSTS,
+    QUERY_POSTS,
     {
       variables: {},
     }
