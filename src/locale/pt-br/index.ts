@@ -60,7 +60,8 @@ const PT_BR = {
         forgot_password: 'Esqueceu a senha?',
       },
       error: {
-        wrong_credentials: 'Você digitou um nome de usuário ou senha inválidos.',
+        wrong_credentials:
+          'Você digitou um nome de usuário ou senha inválidos.',
         too_many_attempts:
           'Número de tentativas de login excedido. Para sua segurança, não é possível fazer o login no momento. Tente novamente mais tarde.',
       },
@@ -154,6 +155,12 @@ const PT_BR = {
         updatePassword: 'Redefinir senha',
       },
     },
+    activateAccount: {
+      activating: 'Ativando a sua conta...',
+      success:
+        'Sua conta foi ativada com sucesso!',
+      loginLink: 'Clique aqui para acessar',
+    },
     header: {
       tabs: {
         home: 'Início',
@@ -188,7 +195,7 @@ const PT_BR = {
       },
       channels: {
         title: 'Escolha um canal:',
-        page_title: 'Canais'
+        page_title: 'Canais',
       },
       collection: {
         action: 'Ação',
@@ -196,7 +203,7 @@ const PT_BR = {
         family: 'Família',
         watch_now: 'Assistir agora',
         my_list: 'Minha Lista',
-        more_categories: 'Mais categorias'
+        more_categories: 'Mais categorias',
       },
       my_list: {
         my_list: 'Minha Lista',
@@ -263,13 +270,15 @@ const PT_BR = {
           or: 'ou',
           input_label_fullname: 'Nome Completo',
           input_label_email: 'Email',
-          term_service: 'Ao se inscrever, concordo com a Política de Privacidade e Termos de Serviço do FanHero.',
+          term_service:
+            'Ao se inscrever, concordo com a Política de Privacidade e Termos de Serviço do FanHero.',
           signup_btn: 'inscrever-se',
-          already_have_account: 'já tem uma conta? Entre aqui'
+          already_have_account: 'já tem uma conta? Entre aqui',
         },
         more_info: {
           title: 'Campo customizado',
-          subtitle: '{fullName} precisamos de um pouco mais de informações sobre você',
+          subtitle:
+            '{fullName} precisamos de um pouco mais de informações sobre você',
           inputName: 'Nome',
           inputEmail: 'Email',
           inputGender: 'Gênero',
@@ -293,26 +302,28 @@ const PT_BR = {
           full_name: 'Nome Completo',
           email: 'E-mail',
           CPF: 'CPF',
-          authorize: 'Autorizo ​​a FanHero LLC, a enviar instruções à instituição financeira que emitiu meu cartão para receber pagamentos da conta do cartão, de acordo com os termos do meu contrato com você.',
+          authorize:
+            'Autorizo ​​a FanHero LLC, a enviar instruções à instituição financeira que emitiu meu cartão para receber pagamentos da conta do cartão, de acordo com os termos do meu contrato com você.',
           place_you_order: 'Faça seu pedido',
         },
         modal: {
           success: {
-            title : "Pago com sucesso",
-            subtitle: "Seu pagamento foi processado com sucesso.",
-            close: "Aproveite seu conteúdo"
+            title: 'Pago com sucesso',
+            subtitle: 'Seu pagamento foi processado com sucesso.',
+            close: 'Aproveite seu conteúdo',
           },
           failure: {
-            title: "Alguma coisa deu errado!",
-            subtitle: "Nós vamos corrigi-lo. Tente depois.",
-            close: "Repetir"
+            title: 'Alguma coisa deu errado!',
+            subtitle: 'Nós vamos corrigi-lo. Tente depois.',
+            close: 'Repetir',
           },
         },
         password: {
-          title: "Você está quase lá",
-          subtitle: "Sua conta está quase pronta. Escolha uma senha para sua conta e aproveite o show.",
-          password_input: "Senha",
-          saveandcontinue: "Salve e continue"
+          title: 'Você está quase lá',
+          subtitle:
+            'Sua conta está quase pronta. Escolha uma senha para sua conta e aproveite o show.',
+          password_input: 'Senha',
+          saveandcontinue: 'Salve e continue',
         },
       },
       post: {
