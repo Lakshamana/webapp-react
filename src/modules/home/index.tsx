@@ -73,7 +73,7 @@ const HomePage = () => {
   } = useQuery(QUERY_CATEGORIES, {
     variables: {
       filter: {
-        featuredAt: {},
+        featured: true,
       },
     },
     skip: !activeChannel,
@@ -142,7 +142,7 @@ const HomePage = () => {
 
   const renderFeaturedCategoriesScroller = () => (
     <CategoriesScroller
-      items={featuredCategoriesData?.categories}
+      items={featuredCategoriesData?.categories?.rows}
       sectionTitle={t('page.home.featured_categories')}
       hasMoreLink={true}
     />
@@ -164,7 +164,7 @@ const HomePage = () => {
           w={'100vw'}
         >
           {!!featuredPostsData?.posts?.length && renderFeaturedPostsScroller()}
-          {!!featuredCategoriesData?.categories?.length &&
+          {!!featuredCategoriesData?.categories?.rows?.length &&
             renderFeaturedCategoriesScroller()}
 
           {/* TODO: Built a empty state component */}
