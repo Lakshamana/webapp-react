@@ -2,8 +2,9 @@ import { Icon } from '@iconify/react'
 import { Spinner, Flex } from '@chakra-ui/react'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { Channel } from 'generated/graphql'
+import { ChannelIcon } from './components'
 
-import { Container, Text, Avatar } from 'components'
+import { Container, Text } from 'components'
 
 import { ChannelItem, ChannelList } from './styles'
 import { colors } from 'styles'
@@ -42,6 +43,10 @@ const Channels = ({
         )}
         {channels &&
           channels.map((channel: Channel) => {
+            const mediaId =
+              channel.customization?.icon &&
+              channel.customization?.icon[colorMode]
+
             return (
               <ChannelItem
                 key={channel.id}
@@ -59,14 +64,10 @@ const Channels = ({
                       />
                     )}
                   </Container>
-                  <Avatar
-                    ml={1}
-                    name={channel?.name}
-                    borderRadius={'8px'}
-                    height={10}
-                    width={10}
-                    src={generateChannelImage(channel)}
-                  />
+                  <ChannelIcon
+                    mediaId={mediaId || ''}
+                    channelName={channel.name}
+                  ></ChannelIcon>
                   <Text
                     ml={3}
                     color={colors.generalText[colorMode]}

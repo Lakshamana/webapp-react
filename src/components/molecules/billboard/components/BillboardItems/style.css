@@ -4,7 +4,6 @@
 
 .billboard-pagination {
   bottom: 50px !important;
-  transform: translateX(-50%);
   z-index: 10;
 }
 
