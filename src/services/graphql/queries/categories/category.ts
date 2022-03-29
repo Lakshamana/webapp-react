@@ -16,7 +16,7 @@ export const QUERY_CATEGORY = gql`
           imgPath
         }
       }
-      children(pagination: { limit: 10 }) {
+      children {
         description
         featuredAt
         geoFence
