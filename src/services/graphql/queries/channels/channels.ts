@@ -11,24 +11,14 @@ export const QUERY_CHANNELS = gql`
         name
         customization {
           icon {
-            dark {
-              imgPath
-            }
-            light {
-              imgPath
-            }
+            dark
+            light
           }
           logo {
-            dark {
-              imgPath
-            }
-            light {
-              imgPath
-            }
+            dark
+            light
           }
-          thumbnail {
-            imgPath
-          }
+          thumbnail
         }
         __typename
       }
@@ -36,12 +26,18 @@ export const QUERY_CHANNELS = gql`
         id
         name
         thumbnail
-        kind
         customization {
-          thumbnail {
-            imgPath
+          icon {
+            dark
+            light
           }
+          logo {
+            dark
+            light
+          }
+          thumbnail
         }
+        kind
         __typename
       }
     }
