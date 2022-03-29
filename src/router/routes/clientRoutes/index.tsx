@@ -22,6 +22,7 @@ import {
   CheckoutCustomField,
   CardInfo,
   Password,
+  ActivateAccount
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -155,6 +156,13 @@ const ClientRoutes = ({ isAccesible }: any) => {
         path="/login"
         component={LoginPage}
         redirectTo="/"
+        template={LoginLayout}
+      />
+       <ClientRoute
+        isAccesible={true}
+        path="/activation"
+        component={ActivateAccount}
+        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
