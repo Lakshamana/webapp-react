@@ -12,6 +12,11 @@ const ModalLogout = ({
   const { signOut } = useAuth()
   const [signoutLoading, setSignoutLoading] = useBoolean()
 
+  const handleLogout = () => {
+    signOut()
+    setSignoutLoading.on()
+  }
+
   return (
     <Modal
       isCentered
@@ -20,10 +25,7 @@ const ModalLogout = ({
       closeButton={false}
       isOpen={isOpen}
       onClose={onClose}
-      onConfirm={() => {
-        signOut()
-        setSignoutLoading.on()
-      }}
+      onConfirm={handleLogout}
       loading={signoutLoading}
     />
   )
