@@ -3,13 +3,8 @@ import { Link } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { useTranslation } from 'react-i18next'
-import {
-  VideosScrollerProps,
-  VideoPostProps,
-  VideoPostCardProps,
-  RedactedVideo,
-} from 'types/posts'
-import { RedactReason } from 'generated/graphql'
+import { VideosScrollerProps, VideoPostCardProps } from 'types/posts'
+import { Post } from 'generated/graphql'
 import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
 import { convertCamelCaseToDash } from 'utils'
@@ -31,14 +26,14 @@ const VideosScroller = ({
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { activeChannel } = useChannelsStore()
 
-  const getImageUrl = (post: VideoPostProps) => {
+  const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
       },
     }
 
-    if (isExclusive(post) || isGeolocked(post)) {
+    if (isExclusive(post)) {
       imageOptions.blur = 20
     }
 
@@ -55,31 +50,10 @@ const VideosScroller = ({
     return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
   }
 
-  const isRedacted = (post: VideoPostProps) => {
-    return (
-      post.__typename === 'RedactedOnDemandPost' ||
-      post.__typename === 'RedactedVideoPost'
-    )
-  }
-
-  const isExclusive = (post: VideoPostProps) => {
-    return (
-      (isRedacted(post) &&
-        (post as RedactedVideo).reason === RedactReason.Exclusive) ||
-      false
-    )
-  }
-
-  const isGeolocked = (post: VideoPostProps) => {
-    return (
-      (isRedacted(post) &&
-        (post as RedactedVideo).reason === RedactReason.Geofence) ||
-      false
-    )
-  }
+  const isExclusive = (post: Post) => post.kind === 'exclusive'
 
   useEffect(() => {
-    const mappedArr = items?.map((item: VideoPostProps) => {
+    const mappedArr = items?.map((item: Post) => {
       const thumbnail = getImageUrl(item)
       const url = getPostUrl(`${item.id}`)
       return {
@@ -87,11 +61,15 @@ const VideosScroller = ({
         title: `${item.title}`,
         url: url,
         thumbnail: thumbnail,
-        mediaLength: item.media?.duration || undefined,
-        countViews: item.counts?.countViewsTotal || undefined,
+        mediaLength:
+          item.media?.__typename === 'MediaVideo' ? item.media?.duration : undefined,
+        //TODO: Verify if countViews exists on API
+        countViews: undefined,
         isExclusive: isExclusive(item),
-        isGeolocked: isGeolocked(item),
-        isPinned: !!item.pinnedAt
+        //TODO: Implement isGeolocked
+        isGeolocked: false,
+        //TODO: Waiting for API
+        isPinned: false,
       }
     })
     setScrollerItems(mappedArr?.length ? mappedArr : [])

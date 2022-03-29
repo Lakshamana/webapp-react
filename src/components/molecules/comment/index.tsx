@@ -25,9 +25,10 @@ const CommentWrapper = ({ ...props }: CommentType) => {
           ml={2}
           fontSize={'0.85rem'}
         >
-          {formatDistance(new Date(props.createdAt), new Date(), {
+          {/* TODO: Don't have createdAt field on API}
+          {/* {formatDistance(new Date(props.createdAt), new Date(), {
             addSuffix: true,
-          })}
+          })} */}
         </Text>
       </Flex>
 
@@ -59,7 +60,7 @@ const Comment = ({ ...props }: CommentType) => {
         width={'40px'}
         height={'40px'}
         name={`${props.author?.username}`}
-        src={`${props.author?.avatarUrl}`}
+        src={''}
       />
       <Box>
         <CommentWrapper {...props} />

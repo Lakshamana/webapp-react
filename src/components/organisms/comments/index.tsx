@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Flex, Divider } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { useQuery } from '@apollo/client'
 import { useThemeStore } from 'services/stores'
 import { Comment, Text } from 'components'
@@ -7,35 +7,35 @@ import { CommentForm } from './components'
 import { QUERY_COMMENTS } from 'services/graphql'
 import { kFormatter } from 'utils'
 import { colors } from 'styles'
-import { AvailableVideoPost } from 'types/posts'
+import { Post } from 'generated/graphql'
 import { DEFAULT_LIMIT_QUERY } from 'config/constants'
 import {
-  CommentTypeSortEnum,
+  FindPostCommentSortFields,
   SortDirection,
   Comment as CommentType,
 } from 'generated/graphql'
-import { useEffect } from 'react'
 
-const Comments = ({ ...props }: AvailableVideoPost) => {
+const Comments = ({ ...props }: Post) => {
   const { colorMode } = useThemeStore()
   const [comments, setComments] = useState<CommentType[]>()
 
-  const { data } = useQuery(QUERY_COMMENTS, {
+  const { data, loading } = useQuery(QUERY_COMMENTS, {
     variables: {
-      postId: props.id,
+      filter: {
+        post: props.id,
+      },
       limit: DEFAULT_LIMIT_QUERY,
-      orderBy: [
+      sort: [
         {
-          name: CommentTypeSortEnum.CreatedAt,
+          field: FindPostCommentSortFields.CreatedAt,
           direction: SortDirection.Desc,
         },
       ],
     },
+    onCompleted: (result) => {
+      setComments(result.comments)
+    },
   })
-
-  useEffect(() => {
-    if (data) setComments(data.comments)
-  }, [data])
 
   return (
     <Flex flexDirection="column" width={'100%'}>
@@ -44,9 +44,9 @@ const Comments = ({ ...props }: AvailableVideoPost) => {
         fontSize="1.4rem"
         color={colors.generalText[colorMode]}
       >
-        {`${kFormatter(props?.counts?.countComments || 0)} Comments`}
+        {`${kFormatter(props?.countComments || 0)} Comments`}
       </Text>
-      <CommentForm></CommentForm>
+      <CommentForm/>
       {comments?.length &&
         comments.map((comment: CommentType) => {
           return <Comment {...comment}></Comment>

@@ -25,6 +25,7 @@ const ClientRoute = ({
         updateActiveChannel(channelName)
       }
     }
+    //eslint-disable-next-line
   }, [activeChannel])
 
   useEffect(() => {

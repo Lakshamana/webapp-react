@@ -1,28 +1,15 @@
-import {
-  OnDemandPost,
-  RedactedOnDemandPost,
-  RedactedVideoPost,
-  VideoPost,
-} from 'generated/graphql'
-
-export type RedactedVideo = RedactedOnDemandPost | RedactedVideoPost
-
-export type VideoPostProps =
-  | OnDemandPost
-  | RedactedOnDemandPost
-  | RedactedVideoPost
-  | VideoPost
+import { Post } from 'generated/graphql'
 
 export type VideosScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
   hasMoreLink?: boolean
-  items?: VideoPostProps[]
+  items?: Post[]
 }
 
 export type VideosGridProps = {
   sectionTitle?: string
-  items?: VideoPostProps[]
+  items?: Post[]
 }
 
 export type VideoPostCardProps = {
@@ -31,11 +18,9 @@ export type VideoPostCardProps = {
   url?: string
   description?: string
   thumbnail?: string
-  mediaLength?: number
+  mediaLength?: Maybe<number>
   countViews?: number
-  isExclusive?: boolean
+  isExclusive: boolean
   isGeolocked?: boolean
   isPinned?: boolean
 }
-
-export type AvailableVideoPost = VideoPost | OnDemandPost

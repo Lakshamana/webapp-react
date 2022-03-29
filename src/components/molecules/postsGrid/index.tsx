@@ -4,11 +4,8 @@ import { SimpleGrid, Flex } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { VideoPostCard, Text } from 'components'
-import {
-  VideoPostProps,
-  VideoPostCardProps,
-  VideosGridProps,
-} from 'types/posts'
+import { Post } from 'generated/graphql'
+import { VideoPostCardProps, VideosGridProps } from 'types/posts'
 import { colors, breakpoints } from 'styles'
 import { Wrapper } from './style'
 
@@ -18,7 +15,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const [gridItems, setGridItems] = useState<VideoPostCardProps[]>()
   const { colorMode } = useThemeStore()
 
-  const getImageUrl = (post: VideoPostProps) => {
+  const getImageUrl = (post: Post) => {
     return generateImage(
       ThumborInstanceTypes.IMAGE,
       post.thumbnail?.imgPath || '',
@@ -36,7 +33,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
 
   useEffect(() => {
     if (items && items?.length) {
-      const mappedArr = items?.map((item: VideoPostProps) => {
+      const mappedArr = items?.map((item: Post) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(`${item.id}`)
         return {
@@ -44,10 +41,13 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
           title: `${item.title}`,
           url: url,
           thumbnail: thumbnail,
-          mediaLength: item.media?.duration || undefined,
-          countViews: item.counts?.countViews || undefined,
-          isExclusive:
-            item.__typename === ('RedactedVideoPost' || 'RedactedOnDemandPost'),
+          mediaLength:
+            item.media?.__typename === 'MediaVideo'
+              ? item.media?.duration
+              : undefined,
+          countViews: undefined,
+          isExclusive: item.kind === 'exclusive',
+          //TODO: Implement isGeolocked
           isGeolocked: false,
         }
       })

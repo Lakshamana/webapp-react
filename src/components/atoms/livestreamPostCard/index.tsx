@@ -3,7 +3,6 @@ import { useHistory } from 'react-router'
 import { useThemeStore } from 'services/stores'
 import { Icon } from '@iconify/react'
 import { Flex, Box } from '@chakra-ui/layout'
-import { LivestreamStatus } from 'generated/graphql'
 import { LivestreamPostCardProps } from 'types/livestreams'
 import { Text } from 'components'
 import { PostContent, BlockedContent, Live, CardWrapper } from './style'
@@ -14,7 +13,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
 
-  const isLive = props.status === LivestreamStatus.Active
+  const isLive = props.status === 'active'
 
   const selectPost = () => {
     history.push(`${props.url}`)

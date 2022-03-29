@@ -1,10 +1,8 @@
-import { Livestream, LivestreamStatus } from 'generated/graphql'
-
 export type LivestreamsScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
   hasMoreLink?: boolean
-  items?: Livestream[]
+  items?: any[]
 }
 
 export type LivestreamPostCardProps = {
@@ -12,7 +10,7 @@ export type LivestreamPostCardProps = {
   title?: string
   url?: string
   thumbnail?: string
-  status?: LivestreamStatus | null
+  status?: string | null
   isExclusive?: boolean
   isGeolocked?: boolean
 }

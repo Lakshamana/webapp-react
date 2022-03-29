@@ -1,7 +1,7 @@
-import { AvailableVideoPost } from 'types/posts'
+import { Post } from 'generated/graphql'
 
 export interface VideoPlaylistProps {
   title?: string
   autoplay?: boolean
-  videos?: AvailableVideoPost[]
+  videos?: Post[]
 }

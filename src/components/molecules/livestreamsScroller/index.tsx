@@ -9,12 +9,6 @@ import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { useThemeStore } from 'services/stores'
 import { convertCamelCaseToDash } from 'utils'
 import { useChannelsStore } from 'services/stores'
-import {
-  Livestream,
-  LivestreamStatus,
-  RedactedLivestreamEvent,
-  RedactReason,
-} from 'generated/graphql'
 
 import { CardsScroller, LivestreamPostCard } from 'components'
 import { Text } from 'components'
@@ -42,7 +36,7 @@ const LivestreamScroller = ({
 
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const getImageUrl = (post: Livestream) => {
+  const getImageUrl = (post: any) => {
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
@@ -68,20 +62,11 @@ const LivestreamScroller = ({
   const getLivestreamUrl = (id: string) =>
     `/c/${convertCamelCaseToDash(activeChannel?.name)}/live/${id}`
 
-  const isRedacted = (post: Livestream) =>
-    post.__typename === 'RedactedLivestreamEvent'
+  const isExclusive = (post: any) => false
 
-  const isExclusive = (post: Livestream) =>
-    (isRedacted(post) &&
-      (post as RedactedLivestreamEvent).reason === RedactReason.Exclusive) ||
-    false
+  const isGeolocked = (post: any) => false
 
-  const isGeolocked = (post: Livestream) =>
-    (isRedacted(post) &&
-      (post as RedactedLivestreamEvent).reason === RedactReason.Geofence) ||
-    false
-
-  const isLive = (post: Livestream) => post.status === LivestreamStatus.Active
+  const isLive = (post: any) => post.status === 'active'
 
   useEffect(() => {
     const arrForSort = [...items!]
@@ -94,7 +79,7 @@ const LivestreamScroller = ({
         ? -1
         : compareAsc(a.scheduledStartAt, b.scheduledStartAt)
     })
-    const mappedArr = arrForSort?.map((item: Livestream) => {
+    const mappedArr = arrForSort?.map((item: any) => {
       const thumbnail = getImageUrl(item)
       const url = getLivestreamUrl(`${item.id}`)
       return {

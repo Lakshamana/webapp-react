@@ -1,92 +1,39 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_POST = gql`
-  query GetPost($id: String!) {
+  query GetPost($id: ID!) {
     post(id: $id) {
-      ... on PostCommon {
-        __typename
+      id
+      access
+      allowComments
+      countComments
+      countReactions
+      description
+      engagedUsers {
+        username
       }
-      ... on VideoPost {
-        description
-        categories {
-          id
-        }
-        media {
-          baseUrl
-          duration
-          hlsPath
-          subtitles {
-            mediaId
-          }
-          mp4Path
-        }
-        mediaPosition {
-          percent
-          seconds
-        }
+      categories {
         id
-        title
-        access
-        counts {
-          countComments
-          countReactions
-          countUniqueCommenters
-          countViews
-          countUniqueCommenters
-          # TO-DO: This is an API problem
-          # engagedUsers {}
-          reactions {
-            count
-            name
-          }
-        }
-        featuredAt
-        myReactions {
-          count
-          name
-        }
-        publishedAt
-        pinnedAt
-        createdAt
       }
-      ... on RedactedVideoPost {
-        title
-        entitlements {
-          prices {
-            badge
-          }
+      featured
+      geofence
+      kind
+      media {
+        ... on MediaVideo {
+          baseUrl
+          mp4Path
+          duration
+          aspectRatio
+          createdAt
+          hlsPath
         }
       }
-      ... on OnDemandPost {
-        description
-        thumbnail {
-          id
-          imgPath
-          height
-          width
-        }
+      reactions {
+        name
+        count
       }
-      ... on RedactedOnDemandPost {
-        entitlements {
-          prices {
-            badge
-          }
-        }
-      }
-      ... on AudioPost {
-        description
-        audioTitle
-        audioArtist
-        mediaPosition {
-          seconds
-        }
-        thumbnail {
-          id
-          imgPath
-          height
-          width
-        }
-      }
+      title
+      type
     }
   }
 `

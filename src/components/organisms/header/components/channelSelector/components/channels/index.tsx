@@ -19,10 +19,17 @@ const Channels = ({
 }: PropsChannels) => {
   const { generateImage } = useThumbor()
 
-  const generateChannelImage = (path: string) => {
-    let channel_img = generateImage(ThumborInstanceTypes.IMAGE, path, {
-      size: { height: 80 },
-    })
+  const generateChannelImage = (channel: Channel) => {
+    const imgPath = channel?.customization?.logo
+      ? channel?.customization?.logo[colorMode]
+      : ''
+    const channel_img = generateImage(
+      ThumborInstanceTypes.IMAGE,
+      imgPath as string,
+      {
+        size: { height: 80 },
+      }
+    )
     return channel_img
   }
 
@@ -59,9 +66,7 @@ const Channels = ({
                     borderRadius={'8px'}
                     height={10}
                     width={10}
-                    src={generateChannelImage(
-                      channel?.customization?.logo[colorMode]
-                    )}
+                    src={generateChannelImage(channel)}
                   />
                   <Text
                     ml={3}
