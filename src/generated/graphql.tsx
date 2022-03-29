@@ -32,6 +32,8 @@ export type AccessToken = {
 
 export type Account = {
   __typename?: 'Account';
+  /** createdAt */
+  createdAt: Scalars['String'];
   display_name?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   first_name?: Maybe<Scalars['String']>;
@@ -201,11 +203,6 @@ export type BillboardCustomizationOutput = {
   mobile: MediaCustomizationOutput;
 };
 
-export type BooleanFilterOperator = {
-  /** Equal operator */
-  eq?: Maybe<Scalars['Boolean']>;
-};
-
 export type Category = {
   __typename?: 'Category';
   access?: Maybe<Scalars['String']>;
@@ -229,8 +226,7 @@ export type Category = {
 
 
 export type CategoryChildrenArgs = {
-  filter?: Maybe<CategoryFilter>;
-  pagination: PaginationArgs;
+  filter?: Maybe<ChildrenCategoryFilter>;
 };
 
 export type CategoryCustomization = {
@@ -247,12 +243,12 @@ export type CategoryCustomizationInput = {
 };
 
 export type CategoryFilter = {
-  featuredAt?: Maybe<DateFilterOperator>;
-  isParent?: Maybe<BooleanFilterOperator>;
-  limit?: Maybe<Scalars['Float']>;
-  parent?: Maybe<MongoIdFilterOperator>;
-  skip?: Maybe<Scalars['Float']>;
-  sort?: Maybe<CategorySortBy>;
+  featured?: Maybe<Scalars['Boolean']>;
+  isParent?: Maybe<Scalars['Boolean']>;
+  page?: Maybe<Scalars['Float']>;
+  pageSize?: Maybe<Scalars['Float']>;
+  parent?: Maybe<Scalars['ID']>;
+  sortBy?: Maybe<Scalars['String']>;
 };
 
 export type CategoryInput = {
@@ -270,41 +266,7 @@ export type CategoryInput = {
   tag?: Maybe<Scalars['String']>;
 };
 
-export type CategorySortBy = {
-  direction?: Maybe<SortDirection>;
-  field?: Maybe<CategorySortEnum>;
-};
-
-export enum CategorySortEnum {
-  Access = 'access',
-  Channel = 'channel',
-  CreatedAt = 'createdAt',
-  Description = 'description',
-  FeaturedAt = 'featuredAt',
-  IsParent = 'isParent',
-  Name = 'name',
-  Organization = 'organization',
-  Parent = 'parent',
-  Sort = 'sort',
-  Status = 'status'
-}
-
 export type Channel = AvailableChannel | GeolockedChannel;
-
-export type ChannelCustomizationDetail = {
-  __typename?: 'ChannelCustomizationDetail';
-  aspectRatio?: Maybe<Scalars['String']>;
-  baseUrl?: Maybe<Scalars['String']>;
-  dashPath?: Maybe<Scalars['String']>;
-  duration?: Maybe<Scalars['Int']>;
-  height?: Maybe<Scalars['Int']>;
-  hlsPath?: Maybe<Scalars['String']>;
-  imgPath?: Maybe<Scalars['String']>;
-  mp3Path?: Maybe<Scalars['String']>;
-  mp4Path?: Maybe<Scalars['String']>;
-  orientation?: Maybe<Scalars['String']>;
-  width?: Maybe<Scalars['Int']>;
-};
 
 export type ChannelCustomizationInput = {
   icon?: Maybe<ChannelCustomizationLightDarkInput>;
@@ -319,15 +281,15 @@ export type ChannelCustomizationLightDarkInput = {
 
 export type ChannelCustomizationLightDarkOutput = {
   __typename?: 'ChannelCustomizationLightDarkOutput';
-  dark?: Maybe<ChannelCustomizationDetail>;
-  light?: Maybe<ChannelCustomizationDetail>;
+  dark?: Maybe<Scalars['ID']>;
+  light?: Maybe<Scalars['ID']>;
 };
 
 export type ChannelCustomizationOutput = {
   __typename?: 'ChannelCustomizationOutput';
   icon?: Maybe<ChannelCustomizationLightDarkOutput>;
   logo?: Maybe<ChannelCustomizationLightDarkOutput>;
-  thumbnail?: Maybe<ChannelCustomizationDetail>;
+  thumbnail?: Maybe<Scalars['ID']>;
 };
 
 export type ChannelFindAllFilter = {
@@ -345,6 +307,11 @@ export enum ChannelKind {
   Paywall = 'Paywall',
   Public = 'Public'
 }
+
+export type ChildrenCategoryFilter = {
+  featured?: Maybe<Scalars['Boolean']>;
+  isParent?: Maybe<Scalars['Boolean']>;
+};
 
 export type Comment = {
   __typename?: 'Comment';
@@ -611,15 +578,6 @@ export enum CustomFieldTypesEnum {
   Number = 'NUMBER',
   String = 'STRING'
 }
-
-export type DateFilterOperator = {
-  /** Equal operator */
-  eq?: Maybe<Scalars['DateTime']>;
-  /** Greater than equal operator */
-  gte?: Maybe<Array<Scalars['DateTime']>>;
-  /** Less than equal operator */
-  lte?: Maybe<Scalars['DateTime']>;
-};
 
 export type EmailResponseEnvelopeDto = {
   __typename?: 'EmailResponseEnvelopeDTO';
@@ -952,17 +910,6 @@ export type Menu = {
   route?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Scalars['String']>;
-};
-
-export type MongoIdFilterOperator = {
-  /** Equal operator */
-  idEq?: Maybe<Scalars['ID']>;
-  /** In operator */
-  idIn?: Maybe<Array<Scalars['ID']>>;
-  /** Not equal operator */
-  idNeq?: Maybe<Scalars['ID']>;
-  /** Not in operator */
-  idNin?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type Mutation = {
@@ -1766,6 +1713,20 @@ export enum OrganizationSortFields {
   Name = 'name'
 }
 
+export type PaginatedCategoriesOutput = {
+  __typename?: 'PaginatedCategoriesOutput';
+  count: Scalars['Float'];
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  isFirstPage: Scalars['Boolean'];
+  isLastPage: Scalars['Boolean'];
+  page: Scalars['Float'];
+  pageCount: Scalars['Float'];
+  pageNumberIsGood: Scalars['Boolean'];
+  pageSize: Scalars['Float'];
+  rows: Array<Category>;
+};
+
 export type PaginationArgs = {
   limit?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -1996,7 +1957,7 @@ export type Query = {
   accountsGdprLgpd: Array<AccountGdprLgpd>;
   billboard: Billboard;
   billboards: Array<Billboard>;
-  categories: Array<Category>;
+  categories: PaginatedCategoriesOutput;
   category: Category;
   channel: Channel;
   channels: Array<Channel>;
@@ -2947,7 +2908,7 @@ export type GetCategoriesQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> };
+export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', count: number, hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string> }> }> } };
 
 export type GetCategoryQueryVariables = Exact<{
   id: Scalars['String'];
@@ -2961,7 +2922,7 @@ export type ChannelsQueryVariables = Exact<{
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<string>, description: string, geofence?: Maybe<any>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'ChannelCustomizationDetail', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'ChannelCustomizationDetail', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'ChannelCustomizationDetail', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'ChannelCustomizationDetail', imgPath?: Maybe<string> }> }>, thumbnail?: Maybe<{ __typename?: 'ChannelCustomizationDetail', imgPath?: Maybe<string> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<string>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<{ __typename?: 'ChannelCustomizationDetail', imgPath?: Maybe<string> }> }> }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<string>, description: string, geofence?: Maybe<any>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<string>, icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<string>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<string>, icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }> }> }> };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -2972,6 +2933,13 @@ export type CommentsQueryVariables = Exact<{
 
 
 export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, countComments: number, description: string, countUpVotes: number, parent?: Maybe<string>, author?: Maybe<{ __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> }> }> };
+
+export type MediaQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type MediaQuery = { __typename?: 'Query', media: { __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', thumbnailPath?: Maybe<string> } };
 
 export type MenusQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2997,7 +2965,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, engagedUsers: Array<{ __typename?: 'EngagedUser', username: string }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, engagedUsers: Array<{ __typename?: 'EngagedUser', username: string }>, categories: Array<{ __typename?: 'Category', id: string }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
@@ -3897,39 +3865,44 @@ export type GetBillboardsQueryResult = Apollo.QueryResult<GetBillboardsQuery, Ge
 export const GetCategoriesDocument = gql`
     query GetCategories($filter: CategoryFilter) {
   categories(filter: $filter) {
-    access
-    createdAt
-    customization {
-      desktop {
-        imgPath
+    count
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageNumberIsGood
+    pageSize
+    rows {
+      access
+      createdAt
+      customization {
+        desktop {
+          imgPath
+        }
+        mobile {
+          imgPath
+        }
+        thumbnail {
+          imgPath
+        }
       }
-      mobile {
-        imgPath
+      children {
+        description
+        featuredAt
+        geoFence
+        id
+        name
+        description
+        tag
       }
-      thumbnail {
-        imgPath
-      }
-    }
-    children(pagination: {limit: 10}) {
       description
       featuredAt
       geoFence
       id
       name
-      customization {
-        thumbnail {
-          imgPath
-        }
-      }
-      description
       tag
     }
-    description
-    featuredAt
-    geoFence
-    id
-    name
-    tag
   }
 }
     `;
@@ -3983,7 +3956,7 @@ export const GetCategoryDocument = gql`
         imgPath
       }
     }
-    children(pagination: {limit: 10}) {
+    children {
       description
       featuredAt
       geoFence
@@ -4051,24 +4024,14 @@ export const ChannelsDocument = gql`
       name
       customization {
         icon {
-          dark {
-            imgPath
-          }
-          light {
-            imgPath
-          }
+          dark
+          light
         }
         logo {
-          dark {
-            imgPath
-          }
-          light {
-            imgPath
-          }
+          dark
+          light
         }
-        thumbnail {
-          imgPath
-        }
+        thumbnail
       }
       __typename
     }
@@ -4076,12 +4039,18 @@ export const ChannelsDocument = gql`
       id
       name
       thumbnail
-      kind
       customization {
-        thumbnail {
-          imgPath
+        icon {
+          dark
+          light
         }
+        logo {
+          dark
+          light
+        }
+        thumbnail
       }
+      kind
       __typename
     }
   }
@@ -4173,6 +4142,52 @@ export function useCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
 export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
 export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
+export const MediaDocument = gql`
+    query Media($id: String!) {
+  media(id: $id) {
+    ... on MediaPhoto {
+      imgPath
+    }
+    ... on MediaVideo {
+      thumbnailPath
+    }
+  }
+}
+    `;
+export type MediaComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MediaQuery, MediaQueryVariables>, 'query'> & ({ variables: MediaQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const MediaComponent = (props: MediaComponentProps) => (
+      <ApolloReactComponents.Query<MediaQuery, MediaQueryVariables> query={MediaDocument} {...props} />
+    );
+    
+
+/**
+ * __useMediaQuery__
+ *
+ * To run a query within a React component, call `useMediaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMediaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMediaQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMediaQuery(baseOptions: Apollo.QueryHookOptions<MediaQuery, MediaQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MediaQuery, MediaQueryVariables>(MediaDocument, options);
+      }
+export function useMediaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MediaQuery, MediaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MediaQuery, MediaQueryVariables>(MediaDocument, options);
+        }
+export type MediaQueryHookResult = ReturnType<typeof useMediaQuery>;
+export type MediaLazyQueryHookResult = ReturnType<typeof useMediaLazyQuery>;
+export type MediaQueryResult = Apollo.QueryResult<MediaQuery, MediaQueryVariables>;
 export const MenusDocument = gql`
     query Menus {
   menus {
@@ -4339,6 +4354,9 @@ export const GetPostDocument = gql`
     description
     engagedUsers {
       username
+    }
+    categories {
+      id
     }
     featured
     geofence
