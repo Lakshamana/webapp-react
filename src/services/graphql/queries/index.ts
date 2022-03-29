@@ -6,5 +6,5 @@ export * from './billboards'
 export * from './comments'
 export * from './organization'
 export * from './menus'
-
+export * from './media'
 
