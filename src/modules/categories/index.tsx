@@ -28,11 +28,8 @@ const CategoriesPage = () => {
     useQuery(QUERY_CATEGORIES, {
       variables: {
         filter: {
-          featuredAt: {
-            eq: null,
-          },
+          featured: true,
         },
-        pagination: {},
       },
       skip: !activeChannel,
     })
@@ -41,12 +38,7 @@ const CategoriesPage = () => {
     QUERY_CATEGORIES,
     {
       variables: {
-        filter: {
-          featuredAt: {
-            eq: null,
-          },
-        },
-        pagination: {},
+        filter: {},
       },
       skip: !activeChannel,
     }
@@ -58,7 +50,7 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     setCategoriesBillboardItems([])
-    const billboardItems = featuredCategoriesData?.categories?.reduce(
+    const billboardItems = featuredCategoriesData?.categories?.rows?.reduce(
       (memo, curr) => {
         const cover = getImageUrl(curr?.customization?.mobile?.imgPath)
         const banner = getImageUrl(curr?.customization?.desktop?.imgPath)
@@ -78,12 +70,12 @@ const CategoriesPage = () => {
   }, [featuredCategoriesData])
 
   useEffect(() => {
-    if (categoriesData?.categories.length) {
-      const categoriesWithChildren = categoriesData?.categories.filter(
+    if (categoriesData?.categories.rows.length) {
+      const categoriesWithChildren = categoriesData?.categories.rows.filter(
         (category) => category.children && !!category.children.length
       )
 
-      const noChildren = categoriesData?.categories.filter(
+      const noChildren = categoriesData?.categories.rows.filter(
         (category) => category.children && !category.children.length
       )
 
@@ -125,7 +117,7 @@ const CategoriesPage = () => {
                 <CategoriesScroller
                   key={category.id}
                   items={category.children as Category[]}
-                  sectionTitle={category?.name || ''}
+                  sectionTitle={category?.name}
                   hasMoreLink={true}
                   sectionUrl={`/c/${activeChannel}/category/${category.id}`}
                 />
