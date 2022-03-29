@@ -20,9 +20,8 @@ const Channels = ({
   const { generateImage } = useThumbor()
 
   const generateChannelImage = (channel: Channel) => {
-    const imgPath = channel?.customization?.logo
-      ? channel?.customization?.logo[colorMode]
-      : ''
+    const imgPath =
+      channel?.customization?.logo && channel?.customization?.logo[colorMode]
     const channel_img = generateImage(
       ThumborInstanceTypes.IMAGE,
       imgPath as string,
