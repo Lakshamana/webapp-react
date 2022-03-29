@@ -156,6 +156,12 @@ const EN_US = {
         updatePassword: 'Update password',
       },
     },
+    activateAccount: {
+      activating: 'Activating your account...',
+      success:
+        'Your account has been successfully activated.',
+      loginLink: 'Click here to access'
+    },
     header: {
       tabs: {
         home: 'Home',
@@ -190,7 +196,7 @@ const EN_US = {
       },
       channels: {
         title: 'Choose a channel:',
-        page_title: 'Channels'
+        page_title: 'Channels',
       },
       collection: {
         action: 'Action',
