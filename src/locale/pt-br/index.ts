@@ -212,6 +212,10 @@ const PT_BR = {
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
       },
+      category: {
+        videos: 'Vídeos',
+        categories: 'Categorias'
+      },
       my_list: {
         my_list: 'Minha Lista',
         pinned_categories: 'Categorias favoritas',
