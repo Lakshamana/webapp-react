@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
@@ -25,6 +25,7 @@ const ChannelSelector = () => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const [mediaIds, setMediaIds] = useState<any>([])
   const { activeChannel, setActiveChannel, channelsList, setChannelsList } =
     useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -56,6 +57,14 @@ const ChannelSelector = () => {
     let channelName = convertCamelCaseToDash(channel.name)
     history.push(`/c/${channelName}`)
   }
+
+  useEffect(() => {
+    const mediaIdsFiltered = channelsList?.map(
+      (channel) => channel.customization?.thumbnail
+    )
+    setMediaIds(mediaIdsFiltered)
+    // getMedia()
+  }, [channelsList])
 
   return (
     <CustomContainer ml={'12px'}>
@@ -89,13 +98,16 @@ const ChannelSelector = () => {
             {...{ search, colorMode }}
             onChange={() => handleSearch}
           /> */}
-            <Channels
-              selected={activeChannel}
-              channels={channelsList || []}
-              isLoading={loading}
-              onSelect={handleSelect}
-              {...{ colorMode }}
-            />
+            {!!mediaIds.length && (
+              <Channels
+                selected={activeChannel}
+                mediasId={mediaIds}
+                channels={channelsList || []}
+                isLoading={loading}
+                onSelect={handleSelect}
+                {...{ colorMode }}
+              />
+            )}
           </Container>
         </Popover>
       </Flex>
