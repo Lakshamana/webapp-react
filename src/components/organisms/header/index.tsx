@@ -1,5 +1,5 @@
 import { useState, memo, useReducer, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, matchPath } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/client'
 import { QUERY_MENUS } from 'services/graphql'
 import { useMediaQuery } from '@chakra-ui/media-query'
@@ -91,13 +91,26 @@ const HeaderComponent = () => {
   }
 
   useEffect(() => {
-    setTabsList(MENU_TABS)
     dispatch({ type: 'openMenu', value: false })
-    setActiveChannelMenu([])
-    const home_tab = MENU_TABS.find((tab) => tab.id === 'home')
-    if (home_tab) setActiveTab(home_tab)
     // eslint-disable-next-line
   }, [activeChannel])
+
+  useEffect(() => {
+    setTabsList(MENU_TABS)
+    setActiveChannelMenu([])
+    const getActiveTab = matchPath(pathname, {
+      path: "/c/:channel/:tabUrlName",
+      exact: true,
+      strict: true
+    })
+    const tabName =
+      getActiveTab && getActiveTab?.params
+        ? getActiveTab?.params['tabUrlName']
+        : "home"
+    const home_tab = MENU_TABS.find((tab) => tab.id === tabName)
+    if (home_tab) setActiveTab(home_tab)
+    // eslint-disable-next-line
+  }, [pathname])
 
   useEffect(() => {
     if (state.openMenu && !activeChannelMenu.length) {

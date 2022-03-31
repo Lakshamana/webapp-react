@@ -81,7 +81,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
         redirectTo="/c/:channel"
         template={MainLayout}
       />
-       <ClientRoute
+      <ClientRoute
         isAccesible={true}
         path="/c/:channel/category/:id"
         component={CategoryPage}
@@ -111,7 +111,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
       />
       <ClientRoute
         isAccesible={true}
-        path="/c/:channel/livestreams"
+        path="/c/:channel/live"
         component={Livestreams}
         redirectTo="/channels"
         template={MainLayout}
@@ -158,7 +158,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
         redirectTo="/"
         template={LoginLayout}
       />
-       <ClientRoute
+      <ClientRoute
         isAccesible={true}
         path="/activation"
         component={ActivateAccount}

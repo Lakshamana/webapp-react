@@ -9,7 +9,7 @@ export const MENU_TABS = [
   {
     id: 'live',
     label: i18n.t('header.tabs.live'),
-    url: '/c/:channel/livestreams',
+    url: '/c/:channel/live',
   },
   {
     id: 'feed',
@@ -17,8 +17,8 @@ export const MENU_TABS = [
     url: '/c/:channel/feed',
   },
   {
-    id: 'collections',
-    label: i18n.t('header.tabs.collections'),
+    id: 'categories',
+    label: i18n.t('header.tabs.categories'),
     url: '/c/:channel/categories',
   },
   {
