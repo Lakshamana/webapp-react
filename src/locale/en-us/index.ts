@@ -198,6 +198,13 @@ const EN_US = {
         title: 'Choose a channel:',
         page_title: 'Channels',
       },
+      feed: {
+        empty_list: 'No posts found.',
+        search_options: {
+          recent: 'Most Recent',
+          old: 'Most Old',
+        }
+      },
       collection: {
         action: 'Action',
         drama: 'Drama',

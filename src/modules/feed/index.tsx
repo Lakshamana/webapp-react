@@ -2,75 +2,76 @@ import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from "@apollo/client"
 import { formatDistance, intervalToDuration } from 'date-fns'
-import { Center, Spinner } from "@chakra-ui/react"
+import { Center } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
+import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore, useCommonStore } from 'services/stores'
-import { Container, FeedPostCard, Select } from "components"
+import { Container, FeedPostCard, Select, Text, LoadingItem } from "components"
 import { colors } from 'styles'
 
 const FeedPage = () => {
-  const limit = 10
+  const LIMIT_RESULTS = 4
   const { t } = useTranslation()
+  const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
+  const [filterBy, SetFilterBy] = useState()
+  const [listOfPosts, setListOfPosts] = useState([])
+  const [noPosts, setNoPosts] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_POSTS, {
+    fetchPolicy: "network-only"
+  })
 
   const filterList = [
-		{ value: 'recent', label: 'Most Recent' },
-		{ value: 'old', label: 'Most Old' },
-		{ value: 'popular', label: 'Popular' },
-	]
+    { value: 'recent', label: t('page.feed.search_options.recent') },
+    { value: 'old', label: t('page.feed.search_options.old') }
+  ]
 
-  const [filterBy, SetFilterBy] = useState();
-  const [posts, setPosts] = useState([]);
-  const [hasMore, setHasMore] = useState(true)
-
-  const getOrderBy = () => {
-    if (filterBy === 'popular')
-      return [{ name: "popular", direction: "DESC" }]
-
-    if (filterBy === 'old')
-      return [{ name: "publishedAt", direction: "ASC" }]
-
-    return [{ name: "publishedAt", direction: "DESC" }]
-  }
+  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
 
   useEffect(() => {
-    setPageTitle(t('header.tabs.feed'))
-    //eslint-disable-next-line
-  }, [])
-
+    if (activeChannel) {
+      setListOfPosts([])
+      getPosts()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChannel, filterBy])
 
   useEffect(() => {
-    setPosts([])
+    if (!dataPosts) return
+    if (dataPosts?.posts?.length === 0) {
+      listOfPosts.length > 0
+        ? setHasMore(false)
+        : setNoPosts(true)
+      return
+    }
+    convertDataPost(dataPosts.posts)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataPosts])
+
+  const getPosts = (skip: number = 0) => {
     loadPosts({
+      context: { headers: { channel: activeChannel?.id } },
       variables: {
-        limit,
-        skip: 0,
-        orderBy: getOrderBy(),
-      }
-    })
-  }, [filterBy])
-
-	const handleFilterChange = (evt: any) => {
-    const { value } = evt?.target;
-    SetFilterBy(value)
-  }
-
-  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_POSTS)
-
-  const loadMorePosts = () => {
-    loadPosts({
-      context: { headers: { channel: activeChannel?.id || '5c9277169a57aca84e2cdced' } },
-      variables: {
-        limit,
-        skip: posts.length,
-        orderBy: getOrderBy(),
+        filter: {
+          skip,
+          limit: LIMIT_RESULTS,
+          sort: getSortByFilter()
+        }
       }
     })
   }
+
+  const loadMorePosts = () => getPosts(listOfPosts.length)
+
+  const getSortByFilter = () => ({
+    field: "publishedAt",
+    direction: filterBy !== 'old' ? "ASC" : "DESC"
+  })
 
   const getUrl = (obj) =>
     generateImage(
@@ -84,35 +85,27 @@ const FeedPage = () => {
       }
     )
 
-  useEffect(() => {
-    if (!dataPosts) return
+  //TODO: refact this soon
+  const convertDataPost = (rawPosts) => {
+    const preparedPost = rawPosts.map(post => {
+      const duration = post?.duration && intervalToDuration({ start: 0, end: post?.duration * 1000 })
 
-    if (dataPosts?.posts?.length === 0) {
-      setHasMore(false)
-      return
-    }
-
-    const reduced = dataPosts.posts.map(post => {
-      const duration = post?.duration 
-        ? intervalToDuration({ start: 0, end: post?.duration * 1000 }) 
-        : undefined
-
-      const mediaLength = !duration 
-        ? '' 
+      const mediaLength = !duration
+        ? ''
         : `${duration.hours ? `${duration.hours}:` : ''}${duration.minutes}:${duration.seconds}`
 
-      const coverImage = post?.type && post.type === 'image' 
-        ? getUrl(post.media) 
-        : post.thumbnail 
-          ? getUrl(post.thumbnail) 
+      const coverImage = post?.type && post.type === 'image'
+        ? getUrl(post.media)
+        : post.thumbnail
+          ? getUrl(post.thumbnail)
           : ''
 
-      const date = post.publishedAt 
-        ? formatDistance(new Date(post.publishedAt), new Date(), { addSuffix: true }) 
+      const date = post.publishedAt
+        ? formatDistance(new Date(post.publishedAt), new Date(), { addSuffix: true })
         : ''
 
-      const type = post.type 
-        ? post.type.charAt(0).toUpperCase() + post.type.slice(1) 
+      const type = post.type
+        ? post.type.charAt(0).toUpperCase() + post.type.slice(1)
         : ''
 
       return {
@@ -120,47 +113,52 @@ const FeedPage = () => {
         postDescription: post.description,
         date,
         type,
-
         hasActivity: true,
         displayViews: true,
-
         countMessages: post.counts?.countComments,
-
         coverImage,
         mediaLength,
         views: post.counts?.countViews,
-
         audioTitle: post.audioTitle,
         audioArtist: post.audioArtist,
-
         timeRemaining: '',
         itemQuestion: '',
         percentage: '',
-
         voted: !!post.myVote,
-
         isExclusive: false,
         isGeolocked: false,
       }
     })
+    setListOfPosts(listOfPosts.concat(preparedPost))
+  }
 
-    setPosts(posts.concat(reduced))
-  }, [dataPosts])
+  const handleFilterChange = (evt: any) => {
+    const { value } = evt?.target;
+    SetFilterBy(value)
+  }
 
-   useEffect(() => {
-    // if (!activeChannel?.id) return
-    if (!activeChannel?.id) console.log('--- not channel', 'activeChannel?.id', activeChannel?.id)
+  if (noPosts) {
+    return (
+      <Center width="100%" height={100}>
+        <Text
+          kind="headline"
+          fontSize={18}
+          fontWeight="Bold"
+          color={colors.generalText[colorMode]}
+        >
+          {t('page.feed.empty_list')}
+        </Text>
+      </Center>
+    )
+  }
 
-    setPosts([])
-    loadPosts({
-      context: { headers: { channel: activeChannel?.id || '5c9277169a57aca84e2cdced' } },
-      variables: { limit, skip: 0, orderBy: getOrderBy() }
-    })
-  }, [activeChannel])
+  if (listOfPosts.length === 0) {
+    return <LoadingItem />
+  }
 
-	return (
-    <Container flexDirection={"column"} width={"100%"}>
-      <Container 
+  return (
+    <Center width="100%" height={'100%'} flexDirection={'column'}>
+      <Container
         flexDirection={"column"}
         width={"100%"}
         margin="1em auto 0 auto"
@@ -173,24 +171,19 @@ const FeedPage = () => {
           onChange={handleFilterChange}
         />
       </Container>
-
       <InfiniteScroll
-        dataLength={posts.length}
+        dataLength={listOfPosts.length}
         next={loadMorePosts}
         hasMore={hasMore}
-        loader={(
-          <Center width="100%">
-            <Spinner size={'xl'} color={colors.brand.primary['dark']} />
-          </Center>
-        )}
+        loader={<LoadingItem />}
         endMessage={<></>}
       >
-        {!!posts?.length && posts.map((post) => (
-          <FeedPostCard {...post} />
+        {listOfPosts.map((post, key) => (
+          <FeedPostCard key={key} {...post} />
         ))}
       </InfiniteScroll>
-    </Container>
-	)
+    </Center>
+  )
 }
 
 export { FeedPage }

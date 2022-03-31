@@ -197,6 +197,13 @@ const PT_BR = {
         title: 'Escolha um canal:',
         page_title: 'Canais',
       },
+      feed: {
+        empty_list: 'Nenhuma postagem encontrada.',
+        search_options: {
+          recent: 'Mais Recente',
+          old: 'Mais Antiga',
+        }
+      },
       collection: {
         action: 'Ação',
         drama: 'Drama',
