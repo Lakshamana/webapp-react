@@ -43,13 +43,13 @@ const FeedPage = () => {
 
   useEffect(() => {
     if (!dataPosts) return
-    if (dataPosts?.posts?.length === 0) {
+    if (dataPosts?.posts?.rows.length === 0) {
       listOfPosts.length > 0
         ? setHasMore(false)
         : setNoPosts(true)
       return
     }
-    convertDataPost(dataPosts.posts)
+    convertDataPost(dataPosts.posts.rows)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
 
@@ -58,9 +58,9 @@ const FeedPage = () => {
       context: { headers: { channel: activeChannel?.id } },
       variables: {
         filter: {
-          skip,
-          limit: LIMIT_RESULTS,
-          sort: getSortByFilter()
+          // skip,
+          pageSize: LIMIT_RESULTS,
+          sortBy: getSortByFilter()
         }
       }
     })
@@ -68,10 +68,9 @@ const FeedPage = () => {
 
   const loadMorePosts = () => getPosts(listOfPosts.length)
 
-  const getSortByFilter = () => ({
-    field: "publishedAt",
-    direction: filterBy !== 'old' ? "ASC" : "DESC"
-  })
+  const getSortByFilter = () => {
+    return filterBy !== 'old' ? "publishedAt.asc" : "publishedAt.desc"
+  }
 
   const getUrl = (obj) =>
     generateImage(
@@ -94,20 +93,20 @@ const FeedPage = () => {
         ? ''
         : `${duration.hours ? `${duration.hours}:` : ''}${duration.minutes}:${duration.seconds}`
 
-      const coverImage = post?.type && post.type === 'image'
-        ? getUrl(post.media)
-        : post.thumbnail
-          ? getUrl(post.thumbnail)
-          : ''
+      let coverImage
+      if (post?.type) {
+        coverImage = post.type === 'IMAGE'
+          ? getUrl(post.media)
+          : getUrl(post.thumbnail)
+      }
 
-      const date = post.publishedAt
-        ? formatDistance(new Date(post.publishedAt), new Date(), { addSuffix: true })
-        : ''
+      const date = post.publishedAt &&
+        formatDistance(new Date(post.publishedAt), new Date(), { addSuffix: true })
 
-      const type = post.type
-        ? post.type.charAt(0).toUpperCase() + post.type.slice(1)
-        : ''
+      const type = post.type &&
+        post.type.charAt(0).toUpperCase() + post.type.slice(1)
 
+      //TODO: why some items has default value?
       return {
         postTitle: post.title,
         postDescription: post.description,
@@ -115,7 +114,7 @@ const FeedPage = () => {
         type,
         hasActivity: true,
         displayViews: true,
-        countMessages: post.counts?.countComments,
+        countMessages: post.countComments,
         coverImage,
         mediaLength,
         views: post.counts?.countViews,
