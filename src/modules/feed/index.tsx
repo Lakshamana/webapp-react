@@ -58,7 +58,6 @@ const FeedPage = () => {
       context: { headers: { channel: activeChannel?.id } },
       variables: {
         filter: {
-          // skip,
           pageSize: LIMIT_RESULTS,
           sortBy: getSortByFilter()
         }
