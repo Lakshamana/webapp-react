@@ -67,10 +67,7 @@ const FeedPage = () => {
   }
 
   const loadMorePosts = () => getPosts(listOfPosts.length)
-
-  const getSortByFilter = () => {
-    return filterBy !== 'old' ? "publishedAt.asc" : "publishedAt.desc"
-  }
+  const getSortByFilter = () => filterBy !== 'old' ? "publishedAt.asc" : "publishedAt.desc"
 
   const getUrl = (obj) =>
     generateImage(
