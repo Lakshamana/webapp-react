@@ -7,4 +7,5 @@ export interface PropsChannels {
   onSelect: any
   colorMode: ColorMode
   isLoading?: boolean
+  mediasId: string[]
 }
