@@ -18,28 +18,22 @@ type TabsState = {
 
 export const useTabsStore = create<TabsState>((set) => ({
   activeTab: null,
-  setActiveTab: (activeTab: TabsData) => {
-    return set({ activeTab })
-  },
+  setActiveTab: (activeTab: TabsData) => set({ activeTab }),
   tabsList: [],
   setTabsList: (tabsList: TabsData[]) => {
     const channel = getData(CHANNEL_INFO)
-
     if (channel) {
-      let channelName = convertCamelCaseToDash(channel.name)
-
+      const channelName = convertCamelCaseToDash(channel.name)
+      let slug
       for (const tab of tabsList) {
-        let substring = tab.url.substring(
+        slug = tab.url.substring(
           tab.url.lastIndexOf('c/') + 2,
           tab.url.lastIndexOf('/')
         )
-
         if (tab.id === 'home') {
-          let substring = tab.url.substring(tab.url.indexOf('c/') + 2)
-          tab.url = tab.url.replace(substring, channelName)
-        } else {
-          tab.url = tab.url.replace(substring, channelName)
+          slug = tab.url.substring(tab.url.indexOf('c/') + 2)
         }
+        tab.url = tab.url.replace(slug, channelName)
       }
     }
     return set({ tabsList })
