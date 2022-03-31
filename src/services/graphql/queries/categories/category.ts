@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_CATEGORY = gql`
-  query GetCategory($id: String!) {
+  query GetCategoryWithPosts($id: String!) {
     category(id: $id) {
+      id
       access
       createdAt
       customization {
@@ -36,6 +37,28 @@ export const QUERY_CATEGORY = gql`
       id
       name
       tag
+    }
+    posts(filters: { category: $id }) {
+      id
+      access
+      title
+      description
+      featured
+      geofence
+      kind
+      slug
+      status
+      tags
+      thumbnail {
+        imgPath
+      }
+      type
+      publishedAt
+      media {
+        ... on MediaVideo {
+          duration
+        }
+      }
     }
   }
 `
