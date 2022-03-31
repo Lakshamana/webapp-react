@@ -3,7 +3,6 @@ import { gql } from '@apollo/client'
 export const QUERY_CATEGORIES = gql`
   query GetCategories($filter: CategoryFilter) {
     categories(filter: $filter) {
-      count
       hasNextPage
       hasPreviousPage
       isFirstPage
@@ -13,6 +12,7 @@ export const QUERY_CATEGORIES = gql`
       pageSize
       rows {
         access
+        parentId
         createdAt
         customization {
           desktop {
@@ -26,6 +26,7 @@ export const QUERY_CATEGORIES = gql`
           }
         }
         children {
+          parentId
           description
           featuredAt
           customization {

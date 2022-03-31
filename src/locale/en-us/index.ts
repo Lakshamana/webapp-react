@@ -213,6 +213,10 @@ const EN_US = {
         my_list: 'My List',
         more_categories: 'More categories',
       },
+      category: {
+        videos: 'Videos',
+        categories: 'Categories'
+      },
       my_list: {
         my_list: 'My List',
         pinned_categories: 'Favorite Categories',

@@ -72,14 +72,15 @@ const CategoriesPage = () => {
   useEffect(() => {
     if (categoriesData?.categories.rows.length) {
       const categoriesWithChildren = categoriesData?.categories.rows.filter(
-        (category) => category.children && !!category.children.length
+        (category: Category) => category.children?.length
       )
 
       const noChildren = categoriesData?.categories.rows.filter(
-        (category) => category.children && !category.children.length
+        (category: Category) => !category.children?.length && !category.parentId
       )
 
       setCategoriesWithChildren(categoriesWithChildren)
+      
       setCategoriesWithouChildren(noChildren)
     }
   }, [categoriesData])

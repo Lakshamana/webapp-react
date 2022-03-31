@@ -1,22 +1,28 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_POSTS = gql`
-  query GetPosts($filter: PostFilter) {
-    posts(filters: $filter) {
+  query GetPosts($filters: PostFilter) {
+    posts(filters: $filters) {
+      id
       access
+      title
       description
+      featured
       geofence
       kind
-      id
       slug
       status
       tags
       thumbnail {
         imgPath
       }
-      title
       type
       publishedAt
+      media {
+        ... on MediaVideo {
+          duration
+        }
+      }
     }
   }
 `

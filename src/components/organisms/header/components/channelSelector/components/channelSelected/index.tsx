@@ -4,11 +4,10 @@ import { Icon } from '@iconify/react'
 import { useMediaQuery } from '@chakra-ui/react'
 import { useChannelsStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { QUERY_MEDIA } from 'services/graphql'
+import { QUERY_SINGLE_MEDIA } from 'services/graphql'
 import { Container, Avatar } from 'components'
 import { colors, breakpoints } from 'styles'
 import { IconContainer } from './styles'
-
 import { PropsChannelSelected } from './types'
 
 const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
@@ -18,7 +17,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
   const [iconPath, setIconPath] = useState<any>()
 
   //TODO: Get icon with Media Query is a temporary solution, it should be removed when the API is working properly
-  const { data, loading } = useQuery(QUERY_MEDIA, {
+  const { data, loading } = useQuery(QUERY_SINGLE_MEDIA, {
     variables: {
       id:
         activeChannel?.customization?.icon &&
