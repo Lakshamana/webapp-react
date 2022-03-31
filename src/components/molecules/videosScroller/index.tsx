@@ -50,19 +50,22 @@ const VideosScroller = ({
     return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
   }
 
-  const isExclusive = (post: Post) => post.kind === 'exclusive'
+  const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
 
   useEffect(() => {
     const mappedArr = items?.map((item: Post) => {
       const thumbnail = getImageUrl(item)
       const url = getPostUrl(`${item.id}`)
       return {
-        id: `${item.id}`,
-        title: `${item.title}`,
+        id: item.id,
+        title: item.title,
         url: url,
+        description: item?.description,
         thumbnail: thumbnail,
         mediaLength:
-          item.media?.__typename === 'MediaVideo' ? item.media?.duration : undefined,
+          item.media?.__typename === 'MediaVideo'
+            ? item.media?.duration
+            : undefined,
         //TODO: Verify if countViews exists on API
         countViews: undefined,
         isExclusive: isExclusive(item),
