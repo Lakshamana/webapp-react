@@ -4,24 +4,14 @@ import { FeedPostCardProps } from "../../types"
 const SetMediaType = ({ ...props }: FeedPostCardProps) => {
 	const GetMediaType = () => {
 		switch (props.type) {
-			case "Blog":
-				return <></>
-			case "Image":
-				return (
-					<ImagePost {...props} />
-				)
-			case "Video":
-				return (
-					<VideoPost {...props}/>
-				)
-			case "Audio":
-				return (
-					<AudioPost {...props}/>
-				)
-			case "Poll":
-				return (
-					<PollPost {...props}/>
-				)
+			case "IMAGE":
+				return <ImagePost {...props} />
+			case "VIDEO":
+				return <VideoPost {...props} />
+			case "AUDIO":
+				return <AudioPost {...props} />
+			case "POLL":
+				return <PollPost {...props} />
 			default:
 				return <></>
 		}

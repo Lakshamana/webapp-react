@@ -27,7 +27,7 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	voted: boolean
 	isExclusive: boolean
 	isGeolocked: boolean
-	itensQuestions?: Array<any|itensQuestions>
+	itensQuestions?: Array<any | itensQuestions>
 }
 
 export interface itensQuestions {
@@ -49,4 +49,4 @@ export interface MediaTypeProps {
 	mediaType: MediaType
 }
 
-type MediaType = "Audio" | "Video" | "Blog" | "Image" | "Poll"
+type MediaType = "AUDIO" | "VIDEO" | "BLOG" | "IMAGE" | "POLL"
