@@ -1,9 +1,7 @@
 import { useQuery } from '@apollo/client'
-import { Flex } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { QUERY_CATEGORIES, QUERY_POSTS } from 'services/graphql'
-import { Container, Skeleton } from 'components'
-import { PostsGrid, CategoriesGrid } from 'components'
+import { Container, EmptyState, Skeleton, PostsGrid, CategoriesGrid } from 'components'
 import { useCommonStore } from 'services/stores'
 import { useEffect } from 'react'
 
@@ -58,12 +56,7 @@ const MyListPage = () => {
       {!!pinnedCategoriesData?.pinnedCategories?.length &&
         renderCategoriesGrid()}
       {!!pinnedPostsData?.pinnedPosts?.length && renderPostsGrid()}
-      {/* TODO: built a empty state component */}
-      {isEmpty && (
-        <Flex w={'100vw'} justifyContent="center" color="white">
-          Page empty! We need to create an empty state component.
-        </Flex>
-      )}
+      {isEmpty && <EmptyState/>}
     </Container>
   )
 }
