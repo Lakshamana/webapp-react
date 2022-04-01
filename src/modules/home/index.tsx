@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 
-import {
-  PostType,
-  SortDirection
-} from 'generated/graphql'
+import { PostType, SortDirection, Category } from 'generated/graphql'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { useChannelsStore, useCommonStore } from 'services/stores'
+import {
+  useChannelsStore,
+  useCommonStore,
+  useCustomizationStore,
+} from 'services/stores'
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
@@ -31,9 +32,12 @@ const HomePage = () => {
   const { t } = useTranslation()
   const { generateImage } = useThumbor()
   const { setPageTitle } = useCommonStore()
+  const { activeChannelConfig } = useCustomizationStore()
 
   const { activeChannel } = useChannelsStore()
   const [billboardItems, setBillboardItems] = useState([])
+  const [categoriesWithChildren, setCategoriesWithChildren] =
+    useState<Category[]>()
 
   const {
     data: billboardData,
@@ -79,13 +83,33 @@ const HomePage = () => {
     skip: !activeChannel,
   })
 
+  const [getCategories, { data: categoriesData, loading: loadingCategories }] =
+    useLazyQuery(QUERY_CATEGORIES, {
+      variables: {
+        filter: {},
+      },
+      onCompleted: () => {
+        const categoriesWithChildren = categoriesData?.categories.rows.filter(
+          (category: Category) => category.children?.length
+        )
+        setCategoriesWithChildren(categoriesWithChildren)
+      },
+    })
+
+  const isHomeDisplayingCategories =
+    activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES
+
   const isLoading =
-    loadingBillboard || loadingFeaturedCategories || loadingFeaturedPosts
+    loadingBillboard ||
+    loadingFeaturedCategories ||
+    loadingFeaturedPosts ||
+    (loadingCategories && isHomeDisplayingCategories)
 
   const hasResults =
     billboardData?.billboard?.length ||
     featuredPostsData?.posts?.rows?.length ||
-    featuredCategoriesData?.categories?.rows?.length
+    featuredCategoriesData?.categories?.rows?.length ||
+    (isHomeDisplayingCategories && categoriesWithChildren?.length)
 
   const isEmpty = !isLoading && !hasResults
 
@@ -98,6 +122,11 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [activeChannel])
 
+  useEffect(() => {
+    if (isHomeDisplayingCategories) getCategories()
+    //eslint-disable-next-line
+  }, [activeChannelConfig])
+
   const getImageUrl = (path: string) => {
     return generateImage(ThumborInstanceTypes.IMAGE, path)
   }
@@ -105,23 +134,26 @@ const HomePage = () => {
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
 
-    const billboardItems = billboardData?.billboards?.rows?.reduce((memo, curr) => {
-      const cover = getImageUrl(curr.customization?.mobile?.imgPath)
-      const banner = getImageUrl(curr.customization?.desktop?.imgPath)
+    const billboardItems = billboardData?.billboards?.rows?.reduce(
+      (memo, curr) => {
+        const cover = getImageUrl(curr.customization?.mobile?.imgPath)
+        const banner = getImageUrl(curr.customization?.desktop?.imgPath)
 
-      memo.push({
-        ...curr,
-        actions: curr.actions.map((action) => ({
-          ...action,
-          bgColor: convertToValidColor(action.bgColor),
-          borderColor: convertToValidColor(action.borderColor),
-          textColor: convertToValidColor(action.textColor),
-        })),
-        cover,
-        banner,
-      })
-      return memo
-    }, [])
+        memo.push({
+          ...curr,
+          actions: curr.actions.map((action) => ({
+            ...action,
+            bgColor: convertToValidColor(action.bgColor),
+            borderColor: convertToValidColor(action.borderColor),
+            textColor: convertToValidColor(action.textColor),
+          })),
+          cover,
+          banner,
+        })
+        return memo
+      },
+      []
+    )
 
     setBillboardItems(billboardItems)
 
@@ -148,6 +180,17 @@ const HomePage = () => {
     />
   )
 
+  const renderCategoriesWithChildren = () =>
+    categoriesWithChildren?.map((category: Category) => (
+      <CategoriesScroller
+        key={category.id}
+        items={category.children}
+        sectionTitle={category?.name}
+        hasMoreLink={true}
+        sectionUrl={`/c/${activeChannel}/category/${category.id}`}
+      />
+    ))
+
   return (
     <Container flexDirection={'column'} display={'flex'}>
       {!!billboardItems?.length && renderBillboard()}
@@ -163,10 +206,12 @@ const HomePage = () => {
           mt={billboardItems ? 0 : 7}
           w={'100vw'}
         >
-          {!!featuredPostsData?.posts?.rows?.length && renderFeaturedPostsScroller()}
+          {!!featuredPostsData?.posts?.rows?.length &&
+            renderFeaturedPostsScroller()}
           {!!featuredCategoriesData?.categories?.rows?.length &&
             renderFeaturedCategoriesScroller()}
-          {isEmpty && <EmptyState/>}
+          {!!categoriesWithChildren?.length && renderCategoriesWithChildren()}
+          {isEmpty && <EmptyState />}
         </Flex>
       )}
     </Container>
