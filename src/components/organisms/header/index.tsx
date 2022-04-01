@@ -70,9 +70,9 @@ const HeaderComponent = () => {
 
   const handleOpenSearch = () => {
     if (isMobile()) {
-      handleCloseMenu()
       setVisibleMobile('none')
     }
+    handleCloseMenu()
     dispatch({ type: 'openSearch', value: true })
   }
 
@@ -93,7 +93,7 @@ const HeaderComponent = () => {
     setActiveChannelMenu([])
     handleCloseMenu()
     // eslint-disable-next-line
-  }, [activeChannel])
+  }, [activeChannel, pathname])
 
   useEffect(() => {
     setTabsList(MENU_TABS)
@@ -163,7 +163,7 @@ const HeaderComponent = () => {
             alignItems="center"
             display={['none', 'none', 'flex']}
           >
-            <Tabs />
+            <Tabs closeSideMenu={handleCloseMenu} />
           </Container>
         )}
         <Container
@@ -180,7 +180,11 @@ const HeaderComponent = () => {
             search={state.search}
             {...{ colorMode }}
           />
-          <UserInfo display={'menu'} {...{ colorMode, toggleColorMode }} />
+          <UserInfo
+            display={'menu'}
+            closeSideMenu={handleCloseMenu}
+            {...{ colorMode, toggleColorMode }}
+          />
         </Container>
       </HeaderContainer>
     </>
