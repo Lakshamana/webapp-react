@@ -34,7 +34,7 @@ const EmptyState = () => {
         variant="link"
         label={t('common.back_to_home')}
         onClick={() =>
-          history.push(`/c/${convertCamelCaseToDash(activeChannel?.name)}/home`)
+          history.push(`/c/${convertCamelCaseToDash(activeChannel?.name)}`)
         }
       />
     </Flex>
