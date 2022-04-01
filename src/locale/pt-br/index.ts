@@ -199,7 +199,6 @@ const PT_BR = {
         page_title: 'Canais',
       },
       feed: {
-        empty_list: 'Nenhuma postagem encontrada.',
         search_options: {
           recent: 'Mais Recente',
           old: 'Mais Antiga',
