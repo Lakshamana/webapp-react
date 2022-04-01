@@ -1,15 +1,17 @@
 import { Icon } from '@iconify/react'
 import { Flex, Divider } from '@chakra-ui/layout'
-import { Container, Text, Link } from 'components'
+import { Container, Text } from 'components'
 
 import { NavbarProps } from './types'
 
 import { colors } from 'styles'
+import { useHistory } from 'react-router-dom'
 
-const Navbar = ({ colorMode, text }: NavbarProps) => (
-  <Container width={1} mt={1} alignItems="center" mb={2}>
-    <Link to="/home">
-      <Flex alignItems="center">
+const Navbar = ({ colorMode, text }: NavbarProps) => {
+  let history = useHistory()
+  return (
+    <Container width={1} mt={1} alignItems="center" mb={2}>
+      <Flex alignItems="center" onClick={history.goBack} cursor="pointer">
         <Icon
           icon="mdi:arrow-left"
           width={20}
@@ -31,8 +33,8 @@ const Navbar = ({ colorMode, text }: NavbarProps) => (
           {text}
         </Text>
       </Flex>
-    </Link>
-  </Container>
-)
+    </Container>
+  )
+}
 
 export { Navbar }
