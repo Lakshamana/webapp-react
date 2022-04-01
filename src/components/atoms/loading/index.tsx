@@ -2,7 +2,7 @@ import { Spinner, Center } from '@chakra-ui/react'
 import { colors } from 'styles'
 
 const LoadingItem = () => (
-  <Center width='100%' height={100}>
+  <Center width={120} height={100}>
     <Spinner size={'xl'} color={colors.brand.primary['dark']} />
   </Center>
 )
