@@ -1,27 +1,31 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_POSTS = gql`
-  query GetPosts($filters: PostFilter) {
-    posts(filters: $filters) {
-      id
-      access
-      title
-      description
-      featured
-      geofence
-      kind
-      slug
-      status
-      tags
-      thumbnail {
-        imgPath
-      }
-      type
-      publishedAt
-      media {
-        ... on MediaVideo {
-          duration
+  query GetPosts($filter: PostFilter) {
+    posts(filters: $filter) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageCount
+      total
+      rows {
+        access
+        description
+        geofence
+        kind
+        id
+        slug
+        status
+        tags
+        thumbnail {
+          imgPath
         }
+        title
+        type
+        publishedAt
+        countComments
       }
     }
   }
