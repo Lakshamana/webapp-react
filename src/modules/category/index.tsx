@@ -12,6 +12,7 @@ import {
   CategoriesGrid,
   Button,
   PostsGrid,
+  EmptyState,
 } from 'components'
 import { HeroBannerProps } from 'types/common'
 import { sizes, colors } from 'styles'
@@ -83,12 +84,7 @@ const CategoryPage = () => {
         {!!categoryData?.posts?.length && (
           <PostsGrid sectionTitle={t("page.category.videos")} items={categoryData?.posts}></PostsGrid>
         )}
-        {/* TODO: Built a empty state component */}
-        {isEmpty && (
-          <Flex w={'100vw'} py={20} justifyContent="center" color="white">
-            Page empty! We need to create an empty state component.
-          </Flex>
-        )}
+        {isEmpty && <EmptyState/>}
       </Flex>
     </Container>
   )

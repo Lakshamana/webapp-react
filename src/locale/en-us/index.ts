@@ -1,6 +1,7 @@
 const EN_US = {
   translations: {
     common: {
+      back_to_home: 'Back to home',
       or: 'or',
       error: {
         generic_api_error:

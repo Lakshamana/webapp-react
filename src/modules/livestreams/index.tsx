@@ -8,7 +8,7 @@ import {
   SortDirection,
   PostType,
 } from 'generated/graphql'
-import { Container, Skeleton } from 'components/atoms'
+import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
   LivestreamScroller,
   VideosScroller,
@@ -167,12 +167,7 @@ const Livestreams = () => {
               sectionTitle={t('page.live.past')}
             ></VideosScroller>
           )}
-          {/* TODO: built a empty state component */}
-          {isEmpty && (
-            <Flex w={'100vw'} justifyContent="center" color="white">
-              Page empty! We need to create an empty state component.
-            </Flex>
-          )}
+          {isEmpty && <EmptyState/> }
         </Flex>
       )}
     </Container>

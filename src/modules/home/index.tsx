@@ -16,7 +16,7 @@ import {
   QUERY_POSTS,
 } from 'services/graphql'
 
-import { Container, Skeleton } from 'components/atoms'
+import { Container, EmptyState, Skeleton } from 'components/atoms'
 
 import {
   BillboardScroller,
@@ -166,13 +166,7 @@ const HomePage = () => {
           {!!featuredPostsData?.posts?.length && renderFeaturedPostsScroller()}
           {!!featuredCategoriesData?.categories?.rows?.length &&
             renderFeaturedCategoriesScroller()}
-
-          {/* TODO: Built a empty state component */}
-          {isEmpty && (
-            <Flex w={'100vw'} py={20} justifyContent="center" color="white">
-              Page empty! We need to create an empty state component.
-            </Flex>
-          )}
+          {isEmpty && <EmptyState/>}
         </Flex>
       )}
     </Container>
