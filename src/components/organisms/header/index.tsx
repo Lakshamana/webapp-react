@@ -44,7 +44,7 @@ const HeaderComponent = () => {
 
   const [getMenus] = useLazyQuery(QUERY_MENUS, {
     fetchPolicy: "network-only",
-    onCompleted: (result) => setActiveChannelMenu(result.menus)
+    onCompleted: (result) => setActiveChannelMenu(result.menus.rows)
   })
 
   const [state, dispatch] = useReducer(reducer, {
