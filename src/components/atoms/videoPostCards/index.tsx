@@ -74,7 +74,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
     >
       <Flex direction="column">
         <Text
-          fontSize="0.75rem"
+          fontSize="1rem"
           noOfLines={1}
           fontWeight="bolder"
           color={colors.generalText[colorMode]}
@@ -83,7 +83,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
         </Text>
         {props.description && (
           <Text
-            fontSize="0.65rem"
+            fontSize="0.8rem"
             noOfLines={2}
             color={colors.secondaryText[colorMode]}
           >
