@@ -6,15 +6,12 @@ import { Center } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
-import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore, useCommonStore } from 'services/stores'
-import { Container, FeedPostCard, Select, Text, LoadingItem } from "components"
-import { colors } from 'styles'
+import { Container, FeedPostCard, Select, EmptyState, LoadingItem } from "components"
 
 const FeedPage = () => {
   const LIMIT_RESULTS = 4
   const { t } = useTranslation()
-  const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
@@ -133,18 +130,7 @@ const FeedPage = () => {
   }
 
   if (noPosts) {
-    return (
-      <Center width="100%" height={100}>
-        <Text
-          kind="headline"
-          fontSize={18}
-          fontWeight="Bold"
-          color={colors.generalText[colorMode]}
-        >
-          {t('page.feed.empty_list')}
-        </Text>
-      </Center>
-    )
+    return <EmptyState />
   }
 
   if (listOfPosts.length === 0) {
