@@ -86,7 +86,7 @@ const CategoriesPage = () => {
   }, [categoriesData])
 
   useEffect(() => {
-    setPageTitle(t('header.tabs.collections'))
+    setPageTitle(t('header.tabs.categories'))
     //eslint-disable-next-line
   }, [])
 
@@ -109,7 +109,7 @@ const CategoriesPage = () => {
             {!!categoriesWithoutChildren?.length && (
               <CategoriesScroller
                 items={categoriesWithoutChildren}
-                sectionTitle={t('page.collection.more_categories')}
+                sectionTitle={t('page.categories.more_categories')}
                 hasMoreLink={true}
               />
             )}

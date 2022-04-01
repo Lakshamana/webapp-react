@@ -56,7 +56,7 @@ const HomePage = () => {
     variables: {
       filters: {
         featured: true,
-        typeIn: [PostType.Video, PostType.OnDemand],
+        type: PostType.Video,
         sort: {
           field: 'publishedAt',
           direction: SortDirection.Desc,
@@ -84,7 +84,7 @@ const HomePage = () => {
 
   const hasResults =
     billboardData?.billboard?.length ||
-    featuredPostsData?.posts?.length ||
+    featuredPostsData?.posts?.rows?.length ||
     featuredCategoriesData?.categories?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
@@ -134,7 +134,7 @@ const HomePage = () => {
 
   const renderFeaturedPostsScroller = () => (
     <VideosScroller
-      items={featuredPostsData?.posts}
+      items={featuredPostsData?.posts?.rows}
       sectionTitle={t('page.home.featured_posts')}
       hasMoreLink={true}
     />
@@ -163,7 +163,7 @@ const HomePage = () => {
           mt={billboardItems ? 0 : 7}
           w={'100vw'}
         >
-          {!!featuredPostsData?.posts?.length && renderFeaturedPostsScroller()}
+          {!!featuredPostsData?.posts?.rows?.length && renderFeaturedPostsScroller()}
           {!!featuredCategoriesData?.categories?.rows?.length &&
             renderFeaturedCategoriesScroller()}
           {isEmpty && <EmptyState/>}

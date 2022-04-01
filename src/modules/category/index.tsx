@@ -53,7 +53,7 @@ const CategoryPage = () => {
   }, [categoryData])
 
   const hasResults =
-    !!categoryData?.category?.children?.length || !!categoryData?.posts?.length
+    !!categoryData?.category?.children?.length || !!categoryData?.posts?.rows?.length
 
   const isEmpty = !loadingCategory && !hasResults
 
@@ -66,7 +66,7 @@ const CategoryPage = () => {
             variant={'unstyled'}
             iconName={!!categoryData?.category?.pinnedAt ? 'check' : 'plus'}
             color={`${colors.white}`}
-            label={t('page.collection.my_list')}
+            label={t('page.categories.my_list')}
             width={'100%'}
             height={'100%'}
           />
@@ -81,8 +81,8 @@ const CategoryPage = () => {
         {!!categoryData?.category?.children?.length && (
           <CategoriesGrid sectionTitle={t("page.category.categories")} items={categoryData?.category?.children} />
         )}
-        {!!categoryData?.posts?.length && (
-          <PostsGrid sectionTitle={t("page.category.videos")} items={categoryData?.posts}></PostsGrid>
+        {!!categoryData?.posts?.rows?.length && (
+          <PostsGrid sectionTitle={t("page.category.videos")} items={categoryData?.posts?.rows}></PostsGrid>
         )}
         {isEmpty && <EmptyState/>}
       </Flex>

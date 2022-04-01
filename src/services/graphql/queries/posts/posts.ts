@@ -22,6 +22,11 @@ export const QUERY_POSTS = gql`
         thumbnail {
           imgPath
         }
+        media {
+          ... on MediaVideo {
+            duration
+          }
+        }
         title
         type
         publishedAt

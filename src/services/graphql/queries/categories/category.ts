@@ -24,7 +24,7 @@ export const QUERY_CATEGORY = gql`
         id
         name
         description
-        tag
+        tags
         customization {
           thumbnail {
             imgPath
@@ -36,27 +36,32 @@ export const QUERY_CATEGORY = gql`
       geoFence
       id
       name
-      tag
-    }
-    posts(filters: { category: $id }) {
-      id
-      access
-      title
-      description
-      featured
-      geofence
-      kind
-      slug
-      status
       tags
-      thumbnail {
-        imgPath
-      }
-      type
-      publishedAt
-      media {
-        ... on MediaVideo {
-          duration
+    }
+    posts(filters: { categories: [$id], type: VIDEO }) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageCount
+      pageNumberIsGood
+      pageSize
+      rows {
+        id
+        access
+        title
+        description
+        geofence
+        slug
+        status
+        thumbnail {
+          imgPath
+        }
+        media {
+          ... on MediaVideo {
+            duration
+          }
         }
       }
     }
