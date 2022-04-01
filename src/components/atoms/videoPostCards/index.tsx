@@ -74,7 +74,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
     >
       <Flex direction="column">
         <Text
-          fontSize="1rem"
+          fontSize="0.85rem"
           noOfLines={1}
           fontWeight="bolder"
           color={colors.generalText[colorMode]}
@@ -83,8 +83,10 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
         </Text>
         {props.description && (
           <Text
-            fontSize="0.8rem"
+            mt={1}
+            fontSize="0.7rem"
             noOfLines={2}
+            lineHeight={'0.9rem'}
             color={colors.secondaryText[colorMode]}
           >
             {stripHTML(props.description)}
