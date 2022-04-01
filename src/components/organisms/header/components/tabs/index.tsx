@@ -2,9 +2,11 @@ import { useTabsStore, useThemeStore } from 'services/stores'
 import { Tab } from 'components'
 import { colors } from 'styles'
 import { TabContainer } from './styles'
+import { useTranslation } from 'react-i18next'
 
 const Tabs = () => {
   const { colorMode } = useThemeStore()
+  const { t } = useTranslation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
   return (
     <TabContainer display="flex">
@@ -17,7 +19,7 @@ const Tabs = () => {
           color={colors.secondaryText[colorMode]}
           mx={15}
         >
-          {tab.label}
+          { t(tab.label) }
         </Tab>
       ))}
     </TabContainer>
