@@ -11,6 +11,9 @@ export const QUERY_BILLBOARDS = gql`
       pageNumberIsGood
       pageSize
       rows {
+        id
+        title
+        description
         actions {
           bgColor
           borderColor
