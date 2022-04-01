@@ -6,7 +6,7 @@ export const VideoContent: any = styled.div`
 	position: relative;
 	width: 100%;
 	padding-top: 56.25%;
-	${({ coverImage }: any) => `background: url(${coverImage});`}
+	${({ coverImage }: any) => `background: url("${coverImage}");`}
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
