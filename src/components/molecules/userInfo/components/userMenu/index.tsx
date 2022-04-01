@@ -11,7 +11,7 @@ const UserMenu = ({ colorMode, account, avatar_url }: PropsUserMenu) => (
         <Divider orientation="vertical" color={colors.grey['700']} />
       </Center>
       <Text ellipsis color={colors.secondaryText[colorMode]}>
-        {account?.username || account?.display_name}
+        {account?.display_name || account?.username}
       </Text>
     </TextContainer>
     <Container>
