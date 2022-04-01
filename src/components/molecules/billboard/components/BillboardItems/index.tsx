@@ -58,7 +58,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                     <ContentButton>
                       <Button
                         iconName={'play'}
-                        label={t('page.collection.watch_now')}
+                        label={t('page.categories.watch_now')}
                         width={'100%'}
                         height={'100%'}
                       />
@@ -69,7 +69,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                         variant={'unstyled'}
                         iconName={item.isPinned ? 'check' : 'plus-circle'}
                         color={`${colors.white}`}
-                        label={t('page.collection.my_list')}
+                        label={t('page.categories.my_list')}
                         width={'100%'}
                         height={'100%'}
                       />
