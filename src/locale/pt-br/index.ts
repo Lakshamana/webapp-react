@@ -1,6 +1,7 @@
 const PT_BR = {
   translations: {
     common: {
+      back_to_home: 'Voltar para o início',
       or: 'ou',
       error: {
         generic_api_error:
