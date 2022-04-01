@@ -36,7 +36,6 @@ export const authWithCustomToken = (): Promise<boolean> => {
       })
       .catch(() => {
         refreshFirebaseToken().then(({ data }: any) => {
-          console.log(data?.data?.refreshToken?.refreshToken?.firebaseToken)
           const newFirebaseToken =
             data?.data?.refreshToken?.refreshToken?.firebaseToken
           saveData(FIREBASE_TOKEN, newFirebaseToken)
@@ -46,7 +45,7 @@ export const authWithCustomToken = (): Promise<boolean> => {
   })
 }
 
-const refreshFirebaseToken = async () => {
+export const refreshFirebaseToken = async () => {
   try {
     return requestGraphql({
       query: MUTATION_REFRESH_FIREBASE_TOKEN,
