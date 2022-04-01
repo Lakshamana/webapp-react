@@ -35,6 +35,8 @@ const PT_BR = {
       no: 'Não',
       close: 'Fechar',
       send: 'Enviar',
+      empty_content: 'Sem conteúdo no momento',
+      try_again_later: 'Tente novamente mais tarde',
       enjoy_your_content: 'Aproveite seu conteúdo',
       retry: 'Tentar novamente',
       access_your_account: 'Acesse a sua conta',

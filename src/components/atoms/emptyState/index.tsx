@@ -5,10 +5,12 @@ import { colors } from 'styles'
 import { useThemeStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
+
 const EmptyState = () => {
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
   const history = useHistory()
+
   return (
     <Flex
       py={10}
@@ -18,19 +20,19 @@ const EmptyState = () => {
       justifyContent="center"
       color={colors.generalText[colorMode]}
     >
-      <Icon width="70" icon="mdi:movie-off"></Icon>
+      <Icon width="70" icon="mdi:movie-off" />
       <Text pt={2} fontSize="1.5rem" fontWeight="bold">
-        Sem conteúdo no momento
+        {t('common.empty_content')}
       </Text>
       <Text pt={2} color={colors.secondaryText[colorMode]}>
-        Tente novamente mais tarde
+        {t('common.try_again_later')}
       </Text>
       <Button
         mt={2}
         variant="link"
         label={t('common.back_to_home')}
         onClick={() => history.push('home')}
-      ></Button>
+      />
     </Flex>
   )
 }

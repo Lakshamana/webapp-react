@@ -36,6 +36,8 @@ const EN_US = {
       no: 'No',
       close: 'Close',
       send: 'Send',
+      empty_content: 'No content at moment',
+      try_again_later: 'Try again later',
       enjoy_your_content: 'Enjoy your content',
       retry: 'Retry',
       access_your_account: 'Access your account',
