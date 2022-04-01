@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
 import { Box, Flex } from '@chakra-ui/layout'
 import { useMediaQuery } from '@chakra-ui/react'
+import { PropsChannelSelector } from './types'
 
 import { Channel } from 'generated/graphql'
 
@@ -19,7 +20,7 @@ import { Channels, ChannelSearch, ChannelSelected } from './components'
 import { CustomContainer } from './styles'
 import { colors, breakpoints } from 'styles'
 
-const ChannelSelector = () => {
+const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { colorMode } = useThemeStore()
   const { setActiveTab, tabsList } = useTabsStore()
   const { t } = useTranslation()
@@ -44,6 +45,7 @@ const ChannelSelector = () => {
     if (!channelsList?.length) {
       getChannels()
     }
+    closeSideMenu()
     setOpen(true)
   }
 

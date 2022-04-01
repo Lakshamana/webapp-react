@@ -14,6 +14,7 @@ const UserInfo = ({
   delimited = true,
   colorMode,
   toggleColorMode,
+  closeSideMenu
 }: PropsUserInfo) => {
   const history = useHistory()
   const { t } = useTranslation()
@@ -50,7 +51,9 @@ const UserInfo = ({
           display="sidebar"
           popoverTrigger={
             <button>
-              <UserContainer {...{ delimited }}>
+              <UserContainer
+                onClick={closeSideMenu}
+                {...{ delimited }}>
                 <UserMenu {...{ colorMode, account, avatar_url: user?.avatar_url }} />
               </UserContainer>
             </button>

@@ -42,7 +42,7 @@ const HeaderComponent = () => {
     }
   )
 
-  const [getMenus] = useLazyQuery(QUERY_MENUS, {
+  const [getMenus, { loading: loadingMenu }] = useLazyQuery(QUERY_MENUS, {
     fetchPolicy: "network-only",
     onCompleted: (result) => setActiveChannelMenu(result.menus.rows)
   })
@@ -65,15 +65,14 @@ const HeaderComponent = () => {
     dispatch({ type: 'openSearch', value: false })
   }
 
-  const handleOpenMenu = () => {
-    dispatch({ type: 'openMenu', value: !state.openMenu })
-  }
+  const handleToggleMenu = () => dispatch({ type: 'openMenu', value: !state.openMenu })
+  const handleCloseMenu = () => dispatch({ type: 'openMenu', value: false })
 
   const handleOpenSearch = () => {
     if (isMobile()) {
-      dispatch({ type: 'openMenu', value: false })
       setVisibleMobile('none')
     }
+    handleCloseMenu()
     dispatch({ type: 'openSearch', value: true })
   }
 
@@ -91,13 +90,13 @@ const HeaderComponent = () => {
   }
 
   useEffect(() => {
-    dispatch({ type: 'openMenu', value: false })
+    setActiveChannelMenu([])
+    handleCloseMenu()
     // eslint-disable-next-line
-  }, [activeChannel])
+  }, [activeChannel, pathname])
 
   useEffect(() => {
     setTabsList(MENU_TABS)
-    setActiveChannelMenu([])
     const getActiveTab = matchPath(pathname, {
       path: "/c/:channel/:tabUrlName",
       exact: true,
@@ -124,6 +123,8 @@ const HeaderComponent = () => {
       <SideMenu
         data={activeChannelMenu}
         open={state.openMenu}
+        loading={loadingMenu}
+        closeMenuAction={handleCloseMenu}
         {...{ colorMode }}
       >
         <UserInfo display={'sidebar'} {...{ colorMode, toggleColorMode }} />
@@ -140,7 +141,7 @@ const HeaderComponent = () => {
         justifyContent="space-between"
       >
         <Container alignItems="center" display={visibleMobile}>
-          <MenuIcon open={state.openMenu} setOpen={handleOpenMenu} />
+          <MenuIcon open={state.openMenu} setOpen={handleToggleMenu} />
           <Logo
             mx={2}
             ignoreFallback
@@ -150,7 +151,9 @@ const HeaderComponent = () => {
           <Center height="30px">
             <Divider orientation="vertical" color={colors.grey['700']} />
           </Center>
-          {!state.openSearch && <ChannelSelector />}
+          {!state.openSearch &&
+            <ChannelSelector closeSideMenu={handleCloseMenu} />
+          }
         </Container>
         {!state.openSearch && (
           <Container
@@ -160,7 +163,7 @@ const HeaderComponent = () => {
             alignItems="center"
             display={['none', 'none', 'flex']}
           >
-            <Tabs />
+            <Tabs closeSideMenu={handleCloseMenu} />
           </Container>
         )}
         <Container
@@ -177,7 +180,11 @@ const HeaderComponent = () => {
             search={state.search}
             {...{ colorMode }}
           />
-          <UserInfo display={'menu'} {...{ colorMode, toggleColorMode }} />
+          <UserInfo
+            display={'menu'}
+            closeSideMenu={handleCloseMenu}
+            {...{ colorMode, toggleColorMode }}
+          />
         </Container>
       </HeaderContainer>
     </>

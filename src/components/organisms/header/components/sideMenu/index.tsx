@@ -10,13 +10,14 @@ import { colors } from 'styles'
 import { getChannelNameInPath } from 'utils'
 
 
-const SideMenu = ({ open, colorMode, children, data }: PropsSideMenu) => {
+const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }: PropsSideMenu) => {
   const history = useHistory()
   const { pathname } = useLocation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
 
   const redirectTo = (route) => () => {
     if (!route) return
+    closeMenuAction()
     if (route.indexOf('http') === 0) {
       window?.open(route, '_blank')?.focus()
       return
@@ -66,7 +67,7 @@ const SideMenu = ({ open, colorMode, children, data }: PropsSideMenu) => {
       </ScrollContainer>
       <ChannelsContainer flexDirection="column" my={3} px={'20px'}>
         <Box>
-          {data.length === 0 && (
+          {loading && (
             <Flex alignItems="center" justifyContent="center" py={20}>
               <Spinner size="lg" color={colors.brand.primary[colorMode]} />
             </Flex>
