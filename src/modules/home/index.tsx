@@ -60,7 +60,7 @@ const HomePage = () => {
     variables: {
       filters: {
         featured: true,
-        type: PostType.Video,
+        typeIn: [PostType.Video, PostType.OnDemand],
         sort: {
           field: 'publishedAt',
           direction: SortDirection.Desc,
