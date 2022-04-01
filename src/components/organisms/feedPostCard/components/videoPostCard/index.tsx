@@ -13,26 +13,20 @@ import {
 const VideoPost = ({ ...props }: FeedPostCardProps) => (
 	<VideoContent {...props}>
 		<VideoItemPlay>
-			<Icon width={38} icon='mdi:play'></Icon>
+			<Icon width={38} icon='mdi:play' />
 		</VideoItemPlay>
-		{props.displayViews ? (
-			<>
+		{props.displayViews &&
+			(<>
 				<CountView padding={2}>
-					<Icon width={18} icon='mdi:play'></Icon>
+					<Icon width={18} icon='mdi:play' />
 					{abbreviateNumber(props.views)}
 				</CountView>
-				<MediaLength padding={2}>{props.mediaLength}</MediaLength>
-			</>
-		) : (
-			""
-		)}
-		{props.isExclusive ? (
-			<ExclusiveBlocked />
-		) : "" || props.isGeolocked ? (
-			<GeolockedBlocked />
-		) : (
-			""
-		)}
+				<MediaLength padding={2}>
+					{props.mediaLength}
+				</MediaLength>
+			</>)}
+		{props.isExclusive && <ExclusiveBlocked />}
+		{props.isGeolocked && <GeolockedBlocked />}
 	</VideoContent>
 )
 
