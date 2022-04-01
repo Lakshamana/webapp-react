@@ -4,9 +4,11 @@ import { Icon } from '@iconify/react'
 import { colors } from 'styles'
 import { useThemeStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
 const EmptyState = () => {
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
+  const history = useHistory()
   return (
     <Flex
       py={10}
@@ -23,7 +25,12 @@ const EmptyState = () => {
       <Text pt={2} color={colors.secondaryText[colorMode]}>
         Tente novamente mais tarde
       </Text>
-      <Button mt={2} variant='link' label={t('common.back_to_home')}></Button>
+      <Button
+        mt={2}
+        variant="link"
+        label={t('common.back_to_home')}
+        onClick={() => history.push('home')}
+      ></Button>
     </Flex>
   )
 }
