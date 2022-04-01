@@ -74,7 +74,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
           <Flex>
             <Box display="flex" flexDirection="column">
               <Text
-                fontSize="1rem"
+                fontSize="0.85rem"
                 noOfLines={1}
                 fontWeight="bolder"
                 color={colors.generalText[colorMode]}
@@ -82,7 +82,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
                 {props.title}
               </Text>
               <Text
-                fontSize="0.8rem"
+                fontSize="0.7rem"
                 noOfLines={2}
                 color={colors.secondaryText[colorMode]}
               >
