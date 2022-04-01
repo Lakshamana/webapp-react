@@ -56,6 +56,8 @@ export interface PropsMenuIcon extends SpaceProps {
 
 export interface PropsSideMenu {
   open: boolean;
+  closeMenuAction: any;
+  loading: boolean;
   data: [];
   colorMode: ColorMode;
   children: JSX.Element | JSX.Element[]
