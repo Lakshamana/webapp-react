@@ -8,12 +8,14 @@ import { PropsSideMenu } from '../../types'
 import { SideContainer, ScrollContainer, ChannelsContainer, Circle } from './styles'
 import { colors } from 'styles'
 import { getChannelNameInPath } from 'utils'
+import { useTranslation } from 'react-i18next'
 
 
 const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }: PropsSideMenu) => {
   const history = useHistory()
   const { pathname } = useLocation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
+  const { t } = useTranslation()
 
   const redirectTo = (route) => () => {
     if (!route) return
@@ -57,7 +59,7 @@ const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }:
                         : colors.secondaryText[colorMode]
                     }
                   >
-                    {item.label}
+                    { t(item.label) }
                   </Text>
                 </Container>
               </Link>
