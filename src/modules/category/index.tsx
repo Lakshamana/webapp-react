@@ -72,7 +72,7 @@ const CategoryPage = () => {
           />
         </Flex>
       </HeroBanner>
-      <Flex pb={2} gridGap={10} flexDirection={'column'}>
+      <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'}>
         {loadingCategory && (
           <Box p={sizes.paddingSm} width="100%">
             <Skeleton kind="cards" numberOfCards={4} />

@@ -96,25 +96,31 @@ export const SwiperStyled = styled(Swiper)`
     background: linear-gradient(
       to left,
       transparent,
-      #0f0f0f 90%,
+      #0f0f0f 70%,
       #0f0f0f 100%
     );
     left: 0 !important;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: left;
   }
 
   .swiper-button-next {
     background: linear-gradient(
       to right,
       transparent,
-      #0f0f0f 90%,
+      #0f0f0f 70%,
       #0f0f0f 100%
     );
     right: 0 !important;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: right;
   }
 
   .swiper-button-prev:after,
   .swiper-button-next:after {
-    font-size: 18px !important;
+    font-size: 22px !important;
     font-weight: bold;
   }
 

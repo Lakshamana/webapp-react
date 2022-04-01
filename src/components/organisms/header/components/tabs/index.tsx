@@ -3,9 +3,11 @@ import { Tab } from 'components'
 import { colors } from 'styles'
 import { TabContainer } from './styles'
 import { PropsTabs } from './types'
+import { useTranslation } from 'react-i18next'
 
 const Tabs = ({ closeSideMenu }: PropsTabs) => {
   const { colorMode } = useThemeStore()
+  const { t } = useTranslation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
 
   const handleSelect = (tab) => () => {
@@ -24,7 +26,7 @@ const Tabs = ({ closeSideMenu }: PropsTabs) => {
           color={colors.secondaryText[colorMode]}
           mx={15}
         >
-          {tab.label}
+          { t(tab.label) }
         </Tab>
       ))}
     </TabContainer>

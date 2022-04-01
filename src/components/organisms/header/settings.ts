@@ -1,29 +1,27 @@
-import i18n from 'config/i18n'
-
 export const MENU_TABS = [
   {
     id: 'home',
-    label: i18n.t('header.tabs.home'),
+    label: 'header.tabs.home',
     url: '/c/:channel',
   },
   {
     id: 'live',
-    label: i18n.t('header.tabs.live'),
+    label: 'header.tabs.live',
     url: '/c/:channel/live',
   },
   {
     id: 'feed',
-    label: i18n.t('header.tabs.feed'),
+    label: 'header.tabs.feed',
     url: '/c/:channel/feed',
   },
   {
     id: 'categories',
-    label: i18n.t('header.tabs.categories'),
+    label: 'header.tabs.categories',
     url: '/c/:channel/categories',
   },
   {
     id: 'mylist',
-    label: i18n.t('header.tabs.my_list'),
+    label: 'header.tabs.my_list',
     url: '/c/:channel/mylist',
   }
 ]

@@ -38,7 +38,7 @@ export const QUERY_CATEGORY = gql`
       name
       tags
     }
-    posts(filters: { categories: [$id], type: VIDEO }) {
+    posts(filters: { categories: [$id], typeIn: [VIDEO, ON_DEMAND] }) {
       hasNextPage
       hasPreviousPage
       isFirstPage
