@@ -1,21 +1,33 @@
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { SimpleGrid, Flex } from '@chakra-ui/react'
-import { useThemeStore } from 'services/stores/theme'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { useThemeStore, useChannelsStore } from 'services/stores'
+import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { VideoPostCard, Text } from 'components'
 import { Post } from 'generated/graphql'
 import { VideoPostCardProps, VideosGridProps } from 'types/posts'
-import { colors, breakpoints } from 'styles'
+import { colors, breakpoints, sizes } from 'styles'
 import { Wrapper } from './style'
+import { convertCamelCaseToDash } from 'utils'
 
 const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const { generateImage } = useThumbor()
+  const { colorMode } = useThemeStore()
+  const { activeChannel } = useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [gridItems, setGridItems] = useState<VideoPostCardProps[]>()
-  const { colorMode } = useThemeStore()
 
   const getImageUrl = (post: Post) => {
+    const imageOptions: ThumborParams = {
+      size: {
+        height: 400,
+      },
+    }
+
+    if (isExclusive(post)) {
+      imageOptions.blur = 20
+    }
+
     return generateImage(
       ThumborInstanceTypes.IMAGE,
       post.thumbnail?.imgPath || '',
@@ -28,8 +40,10 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   }
 
   const getPostUrl = (id: string) => {
-    return `post/${id}`
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
   }
+
+  const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
 
   useEffect(() => {
     if (items && items?.length) {
@@ -46,7 +60,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
               ? item.media?.duration
               : undefined,
           countViews: undefined,
-          isExclusive: item.kind === 'exclusive',
+          isExclusive: item.access === 'EXCLUSIVE',
           //TODO: Implement isGeolocked
           isGeolocked: false,
         }
@@ -57,7 +71,12 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   }, [items])
 
   return (
-    <Flex alignItems={'left'} flexDirection={'column'} w={'100vw'}>
+    <Flex
+      paddingX={{ base: sizes.paddingSm, md: sizes.paddingMd }}
+      alignItems={'left'}
+      flexDirection={'column'}
+      w={'100vw'}
+    >
       <Text
         marginBottom={'10px'}
         color={colors.generalText[colorMode]}

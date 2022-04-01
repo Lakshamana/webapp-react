@@ -85,7 +85,7 @@ const HomePage = () => {
   const hasResults =
     billboardData?.billboard?.length ||
     featuredPostsData?.posts?.length ||
-    featuredCategoriesData?.categories?.length
+    featuredCategoriesData?.categories?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
@@ -105,7 +105,7 @@ const HomePage = () => {
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
 
-    const billboardItems = billboardData?.billboards?.reduce((memo, curr) => {
+    const billboardItems = billboardData?.billboards?.rows?.reduce((memo, curr) => {
       const cover = getImageUrl(curr.customization?.mobile?.imgPath)
       const banner = getImageUrl(curr.customization?.desktop?.imgPath)
 

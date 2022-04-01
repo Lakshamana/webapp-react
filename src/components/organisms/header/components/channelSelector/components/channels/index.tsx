@@ -1,37 +1,37 @@
+import { useState } from 'react'
+import { useQuery } from '@apollo/client'
 import { Icon } from '@iconify/react'
 import { Spinner, Flex } from '@chakra-ui/react'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { Channel } from 'generated/graphql'
-import { ChannelIcon } from './components'
-
-import { Container, Text } from 'components'
-
+import { Container, Text, Avatar } from 'components'
 import { ChannelItem, ChannelList } from './styles'
 import { colors } from 'styles'
-
 import { PropsChannels } from './types'
+import { QUERY_MEDIA } from 'services/graphql'
 
 const Channels = ({
   selected,
   onSelect,
   colorMode,
   channels,
+  mediasId,
   isLoading,
 }: PropsChannels) => {
   const { generateImage } = useThumbor()
+  const [medias, setMedias] = useState<any[]>([''])
 
-  const generateChannelImage = (channel: Channel) => {
-    const imgPath =
-      channel?.customization?.logo && channel?.customization?.logo[colorMode]
-    const channel_img = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      imgPath as string,
-      {
-        size: { height: 80 },
-      }
-    )
-    return channel_img
-  }
+  const { loading, data } = useQuery(QUERY_MEDIA(mediasId), {
+    onCompleted: (result) => {
+      const arr = Object.values(result)
+      setMedias(arr)
+    },
+  })
+
+  const generateChannelImage = (path) =>
+    generateImage(ThumborInstanceTypes.IMAGE, path, {
+      size: { height: 80 },
+    })
 
   return (
     <Container flexDirection="column" width={1}>
@@ -43,9 +43,10 @@ const Channels = ({
         )}
         {channels &&
           channels.map((channel: Channel) => {
-            const mediaId =
-              channel.customization?.icon &&
-              channel.customization?.icon[colorMode]
+            const itemMedia = medias?.find(
+              (el) => el.id === channel.customization?.thumbnail
+            )
+            const itemImage = generateChannelImage(itemMedia?.imgPath)
 
             return (
               <ChannelItem
@@ -64,10 +65,14 @@ const Channels = ({
                       />
                     )}
                   </Container>
-                  <ChannelIcon
-                    mediaId={mediaId || ''}
-                    channelName={channel.name}
-                  ></ChannelIcon>
+                  <Avatar
+                    ml={1}
+                    name={channel.name}
+                    borderRadius={'8px'}
+                    height={10}
+                    width={10}
+                    src={itemImage}
+                  />
                   <Text
                     ml={3}
                     color={colors.generalText[colorMode]}

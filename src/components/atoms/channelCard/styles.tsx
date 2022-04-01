@@ -1,13 +1,15 @@
 import styled from 'styled-components'
+import { ChannelProps } from 'types/channel'
 import { breakpoints } from 'styles'
 
-export const ChannelContent = styled.div`
+export const ChannelContent = styled.div<ChannelProps>`
   display: flex;
   width: 100%;
   padding-top: 56.25%;
   height: auto;
   position: relative;
   border-radius: 4px;
+  ${({ image }: ChannelProps) => `background: url('${image}');`}
   background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
   cursor: pointer;
   background-position: center;

@@ -166,7 +166,7 @@ const PT_BR = {
         home: 'Início',
         live: 'Ao vivo',
         feed: 'Feed',
-        collections: 'Categorias',
+        categories: 'Categorias',
         my_list: 'Minha lista',
         settings: 'Ajustes',
         tags: 'Tags',
@@ -204,13 +204,17 @@ const PT_BR = {
           old: 'Mais Antiga',
         }
       },
-      collection: {
+      categories: {
         action: 'Ação',
         drama: 'Drama',
         family: 'Família',
         watch_now: 'Assistir agora',
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
+      },
+      category: {
+        videos: 'Vídeos',
+        categories: 'Categorias'
       },
       my_list: {
         my_list: 'Minha Lista',

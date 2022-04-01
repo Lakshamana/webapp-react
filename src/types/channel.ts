@@ -8,5 +8,4 @@ export interface ChannelProps {
     isExclusive?: boolean;
     onClick?: any;
     thumbnail?: string;
-    mediaId?: string;
   }

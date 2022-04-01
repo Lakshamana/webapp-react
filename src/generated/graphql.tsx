@@ -55,6 +55,12 @@ export type Account = {
   username?: Maybe<Scalars['String']>;
 };
 
+export type AccountActivated = {
+  __typename?: 'AccountActivated';
+  activated: Scalars['Boolean'];
+  activationCode: Scalars['String'];
+};
+
 export type AccountGdprLgpd = {
   __typename?: 'AccountGdprLgpd';
   accepted: Scalars['Boolean'];
@@ -99,6 +105,11 @@ export type AccountStatus = {
   block_temp?: Maybe<Scalars['DateTime']>;
   gdpr?: Maybe<Scalars['Boolean']>;
   pending_activation?: Maybe<Scalars['Boolean']>;
+};
+
+export type ActivateAccount = {
+  activationCode: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type AddComment = {
@@ -162,6 +173,7 @@ export type Billboard = {
   __typename?: 'Billboard';
   actions: Array<BillboardActionsOutput>;
   channel: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
   customization: BillboardCustomizationOutput;
   delay: Scalars['Int'];
   deleted: Scalars['Boolean'];
@@ -696,6 +708,9 @@ export type FindAllSubjectsQueryParamsDto = {
 };
 
 export type FindBillboardsInput = {
+  page?: Maybe<Scalars['Float']>;
+  pageSize?: Maybe<Scalars['Float']>;
+  sortBy?: Maybe<Scalars['String']>;
   target?: Maybe<Scalars['String']>;
 };
 
@@ -914,6 +929,7 @@ export type Menu = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  activateAccount: AccountActivated;
   activeAccount: Account;
   addComment: Comment;
   addReaction: Array<ReactionsAggregate>;
@@ -980,6 +996,7 @@ export type Mutation = {
   removeRole: RolesDto;
   removeSubject: SubjectDto;
   removeTag: TagOutput;
+  resendActivateAccount: AccountActivated;
   resetPassword: EmailSent;
   sendEmail: ResponseEmailSendedDto;
   signIn: SingIn;
@@ -1024,6 +1041,11 @@ export type Mutation = {
   updateUpload: ResponseUploadOutput;
   updateVideoPost: Post;
   verifyMail: VerifyMail;
+};
+
+
+export type MutationActivateAccountArgs = {
+  payload: ActivateAccount;
 };
 
 
@@ -1353,6 +1375,11 @@ export type MutationRemoveSubjectArgs = {
 
 export type MutationRemoveTagArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationResendActivateAccountArgs = {
+  payload: ResendActivateAccount;
 };
 
 
@@ -1713,9 +1740,22 @@ export enum OrganizationSortFields {
   Name = 'name'
 }
 
+export type PaginatedBillboardsOutput = {
+  __typename?: 'PaginatedBillboardsOutput';
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  isFirstPage: Scalars['Boolean'];
+  isLastPage: Scalars['Boolean'];
+  page: Scalars['Float'];
+  pageCount: Scalars['Float'];
+  pageNumberIsGood: Scalars['Boolean'];
+  pageSize: Scalars['Float'];
+  rows: Array<Billboard>;
+  total: Scalars['Float'];
+};
+
 export type PaginatedCategoriesOutput = {
   __typename?: 'PaginatedCategoriesOutput';
-  count: Scalars['Float'];
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   isFirstPage: Scalars['Boolean'];
@@ -1725,6 +1765,21 @@ export type PaginatedCategoriesOutput = {
   pageNumberIsGood: Scalars['Boolean'];
   pageSize: Scalars['Float'];
   rows: Array<Category>;
+  total: Scalars['Float'];
+};
+
+export type PaginatedMediaUnion = {
+  __typename?: 'PaginatedMediaUnion';
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  isFirstPage: Scalars['Boolean'];
+  isLastPage: Scalars['Boolean'];
+  page: Scalars['Float'];
+  pageCount: Scalars['Float'];
+  pageNumberIsGood: Scalars['Boolean'];
+  pageSize: Scalars['Float'];
+  rows: Array<MediaUnion>;
+  total: Scalars['Float'];
 };
 
 export type PaginationArgs = {
@@ -1785,6 +1840,7 @@ export type PlaylistOutput = {
   __typename?: 'PlaylistOutput';
   channel: Scalars['ID'];
   contents: Array<Scalars['ID']>;
+  createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   posts: Array<Scalars['ID']>;
   slug: Scalars['String'];
@@ -1956,7 +2012,7 @@ export type Query = {
   accountsCount: ResponseAccountsCount;
   accountsGdprLgpd: Array<AccountGdprLgpd>;
   billboard: Billboard;
-  billboards: Array<Billboard>;
+  billboards: PaginatedBillboardsOutput;
   categories: PaginatedCategoriesOutput;
   category: Category;
   channel: Channel;
@@ -1980,7 +2036,7 @@ export type Query = {
   me: Me;
   media: MediaUnion;
   mediaCount: Scalars['Int'];
-  medias: Array<MediaUnion>;
+  medias: PaginatedMediaUnion;
   menu: Menu;
   menus: Array<Menu>;
   organization: Organization;
@@ -2302,6 +2358,10 @@ export enum ReportType {
   User = 'USER'
 }
 
+export type ResendActivateAccount = {
+  id: Scalars['ID'];
+};
+
 export type ResponseAccountsCount = {
   __typename?: 'ResponseAccountsCount';
   count: Scalars['Float'];
@@ -2467,7 +2527,6 @@ export type TagOutput = {
 
 export type TagsOutput = {
   __typename?: 'TagsOutput';
-  count: Scalars['Float'];
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   isFirstPage: Scalars['Boolean'];
@@ -2477,6 +2536,7 @@ export type TagsOutput = {
   pageNumberIsGood: Scalars['Boolean'];
   pageSize: Scalars['Float'];
   rows: Array<TagOutput>;
+  total: Scalars['Float'];
 };
 
 export type UpdateAccountGdprLgpdInput = {
@@ -2820,6 +2880,13 @@ export type UpdateMyProfileMutationVariables = Exact<{
 
 export type UpdateMyProfileMutation = { __typename?: 'Mutation', updateMyProfile: { __typename?: 'Profile', address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, gender?: Maybe<string>, phone?: Maybe<string>, locale?: Maybe<string> } };
 
+export type ActivateAccountMutationVariables = Exact<{
+  payload: ActivateAccount;
+}>;
+
+
+export type ActivateAccountMutation = { __typename?: 'Mutation', activateAccount: { __typename?: 'AccountActivated', activated: boolean } };
+
 export type RefreshFirebaseTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2901,21 +2968,21 @@ export type GetBillboardsQueryVariables = Exact<{
 }>;
 
 
-export type GetBillboardsQuery = { __typename?: 'Query', billboards: Array<{ __typename?: 'Billboard', id: string, title: string, description: string, delay: number, sort: number, actions: Array<{ __typename?: 'BillboardActionsOutput', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>, customization: { __typename?: 'BillboardCustomizationOutput', desktop: { __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }, mobile: { __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> } } }> };
+export type GetBillboardsQuery = { __typename?: 'Query', billboards: { __typename?: 'PaginatedBillboardsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Billboard', delay: number, sort: number, actions: Array<{ __typename?: 'BillboardActionsOutput', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>, customization: { __typename?: 'BillboardCustomizationOutput', desktop: { __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }, mobile: { __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> } } }> } };
 
 export type GetCategoriesQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', count: number, hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string> }> }> } };
+export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
-export type GetCategoryQueryVariables = Exact<{
+export type GetCategoryWithPostsQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+export type GetCategoryWithPostsQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, tag?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }, posts: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, featured: boolean, geofence: any, kind: string, slug: string, status: string, tags: Array<string>, type: string, publishedAt: any, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }> }> };
 
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
@@ -2933,13 +3000,6 @@ export type CommentsQueryVariables = Exact<{
 
 
 export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, countComments: number, description: string, countUpVotes: number, parent?: Maybe<string>, author?: Maybe<{ __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> }> }> };
-
-export type MediaQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type MediaQuery = { __typename?: 'Query', media: { __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', thumbnailPath?: Maybe<string> } };
 
 export type MenusQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2968,11 +3028,11 @@ export type GetPostQueryVariables = Exact<{
 export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, engagedUsers: Array<{ __typename?: 'EngagedUser', username: string }>, categories: Array<{ __typename?: 'Category', id: string }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostsQueryVariables = Exact<{
-  filter?: Maybe<PostFilter>;
+  filters?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', access: string, description: string, geofence: any, kind: string, id: string, slug: string, status: string, tags: Array<string>, title: string, type: string, publishedAt: any, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> } }> };
+export type GetPostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, featured: boolean, geofence: any, kind: string, slug: string, status: string, tags: Array<string>, type: string, publishedAt: any, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }> }> };
 
 
 export const CreateAccountDocument = gql`
@@ -3277,6 +3337,45 @@ export function useUpdateMyProfileMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateMyProfileMutationHookResult = ReturnType<typeof useUpdateMyProfileMutation>;
 export type UpdateMyProfileMutationResult = Apollo.MutationResult<UpdateMyProfileMutation>;
 export type UpdateMyProfileMutationOptions = Apollo.BaseMutationOptions<UpdateMyProfileMutation, UpdateMyProfileMutationVariables>;
+export const ActivateAccountDocument = gql`
+    mutation ActivateAccount($payload: ActivateAccount!) {
+  activateAccount(payload: $payload) {
+    activated
+  }
+}
+    `;
+export type ActivateAccountMutationFn = Apollo.MutationFunction<ActivateAccountMutation, ActivateAccountMutationVariables>;
+export type ActivateAccountComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<ActivateAccountMutation, ActivateAccountMutationVariables>, 'mutation'>;
+
+    export const ActivateAccountComponent = (props: ActivateAccountComponentProps) => (
+      <ApolloReactComponents.Mutation<ActivateAccountMutation, ActivateAccountMutationVariables> mutation={ActivateAccountDocument} {...props} />
+    );
+    
+
+/**
+ * __useActivateAccountMutation__
+ *
+ * To run a mutation, you first call `useActivateAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActivateAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [activateAccountMutation, { data, loading, error }] = useActivateAccountMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useActivateAccountMutation(baseOptions?: Apollo.MutationHookOptions<ActivateAccountMutation, ActivateAccountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ActivateAccountMutation, ActivateAccountMutationVariables>(ActivateAccountDocument, options);
+      }
+export type ActivateAccountMutationHookResult = ReturnType<typeof useActivateAccountMutation>;
+export type ActivateAccountMutationResult = Apollo.MutationResult<ActivateAccountMutation>;
+export type ActivateAccountMutationOptions = Apollo.BaseMutationOptions<ActivateAccountMutation, ActivateAccountMutationVariables>;
 export const RefreshFirebaseTokenDocument = gql`
     mutation RefreshFirebaseToken {
   refreshToken {
@@ -3804,27 +3903,33 @@ export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVa
 export const GetBillboardsDocument = gql`
     query GetBillboards($filter: FindBillboardsInput) {
   billboards(filter: $filter) {
-    id
-    title
-    description
-    actions {
-      bgColor
-      borderColor
-      icon
-      label
-      route
-      textColor
-    }
-    customization {
-      desktop {
-        imgPath
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageNumberIsGood
+    pageSize
+    rows {
+      actions {
+        bgColor
+        borderColor
+        icon
+        label
+        route
+        textColor
       }
-      mobile {
-        imgPath
+      customization {
+        desktop {
+          imgPath
+        }
+        mobile {
+          imgPath
+        }
       }
+      delay
+      sort
     }
-    delay
-    sort
   }
 }
     `;
@@ -3865,7 +3970,6 @@ export type GetBillboardsQueryResult = Apollo.QueryResult<GetBillboardsQuery, Ge
 export const GetCategoriesDocument = gql`
     query GetCategories($filter: CategoryFilter) {
   categories(filter: $filter) {
-    count
     hasNextPage
     hasPreviousPage
     isFirstPage
@@ -3875,6 +3979,7 @@ export const GetCategoriesDocument = gql`
     pageSize
     rows {
       access
+      parentId
       createdAt
       customization {
         desktop {
@@ -3888,8 +3993,20 @@ export const GetCategoriesDocument = gql`
         }
       }
       children {
+        parentId
         description
         featuredAt
+        customization {
+          desktop {
+            imgPath
+          }
+          mobile {
+            imgPath
+          }
+          thumbnail {
+            imgPath
+          }
+        }
         geoFence
         id
         name
@@ -3940,9 +4057,10 @@ export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
-export const GetCategoryDocument = gql`
-    query GetCategory($id: String!) {
+export const GetCategoryWithPostsDocument = gql`
+    query GetCategoryWithPosts($id: String!) {
   category(id: $id) {
+    id
     access
     createdAt
     customization {
@@ -3977,42 +4095,64 @@ export const GetCategoryDocument = gql`
     name
     tag
   }
+  posts(filters: {category: $id}) {
+    id
+    access
+    title
+    description
+    featured
+    geofence
+    kind
+    slug
+    status
+    tags
+    thumbnail {
+      imgPath
+    }
+    type
+    publishedAt
+    media {
+      ... on MediaVideo {
+        duration
+      }
+    }
+  }
 }
     `;
-export type GetCategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryQuery, GetCategoryQueryVariables>, 'query'> & ({ variables: GetCategoryQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type GetCategoryWithPostsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables>, 'query'> & ({ variables: GetCategoryWithPostsQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const GetCategoryComponent = (props: GetCategoryComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryQuery, GetCategoryQueryVariables> query={GetCategoryDocument} {...props} />
+    export const GetCategoryWithPostsComponent = (props: GetCategoryWithPostsComponentProps) => (
+      <ApolloReactComponents.Query<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables> query={GetCategoryWithPostsDocument} {...props} />
     );
     
 
 /**
- * __useGetCategoryQuery__
+ * __useGetCategoryWithPostsQuery__
  *
- * To run a query within a React component, call `useGetCategoryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCategoryWithPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryWithPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryQuery({
+ * const { data, loading, error } = useGetCategoryWithPostsQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetCategoryQuery(baseOptions: Apollo.QueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+export function useGetCategoryWithPostsQuery(baseOptions: Apollo.QueryHookOptions<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+        return Apollo.useQuery<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables>(GetCategoryWithPostsDocument, options);
       }
-export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+export function useGetCategoryWithPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+          return Apollo.useLazyQuery<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables>(GetCategoryWithPostsDocument, options);
         }
-export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
-export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
-export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
+export type GetCategoryWithPostsQueryHookResult = ReturnType<typeof useGetCategoryWithPostsQuery>;
+export type GetCategoryWithPostsLazyQueryHookResult = ReturnType<typeof useGetCategoryWithPostsLazyQuery>;
+export type GetCategoryWithPostsQueryResult = Apollo.QueryResult<GetCategoryWithPostsQuery, GetCategoryWithPostsQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFindAllFilter!) {
   channels(filter: $filter) {
@@ -4142,52 +4282,6 @@ export function useCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
 export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
 export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
-export const MediaDocument = gql`
-    query Media($id: String!) {
-  media(id: $id) {
-    ... on MediaPhoto {
-      imgPath
-    }
-    ... on MediaVideo {
-      thumbnailPath
-    }
-  }
-}
-    `;
-export type MediaComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<MediaQuery, MediaQueryVariables>, 'query'> & ({ variables: MediaQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const MediaComponent = (props: MediaComponentProps) => (
-      <ApolloReactComponents.Query<MediaQuery, MediaQueryVariables> query={MediaDocument} {...props} />
-    );
-    
-
-/**
- * __useMediaQuery__
- *
- * To run a query within a React component, call `useMediaQuery` and pass it any options that fit your needs.
- * When your component renders, `useMediaQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMediaQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useMediaQuery(baseOptions: Apollo.QueryHookOptions<MediaQuery, MediaQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MediaQuery, MediaQueryVariables>(MediaDocument, options);
-      }
-export function useMediaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MediaQuery, MediaQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MediaQuery, MediaQueryVariables>(MediaDocument, options);
-        }
-export type MediaQueryHookResult = ReturnType<typeof useMediaQuery>;
-export type MediaLazyQueryHookResult = ReturnType<typeof useMediaLazyQuery>;
-export type MediaQueryResult = Apollo.QueryResult<MediaQuery, MediaQueryVariables>;
 export const MenusDocument = gql`
     query Menus {
   menus {
@@ -4415,22 +4509,28 @@ export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
 export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
 export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
 export const GetPostsDocument = gql`
-    query GetPosts($filter: PostFilter) {
-  posts(filters: $filter) {
+    query GetPosts($filters: PostFilter) {
+  posts(filters: $filters) {
+    id
     access
+    title
     description
+    featured
     geofence
     kind
-    id
     slug
     status
     tags
     thumbnail {
       imgPath
     }
-    title
     type
     publishedAt
+    media {
+      ... on MediaVideo {
+        duration
+      }
+    }
   }
 }
     `;
@@ -4453,7 +4553,7 @@ export type GetPostsComponentProps = Omit<ApolloReactComponents.QueryComponentOp
  * @example
  * const { data, loading, error } = useGetPostsQuery({
  *   variables: {
- *      filter: // value for 'filter'
+ *      filters: // value for 'filters'
  *   },
  * });
  */

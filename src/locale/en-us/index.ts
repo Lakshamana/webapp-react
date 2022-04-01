@@ -167,7 +167,7 @@ const EN_US = {
         home: 'Home',
         live: 'Live',
         feed: 'Feed',
-        collections: 'Categories',
+        categories: 'Categories',
         my_list: 'My List',
         settings: 'Settings',
         tags: 'Tags',
@@ -205,13 +205,17 @@ const EN_US = {
           old: 'Most Old',
         }
       },
-      collection: {
+      categories: {
         action: 'Action',
         drama: 'Drama',
         family: 'Family',
         watch_now: 'Watch Now',
         my_list: 'My List',
         more_categories: 'More categories',
+      },
+      category: {
+        videos: 'Videos',
+        categories: 'Categories'
       },
       my_list: {
         my_list: 'My List',

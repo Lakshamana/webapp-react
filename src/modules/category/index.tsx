@@ -11,6 +11,7 @@ import {
   Skeleton,
   CategoriesGrid,
   Button,
+  PostsGrid,
 } from 'components'
 import { HeroBannerProps } from 'types/common'
 import { sizes, colors } from 'styles'
@@ -50,7 +51,8 @@ const CategoryPage = () => {
     // eslint-disable-next-line
   }, [categoryData])
 
-  const hasResults = !!categoryData?.category?.children?.length
+  const hasResults =
+    !!categoryData?.category?.children?.length || !!categoryData?.posts?.length
 
   const isEmpty = !loadingCategory && !hasResults
 
@@ -69,16 +71,17 @@ const CategoryPage = () => {
           />
         </Flex>
       </HeroBanner>
-      <Flex pb={10} gridGap={10} flexDirection={'column'}>
+      <Flex pb={2} gridGap={10} flexDirection={'column'}>
         {loadingCategory && (
           <Box p={sizes.paddingSm} width="100%">
             <Skeleton kind="cards" numberOfCards={4} />
           </Box>
         )}
         {!!categoryData?.category?.children?.length && (
-          <CategoriesGrid
-            items={categoryData?.category?.children}
-          />
+          <CategoriesGrid sectionTitle={t("page.category.categories")} items={categoryData?.category?.children} />
+        )}
+        {!!categoryData?.posts?.length && (
+          <PostsGrid sectionTitle={t("page.category.videos")} items={categoryData?.posts}></PostsGrid>
         )}
         {/* TODO: Built a empty state component */}
         {isEmpty && (
