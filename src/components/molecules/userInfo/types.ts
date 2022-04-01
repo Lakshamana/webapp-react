@@ -15,5 +15,6 @@ export interface PropsUserInfo {
   display: 'sidebar' | 'menu';
   delimited?: boolean;
   colorMode: "light" | "dark";
+  closeSideMenu?: any;
   toggleColorMode: any;
 }
