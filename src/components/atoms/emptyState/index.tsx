@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { Flex } from '@chakra-ui/layout'
+import { Flex, Center } from '@chakra-ui/layout'
 import { Icon } from '@iconify/react'
 import { useThemeStore, useChannelsStore } from 'services/stores'
 import { Text, Button } from 'components'
@@ -29,14 +29,16 @@ const EmptyState = () => {
       <Text pt={2} color={colors.secondaryText[colorMode]}>
         {t('common.try_again_later')}
       </Text>
-      <Button
-        mt={2}
-        variant="link"
-        label={t('common.back_to_home')}
-        onClick={() =>
-          history.push(`/c/${convertCamelCaseToDash(activeChannel?.name)}`)
-        }
-      />
+      <Center>
+        <Button
+          mt={2}
+          variant="link"
+          label={t('common.back_to_home')}
+          onClick={() =>
+            history.push(`/c/${convertCamelCaseToDash(activeChannel?.name)}`)
+          }
+        />
+      </Center>
     </Flex>
   )
 }
