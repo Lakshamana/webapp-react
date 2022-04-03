@@ -9,6 +9,7 @@ export interface SelectProps extends SelectPackageProps {
   spacing?: any
   font?: any
   options: Array<Option>
+  defaultValue?: any
 }
 
 export interface OptionsProps {

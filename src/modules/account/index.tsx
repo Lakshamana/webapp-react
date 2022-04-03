@@ -242,7 +242,11 @@ const AccountPage = () => {
           <SingleConfiguration
             text={t('page.account.language_selection')}
             children={
-              <Select options={LANGUAGES} onChange={handleLanguageChange} />
+              <Select
+                options={LANGUAGES}
+                onChange={handleLanguageChange}
+                defaultValue={i18n.language}
+              />
             }
             {...{ colorMode }}
           />
