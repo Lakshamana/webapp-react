@@ -20,7 +20,7 @@ const AddReactionButton = () => {
           justifyItems={'center'}
         >
           {availableReactions.map((reaction) => (
-            <EmoticonReaction key={`${reaction.name}-popover`} p={1} m={1}>
+            <EmoticonReaction key={`${reaction.name}-popover`}>
               {reaction.value}
             </EmoticonReaction>
           ))}
