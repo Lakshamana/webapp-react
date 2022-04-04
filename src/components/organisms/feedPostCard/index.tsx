@@ -2,8 +2,10 @@ import { useTranslation } from 'react-i18next'
 import { Text, ReactionBar, Participants } from 'components'
 import { SetMediaType } from './components'
 import { useThemeStore } from 'services/stores/theme'
+import { useChannelsStore } from 'services/stores'
 import { FeedPostCardProps, defaultProps } from './types'
-import { convertCountMessage } from 'utils'
+import { convertCountMessage, convertCamelCaseToDash } from 'utils'
+import { Link } from 'react-router-dom'
 import { colors } from 'styles'
 import {
   FeedContent,
@@ -19,6 +21,11 @@ import {
 const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { activeChannel } = useChannelsStore()
+
+  const getPostUrl = (id: string) => {
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
+  }
 
   const translateMapper = [
     'page.feed.no_comments',
@@ -31,21 +38,25 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
       <CardContent>
         {
           props.type !== 'POLL' &&
-          <SetMediaType {...props} />
+          <Link to={getPostUrl(props.id)}>
+            <SetMediaType {...props} />
+          </Link>
         }
-        <CardHeader>
-          <Text
-            kind="headline"
-            fontSize={22}
-            fontWeight={'Bold'}
-            color={colors.generalText[colorMode]}
-          >
-            {props.postTitle}
-          </Text>
-          <Date fontSize="12px" fontWeight={'Bold'} marginRight={3}>
-            {props.date}
-          </Date>
-        </CardHeader>
+        <Link to={getPostUrl(props.id)}>
+          <CardHeader>
+            <Text
+              kind="headline"
+              fontSize={22}
+              fontWeight={'Bold'}
+              color={colors.generalText[colorMode]}
+            >
+              {props.postTitle}
+            </Text>
+            <Date fontSize="12px" fontWeight={'Bold'} marginRight={3}>
+              {props.date}
+            </Date>
+          </CardHeader>
+        </Link>
         <CardDescription fontSize={15}>
           {props.postDescription}
         </CardDescription>
