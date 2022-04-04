@@ -42,7 +42,8 @@ const FeedPage = () => {
 
   useEffect(() => {
     if (!dataPosts) return
-    setHasMore(dataPosts.posts.hasNextPage)
+    // setHasMore(dataPosts.posts.hasNextPage)
+    setHasMore(true)
     convertDataPost(dataPosts.posts.rows)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
@@ -143,9 +144,11 @@ const FeedPage = () => {
   }
 
   const loadingItems = (number) => (
-    <Box mt={2}>
-      <Skeleton kind={'posts'} numberOfCards={number} />
-    </Box>
+    <Center width="100%" height={'100%'} flexDirection={'column'}>
+      <Box mt={2}>
+        <Skeleton kind={'posts'} numberOfCards={number} />
+      </Box>
+    </Center>
   )
 
   return (
