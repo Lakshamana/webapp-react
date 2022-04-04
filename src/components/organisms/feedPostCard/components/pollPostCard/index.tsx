@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react"
 import { Divider, Flex } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
 import { Text } from "components"
-import { abbreviateNumber } from "../../utils"
+import { abbreviateNumber } from "utils"
 import { FeedPostCardProps } from "../../types"
 import { colors } from "styles"
 import {
@@ -17,9 +17,9 @@ const PollPost = ({ ...props }: FeedPostCardProps) => {
 	const { t } = useTranslation()
 	return (
 		<PollContent paddingX={3} paddingY={2}>
-			{props.itensQuestions && props.itensQuestions.map(question=>(
+			{props.itensQuestions && props.itensQuestions.map(question => (
 				<PollItem {...props} padding={2} marginBottom={2} key={question.id}>
-					<ProgressBar { ...question } />
+					<ProgressBar {...question} />
 					<PollItemText>
 						<Text kind='headline' color={colors.white}>{question.item}</Text>
 					</PollItemText>
