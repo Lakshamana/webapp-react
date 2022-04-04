@@ -36,6 +36,8 @@ const HomePage = () => {
 
   const { activeChannel } = useChannelsStore()
   const [billboardItems, setBillboardItems] = useState([])
+  const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
+    useState(true)
   const [categoriesWithChildren, setCategoriesWithChildren] =
     useState<Category[]>()
 
@@ -83,21 +85,16 @@ const HomePage = () => {
     skip: !activeChannel,
   })
 
-  const [getCategories, { data: categoriesData, loading: loadingCategories }] =
-    useLazyQuery(QUERY_CATEGORIES, {
-      variables: {
-        filter: {},
-      },
-      onCompleted: () => {
-        const categoriesWithChildren = categoriesData?.categories.rows.filter(
-          (category: Category) => category.children?.length
-        )
-        setCategoriesWithChildren(categoriesWithChildren)
-      },
-    })
-
-  const isHomeDisplayingCategories =
-    activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES
+  const {
+    data: categoriesData,
+    loading: loadingCategories,
+    refetch: refetchCategories,
+  } = useQuery(QUERY_CATEGORIES, {
+    variables: {
+      filter: {},
+    },
+    skip: !isHomeDisplayingCategories,
+  })
 
   const isLoading =
     loadingBillboard ||
@@ -114,6 +111,11 @@ const HomePage = () => {
   const isEmpty = !isLoading && !hasResults
 
   useEffect(() => {
+    setPageTitle(t('header.tabs.home'))
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
     if (activeChannel) {
       refetchBillboard()
       refetchFeaturedPosts()
@@ -123,7 +125,11 @@ const HomePage = () => {
   }, [activeChannel])
 
   useEffect(() => {
-    if (isHomeDisplayingCategories) getCategories()
+    setIsHomeDisplayingCategories(
+      activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
+    )
+    if (isHomeDisplayingCategories) refetchCategories()
+
     //eslint-disable-next-line
   }, [activeChannelConfig])
 
@@ -132,8 +138,6 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    setPageTitle(t('header.tabs.home'))
-
     const billboardItems = billboardData?.billboards?.rows?.reduce(
       (memo, curr) => {
         const cover = getImageUrl(curr.customization?.mobile?.imgPath)
@@ -159,6 +163,14 @@ const HomePage = () => {
 
     // eslint-disable-next-line
   }, [billboardData])
+
+  useEffect(() => {
+    const categoriesWithChildren = categoriesData?.categories.rows.filter(
+      (category: Category) => category.children?.length
+    )
+    setCategoriesWithChildren(categoriesWithChildren)
+    // eslint-disable-next-line
+  }, [categoriesData])
 
   const renderBillboard = () => (
     <BillboardScroller items={billboardItems} customButtons={true} />
