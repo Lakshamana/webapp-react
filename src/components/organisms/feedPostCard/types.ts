@@ -10,6 +10,8 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	postDescription: string
 	date: string
 	postUrl?: string
+	countReactions: number
+	reactions: Array<reactions>
 	countMessages: number
 	hasActivity: boolean
 	coverImage: string
@@ -28,6 +30,11 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	isExclusive: boolean
 	isGeolocked: boolean
 	itensQuestions?: Array<any | itensQuestions>
+}
+
+export interface reactions {
+	count: number,
+	name: string
 }
 
 export interface itensQuestions {
