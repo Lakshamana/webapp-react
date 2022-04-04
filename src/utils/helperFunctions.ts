@@ -116,7 +116,7 @@ export const abbreviateNumber = (value: number) => {
   return shortValueToString + suffixes[suffixNum];
 }
 
-export function convertCountMessage(t, data, translateMapper) {
+export function convertCountMessage(t: any, data: number, translateMapper: Array<string>) {
   const countMessages = abbreviateNumber(data)
   if (Number(countMessages) === 0) return t(translateMapper[0])
   const defineMessage = Number(countMessages) < 9
