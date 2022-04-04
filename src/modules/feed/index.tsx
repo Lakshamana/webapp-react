@@ -10,16 +10,16 @@ import { useChannelsStore, useCommonStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, LoadingItem } from "components"
 
 const FeedPage = () => {
-  const LIMIT_RESULTS = 4
+  const LIMIT_RESULTS = 5
   const { t } = useTranslation()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
   const [filterBy, SetFilterBy] = useState()
   const [listOfPosts, setListOfPosts] = useState([])
-  const [noPosts, setNoPosts] = useState(false)
+  const [totalPosts, setTotalPosts] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-  const [loadPosts, { data: dataPosts }] = useLazyQuery(QUERY_POSTS, {
+  const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
     fetchPolicy: "network-only"
   })
 
@@ -40,21 +40,18 @@ const FeedPage = () => {
 
   useEffect(() => {
     if (!dataPosts) return
-    if (dataPosts?.posts?.rows.length === 0) {
-      listOfPosts.length > 0
-        ? setHasMore(false)
-        : setNoPosts(true)
-      return
-    }
+    setHasMore(dataPosts.posts.hasNextPage)
+    setTotalPosts(dataPosts.posts.total)
     convertDataPost(dataPosts.posts.rows)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
 
-  const getPosts = (skip: number = 0) => {
+  const getPosts = (page: number = 1) => {
     loadPosts({
       context: { headers: { channel: activeChannel?.id } },
       variables: {
         filter: {
+          page,
           pageSize: LIMIT_RESULTS,
           sortBy: getSortByFilter()
         }
@@ -62,7 +59,10 @@ const FeedPage = () => {
     })
   }
 
-  const loadMorePosts = () => getPosts(listOfPosts.length)
+  const loadMorePosts = () => {
+    if (hasMore) getPosts(dataPosts.posts.page + 1)
+  }
+
   const getSortByFilter = () => filterBy !== 'old' ? "publishedAt.asc" : "publishedAt.desc"
 
   const getUrl = (obj) =>
@@ -129,12 +129,12 @@ const FeedPage = () => {
     SetFilterBy(value)
   }
 
-  if (noPosts) {
-    return <EmptyState />
+  if (loadingPosts && listOfPosts.length === 0) {
+    return <LoadingItem />
   }
 
-  if (listOfPosts.length === 0) {
-    return <LoadingItem />
+  if (totalPosts === 0) {
+    return <EmptyState />
   }
 
   return (
