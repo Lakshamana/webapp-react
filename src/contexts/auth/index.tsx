@@ -16,7 +16,6 @@ import {
 import {
   signOutFB,
   authWithCustomToken,
-  refreshFirebaseToken,
   isUserLoggedFB,
 } from 'services/firebase'
 import {
@@ -189,16 +188,7 @@ export const AuthProvider = ({ children }) => {
   }, [accessToken])
 
   useEffect(() => {
-    if (accessToken && !isUserLoggedFB()) {
-      if (firebaseToken) authWithCustomToken()
-      else {
-        refreshFirebaseToken().then(({ data }: any) => {
-          const newFirebaseToken =
-            data?.data?.refreshToken?.refreshToken?.firebaseToken
-          saveData(FIREBASE_TOKEN, newFirebaseToken)
-        })
-      }
-    }
+    if (accessToken && !isUserLoggedFB()) authWithCustomToken()
     //eslint-disable-next-line
   }, [firebaseToken])
 
