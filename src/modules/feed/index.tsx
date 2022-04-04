@@ -42,8 +42,7 @@ const FeedPage = () => {
 
   useEffect(() => {
     if (!dataPosts) return
-    // setHasMore(dataPosts.posts.hasNextPage)
-    setHasMore(true)
+    setHasMore(dataPosts.posts.hasNextPage)
     convertDataPost(dataPosts.posts.rows)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
