@@ -3,7 +3,7 @@ import { Text, ReactionBar, Participants } from 'components'
 import { SetMediaType } from './components'
 import { useThemeStore } from 'services/stores/theme'
 import { FeedPostCardProps, defaultProps } from './types'
-import { abbreviateNumber } from './utils'
+import { convertCountMessage } from 'utils'
 import { colors } from 'styles'
 import {
   FeedContent,
@@ -13,21 +13,18 @@ import {
   CardDescription,
   CardReactions,
   CardFooter,
-  CountMessage,
+  CountComment
 } from './style'
 
 const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
 
-  const convertCountMessage = () => {
-    const countMessages = abbreviateNumber(props.countMessages)
-    if (Number(countMessages) === 0) return t('common.no_comments')
-    const defineMessage = Number(countMessages) < 9
-      ? t('common.comment')
-      : t('common.comments')
-    return `${countMessages} ${defineMessage}`
-  }
+  const translateMapper = [
+    'page.feed.no_comments',
+    'page.feed.comment',
+    'page.feed.comments'
+  ]
 
   return (
     <FeedContent>
@@ -57,13 +54,16 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
           <SetMediaType {...props} />
         }
         <CardReactions>
-          <ReactionBar />
+          <ReactionBar
+            reactions={props.reactions}
+            totalReactions={props.countReactions}
+          />
         </CardReactions>
         <CardFooter>
           <Participants participants={[]} />
-          <CountMessage marginLeft={'auto'} fontSize={15}>
-            {convertCountMessage()}
-          </CountMessage>
+          <CountComment marginLeft={'auto'} fontSize={15}>
+            {convertCountMessage(t, props.countMessages, translateMapper)}
+          </CountComment>
         </CardFooter>
       </CardContent>
     </FeedContent>
