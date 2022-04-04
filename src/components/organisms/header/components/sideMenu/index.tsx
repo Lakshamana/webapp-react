@@ -71,7 +71,7 @@ const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }:
         <Box>
           {loading &&
             [0, 1, 2].map(each => (
-              <Skeleton height='30px' width='100%' my={4} />
+              <Skeleton key={each} height='30px' width='100%' my={4} />
             ))
           }
           {data?.map((menu: any) => (
