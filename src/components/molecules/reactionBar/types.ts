@@ -4,6 +4,7 @@ export type ReactionType = {
 }
 
 export type ReactionsCount = {
+  postId: string | null | undefined
   totalReactions?: number | null | undefined
   reactions?: ReactionType[]
   myReactions?: ReactionType[]
