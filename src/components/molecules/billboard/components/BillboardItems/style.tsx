@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { breakpoints } from 'styles'
+import { Swiper } from 'swiper/react'
 
 export const BillboardItems = styled.div`
   position: relative;
@@ -142,5 +143,58 @@ export const BoxButtons = styled.div`
 export const ContentButton = styled.div`
   &:first-child {
     margin-right: 10px;
+  }
+`
+
+export const SwiperStyled = styled(Swiper)`
+  .slider {
+    width: 100% !important;
+  }
+
+  .billboard-pagination {
+    bottom: 50px !important;
+    z-index: 10;
+  }
+
+  .billboard-pagination > .swiper-pagination-bullet {
+    width: 60px;
+    height: 4px;
+    border-radius: 0;
+  }
+
+  .billboard-pagination > .swiper-pagination-bullet:hover,
+  .billboard-pagination > .swiper-pagination-bullet:focus {
+    outline: unset;
+  }
+
+  .swiper-container {
+    overflow: inherit !important;
+    padding: 0px !important;
+  }
+
+  .billboard-pagination .swiper-pagination-bullet-active {
+    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+  }
+
+  @media screen and (max-width: 768px) {
+    .billboard-pagination {
+      bottom: 30px !important;
+    }
+
+    .billboard-pagination > .swiper-pagination-bullet {
+      width: 60px;
+      height: 4px;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    .billboard-pagination > .pagination {
+      margin-bottom: 5px;
+    }
+
+    .billboard-pagination > .swiper-pagination-bullet {
+      width: 25px;
+      height: 4px;
+    }
   }
 `

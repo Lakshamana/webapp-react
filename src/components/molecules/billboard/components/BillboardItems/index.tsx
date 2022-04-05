@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { SwiperSlide } from 'swiper/react'
 import SwiperCore, { Autoplay, Pagination, EffectFade } from 'swiper'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components'
@@ -18,6 +18,7 @@ import {
   Description,
   BoxButtons,
   ContentButton,
+  SwiperStyled
 } from './style'
 import { colors, breakpoints } from 'styles'
 import './style.css'
@@ -34,7 +35,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
   if (!items || !items.length) return <></>
 
   return (
-    <Swiper {...Params} style={{ position: 'relative', height: '100%' }}>
+    <SwiperStyled {...Params} style={{ position: 'relative', height: '100%' }}>
       {getItems(items).map((item: BillboardItem) => (
         <SwiperSlide style={{ width: '100%' }} key={item.id} className="slider">
           <BillboardItems>
@@ -82,7 +83,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
         </SwiperSlide>
       ))}
       <div className="swiper-pagination billboard-pagination" />
-    </Swiper>
+    </SwiperStyled>
   )
 }
 
