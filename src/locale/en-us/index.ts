@@ -30,9 +30,6 @@ const EN_US = {
       enable: 'Enable',
       disable: 'Disable',
       dark_mode: 'dark mode',
-      comments: 'comments',
-      no_comments: 'No comments',
-      comment: 'comment',
       messages: 'messages',
       votes: 'votes',
       yes: 'Yes',
@@ -205,6 +202,12 @@ const EN_US = {
         page_title: 'Channels',
       },
       feed: {
+        comments: 'Comments',
+        no_comments: 'No comments',
+        comment: 'Comment',
+        reactions: 'Reactions',
+        no_reactions: 'No reactions',
+        reaction: 'Reaction',
         search_options: {
           recent: 'Most Recent',
           old: 'Most Old',

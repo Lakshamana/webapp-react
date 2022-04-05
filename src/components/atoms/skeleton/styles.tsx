@@ -9,3 +9,8 @@ export const PostCard = styled(StyleContainer)`
   position: relative;
   border-radius: 4px;
 `
+
+export const FeedContent = styled(StyleContainer)`
+    height: 300px;
+    width: 746px;
+`

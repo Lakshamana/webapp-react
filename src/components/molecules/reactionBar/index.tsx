@@ -8,6 +8,7 @@ import { colors } from 'styles'
 import { AddReactionButton } from './components'
 import { ReactionsCount, ReactionType } from './types'
 import { useEffect, useState } from 'react'
+import { convertCountMessage } from 'utils'
 
 const ReactionBar = ({
   myReactions,
@@ -19,11 +20,15 @@ const ReactionBar = ({
   const [filteredReactions, setFilteredReactions] = useState<ReactionType[]>()
   const [myActiveReactions, setMyActiveReactions] = useState<ReactionType[]>()
 
+  const translateMapper = [
+    'page.feed.no_reactions',
+    'page.feed.reaction',
+    'page.feed.reactions'
+  ]
+
   useEffect(() => {
-    reactions?.sort((a, b) => {
-      return b.count - a.count
-    })
-    let result = reactions?.slice(0, 3)
+    reactions?.sort((a, b) => b.count - a.count)
+    const result = reactions?.slice(0, 3)
     setFilteredReactions(result)
   }, [reactions])
 
@@ -49,7 +54,9 @@ const ReactionBar = ({
                 minHeight={32}
               >
                 {reactionValue?.value}
-                <Text ml={2}>{formatNumber(reaction?.count || 0, 1)}</Text>
+                <Text ml={2}>
+                  {formatNumber(reaction?.count || 0, 1)}
+                </Text>
               </Reaction>
             )
           })}
@@ -58,7 +65,7 @@ const ReactionBar = ({
       <Container ml={2}>
         {!!totalReactions && (
           <Text color={colors.secondaryText[colorMode]}>
-            {totalReactions} {t('page.post.reactions')}
+            {convertCountMessage(t, totalReactions, translateMapper)}
           </Text>
         )}
       </Container>
