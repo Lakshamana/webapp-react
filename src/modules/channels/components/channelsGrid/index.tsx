@@ -1,22 +1,14 @@
-import { useState } from 'react'
-import { useQuery } from '@apollo/client'
 import { SimpleGrid } from '@chakra-ui/react'
 import { ChannelCard } from 'components'
 import { Channel } from 'generated/graphql'
 import { Props } from './types'
-import { QUERY_MEDIA } from 'services/graphql'
+
 import { useThumbor, ThumborInstanceTypes, ThumborParams } from 'services/hooks'
+import { useFlags } from 'contexts/flags'
 
-const ChannelsGrid = ({ channelsList, mediasId, channelSelected }: Props) => {
+const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const { generateImage } = useThumbor()
-  const [medias, setMedias] = useState<any[]>()
-
-  const { loading, data } = useQuery(QUERY_MEDIA(mediasId), {
-    onCompleted: (result) => {
-      const arr = Object.values(result)
-      setMedias(arr)
-    },
-  })
+  const { CHANNELS } = useFlags()
 
   const getImageUrl = (path) => {
     const imageOptions: ThumborParams = {
@@ -24,8 +16,7 @@ const ChannelsGrid = ({ channelsList, mediasId, channelSelected }: Props) => {
         height: 400,
       },
     }
-    const image = generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
-    return image
+    return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
   }
 
   const isGeolocked = (channel: Channel) =>
@@ -34,10 +25,8 @@ const ChannelsGrid = ({ channelsList, mediasId, channelSelected }: Props) => {
   return (
     <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
       {channelsList?.map((item) => {
-        const itemMedia = medias?.find(
-          (el) => el.id === item.customization?.thumbnail
-        )
-        const itemImage = getImageUrl(itemMedia?.imgPath)
+        const channelConfig = CHANNELS[item.id]
+        const channelThumbnail = getImageUrl(channelConfig.IMAGES?.THUMBNAIL)
         return (
           <ChannelCard
             id={item.id}
@@ -46,7 +35,7 @@ const ChannelsGrid = ({ channelsList, mediasId, channelSelected }: Props) => {
             key={item.id}
             onClick={(value) => channelSelected(value)}
             isGeolocked={isGeolocked(item)}
-            image={itemImage}
+            image={channelThumbnail}
           />
         )
       })}

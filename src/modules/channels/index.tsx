@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
@@ -17,7 +17,6 @@ const ChannelsPage = () => {
   const { colorMode } = useThemeStore()
   const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
-  const [mediaIds, setMediaIds] = useState<any>([])
 
   const { data, loading } = useQuery(QUERY_CHANNELS, {
     variables: {
@@ -27,14 +26,6 @@ const ChannelsPage = () => {
       setChannelsList(result.channels)
     },
   })
-
-  useEffect(() => {
-    const mediaIdsFiltered = channelsList?.map(
-      (channel) => channel.customization?.thumbnail
-    )
-    setMediaIds(mediaIdsFiltered)
-    // getMedia()
-  }, [channelsList])
 
   const selectChannel = async (channelId: string | null) => {
     const selected = channelsList?.filter(
@@ -63,10 +54,9 @@ const ChannelsPage = () => {
       >
         {t('page.channels.title')}
       </Text>
-      {loading && <Skeleton kind="cards" numberOfCards={5} />}
-      {!!mediaIds.length && !loading && (
+      {loading && <Skeleton kind="cards" numberOfCards={4} />}
+      {!loading && (
         <ChannelsGrid
-          mediasId={mediaIds}
           channelSelected={selectChannel}
           channelsList={data.channels}
         />
