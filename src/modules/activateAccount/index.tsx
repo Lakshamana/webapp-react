@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { MUTATION_ACTIVATE_ACCOUNT } from 'services/graphql'
 import { Spinner, Box } from '@chakra-ui/react'
-import { Text, Link } from 'components'
+import { Text, AlertCard } from 'components'
 import { colors } from 'styles'
 import { useThemeStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
@@ -67,17 +67,13 @@ const ActivateAccount = () => {
         </Box>
       )}
       {isActivated && (
-        <Box>
-          <Text fontSize={'22px'} mb={4} color={colors.generalText[colorMode]}>
-            {t('activateAccount.success')}
-          </Text>
-          <Link
-            to={'/login'}
-            fontWeight={'bolder'}
-            textTransform={'uppercase'}
-            label={t('activateAccount.loginLink')}
-          />
-        </Box>
+        <AlertCard
+          type={'success'}
+          title={t('activateAccount.success')}
+          description={''}
+          actionLabel={t('activateAccount.loginLink')}
+          toRoute={'login'}
+        />
       )}
     </Box>
   )
