@@ -1,16 +1,18 @@
+import { useEffect, useState } from 'react'
 import { useThemeStore } from 'services/stores/theme'
 import { useTranslation } from 'react-i18next'
-import { formatNumber } from 'utils'
+import { useMutation } from '@apollo/client'
+import { ADD_MY_REACTION, REMOVE_MY_REACTION } from 'services/graphql'
 import { Container, Text } from 'components'
+import { AddReactionButton } from './components'
 import { availableReactions } from './settings'
 import { Reaction } from './styles'
 import { colors } from 'styles'
-import { AddReactionButton } from './components'
 import { ReactionsCount, ReactionType } from './types'
-import { useEffect, useState } from 'react'
-import { convertCountMessage } from 'utils'
+import { formatNumber, convertCountMessage } from 'utils'
 
 const ReactionBar = ({
+  postId,
   myReactions,
   reactions,
   totalReactions,
@@ -20,6 +22,9 @@ const ReactionBar = ({
   const [filteredReactions, setFilteredReactions] = useState<ReactionType[]>()
   const [myActiveReactions, setMyActiveReactions] = useState<ReactionType[]>()
 
+  const [addMyReaction, { loading: addLoading }] = useMutation(ADD_MY_REACTION)
+  const [removeMyReaction, { loading: removeLoading }] = useMutation(REMOVE_MY_REACTION)
+
   const translateMapper = [
     'page.feed.no_reactions',
     'page.feed.reaction',
@@ -28,14 +33,26 @@ const ReactionBar = ({
 
   useEffect(() => {
     reactions?.sort((a, b) => b.count - a.count)
-    const result = reactions?.slice(0, 3)
-    setFilteredReactions(result)
+    const onlyThreeBiggests = reactions?.slice(0, 3)
+    setFilteredReactions(onlyThreeBiggests)
   }, [reactions])
 
   useEffect(() => {
-    const arr = myReactions?.filter((item) => item.count > 0)
-    setMyActiveReactions(arr)
+    setMyActiveReactions(myReactions)
   }, [myReactions])
+
+  const updateMyReaction = (reaction: string, chooseType: boolean) => () => {
+    const variables = {
+      input: {
+        post: postId,
+        reaction
+      }
+    }
+    //TODO: waiting for API
+    // chooseType
+    //   ? addMyReaction({ variables })
+    //   : removeMyReaction({ variables })
+  }
 
   return (
     <Container alignItems="center">
@@ -43,15 +60,17 @@ const ReactionBar = ({
         {
           !!filteredReactions?.length &&
           filteredReactions?.map((reaction) => {
-            const reactionValue = availableReactions.find(
-              (item) => item.name === reaction?.name
-            )
+            const ifContainsName = ({ name }) => name === reaction?.name
+            const reactionValue = availableReactions.find(ifContainsName)
+            const isMyReaction = Boolean(myActiveReactions?.find(ifContainsName))
             return (
               <Reaction
                 key={`${reaction?.name}-reaction`}
                 p={1}
                 mr={1}
                 minHeight={32}
+                myReaction={isMyReaction}
+                onClick={updateMyReaction(reaction?.name, !isMyReaction)}
               >
                 {reactionValue?.value}
                 <Text ml={2}>
@@ -61,7 +80,10 @@ const ReactionBar = ({
             )
           })}
       </Container>
-      <AddReactionButton />
+      <AddReactionButton
+        myActiveReactions={myActiveReactions}
+        updateMyReaction={updateMyReaction}
+      />
       <Container ml={2}>
         {!!totalReactions && (
           <Text color={colors.secondaryText[colorMode]}>
