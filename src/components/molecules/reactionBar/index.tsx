@@ -35,7 +35,8 @@ const ReactionBar = ({
   return (
     <Container alignItems="center">
       <Container>
-        {filteredReactions?.length &&
+        {
+          !!filteredReactions?.length &&
           filteredReactions?.map((reaction) => {
             const reactionValue = availableReactions.find(
               (item) => item.name === reaction?.name
@@ -53,9 +54,9 @@ const ReactionBar = ({
             )
           })}
       </Container>
-      <AddReactionButton></AddReactionButton>
+      <AddReactionButton />
       <Container ml={2}>
-        {totalReactions && (
+        {!!totalReactions && (
           <Text color={colors.secondaryText[colorMode]}>
             {totalReactions} {t('page.post.reactions')}
           </Text>
