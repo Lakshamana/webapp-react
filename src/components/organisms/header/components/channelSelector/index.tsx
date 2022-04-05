@@ -52,7 +52,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const handleSearch = (e: any) => setSearch(e.target.value)
 
   const handleSelect = (channel: Channel) => {
-    let homeTab = tabsList.filter((item) => item.id === 'home')
+    let homeTab = tabsList.filter((item) => item.TAB === 'home')
     setActiveTab(homeTab[0])
     setActiveChannel(channel)
     setOpen(false)

@@ -1,32 +1,38 @@
+import { useTranslation } from 'react-i18next'
 import { useTabsStore, useThemeStore } from 'services/stores'
 import { Tab } from 'components'
 import { colors } from 'styles'
 import { TabContainer } from './styles'
 import { PropsTabs } from './types'
-import { useTranslation } from 'react-i18next'
+import { TabFlags } from 'types/flags'
 
 const Tabs = ({ closeSideMenu }: PropsTabs) => {
   const { colorMode } = useThemeStore()
-  const { t } = useTranslation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
+  const { i18n } = useTranslation()
 
   const handleSelect = (tab) => () => {
     closeSideMenu()
     setActiveTab(tab)
   }
 
+  const getTabLabel = (tab: TabFlags) => {
+    const item = tab.LABEL.filter((item) => i18n.language.includes(item.LOCALE))
+    return item[0].VALUE
+  }
+
   return (
     <TabContainer display="flex">
-      {tabsList.map((tab: any) => (
+      {tabsList.map((tab: TabFlags) => (
         <Tab
-          key={tab.id}
-          link={tab.url}
-          selected={activeTab?.id === tab.id}
+          key={tab.TAB}
+          link={tab.URL}
+          selected={activeTab?.TAB === tab.TAB}
           onSelect={handleSelect(tab)}
           color={colors.secondaryText[colorMode]}
           mx={15}
         >
-          { t(tab.label) }
+          {getTabLabel(tab)}
         </Tab>
       ))}
     </TabContainer>

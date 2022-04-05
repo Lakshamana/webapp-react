@@ -13,7 +13,7 @@ const ExternalFooter = () => {
         <TextFooter>
           <Link
             fontSize={[16]}
-            to={ORGANIZATION.TERMS_URL}
+            to={ORGANIZATION.TERMS_URL!}
             label={t('common.terms')}
             defaultColor={true}
             isExternal
@@ -22,7 +22,7 @@ const ExternalFooter = () => {
             {`&`}
           </Text>
           <Link
-            to={ORGANIZATION.PRIVACY_URL}
+            to={ORGANIZATION.PRIVACY_URL!}
             label={t('common.privacy')}
             fontSize={[16]}
             defaultColor

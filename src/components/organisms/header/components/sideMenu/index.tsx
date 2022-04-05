@@ -5,17 +5,29 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { Container, Text } from 'components'
 import { Skeleton } from 'components/atoms'
 import { PropsSideMenu } from '../../types'
-import { SideContainer, ScrollContainer, ChannelsContainer, Circle } from './styles'
+import {
+  SideContainer,
+  ScrollContainer,
+  ChannelsContainer,
+  Circle,
+} from './styles'
 import { colors } from 'styles'
 import { getChannelNameInPath } from 'utils'
 import { useTranslation } from 'react-i18next'
+import { TabFlags } from 'types/flags'
 
-
-const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }: PropsSideMenu) => {
+const SideMenu = ({
+  loading,
+  open,
+  closeMenuAction,
+  colorMode,
+  children,
+  data,
+}: PropsSideMenu) => {
   const history = useHistory()
   const { pathname } = useLocation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
-  const { t } = useTranslation()
+  const { i18n } = useTranslation()
 
   const redirectTo = (route) => () => {
     if (!route) return
@@ -28,17 +40,22 @@ const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }:
     history.push(`/c/${channelName}${route}`)
   }
 
+  const getTabLabel = (tab: TabFlags) => {
+    const item = tab.LABEL.filter((item) => i18n.language.includes(item.LOCALE))
+    return item[0].VALUE
+  }
+
   return (
     <SideContainer display="block" {...{ open }}>
       {children}
       <ScrollContainer flexDirection="column" my={3} px={'20px'}>
         <Box>
-          {tabsList?.map((item: any) => {
-            const isSelected = activeTab?.id === item.id
+          {tabsList?.map((item: TabFlags) => {
+            const isSelected = activeTab?.TAB === item.TAB
             return (
               <Link
-                to={item.url}
-                key={`Path-${item.id}`}
+                to={item.URL}
+                key={`Path-${item.TAB}`}
                 onClick={() => setActiveTab(item)}
               >
                 <Container
@@ -59,7 +76,7 @@ const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }:
                         : colors.secondaryText[colorMode]
                     }
                   >
-                    {t(item.label)}
+                    {getTabLabel(item)}
                   </Text>
                 </Container>
               </Link>
@@ -86,7 +103,7 @@ const SideMenu = ({ loading, open, closeMenuAction, colorMode, children, data }:
               <Text
                 style={{
                   textTransform: 'uppercase',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
                 color={colors.generalText[colorMode]}
               >
