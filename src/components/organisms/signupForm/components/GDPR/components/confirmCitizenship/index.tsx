@@ -25,7 +25,7 @@ const ConfirmCitizenshipForm = ({ handleFormSubmit }: ConfirmAgeProps) => {
       </Text>
       <Link
         label={t('common.what_is_this')}
-        to={ORGANIZATION.GDPR_URL}
+        to={ORGANIZATION.GDPR_URL!}
         isExternal
       ></Link>
       <Button

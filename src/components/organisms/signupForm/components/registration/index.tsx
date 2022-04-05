@@ -34,7 +34,7 @@ const RegistrationForm = ({
         {t('common.accept_all')}
         <Link
           paddingX={1}
-          to={ORGANIZATION.TERMS_URL}
+          to={ORGANIZATION.TERMS_URL!}
           label={t('common.terms')}
           isExternal
         />

@@ -23,14 +23,14 @@ const OurPolitics = ({
       {t('signup.our_politics.agree')}
       <Link
         paddingX={1}
-        to={ORGANIZATION.TERMS_URL}
+        to={ORGANIZATION.TERMS_URL!}
         label={t('common.terms')}
         isExternal
       />
       {t('common.and')}
       <Link
         paddingX={1}
-        to={ORGANIZATION.PRIVACY_URL}
+        to={ORGANIZATION.PRIVACY_URL!}
         label={t('common.privacy')}
         isExternal
       />
