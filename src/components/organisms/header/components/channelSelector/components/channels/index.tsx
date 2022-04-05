@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import { useQuery } from '@apollo/client'
 import { Icon } from '@iconify/react'
 import { Spinner, Flex } from '@chakra-ui/react'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
@@ -8,30 +6,25 @@ import { Container, Text, Avatar } from 'components'
 import { ChannelItem, ChannelList } from './styles'
 import { colors } from 'styles'
 import { PropsChannels } from './types'
-import { QUERY_MEDIA } from 'services/graphql'
+import { useFlags } from 'contexts/flags'
 
 const Channels = ({
   selected,
   onSelect,
   colorMode,
   channels,
-  mediasId,
   isLoading,
 }: PropsChannels) => {
   const { generateImage } = useThumbor()
-  const [medias, setMedias] = useState<any[]>([''])
+  const { CHANNELS } = useFlags()
 
-  const { loading, data } = useQuery(QUERY_MEDIA(mediasId), {
-    onCompleted: (result) => {
-      const arr = Object.values(result)
-      setMedias(arr)
-    },
-  })
-
-  const generateChannelImage = (path) =>
-    generateImage(ThumborInstanceTypes.IMAGE, path, {
+  const generateChannelImage = (icon: any) => {
+    const theme = colorMode.toUpperCase()
+    if (!icon[theme]) return ''
+    return generateImage(ThumborInstanceTypes.IMAGE, icon[theme], {
       size: { height: 80 },
     })
+  }
 
   return (
     <Container flexDirection="column" width={1}>
@@ -43,10 +36,10 @@ const Channels = ({
         )}
         {channels &&
           channels.map((channel: Channel) => {
-            const itemMedia = medias?.find(
-              (el) => el.id === channel.customization?.thumbnail
+            const channelConfig = CHANNELS[channel.id]
+            const channelThumbnail = generateChannelImage(
+              channelConfig.IMAGES?.CHANNEL_ICON
             )
-            const itemImage = generateChannelImage(itemMedia?.imgPath)
 
             return (
               <ChannelItem
@@ -71,7 +64,7 @@ const Channels = ({
                     borderRadius={'8px'}
                     height={10}
                     width={10}
-                    src={itemImage}
+                    src={channelThumbnail}
                   />
                   <Text
                     ml={3}
