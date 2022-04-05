@@ -15,36 +15,43 @@ import {
 
 import { useThemeStore } from 'services/stores/theme'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
-import { useChannelsStore, useOrganizationStore } from 'services/stores'
-import { MENU_TABS, initialState, SEARCH_VALUES } from './settings'
+import { useChannelsStore, useCustomizationStore } from 'services/stores'
+import { initialState, SEARCH_VALUES } from './settings'
 import { defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
 import { sizes, breakpoints, colors } from 'styles'
 import { HeaderContainer } from './styles'
 import { useTabsStore } from 'services/stores/tabs'
+import { useFlags } from 'contexts/flags'
 
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
+  const { organizationConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
-  const { setTabsList, setActiveTab } = useTabsStore()
+  const { setTabsList, setActiveTab, tabsList } = useTabsStore()
   const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
     useChannelsStore()
 
-  const { organization } = useOrganizationStore()
+  const { ORGANIZATION } = useFlags()
   const { generateImage } = useThumbor()
-  const org_logo = generateImage(
-    ThumborInstanceTypes.IMAGE,
-    organization?.customization.logo,
-    {
-      size: { height: 80 },
-    }
-  )
+
+  const orgLogo = () => {
+    if (!ORGANIZATION.IMAGES?.LOGO) return ''
+
+    return generateImage(
+      ThumborInstanceTypes.IMAGE,
+      ORGANIZATION.IMAGES?.LOGO,
+      {
+        size: { height: 80 },
+      }
+    )
+  }
 
   const [getMenus, { loading: loadingMenu }] = useLazyQuery(QUERY_MENUS, {
-    fetchPolicy: "network-only",
-    onCompleted: (result) => setActiveChannelMenu(result.menus.rows)
+    fetchPolicy: 'network-only',
+    onCompleted: (result) => setActiveChannelMenu(result.menus.rows),
   })
 
   const [state, dispatch] = useReducer(reducer, {
@@ -65,7 +72,8 @@ const HeaderComponent = () => {
     dispatch({ type: 'openSearch', value: false })
   }
 
-  const handleToggleMenu = () => dispatch({ type: 'openMenu', value: !state.openMenu })
+  const handleToggleMenu = () =>
+    dispatch({ type: 'openMenu', value: !state.openMenu })
   const handleCloseMenu = () => dispatch({ type: 'openMenu', value: false })
 
   const handleOpenSearch = () => {
@@ -96,17 +104,20 @@ const HeaderComponent = () => {
   }, [activeChannel, pathname])
 
   useEffect(() => {
-    setTabsList(MENU_TABS)
+    if (organizationConfig && organizationConfig.HEADER) {
+      setTabsList(organizationConfig?.HEADER?.TABS)
+    }
     const getActiveTab = matchPath(pathname, {
-      path: "/c/:channel/:tabUrlName",
+      path: '/c/:channel/:tabUrlName',
       exact: true,
-      strict: true
+      strict: true,
     })
     const tabName =
       getActiveTab && getActiveTab?.params
-        ? getActiveTab?.params['tabUrlName']
-        : "home"
-    const home_tab = MENU_TABS.find((tab) => tab.id === tabName)
+        ? getActiveTab?.params['tabUrlName'].toUpperCase()
+        : 'HOME'
+
+    const home_tab = tabsList.find((item) => item.TAB === tabName)
     if (home_tab) setActiveTab(home_tab)
     // eslint-disable-next-line
   }, [pathname])
@@ -145,15 +156,15 @@ const HeaderComponent = () => {
           <Logo
             mx={2}
             ignoreFallback
-            src={org_logo}
+            src={orgLogo()}
             width={isDesktop ? '180px' : '120px'}
           />
           <Center height="30px">
             <Divider orientation="vertical" color={colors.grey['700']} />
           </Center>
-          {!state.openSearch &&
+          {!state.openSearch && (
             <ChannelSelector closeSideMenu={handleCloseMenu} />
-          }
+          )}
         </Container>
         {!state.openSearch && (
           <Container
