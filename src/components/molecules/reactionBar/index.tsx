@@ -40,8 +40,8 @@ const ReactionBar = ({
   return (
     <Container alignItems="center">
       <Container>
-        {filteredReactions &&
-          filteredReactions?.length > 0 &&
+        {
+          !!filteredReactions?.length &&
           filteredReactions?.map((reaction) => {
             const reactionValue = availableReactions.find(
               (item) => item.name === reaction?.name
