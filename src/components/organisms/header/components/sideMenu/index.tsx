@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useTabsStore } from 'services/stores'
 import { Box } from '@chakra-ui/layout'
-import { Spinner, Flex } from '@chakra-ui/react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Container, Text } from 'components'
+import { Skeleton } from 'components/atoms'
 import { PropsSideMenu } from '../../types'
 import {
   SideContainer,
@@ -86,11 +86,11 @@ const SideMenu = ({
       </ScrollContainer>
       <ChannelsContainer flexDirection="column" my={3} px={'20px'}>
         <Box>
-          {loading && (
-            <Flex alignItems="center" justifyContent="center" py={20}>
-              <Spinner size="lg" color={colors.brand.primary[colorMode]} />
-            </Flex>
-          )}
+          {loading &&
+            [0, 1, 2].map(each => (
+              <Skeleton key={each} height='30px' width='100%' my={4} />
+            ))
+          }
           {data?.map((menu: any) => (
             <Container
               key={`menu-${menu.id}`}

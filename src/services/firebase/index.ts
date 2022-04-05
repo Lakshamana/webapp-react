@@ -26,34 +26,34 @@ const accessToken = getData(AUTH_TOKEN)
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
-export const authWithCustomToken = (): Promise<boolean> => {
+export const authWithCustomToken = () => {
   const FirebaseToken = getData(FIREBASE_TOKEN)
-  return new Promise(function (resolve, reject) {
-    signInWithCustomToken(CUSTOM_TOKEN_AUTH, FirebaseToken)
-      .then((userCredential) => {
-        const user = userCredential.user
-        resolve(!!user)
-      })
-      .catch(() => {
-        refreshFirebaseToken().then(({ data }: any) => {
-          const newFirebaseToken =
-            data?.data?.refreshToken?.refreshToken?.firebaseToken
-          saveData(FIREBASE_TOKEN, newFirebaseToken)
-          signInWithCustomToken(CUSTOM_TOKEN_AUTH, newFirebaseToken)
-        })
-      })
-  })
+  if (FirebaseToken)
+    signInWithCustomToken(CUSTOM_TOKEN_AUTH, FirebaseToken).catch(() => {
+      refreshFirebaseToken()
+      return
+    })
+  refreshFirebaseToken()
 }
 
 export const refreshFirebaseToken = async () => {
   try {
-    return requestGraphql({
+    await requestGraphql({
       query: MUTATION_REFRESH_FIREBASE_TOKEN,
       headers: {
         authorization: accessToken ? `Bearer ${accessToken}` : '',
         organization: REACT_APP_ORGANIZATION_URL,
       },
     })
+      .then(({ data }: any) => {
+        const newFirebaseToken =
+          data?.data?.refreshToken?.refreshToken?.firebaseToken
+        if (newFirebaseToken) {
+          saveData(FIREBASE_TOKEN, newFirebaseToken)
+          signInWithCustomToken(CUSTOM_TOKEN_AUTH, newFirebaseToken)
+        }
+      })
+      .catch((error) => console.log(error))
   } catch (error) {
     console.warn(`refresh firebase token error -> `, error)
   }

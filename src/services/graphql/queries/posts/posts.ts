@@ -31,6 +31,12 @@ export const QUERY_POSTS = gql`
         type
         publishedAt
         countComments
+        reactions {
+          count
+          name
+        }
+        countReactions
+        inFeed
       }
     }
   }

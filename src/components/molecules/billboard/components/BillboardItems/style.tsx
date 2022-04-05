@@ -34,6 +34,7 @@ export const HeroImageWrapper = styled.div`
         } 0%, rgba(15, 15, 15, 0) 30%), linear-gradient(359.29deg, ${
           theme.colors.bodyBg[theme.colorMode]
         } 0.7%, rgba(15, 15, 15, 0) 50%)`};
+  }
 `
 
 export const HeroImg = styled.img`
@@ -62,8 +63,8 @@ export const Info = styled.div`
   color: #fff;
   position: absolute;
   display: flex;
-  align-items: center;
-  padding: 0px 0px 0px 35px;
+  align-items: flex-end;
+  padding: 0px 0px 100px 35px;
   width: 60%;
   height: 100%;
 
