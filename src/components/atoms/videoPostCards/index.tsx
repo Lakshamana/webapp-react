@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router'
-import { Flex, Text, Box, Spacer, Divider } from '@chakra-ui/react'
+import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
-import { useThemeStore } from 'services/stores'
+import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
+import { useCustomizationStore, useThemeStore } from 'services/stores'
 
 import { CardWrapper, PostContent, BlockedContent, PlayContent } from './style'
 import { colors } from 'styles'
@@ -14,54 +16,67 @@ import { VideoPostCardProps } from 'types/posts'
 const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
   const history = useHistory()
   const { t } = useTranslation()
+  const { activeChannelConfig } = useCustomizationStore()
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
 
-  // TODO: ALL comments in this page are waiting for API Pin/Unpin Post mutations
+  const [pinPost, { loading: loadingPinPost }] = useMutation(
+    MUTATION_PIN_POST,
+    {
+      variables: {
+        payload: {
+          post: props.id,
+          pinned: true,
+        },
+      },
+    }
+  )
 
-  // const [pinPost, { loading }] = useMutation(
-  //   props.isPinned ? MUTATION_UNPIN_POST : MUTATION_PIN_POST,
-  //   {
-  //     variables: {
-  //       postId: props.id,
-  //     },
-  //   }
-  // )
+  const [unpinPost, { loading: loadingUnpinPost }] = useMutation(
+    MUTATION_UNPIN_POST,
+    {
+      variables: {
+        id: props.id,
+      },
+    }
+  )
+
+  const isLoading = loadingPinPost || loadingUnpinPost
 
   const selectPost = () => history.push(`${props.url}`)
 
-  // const renderAddToMyListIcon = () => (
-  //   <Box
-  //     borderColor="red"
-  //     backgroundColor={colors.cardBg[colorMode]}
-  //     borderRadius="100%"
-  //     width="25px"
-  //     height="25px"
-  //     display="flex"
-  //     alignItems="center"
-  //     justifyContent="center"
-  //     onClick={() => pinPost()}
-  //   >
-  //     {loading && (
-  //       <Spinner
-  //         thickness="1px"
-  //         width="15px"
-  //         height="15px"
-  //         color={colors.brand.primary[colorMode]}
-  //       ></Spinner>
-  //     )}
-  //     {!loading && (
-  //       <Icon
-  //         icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
-  //         color={
-  //           props.isPinned
-  //             ? colors.brand.primary[colorMode]
-  //             : colors.generalText[colorMode]
-  //         }
-  //       ></Icon>
-  //     )}
-  //   </Box>
-  // )
+  const renderAddToMyListIcon = () => (
+    <Box
+      borderColor="red"
+      backgroundColor={colors.cardBg[colorMode]}
+      borderRadius="100%"
+      minWidth="25px"
+      height="25px"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      onClick={() => (props.isPinned ? unpinPost() : pinPost())}
+    >
+      {isLoading && (
+        <Spinner
+          thickness="1px"
+          width="15px"
+          height="15px"
+          color={colors.brand.primary[colorMode]}
+        ></Spinner>
+      )}
+      {!isLoading && (
+        <Icon
+          icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
+          color={
+            props.isPinned
+              ? colors.brand.primary[colorMode]
+              : colors.generalText[colorMode]
+          }
+        ></Icon>
+      )}
+    </Box>
+  )
 
   const renderInfo = () => (
     <Box
@@ -72,40 +87,40 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       w={'100%'}
       background={colors.footerBg[colorMode]}
     >
-      <Flex direction="column">
-        <Text
-          fontSize="0.85rem"
-          noOfLines={1}
-          fontWeight="bolder"
-          color={colors.generalText[colorMode]}
-        >
-          {stripHTML(props.title)}
-        </Text>
-        {props.description && (
+      <Flex direction="row">
+        <Flex direction='column'>
           <Text
-            mt={1}
-            fontSize="0.7rem"
-            noOfLines={2}
-            lineHeight={'0.9rem'}
-            color={colors.secondaryText[colorMode]}
+            fontSize="0.85rem"
+            noOfLines={1}
+            fontWeight="bolder"
+            color={colors.generalText[colorMode]}
           >
-            {stripHTML(props.description)}
+            {stripHTML(props.title)}
           </Text>
-        )}
-        <Spacer px={1} />
-        {/* {renderAddToMyListIcon()} */}
+          {props.description && (
+            <Text
+              mt={1}
+              fontSize="0.7rem"
+              noOfLines={2}
+              lineHeight={'0.9rem'}
+              color={colors.secondaryText[colorMode]}
+            >
+              {stripHTML(props.description)}
+            </Text>
+          )}
+        </Flex>
+        <Spacer />
+        {renderAddToMyListIcon()}
       </Flex>
       <Flex mt={1}>
-        {props.countViews && (
+        {activeChannelConfig?.DISPLAY_POST_THUMB_COUNT_VIEWS && (
           <Text
             display="flex"
             alignItems="center"
             fontSize="0.7rem"
             color={colors.secondaryText[colorMode]}
           >
-            <Icon icon={`mdi:eye-outline`}></Icon>
-            <Divider orientation="vertical" px={'2px'}></Divider>
-            {props.countViews} {t('page.post.views')}
+            {props.countViews || 0} {t('page.post.views')}
           </Text>
         )}
         <Spacer px={1} />
