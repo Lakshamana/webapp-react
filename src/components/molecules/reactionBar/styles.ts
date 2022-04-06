@@ -1,15 +1,23 @@
 import styled from 'styled-components'
 import { space, layout, SpaceProps, LayoutProps } from 'styled-system'
 
-interface SpaceLayoutProps extends SpaceProps, LayoutProps { }
+export type ReactionProps = {
+  myReaction: boolean
+}
 
-export const Reaction = styled.div<SpaceLayoutProps>`
+interface SpaceLayoutProps extends SpaceProps, LayoutProps, ReactionProps { }
+
+export const Reaction: any = styled.div<SpaceLayoutProps>`
   ${space}
   ${layout}
   height: 35px;
   display: flex;
   border-radius: 3px;
-  background:  ${({ theme }) => theme.colors.reaction.background[theme.colorMode]};
+  background:  ${({ theme, myReaction }) => {
+    return myReaction
+      ? theme.colors.reaction.selected[theme.colorMode]
+      : theme.colors.reaction.background[theme.colorMode]
+  }};
   color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
   cursor: pointer;
   align-items: center;
@@ -27,6 +35,10 @@ export const EmoticonReaction = styled.div<SpaceLayoutProps>`
   align-items: center;
   font-size: 1.6rem;
   padding: 0.3em;
+  background:  ${({ theme, myReaction }) => {
+    return myReaction &&
+      theme.colors.reaction.selected[theme.colorMode]
+  }};
   :hover {
     background: ${({ theme }) => theme.colors.reaction.hover.background};
   }

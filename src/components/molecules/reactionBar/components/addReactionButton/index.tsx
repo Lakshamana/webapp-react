@@ -2,8 +2,9 @@ import { Container, Popover } from 'components'
 import { Icon } from '@iconify/react'
 import { Reaction, EmoticonReaction } from './../../styles'
 import { availableReactions } from './../../settings'
+import { PropsType } from './types'
 
-const AddReactionButton = () => {
+const AddReactionButton = ({ myActiveReactions, updateMyReaction }: PropsType) => {
   return (
     <Container>
       <Popover
@@ -19,11 +20,18 @@ const AddReactionButton = () => {
           gridTemplateColumns={'repeat(6, 1fr)'}
           justifyItems={'center'}
         >
-          {availableReactions.map((reaction) => (
-            <EmoticonReaction key={`${reaction.name}-popover`}>
-              {reaction.value}
-            </EmoticonReaction>
-          ))}
+          {availableReactions.map((reaction) => {
+            const isMyReaction = Boolean(myActiveReactions?.find(({ name }) => name === reaction?.name))
+            return (
+              <EmoticonReaction
+                key={`${reaction.name}-popover`}
+                onClick={updateMyReaction(reaction.name, !isMyReaction)}
+                myReaction={isMyReaction}
+              >
+                {reaction.value}
+              </EmoticonReaction>
+            )
+          })}
         </Container>
       </Popover>
     </Container>

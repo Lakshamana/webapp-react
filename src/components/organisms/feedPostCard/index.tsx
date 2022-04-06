@@ -18,6 +18,17 @@ import {
   CountComment
 } from './style'
 
+const MOCK_MY_REACTIONS = [
+  {
+    count: 999999,
+    name: 'ANGRY_FACE'
+  },
+  {
+    count: 777777,
+    name: 'LAUGHING_FACE'
+  }
+]
+
 const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -31,6 +42,18 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
     'page.feed.no_comments',
     'page.feed.comment',
     'page.feed.comments'
+  ]
+
+  const MOCK_ALL_REACTIONS = [
+    ...props.reactions,
+    {
+      count: 13111111,
+      name: 'LAUGHING_FACE'
+    },
+    {
+      count: 13,
+      name: 'RED_HEART'
+    }
   ]
 
   return (
@@ -66,8 +89,10 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
         }
         <CardReactions>
           <ReactionBar
-            reactions={props.reactions}
+            postId={props.id}
+            reactions={MOCK_ALL_REACTIONS}
             totalReactions={props.countReactions}
+            myReactions={MOCK_MY_REACTIONS}
           />
         </CardReactions>
         <CardFooter>

@@ -146,6 +146,10 @@ const defaultColors: any = {
       background: '#0469FF',
       color: 'white',
     },
+    selected: {
+      light: '#0469FF',
+      dark: '#0469FF',
+    },
   },
   white: '#FFFFFF',
   black: '#000000',

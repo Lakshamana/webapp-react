@@ -28,21 +28,15 @@ const VideoPostView = () => {
   const [relatedVideosData, setRelatedVideosData] = useState<Post[]>()
 
   const { data, loading } = useQuery(QUERY_POST, {
-    variables: {
-      id: id,
-    },
-    onCompleted: (result) => {
-      setPostData(result?.post)
-    },
+    variables: { id },
+    onCompleted: (result) => setPostData(result?.post)
   })
 
   const [
     getRelatedPosts,
     { data: relatedPosts, loading: loadingRelatedPosts },
   ] = useLazyQuery(QUERY_POSTS, {
-    onCompleted: (result) => {
-      setRelatedVideosData(result?.posts)
-    },
+    onCompleted: (result) => setRelatedVideosData(result?.posts)
   })
 
   useEffect(() => {
@@ -100,15 +94,16 @@ const VideoPostView = () => {
         <Subtitle>
           <span
             dangerouslySetInnerHTML={{ __html: `${postData?.description}` }}
-          ></span>
+          />
         </Subtitle>
         <Flex w="100%" mt={4} flexDirection={isDesktop ? 'row' : 'column'}>
           <ReactionBar
+            postId={postData?.id}
             reactions={postReactions}
             totalReactions={postData?.countReactions}
             myReactions={[]}
           />
-          <Spacer mt={isDesktop ? 0 : 4}></Spacer>
+          <Spacer mt={isDesktop ? 0 : 4} />
           <Participants participants={engagedUsers} />
         </Flex>
       </VideoDetails>
@@ -121,16 +116,16 @@ const VideoPostView = () => {
         <VideoComments>
           {postData && (
             <Box w={{ sm: '100%', md: '55%', lg: '60%', xl: '70%' }}>
-              <Comments {...postData}></Comments>
+              <Comments {...postData} />
             </Box>
           )}
-          <Spacer mx={3}></Spacer>
+          <Spacer mx={3} />
           {relatedVideosData?.length && (
             <Box w={{ sm: '100%', md: '45%', lg: '40%', xl: '30%' }}>
               <VideoPlaylist
                 title={t('page.post.related_videos')}
                 videos={[...relatedVideosData]}
-              ></VideoPlaylist>
+              />
             </Box>
           )}
         </VideoComments>
