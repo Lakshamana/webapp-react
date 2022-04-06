@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { useFlags } from 'contexts/flags'
 import { Logo, Text, Container, Link } from 'components/atoms'
 import { BoxFooter, FooterItems, TextFooter } from './style'
+import { useCustomizationStore } from 'services/stores'
 
 const ExternalFooter = () => {
   const { t } = useTranslation()
-  const { ORGANIZATION } = useFlags()
+  const { organizationConfig } = useCustomizationStore()
 
   return (
     <BoxFooter display={'flex'} alignItems={'center'}>
@@ -13,7 +13,7 @@ const ExternalFooter = () => {
         <TextFooter>
           <Link
             fontSize={[16]}
-            to={ORGANIZATION.TERMS_URL!}
+            to={organizationConfig?.TERMS_URL!}
             label={t('common.terms')}
             defaultColor={true}
             isExternal
@@ -22,7 +22,7 @@ const ExternalFooter = () => {
             {`&`}
           </Text>
           <Link
-            to={ORGANIZATION.PRIVACY_URL!}
+            to={organizationConfig?.PRIVACY_URL!}
             label={t('common.privacy')}
             fontSize={[16]}
             defaultColor
