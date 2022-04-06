@@ -1,6 +1,5 @@
 import { Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { useFlags } from 'contexts/flags'
 import { useThemeStore } from 'services/stores/theme'
 import {
   Input,
@@ -16,6 +15,7 @@ import { useFormik } from 'formik'
 import { initialValues, validationSchema } from './settings'
 import { RegistrationProps } from './types'
 import { colors, fonts, sizes } from 'styles'
+import { useCustomizationStore } from 'services/stores'
 
 const RegistrationForm = ({
   handleFormSubmit,
@@ -26,7 +26,7 @@ const RegistrationForm = ({
 }: RegistrationProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const { ORGANIZATION } = useFlags()
+  const { organizationConfig } = useCustomizationStore()
 
   const renderCheckboxLabel = () => {
     return (
@@ -34,7 +34,7 @@ const RegistrationForm = ({
         {t('common.accept_all')}
         <Link
           paddingX={1}
-          to={ORGANIZATION.TERMS_URL!}
+          to={organizationConfig?.TERMS_URL!}
           label={t('common.terms')}
           isExternal
         />

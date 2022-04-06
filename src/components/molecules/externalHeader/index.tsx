@@ -3,20 +3,20 @@ import { Box } from '@chakra-ui/layout'
 import { ExternalHeaderProps } from './types'
 import { BoxHeader, HeaderItems } from './style'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { useFlags } from 'contexts/flags'
+import { useCustomizationStore } from 'services/stores'
 
 const ExternalHeader = ({
   rightContent,
   rightContentStyle,
 }: ExternalHeaderProps) => {
-  const { ORGANIZATION } = useFlags()
+  const { organizationConfig } = useCustomizationStore()
   const { generateImage } = useThumbor()
 
   const orgLogo = () => {
-    if (!ORGANIZATION.IMAGES?.LOGO) return ''
+    if (!organizationConfig?.IMAGES?.LOGO) return ''
     return generateImage(
       ThumborInstanceTypes.IMAGE,
-      ORGANIZATION.IMAGES?.LOGO,
+      organizationConfig?.IMAGES?.LOGO,
       {
         size: { height: 80 },
       }

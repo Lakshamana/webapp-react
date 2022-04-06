@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Button, Text, Container, Checkbox, Link } from 'components'
 import { ConfirmAgeProps } from './types'
 import { useThemeStore } from 'services/stores/theme'
-import { useFlags } from 'contexts/flags'
 import { colors, sizes } from 'styles'
+import { useCustomizationStore } from 'services/stores'
 
 const OurPolitics = ({
   handleFormSubmit,
@@ -14,7 +14,7 @@ const OurPolitics = ({
 }: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const { ORGANIZATION } = useFlags()
+  const { organizationConfig } = useCustomizationStore()
 
   const [terms, setTerms] = useState(false)
 
@@ -23,14 +23,14 @@ const OurPolitics = ({
       {t('signup.our_politics.agree')}
       <Link
         paddingX={1}
-        to={ORGANIZATION.TERMS_URL!}
+        to={organizationConfig?.TERMS_URL!}
         label={t('common.terms')}
         isExternal
       />
       {t('common.and')}
       <Link
         paddingX={1}
-        to={ORGANIZATION.PRIVACY_URL!}
+        to={organizationConfig?.PRIVACY_URL!}
         label={t('common.privacy')}
         isExternal
       />
