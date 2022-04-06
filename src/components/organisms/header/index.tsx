@@ -22,27 +22,31 @@ import { handleContentSearch, reducer, getSelectedTab } from './utils'
 import { sizes, breakpoints, colors } from 'styles'
 import { HeaderContainer } from './styles'
 import { useTabsStore } from 'services/stores/tabs'
-import { useFlags } from 'contexts/flags'
 
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
   const { pathname } = useLocation()
-  const { organizationConfig } = useCustomizationStore()
+  const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { setTabsList, setActiveTab, tabsList } = useTabsStore()
   const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
     useChannelsStore()
-
-  const { ORGANIZATION } = useFlags()
   const { generateImage } = useThumbor()
 
-  const orgLogo = () => {
-    if (!ORGANIZATION.IMAGES?.LOGO) return ''
+  const orgLogo = generateImage(
+    ThumborInstanceTypes.IMAGE,
+    organizationConfig?.IMAGES?.LOGO || '',
+    {
+      size: { height: 80 },
+    }
+  )
 
+  const channelLogo = () => {
+    const theme = colorMode.toUpperCase()
     return generateImage(
       ThumborInstanceTypes.IMAGE,
-      ORGANIZATION.IMAGES?.LOGO,
+      activeChannelConfig?.IMAGES?.CHANNEL_LOGO[theme] || '',
       {
         size: { height: 80 },
       }
@@ -156,7 +160,11 @@ const HeaderComponent = () => {
           <Logo
             mx={2}
             ignoreFallback
-            src={orgLogo()}
+            src={
+              activeChannelConfig?.DISPLAY_CHANNEL_LOGO
+                ? channelLogo()
+                : orgLogo
+            }
             width={isDesktop ? '180px' : '120px'}
           />
           <Center height="30px">
@@ -182,15 +190,17 @@ const HeaderComponent = () => {
           flex={state.openSearch ? 1 : 'none'}
           zIndex={1000}
         >
-          <SearchBar
-            data={searchValues}
-            open={state.openSearch}
-            onOpen={handleOpenSearch}
-            onClose={handleCloseSearch}
-            onSearch={handleSearch}
-            search={state.search}
-            {...{ colorMode }}
-          />
+          {activeChannelConfig?.DISPLAY_SEARCH && (
+            <SearchBar
+              data={searchValues}
+              open={state.openSearch}
+              onOpen={handleOpenSearch}
+              onClose={handleCloseSearch}
+              onSearch={handleSearch}
+              search={state.search}
+              {...{ colorMode }}
+            />
+          )}
           <UserInfo
             display={'menu'}
             closeSideMenu={handleCloseMenu}
