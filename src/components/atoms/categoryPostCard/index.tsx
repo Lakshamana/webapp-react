@@ -1,6 +1,13 @@
 import { useState } from 'react'
+import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router'
-import { Flex, Text, Box, Spacer } from '@chakra-ui/react'
+import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
+import {
+  MUTATION_PIN_CATEGORY,
+  MUTATION_UNPIN_CATEGORY,
+} from 'services/graphql'
+import { Icon } from '@iconify/react'
+
 import { useThemeStore } from 'services/stores'
 import { CategoryPostCardProps } from 'types/categories'
 import { colors } from 'styles'
@@ -11,50 +18,57 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
 
-  // TODO: ALL comments in this page are waiting for API Pin/Unpin Category mutations
+  const [pinCategory, { loading }] = useMutation(MUTATION_PIN_CATEGORY, {
+    variables: {
+      payload: {
+        category: props.id,
+        pinned: true,
+      },
+    },
+  })
 
-  // const [pinCategory, { loading }] = useMutation(
-  //   props.isPinned ? MUTATION_UNPIN_CATEGORY : MUTATION_PIN_CATEGORY,
-  //   {
-  //     variables: {
-  //       categoryId: props.id,
-  //     },
-  //   }
-  // )
+  const [unpinCategory, { loading: loadingUnpinCategory }] = useMutation(
+    MUTATION_UNPIN_CATEGORY,
+    {
+      variables: {
+        id: props.id,
+      },
+    }
+  )
 
   const selectCategory = () => history.push(`${props.url}`)
 
-  // const renderAddToMyListIcon = () => (
-  //   <Box
-  //     borderColor="red"
-  //     backgroundColor={colors.cardBg[colorMode]}
-  //     borderRadius="100%"
-  //     width="25px"
-  //     height="25px"
-  //     display="flex"
-  //     alignItems="center"
-  //     justifyContent="center"
-  //     // onClick={() => pinCategory()}
-  //   >
-  //     {loading ? (
-  //       <Spinner
-  //         thickness="1px"
-  //         width="15px"
-  //         height="15px"
-  //         color={colors.brand.primary[colorMode]}
-  //       />
-  //     ) : (
-  //       <Icon
-  //         icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
-  //         color={
-  //           props.isPinned
-  //             ? colors.brand.primary[colorMode]
-  //             : colors.generalText[colorMode]
-  //         }
-  //       />
-  //     )}
-  //   </Box>
-  // )
+  const renderAddToMyListIcon = () => (
+    <Box
+      borderColor="red"
+      backgroundColor={colors.cardBg[colorMode]}
+      borderRadius="100%"
+      width="25px"
+      height="25px"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      // onClick={() => pinCategory()}
+    >
+      {loading ? (
+        <Spinner
+          thickness="1px"
+          width="15px"
+          height="15px"
+          color={colors.brand.primary[colorMode]}
+        />
+      ) : (
+        <Icon
+          icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
+          color={
+            props.isPinned
+              ? colors.brand.primary[colorMode]
+              : colors.generalText[colorMode]
+          }
+        />
+      )}
+    </Box>
+  )
 
   return (
     <CardWrapper
@@ -90,7 +104,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
               </Text>
             </Box>
             <Spacer px={1}></Spacer>
-            {/* {renderAddToMyListIcon()} */}
+            {renderAddToMyListIcon()}
           </Flex>
         </Box>
       )}
