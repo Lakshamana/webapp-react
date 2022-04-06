@@ -55,7 +55,7 @@ const HeaderComponent = () => {
 
   const [getMenus, { loading: loadingMenu }] = useLazyQuery(QUERY_MENUS, {
     fetchPolicy: 'network-only',
-    onCompleted: (result) => setActiveChannelMenu(result.menus.rows),
+    onCompleted: (result) => setActiveChannelMenu(result?.menus?.rows),
   })
 
   const [state, dispatch] = useReducer(reducer, {
@@ -111,23 +111,29 @@ const HeaderComponent = () => {
     if (organizationConfig && organizationConfig.HEADER) {
       setTabsList(organizationConfig?.HEADER?.TABS)
     }
-    const getActiveTab = matchPath(pathname, {
-      path: '/c/:channel/:tabUrlName',
-      exact: true,
-      strict: true,
-    })
-    const tabName =
-      getActiveTab && getActiveTab?.params
-        ? getActiveTab?.params['tabUrlName'].toUpperCase()
-        : 'HOME'
-
-    const home_tab = tabsList.find((item) => item.TAB === tabName)
-    if (home_tab) setActiveTab(home_tab)
     // eslint-disable-next-line
   }, [pathname])
 
   useEffect(() => {
-    if (state.openMenu && !activeChannelMenu.length) {
+    const getActiveTab = matchPath(pathname, {
+      path: '/c/:channel/:tabUrlName',
+      strict: true,
+    })
+    let tabName =
+      getActiveTab && getActiveTab?.params
+        ? getActiveTab?.params['tabUrlName'].toUpperCase()
+        : 'HOME'
+
+    if (tabName === 'CATEGORY') {
+      tabName = 'COLLECTIONS'
+    }
+    const defineTab = tabsList.find((item) => item.TAB === tabName)
+    defineTab && setActiveTab(defineTab)
+    // eslint-disable-next-line
+  }, [tabsList])
+
+  useEffect(() => {
+    if (state.openMenu && activeChannelMenu?.length > 0) {
       getMenus()
     }
     //eslint-disable-next-line
