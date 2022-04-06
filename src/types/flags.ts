@@ -76,6 +76,14 @@ export type ColorFlags = {
 }
 
 export type ChannelFlags = {
+  COLORS: ColorFlags
+  DISPLAY_CHANNEL_LOGO: boolean
+  DISPLAY_COMMENTS: boolean
+  DISPLAY_LIVESTREAM_USERS_COUNT: boolean
+  DISPLAY_POST_THUMB_COUNT_VIEWS: boolean
+  DISPLAY_POST_THUMB_TITLE: boolean
+  DISPLAY_REACTIONS: boolean
+  DISPLAY_SEARCH: boolean
   HEADER: {
     TABS: TabFlags[]
   }
@@ -84,15 +92,13 @@ export type ChannelFlags = {
     CAROUSELS: CarouselFlags[]
   }
   IMAGES?: ChannelImageFlags
-  COLORS: ColorFlags
+  SETTINGS: {
+    DISPLAY_CHANNEL_LOGO: boolean
+    DISPLAY_COMMENTS: boolean
+    DISPLAY_POST_THUMB_COUNT_VIEWS: boolean
+    DISPLAY_REACTIONS: boolean
+  }
   THEME: string
-  DISPLAY_SEARCH: boolean
-  DISPLAY_CHANNEL_LOGO: boolean
-  DISPLAY_POST_THUMB_COUNT_VIEWS: boolean
-  DISPLAY_POST_THUMB_TITLE: boolean
-  DISPLAY_COMMENTS: boolean
-  DISPLAY_REACTIONS: boolean
-  DISPLAY_LIVESTREAM_USERS_COUNT: boolean
 }
 
 export interface FlagTypes {
