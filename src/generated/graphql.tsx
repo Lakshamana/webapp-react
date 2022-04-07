@@ -241,6 +241,7 @@ export type Category = {
   name: Scalars['String'];
   organization: Scalars['ID'];
   parentId?: Maybe<Scalars['ID']>;
+  pinnedAt?: Maybe<Scalars['DateTime']>;
   sort: Scalars['Int'];
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['ID']>>;
@@ -394,13 +395,13 @@ export type CreateAccountInput = {
 };
 
 export type CreateAccountPinnedPost = {
-  pinned: Scalars['Boolean'];
+  pinned?: Maybe<Scalars['Boolean']>;
   post: Scalars['String'];
 };
 
 export type CreateAccountPinnnedCategory = {
   category: Scalars['String'];
-  pinned: Scalars['Boolean'];
+  pinned?: Maybe<Scalars['Boolean']>;
 };
 
 export type CreateAccountSessionInput = {
@@ -1468,12 +1469,12 @@ export type MutationUnbanAccountTempArgs = {
 
 
 export type MutationUnpinCategoryArgs = {
-  id: Scalars['String'];
+  categoryId: Scalars['String'];
 };
 
 
 export type MutationUnpinPostArgs = {
-  id: Scalars['String'];
+  postId: Scalars['String'];
 };
 
 
@@ -1968,6 +1969,7 @@ export type Post = {
   inFeed: Scalars['Boolean'];
   kind: Scalars['String'];
   media?: Maybe<MediaUnion>;
+  pinnedAt?: Maybe<Scalars['DateTime']>;
   playlists?: Maybe<Array<PlaylistOutput>>;
   publishedAt: Scalars['DateTime'];
   pushNotification: Scalars['Boolean'];
@@ -3136,7 +3138,8 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'OrganizationPublic', id: string, name?: Maybe<string>, kind?: Maybe<string>, status?: Maybe<string>, tenant_id?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
 
 export type GetPostQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -3147,7 +3150,7 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', access: string, description: string, geofence: any, kind: string, id: string, slug: string, status: string, tags: Array<string>, title: string, type: string, publishedAt: any, countComments: number, countReactions: number, inFeed: boolean, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', access: string, description: string, geofence: any, kind: string, id: string, slug: string, status: string, pinnedAt?: Maybe<any>, tags: Array<string>, title: string, type: string, publishedAt: any, countComments: number, countReactions: number, inFeed: boolean, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 
 export const CreateAccountDocument = gql`
@@ -3826,7 +3829,7 @@ export type PinCategoryMutationResult = Apollo.MutationResult<PinCategoryMutatio
 export type PinCategoryMutationOptions = Apollo.BaseMutationOptions<PinCategoryMutation, PinCategoryMutationVariables>;
 export const UnpinCategoryDocument = gql`
     mutation UnpinCategory($id: String!) {
-  unpinCategory(id: $id) {
+  unpinCategory(categoryId: $id) {
     id
     pinnedAt
     __typename
@@ -3988,7 +3991,7 @@ export type PinPostMutationResult = Apollo.MutationResult<PinPostMutation>;
 export type PinPostMutationOptions = Apollo.BaseMutationOptions<PinPostMutation, PinPostMutationVariables>;
 export const UnpinPostDocument = gql`
     mutation UnpinPost($id: String!) {
-  unpinPost(id: $id) {
+  unpinPost(postId: $id) {
     id
     pinnedAt
     __typename
@@ -4767,8 +4770,8 @@ export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrg
 export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
 export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
 export const GetPostDocument = gql`
-    query GetPost($id: ID!) {
-  post(id: $id) {
+    query GetPost($id: ID, $slug: String) {
+  post(id: $id, slug: $slug) {
     id
     access
     allowComments
@@ -4803,7 +4806,7 @@ export const GetPostDocument = gql`
   }
 }
     `;
-export type GetPostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostQuery, GetPostQueryVariables>, 'query'> & ({ variables: GetPostQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type GetPostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostQuery, GetPostQueryVariables>, 'query'>;
 
     export const GetPostComponent = (props: GetPostComponentProps) => (
       <ApolloReactComponents.Query<GetPostQuery, GetPostQueryVariables> query={GetPostDocument} {...props} />
@@ -4823,10 +4826,11 @@ export type GetPostComponentProps = Omit<ApolloReactComponents.QueryComponentOpt
  * const { data, loading, error } = useGetPostQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetPostQuery(baseOptions: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+export function useGetPostQuery(baseOptions?: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
       }
@@ -4855,6 +4859,7 @@ export const GetPostsDocument = gql`
       id
       slug
       status
+      pinnedAt
       tags
       thumbnail {
         imgPath
