@@ -17,7 +17,7 @@ export type OrganizationFlags = {
 
 export type TabFlags = {
   TAB: string
-  ACTIVE: boolean
+  IS_ACTIVE: boolean
   ORDER: number
   LABEL: LocaleFlags[]
   URL: string
@@ -45,10 +45,12 @@ export type ChannelImageFlags = {
 }
 
 export type CarouselFlags = {
-  ACTIVE: boolean
+  IS_ACTIVE: boolean
+  DEFAULT: boolean
   ORDER: number
   LABEL: LocaleFlags[]
-  TYPE: string
+  CONTENT_TYPE: string
+  TAGS: []
 }
 
 export type LocaleFlags = {
@@ -77,25 +79,24 @@ export type ColorFlags = {
 
 export type ChannelFlags = {
   COLORS: ColorFlags
-  DISPLAY_CHANNEL_LOGO: boolean
-  DISPLAY_COMMENTS: boolean
-  DISPLAY_LIVESTREAM_USERS_COUNT: boolean
-  DISPLAY_POST_THUMB_COUNT_VIEWS: boolean
-  DISPLAY_POST_THUMB_TITLE: boolean
-  DISPLAY_REACTIONS: boolean
-  DISPLAY_SEARCH: boolean
-  HEADER: {
-    TABS: TabFlags[]
-  }
   HOME_ITEMS: {
     DISPLAY_ALL_CATEGORIES: boolean
     CAROUSELS: CarouselFlags[]
   }
   IMAGES?: ChannelImageFlags
+  LIVESTREAM: [
+    {
+      ACTIVE: boolean
+      LABEL: LocaleFlags[]
+      ORDER: number
+      TAB: string
+    }
+  ]
   SETTINGS: {
     DISPLAY_CHANNEL_LOGO: boolean
     DISPLAY_COMMENTS: boolean
     DISPLAY_POST_THUMB_COUNT_VIEWS: boolean
+    DISPLAY_POST_THUMB_TITLE: boolean
     DISPLAY_REACTIONS: boolean
   }
   THEME: string
