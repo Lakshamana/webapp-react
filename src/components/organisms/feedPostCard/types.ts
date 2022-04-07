@@ -7,6 +7,7 @@ import {
 
 export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyProps, FlexboxProps {
 	id: string
+	slug: string
 	postTitle: string
 	postDescription: string
 	date: string
