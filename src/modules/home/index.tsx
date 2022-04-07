@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 
 import { PostType, SortDirection, Category } from 'generated/graphql'
 
@@ -16,6 +16,8 @@ import {
   QUERY_CATEGORIES,
   QUERY_POSTS,
 } from 'services/graphql'
+
+import { HomeCarouselsTypes } from 'types/common'
 
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 
@@ -60,13 +62,9 @@ const HomePage = () => {
     loading: loadingFeaturedPosts,
   } = useQuery(QUERY_POSTS, {
     variables: {
-      filters: {
+      filter: {
         featured: true,
         typeIn: [PostType.Video, PostType.OnDemand],
-        sort: {
-          field: 'publishedAt',
-          direction: SortDirection.Desc,
-        },
       },
     },
     skip: !activeChannel,
@@ -100,7 +98,7 @@ const HomePage = () => {
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
-    (loadingCategories && isHomeDisplayingCategories)
+    loadingCategories
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -176,21 +174,25 @@ const HomePage = () => {
     <BillboardScroller items={billboardItems} customButtons={true} />
   )
 
-  const renderFeaturedPostsScroller = () => (
-    <VideosScroller
-      items={featuredPostsData?.posts?.rows}
-      sectionTitle={t('page.home.featured_posts')}
-      hasMoreLink={true}
-    />
-  )
+  const renderFeaturedPostsScroller = () =>
+    !!featuredPostsData?.posts?.rows && (
+      <VideosScroller
+        key="featured-posts"
+        items={featuredPostsData?.posts?.rows}
+        sectionTitle={t('page.home.featured_posts')}
+        hasMoreLink={true}
+      />
+    )
 
-  const renderFeaturedCategoriesScroller = () => (
-    <CategoriesScroller
-      items={featuredCategoriesData?.categories?.rows}
-      sectionTitle={t('page.home.featured_categories')}
-      hasMoreLink={true}
-    />
-  )
+  const renderFeaturedCategoriesScroller = () =>
+    !!featuredCategoriesData?.categories?.rows && (
+      <CategoriesScroller
+        key="featured-categories"
+        items={featuredCategoriesData?.categories?.rows}
+        sectionTitle={t('page.home.featured_categories')}
+        hasMoreLink={true}
+      />
+    )
 
   const renderCategoriesWithChildren = () =>
     categoriesWithChildren?.map((category: Category) => (
@@ -202,6 +204,21 @@ const HomePage = () => {
         sectionUrl={`/c/${activeChannel}/category/${category.id}`}
       />
     ))
+
+  const homeCarouselsFiltered = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
+    (a, b) => a.ORDER - b.ORDER
+  ).filter((item) => item.IS_ACTIVE)
+
+  const renderCarouselsOrderedByRemoteConfig = (contentType: string) => {
+    switch (contentType) {
+      case HomeCarouselsTypes.Posts:
+        return renderFeaturedPostsScroller()
+      case HomeCarouselsTypes.Collections:
+        return renderFeaturedCategoriesScroller()
+      default:
+        return ''
+    }
+  }
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
@@ -218,10 +235,10 @@ const HomePage = () => {
           mt={billboardItems ? 0 : 7}
           w={'100vw'}
         >
-          {!!featuredPostsData?.posts?.rows?.length &&
-            renderFeaturedPostsScroller()}
-          {!!featuredCategoriesData?.categories?.rows?.length &&
-            renderFeaturedCategoriesScroller()}
+          {!!homeCarouselsFiltered?.length &&
+            homeCarouselsFiltered.map((item) =>
+              renderCarouselsOrderedByRemoteConfig(item.CONTENT_TYPE[0])
+            )}
           {!!categoriesWithChildren?.length && renderCategoriesWithChildren()}
           {isEmpty && <EmptyState />}
         </Flex>
