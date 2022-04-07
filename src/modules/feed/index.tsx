@@ -61,7 +61,7 @@ const FeedPage = () => {
   }
 
   const loadMorePosts = () => {
-    if (hasMore) getPosts(dataPosts.posts.page + 1)
+    if (hasMore) getPosts(dataPosts?.posts.page + 1)
   }
 
   const getSortByFilter = () => filterBy !== 'old' ? "publishedAt.asc" : "publishedAt.desc"
