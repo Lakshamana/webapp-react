@@ -2764,7 +2764,7 @@ export type UpdateMediaVideo = {
 
 export type UpdateMenu = {
   icon?: Maybe<Scalars['String']>;
-  isParent?: Maybe<Scalars['ID']>;
+  isParent?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   parentId?: Maybe<Scalars['ID']>;
   route?: Maybe<Scalars['String']>;
