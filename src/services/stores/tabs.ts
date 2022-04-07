@@ -4,6 +4,16 @@ import { getData } from 'services/storage'
 import { TabFlags } from 'types/flags'
 import { convertCamelCaseToDash } from 'utils'
 
+export const mapperTabName = {
+  HOME: 'HOME',
+  FEED: 'FEED',
+  LIVE: 'LIVE',
+  CATEGORIES: 'COLLECTIONS',
+  CATEGORY: 'COLLECTIONS',
+  MYLIST: 'MY_LIST',
+  ROOMS: 'ROOMS',
+}
+
 const getTabURL = (tab: string) => {
   const URL = {
     HOME: '/c/:channel',

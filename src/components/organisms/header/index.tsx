@@ -21,7 +21,7 @@ import { defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
 import { sizes, breakpoints, colors } from 'styles'
 import { HeaderContainer } from './styles'
-import { useTabsStore } from 'services/stores/tabs'
+import { mapperTabName, useTabsStore } from 'services/stores/tabs'
 
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
@@ -124,16 +124,23 @@ const HeaderComponent = () => {
         ? getActiveTab?.params['tabUrlName'].toUpperCase()
         : 'HOME'
 
-    if (tabName === 'CATEGORY') {
-      tabName = 'COLLECTIONS'
+    tabName = mapperTabName[tabName]
+    const UNRELATED_MENU = {
+      TAB: '',
+      IS_ACTIVE: true,
+      ORDER: 0,
+      LABEL: [{ LOCALE: '', VALUE: '' }],
+      URL: ''
     }
     const defineTab = tabsList.find((item) => item.TAB === tabName)
-    defineTab && setActiveTab(defineTab)
+    defineTab
+      ? setActiveTab(defineTab)
+      : setActiveTab(UNRELATED_MENU)
     // eslint-disable-next-line
-  }, [tabsList])
+  }, [tabsList, pathname])
 
   useEffect(() => {
-    if (state.openMenu && activeChannelMenu?.length > 0) {
+    if (state.openMenu && !!!activeChannelMenu?.length) {
       getMenus()
     }
     //eslint-disable-next-line
