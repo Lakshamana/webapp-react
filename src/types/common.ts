@@ -18,3 +18,10 @@ export type HeroBannerProps = {
   mobileImage?: string
   children?: JSX.Element | JSX.Element[]
 }
+
+export const enum HomeCarouselsTypes {
+  Posts = 'POSTS',
+  Livestreams = 'LIVESTREAMS',
+  ContinueWatching = 'CONTINUE_WATCHING',
+  Collections = 'COLLECTIONS',
+}
