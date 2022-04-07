@@ -21,7 +21,7 @@ import { defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
 import { sizes, breakpoints, colors } from 'styles'
 import { HeaderContainer } from './styles'
-import { useTabsStore } from 'services/stores/tabs'
+import { mapperTabName, useTabsStore } from 'services/stores/tabs'
 
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
@@ -124,9 +124,7 @@ const HeaderComponent = () => {
         ? getActiveTab?.params['tabUrlName'].toUpperCase()
         : 'HOME'
 
-    if (tabName === 'CATEGORIES') {
-      tabName = 'COLLECTIONS'
-    }
+    tabName = mapperTabName[tabName]
     const UNRELATED_MENU = {
       TAB: '',
       IS_ACTIVE: true,
