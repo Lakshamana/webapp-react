@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 
 import { PostType, SortDirection, Category } from 'generated/graphql'
 
@@ -24,6 +24,7 @@ import {
   CategoriesScroller,
   VideosScroller,
 } from 'components/molecules'
+import { BillboardTarget } from 'types/common'
 
 import { convertToValidColor } from 'utils'
 import { sizes } from 'styles'
@@ -48,7 +49,7 @@ const HomePage = () => {
   } = useQuery(QUERY_BILLBOARDS, {
     variables: {
       filter: {
-        target: 'home',
+        target: BillboardTarget.Home,
       },
     },
     skip: !activeChannel,
