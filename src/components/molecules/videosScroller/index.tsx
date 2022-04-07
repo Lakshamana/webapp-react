@@ -46,8 +46,8 @@ const VideosScroller = ({
     return image
   }
 
-  const getPostUrl = (id: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
+  const getPostUrl = (slug: string) => {
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${slug}`
   }
 
   const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
@@ -55,7 +55,7 @@ const VideosScroller = ({
   useEffect(() => {
     const mappedArr = items?.map((item: Post) => {
       const thumbnail = getImageUrl(item)
-      const url = getPostUrl(`${item.id}`)
+      const url = getPostUrl(item.slug)
       return {
         id: item.id,
         title: item.title,
@@ -66,13 +66,12 @@ const VideosScroller = ({
           item.media?.__typename === 'MediaVideo'
             ? item.media?.duration
             : undefined,
-        //TODO: Verify if countViews exists on API
+        //TODO: Waiting for API
         countViews: undefined,
         isExclusive: isExclusive(item),
         //TODO: Implement isGeolocked
         isGeolocked: false,
-        //TODO: Waiting for API
-        isPinned: false,
+        isPinned: item.pinnedAt,
       }
     })
     setScrollerItems(mappedArr?.length ? mappedArr : [])

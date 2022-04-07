@@ -125,7 +125,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
       />
       <ClientRoute
         isAccesible={true}
-        path="/c/:channel/post/:id"
+        path="/c/:channel/post/:slug"
         component={VideoPostView}
         redirectTo="/channels"
         template={MainLayout}

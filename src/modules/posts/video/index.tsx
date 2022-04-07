@@ -22,7 +22,7 @@ import { useCustomizationStore } from 'services/stores'
 
 const VideoPostView = () => {
   const { colorMode } = useThemeStore()
-  const { id } = useParams<{ channel: string; id: string }>()
+  const { slug } = useParams<{ channel: string; slug: string }>()
   const { t } = useTranslation()
   const { activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -30,7 +30,7 @@ const VideoPostView = () => {
   const [relatedVideosData, setRelatedVideosData] = useState<Post[]>()
 
   const { loading: loadingPost } = useQuery(QUERY_POST, {
-    variables: { id },
+    variables: { slug },
     onCompleted: (result) => setPostData(result?.post),
   })
 
@@ -38,15 +38,21 @@ const VideoPostView = () => {
     getRelatedPosts,
     { data: relatedPosts, loading: loadingRelatedPosts },
   ] = useLazyQuery(QUERY_POSTS, {
-    onCompleted: (result) => setRelatedVideosData(result?.posts),
+    onCompleted: (result) => {
+      const filteredRelatedVideos = result.posts.rows.filter(
+        (item) => item.slug !== slug
+      )
+      setRelatedVideosData(filteredRelatedVideos)
+    },
   })
 
   useEffect(() => {
     if (postData?.categories?.length) {
+      const filteredCategories = postData.categories.map((item) => item.id)
       getRelatedPosts({
         variables: {
           filter: {
-            category: postData.categories[0]?.id,
+            categories: filteredCategories,
           },
         },
       })
@@ -89,9 +95,11 @@ const VideoPostView = () => {
       alignItems="center"
       mb={'-30px'}
     >
-      <Video>
-        <VideoPlayer src={mediaUrl()} />
-      </Video>
+      {!loadingPost && (
+        <Video>
+          <VideoPlayer src={mediaUrl()} />
+        </Video>
+      )}
       <VideoDetails>
         <Title>{postData?.title}</Title>
         <Subtitle>
@@ -123,7 +131,13 @@ const VideoPostView = () => {
       >
         <VideoComments>
           {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
-            <Box w={!!relatedVideosData?.length ? { sm: '100%', md: '55%', lg: '60%', xl: '70%' } : '100%'}>
+            <Box
+              w={
+                !!relatedVideosData?.length
+                  ? { sm: '100%', md: '55%', lg: '60%', xl: '70%' }
+                  : '100%'
+              }
+            >
               {postData && <Comments {...postData} />}
             </Box>
           )}
