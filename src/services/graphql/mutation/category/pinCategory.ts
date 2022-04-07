@@ -5,6 +5,7 @@ export const MUTATION_PIN_CATEGORY = gql`
     pinCategory(payload: $payload) {
       id
       pinnedAt
+      __typename
     }
   }
 `
