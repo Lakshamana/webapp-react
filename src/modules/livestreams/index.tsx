@@ -14,6 +14,7 @@ import {
   VideosScroller,
   BillboardScroller,
 } from 'components/molecules'
+import { BillboardTarget } from 'types/common'
 import { sizes } from 'styles'
 import { useCommonStore } from 'services/stores'
 import { convertToValidColor } from 'utils'
@@ -53,7 +54,7 @@ const Livestreams = () => {
   const { data: billboardData } = useQuery(QUERY_BILLBOARDS, {
     variables: {
       filter: {
-        target: 'live',
+        target: BillboardTarget.Live,
       },
     },
   })
