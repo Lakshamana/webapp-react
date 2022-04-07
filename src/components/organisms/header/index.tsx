@@ -124,16 +124,25 @@ const HeaderComponent = () => {
         ? getActiveTab?.params['tabUrlName'].toUpperCase()
         : 'HOME'
 
-    if (tabName === 'CATEGORY') {
+    if (tabName === 'CATEGORIES') {
       tabName = 'COLLECTIONS'
     }
+    const UNRELATED_MENU = {
+      TAB: '',
+      IS_ACTIVE: true,
+      ORDER: 0,
+      LABEL: [{ LOCALE: '', VALUE: '' }],
+      URL: ''
+    }
     const defineTab = tabsList.find((item) => item.TAB === tabName)
-    defineTab && setActiveTab(defineTab)
+    defineTab
+      ? setActiveTab(defineTab)
+      : setActiveTab(UNRELATED_MENU)
     // eslint-disable-next-line
-  }, [tabsList])
+  }, [tabsList, pathname])
 
   useEffect(() => {
-    if (state.openMenu && activeChannelMenu?.length > 0) {
+    if (state.openMenu && !!!activeChannelMenu?.length) {
       getMenus()
     }
     //eslint-disable-next-line
