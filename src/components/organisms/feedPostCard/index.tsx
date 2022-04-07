@@ -34,8 +34,8 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { colorMode } = useThemeStore()
   const { activeChannel } = useChannelsStore()
 
-  const getPostUrl = (id: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
+  const getPostUrl = (slug: string) => {
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${slug}`
   }
 
   const translateMapper = [
@@ -61,11 +61,11 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
       <CardContent>
         {
           props.type !== 'POLL' &&
-          <Link to={getPostUrl(props.id)}>
+          <Link to={getPostUrl(props.slug)}>
             <SetMediaType {...props} />
           </Link>
         }
-        <Link to={getPostUrl(props.id)}>
+        <Link to={getPostUrl(props.slug)}>
           <CardHeader>
             <Text
               kind="headline"

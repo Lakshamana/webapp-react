@@ -113,6 +113,7 @@ const FeedPage = () => {
         //TODO: why some items has default value?
         return {
           id: post.id,
+          slug: post.slug,
           postTitle: post.title,
           postDescription: post.description,
           date: date(),
