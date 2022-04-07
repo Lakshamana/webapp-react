@@ -39,8 +39,8 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
     )
   }
 
-  const getPostUrl = (id: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
+  const getPostUrl = (slug: string) => {
+    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${slug}`
   }
 
   const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
@@ -49,10 +49,10 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
     if (items && items?.length) {
       const mappedArr = items?.map((item: Post) => {
         const thumbnail = getImageUrl(item)
-        const url = getPostUrl(`${item.id}`)
+        const url = getPostUrl(item.slug)
         return {
-          id: `${item.id}`,
-          title: `${item.title}`,
+          id: item.id,
+          title: item.title,
           url: url,
           thumbnail: thumbnail,
           mediaLength:
@@ -63,6 +63,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
           isExclusive: item.access === 'EXCLUSIVE',
           //TODO: Implement isGeolocked
           isGeolocked: false,
+          isPinned: item.pinnedAt,
         }
       })
       setGridItems(mappedArr)
