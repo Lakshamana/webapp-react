@@ -26,6 +26,7 @@ import {
   CategoriesScroller,
   VideosScroller,
 } from 'components/molecules'
+import { BillboardTarget } from 'types/common'
 
 import { convertToValidColor } from 'utils'
 import { sizes } from 'styles'
@@ -50,7 +51,7 @@ const HomePage = () => {
   } = useQuery(QUERY_BILLBOARDS, {
     variables: {
       filter: {
-        target: 'home',
+        target: BillboardTarget.Home,
       },
     },
     skip: !activeChannel,
