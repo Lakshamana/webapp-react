@@ -18,25 +18,27 @@ import { buildUrlFromPath } from 'utils'
 import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
 import { colors, breakpoints } from 'styles'
 import { Post } from 'generated/graphql'
+import { useCustomizationStore } from 'services/stores'
 
 const VideoPostView = () => {
   const { colorMode } = useThemeStore()
   const { id } = useParams<{ channel: string; id: string }>()
   const { t } = useTranslation()
+  const { activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [postData, setPostData] = useState<Post>()
   const [relatedVideosData, setRelatedVideosData] = useState<Post[]>()
 
   const { data, loading } = useQuery(QUERY_POST, {
     variables: { id },
-    onCompleted: (result) => setPostData(result?.post)
+    onCompleted: (result) => setPostData(result?.post),
   })
 
   const [
     getRelatedPosts,
     { data: relatedPosts, loading: loadingRelatedPosts },
   ] = useLazyQuery(QUERY_POSTS, {
-    onCompleted: (result) => setRelatedVideosData(result?.posts)
+    onCompleted: (result) => setRelatedVideosData(result?.posts),
   })
 
   useEffect(() => {
@@ -97,14 +99,18 @@ const VideoPostView = () => {
           />
         </Subtitle>
         <Flex w="100%" mt={4} flexDirection={isDesktop ? 'row' : 'column'}>
-          <ReactionBar
-            postId={postData?.id}
-            reactions={postReactions}
-            totalReactions={postData?.countReactions}
-            myReactions={[]}
-          />
+          {activeChannelConfig?.DISPLAY_REACTIONS && (
+            <ReactionBar
+              postId={postData?.id}
+              reactions={postReactions}
+              totalReactions={postData?.countReactions}
+              myReactions={[]}
+            />
+          )}
           <Spacer mt={isDesktop ? 0 : 4} />
-          <Participants participants={engagedUsers} />
+          {activeChannelConfig?.DISPLAY_COMMENTS && (
+            <Participants participants={engagedUsers} />
+          )}
         </Flex>
       </VideoDetails>
       <Container
@@ -114,9 +120,9 @@ const VideoPostView = () => {
         justifyContent="center"
       >
         <VideoComments>
-          {postData && (
+          {activeChannelConfig?.DISPLAY_COMMENTS && (
             <Box w={{ sm: '100%', md: '55%', lg: '60%', xl: '70%' }}>
-              <Comments {...postData} />
+              {postData && <Comments {...postData} />}
             </Box>
           )}
           <Spacer mx={3} />
