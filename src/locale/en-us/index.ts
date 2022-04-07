@@ -49,6 +49,11 @@ const EN_US = {
       accept_all: 'I accept all',
       agree: 'Agree',
       cancel_registration: 'Cancel registration',
+      push: {
+        allow: 'Allow',
+        cancel: 'No thanks',
+        title: '{{org}} would like to send you push notifications'
+      }
     },
     signin: {
       title: 'Access {{org}} now',

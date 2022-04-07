@@ -46,6 +46,11 @@ const PT_BR = {
       confirm_signout: 'Tem certeza que deseja sair?',
       update: 'Atualizar',
       accept_all: 'Eu aceito todos os',
+      push: {
+        allow: 'Permitir',
+        cancel: 'Não, obrigado.',
+        title: '{{org}} gostaria de enviar notificações.'
+      }
     },
     signin: {
       title: 'Acesse {{org}} agora',

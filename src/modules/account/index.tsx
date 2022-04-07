@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
 import { Box } from '@chakra-ui/layout'
+import OneSignal from 'react-onesignal'
 
 import {
   Container,
@@ -49,6 +50,7 @@ const AccountPage = () => {
   const [updateAccountError, setUpdateAccountError] = useState('')
   const [updateProfileError, setUpdateProfileError] = useState('')
   const [forgetAccountError, setForgetAccountError] = useState('')
+  const [isPushEnabled, setIsPushEnabled] = useState(false)
   const [updatePasswordMsg, setUpdatePasswordMsg] =
     useState<AlertObjectType | null>()
   const { user, account } = useAuthStore()
@@ -162,6 +164,10 @@ const AccountPage = () => {
   useEffect(() => {
     getAccount()
     setPageTitle(t('page.account.title'))
+    OneSignal.isPushNotificationsEnabled().then((result) =>
+      setIsPushEnabled(result)
+    )
+
     // eslint-disable-next-line
   }, [])
 
@@ -169,6 +175,27 @@ const AccountPage = () => {
     const { value } = evt?.target
     i18n.changeLanguage(value)
     saveData(APP_LOCALE, value)
+  }
+
+  const onManageWebPushSubscriptionToggleClicked = () => {
+    OneSignal.isPushNotificationsEnabled().then((result: any) => {
+      if (result) {
+        /* Subscribed, opt them out */
+        OneSignal.setSubscription(false)
+        setIsPushEnabled(false)
+      } else {
+        OneSignal.getNotificationPermission().then((result: any) => {
+          if (result === 'granted') {
+            OneSignal.setSubscription(true)
+            setIsPushEnabled(true)
+          }
+          if (result === 'default') OneSignal.showSlidedownPrompt()
+          //TODO: Alert user about how enable permissions on browser
+          if (result === 'denied')
+            console.log('give permission to your browser')
+        })
+      }
+    })
   }
 
   return (
@@ -252,7 +279,13 @@ const AccountPage = () => {
           />
           <SingleConfiguration
             text={t('page.account.push_notifications')}
-            children={<ToggleButton size="md" onChange={() => {}} />}
+            children={
+              <ToggleButton
+                size="md"
+                isChecked={isPushEnabled}
+                onChange={onManageWebPushSubscriptionToggleClicked}
+              />
+            }
             {...{ colorMode }}
           />
         </ConfigBox>
