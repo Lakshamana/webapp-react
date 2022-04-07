@@ -18,6 +18,7 @@ export const QUERY_POSTS = gql`
         id
         slug
         status
+        pinnedAt
         tags
         thumbnail {
           imgPath
