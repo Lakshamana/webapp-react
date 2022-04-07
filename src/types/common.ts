@@ -19,6 +19,13 @@ export type HeroBannerProps = {
   children?: JSX.Element | JSX.Element[]
 }
 
+export const enum HomeCarouselsTypes {
+  Posts = 'POSTS',
+  Livestreams = 'LIVESTREAMS',
+  ContinueWatching = 'CONTINUE_WATCHING',
+  Collections = 'COLLECTIONS',
+}
+
 export const enum BillboardTarget {
   Home = 'HOME',
   Live = 'LIVE',

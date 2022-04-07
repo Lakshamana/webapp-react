@@ -32,7 +32,7 @@ export const useTabsStore = create<TabsState>((set) => ({
     const channel = getData(CHANNEL_INFO)
     const activeTabs = tabsList
       .sort((a, b) => a.ORDER - b.ORDER)
-      .filter((item) => item.ACTIVE)
+      .filter((item) => item.IS_ACTIVE)
     if (channel) {
       const channelName = convertCamelCaseToDash(channel.name)
       let slug = ''

@@ -20,7 +20,7 @@ const Channels = ({
 
   const generateChannelImage = (icon: any) => {
     const theme = colorMode.toUpperCase()
-    if (!icon[theme]) return ''
+    if (!icon) return ''
     return generateImage(ThumborInstanceTypes.IMAGE, icon[theme], {
       size: { height: 80 },
     })
@@ -38,7 +38,7 @@ const Channels = ({
           channels.map((channel: Channel) => {
             const channelConfig = CHANNELS[channel.id]
             const channelThumbnail = generateChannelImage(
-              channelConfig.IMAGES?.CHANNEL_ICON
+              channelConfig?.IMAGES?.CHANNEL_ICON
             )
 
             return (

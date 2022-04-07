@@ -29,7 +29,7 @@ const VideoPostView = () => {
   const [postData, setPostData] = useState<Post>()
   const [relatedVideosData, setRelatedVideosData] = useState<Post[]>()
 
-  const { data, loading } = useQuery(QUERY_POST, {
+  const { loading: loadingPost } = useQuery(QUERY_POST, {
     variables: { id },
     onCompleted: (result) => setPostData(result?.post),
   })
@@ -87,6 +87,7 @@ const VideoPostView = () => {
       flexDirection={'column'}
       justifyContent="center"
       alignItems="center"
+      mb={'-30px'}
     >
       <Video>
         <VideoPlayer src={mediaUrl()} />
@@ -99,7 +100,7 @@ const VideoPostView = () => {
           />
         </Subtitle>
         <Flex w="100%" mt={4} flexDirection={isDesktop ? 'row' : 'column'}>
-          {activeChannelConfig?.DISPLAY_REACTIONS && (
+          {activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
             <ReactionBar
               postId={postData?.id}
               reactions={postReactions}
@@ -108,7 +109,7 @@ const VideoPostView = () => {
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
-          {activeChannelConfig?.DISPLAY_COMMENTS && (
+          {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
             <Participants participants={engagedUsers} />
           )}
         </Flex>
@@ -116,17 +117,18 @@ const VideoPostView = () => {
       <Container
         width={'100vw'}
         mt={'30px'}
+        pb={'30px'}
         backgroundColor={colors.cardBg[colorMode]}
         justifyContent="center"
       >
         <VideoComments>
-          {activeChannelConfig?.DISPLAY_COMMENTS && (
-            <Box w={{ sm: '100%', md: '55%', lg: '60%', xl: '70%' }}>
+          {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
+            <Box w={!!relatedVideosData?.length ? { sm: '100%', md: '55%', lg: '60%', xl: '70%' } : '100%'}>
               {postData && <Comments {...postData} />}
             </Box>
           )}
           <Spacer mx={3} />
-          {relatedVideosData?.length && (
+          {!!relatedVideosData?.length && (
             <Box w={{ sm: '100%', md: '45%', lg: '40%', xl: '30%' }}>
               <VideoPlaylist
                 title={t('page.post.related_videos')}

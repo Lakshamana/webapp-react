@@ -167,7 +167,7 @@ const HeaderComponent = () => {
             mx={2}
             ignoreFallback
             src={
-              activeChannelConfig?.DISPLAY_CHANNEL_LOGO
+              activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
                 ? channelLogo()
                 : orgLogo
             }
@@ -196,17 +196,15 @@ const HeaderComponent = () => {
           flex={state.openSearch ? 1 : 'none'}
           zIndex={1000}
         >
-          {activeChannelConfig?.DISPLAY_SEARCH && (
-            <SearchBar
-              data={searchValues}
-              open={state.openSearch}
-              onOpen={handleOpenSearch}
-              onClose={handleCloseSearch}
-              onSearch={handleSearch}
-              search={state.search}
-              {...{ colorMode }}
-            />
-          )}
+          <SearchBar
+            data={searchValues}
+            open={state.openSearch}
+            onOpen={handleOpenSearch}
+            onClose={handleCloseSearch}
+            onSearch={handleSearch}
+            search={state.search}
+            {...{ colorMode }}
+          />
           <UserInfo
             display={'menu'}
             closeSideMenu={handleCloseMenu}

@@ -113,7 +113,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
         {renderAddToMyListIcon()}
       </Flex>
       <Flex mt={1}>
-        {activeChannelConfig?.DISPLAY_POST_THUMB_COUNT_VIEWS && (
+        {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS && (
           <Text
             display="flex"
             alignItems="center"

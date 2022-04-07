@@ -26,7 +26,7 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
     <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
       {channelsList?.map((item) => {
         const channelConfig = CHANNELS[item.id]
-        const channelThumbnail = getImageUrl(channelConfig.IMAGES?.THUMBNAIL)
+        const channelThumbnail = getImageUrl(channelConfig?.IMAGES?.THUMBNAIL)
         return (
           <ChannelCard
             id={item.id}
