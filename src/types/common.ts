@@ -18,3 +18,8 @@ export type HeroBannerProps = {
   mobileImage?: string
   children?: JSX.Element | JSX.Element[]
 }
+
+export const enum BillboardTarget {
+  Home = 'HOME',
+  Live = 'LIVE',
+}
