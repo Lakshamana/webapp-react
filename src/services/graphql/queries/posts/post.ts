@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_POST = gql`
-  query GetPost($id: ID!) {
-    post(id: $id) {
+  query GetPost($id: ID, $slug: String) {
+    post(id: $id, slug: $slug) {
       id
       access
       allowComments
