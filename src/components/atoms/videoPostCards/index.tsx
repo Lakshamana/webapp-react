@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router'
 import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
@@ -19,6 +19,11 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
   const { activeChannelConfig } = useCustomizationStore()
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
+  const [isPostPinned, setIsPostPinned] = useState(false)
+
+  useEffect(() => {
+    setIsPostPinned(props.isPinned || false)
+  }, [props.isPinned])
 
   const [pinPost, { loading: loadingPinPost }] = useMutation(
     MUTATION_PIN_POST,
@@ -29,6 +34,9 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
           pinned: true,
         },
       },
+      onCompleted: (result) => {
+        setIsPostPinned(result?.pinPost?.pinned)
+      }
     }
   )
 
@@ -38,6 +46,9 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       variables: {
         id: props.id,
       },
+      onCompleted: (result) => {
+        setIsPostPinned(result?.unpinPost?.pinned)
+      }
     }
   )
 
@@ -55,7 +66,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      onClick={() => (props.isPinned ? unpinPost() : pinPost())}
+      onClick={() => (isPostPinned ? unpinPost() : pinPost())}
     >
       {isLoading && (
         <Spinner
@@ -67,9 +78,9 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       )}
       {!isLoading && (
         <Icon
-          icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
+          icon={isPostPinned ? 'mdi:check' : 'mdi:plus'}
           color={
-            props.isPinned
+            isPostPinned
               ? colors.brand.primary[colorMode]
               : colors.generalText[colorMode]
           }

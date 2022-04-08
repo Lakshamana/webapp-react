@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router'
 import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
@@ -17,15 +17,26 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
+  const [isCategoryPinned, setIsCategoryPinned] = useState(false)
 
-  const [pinCategory, { loading }] = useMutation(MUTATION_PIN_CATEGORY, {
-    variables: {
-      payload: {
-        category: props.id,
-        pinned: true,
+  useEffect(() => {
+    setIsCategoryPinned(props.isPinned || false)
+  }, [props.isPinned])
+
+  const [pinCategory, { loading: loadingPinCategory }] = useMutation(
+    MUTATION_PIN_CATEGORY,
+    {
+      variables: {
+        payload: {
+          category: props.id,
+          pinned: true,
+        },
       },
-    },
-  })
+      onCompleted: (result) => {
+        setIsCategoryPinned(result?.pinCategory?.pinned)
+      }
+    }
+  )
 
   const [unpinCategory, { loading: loadingUnpinCategory }] = useMutation(
     MUTATION_UNPIN_CATEGORY,
@@ -33,8 +44,13 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
       variables: {
         id: props.id,
       },
+      onCompleted: (result) => {
+        setIsCategoryPinned(result?.unpinCategory?.pinned)
+      }
     }
   )
+
+  const isLoading = loadingPinCategory || loadingUnpinCategory
 
   const selectCategory = () => history.push(`${props.url}`)
 
@@ -48,9 +64,9 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      // onClick={() => pinCategory()}
+      onClick={() => (isCategoryPinned ? unpinCategory() : pinCategory())}
     >
-      {loading ? (
+      {isLoading ? (
         <Spinner
           thickness="1px"
           width="15px"
@@ -59,9 +75,9 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
         />
       ) : (
         <Icon
-          icon={props.isPinned ? 'mdi:check' : 'mdi:plus'}
+          icon={isCategoryPinned ? 'mdi:check' : 'mdi:plus'}
           color={
-            props.isPinned
+            isCategoryPinned
               ? colors.brand.primary[colorMode]
               : colors.generalText[colorMode]
           }

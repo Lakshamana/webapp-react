@@ -2,8 +2,6 @@ import { memo } from 'react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { SwiperSlide } from 'swiper/react'
 import SwiperCore, { Autoplay, Pagination, EffectFade } from 'swiper'
-import { useTranslation } from 'react-i18next'
-import { Button } from 'components'
 import { ActionsList } from '../BillboardActions'
 import { getActions, getItems } from 'utils'
 import { Props, BillboardItem } from '../../types'
@@ -17,20 +15,18 @@ import {
   Title,
   Description,
   BoxButtons,
-  ContentButton,
   SwiperStyled
 } from './style'
-import { colors, breakpoints } from 'styles'
+import { breakpoints } from 'styles'
 import './style.css'
 import 'swiper/swiper-bundle.min.css'
 import { Badge } from 'components/atoms'
+import { CategoryButtons } from '../CategoryButtons'
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
 const SwiperSlideList = ({ items, customButtons }: Props) => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
-
-  const { t } = useTranslation()
 
   if (!items || !items.length) return <></>
 
@@ -55,27 +51,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                     <ActionsList actions={getActions(item?.actions)} />
                   </BoxButtons>
                 ) : (
-                  <BoxButtons>
-                    <ContentButton>
-                      <Button
-                        iconName={'play'}
-                        label={t('page.categories.watch_now')}
-                        width={'100%'}
-                        height={'100%'}
-                      />
-                    </ContentButton>
-                    <ContentButton>
-                      <Button
-                        backgroundColor={`${colors.grey['800']}`}
-                        variant={'unstyled'}
-                        iconName={item.isPinned ? 'check' : 'plus-circle'}
-                        color={`${colors.white}`}
-                        label={t('page.categories.my_list')}
-                        width={'100%'}
-                        height={'100%'}
-                      />
-                    </ContentButton>
-                  </BoxButtons>
+                 <CategoryButtons isPinned={item.isPinned || false} categoryId={item.id}></CategoryButtons>
                 )}
               </InfoContent>
             </Info>

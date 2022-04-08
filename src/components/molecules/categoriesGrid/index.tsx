@@ -35,6 +35,7 @@ const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
           title: item.name,
           url,
           thumbnail,
+          isPinned: item.pinnedAt
         }
       })
       setGridItems(mappedArr)

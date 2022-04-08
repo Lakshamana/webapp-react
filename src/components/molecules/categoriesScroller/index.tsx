@@ -55,8 +55,7 @@ const CategoriesScroller = ({
         description: item.description || '',
         url: url,
         thumbnail: thumbnail,
-        //TODO: Waiting for API
-        isPinned: false,
+        isPinned: item.pinnedAt,
       }
     })
     setScrollerItems(categoriesItems)
