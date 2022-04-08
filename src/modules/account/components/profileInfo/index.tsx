@@ -40,12 +40,15 @@ const ProfileInfo = ({
       },
     })
 
+  const validateDate = (value) =>
+    Date.parse(value) ? new Date(value) : new Date()
+
   const renderInputByType = (key: string, value: any) => {
     switch (key) {
       case 'birthday':
         return (
           <DateInput
-            startValue={new Date(value)}
+            startValue={validateDate(value)}
             onChange={(date) => {
               setFieldValue(key, date)
             }}
