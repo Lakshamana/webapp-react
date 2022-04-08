@@ -27,7 +27,8 @@ const CategoryPage = () => {
     QUERY_CATEGORY,
     {
       variables: {
-        id,
+        categoryId: id,
+        postId: id
       },
     }
   )
@@ -84,7 +85,7 @@ const CategoryPage = () => {
         {!!categoryData?.posts?.rows?.length && (
           <PostsGrid sectionTitle={t("page.category.videos")} items={categoryData?.posts?.rows}></PostsGrid>
         )}
-        {isEmpty && <EmptyState/>}
+        {isEmpty && <EmptyState />}
       </Flex>
     </Container>
   )

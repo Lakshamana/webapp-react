@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_CATEGORY = gql`
-  query GetCategoryWithPosts($id: String!) {
-    category(id: $id) {
+  query GetCategoryWithPosts($categoryId: ID!, $postId: String!) {
+    category(id: $categoryId) {
       id
       access
       createdAt
@@ -40,7 +40,7 @@ export const QUERY_CATEGORY = gql`
       name
       tags
     }
-    posts(filters: { categories: [$id], typeIn: [VIDEO, ON_DEMAND] }) {
+    posts(filters: { categories: [$postId], typeIn: [VIDEO, ON_DEMAND] }) {
       hasNextPage
       hasPreviousPage
       isFirstPage
