@@ -119,7 +119,7 @@ export const abbreviateNumber = (value: number) => {
 export function convertCountMessage(t: any, data: number, translateMapper: Array<string>) {
   const countMessages = abbreviateNumber(data)
   if (Number(countMessages) === 0) return t(translateMapper[0])
-  const defineMessage = Number(countMessages) < 9
+  const defineMessage = Number(countMessages) === 1
     ? t(translateMapper[1])
     : t(translateMapper[2])
   return `${countMessages} ${defineMessage}`
