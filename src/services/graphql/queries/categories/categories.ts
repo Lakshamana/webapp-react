@@ -12,6 +12,7 @@ export const QUERY_CATEGORIES = gql`
       pageSize
       rows {
         access
+        pinnedAt
         parentId
         createdAt
         customization {
@@ -29,6 +30,7 @@ export const QUERY_CATEGORIES = gql`
           parentId
           description
           featuredAt
+          pinnedAt
           customization {
             desktop {
               imgPath

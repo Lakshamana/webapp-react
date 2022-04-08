@@ -6,6 +6,7 @@ export const QUERY_CATEGORY = gql`
       id
       access
       createdAt
+      pinnedAt
       customization {
         desktop {
           imgPath
@@ -21,6 +22,7 @@ export const QUERY_CATEGORY = gql`
         description
         featuredAt
         geoFence
+        pinnedAt
         id
         name
         description
@@ -52,6 +54,7 @@ export const QUERY_CATEGORY = gql`
         access
         title
         description
+        pinnedAt
         geofence
         slug
         status
