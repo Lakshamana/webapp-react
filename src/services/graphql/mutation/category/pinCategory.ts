@@ -6,6 +6,7 @@ export const MUTATION_PIN_CATEGORY = gql`
       id
       pinnedAt
       __typename
+      pinned
     }
   }
 `
