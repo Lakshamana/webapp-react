@@ -22,26 +22,25 @@ import { MUTATION_REFRESH_FIREBASE_TOKEN } from 'services/graphql'
 
 const { REACT_APP_ORGANIZATION_URL } = process.env
 
-const accessToken = getData(AUTH_TOKEN)
-
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
 export const authWithCustomToken = () => {
-  const FirebaseToken = getData(FIREBASE_TOKEN)
-  if (FirebaseToken)
-    signInWithCustomToken(CUSTOM_TOKEN_AUTH, FirebaseToken).catch(() => {
-      refreshFirebaseToken()
-      return
-    })
-  refreshFirebaseToken()
+  const firebaseToken = getData(FIREBASE_TOKEN)
+  if (firebaseToken)
+    signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
+      .catch(() => {
+        refreshFirebaseToken()
+        return
+      })
 }
 
 export const refreshFirebaseToken = async () => {
+  const accessToken = getData(AUTH_TOKEN)
   try {
     await requestGraphql({
       query: MUTATION_REFRESH_FIREBASE_TOKEN,
       headers: {
-        authorization: accessToken ? `Bearer ${accessToken}` : '',
+        authorization: `Bearer ${accessToken}`,
         organization: REACT_APP_ORGANIZATION_URL,
       },
     })
@@ -157,14 +156,10 @@ export const SocialSignIn = (
                         })
                       }
                     })
-                    .catch((err) => {
-                      reject(err)
-                    })
+                    .catch((err) => reject(err))
                 }
               })
-              .catch((err) => {
-                reject(err)
-              })
+              .catch((err) => reject(err))
           })
         }
         reject(err)
@@ -172,10 +167,5 @@ export const SocialSignIn = (
   })
 }
 
-export const signOutFB = () => {
-  signOut(CUSTOM_TOKEN_AUTH)
-}
-
-export const isUserLoggedFB = (): boolean => {
-  return !!CUSTOM_TOKEN_AUTH.currentUser
-}
+export const signOutFB = () => signOut(CUSTOM_TOKEN_AUTH)
+export const isUserLoggedFB = (): boolean => !!CUSTOM_TOKEN_AUTH.currentUser
