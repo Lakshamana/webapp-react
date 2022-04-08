@@ -26,7 +26,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
-  const [mediaIds, setMediaIds] = useState<any>([])
   const { activeChannel, setActiveChannel, channelsList, setChannelsList } =
     useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -60,14 +59,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     history.push(`/c/${channelName}`)
   }
 
-  useEffect(() => {
-    const mediaIdsFiltered = channelsList?.map(
-      (channel) => channel.customization?.thumbnail
-    )
-    setMediaIds(mediaIdsFiltered)
-    // getMedia()
-  }, [channelsList])
-
   return (
     <CustomContainer ml={'12px'}>
       <Flex alignItems="center">
@@ -100,16 +91,13 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
             {...{ search, colorMode }}
             onChange={() => handleSearch}
           /> */}
-            {!!mediaIds.length && (
-              <Channels
-                selected={activeChannel}
-                mediasId={mediaIds}
-                channels={channelsList || []}
-                isLoading={loading}
-                onSelect={handleSelect}
-                {...{ colorMode }}
-              />
-            )}
+            <Channels
+              selected={activeChannel}
+              channels={channelsList || []}
+              isLoading={loading}
+              onSelect={handleSelect}
+              {...{ colorMode }}
+            />
           </Container>
         </Popover>
       </Flex>
