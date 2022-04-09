@@ -34,10 +34,7 @@ const VideoPostView = () => {
     onCompleted: (result) => setPostData(result?.post),
   })
 
-  const [
-    getRelatedPosts,
-    { data: relatedPosts, loading: loadingRelatedPosts },
-  ] = useLazyQuery(QUERY_POSTS, {
+  const [getRelatedPosts] = useLazyQuery(QUERY_POSTS, {
     onCompleted: (result) => {
       const filteredRelatedVideos = result.posts.rows.filter(
         (item) => item.slug !== slug
@@ -69,24 +66,11 @@ const VideoPostView = () => {
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
   }
 
-  const postReactions =
-    postData?.reactions?.map((item) => ({
-      name: `${item?.name}`,
-      count: item?.count || 0,
-    })) || []
-
   const engagedUsers =
     postData?.engagedUsers.map((item) => ({
       name: item.username,
       avatar: '',
     })) || []
-
-  //TODO: Waiting for API to get My Reactions
-  // const postMyReactions =
-  //   postData?.myReactions?.map((item) => ({
-  //     name: `${item?.name}`,
-  //     count: item?.count || 0,
-  //   })) || []
 
   return (
     <Container
@@ -111,9 +95,9 @@ const VideoPostView = () => {
           {activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
             <ReactionBar
               postId={postData?.id}
-              reactions={postReactions}
+              reactions={postData ? [...postData?.reactions] : []}
               totalReactions={postData?.countReactions}
-              myReactions={[]}
+              myReactions={postData?.myReactions ?? []}
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
