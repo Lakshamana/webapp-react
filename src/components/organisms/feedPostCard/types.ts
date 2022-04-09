@@ -13,6 +13,7 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	date: string
 	postUrl?: string
 	countReactions: number
+	myReactions: Array<myReactions>
 	reactions: Array<reactions>
 	countMessages: number
 	hasActivity: boolean
@@ -36,6 +37,10 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 
 export interface reactions {
 	count: number,
+	name: string
+}
+
+export interface myReactions {
 	name: string
 }
 
