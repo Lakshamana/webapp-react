@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react'
 import { useThemeStore } from 'services/stores/theme'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
+import { Spinner } from '@chakra-ui/react'
 import { ADD_MY_REACTION, REMOVE_MY_REACTION } from 'services/graphql'
 import { Container, Text } from 'components'
 import { AddReactionButton } from './components'
 import { availableReactions } from './settings'
 import { Reaction } from './styles'
 import { colors } from 'styles'
-import { ReactionsCount, ReactionType } from './types'
+import { MyReactionType, ReactionsCount, ReactionType, UpdateReactionMode } from './types'
 import { formatNumber, convertCountMessage } from 'utils'
+import { UpdateReactions } from './components/addReactionButton/types'
 
 const ReactionBar = ({
   postId,
@@ -19,11 +21,14 @@ const ReactionBar = ({
 }: ReactionsCount) => {
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
-  const [filteredReactions, setFilteredReactions] = useState<ReactionType[]>()
-  const [myActiveReactions, setMyActiveReactions] = useState<ReactionType[]>()
+  const [onlyThreeBiggests, setOnlyThreeBiggests] = useState<ReactionType[]>()
+  const [allReactions, setAllReactions] = useState<ReactionType[]>()
+  const [totalOfReactions, setTotalOfReactions] = useState<number>(0)
+  const [myActiveReactions, setMyActiveReactions] = useState<MyReactionType[]>([])
+  const [updatingReactions, setUpdatingReactions] = useState<UpdateReactions>({ reaction: '', isLoading: false })
 
-  const [addMyReaction, { loading: addLoading }] = useMutation(ADD_MY_REACTION)
-  const [removeMyReaction, { loading: removeLoading }] = useMutation(REMOVE_MY_REACTION)
+  const [addMyReaction] = useMutation(ADD_MY_REACTION)
+  const [removeMyReaction] = useMutation(REMOVE_MY_REACTION)
 
   const translateMapper = [
     'page.feed.no_reactions',
@@ -32,37 +37,71 @@ const ReactionBar = ({
   ]
 
   useEffect(() => {
-    reactions?.sort((a, b) => b.count - a.count)
-    const onlyThreeBiggests = reactions?.slice(0, 3)
-    setFilteredReactions(onlyThreeBiggests)
-  }, [reactions])
+    allReactions?.sort((a, b) => b.count - a.count)
+    const threeBiggests = allReactions?.slice(0, 3)
+    setOnlyThreeBiggests(threeBiggests)
+  }, [allReactions])
 
   useEffect(() => {
+    setAllReactions(reactions)
     setMyActiveReactions(myReactions)
-  }, [myReactions])
+    setTotalOfReactions(totalReactions ?? 0)
+  }, [myReactions, reactions, totalReactions])
 
-  const updateMyReaction = (reaction: string, chooseType: boolean) => () => {
+  const updateAllReactions = (data) => {
+    setAllReactions(data)
+    endOfUpdate()
+  }
+  const endOfUpdate = () => setUpdatingReactions({ reaction: '', isLoading: false })
+  const updateTotalReactions = (mode: UpdateReactionMode) => {
+    if (mode === 'INCREASE') {
+      setTotalOfReactions(totalOfReactions + 1)
+    } else {
+      if (totalOfReactions <= 0) return
+      setTotalOfReactions(totalOfReactions - 1)
+    }
+  }
+
+  const updateMyReaction = (reaction: string) => () => {
+    if (updatingReactions.isLoading) return
     const variables = {
       input: {
         post: postId,
         reaction
       }
     }
-    //TODO: waiting for API
-    // chooseType
-    //   ? addMyReaction({ variables })
-    //   : removeMyReaction({ variables })
+    setUpdatingReactions({ reaction, isLoading: true })
+    const myReactionsContains = myActiveReactions.find(each => each.name === reaction)
+    if (myReactionsContains) {
+      removeMyReaction({ variables })
+        .then(({ data }) => {
+          const updateMyReaction = myActiveReactions?.filter(each => each.name !== reaction)
+          setMyActiveReactions(updateMyReaction)
+          updateAllReactions(data.removeReaction)
+          updateTotalReactions('DECREASE')
+        })
+        .catch(endOfUpdate)
+    } else {
+      addMyReaction({ variables })
+        .then(({ data }) => {
+          setMyActiveReactions([...myActiveReactions, { name: reaction }])
+          updateAllReactions(data.addReaction)
+          updateTotalReactions('INCREASE')
+        })
+        .catch(endOfUpdate)
+    }
   }
 
   return (
     <Container alignItems="center">
       <Container>
         {
-          !!filteredReactions?.length &&
-          filteredReactions?.map((reaction) => {
+          !!onlyThreeBiggests?.length &&
+          onlyThreeBiggests?.map((reaction) => {
             const ifContainsName = ({ name }) => name === reaction?.name
             const reactionValue = availableReactions.find(ifContainsName)
-            const isMyReaction = Boolean(myActiveReactions?.find(ifContainsName))
+            const isMyReaction = myActiveReactions.find(ifContainsName)
+            const isUpdating = updatingReactions.reaction === reaction.name && updatingReactions.isLoading
             return (
               <Reaction
                 key={`${reaction?.name}-reaction`}
@@ -70,24 +109,40 @@ const ReactionBar = ({
                 mr={1}
                 minHeight={32}
                 myReaction={isMyReaction}
-                onClick={updateMyReaction(reaction?.name, !isMyReaction)}
+                onClick={updateMyReaction(reaction?.name)}
               >
-                {reactionValue?.value}
-                <Text ml={2}>
-                  {formatNumber(reaction?.count || 0, 1)}
-                </Text>
+                {
+                  isUpdating &&
+                  <Spinner
+                    speed="0.65s"
+                    thickness={'3px'}
+                    size={'md'}
+                    color={colors.secondaryText[colorMode]}
+                  />
+                }
+                {
+                  !isUpdating &&
+                  <>
+                    {reactionValue?.value}
+                    <Text ml={2}>
+                      {formatNumber(reaction?.count || 0, 1)}
+                    </Text>
+                  </>
+                }
               </Reaction>
             )
-          })}
+          })
+        }
       </Container>
       <AddReactionButton
+        updateReactions={updatingReactions}
         myActiveReactions={myActiveReactions}
         updateMyReaction={updateMyReaction}
       />
       <Container ml={2}>
-        {!!totalReactions && (
+        {!!totalOfReactions && (
           <Text color={colors.secondaryText[colorMode]}>
-            {convertCountMessage(t, totalReactions, translateMapper)}
+            {convertCountMessage(t, totalOfReactions, translateMapper)}
           </Text>
         )}
       </Container>

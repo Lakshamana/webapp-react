@@ -122,6 +122,7 @@ const FeedPage = () => {
           displayViews: true,
           countMessages: post.countComments,
           countReactions: post.countReactions,
+          myReactions: post.myReactions,
           reactions: post.reactions,
           coverImage,
           mediaLength,

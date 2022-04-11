@@ -1,6 +1,12 @@
-import { ReactionType } from "../../types"
+import { MyReactionType } from "../../types"
+
+export type UpdateReactions = {
+  reaction: string
+  isLoading: boolean
+}
 
 export type PropsType = {
-  myActiveReactions: ReactionType[] | undefined
+  updateReactions: UpdateReactions
+  myActiveReactions: MyReactionType[]
   updateMyReaction: Function
 }

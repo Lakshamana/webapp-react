@@ -1,9 +1,6 @@
 import styled from 'styled-components'
 import { space, layout, SpaceProps, LayoutProps } from 'styled-system'
-
-export type ReactionProps = {
-  myReaction: boolean
-}
+import { ReactionProps } from './types'
 
 interface SpaceLayoutProps extends SpaceProps, LayoutProps, ReactionProps { }
 
