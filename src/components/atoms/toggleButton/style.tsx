@@ -11,7 +11,7 @@ export const SwitchStyled: any = styled(Switch)`
   }
 
   .chakra-switch__track[data-checked] {
-    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]}90};
+    background: ${({ theme }) => theme.colors.brand.indicator[theme.colorMode]}90};
   }
 
   .chakra-switch__track[data-focus] {
@@ -24,7 +24,7 @@ export const SwitchStyled: any = styled(Switch)`
     box-shadow: 0px 1px 3px rgb(0 0 0 / 60%);
     background-color: ${({ theme, checked }) =>
       checked
-        ? theme.colors.brand.primary[theme.colorMode]
+        ? theme.colors.brand.indicator[theme.colorMode]
         : theme.colors.grey[100]} !important;
   }
 `

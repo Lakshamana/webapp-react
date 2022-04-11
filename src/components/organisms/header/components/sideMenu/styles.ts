@@ -66,7 +66,7 @@ export const ExitContainer = styled(StyleContainer)`
 export const Circle = styled.div`
   ${layout}
   background-color: ${({ theme }) =>
-    theme.colors.brand.primary[theme.colorMode]};
+    theme.colors.brand.indicator[theme.colorMode]};
   border-radius: 50%;
   width: 8px;
   height: 8px;

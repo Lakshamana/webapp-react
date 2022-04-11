@@ -17,7 +17,7 @@ interface ActionLinkProps {
 export const Section = styled.div``
 
 export const ActionLink = styled(RegularText)<ActionLinkProps>`
-  color: ${({ theme }) => theme.colors.brand.accent[theme.colorMode]};
+  color: ${({ theme }) => theme.colors.brand.action_link[theme.colorMode]};
   user-select: none;
   cursor: pointer;
   text-decoration: ${({ underline }) => (underline ? 'underline' : 'none')};

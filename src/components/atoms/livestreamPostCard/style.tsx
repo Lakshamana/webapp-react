@@ -42,7 +42,7 @@ export const BlockedContent: any = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: ${({ theme }) =>
-    theme.colors.brand.indicator[theme.colorMode]};
+    theme.colors.brand.primary[theme.colorMode]};
 
   @media screen and (max-width: ${breakpoints.sm}) {
     width: 41px;

@@ -36,9 +36,9 @@ const LivePostView = () => {
 
   const statusBadge = (status: any): LivestreamBadge => {
     const Badge = {
-      ACTIVE: { label: 'LIVE', color: colors.brand.primary[colorMode] },
-      SCHEDULED: { label: 'UPCOMING', color: colors.brand.accent[colorMode] },
-      PREPARING: { label: 'UPCOMING', color: colors.brand.accent[colorMode] },
+      ACTIVE: { label: 'LIVE', color: colors.brand.live_badges.live },
+      SCHEDULED: { label: 'UPCOMING', color: colors.brand.live_badges?.upcoming },
+      PREPARING: { label: 'UPCOMING', color: colors.brand.live_badges?.upcoming },
       default: { label: 'UPCOMING', color: colors.brand.primary[colorMode] },
     }
 

@@ -174,7 +174,7 @@ export const SwiperStyled = styled(Swiper)`
   }
 
   .billboard-pagination .swiper-pagination-bullet-active {
-    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+    background: ${({ theme }) => theme.colors.brand.indicator[theme.colorMode]};
   }
 
   @media screen and (max-width: 768px) {

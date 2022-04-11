@@ -74,7 +74,7 @@ export const ButtonStyled: any = styled(Button)<Props>`
       },
       link: {
         padding: 0,
-        color: (theme) => `${theme.colors.brand.accent[theme.colorMode]}`,
+        color: (theme) => `${theme.colors.brand.action_link[theme.colorMode]}`,
         '&:disabled': {
           '&:hover': {
             opacity: '0.4',

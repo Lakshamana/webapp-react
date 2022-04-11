@@ -11,7 +11,7 @@ const defaultColors: any = {
       light: '',
       dark: '',
     },
-    accent: {
+    action_link: {
       light: '',
       dark: '',
     },
@@ -19,6 +19,15 @@ const defaultColors: any = {
       light: '',
       dark: '',
     },
+    live_badges: {
+      finished: '',
+      live: '',
+      upcoming: ''
+    },
+    progress: {
+      light: '',
+      dark: ''
+    }
   },
   generalText: {
     light: '#000000',
@@ -214,10 +223,13 @@ const defaultColors: any = {
 
 export function setColor(BRAND_COLORS: ColorFlags) {
   defaultColors.brand = toLowerKeys(BRAND_COLORS)
+  console.log(defaultColors.brand)
   defaultColors.brand.primary = toLowerKeys(defaultColors.brand.primary)
   defaultColors.brand.secondary = toLowerKeys(defaultColors.brand.secondary)
-  defaultColors.brand.accent = toLowerKeys(defaultColors.brand.accent)
+  defaultColors.brand.action_link = toLowerKeys(defaultColors.brand.action_link)
   defaultColors.brand.indicator = toLowerKeys(defaultColors.brand.indicator)
+  defaultColors.brand.live_badges = toLowerKeys(defaultColors.brand.live_badges)
+  defaultColors.brand.progress = toLowerKeys(defaultColors.brand.progress)
 }
 
 export const colors = defaultColors
