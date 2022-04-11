@@ -54,6 +54,7 @@ const HomePage = () => {
         target: BillboardTarget.Home,
       },
     },
+    notifyOnNetworkStatusChange: true,
     skip: !activeChannel,
   })
 
@@ -68,6 +69,7 @@ const HomePage = () => {
         typeIn: [PostType.Video, PostType.OnDemand],
       },
     },
+    notifyOnNetworkStatusChange: true,
     skip: !activeChannel,
   })
 
@@ -81,6 +83,7 @@ const HomePage = () => {
         featured: true,
       },
     },
+    notifyOnNetworkStatusChange: true,
     skip: !activeChannel,
   })
 
@@ -92,7 +95,8 @@ const HomePage = () => {
     variables: {
       filter: {},
     },
-    skip: !isHomeDisplayingCategories,
+    notifyOnNetworkStatusChange: true,
+    skip: !isHomeDisplayingCategories || !activeChannel,
   })
 
   const isLoading =
@@ -115,22 +119,23 @@ const HomePage = () => {
   }, [])
 
   useEffect(() => {
+    setIsHomeDisplayingCategories(
+      activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
+    )
+    //eslint-disable-next-line
+  }, [activeChannelConfig])
+
+  useEffect(() => {
     if (activeChannel) {
       refetchBillboard()
       refetchFeaturedPosts()
       refetchFeaturedCategories()
+      if (isHomeDisplayingCategories) refetchCategories()
     }
     // eslint-disable-next-line
   }, [activeChannel])
 
-  useEffect(() => {
-    setIsHomeDisplayingCategories(
-      activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
-    )
-    if (isHomeDisplayingCategories) refetchCategories()
 
-    //eslint-disable-next-line
-  }, [activeChannelConfig])
 
   const getImageUrl = (path: string) => {
     return generateImage(ThumborInstanceTypes.IMAGE, path)
