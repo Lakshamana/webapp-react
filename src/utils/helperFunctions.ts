@@ -83,6 +83,7 @@ export function stripHTML(text: string) {
 }
 
 export function toLowerKeys(obj: Object) {
+  if (!obj) return ''
   return Object.keys(obj).reduce((accumulator, key) => {
     accumulator[key.toLowerCase()] = obj[key]
     return accumulator
