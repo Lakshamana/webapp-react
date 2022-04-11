@@ -14,12 +14,12 @@ export const useCustomizationStore = create<CustomizationState>((set) => ({
   activeChannelConfig: null,
   organizationConfig: null,
   setActiveChannelConfig: (activeChannelConfig: ChannelFlags) => {
-    if (activeChannelConfig.COLORS) setColor(activeChannelConfig.COLORS)
+    if (activeChannelConfig?.COLORS) setColor(activeChannelConfig.COLORS)
     return set({ activeChannelConfig })
   },
   setOrganizationConfig: (organizationConfig: OrganizationFlags) => {
     if (
-      organizationConfig.COLORS &&
+      organizationConfig?.COLORS &&
       !(colors.brand.primary.dark && colors.brand.primary.light)
     )
       setColor(organizationConfig.COLORS)

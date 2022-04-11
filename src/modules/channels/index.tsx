@@ -61,7 +61,7 @@ const ChannelsPage = () => {
       {!loading && (
         <ChannelsGrid
           channelSelected={selectChannel}
-          channelsList={data.channels}
+          channelsList={data?.channels}
         />
       )}
     </Container>
