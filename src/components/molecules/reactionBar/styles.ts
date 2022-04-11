@@ -12,7 +12,7 @@ export const Reaction: any = styled.div<SpaceLayoutProps>`
   border-radius: 3px;
   background:  ${({ theme, myReaction }) => {
     return myReaction
-      ? theme.colors.reaction.selected[theme.colorMode]
+      ? theme.colors.brand.primary[theme.colorMode]
       : theme.colors.reaction.background[theme.colorMode]
   }};
   color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
@@ -37,9 +37,9 @@ export const EmoticonReaction = styled.div<SpaceLayoutProps>`
   margin-bottom: 0.5px;
   background:  ${({ theme, myReaction }) => {
     return myReaction &&
-      theme.colors.reaction.selected[theme.colorMode]
+      theme.colors.brand.primary[theme.colorMode]
   }};
   :hover {
-    background: ${({ theme }) => theme.colors.reaction.hover.background};
+    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
   }
 `

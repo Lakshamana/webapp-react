@@ -20,7 +20,7 @@ const Link = ({
         style={{
           color: defaultColor
             ? colors.generalText[colorMode]
-            : colors.brand.accent[colorMode],
+            : colors.brand.action_link[colorMode],
           textTransform: props.textTransform,
           fontWeight : props.fontWeight
         }}
@@ -39,7 +39,7 @@ const Link = ({
         color={
           defaultColor
             ? colors.generalText[colorMode]
-            : colors.brand.accent[colorMode]
+            : colors.brand.action_link[colorMode]
         }
       >
         {label}

@@ -9,6 +9,8 @@ import { PropsUserSidebar } from './types'
 import { UserContainer } from './styles'
 import { Flex } from '@chakra-ui/react'
 
+import { colors } from 'styles'
+
 const UserSidebar = ({ account, toggleColorMode }: PropsUserSidebar) => {
   const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -35,11 +37,12 @@ const UserSidebar = ({ account, toggleColorMode }: PropsUserSidebar) => {
           <Button
             size="sm"
             onClick={() => history.push('/account')}
-            variant="link"
+            variant="unstyled"
+            color={colors.brand.indicator[colorMode]}
           >
             <Icon width={25} icon={'mdi:cog-outline'} />
           </Button>
-          <Button size="sm" onClick={toggleColorMode} variant="link">
+          <Button size="sm" onClick={toggleColorMode} variant="unstyled" color={colors.brand.indicator[colorMode]}>
             <Icon
               width={25}
               icon={
@@ -49,7 +52,7 @@ const UserSidebar = ({ account, toggleColorMode }: PropsUserSidebar) => {
               }
             />
           </Button>
-          <Button size="sm" onClick={onOpen} variant="link">
+          <Button size="sm" onClick={onOpen} variant="unstyled" color={colors.brand.indicator[colorMode]}>
             <Icon width={25} icon={'mdi:power'} />
           </Button>
         </Flex>

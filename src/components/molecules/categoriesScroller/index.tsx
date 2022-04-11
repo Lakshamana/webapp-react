@@ -76,7 +76,7 @@ const CategoriesScroller = ({
         </Text>
         {hasMoreLink && (
           <Link
-            color={colors.brand.primary[colorMode]}
+            color={colors.brand.action_link[colorMode]}
             fontSize={'1.27rem'}
             to={sectionUrl}
           >

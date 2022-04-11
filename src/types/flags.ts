@@ -59,19 +59,28 @@ export type LocaleFlags = {
 }
 
 export type ColorFlags = {
-  PRIMARY: {
-    LIGHT: string
-    DARK: string
-  }
-  SECONDARY: {
-    LIGHT: string
-    DARK: string
-  }
-  ACCENT: {
+  ACTION_LINK: {
     LIGHT: string
     DARK: string
   }
   INDICATOR: {
+    LIGHT: string
+    DARK: string
+  }
+  LIVE_BADGES: {
+    FINISHED: string
+    LIVE: string
+    UPCOMING: string
+  }
+  PRIMARY: {
+    LIGHT: string
+    DARK: string
+  }
+  PROGRESS: {
+    LIGHT: string
+    DARK: string
+  }
+  SECONDARY: {
     LIGHT: string
     DARK: string
   }

@@ -109,7 +109,7 @@ const LivestreamScroller = ({
       </Text>
       {hasMoreLink && (
         <Link
-          color={colors.brand.primary[colorMode]}
+          color={colors.brand.action_link[colorMode]}
           fontSize={isDesktop ? '1.27rem' : '1.1rem'}
           to={sectionUrl}
         >
