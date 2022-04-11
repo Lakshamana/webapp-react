@@ -178,7 +178,7 @@ const HeaderComponent = () => {
                 ? channelLogo()
                 : orgLogo
             }
-            width={isDesktop ? '180px' : '120px'}
+            maxWidth={isDesktop ? '180px' : '120px'}
           />
           <Center height="30px">
             <Divider orientation="vertical" color={colors.grey['700']} />
