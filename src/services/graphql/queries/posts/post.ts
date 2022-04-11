@@ -28,6 +28,9 @@ export const QUERY_POST = gql`
           hlsPath
         }
       }
+      myReactions {
+        name
+      }
       reactions {
         name
         count

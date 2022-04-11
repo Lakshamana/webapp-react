@@ -49,12 +49,12 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
     if (items && items?.length) {
       const mappedArr = items?.map((item: Post) => {
         const thumbnail = getImageUrl(item)
-        const url = getPostUrl(item.slug)
+        const url = getPostUrl(`${item.slug}`)
         return {
           id: item.id,
           title: item.title,
-          url: url,
-          thumbnail: thumbnail,
+          url,
+          thumbnail,
           mediaLength:
             item.media?.__typename === 'MediaVideo'
               ? item.media?.duration

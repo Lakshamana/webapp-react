@@ -11,6 +11,9 @@ export const QUERY_POSTS = gql`
       pageCount
       total
       rows {
+        myReactions {
+          name
+        }
         access
         description
         geofence
