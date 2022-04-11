@@ -3,7 +3,7 @@ import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@apollo/client'
 
-import { PostType, SortDirection, Category } from 'generated/graphql'
+import { PostType, Category, Billboard } from 'generated/graphql'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
@@ -19,6 +19,8 @@ import {
 
 import { HomeCarouselsTypes } from 'types/common'
 
+import { CarouselFlags } from 'types/flags'
+
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 
 import {
@@ -32,7 +34,7 @@ import { convertToValidColor } from 'utils'
 import { sizes } from 'styles'
 
 const HomePage = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { generateImage } = useThumbor()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
@@ -135,17 +137,14 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [activeChannel])
 
-
-
-  const getImageUrl = (path: string) => {
-    return generateImage(ThumborInstanceTypes.IMAGE, path)
-  }
+  const getImageUrl = (path: string) =>
+    generateImage(ThumborInstanceTypes.IMAGE, path)
 
   useEffect(() => {
-    const billboardItems = billboardData?.billboards?.rows?.reduce(
-      (memo, curr) => {
-        const cover = getImageUrl(curr.customization?.mobile?.imgPath)
-        const banner = getImageUrl(curr.customization?.desktop?.imgPath)
+    const billboardItems = billboardData?.billboards?.rows
+      ?.reduce((memo, curr: Billboard) => {
+        const cover = getImageUrl(curr.customization?.mobile?.imgPath || '')
+        const banner = getImageUrl(curr.customization?.desktop?.imgPath || '')
 
         memo.push({
           ...curr,
@@ -159,9 +158,8 @@ const HomePage = () => {
           banner,
         })
         return memo
-      },
-      []
-    )
+      }, [])
+      .sort((a, b) => a.sort - b.sort)
 
     setBillboardItems(billboardItems)
 
@@ -180,22 +178,22 @@ const HomePage = () => {
     <BillboardScroller items={billboardItems} customButtons={true} />
   )
 
-  const renderFeaturedPostsScroller = () =>
+  const renderFeaturedPostsScroller = (item: CarouselFlags) =>
     !!featuredPostsData?.posts?.rows && (
       <VideosScroller
-        key="featured-posts"
+        key={`${item.LABEL[0].VALUE}`}
         items={featuredPostsData?.posts?.rows}
-        sectionTitle={t('page.home.featured_posts')}
+        sectionTitle={getCarouselLabel(item)}
         hasMoreLink={true}
       />
     )
 
-  const renderFeaturedCategoriesScroller = () =>
+  const renderFeaturedCategoriesScroller = (item: CarouselFlags) =>
     !!featuredCategoriesData?.categories?.rows && (
       <CategoriesScroller
         key="featured-categories"
         items={featuredCategoriesData?.categories?.rows}
-        sectionTitle={t('page.home.featured_categories')}
+        sectionTitle={getCarouselLabel(item)}
         hasMoreLink={true}
       />
     )
@@ -211,16 +209,23 @@ const HomePage = () => {
       />
     ))
 
+  const getCarouselLabel = (item: CarouselFlags) => {
+    const label = item.LABEL.filter((item) =>
+      i18n.language.includes(item.LOCALE)
+    )
+    return label[0].VALUE
+  }
+
   const homeCarouselsFiltered = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
     (a, b) => a.ORDER - b.ORDER
   ).filter((item) => item.IS_ACTIVE)
 
-  const renderCarouselsOrderedByRemoteConfig = (contentType: string) => {
-    switch (contentType) {
+  const renderCarouselsOrderedByRemoteConfig = (item: CarouselFlags) => {
+    switch (item.CONTENT_TYPE[0]) {
       case HomeCarouselsTypes.Posts:
-        return renderFeaturedPostsScroller()
+        return renderFeaturedPostsScroller(item)
       case HomeCarouselsTypes.Collections:
-        return renderFeaturedCategoriesScroller()
+        return renderFeaturedCategoriesScroller(item)
       default:
         return ''
     }
@@ -242,8 +247,8 @@ const HomePage = () => {
           w={'100vw'}
         >
           {!!homeCarouselsFiltered?.length &&
-            homeCarouselsFiltered.map((item) =>
-              renderCarouselsOrderedByRemoteConfig(item.CONTENT_TYPE[0])
+            homeCarouselsFiltered.map((item: CarouselFlags) =>
+              renderCarouselsOrderedByRemoteConfig(item)
             )}
           {!!categoriesWithChildren?.length && renderCategoriesWithChildren()}
           {isEmpty && <EmptyState />}
