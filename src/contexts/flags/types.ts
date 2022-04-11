@@ -6,23 +6,32 @@ export const defaultProps = {
     APP_BRAND: 'fanhero',
     DFP_ACTIVE: false,
     COLORS: {
-      PRIMARY: {
+      ACTION_LINK: {
         LIGHT: '',
-        DARK: ''
-      },
-      SECONDARY: {
-        LIGHT: '',
-        DARK: ''
-      },
-      ACCENT: {
-        LIGHT: '',
-        DARK: ''
+        DARK: '',
       },
       INDICATOR: {
         LIGHT: '',
-        DARK: ''
-      }
-    }
+        DARK: '',
+      },
+      LIVE_BADGES: {
+        FINISHED: '',
+        LIVE: '',
+        UPCOMING: ''
+      },
+      PRIMARY: {
+        LIGHT: '',
+        DARK: '',
+      },
+      PROGRESS: {
+        LIGHT: '',
+        DARK: '',
+      },
+      SECONDARY: {
+        LIGHT: '',
+        DARK: '',
+      },
+    },
   },
   CHANNELS: {},
 }
