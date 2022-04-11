@@ -27,7 +27,7 @@ const EmptyHeader = () => {
     <BoxHeader display="flex" alignItems="center" justifyContent="center">
       <HeaderItems>
         <Logo
-          width={isDesktop ? '180px' : '120px'}
+          maxWidth={isDesktop ? '180px' : '120px'}
           marginRight={[3, 4]}
           py={20}
           src={orgLogo}
