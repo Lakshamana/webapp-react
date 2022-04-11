@@ -9,7 +9,6 @@ import { Channel } from 'generated/graphql'
 import { Container, Text, Skeleton } from 'components'
 import { ChannelsGrid } from './components'
 import { colors } from 'styles'
-import { convertCamelCaseToDash } from 'utils'
 
 const ChannelsPage = () => {
   const { t } = useTranslation()
@@ -32,9 +31,13 @@ const ChannelsPage = () => {
       (channel: Channel) => channel.id === channelId
     )
     if (selected?.length) {
-      const channelRoute = convertCamelCaseToDash(selected[0].name)
-      await setActiveChannel(selected[0])
-      history.push(`/c/${channelRoute}`)
+      const myChannel = selected[0]
+      await setActiveChannel({
+        id: myChannel.id,
+        name: myChannel.name,
+        slug: myChannel.slug || '',
+      })
+      history.push(`/c/${myChannel.slug}`)
     }
   }
 
