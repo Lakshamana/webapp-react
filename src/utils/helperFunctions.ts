@@ -79,14 +79,23 @@ export const formattedSeconds = (seconds: number) => {
 }
 
 export function stripHTML(text: string) {
-  return text.replace(/(<([^>]+)>)/gi, "");
+  return text.replace(/(<([^>]+)>)/gi, '')
 }
 
 export function toLowerKeys(obj: Object) {
   return Object.keys(obj).reduce((accumulator, key) => {
-    accumulator[key.toLowerCase()] = obj[key];
-    return accumulator;
-  }, {});
+    accumulator[key.toLowerCase()] = obj[key]
+    return accumulator
+  }, {})
+}
+
+export function getChannelName(channelUrl: string) {
+  const hasChannelInRoute = channelUrl.indexOf('/c/')
+  if (hasChannelInRoute === -1) return
+  const channelInRoute = channelUrl?.substring(channelUrl.indexOf('c/') + 2)
+  const slug = channelInRoute.split('/')[0]
+
+  return slug
 }
 
 export function getChannelNameInPath(channelUrl: String) {
@@ -102,25 +111,27 @@ export function getChannelNameInPath(channelUrl: String) {
 }
 
 export const abbreviateNumber = (value: number) => {
-  const suffixes = ["", "k", "m", "b", "t"]
-  let suffixNum = Math.floor(("" + value).length / 3)
+  const suffixes = ['', 'k', 'm', 'b', 't']
+  let suffixNum = Math.floor(('' + value).length / 3)
   let shortValueToString: string
   let shortValue = parseFloat(
     (suffixNum !== 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(2)
   )
 
-  shortValueToString = (shortValue % 1 !== 0)
-    ? shortValue.toFixed(1)
-    : String(shortValue)
+  shortValueToString =
+    shortValue % 1 !== 0 ? shortValue.toFixed(1) : String(shortValue)
 
-  return shortValueToString + suffixes[suffixNum];
+  return shortValueToString + suffixes[suffixNum]
 }
 
-export function convertCountMessage(t: any, data: number, translateMapper: Array<string>) {
+export function convertCountMessage(
+  t: any,
+  data: number,
+  translateMapper: Array<string>
+) {
   const countMessages = abbreviateNumber(data)
   if (Number(countMessages) === 0) return t(translateMapper[0])
-  const defineMessage = Number(countMessages) === 1
-    ? t(translateMapper[1])
-    : t(translateMapper[2])
+  const defineMessage =
+    Number(countMessages) === 1 ? t(translateMapper[1]) : t(translateMapper[2])
   return `${countMessages} ${defineMessage}`
 }

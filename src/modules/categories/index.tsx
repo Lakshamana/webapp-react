@@ -7,7 +7,7 @@ import { useChannelsStore, useCommonStore } from 'services/stores'
 import { QUERY_CATEGORIES } from 'services/graphql'
 import { Category } from 'generated/graphql'
 
-import { Container, Skeleton } from 'components'
+import { Container, Skeleton, EmptyState } from 'components'
 import { BillboardScroller, CategoriesScroller } from 'components/molecules'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { sizes } from 'styles'
@@ -60,7 +60,7 @@ const CategoriesPage = () => {
           title: curr.name,
           cover,
           banner,
-          isPinned: !!curr.pinnedAt
+          isPinned: !!curr.pinnedAt,
         })
         return memo
       },
@@ -81,7 +81,7 @@ const CategoriesPage = () => {
       )
 
       setCategoriesWithChildren(categoriesWithChildren)
-      
+
       setCategoriesWithouChildren(noChildren)
     }
   }, [categoriesData])
@@ -93,6 +93,11 @@ const CategoriesPage = () => {
 
   const isLoading = loadingFeaturedCategories || loadingCategories
 
+  const hasResults =
+    categoriesWithChildren?.length || categoriesWithoutChildren?.length
+
+  const isEmpty = !isLoading && !hasResults
+
   return (
     <>
       {isLoading && (
@@ -102,10 +107,12 @@ const CategoriesPage = () => {
       )}
       {!isLoading && (
         <Container flexDirection={'column'} width={'100%'}>
-          <BillboardScroller
-            items={categoriesBillboardItems}
-            customButtons={false}
-          />
+          {!!categoriesBillboardItems?.length && (
+            <BillboardScroller
+              items={categoriesBillboardItems}
+              customButtons={false}
+            />
+          )}
           <Flex pb={10} gridGap={10} flexDirection={'column'}>
             {!!categoriesWithoutChildren?.length && (
               <CategoriesScroller
@@ -125,6 +132,7 @@ const CategoriesPage = () => {
                 />
               ))}
           </Flex>
+          {isEmpty && <EmptyState />}
         </Container>
       )}
     </>

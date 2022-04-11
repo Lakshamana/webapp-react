@@ -5,6 +5,7 @@ export const QUERY_CATEGORY = gql`
     category(id: $categoryId) {
       id
       access
+      slug
       createdAt
       pinnedAt
       customization {
@@ -23,8 +24,8 @@ export const QUERY_CATEGORY = gql`
         featuredAt
         geoFence
         pinnedAt
+        slug
         id
-        name
         description
         tags
         customization {

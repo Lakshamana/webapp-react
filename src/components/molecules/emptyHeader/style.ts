@@ -7,6 +7,7 @@ interface BoxHeaderProps {
 }
 
 export const BoxHeader = styled(StyleContainer) <BoxHeaderProps>`
+  overflow-y: hidden;
   height: ${({ theme }) => theme.sizes.headerMobileHeight};
   background-color: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
   box-shadow: 1px 0px 1px rgb(0 0 0 / 38%);

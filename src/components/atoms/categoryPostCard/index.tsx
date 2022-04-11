@@ -59,7 +59,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
       borderColor="red"
       backgroundColor={colors.cardBg[colorMode]}
       borderRadius="100%"
-      width="25px"
+      minWidth="25px"
       height="25px"
       display="flex"
       alignItems="center"

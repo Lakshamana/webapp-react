@@ -4,7 +4,7 @@ import {
   QUERY_ORGANIZATION_PUBLIC_SETTINGS,
   QUERY_ME,
   MUTATION_SIGNOUT,
-  QUERY_CHANNELS,
+  QUERY_CHANNEL,
 } from 'services/graphql'
 import { useFlags } from 'contexts/flags'
 import {
@@ -23,7 +23,6 @@ import {
   ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
-  CHANNEL_INFO,
   FIREBASE_TOKEN,
 } from 'config/constants'
 
@@ -48,8 +47,6 @@ export const AuthProvider = ({ children }) => {
   const [loadingAccount, setLoadingAcount] = useState(false)
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { CHANNELS, ORGANIZATION } = useFlags()
-
-  const storedChannel = getData(CHANNEL_INFO)
 
   const client = useApolloClient()
 
@@ -88,18 +85,17 @@ export const AuthProvider = ({ children }) => {
     if (accessToken) await getAccount()
   }
 
-  const updateActiveChannel = async (channel?: string) => {
+  const updateActiveChannel = async (channelSlug?: string) => {
+    if (!channelSlug) return
     setLoading(true)
     const { data } = await client.query({
-      query: QUERY_CHANNELS,
+      query: QUERY_CHANNEL,
       variables: {
-        filter: {
-          name__exact: channel || storedChannel?.name,
-        },
+        slug: channelSlug,
       },
     })
-    if (data?.channels.length) {
-      setActiveChannel(data.channels[0])
+    if (data?.channel) {
+      setActiveChannel(data.channel)
       setLoading(false)
     }
     setLoading(false)

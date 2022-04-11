@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
 import { Props } from './types'
-import { getChannelNameInPath } from 'utils'
+import { getChannelName } from 'utils'
 import { useChannelsStore } from 'services/stores'
 import { useAuth } from 'contexts/auth'
+import { getData } from 'services/storage'
+import { CHANNEL_INFO } from 'config/constants'
 
 const ClientRoute = ({
   component: Component,
@@ -13,16 +15,21 @@ const ClientRoute = ({
   template: Template,
   ...rest
 }: Props) => {
-  const { activeChannel } = useChannelsStore()
+  const { activeChannel, setActiveChannel } = useChannelsStore()
   const { updateActiveChannel } = useAuth()
   const location = useLocation()
+  const storedChannel = getData(CHANNEL_INFO)
 
   useEffect(() => {
     if (!activeChannel) {
       const channelUrl = location.pathname
-      const channelName = getChannelNameInPath(channelUrl)
-      if (channelName) {
-        updateActiveChannel(channelName)
+      const channelSlug = getChannelName(channelUrl)
+      if (channelSlug) {
+        if (storedChannel?.slug === channelSlug) {
+          setActiveChannel(storedChannel)
+        } else {
+          updateActiveChannel(channelSlug)
+        }
       }
     }
     //eslint-disable-next-line

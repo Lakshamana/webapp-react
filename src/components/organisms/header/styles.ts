@@ -3,6 +3,7 @@ import { StyleContainer } from 'components'
 import { breakpoints } from 'styles'
 
 export const HeaderContainer = styled(StyleContainer)`
+  overflow-y: hidden;
   display: flex;
   background: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
   padding: 0 ${({ theme }) => theme.sizes.paddingSm};

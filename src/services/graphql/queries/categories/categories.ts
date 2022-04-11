@@ -14,6 +14,7 @@ export const QUERY_CATEGORIES = gql`
         access
         pinnedAt
         parentId
+        slug
         createdAt
         customization {
           desktop {
@@ -28,6 +29,7 @@ export const QUERY_CATEGORIES = gql`
         }
         children {
           parentId
+          slug
           description
           featuredAt
           pinnedAt
