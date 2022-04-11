@@ -53,7 +53,11 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const handleSelect = (channel: Channel) => {
     let homeTab = tabsList.filter((item) => item.TAB === 'home')
     setActiveTab(homeTab[0])
-    setActiveChannel(channel)
+    setActiveChannel({
+      id: channel.id,
+      name: channel.name,
+      slug: channel.slug || ''
+    })
     setOpen(false)
     let channelName = convertCamelCaseToDash(channel.name)
     history.push(`/c/${channelName}`)
