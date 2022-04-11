@@ -44,7 +44,6 @@ export const useTabsStore = create<TabsState>((set) => ({
       .sort((a, b) => a.ORDER - b.ORDER)
       .filter((item) => item.IS_ACTIVE)
     if (channel) {
-      const channelName = convertCamelCaseToDash(channel.name)
       let slug = ''
       for (const tab of tabsList) {
         tab.URL = getTabURL(tab.TAB)
@@ -55,7 +54,7 @@ export const useTabsStore = create<TabsState>((set) => ({
         if (tab.TAB === 'HOME') {
           slug = tab.URL?.substring(tab.URL.indexOf('c/') + 2)
         }
-        tab.URL = tab.URL?.replace(slug, channelName)
+        tab.URL = tab.URL?.replace(slug, channel.slug)
       }
     }
     return set({ tabsList })
