@@ -26,12 +26,15 @@ export const EmoticonReaction = styled.div<SpaceLayoutProps>`
   ${space}
   ${layout}
   height: 42px;
+  width: 98%;
   display: flex;
   border-radius: 5px;
   cursor: pointer;
   align-items: center;
+  justify-content: center;
   font-size: 1.6rem;
   padding: 0.3em;
+  margin-bottom: 0.5px;
   background:  ${({ theme, myReaction }) => {
     return myReaction &&
       theme.colors.reaction.selected[theme.colorMode]
