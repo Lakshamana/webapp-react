@@ -1,12 +1,13 @@
-import styled from "styled-components";
-import { StyleContainer } from "components";
-import { breakpoints } from "styles";
+import styled from 'styled-components'
+import { StyleContainer } from 'components'
+import { breakpoints } from 'styles'
 
 interface BoxHeaderProps {
-  mode?: string;
+  mode?: string
 }
 
-export const BoxHeader = styled(StyleContainer) <BoxHeaderProps>`
+export const BoxHeader = styled(StyleContainer)<BoxHeaderProps>`
+  overflow-y: hidden;
   height: ${({ theme }) => theme.sizes.headerMobileHeight};
   background-color: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
 
@@ -16,11 +17,11 @@ export const BoxHeader = styled(StyleContainer) <BoxHeaderProps>`
     padding: 0 ${({ theme }) => theme.sizes.paddingMd};
     height: ${({ theme }) => theme.sizes.headerDesktopHeight};
   }
-`;
+`
 
 export const HeaderItems = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
-`;
+`
