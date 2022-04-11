@@ -8,6 +8,7 @@ export const QUERY_CHANNELS = gql`
         kind
         description
         geofence
+        slug
         name
         customization {
           icon {
@@ -37,6 +38,30 @@ export const QUERY_CHANNELS = gql`
           }
           thumbnail
         }
+        kind
+        __typename
+      }
+    }
+  }
+`
+
+export const QUERY_CHANNEL = gql`
+  query Channel($slug: String) {
+    channel(slug: $slug) {
+      ... on AvailableChannel {
+        id
+        kind
+        description
+        geofence
+        slug
+        name
+        __typename
+      }
+      ... on GeolockedChannel {
+        id
+        name
+        thumbnail
+        slug
         kind
         __typename
       }
