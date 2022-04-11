@@ -12,12 +12,10 @@ const { NODE_ENV, REACT_APP_REMOTE_CONFIG_MINIMUM_FETCH_INTERVAL_MILLIS } =
 
 export const firebaseApp = initializeApp(FIREBASE_CONFIG)
 
-const developmentFetchInterval =
-  REACT_APP_REMOTE_CONFIG_MINIMUM_FETCH_INTERVAL_MILLIS || '1000'
-
-  console.log(developmentFetchInterval)
+const productionFetchInterval =
+  REACT_APP_REMOTE_CONFIG_MINIMUM_FETCH_INTERVAL_MILLIS || '10800000'
 
 export const firebaseRemoteConfig = getRemoteConfig()
 firebaseRemoteConfig.settings.fetchTimeoutMillis = 15000
 firebaseRemoteConfig.settings.minimumFetchIntervalMillis =
-  NODE_ENV === 'development' ? parseInt(developmentFetchInterval) : 10800000
+  NODE_ENV === 'development' ? 1000 : parseInt(productionFetchInterval)
