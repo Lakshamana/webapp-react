@@ -12,8 +12,6 @@ import { useChannelsStore, useTabsStore } from 'services/stores'
 import { QUERY_CHANNELS } from 'services/graphql'
 import { useThemeStore } from 'services/stores'
 
-import { convertCamelCaseToDash } from 'utils'
-
 import { Container, Popover, Text } from 'components'
 import { Channels, ChannelSearch, ChannelSelected } from './components'
 
@@ -59,8 +57,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
       slug: channel.slug || ''
     })
     setOpen(false)
-    let channelName = convertCamelCaseToDash(channel.name)
-    history.push(`/c/${channelName}`)
+    history.push(`/c/${channel.slug}`)
   }
 
   return (
