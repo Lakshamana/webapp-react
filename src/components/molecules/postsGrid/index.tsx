@@ -8,7 +8,6 @@ import { Post } from 'generated/graphql'
 import { VideoPostCardProps, VideosGridProps } from 'types/posts'
 import { colors, breakpoints, sizes } from 'styles'
 import { Wrapper } from './style'
-import { convertCamelCaseToDash } from 'utils'
 
 const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const { generateImage } = useThumbor()
@@ -40,7 +39,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   }
 
   const getPostUrl = (slug: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${slug}`
+    return `/c/${activeChannel?.slug}/post/${slug}`
   }
 
   const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
@@ -88,7 +87,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
       </Text>
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
-          <Wrapper>
+          <Wrapper key={item.id}>
             <VideoPostCard {...item}></VideoPostCard>
           </Wrapper>
         ))}

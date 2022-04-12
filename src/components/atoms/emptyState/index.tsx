@@ -5,7 +5,6 @@ import { Icon } from '@iconify/react'
 import { useThemeStore, useChannelsStore } from 'services/stores'
 import { Text, Button } from 'components'
 import { colors } from 'styles'
-import { convertCamelCaseToDash } from 'utils'
 
 const EmptyState = () => {
   const { colorMode } = useThemeStore()

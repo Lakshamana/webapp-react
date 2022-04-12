@@ -4,7 +4,7 @@ import { SetMediaType } from './components'
 import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
 import { FeedPostCardProps, defaultProps } from './types'
-import { convertCountMessage, convertCamelCaseToDash } from 'utils'
+import { convertCountMessage } from 'utils'
 import { Link } from 'react-router-dom'
 import { colors } from 'styles'
 import {
@@ -24,7 +24,7 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { activeChannel } = useChannelsStore()
 
   const getPostUrl = (slug: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${slug}`
+    return `/c/${activeChannel?.slug}/post/${slug}`
   }
 
   const translateMapper = [
