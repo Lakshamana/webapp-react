@@ -6,9 +6,12 @@ import { useThemeStore } from 'services/stores/theme'
 import { CategoriesGridProps, CategoryPostCardProps } from 'types/categories'
 import { CategoryPostCard, Text } from 'components'
 import { colors, breakpoints, sizes } from 'styles'
+import { useChannelsStore } from 'services/stores'
+import { Wrapper } from './style'
 
-const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
+const CategoriesGrid = ({ sendUnpinEvent, items, sectionTitle }: CategoriesGridProps) => {
   const { generateImage } = useThumbor()
+  const { activeChannel } = useChannelsStore()
   const [gridItems, setGridItems] = useState<CategoryPostCardProps[]>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { colorMode } = useThemeStore()
@@ -22,20 +25,25 @@ const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
     return image
   }
 
-  const getPostUrl = (id: string) => {
-    return `category/${id}`
+  const getPostUrl = (slug: string) => {
+    return `/c/${activeChannel?.slug}/category/${slug}`
   }
+
+  const callUnpinEvent = (categoryId: string) => {
+    if (sendUnpinEvent) sendUnpinEvent(categoryId)
+  }
+
   useEffect(() => {
     if (items && items?.length) {
       const mappedArr = items?.map((item: any) => {
         const thumbnail = getImageUrl(item.customization?.thumbnail?.imgPath)
-        const url = getPostUrl(`${item.id}`)
+        const url = getPostUrl(`${item.slug}`)
         return {
           id: item.id,
           title: item.name,
           url,
           thumbnail,
-          isPinned: item.pinnedAt
+          isPinned: item.pinnedAt,
         }
       })
       setGridItems(mappedArr)
@@ -60,7 +68,11 @@ const CategoriesGrid = ({ items, sectionTitle }: CategoriesGridProps) => {
       </Text>
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
-          <CategoryPostCard {...item}></CategoryPostCard>
+          <Wrapper key={item.id}>
+            <CategoryPostCard categoryUnpinned={(id) => {
+                callUnpinEvent(id)
+              }} {...item} />
+          </Wrapper>
         ))}
       </SimpleGrid>
     </Flex>

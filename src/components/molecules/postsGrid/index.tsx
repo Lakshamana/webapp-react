@@ -9,7 +9,11 @@ import { VideoPostCardProps, VideosGridProps } from 'types/posts'
 import { colors, breakpoints, sizes } from 'styles'
 import { Wrapper } from './style'
 
-const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
+const PostsGrid = ({
+  sendUnpinEvent,
+  items,
+  sectionTitle,
+}: VideosGridProps) => {
   const { generateImage } = useThumbor()
   const { colorMode } = useThemeStore()
   const { activeChannel } = useChannelsStore()
@@ -30,11 +34,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
     return generateImage(
       ThumborInstanceTypes.IMAGE,
       post.thumbnail?.imgPath || '',
-      {
-        size: {
-          height: 400,
-        },
-      }
+      imageOptions
     )
   }
 
@@ -43,6 +43,10 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   }
 
   const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
+
+  const callUnpinEvent = (postId: string) => {
+    if (sendUnpinEvent) sendUnpinEvent(postId)
+  }
 
   useEffect(() => {
     if (items && items?.length) {
@@ -88,7 +92,12 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            <VideoPostCard {...item}></VideoPostCard>
+            <VideoPostCard
+              postUnpinned={(id) => {
+                callUnpinEvent(id)
+              }}
+              {...item}
+            ></VideoPostCard>
           </Wrapper>
         ))}
       </SimpleGrid>

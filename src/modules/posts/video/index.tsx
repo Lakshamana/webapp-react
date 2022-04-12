@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { QUERY_POST, QUERY_POSTS } from 'services/graphql'
-import { useThemeStore } from 'services/stores/theme'
+import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
   VideoPlayer,
@@ -24,6 +24,7 @@ const VideoPostView = () => {
   const { colorMode } = useThemeStore()
   const { slug } = useParams<{ channel: string; slug: string }>()
   const { t } = useTranslation()
+  const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [postData, setPostData] = useState<Post>()
@@ -44,6 +45,7 @@ const VideoPostView = () => {
   })
 
   useEffect(() => {
+    if (postData?.title) setPageTitle(postData.title)
     if (postData?.categories?.length) {
       const filteredCategories = postData.categories.map((item) => item.id)
       getRelatedPosts({

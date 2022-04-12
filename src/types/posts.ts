@@ -10,6 +10,7 @@ export type VideosScrollerProps = {
 export type VideosGridProps = {
   sectionTitle?: string
   items?: Post[]
+  sendUnpinEvent?: (postId: string) => void
 }
 
 export type VideoPostCardProps = {
@@ -23,4 +24,5 @@ export type VideoPostCardProps = {
   isExclusive: boolean
   isGeolocked?: boolean
   isPinned?: boolean
+  postUnpinned?: (postId: string) => void
 }

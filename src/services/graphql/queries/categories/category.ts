@@ -24,6 +24,7 @@ export const QUERY_CATEGORY = gql`
         featuredAt
         geoFence
         pinnedAt
+        name
         slug
         id
         description
