@@ -7,9 +7,5 @@ export const Wrapper: any = styled.div`
     margin-top: -30px;
     transform: scale(1.2);
     z-index: 9999;
-
-    &:first-child:hover {
-      margin-left: 30px;
-    }
   }
 `
