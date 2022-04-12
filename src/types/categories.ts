@@ -10,6 +10,7 @@ export type CategoriesScrollerProps = {
 export type CategoriesGridProps = {
   sectionTitle?: string
   items?: Maybe<Category[]>
+  sendUnpinEvent?: (categoryId: string) => void
 }
 
 export type CategoryPostCardProps = {
@@ -21,4 +22,5 @@ export type CategoryPostCardProps = {
   description?: string
   isNew?: string
   isPinned?: boolean
+  categoryUnpinned?: (categoryId: string) => void
 }
