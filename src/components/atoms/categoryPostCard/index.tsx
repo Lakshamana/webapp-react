@@ -13,7 +13,10 @@ import { CategoryPostCardProps } from 'types/categories'
 import { colors } from 'styles'
 import { CardWrapper, PostContent } from './style'
 
-const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
+const CategoryPostCard = ({
+  categoryUnpinned,
+  ...props
+}: CategoryPostCardProps) => {
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
@@ -34,7 +37,7 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
       },
       onCompleted: (result) => {
         setIsCategoryPinned(result?.pinCategory?.pinned)
-      }
+      },
     }
   )
 
@@ -45,8 +48,9 @@ const CategoryPostCard = ({ ...props }: CategoryPostCardProps) => {
         id: props.id,
       },
       onCompleted: (result) => {
+        if (categoryUnpinned) categoryUnpinned(props.id)
         setIsCategoryPinned(result?.unpinCategory?.pinned)
-      }
+      },
     }
   )
 
