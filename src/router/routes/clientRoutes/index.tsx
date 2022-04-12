@@ -83,7 +83,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
       />
       <ClientRoute
         isAccesible={true}
-        path="/c/:channel/category/:id"
+        path="/c/:channel/category/:slug"
         component={CategoryPage}
         redirectTo="/c/:channel/categories"
         template={MainLayout}
