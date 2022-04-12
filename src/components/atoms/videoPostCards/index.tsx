@@ -13,7 +13,7 @@ import { colors } from 'styles'
 import { formattedSeconds, stripHTML } from 'utils/helperFunctions'
 import { VideoPostCardProps } from 'types/posts'
 
-const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
+const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
   const history = useHistory()
   const { t } = useTranslation()
   const { activeChannelConfig } = useCustomizationStore()
@@ -36,7 +36,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       },
       onCompleted: (result) => {
         setIsPostPinned(result?.pinPost?.pinned)
-      }
+      },
     }
   )
 
@@ -47,8 +47,9 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
         id: props.id,
       },
       onCompleted: (result) => {
+        if (postUnpinned) postUnpinned(props.id)
         setIsPostPinned(result?.unpinPost?.pinned)
-      }
+      },
     }
   )
 
@@ -99,7 +100,7 @@ const VideoPostCard = ({ ...props }: VideoPostCardProps) => {
       background={colors.footerBg[colorMode]}
     >
       <Flex direction="row">
-        <Flex direction='column'>
+        <Flex direction="column">
           <Text
             fontSize="0.85rem"
             noOfLines={1}
