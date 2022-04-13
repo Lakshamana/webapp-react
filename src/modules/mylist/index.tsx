@@ -92,9 +92,15 @@ const MyListPage = () => {
           <Skeleton kind="cards" numberOfCards={4} />
         </Box>
       )}
-      {!!categories?.length && renderCategoriesGrid()}
-      <Divider py={3} my={3} color="transparent"></Divider>
-      {!!posts?.length && renderPostsGrid()}
+      {!isLoading && (
+        <>
+          {!!categories?.length && renderCategoriesGrid()}
+          {!!categories?.length && (
+            <Divider py={3} my={3} color="transparent" />
+          )}
+          {!!posts?.length && renderPostsGrid()}
+        </>
+      )}
       {isEmpty && <EmptyState />}
     </Container>
   )
