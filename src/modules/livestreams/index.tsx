@@ -4,10 +4,7 @@ import { useLazyQuery, useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
 import { QUERY_POSTS, QUERY_BILLBOARDS } from 'services/graphql'
-import {
-  SortDirection,
-  PostType,
-} from 'generated/graphql'
+import { SortDirection, PostType } from 'generated/graphql'
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
   LivestreamScroller,
@@ -66,23 +63,25 @@ const Livestreams = () => {
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
 
-    const billboardItems = billboardData?.billboards?.rows?.reduce((memo, curr) => {
-      const cover = getImageUrl(curr.customization?.mobile?.imgPath)
-      const banner = getImageUrl(curr.customization?.desktop?.imgPath)
+    const billboardItems = billboardData?.billboards?.rows
+      ?.reduce((memo, curr) => {
+        const cover = getImageUrl(curr.customization?.mobile?.imgPath)
+        const banner = getImageUrl(curr.customization?.desktop?.imgPath)
 
-      memo.push({
-        ...curr,
-        actions: curr.actions.map((action) => ({
-          ...action,
-          bgColor: convertToValidColor(action.bgColor),
-          borderColor: convertToValidColor(action.borderColor),
-          textColor: convertToValidColor(action.textColor),
-        })),
-        cover,
-        banner,
-      })
-      return memo
-    }, [])
+        memo.push({
+          ...curr,
+          actions: curr.actions.map((action) => ({
+            ...action,
+            bgColor: convertToValidColor(action.bgColor),
+            borderColor: convertToValidColor(action.borderColor),
+            textColor: convertToValidColor(action.textColor),
+          })),
+          cover,
+          banner,
+        })
+        return memo
+      }, [])
+      .sort((a, b) => a.sort - b.sort)
 
     setBillboardItems(billboardItems)
 
@@ -168,7 +167,7 @@ const Livestreams = () => {
               sectionTitle={t('page.live.past')}
             ></VideosScroller>
           )}
-          {isEmpty && <EmptyState/> }
+          {isEmpty && <EmptyState />}
         </Flex>
       )}
     </Container>
