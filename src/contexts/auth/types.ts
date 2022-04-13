@@ -1,10 +1,9 @@
 import { Account, Profile } from 'generated/graphql'
-
-type KindType = 'public' | 'exclusive'
+import { Kinds } from 'generated/graphql'
 
 export interface AuthTypes {
   signed: boolean
-  kind: KindType
+  kind: Kinds
   user?: object
   loadingAccount: boolean
   signOut: () => Promise<void>

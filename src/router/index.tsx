@@ -12,6 +12,7 @@ import { useAuth } from 'contexts/auth'
 import { useEffect, useState } from 'react'
 import { getData } from 'services/storage'
 import { AUTH_TOKEN } from 'config/constants'
+import { Kinds } from 'generated/graphql'
 
 const Router = () => {
   const { kind } = useAuth()
@@ -24,14 +25,14 @@ const Router = () => {
   useEffect(() => {
     const permission = () => {
       switch (kind) {
-        case 'public':
+        case Kinds.Public:
           setCurrentPermissions(
             accessToken
               ? publicPermissionAuthenticated
               : publicPermissionUnauthenticated
           )
           break
-        case 'exclusive':
+        case Kinds.Exclusive:
           setCurrentPermissions(
             accessToken
               ? exclusivePermissionAuthenticated

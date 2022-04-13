@@ -592,6 +592,7 @@ export type CreateUploadInput = {
 
 export type CreateVideoPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['String']>>;
@@ -600,8 +601,10 @@ export type CreateVideoPost = {
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<ChannelKind>;
   mediaId: Scalars['ID'];
+  password: Scalars['String'];
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   thumbnailId?: Maybe<Scalars['ID']>;
   title: Scalars['String'];
 };
@@ -815,6 +818,13 @@ export type GroupsSortBy = {
 
 export enum GroupsSortFields {
   Name = 'name'
+}
+
+export enum Kinds {
+  Exclusive = 'EXCLUSIVE',
+  Paywall = 'PAYWALL',
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
 }
 
 export type Me = {
@@ -1982,6 +1992,7 @@ export type Post = {
   kind: Scalars['String'];
   media?: Maybe<MediaUnion>;
   myReactions: Array<PostReactions>;
+  password?: Maybe<Scalars['String']>;
   pinnedStatus?: Maybe<AccountPinnedPost>;
   playlists?: Maybe<Array<PlaylistOutput>>;
   publishedAt: Scalars['DateTime'];
@@ -1990,7 +2001,7 @@ export type Post = {
   schedule: Scalars['DateTime'];
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
-  tags: Array<Scalars['ID']>;
+  tags: Array<TagOutput>;
   teaser: Scalars['ID'];
   thumbnail: MediaPhoto;
   title: Scalars['String'];
@@ -2007,11 +2018,13 @@ export enum PostAccess {
 export type PostFilter = {
   categories?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
+  kind?: Maybe<Array<Kinds>>;
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
   pinned?: Maybe<Scalars['Boolean']>;
   publishedAt?: Maybe<Scalars['String']>;
   sortBy?: Maybe<Scalars['String']>;
+  status?: Maybe<PostStatus>;
   typeIn?: Maybe<Array<PostType>>;
 };
 
@@ -2020,6 +2033,11 @@ export type PostReactions = {
   count: Scalars['Int'];
   name: Scalars['String'];
 };
+
+export enum PostStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED'
+}
 
 export enum PostType {
   Audio = 'AUDIO',
@@ -2883,6 +2901,7 @@ export type UpdateUploadInput = {
 
 export type UpdateVideoPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
@@ -2890,8 +2909,10 @@ export type UpdateVideoPost = {
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<ChannelKind>;
   mediaId?: Maybe<Scalars['ID']>;
+  password?: Maybe<Scalars['String']>;
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
   thumbnailId?: Maybe<Scalars['ID']>;
   title?: Maybe<Scalars['String']>;
 };
@@ -3041,6 +3062,20 @@ export type UnpinCategoryMutationVariables = Exact<{
 
 export type UnpinCategoryMutation = { __typename?: 'Mutation', unpinCategory: { __typename?: 'AccountPinnedCategory', pinned: boolean } };
 
+export type AddCommentMutationVariables = Exact<{
+  payload: AddComment;
+}>;
+
+
+export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', countComments: number, id: string, description: string, createdAt: any, countUpVotes: number, content: string, author: { __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> } } };
+
+export type DeleteCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', countComments: number } };
+
 export type AddReactionMutationVariables = Exact<{
   input: AddReaction;
 }>;
@@ -3160,14 +3195,14 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, engagedUsers: Array<{ __typename?: 'EngagedUser', username: string }>, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', access: string, description: string, geofence: any, kind: string, id: string, slug?: Maybe<string>, status: string, tags: Array<string>, title: string, type: string, publishedAt: any, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence: any, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt: any, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 
 export const CreateAccountDocument = gql`
@@ -3881,6 +3916,93 @@ export function useUnpinCategoryMutation(baseOptions?: Apollo.MutationHookOption
 export type UnpinCategoryMutationHookResult = ReturnType<typeof useUnpinCategoryMutation>;
 export type UnpinCategoryMutationResult = Apollo.MutationResult<UnpinCategoryMutation>;
 export type UnpinCategoryMutationOptions = Apollo.BaseMutationOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>;
+export const AddCommentDocument = gql`
+    mutation addComment($payload: AddComment!) {
+  addComment(payload: $payload) {
+    countComments
+    author {
+      displayName
+      username
+    }
+    id
+    description
+    createdAt
+    countUpVotes
+    content
+  }
+}
+    `;
+export type AddCommentMutationFn = Apollo.MutationFunction<AddCommentMutation, AddCommentMutationVariables>;
+export type AddCommentComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddCommentMutation, AddCommentMutationVariables>, 'mutation'>;
+
+    export const AddCommentComponent = (props: AddCommentComponentProps) => (
+      <ApolloReactComponents.Mutation<AddCommentMutation, AddCommentMutationVariables> mutation={AddCommentDocument} {...props} />
+    );
+    
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommentMutation, { data, loading, error }] = useAddCommentMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(baseOptions?: Apollo.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
+      }
+export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>;
+export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
+export type AddCommentMutationOptions = Apollo.BaseMutationOptions<AddCommentMutation, AddCommentMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation deleteComment($id: String!) {
+  deleteComment(id: $id) {
+    countComments
+  }
+}
+    `;
+export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
+export type DeleteCommentComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<DeleteCommentMutation, DeleteCommentMutationVariables>, 'mutation'>;
+
+    export const DeleteCommentComponent = (props: DeleteCommentComponentProps) => (
+      <ApolloReactComponents.Mutation<DeleteCommentMutation, DeleteCommentMutationVariables> mutation={DeleteCommentDocument} {...props} />
+    );
+    
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, options);
+      }
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
+export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const AddReactionDocument = gql`
     mutation addReaction($input: AddReaction!) {
   addReaction(input: $input) {
@@ -4842,9 +4964,6 @@ export const GetPostDocument = gql`
     countComments
     countReactions
     description
-    engagedUsers {
-      username
-    }
     categories {
       id
     }
@@ -4922,6 +5041,7 @@ export const GetPostsDocument = gql`
     pageCount
     total
     rows {
+      id
       myReactions {
         name
       }
@@ -4929,13 +5049,11 @@ export const GetPostsDocument = gql`
       description
       geofence
       kind
-      id
       slug
       status
       pinnedStatus {
         pinned
       }
-      tags
       thumbnail {
         imgPath
       }
