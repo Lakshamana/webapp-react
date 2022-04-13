@@ -3,7 +3,7 @@ import { useLazyQuery, useQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Skeleton } from "components"
+import { Skeleton } from 'components'
 import { QUERY_POST, QUERY_POSTS } from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
@@ -69,6 +69,9 @@ const VideoPostView = () => {
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
   }
 
+  const postHasCommentsAllowed =
+    activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
+
   //TODO: engagedUsers
   // const engagedUsers =
   //   postData?.engagedUsers.map((item) => ({
@@ -106,17 +109,16 @@ const VideoPostView = () => {
           />
         </Subtitle>
         <Flex w="100%" mt={4} flexDirection={isDesktop ? 'row' : 'column'}>
-          {
-            activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
-              <ReactionBar
-                postId={postData?.id}
-                reactions={postData ? [...postData?.reactions] : []}
-                totalReactions={postData?.countReactions}
-                myReactions={postData?.myReactions ?? []}
-              />
-            )}
+          {activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
+            <ReactionBar
+              postId={postData?.id}
+              reactions={postData ? [...postData?.reactions] : []}
+              totalReactions={postData?.countReactions}
+              myReactions={postData?.myReactions ?? []}
+            />
+          )}
           <Spacer mt={isDesktop ? 0 : 4} />
-          {/* {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
+          {/* {postHasCommentsAllowed && (
             <Participants participants={engagedUsers} />
           )} */}
         </Flex>
@@ -129,7 +131,7 @@ const VideoPostView = () => {
         justifyContent="center"
       >
         <VideoComments>
-          {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
+          {postHasCommentsAllowed && (
             <Box
               w={
                 !!relatedVideosData?.length
