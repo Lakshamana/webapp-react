@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
-import { Flex, Spacer, Box } from '@chakra-ui/react'
+import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
+import { Skeleton } from "components"
 import { QUERY_POST, QUERY_POSTS } from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
@@ -68,11 +69,22 @@ const VideoPostView = () => {
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
   }
 
-  const engagedUsers =
-    postData?.engagedUsers.map((item) => ({
-      name: item.username,
-      avatar: '',
-    })) || []
+  //TODO: engagedUsers
+  // const engagedUsers =
+  //   postData?.engagedUsers.map((item) => ({
+  //     name: item.username,
+  //     avatar: '',
+  //   })) || []
+
+  if (loadingPost || !postData) {
+    return (
+      <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
+        <Box mt={2}>
+          <Skeleton kind={'posts'} numberOfCards={1} />
+        </Box>
+      </Center>
+    )
+  }
 
   return (
     <Container
@@ -94,18 +106,19 @@ const VideoPostView = () => {
           />
         </Subtitle>
         <Flex w="100%" mt={4} flexDirection={isDesktop ? 'row' : 'column'}>
-          {activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
-            <ReactionBar
-              postId={postData?.id}
-              reactions={postData ? [...postData?.reactions] : []}
-              totalReactions={postData?.countReactions}
-              myReactions={postData?.myReactions ?? []}
-            />
-          )}
+          {
+            activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
+              <ReactionBar
+                postId={postData?.id}
+                reactions={postData ? [...postData?.reactions] : []}
+                totalReactions={postData?.countReactions}
+                myReactions={postData?.myReactions ?? []}
+              />
+            )}
           <Spacer mt={isDesktop ? 0 : 4} />
-          {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
+          {/* {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
             <Participants participants={engagedUsers} />
-          )}
+          )} */}
         </Flex>
       </VideoDetails>
       <Container

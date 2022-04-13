@@ -13,7 +13,9 @@ export const CharacterCounter = styled(Text)`
   color: ${({ theme }) => theme.colors.inputText[theme.colorMode]};
 `
 
-export const IconCustom = styled(Icon)`
+export const IconCustom: any = styled(Icon)`
   cursor: pointer;
+  height: 21px;
+  width: 21px;
   color: ${({ theme }) => theme.colors.blue['300']};
 `

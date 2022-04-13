@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client'
 
+// TODO: return to list
+// engagedUsers {
+//   username
+// }
 export const QUERY_POST = gql`
   query GetPost($id: ID, $slug: String) {
     post(id: $id, slug: $slug) {
@@ -9,9 +13,6 @@ export const QUERY_POST = gql`
       countComments
       countReactions
       description
-      engagedUsers {
-        username
-      }
       categories {
         id
       }

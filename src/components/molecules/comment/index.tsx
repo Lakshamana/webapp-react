@@ -1,5 +1,6 @@
-import { Box, Flex, Spacer } from '@chakra-ui/react'
+import { Box, Flex, Spacer, Grid, GridItem, SimpleGrid } from '@chakra-ui/react'
 import { formatDistance } from 'date-fns'
+import { Icon } from "@iconify/react"
 import { colors } from 'styles'
 import { useThemeStore } from 'services/stores'
 import { Comment as CommentType } from 'generated/graphql'
@@ -12,61 +13,82 @@ const CommentWrapper = ({ ...props }: CommentType) => {
   const { colorMode } = useThemeStore()
   return (
     <>
-      <Flex alignItems="center">
-        <Text
-          color={colors.generalText[colorMode]}
-          fontSize={'1.1rem'}
-          fontWeight={600}
-        >
-          {props.author?.username}
-        </Text>
-        <Text
-          color={colors.secondaryText[colorMode]}
-          ml={2}
-          fontSize={'0.85rem'}
-        >
-          {/* TODO: Don't have createdAt field on API}
-          {/* {formatDistance(new Date(props.createdAt), new Date(), {
-            addSuffix: true,
-          })} */}
-        </Text>
-      </Flex>
-
-      <Text color={colors.generalText[colorMode]} mt={1} fontSize={pxToRem(16)}>
+      <Text color={colors.generalText[colorMode]} fontSize={pxToRem(16)}>
         {props.description}
       </Text>
-
-      {/* <Flex w="fit-content" mt={2} ml={1} color={'whiteTransparent.200'}>
-        <Vote type="upvote" votes={props.countUpvotes || 0} />
+      <Flex
+        w="fit-content"
+        mt={'12px'}
+        ml={1}
+        color={colors.comments[colorMode]}
+      >
+        <Vote type="upvote" votes={props.countUpVotes || 0} />
         <Spacer w={4} />
-        <Vote type="downvote" votes={props.countUpvotes || 0} />
-        <Flex alignItems="center">
-          <Icon width={20} height={20} icon="mdi:message" />
+        <Vote type="downvote" votes={props.countUpVotes || 0} />
+        <Flex
+          alignItems="center"
+          ml={'20px'}
+          pl={'20px'}
+          h={'32px'}
+          borderLeft='1px'
+          borderColor={colors.comments[colorMode]}
+        >
+          <Icon width={20} height={20} icon="bx:message" />
           <Spacer w={2} />
-          <Text fontSize={14} fontWeight={'bold'}>
+          <Text fontSize={12} fontWeight={'bold'}>
             REPLY
           </Text>
         </Flex>
-      </Flex> */}
+      </Flex>
     </>
   )
 }
 
 const Comment = ({ ...props }: CommentType) => {
+  const { colorMode } = useThemeStore()
+
   return (
-    <Flex py={3}>
-      <Avatar
-        mr={4}
-        width={'40px'}
-        height={'40px'}
-        name={`${props.author?.username}`}
-        src={''}
-      />
+    <>
+      <Grid templateColumns='42px 7fr' gap={2} alignItems={'center'} my={4}>
+        <GridItem>
+          <Avatar
+            width={'36px'}
+            height={'36px'}
+            name={String(props.author?.username)}
+            src={''}
+          />
+        </GridItem>
+        <GridItem>
+          <Flex alignItems="baseline">
+            <Text
+              color={colors.generalText[colorMode]}
+              fontSize={'18px'}
+              fontWeight={700}
+            >
+              {props.author?.username} User name [WIP]
+            </Text>
+            <Text
+              color={colors.secondaryText[colorMode]}
+              ml={2}
+              fontSize={'14px'}
+            >
+              {/* TODO: Don't have createdAt field on API}
+          {/* {formatDistance(new Date(props.createdAt), new Date(), {
+            addSuffix: true,
+          })} */}
+              1 min ago
+            </Text>
+          </Flex>
+        </GridItem>
+        <GridItem />
+        <GridItem w={'100%'}>
+          <CommentWrapper {...props} />
+        </GridItem>
+      </Grid>
       <Box>
-        <CommentWrapper {...props} />
-        {/* <CommentReplies count={props.countComments}></CommentReplies> */}
+        {/* <CommentReplies count={props.countComments} /> */}
       </Box>
-    </Flex>
+    </>
   )
 }
 
