@@ -223,7 +223,6 @@ const defaultColors: any = {
 
 export function setColor(BRAND_COLORS: ColorFlags) {
   defaultColors.brand = toLowerKeys(BRAND_COLORS)
-  console.log(defaultColors.brand)
   defaultColors.brand.primary = toLowerKeys(defaultColors.brand.primary)
   defaultColors.brand.secondary = toLowerKeys(defaultColors.brand.secondary)
   defaultColors.brand.action_link = toLowerKeys(defaultColors.brand.action_link)
