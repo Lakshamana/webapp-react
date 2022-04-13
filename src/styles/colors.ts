@@ -86,6 +86,10 @@ const defaultColors: any = {
     light: '#E2E9E9',
     dark: '#20242A',
   },
+  comments: {
+    light: '#444444',
+    dark: '#666666',
+  },
   alerts: {
     success: {
       default: '#33DA80',
