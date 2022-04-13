@@ -12,7 +12,9 @@ export const QUERY_CATEGORIES = gql`
       pageSize
       rows {
         access
-        pinnedAt
+        pinnedStatus {
+          pinned
+        }
         parentId
         slug
         createdAt
@@ -32,7 +34,9 @@ export const QUERY_CATEGORIES = gql`
           slug
           description
           featuredAt
-          pinnedAt
+          pinnedStatus {
+            pinned
+          }
           customization {
             desktop {
               imgPath

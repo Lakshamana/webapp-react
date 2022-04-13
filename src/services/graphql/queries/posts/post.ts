@@ -15,6 +15,9 @@ export const QUERY_POST = gql`
       categories {
         id
       }
+      pinnedStatus {
+        pinned
+      }
       featured
       geofence
       kind
