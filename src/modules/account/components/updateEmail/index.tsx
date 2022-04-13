@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useFormik } from 'formik'
+import { FormikHelpers, useFormik } from 'formik'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { Flex } from '@chakra-ui/layout'
 import { useThemeStore } from 'services/stores'
@@ -9,14 +9,57 @@ import { initialValues, validationSchema } from './settings'
 import { sizes, colors } from 'styles'
 import { Box } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
-import { MUTATION_UPDATE_ACCOUNT } from 'services/graphql'
+import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT, MUTATION_VERIFY_MAIL } from 'services/graphql'
+import { getData, saveData } from 'services/storage'
+import { ACCOUNT_INFO, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { FormProps } from './types'
+import { useState } from 'react'
+import { useAuth } from 'contexts/auth'
 
 export const UpdateEmail = () => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [loading, setloading] = useState(false)
+  const { updateAccount } = useAuth()
 
-  const [updateEmailOnly, { loading: loadingUpdateEmail }] = useMutation(MUTATION_UPDATE_ACCOUNT)
+  const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL)
+  const [testPassword] = useMutation(MUTATION_SIGNIN, {
+    onError: (error) => setFieldError('password', 'Password Não valido'),
+  })
+  const [updateEmailOnly] = useMutation(MUTATION_UPDATE_ACCOUNT)
+  const [signIn] = useMutation(MUTATION_SIGNIN, {
+    onCompleted: async (result) => {
+      await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
+      await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
+      await updateAccount(result.signIn.account)
+    }
+  })
+
+  const flow = async(values: FormProps, actions: FormikHelpers<FormProps>) => {
+    setloading(true)
+    const email = getData(ACCOUNT_INFO)?.email
+    const { password } = values
+
+    await verifyMail({variables: {payload: { email: values.newEmail }}})
+    .then((res)=>{
+      actions.setFieldError('newEmail', 'Email já cadastrado')
+      setloading(false)
+    })
+    .catch( async (err)=>{
+      try {
+        await testPassword({variables: {payload: { password, email }}})
+        await updateEmailOnly({variables: {payload: { email: values.newEmail }}})
+        await signIn({variables: {payload: { password, email: values.newEmail }}})
+        setloading(false)
+        onClose()
+        resetForm()
+      } catch(err) {
+        setloading(false)
+      }
+    })
+
+  }
 
   const {
     values,
@@ -36,26 +79,7 @@ export const UpdateEmail = () => {
     validationSchema,
     validateOnChange: true,
     validateOnBlur: false,
-    onSubmit: async () => {
-      const { newEmail: email } = values
-      updateEmailOnly({
-        variables: {
-          payload: {
-            email,
-          },
-        },
-      })
-      .then(()=>{
-        onClose()
-        resetForm()
-      })
-      .catch(({ message })=>{
-        setFieldError(
-          'newEmail',
-          message
-        )
-      })
-    },
+    onSubmit: flow,
   })
   return (
     <>
@@ -129,7 +153,7 @@ export const UpdateEmail = () => {
               label={t('page.account.update')}
               onClick={() => handleSubmit()}
               isDisabled={!(dirty && isValid)}
-              isLoading={loadingUpdateEmail}
+              isLoading={loading}
             />
             <Button
               width={sizes.loginButtonWidth}
