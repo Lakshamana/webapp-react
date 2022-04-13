@@ -18,8 +18,8 @@ export const ADD_COMMENT = gql`
 `
 
 export const DELETE_COMMENT = gql`
-  mutation deleteComment($payload: deleteCommentId!) {
-    deleteComment(payload: $payload) {
+  mutation deleteComment($id: String!) {
+    deleteComment(id: $id) {
       countComments
     }
   }
