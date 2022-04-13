@@ -66,7 +66,7 @@ const PostsGrid = ({
           isExclusive: item.access === 'EXCLUSIVE',
           //TODO: Implement isGeolocked
           isGeolocked: false,
-          isPinned: item.pinnedAt,
+          isPinned: item.pinnedStatus?.pinned,
         }
       })
       setGridItems(mappedArr)

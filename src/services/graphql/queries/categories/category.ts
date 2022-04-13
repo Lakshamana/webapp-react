@@ -7,7 +7,9 @@ export const QUERY_CATEGORY = gql`
       access
       slug
       createdAt
-      pinnedAt
+      pinnedStatus {
+        pinned
+      }
       customization {
         desktop {
           imgPath
@@ -23,7 +25,9 @@ export const QUERY_CATEGORY = gql`
         description
         featuredAt
         geoFence
-        pinnedAt
+        pinnedStatus {
+          pinned
+        }
         name
         slug
         id

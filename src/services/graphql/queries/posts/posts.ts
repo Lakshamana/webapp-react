@@ -21,7 +21,9 @@ export const QUERY_POSTS = gql`
         id
         slug
         status
-        pinnedAt
+        pinnedStatus {
+          pinned
+        }
         tags
         thumbnail {
           imgPath

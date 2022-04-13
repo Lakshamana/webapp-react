@@ -8,6 +8,7 @@ import { CategoryPostCard, Text } from 'components'
 import { colors, breakpoints, sizes } from 'styles'
 import { useChannelsStore } from 'services/stores'
 import { Wrapper } from './style'
+import { Category } from 'generated/graphql'
 
 const CategoriesGrid = ({ sendUnpinEvent, items, sectionTitle }: CategoriesGridProps) => {
   const { generateImage } = useThumbor()
@@ -35,15 +36,15 @@ const CategoriesGrid = ({ sendUnpinEvent, items, sectionTitle }: CategoriesGridP
 
   useEffect(() => {
     if (items && items?.length) {
-      const mappedArr = items?.map((item: any) => {
-        const thumbnail = getImageUrl(item.customization?.thumbnail?.imgPath)
+      const mappedArr = items?.map((item: Category) => {
+        const thumbnail = getImageUrl(item.customization?.thumbnail?.imgPath || '')
         const url = getPostUrl(`${item.slug}`)
         return {
           id: item.id,
           title: item.name,
           url,
           thumbnail,
-          isPinned: item.pinnedAt,
+          isPinned: item.pinnedStatus?.pinned,
         }
       })
       setGridItems(mappedArr)

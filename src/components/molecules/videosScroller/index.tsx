@@ -70,7 +70,7 @@ const VideosScroller = ({
         isExclusive: isExclusive(item),
         //TODO: Implement isGeolocked
         isGeolocked: false,
-        isPinned: item.pinnedAt,
+        isPinned: item.pinnedStatus?.pinned,
       }
     })
     setScrollerItems(mappedArr?.length ? mappedArr : [])

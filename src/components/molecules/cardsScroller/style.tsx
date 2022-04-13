@@ -75,7 +75,7 @@ export const SwiperStyled = styled(Swiper)`
   }
 
   .cards-scroller-pagination .swiper-pagination-bullet-active {
-    background: ${({ theme }) => theme.colors.brand.primary[theme.colorMode]};
+    background: ${({ theme }) => theme.colors.brand.indicator[theme.colorMode]};
   }
 
   .cards-scroller-pagination .swiper-pagination-bullet:hover,
