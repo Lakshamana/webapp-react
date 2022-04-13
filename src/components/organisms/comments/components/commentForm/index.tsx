@@ -59,7 +59,6 @@ const CommentForm = ({
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           onKeyDown={(e: any) => e.keyCode === 13 && formik.handleSubmit()}
-          {...formik}
         />
         <InputRightElement>
           {
