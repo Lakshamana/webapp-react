@@ -7,7 +7,6 @@ import { Link } from '@chakra-ui/react'
 
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { useThemeStore } from 'services/stores'
-import { convertCamelCaseToDash } from 'utils'
 import { useChannelsStore } from 'services/stores'
 
 import { CardsScroller, LivestreamPostCard } from 'components'
@@ -60,7 +59,7 @@ const LivestreamScroller = ({
   }
 
   const getLivestreamUrl = (id: string) =>
-    `/c/${convertCamelCaseToDash(activeChannel?.name)}/live/${id}`
+    `/c/${activeChannel?.slug}/live/${id}`
 
   const isExclusive = (post: any) => false
 

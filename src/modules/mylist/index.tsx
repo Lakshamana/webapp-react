@@ -1,33 +1,56 @@
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
+import { Divider, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { QUERY_CATEGORIES, QUERY_POSTS } from 'services/graphql'
-import { Container, EmptyState, Skeleton, PostsGrid, CategoriesGrid } from 'components'
+import { Category, Post } from 'generated/graphql'
 import { useCommonStore } from 'services/stores'
-import { useEffect } from 'react'
+import {
+  Container,
+  EmptyState,
+  Skeleton,
+  PostsGrid,
+  CategoriesGrid,
+} from 'components'
+import { sizes } from 'styles'
 
 const MyListPage = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
-
-  //TODO: Waiting for API to list pinned posts and categories
+  const [categories, setCategories] = useState<Category[]>()
+  const [posts, setPosts] = useState<Post[]>()
 
   const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
     useQuery(QUERY_CATEGORIES, {
-      variables: {},
+      variables: {
+        filter: {
+          pinned: true,
+        },
+      },
+      onCompleted: (result) => {
+        setCategories(result?.categories?.rows)
+      },
+      fetchPolicy: 'no-cache',
     })
 
   // TODO: Implement infinite loading on Cards Grid
   const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
     QUERY_POSTS,
     {
-      variables: {},
+      variables: {
+        filter: {
+          pinned: true,
+        },
+      },
+      onCompleted: (result) => {
+        setPosts(result?.posts?.rows)
+      },
+      fetchPolicy: 'no-cache',
     }
   )
   const isLoading = loadingPinnedCategories || loadingPinnedPosts
 
-  const hasResults =
-    pinnedCategoriesData?.pinnedCategories?.length ||
-    pinnedPostsData?.pinnedPosts?.length
+  const hasResults = categories?.length || posts?.length
 
   const isEmpty = !isLoading && !hasResults
 
@@ -36,27 +59,49 @@ const MyListPage = () => {
     //eslint-disable-next-line
   }, [])
 
+  const unpinPost = (id: string) => {
+    const pinnedPosts = posts?.filter((item) => item.id !== id)
+    setPosts(pinnedPosts)
+  }
+
+  const unpinCategory = (id: string) => {
+    const pinnedCategories = categories?.filter((item) => item.id !== id)
+    setCategories(pinnedCategories)
+  }
+
   const renderCategoriesGrid = () => (
     <CategoriesGrid
       sectionTitle={t('page.my_list.pinned_categories')}
-      items={pinnedCategoriesData?.pinnedCategories}
+      items={categories}
+      sendUnpinEvent={(id) => unpinCategory(id)}
     ></CategoriesGrid>
   )
 
   const renderPostsGrid = () => (
     <PostsGrid
       sectionTitle={t('page.my_list.pinned_videos')}
-      items={pinnedPostsData?.pinnedPosts}
+      items={posts}
+      sendUnpinEvent={(id) => unpinPost(id)}
     ></PostsGrid>
   )
 
   return (
-    <Container flexDirection={'column'} width={'100vw'} defaultPadding my={15}>
-      {isLoading && <Skeleton kind="cards" numberOfCards={4} />}
-      {!!pinnedCategoriesData?.pinnedCategories?.length &&
-        renderCategoriesGrid()}
-      {!!pinnedPostsData?.pinnedPosts?.length && renderPostsGrid()}
-      {isEmpty && <EmptyState/>}
+    <Container flexDirection={'column'} width={'100vw'} my={15}>
+      {isLoading && (
+        <Box p={sizes.paddingSm} width="100%">
+          <Skeleton kind="cards" numberOfCards={4} />
+        </Box>
+      )}
+      {!isLoading && (
+        <>
+          {!!categories?.length && renderCategoriesGrid()}
+          {!!categories?.length && (
+            <Divider py={3} my={3} color="transparent" />
+          )}
+          {!!posts?.length && renderPostsGrid()}
+        </>
+      )}
+      {isEmpty && <EmptyState />}
     </Container>
   )
 }

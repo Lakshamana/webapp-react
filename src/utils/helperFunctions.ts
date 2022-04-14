@@ -9,6 +9,13 @@ export const kFormatter = (num: number | bigint) => {
   return formatter.format(num)
 }
 
+export const kFormatterTranslate = (t: any, num: number, translateMapper: Array<String>) => {
+  if (Number(num) === 0) return t(translateMapper[0])
+  return Number(num) === 1
+    ? `${num} ${t(translateMapper[1])}`
+    : `${kFormatter(num)} ${t(translateMapper[2])}`
+}
+
 export const formatNumber = (num: number, digits: number) => {
   const lookup = [
     { value: 1, symbol: '' },

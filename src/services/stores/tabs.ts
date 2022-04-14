@@ -2,7 +2,6 @@ import create from 'zustand'
 import { CHANNEL_INFO } from 'config/constants'
 import { getData } from 'services/storage'
 import { TabFlags } from 'types/flags'
-import { convertCamelCaseToDash } from 'utils'
 
 export const mapperTabName = {
   HOME: 'HOME',

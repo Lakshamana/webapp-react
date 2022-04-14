@@ -1,22 +1,28 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_COMMENTS = gql`
-  query Comments(
-    $filter: CommentFilter
-    $limit: Float
-    $sort: [FindPostCommentsSort!]
-    $skip: Float
-  ) {
-    comments(filter: $filter, limit: $limit, skip: $skip, sort: $sort) {
-      id
-      author {
-        displayName
-        username
+  query Comments($filter: CommentFilter) {
+    comments(filter: $filter) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      total
+      rows {
+        author {
+          displayName
+          username
+        }
+        description
+        id
+        countUpVotes
+        createdAt
+        countComments
+        parent
       }
-      countComments
-      description
-      countUpVotes
-      parent
+      isLastPage
+      page
+      pageCount
+      pageSize
     }
   }
 `

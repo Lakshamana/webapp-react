@@ -60,7 +60,7 @@ const CategoriesPage = () => {
           title: curr.name,
           cover,
           banner,
-          isPinned: !!curr.pinnedAt,
+          isPinned: !!curr.pinnedStatus?.pinned,
         })
         return memo
       },

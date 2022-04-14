@@ -13,7 +13,6 @@ import { CategoryPostCard } from 'components/atoms'
 import { useEffect } from 'react'
 import { Category } from 'generated/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { convertCamelCaseToDash } from 'utils/helperFunctions'
 
 const CategoriesScroller = ({
   items,
@@ -41,21 +40,21 @@ const CategoriesScroller = ({
     return image
   }
 
-  const getPostUrl = (id: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/category/${id}`
+  const getPostUrl = (slug: string) => {
+    return `/c/${activeChannel?.slug}/category/${slug}`
   }
 
   useEffect(() => {
     const categoriesItems = items?.map((item: Category) => {
       const thumbnail = getImageUrl(item)
-      const url = getPostUrl(`${item.id}`)
+      const url = getPostUrl(`${item.slug}`)
       return {
         id: item.id || '',
         title: item.name || '',
         description: item.description || '',
         url: url,
         thumbnail: thumbnail,
-        isPinned: item.pinnedAt,
+        isPinned: item.pinnedStatus?.pinned,
       }
     })
     setScrollerItems(categoriesItems)

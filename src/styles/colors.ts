@@ -86,6 +86,10 @@ const defaultColors: any = {
     light: '#E2E9E9',
     dark: '#20242A',
   },
+  comments: {
+    light: '#444444',
+    dark: '#666666',
+  },
   alerts: {
     success: {
       default: '#33DA80',
@@ -223,7 +227,6 @@ const defaultColors: any = {
 
 export function setColor(BRAND_COLORS: ColorFlags) {
   defaultColors.brand = toLowerKeys(BRAND_COLORS)
-  console.log(defaultColors.brand)
   defaultColors.brand.primary = toLowerKeys(defaultColors.brand.primary)
   defaultColors.brand.secondary = toLowerKeys(defaultColors.brand.secondary)
   defaultColors.brand.action_link = toLowerKeys(defaultColors.brand.action_link)

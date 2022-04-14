@@ -11,6 +11,7 @@ export const QUERY_POSTS = gql`
       pageCount
       total
       rows {
+        id
         myReactions {
           name
         }
@@ -18,11 +19,11 @@ export const QUERY_POSTS = gql`
         description
         geofence
         kind
-        id
         slug
         status
-        pinnedAt
-        tags
+        pinnedStatus {
+          pinned
+        }
         thumbnail {
           imgPath
         }

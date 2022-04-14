@@ -12,8 +12,6 @@ import { VideoPlaylistProps } from './types'
 import { theme } from 'styles/theme'
 import { colors } from 'styles'
 
-import { convertCamelCaseToDash } from 'utils'
-
 const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
@@ -42,8 +40,8 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
     return image
   }
 
-  const getPostUrl = (id: string) =>
-    `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${id}`
+  const getPostUrl = (slug: string) =>
+    `/c/${activeChannel?.slug}/post/${slug}`
 
   const isExclusive = (post: Post) => post.kind === 'exclusive'
 
@@ -54,7 +52,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       return {
         id: `${item.id}`,
         title: item?.title || '',
-        url: getPostUrl(item.id || ''),
+        url: getPostUrl(item.slug || ''),
         description: item?.description || '',
         thumbnail: getImageUrl(item),
         mediaLength:

@@ -1,13 +1,15 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_CATEGORY = gql`
-  query GetCategoryWithPosts($categoryId: ID!, $postId: String!) {
-    category(id: $categoryId) {
+  query GetCategory($slug: String) {
+    category(slug: $slug) {
       id
       access
       slug
       createdAt
-      pinnedAt
+      pinnedStatus {
+        pinned
+      }
       customization {
         desktop {
           imgPath
@@ -23,7 +25,10 @@ export const QUERY_CATEGORY = gql`
         description
         featuredAt
         geoFence
-        pinnedAt
+        pinnedStatus {
+          pinned
+        }
+        name
         slug
         id
         description
@@ -40,34 +45,6 @@ export const QUERY_CATEGORY = gql`
       id
       name
       tags
-    }
-    posts(filters: { categories: [$postId], typeIn: [VIDEO, ON_DEMAND] }) {
-      hasNextPage
-      hasPreviousPage
-      isFirstPage
-      isLastPage
-      page
-      pageCount
-      pageNumberIsGood
-      pageSize
-      rows {
-        id
-        access
-        title
-        description
-        pinnedAt
-        geofence
-        slug
-        status
-        thumbnail {
-          imgPath
-        }
-        media {
-          ... on MediaVideo {
-            duration
-          }
-        }
-      }
     }
   }
 `

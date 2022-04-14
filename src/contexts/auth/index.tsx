@@ -30,6 +30,7 @@ import { saveData, getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
+import { Kinds } from 'generated/graphql'
 
 const AuthContext = createContext({})
 
@@ -51,7 +52,8 @@ export const AuthProvider = ({ children }) => {
   const client = useApolloClient()
 
   const signed = !!user
-  const [kind, setKind] = useState('public')
+
+  const [kind, setKind] = useState<Kinds>(Kinds.Public)
 
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
@@ -123,7 +125,7 @@ export const AuthProvider = ({ children }) => {
 
   const loadOrganization = async () => {
     if (organization) {
-      if (organization.kind) setKind(organization.kind)
+      if (organization.kind) setKind(organization.kind as Kinds)
       setLoading(false)
       return
     }

@@ -361,6 +361,7 @@ const EN_US = {
         autoplay: 'Autoplay next video',
         related_videos: 'Related videos',
         views: 'views',
+        add_a_comment: 'Add a comment…',
         live: {
           live_chat: {
             title: 'Live Chat',

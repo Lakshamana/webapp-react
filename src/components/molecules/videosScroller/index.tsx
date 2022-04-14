@@ -7,7 +7,6 @@ import { VideosScrollerProps, VideoPostCardProps } from 'types/posts'
 import { Post } from 'generated/graphql'
 import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
-import { convertCamelCaseToDash } from 'utils'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { Text, CardsScroller, VideoPostCard } from 'components'
 import { Header, ContentScroller } from './styles'
@@ -47,7 +46,7 @@ const VideosScroller = ({
   }
 
   const getPostUrl = (slug: string) => {
-    return `/c/${convertCamelCaseToDash(activeChannel?.name)}/post/${slug}`
+    return `/c/${activeChannel?.slug}/post/${slug}`
   }
 
   const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
@@ -71,7 +70,7 @@ const VideosScroller = ({
         isExclusive: isExclusive(item),
         //TODO: Implement isGeolocked
         isGeolocked: false,
-        isPinned: item.pinnedAt,
+        isPinned: item.pinnedStatus?.pinned,
       }
     })
     setScrollerItems(mappedArr?.length ? mappedArr : [])

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
-import { Flex, Spacer, Box } from '@chakra-ui/react'
+import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
+import { Skeleton } from 'components'
 import { QUERY_POST, QUERY_POSTS } from 'services/graphql'
-import { useThemeStore } from 'services/stores/theme'
+import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
   VideoPlayer,
@@ -24,6 +25,7 @@ const VideoPostView = () => {
   const { colorMode } = useThemeStore()
   const { slug } = useParams<{ channel: string; slug: string }>()
   const { t } = useTranslation()
+  const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [postData, setPostData] = useState<Post>()
@@ -44,6 +46,7 @@ const VideoPostView = () => {
   })
 
   useEffect(() => {
+    if (postData?.title) setPageTitle(postData.title)
     if (postData?.categories?.length) {
       const filteredCategories = postData.categories.map((item) => item.id)
       getRelatedPosts({
@@ -66,11 +69,25 @@ const VideoPostView = () => {
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
   }
 
-  const engagedUsers =
-    postData?.engagedUsers.map((item) => ({
-      name: item.username,
-      avatar: '',
-    })) || []
+  const postHasCommentsAllowed =
+    activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
+
+  //TODO: engagedUsers
+  // const engagedUsers =
+  //   postData?.engagedUsers.map((item) => ({
+  //     name: item.username,
+  //     avatar: '',
+  //   })) || []
+
+  if (loadingPost || !postData) {
+    return (
+      <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
+        <Box mt={2}>
+          <Skeleton kind={'posts'} numberOfCards={1} />
+        </Box>
+      </Center>
+    )
+  }
 
   return (
     <Container
@@ -101,9 +118,9 @@ const VideoPostView = () => {
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
-          {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
+          {/* {postHasCommentsAllowed && (
             <Participants participants={engagedUsers} />
-          )}
+          )} */}
         </Flex>
       </VideoDetails>
       <Container
@@ -114,7 +131,7 @@ const VideoPostView = () => {
         justifyContent="center"
       >
         <VideoComments>
-          {activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && (
+          {postHasCommentsAllowed && (
             <Box
               w={
                 !!relatedVideosData?.length
