@@ -20,7 +20,6 @@ import {
   ProfileInfo,
   Navbar,
   UpdatePassword,
-  UpdateEmail,
   ForgetAccount,
 } from './components'
 
@@ -303,7 +302,6 @@ const AccountPage = () => {
             isLoading={loadingUpdatePassword}
             dispatchAlert={() => setUpdatePasswordMsg(null)}
           ></UpdatePassword>
-          <UpdateEmail />
           <ForgetAccount
             error={forgetAccountError}
             isLoading={loadingForgetAccount}

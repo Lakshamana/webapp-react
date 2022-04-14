@@ -13,23 +13,36 @@ import { pxToRem } from 'styles/metrics'
 
 import { UpdateButtons } from '../updateButtons'
 import { AccountData } from './types'
+import * as Yup from 'yup'
+import { LabelError } from './styles'
 
 const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
   const [isEditing, setIsEditing] = useState(false)
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
 
-  const { values, handleSubmit, handleChange, resetForm } = useFormik({
-    initialValues: {
-      username: account.username || '',
-      display_name: account.display_name || '',
-      first_name: account.first_name || '',
-      last_name: account.last_name || '',
-    },
-    onSubmit: async () => {
-      updateAccount({ ...values })
-    },
-  })
+  const { values, errors, touched, handleSubmit, handleChange, resetForm } =
+    useFormik({
+      initialValues: {
+        email: account.email || '',
+        username: account.username || '',
+        display_name: account.display_name || '',
+        first_name: account.first_name || '',
+        last_name: account.last_name || '',
+      },
+      validationSchema: Yup.object({
+        email: Yup.string()
+          .required(
+            t('common.error.field_required', {
+              field_name: t('signup.label.email'),
+            })
+          )
+          .email(t('common.error.valid_email')),
+      }),
+      onSubmit: async () => {
+        updateAccount({ ...values })
+      },
+    })
 
   useEffect(() => {
     setIsEditing(false)
@@ -38,26 +51,23 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
   return (
     <>
       <Flex width={'100%'} pt={2} alignItems="left" direction="column">
-        <Text color={colors.secondaryText[colorMode]} py={'10px'}>
-          <Label fontSize={pxToRem(16)} fontWeight="500">
-            {t(`page.account.email`)}:
-          </Label>
-          {account.email}
-        </Text>
-
         {Object.keys(values).map((key) => (
           <Text key={key} color={colors.secondaryText[colorMode]} py={'10px'}>
             <Label fontSize={pxToRem(16)} fontWeight="500">
               {t(`page.account.${key}`)}:
             </Label>
             {isEditing ? (
-              <Input
-                onChange={handleChange}
-                width="100%"
-                variant="flushed"
-                name={key}
-                value={values[key]}
-              />
+                <>
+                <Input
+                  onChange={handleChange}
+                  width={'100%'}
+                  variant="flushed"
+                  name={`${key}`}
+                  value={values[key]}
+                  isInvalid={errors[key] && touched[key]}
+                />
+                {errors[key] ? <LabelError>{errors[key]}</LabelError> : null}
+              </>
             ) : (
               values[key]
             )}
