@@ -17,6 +17,18 @@ import { useState } from 'react'
 import { useAuth } from 'contexts/auth'
 
 export const UpdateEmail = () => {
+  const errorMessageLogin = (type: string) => {
+    const Error = {
+      'exception:PASSWORD_MISMATCH': t('signin.error.wrong_credentials'),
+      'exception:ACCOUNT_NOT_FOUND': t('signin.error.wrong_credentials'),
+      'exception:TOO_MANY_ATTEMPTS_TRY_LATER': t(
+        'signin.error.too_many_attempts'
+      ),
+      default: t('common.error.generic_api_error'),
+    }
+
+    return Error[type] || Error.default
+  }
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -25,7 +37,7 @@ export const UpdateEmail = () => {
 
   const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL)
   const [testPassword] = useMutation(MUTATION_SIGNIN, {
-    onError: (error) => setFieldError('password', 'Password Não valido'),
+    onError: (error) => setFieldError('password', errorMessageLogin(error.message)),
   })
   const [updateEmailOnly] = useMutation(MUTATION_UPDATE_ACCOUNT)
   const [signIn] = useMutation(MUTATION_SIGNIN, {
@@ -43,7 +55,7 @@ export const UpdateEmail = () => {
 
     await verifyMail({variables: {payload: { email: values.newEmail }}})
     .then((res)=>{
-      actions.setFieldError('newEmail', 'Email já cadastrado')
+      actions.setFieldError('newEmail', t('signup.error.email_exists'))
       setloading(false)
     })
     .catch( async (err)=>{
