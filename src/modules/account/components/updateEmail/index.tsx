@@ -44,7 +44,6 @@ export const UpdateEmail = () => {
     onCompleted: async (result) => {
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
       await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
-      await updateAccount(result.signIn.account)
     }
   })
 
@@ -61,8 +60,9 @@ export const UpdateEmail = () => {
     .catch( async (err)=>{
       try {
         await testPassword({variables: {payload: { password, email }}})
-        await updateEmailOnly({variables: {payload: { email: values.newEmail }}})
+        const account = await updateEmailOnly({variables: {payload: { email: values.newEmail }}})
         await signIn({variables: {payload: { password, email: values.newEmail }}})
+        await updateAccount(account.data.updateMyAccount)
         setloading(false)
         onClose()
         resetForm()
