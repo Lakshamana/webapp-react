@@ -47,7 +47,7 @@ export const UpdateEmail = () => {
     }
   })
 
-  const flow = async(values: FormProps, actions: FormikHelpers<FormProps>) => {
+  const emailUpdateFlow = async(values: FormProps, actions: FormikHelpers<FormProps>) => {
     setloading(true)
     const email = getData(ACCOUNT_INFO)?.email
     const { password } = values
@@ -91,7 +91,7 @@ export const UpdateEmail = () => {
     validationSchema,
     validateOnChange: true,
     validateOnBlur: false,
-    onSubmit: flow,
+    onSubmit: emailUpdateFlow,
   })
   return (
     <>

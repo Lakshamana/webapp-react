@@ -45,26 +45,24 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
           {account.email}
         </Text>
 
-        {Object.keys(values).map((key) => {
-          return (
-            <Text key={key} color={colors.secondaryText[colorMode]} py={'10px'}>
-              <Label fontSize={pxToRem(16)} fontWeight="500">
-                {t(`page.account.${key}`)}:
-              </Label>
-              {isEditing ? (
-                <Input
-                  onChange={handleChange}
-                  width={'100%'}
-                  variant="flushed"
-                  name={`${key}`}
-                  value={values[key]}
-                />
-              ) : (
-                values[key]
-              )}
-            </Text>
-          )
-        })}
+        {Object.keys(values).map((key) => (
+          <Text key={key} color={colors.secondaryText[colorMode]} py={'10px'}>
+            <Label fontSize={pxToRem(16)} fontWeight="500">
+              {t(`page.account.${key}`)}:
+            </Label>
+            {isEditing ? (
+              <Input
+                onChange={handleChange}
+                width="100%"
+                variant="flushed"
+                name={key}
+                value={values[key]}
+              />
+            ) : (
+              values[key]
+            )}
+          </Text>
+        ))}
       </Flex>
       <UpdateButtons
         editFormActive={isEditing}
