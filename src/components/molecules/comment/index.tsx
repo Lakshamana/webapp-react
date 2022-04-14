@@ -1,5 +1,4 @@
 import { Box, Flex, Spacer, Grid, GridItem, SimpleGrid } from '@chakra-ui/react'
-import { formatDistance } from 'date-fns'
 import { Icon } from "@iconify/react"
 import { colors } from 'styles'
 import { useThemeStore } from 'services/stores'
@@ -8,6 +7,7 @@ import { Vote, Text, Avatar } from 'components'
 import { CommentReplies } from './components'
 import { pxToRem } from 'styles/metrics'
 import { defaultProps } from './types'
+import { translateFormatDistance } from 'utils'
 
 const CommentWrapper = ({ ...props }: CommentType) => {
   const { colorMode } = useThemeStore()
@@ -72,11 +72,7 @@ const Comment = ({ ...props }: CommentType) => {
               ml={2}
               fontSize={'14px'}
             >
-              {/* TODO: Don't have createdAt field on API}
-          {/* {formatDistance(new Date(props.createdAt), new Date(), {
-            addSuffix: true,
-          })} */}
-              1 min ago
+              {translateFormatDistance(props.createdAt)}
             </Text>
           </Flex>
         </GridItem>

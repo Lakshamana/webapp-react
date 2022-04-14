@@ -1,4 +1,7 @@
-import { addSeconds, format } from 'date-fns'
+import { addSeconds, format, formatDistance } from 'date-fns'
+import { getData } from 'services/storage'
+import { APP_LOCALE } from 'config/constants'
+import { ptBR } from 'date-fns/locale'
 
 export const RANDOM_ID = () => `${Math.random().toString(36).slice(2, 12)}`
 export const getItems = (items: any) => items || []
@@ -142,4 +145,13 @@ export function convertCountMessage(
   const defineMessage =
     Number(countMessages) === 1 ? t(translateMapper[1]) : t(translateMapper[2])
   return `${countMessages} ${defineMessage}`
+}
+
+export function translateFormatDistance(date: Date) {
+  const params = { addSuffix: true }
+  const defineLanguage = getData(APP_LOCALE)
+  if (defineLanguage === 'pt-BR') {
+    params['locale'] = ptBR
+  }
+  return formatDistance(new Date(date), new Date(), params)
 }
