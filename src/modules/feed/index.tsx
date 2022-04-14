@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from "@apollo/client"
-import { formatDistance, intervalToDuration } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { intervalToDuration } from 'date-fns'
 import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
 import { useChannelsStore, useCommonStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
-import { APP_LOCALE } from 'config/constants'
-import { getData } from 'services/storage'
+import { translateFormatDistance } from "utils"
+import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
+import { SortDirection } from "generated/graphql"
 
 const FeedPage = () => {
-  const LIMIT_RESULTS = 5
   const { t } = useTranslation()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
-  const [filterBy, SetFilterBy] = useState()
+  const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
   const [listOfPosts, setListOfPosts] = useState([])
   const [hasMore, setHasMore] = useState(true)
   const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
@@ -26,8 +25,8 @@ const FeedPage = () => {
   })
 
   const filterList = [
-    { value: 'recent', label: t('page.feed.search_options.recent') },
-    { value: 'old', label: t('page.feed.search_options.old') }
+    { value: 'DESC', label: t('page.feed.search_options.recent') },
+    { value: 'ASC', label: t('page.feed.search_options.old') }
   ]
 
   useEffect(() => setPageTitle(t('header.tabs.feed')), [])
@@ -53,18 +52,18 @@ const FeedPage = () => {
       variables: {
         filter: {
           page,
-          pageSize: LIMIT_RESULTS,
+          pageSize: DEFAULT_PAGESIZE_FEEDS,
           sortBy: getSortByFilter()
         }
       }
     })
   }
 
-  const loadMorePosts = () => {
+  const loadMore = () => {
     if (hasMore) getPosts(dataPosts?.posts.page + 1)
   }
 
-  const getSortByFilter = () => filterBy !== 'old' ? "publishedAt.asc" : "publishedAt.desc"
+  const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
 
   const getUrl = (obj) =>
     generateImage(
@@ -98,12 +97,7 @@ const FeedPage = () => {
 
         const date = () => {
           if (post.publishedAt) {
-            const params = { addSuffix: true }
-            const defineLanguage = getData(APP_LOCALE)
-            if (defineLanguage === 'pt-BR') {
-              params['locale'] = ptBR
-            }
-            return formatDistance(new Date(post.publishedAt), new Date(), params)
+            return translateFormatDistance(post.publishedAt)
           }
         }
 
@@ -183,7 +177,7 @@ const FeedPage = () => {
       }
       <InfiniteScroll
         dataLength={listOfPosts.length}
-        next={loadMorePosts}
+        next={loadMore}
         hasMore={hasMore}
         loader={loadingItems(2)}
       >
