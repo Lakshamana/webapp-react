@@ -13,6 +13,8 @@ import {
   CategoriesGrid,
 } from 'components'
 import { sizes } from 'styles'
+import { getData } from 'services/storage'
+import { ACCOUNT_INFO } from 'config/constants'
 
 const MyListPage = () => {
   const { t } = useTranslation()
@@ -20,17 +22,19 @@ const MyListPage = () => {
   const [categories, setCategories] = useState<Category[]>()
   const [posts, setPosts] = useState<Post[]>()
 
+  const AccountInfo = getData(ACCOUNT_INFO)
+
   const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
     useQuery(QUERY_CATEGORIES, {
       variables: {
         filter: {
           pinned: true,
+          account: AccountInfo?.id
         },
       },
       onCompleted: (result) => {
         setCategories(result?.categories?.rows)
-      },
-      fetchPolicy: 'no-cache',
+      }
     })
 
   // TODO: Implement infinite loading on Cards Grid
@@ -40,12 +44,12 @@ const MyListPage = () => {
       variables: {
         filter: {
           pinned: true,
+          account: AccountInfo?.id
         },
       },
       onCompleted: (result) => {
         setPosts(result?.posts?.rows)
-      },
-      fetchPolicy: 'no-cache',
+      }
     }
   )
   const isLoading = loadingPinnedCategories || loadingPinnedPosts
