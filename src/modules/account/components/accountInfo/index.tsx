@@ -31,7 +31,7 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
   const emailUpdateFlow = async(values: any, actions: FormikHelpers<any>) => {
 
     await verifyMail({variables: {payload: { email: values.email }}})
-    .then((res)=>{
+    .then(()=>{
       actions.setFieldError('email', t('signup.error.email_exists'))
     })
     .catch( async ()=>{
@@ -85,11 +85,11 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
                   onChange={handleChange}
                   width={'100%'}
                   variant="flushed"
-                  name={`${key}`}
+                  name={key}
                   value={values[key]}
                   isInvalid={errors[key] && touched[key]}
                 />
-                {errors[key] ? <LabelError>{errors[key]}</LabelError> : null}
+                { errors[key] && <LabelError>{errors[key]}</LabelError> }
               </>
             ) : (
               values[key]

@@ -63,10 +63,10 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
     onSubmit: async (values) => {
       setloading(true)
       const email = getData(ACCOUNT_INFO)?.email
-      const passwordOK = await verifyPassword({
+      const isPasswordValid = await verifyPassword({
         variables: { payload: { password: values.password, email } },
       })
-      if(passwordOK.errors) {
+      if(isPasswordValid.errors) {
         setloading(false)
         return null
       }
