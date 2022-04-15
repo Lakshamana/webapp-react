@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useFormik } from 'formik'
+import { FormikHelpers, useFormik } from 'formik'
 import { useThemeStore } from 'services/stores/theme'
 
 import { Flex } from '@chakra-ui/layout'
@@ -15,11 +15,30 @@ import { UpdateButtons } from '../updateButtons'
 import { AccountData } from './types'
 import * as Yup from 'yup'
 import { LabelError } from './styles'
+import { PasswordConfirmation } from '../passwordValidation'
+import { useDisclosure } from '@chakra-ui/react'
+import { MUTATION_VERIFY_MAIL } from 'services/graphql'
+import { useMutation } from '@apollo/client'
 
 const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
   const [isEditing, setIsEditing] = useState(false)
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL)
+
+  const emailUpdateFlow = async(values: any, actions: FormikHelpers<any>) => {
+
+    await verifyMail({variables: {payload: { email: values.email }}})
+    .then((res)=>{
+      actions.setFieldError('email', t('signup.error.email_exists'))
+    })
+    .catch( async ()=>{
+      onOpen()
+    })
+
+  }
 
   const { values, errors, touched, handleSubmit, handleChange, resetForm } =
     useFormik({
@@ -39,8 +58,12 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
           )
           .email(t('common.error.valid_email')),
       }),
-      onSubmit: async () => {
-        updateAccount({ ...values })
+      onSubmit: async (values, actions) => {
+        if(values.email === account.email) {
+          updateAccount({ ...values})
+          return null
+        }
+        emailUpdateFlow(values, actions)
       },
     })
 
@@ -81,6 +104,7 @@ const AccountInfo = ({ updateAccount, isLoading, account }: AccountData) => {
         handleSubmit={handleSubmit}
         resetValues={resetForm}
       ></UpdateButtons>
+      <PasswordConfirmation updatedValues={values} isOpen={isOpen} onClose={onClose}/>
     </>
   )
 }

@@ -285,6 +285,7 @@ const EN_US = {
         cancel_subscriptions: 'Cancel your Subscriptions',
         add_payment: 'Add Payment Method',
         payment_method: 'Payment Method',
+        verify_password: 'To update your email, you must enter your password to confirm this action.'
       },
       live: {
         live: 'Live',

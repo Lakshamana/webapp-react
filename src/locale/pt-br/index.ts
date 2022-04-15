@@ -284,6 +284,7 @@ const PT_BR = {
         cancel_subscriptions: 'Cancelar Assinaturas',
         add_payment: 'Adicionar Método de Pagamento',
         payment_method: 'Método de Pagamento',
+        verify_password: 'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
       },
       live: {
         live: 'Ao Vivo',
