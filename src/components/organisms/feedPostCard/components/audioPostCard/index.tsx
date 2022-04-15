@@ -1,4 +1,7 @@
 import { abbreviateNumber } from 'utils/helperFunctions'
+import { Text } from 'components'
+import { Icon } from '@chakra-ui/icon'
+import { FeedPostCardProps } from '../../types'
 import {
 	AudioContent,
 	VideoItemPlay,
