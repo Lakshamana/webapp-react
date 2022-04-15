@@ -1,3 +1,5 @@
+import { HomeCarouselsTypes } from './common'
+
 export type OrganizationFlags = {
   APP_BRAND?: string
   COLORS?: ColorFlags
@@ -49,7 +51,7 @@ export type CarouselFlags = {
   DEFAULT: boolean
   ORDER: number
   LABEL: LocaleFlags[]
-  CONTENT_TYPE: string
+  CONTENT_TYPE: HomeCarouselsTypes[]
   TAGS: []
 }
 
