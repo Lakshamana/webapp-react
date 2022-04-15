@@ -8,6 +8,7 @@ import { Post } from 'generated/graphql'
 import { VideoPostCardProps, VideosGridProps } from 'types/posts'
 import { colors, breakpoints, sizes } from 'styles'
 import { Wrapper } from './style'
+import { isEntityBlocked } from 'utils/accessVerifications'
 
 const PostsGrid = ({
   sendUnpinEvent,
@@ -27,7 +28,7 @@ const PostsGrid = ({
       },
     }
 
-    if (isExclusive(post)) {
+    if (isEntityBlocked(post)) {
       imageOptions.blur = 20
     }
 
@@ -41,8 +42,6 @@ const PostsGrid = ({
   const getPostUrl = (slug: string) => {
     return `/c/${activeChannel?.slug}/post/${slug}`
   }
-
-  const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
 
   const callUnpinEvent = (postId: string) => {
     if (sendUnpinEvent) sendUnpinEvent(postId)
@@ -63,7 +62,7 @@ const PostsGrid = ({
               ? item.media?.duration
               : undefined,
           countViews: undefined,
-          isExclusive: item.access === 'EXCLUSIVE',
+          isExclusive: isEntityBlocked(item),
           //TODO: Implement isGeolocked
           isGeolocked: false,
           isPinned: item.pinnedStatus?.pinned,
