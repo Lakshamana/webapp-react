@@ -8,7 +8,7 @@ import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
 import { useChannelsStore, useCommonStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
-import { translateFormatDistance } from "utils"
+import { translateFormatDistance } from "utils/helperFunctions"
 import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
 import { SortDirection } from "generated/graphql"
 
@@ -68,7 +68,7 @@ const FeedPage = () => {
   const getUrl = (obj) =>
     generateImage(
       ThumborInstanceTypes.IMAGE,
-      obj.imgPath,
+      obj?.imgPath,
       {
         size: {
           height: obj.height || undefined,

@@ -7,7 +7,7 @@ import { Vote, Text, Avatar } from 'components'
 import { CommentReplies } from './components'
 import { pxToRem } from 'styles/metrics'
 import { defaultProps } from './types'
-import { translateFormatDistance } from 'utils'
+import { translateFormatDistance } from 'utils/helperFunctions'
 
 const CommentWrapper = ({ ...props }: CommentType) => {
   const { colorMode } = useThemeStore()
