@@ -24,9 +24,7 @@ const setIsRefreshing = (value) => {
   isRefreshing = value
 }
 
-const addPendingRequest = (pendingRequest: Function) => {
-  pendingRequests.push(pendingRequest)
-}
+const addPendingRequest = (pendingRequest: Function) => pendingRequests.push(pendingRequest)
 
 const resolvePendingRequests = () => {
   pendingRequests.map((callback: any) => callback())
@@ -54,74 +52,71 @@ const refreshToken = async (token) => {
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
-    if (graphQLErrors) {
-      for (let err of graphQLErrors) {
-        if (!err.extensions.code) {
-          invalidData()
-          return
-        }
-        if (err.extensions.code === 'UNAUTHENTICATED') {
-          switch (err.message) {
-            case 'INVALID_TOKEN':
-              if (!isRefreshing) {
-                setIsRefreshing(true)
-                try {
-                  const token = getData(AUTH_TOKEN)
-                  return fromPromise(
-                    refreshToken(token)
-                      .then(({ data }: any) => {
-                        const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
-                        if (!accessToken) {
-                          invalidData()
-                          return
-                        }
-                        saveData(AUTH_TOKEN, accessToken)
-                        const headers = operation.getContext().headers
-                        operation.setContext({
-                          headers: {
-                            ...headers,
-                            authorization: `Bearer ${accessToken}`,
-                          },
-                        })
-                        return forward(operation)
-                      })
-                      .catch(() => invalidData())
-                  ).flatMap(() => {
-                    resolvePendingRequests()
-                    setIsRefreshing(false)
-                    return forward(operation)
-                  })
-                } catch (error) {
-                  console.warn('error on refresh token')
-                }
-              }
-              else {
-                return fromPromise(
-                  new Promise((resolve) => {
-                    console.log('PROMISE >>>>>>>>>>>')
-                    // addPendingRequest(() => resolve())
-                  })
-                ).flatMap(() => {
-                  return forward(operation)
-                })
-              }
-              break
-            case 'exception:PASSWORD_MISMATCH':
-              break
-            default:
-              invalidData()
-          }
-          if (err.extensions.code === 'FORBIDDEN') {
-            console.warn(
-              'User dont have permission to execute this action -> ',
-              operation
-            )
-          }
-        }
-      }
-    }
     if (networkError) {
       console.log(`[Network error]: ${networkError}`)
+    }
+
+    if (!graphQLErrors) return
+
+    for (let err of graphQLErrors) {
+      if (!err.extensions.code) {
+        console.log('This error is not mapped: ', JSON.stringify(graphQLErrors))
+        invalidData()
+        return
+      }
+
+      if (err.extensions.code === 'FORBIDDEN') {
+        console.log(
+          'User dont have permission to execute this action -> ',
+          operation
+        )
+      }
+
+      if (err.extensions.code === 'UNAUTHENTICATED') {
+        if (err.message !== 'INVALID_TOKEN') {
+          console.log('Invalid Checkpoint')
+          // invalidData()
+          return
+        }
+
+        if (isRefreshing) {
+          return fromPromise(
+            new Promise((resolve) => addPendingRequest(resolve))
+          ).flatMap(() => forward(operation))
+        }
+
+        setIsRefreshing(true)
+        try {
+          const token = getData(AUTH_TOKEN)
+          return fromPromise(
+            refreshToken(token)
+              .then(({ data }: any) => {
+                const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
+                if (!accessToken) {
+                  console.log('INVALID ACESSTOKEN')
+                  invalidData()
+                  return
+                }
+                saveData(AUTH_TOKEN, accessToken)
+                const headers = operation.getContext().headers
+                operation.setContext({
+                  headers: {
+                    ...headers,
+                    authorization: `Bearer ${accessToken}`,
+                  },
+                })
+                return forward(operation)
+              })
+              .catch((err) => invalidData())
+          ).flatMap(() => {
+            resolvePendingRequests()
+            setIsRefreshing(false)
+            return forward(operation)
+          })
+        } catch (error) {
+          console.warn('error on refresh token')
+        }
+      }
     }
   }
 )
