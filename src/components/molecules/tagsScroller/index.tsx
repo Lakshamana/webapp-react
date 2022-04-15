@@ -61,7 +61,7 @@ const TagsScroller = ({
         return {
           id: item.id,
           slug: item.slug,
-          title: 'TESE',
+          title: (item.__typename === 'Post' && item.title) || (item.__typename === 'Category' && item.name) || '',
           description: item.description,
           duration:
             item.__typename === 'Post' &&
