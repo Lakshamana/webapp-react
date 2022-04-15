@@ -7,8 +7,6 @@ export type AlertObjectType = {
 
 export type SocialType = 'facebook' | 'google' | 'twitter'
 
-export type EntityType = 'public' | 'exclusive' | 'private' | 'geolocked'
-
 export type ColorMode = 'dark' | 'light'
 
 export type HeroBannerProps = {
