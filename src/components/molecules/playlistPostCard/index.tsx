@@ -68,7 +68,7 @@ const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
       </Box>
 
       <InfoBox>
-        <Title>{stripHTML(props.title)}</Title>
+        <Title>{stripHTML(props.title || '')}</Title>
         {props?.description?.length ? (
           <Subtitle>{stripHTML(props?.description)}</Subtitle>
         ) : (

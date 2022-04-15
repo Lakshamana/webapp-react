@@ -30,7 +30,7 @@ const CategoriesScroller = ({
   const getImageUrl = (category: any) => {
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      category?.customization?.thumbnail.imgPath,
+      category?.customization?.thumbnail?.imgPath,
       {
         size: {
           height: 400,
