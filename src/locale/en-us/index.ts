@@ -137,7 +137,7 @@ const EN_US = {
         back: 'Back',
       },
       error: {
-        email_exists: 'A user with this email address already exists.',
+        email_exists: 'Email address already in use.',
       },
     },
     recoverPassword: {
