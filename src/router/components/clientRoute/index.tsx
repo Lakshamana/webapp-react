@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
 import { Props } from './types'
-import { getChannelName } from 'utils'
+import { getChannelName } from 'utils/helperFunctions'
 import { useChannelsStore } from 'services/stores'
 import { useAuth } from 'contexts/auth'
 import { getData } from 'services/storage'

@@ -10,7 +10,7 @@ import { availableReactions } from './settings'
 import { Reaction } from './styles'
 import { colors } from 'styles'
 import { MyReactionType, ReactionsCount, ReactionType, UpdateReactionMode } from './types'
-import { formatNumber, convertCountMessage } from 'utils'
+import { formatNumber, convertCountMessage } from 'utils/helperFunctions'
 import { UpdateReactions } from './components/addReactionButton/types'
 
 const ReactionBar = ({

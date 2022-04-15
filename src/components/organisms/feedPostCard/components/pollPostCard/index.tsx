@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react"
 import { Divider, Flex } from "@chakra-ui/react"
 import { useTranslation } from "react-i18next"
 import { Text } from "components"
-import { abbreviateNumber } from "utils"
+import { abbreviateNumber } from "utils/helperFunctions"
 import { FeedPostCardProps } from "../../types"
 import { colors } from "styles"
 import {

@@ -2,7 +2,7 @@ import { Skeleton as SkeletonLoading } from '@chakra-ui/react'
 import { SimpleGrid } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
-import { RANDOM_ID } from 'utils'
+import { RANDOM_ID } from 'utils/helperFunctions'
 import { Props, defaultProps } from './types'
 import { PostCard, FeedContent } from './styles'
 

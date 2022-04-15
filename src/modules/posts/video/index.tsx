@@ -15,7 +15,7 @@ import {
   Container,
   Comments,
 } from 'components'
-import { buildUrlFromPath } from 'utils'
+import { buildUrlFromPath } from 'utils/helperFunctions'
 import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
 import { colors, breakpoints } from 'styles'
 import { Post } from 'generated/graphql'

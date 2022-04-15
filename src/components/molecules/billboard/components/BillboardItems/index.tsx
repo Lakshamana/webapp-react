@@ -3,7 +3,7 @@ import { useMediaQuery } from '@chakra-ui/media-query'
 import { SwiperSlide } from 'swiper/react'
 import SwiperCore, { Autoplay, Pagination, EffectFade } from 'swiper'
 import { ActionsList } from '../BillboardActions'
-import { getActions, getItems } from 'utils'
+import { getActions, getItems } from 'utils/helperFunctions'
 import { Props, BillboardItem } from '../../types'
 import { Params } from '../../settings'
 import {
