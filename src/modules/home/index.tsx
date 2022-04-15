@@ -14,7 +14,7 @@ import {
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
-  QUERY_POSTS,
+  QUERY_POSTS
 } from 'services/graphql'
 
 import { HomeCarouselsTypes } from 'types/common'
@@ -27,10 +27,11 @@ import {
   BillboardScroller,
   CategoriesScroller,
   VideosScroller,
+  TagsScroller,
 } from 'components/molecules'
 import { BillboardTarget } from 'types/common'
 
-import { convertToValidColor } from 'utils'
+import { convertToValidColor } from 'utils/helperFunctions'
 import { sizes } from 'styles'
 
 const HomePage = () => {
@@ -56,7 +57,6 @@ const HomePage = () => {
         target: BillboardTarget.Home,
       },
     },
-    notifyOnNetworkStatusChange: true,
     skip: !activeChannel,
   })
 
@@ -71,7 +71,6 @@ const HomePage = () => {
         typeIn: [PostType.Video, PostType.OnDemand],
       },
     },
-    notifyOnNetworkStatusChange: true,
     skip: !activeChannel,
   })
 
@@ -85,7 +84,6 @@ const HomePage = () => {
         featured: true,
       },
     },
-    notifyOnNetworkStatusChange: true,
     skip: !activeChannel,
   })
 
@@ -97,7 +95,6 @@ const HomePage = () => {
     variables: {
       filter: {},
     },
-    notifyOnNetworkStatusChange: true,
     skip: !isHomeDisplayingCategories || !activeChannel,
   })
 
@@ -221,13 +218,30 @@ const HomePage = () => {
   ).filter((item) => item.IS_ACTIVE)
 
   const renderCarouselsOrderedByRemoteConfig = (item: CarouselFlags) => {
-    switch (item.CONTENT_TYPE[0]) {
-      case HomeCarouselsTypes.Posts:
-        return renderFeaturedPostsScroller(item)
-      case HomeCarouselsTypes.Collections:
-        return renderFeaturedCategoriesScroller(item)
-      default:
-        return ''
+    if (!item?.TAGS?.length) {
+      switch (item.CONTENT_TYPE[0]) {
+        case HomeCarouselsTypes.Livestreams:
+          //TODO: Waiting for API
+          return ''
+        case HomeCarouselsTypes.Posts:
+          return renderFeaturedPostsScroller(item)
+        case HomeCarouselsTypes.Collections:
+          return renderFeaturedCategoriesScroller(item)
+        case HomeCarouselsTypes.ContinueWatching:
+          //TODO: Waiting for API
+          return ''
+      }
+    } else {
+      const tagId = item.TAGS.slice(0, 1).shift()
+      return (
+        <TagsScroller
+          key={`${item.LABEL[0].VALUE}`}
+          tagID={tagId}
+          hasMoreLink={true}
+          content={item.CONTENT_TYPE}
+          sectionTitle={getCarouselLabel(item)}
+        />
+      )
     }
   }
 
