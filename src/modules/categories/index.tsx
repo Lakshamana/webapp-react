@@ -37,9 +37,6 @@ const CategoriesPage = () => {
   const { data: categoriesData, loading: loadingCategories } = useQuery(
     QUERY_CATEGORIES,
     {
-      variables: {
-        filter: {},
-      },
       skip: !activeChannel,
     }
   )

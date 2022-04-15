@@ -11,6 +11,7 @@ import { Post } from 'generated/graphql'
 import { VideoPlaylistProps } from './types'
 import { theme } from 'styles/theme'
 import { colors } from 'styles'
+import { isEntityBlocked } from 'utils/accessVerifications'
 
 const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   const { colorMode } = useThemeStore()
@@ -27,7 +28,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       },
     }
 
-    if (isExclusive(post)) {
+    if (isEntityBlocked(post)) {
       imageOptions.blur = 20
     }
 
@@ -40,12 +41,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
     return image
   }
 
-  const getPostUrl = (slug: string) =>
-    `/c/${activeChannel?.slug}/post/${slug}`
-
-  const isExclusive = (post: Post) => post.kind === 'exclusive'
-
-  //TODO: Implement isGeolocked
+  const getPostUrl = (slug: string) => `/c/${activeChannel?.slug}/post/${slug}`
 
   useEffect(() => {
     const mapped = videos?.map((item) => {
@@ -61,7 +57,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
             : undefined,
         //TODO: Verify if countViews exists on API
         countViews: undefined,
-        isExclusive: isExclusive(item),
+        isExclusive: isEntityBlocked(item),
         isGeolocked: false,
       }
     })

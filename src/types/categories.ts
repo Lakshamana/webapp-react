@@ -19,7 +19,7 @@ export type CategoryPostCardProps = {
   thumbnail?: string
   postsCount?: number
   title?: string
-  description?: string
+  description?: Maybe<string>
   isNew?: string
   isPinned?: boolean
   categoryUnpinned?: (categoryId: string) => void

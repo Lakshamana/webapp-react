@@ -107,7 +107,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
             fontWeight="bolder"
             color={colors.generalText[colorMode]}
           >
-            {stripHTML(props.title)}
+            {stripHTML(props.title || '')}
           </Text>
           {props.description && (
             <Text

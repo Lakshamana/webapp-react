@@ -15,9 +15,9 @@ export type VideosGridProps = {
 
 export type VideoPostCardProps = {
   id: string
-  title: string
+  title?: string
   url?: string
-  description?: string
+  description?: Maybe<string>
   thumbnail?: string
   mediaLength?: Maybe<number>
   countViews?: number

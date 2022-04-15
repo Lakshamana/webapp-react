@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react"
 import { FeedPostCardProps } from "../../types"
-import { abbreviateNumber } from "utils"
+import { abbreviateNumber } from "utils/helperFunctions"
 import {
 	VideoContent,
 	VideoItemPlay,

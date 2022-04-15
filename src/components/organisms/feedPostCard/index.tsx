@@ -4,7 +4,7 @@ import { SetMediaType } from './components'
 import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
 import { FeedPostCardProps, defaultProps } from './types'
-import { convertCountMessage } from 'utils'
+import { convertCountMessage } from 'utils/helperFunctions'
 import { Link } from 'react-router-dom'
 import { colors } from 'styles'
 import {

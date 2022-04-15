@@ -165,7 +165,7 @@ export type AvailableChannel = {
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
-  kind?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
   menu?: Maybe<Menu>;
   name: Scalars['String'];
@@ -221,8 +221,8 @@ export type BillboardCustomizationInput = {
 
 export type BillboardCustomizationOutput = {
   __typename?: 'BillboardCustomizationOutput';
-  desktop: MediaCustomizationOutput;
-  mobile: MediaCustomizationOutput;
+  desktop?: Maybe<MediaCustomizationOutput>;
+  mobile?: Maybe<MediaCustomizationOutput>;
 };
 
 export enum BillboardTarget {
@@ -243,7 +243,7 @@ export type Category = {
   id: Scalars['ID'];
   isDeleted?: Maybe<Scalars['Boolean']>;
   isParent?: Maybe<Scalars['Boolean']>;
-  kind: ChannelKind;
+  kind: Kinds;
   name: Scalars['String'];
   organization: Scalars['ID'];
   parentId?: Maybe<Scalars['ID']>;
@@ -290,7 +290,7 @@ export type CategoryInput = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
   isParent?: Maybe<Scalars['Boolean']>;
-  kind: ChannelKind;
+  kind: Kinds;
   name: Scalars['String'];
   parentId?: Maybe<Scalars['ID']>;
   sort?: Maybe<Scalars['Int']>;
@@ -332,13 +332,6 @@ export type ChannelFindAllFilter = {
   status__contains?: Maybe<Scalars['String']>;
   status__exact?: Maybe<Scalars['String']>;
 };
-
-export enum ChannelKind {
-  Closed = 'Closed',
-  Exclusive = 'Exclusive',
-  Paywall = 'Paywall',
-  Public = 'Public'
-}
 
 export type ChildrenCategoryFilter = {
   featured?: Maybe<Scalars['Boolean']>;
@@ -439,8 +432,9 @@ export type CreateAudioPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId: Scalars['ID'];
+  playlists?: Maybe<Array<Scalars['String']>>;
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
   thumbnailId: Scalars['ID'];
@@ -463,7 +457,7 @@ export type CreateChannelInput = {
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
-  kind: Scalars['String'];
+  kind: Kinds;
   menu?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   status?: Maybe<Scalars['String']>;
@@ -516,7 +510,7 @@ export type CreateMenu = {
 };
 
 export type CreateOrganizationInput = {
-  kind: Scalars['String'];
+  kind: Kinds;
   name: Scalars['String'];
 };
 
@@ -535,7 +529,7 @@ export type CreatePhotoPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId: Scalars['ID'];
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
@@ -574,7 +568,7 @@ export type CreateTextPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId: Scalars['ID'];
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
@@ -599,9 +593,10 @@ export type CreateVideoPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId: Scalars['ID'];
-  password: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  playlists?: Maybe<Array<Scalars['String']>>;
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -668,14 +663,14 @@ export type EmbedInput = {
 
 export type EngagedUser = {
   __typename?: 'EngagedUser';
-  displayName: Scalars['String'];
+  displayName?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-  firstName: Scalars['String'];
-  id: Scalars['String'];
-  lastName: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastName?: Maybe<Scalars['String']>;
   organization: Scalars['String'];
   tenant: Scalars['String'];
-  username: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
 };
 
 export type FilterFindAll = {
@@ -786,7 +781,7 @@ export type GeolockedChannel = {
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
-  kind?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
   menu?: Maybe<Menu>;
   name: Scalars['String'];
@@ -1708,7 +1703,7 @@ export type Organization = {
   identifier?: Maybe<Scalars['String']>;
   imageCdnBaseUrl?: Maybe<Scalars['String']>;
   itunes_id?: Maybe<Scalars['String']>;
-  kind?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
   min_compat_version?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   onesignal_id?: Maybe<Scalars['String']>;
@@ -1738,7 +1733,7 @@ export type OrganizationPublic = {
   id: Scalars['ID'];
   identifier?: Maybe<Scalars['String']>;
   imageCdnBaseUrl?: Maybe<Scalars['String']>;
-  kind?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
   min_compat_version?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   portal_url?: Maybe<Scalars['String']>;
@@ -1949,7 +1944,7 @@ export type PlaylistOutput = {
   channel: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
-  posts: Array<Scalars['ID']>;
+  posts: Array<Post>;
   slug: Scalars['String'];
   title: Scalars['String'];
 };
@@ -1996,14 +1991,14 @@ export type Post = {
   pinnedStatus?: Maybe<AccountPinnedPost>;
   playlists?: Maybe<Array<PlaylistOutput>>;
   publishedAt: Scalars['DateTime'];
-  pushNotification: Scalars['Boolean'];
+  pushNotification?: Maybe<PushNotificationOutput>;
   reactions: Array<PostReactions>;
   schedule: Scalars['DateTime'];
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   tags: Array<TagOutput>;
   teaser: Scalars['ID'];
-  thumbnail: MediaPhoto;
+  thumbnail?: Maybe<MediaPhoto>;
   title: Scalars['String'];
   type: Scalars['String'];
 };
@@ -2074,6 +2069,13 @@ export type PublishRemoteConfig = {
 };
 
 export type PushNotification = {
+  content?: Maybe<Scalars['String']>;
+  ignore?: Maybe<Scalars['Boolean']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type PushNotificationOutput = {
+  __typename?: 'PushNotificationOutput';
   content?: Maybe<Scalars['String']>;
   ignore?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
@@ -2686,7 +2688,7 @@ export type UpdateAudioPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId?: Maybe<Scalars['ID']>;
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
@@ -2713,7 +2715,7 @@ export type UpdateCategoryInput = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
   isParent?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   name?: Maybe<Scalars['String']>;
   parentId?: Maybe<Scalars['ID']>;
   sort?: Maybe<Scalars['Int']>;
@@ -2726,7 +2728,7 @@ export type UpdateChannelInput = {
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Scalars['String']>;
   geofence?: Maybe<Scalars['String']>;
-  kind?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
   menu?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
@@ -2807,7 +2809,7 @@ export type UpdateMenu = {
 };
 
 export type UpdateOrganizationInput = {
-  kind?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -2836,7 +2838,7 @@ export type UpdatePhotoPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId?: Maybe<Scalars['ID']>;
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
@@ -2883,7 +2885,7 @@ export type UpdateTextPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId?: Maybe<Scalars['ID']>;
   pushNotification?: Maybe<PushNotification>;
   status?: Maybe<Scalars['String']>;
@@ -2907,7 +2909,7 @@ export type UpdateVideoPost = {
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<ChannelKind>;
+  kind?: Maybe<Kinds>;
   mediaId?: Maybe<Scalars['ID']>;
   password?: Maybe<Scalars['String']>;
   pushNotification?: Maybe<PushNotification>;
@@ -3133,7 +3135,7 @@ export type GetBillboardsQueryVariables = Exact<{
 }>;
 
 
-export type GetBillboardsQuery = { __typename?: 'Query', billboards: { __typename?: 'PaginatedBillboardsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Billboard', id: string, title: string, description: string, delay: number, sort: number, actions: Array<{ __typename?: 'BillboardActionsOutput', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>, customization: { __typename?: 'BillboardCustomizationOutput', desktop: { __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }, mobile: { __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> } } }> } };
+export type GetBillboardsQuery = { __typename?: 'Query', billboards: { __typename?: 'PaginatedBillboardsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Billboard', id: string, title: string, description: string, delay: number, sort: number, actions: Array<{ __typename?: 'BillboardActionsOutput', bgColor?: Maybe<string>, borderColor?: Maybe<string>, icon?: Maybe<string>, label?: Maybe<string>, route?: Maybe<string>, textColor?: Maybe<string> }>, customization: { __typename?: 'BillboardCustomizationOutput', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> } }> } };
 
 export type GetCategoriesQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
@@ -3154,14 +3156,14 @@ export type ChannelsQueryVariables = Exact<{
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<string>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<string>, icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<string>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<string>, icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }> }> }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<string>, icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<Kinds>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', thumbnail?: Maybe<string>, icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<string>, light?: Maybe<string> }> }> }> };
 
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', id: string, kind?: Maybe<string>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, slug?: Maybe<string>, kind?: Maybe<string> } };
+export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -3187,22 +3189,35 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 }>;
 
 
-export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'OrganizationPublic', id: string, name?: Maybe<string>, kind?: Maybe<string>, status?: Maybe<string>, tenant_id?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
+export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'OrganizationPublic', id: string, name?: Maybe<string>, kind?: Maybe<Kinds>, status?: Maybe<string>, tenant_id?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
 
 export type GetPostQueryVariables = Exact<{
-  id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
 export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
+export type GetPostKindQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetPostKindQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, title: string, access: string, kind: string } };
+
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence: any, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt: any, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail: { __typename?: 'MediaPhoto', imgPath?: Maybe<string> }, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence: any, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt: any, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+
+export type GetTagQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetTagQuery = { __typename?: 'Query', tag: { __typename?: 'TagOutput', id: string, title: string, description: string, slug: string, relatedCategories: Array<{ __typename?: 'Category', access?: Maybe<string>, slug?: Maybe<string>, id: string, description?: Maybe<string>, name: string, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }>, relatedPosts: Array<{ __typename?: 'Post', access: string, slug?: Maybe<string>, id: string, description: string, title: string, kind: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 
 export const CreateAccountDocument = gql`
@@ -4956,8 +4971,8 @@ export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrg
 export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
 export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
 export const GetPostDocument = gql`
-    query GetPost($id: ID, $slug: String) {
-  post(id: $id, slug: $slug) {
+    query GetPost($slug: String) {
+  post(slug: $slug) {
     id
     access
     allowComments
@@ -5014,7 +5029,6 @@ export type GetPostComponentProps = Omit<ApolloReactComponents.QueryComponentOpt
  * @example
  * const { data, loading, error } = useGetPostQuery({
  *   variables: {
- *      id: // value for 'id'
  *      slug: // value for 'slug'
  *   },
  * });
@@ -5030,6 +5044,50 @@ export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
 export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
 export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
+export const GetPostKindDocument = gql`
+    query GetPostKind($slug: String) {
+  post(slug: $slug) {
+    id
+    title
+    access
+    kind
+  }
+}
+    `;
+export type GetPostKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostKindQuery, GetPostKindQueryVariables>, 'query'>;
+
+    export const GetPostKindComponent = (props: GetPostKindComponentProps) => (
+      <ApolloReactComponents.Query<GetPostKindQuery, GetPostKindQueryVariables> query={GetPostKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPostKindQuery__
+ *
+ * To run a query within a React component, call `useGetPostKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetPostKindQuery(baseOptions?: Apollo.QueryHookOptions<GetPostKindQuery, GetPostKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPostKindQuery, GetPostKindQueryVariables>(GetPostKindDocument, options);
+      }
+export function useGetPostKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostKindQuery, GetPostKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPostKindQuery, GetPostKindQueryVariables>(GetPostKindDocument, options);
+        }
+export type GetPostKindQueryHookResult = ReturnType<typeof useGetPostKindQuery>;
+export type GetPostKindLazyQueryHookResult = ReturnType<typeof useGetPostKindLazyQuery>;
+export type GetPostKindQueryResult = Apollo.QueryResult<GetPostKindQuery, GetPostKindQueryVariables>;
 export const GetPostsDocument = gql`
     query GetPosts($filter: PostFilter) {
   posts(filters: $filter) {
@@ -5110,3 +5168,77 @@ export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
 export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
 export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
+export const GetTagDocument = gql`
+    query GetTag($id: ID!) {
+  tag(id: $id) {
+    id
+    title
+    description
+    relatedCategories {
+      access
+      slug
+      pinnedStatus {
+        pinned
+      }
+      id
+      description
+      name
+      kind
+      customization {
+        thumbnail {
+          imgPath
+        }
+      }
+    }
+    relatedPosts {
+      access
+      slug
+      pinnedStatus {
+        pinned
+      }
+      id
+      description
+      title
+      kind
+      thumbnail {
+        imgPath
+      }
+    }
+    slug
+  }
+}
+    `;
+export type GetTagComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTagQuery, GetTagQueryVariables>, 'query'> & ({ variables: GetTagQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTagComponent = (props: GetTagComponentProps) => (
+      <ApolloReactComponents.Query<GetTagQuery, GetTagQueryVariables> query={GetTagDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTagQuery__
+ *
+ * To run a query within a React component, call `useGetTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTagQuery(baseOptions: Apollo.QueryHookOptions<GetTagQuery, GetTagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
+      }
+export function useGetTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTagQuery, GetTagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
+        }
+export type GetTagQueryHookResult = ReturnType<typeof useGetTagQuery>;
+export type GetTagLazyQueryHookResult = ReturnType<typeof useGetTagLazyQuery>;
+export type GetTagQueryResult = Apollo.QueryResult<GetTagQuery, GetTagQueryVariables>;

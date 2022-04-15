@@ -11,6 +11,7 @@ import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { Text, CardsScroller, VideoPostCard } from 'components'
 import { Header, ContentScroller } from './styles'
 import { colors, sizes, breakpoints } from 'styles'
+import { isEntityBlocked } from 'utils/accessVerifications'
 
 const VideosScroller = ({
   items,
@@ -32,7 +33,7 @@ const VideosScroller = ({
       },
     }
 
-    if (isExclusive(post)) {
+    if (isEntityBlocked(post)) {
       imageOptions.blur = 20
     }
 
@@ -49,8 +50,6 @@ const VideosScroller = ({
     return `/c/${activeChannel?.slug}/post/${slug}`
   }
 
-  const isExclusive = (post: Post) => post.access === 'EXCLUSIVE'
-
   useEffect(() => {
     const mappedArr = items?.map((item: Post) => {
       const thumbnail = getImageUrl(item)
@@ -65,9 +64,7 @@ const VideosScroller = ({
           item.media?.__typename === 'MediaVideo'
             ? item.media?.duration
             : undefined,
-        //TODO: Waiting for API
-        countViews: undefined,
-        isExclusive: isExclusive(item),
+        isExclusive: isEntityBlocked(item),
         //TODO: Implement isGeolocked
         isGeolocked: false,
         isPinned: item.pinnedStatus?.pinned,

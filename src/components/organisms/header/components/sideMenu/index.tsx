@@ -12,7 +12,7 @@ import {
   Circle,
 } from './styles'
 import { colors } from 'styles'
-import { getChannelNameInPath } from 'utils'
+import { getChannelNameInPath } from 'utils/helperFunctions'
 import { useTranslation } from 'react-i18next'
 import { TabFlags } from 'types/flags'
 

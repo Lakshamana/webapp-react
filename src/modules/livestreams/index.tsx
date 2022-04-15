@@ -14,7 +14,7 @@ import {
 import { BillboardTarget } from 'types/common'
 import { sizes } from 'styles'
 import { useCommonStore } from 'services/stores'
-import { convertToValidColor } from 'utils'
+import { convertToValidColor } from 'utils/helperFunctions'
 
 const Livestreams = () => {
   const { t } = useTranslation()

@@ -1,7 +1,7 @@
-import { Icon } from "@iconify/react"
-import { Text } from "components"
-import { FeedPostCardProps } from "../../types"
-import { abbreviateNumber } from "utils"
+import { abbreviateNumber } from 'utils/helperFunctions'
+import { Text } from 'components'
+import { Icon } from '@chakra-ui/icon'
+import { FeedPostCardProps } from '../../types'
 import {
 	AudioContent,
 	VideoItemPlay,

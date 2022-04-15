@@ -5,8 +5,8 @@ import { gql } from '@apollo/client'
 //   username
 // }
 export const QUERY_POST = gql`
-  query GetPost($id: ID, $slug: String) {
-    post(id: $id, slug: $slug) {
+  query GetPost($slug: String) {
+    post(slug: $slug) {
       id
       access
       allowComments
@@ -41,6 +41,17 @@ export const QUERY_POST = gql`
       }
       title
       type
+    }
+  }
+`
+
+export const QUERY_VERIFY_POST_KIND = gql`
+  query GetPostKind($slug: String) {
+    post(slug: $slug) {
+      id
+      title
+      access
+      kind
     }
   }
 `
