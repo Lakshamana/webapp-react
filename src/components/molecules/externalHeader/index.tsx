@@ -1,6 +1,6 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Box } from '@chakra-ui/layout'
-import { useCustomizationStore } from 'services/stores'
+import { useCustomizationStore, useThemeStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { Logo, LanguageSelector, Container } from 'components'
 import { ExternalHeaderProps } from './types'
@@ -12,14 +12,16 @@ const ExternalHeader = ({
   rightContentStyle,
 }: ExternalHeaderProps) => {
   const { organizationConfig } = useCustomizationStore()
+  const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const orgLogo = () => {
-    if (!organizationConfig?.IMAGES?.LOGO) return ''
+  const generateOrgLogo = () => {
+    const theme = colorMode.toUpperCase()
+    if (!organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
     return generateImage(
       ThumborInstanceTypes.IMAGE,
-      organizationConfig?.IMAGES?.LOGO,
+      organizationConfig?.IMAGES?.ORGANIZATION_LOGO[theme],
       {
         size: { height: 80 },
       }
@@ -34,7 +36,7 @@ const ExternalHeader = ({
           maxWidth={isDesktop ? '180px' : '120px'}
           marginRight={[3, 4]}
           py={20}
-          src={orgLogo()}
+          src={generateOrgLogo()}
         ></Logo>
         <Box marginLeft={'auto'}>
           <LanguageSelector></LanguageSelector>
