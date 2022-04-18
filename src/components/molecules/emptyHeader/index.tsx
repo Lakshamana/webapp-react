@@ -15,13 +15,17 @@ const EmptyHeader = () => {
 
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const orgLogo = generateImage(
-    ThumborInstanceTypes.IMAGE,
-    organizationConfig?.IMAGES?.LOGO || '',
-    {
-      size: { height: 80 },
-    }
-  )
+  const generateOrgLogo = () => {
+    const theme = colorMode.toUpperCase()
+    if (!organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
+    return generateImage(
+      ThumborInstanceTypes.IMAGE,
+      organizationConfig?.IMAGES?.ORGANIZATION_LOGO[theme],
+      {
+        size: { height: 80 },
+      }
+    )
+  }
 
   return (
     <BoxHeader display="flex" alignItems="center" justifyContent="center">
@@ -30,7 +34,7 @@ const EmptyHeader = () => {
           maxWidth={isDesktop ? '180px' : '120px'}
           marginRight={[3, 4]}
           py={20}
-          src={orgLogo}
+          src={generateOrgLogo()}
           ignoreFallback
         ></Logo>
         <Box marginLeft={'auto'} mr={3}>

@@ -34,13 +34,17 @@ const HeaderComponent = () => {
     useChannelsStore()
   const { generateImage } = useThumbor()
 
-  const orgLogo = generateImage(
-    ThumborInstanceTypes.IMAGE,
-    organizationConfig?.IMAGES?.LOGO || '',
-    {
-      size: { height: 80 },
-    }
-  )
+  const generateOrgLogo = () => {
+    const theme = colorMode.toUpperCase()
+    if (!organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
+    return generateImage(
+      ThumborInstanceTypes.IMAGE,
+      organizationConfig?.IMAGES?.ORGANIZATION_LOGO[theme],
+      {
+        size: { height: 80 },
+      }
+    )
+  }
 
   const channelLogo = () => {
     const theme = colorMode.toUpperCase()
@@ -176,7 +180,7 @@ const HeaderComponent = () => {
             src={
               activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
                 ? channelLogo()
-                : orgLogo
+                : generateOrgLogo()
             }
             maxWidth={isDesktop ? '180px' : '120px'}
           />
