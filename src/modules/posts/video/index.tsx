@@ -43,9 +43,11 @@ const VideoPostView = () => {
       )
       setRelatedVideosData(filteredRelatedVideos)
     },
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     if (postData?.title) setPageTitle(postData.title)
     if (postData?.categories?.length) {
       const filteredCategories = postData.categories.map((item) => item.id)
