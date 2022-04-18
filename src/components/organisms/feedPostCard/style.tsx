@@ -57,12 +57,12 @@ export const CardFooter: any = styled.div`
     position: relative;
     background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
     padding: 16px;
-    border-top: 2px solid ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
+    border-top: 1px solid ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
     ${space}
 `;
 
 export const CountComment: any = styled.span`
     ${typography}
     ${space}
-    color:  ${({ theme }) => theme.colors.generalText[theme.colorMode]};
+    color:  ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
 `;
