@@ -10,7 +10,7 @@ export type OrganizationFlags = {
   HEADER?: {
     TABS: TabFlags[]
   }
-  IMAGES?: ImagesFlags
+  IMAGES?: OrgImagesFlags
   LOCALE?: string
   TERMS_URL?: string
   PRIVACY_URL?: string
@@ -25,9 +25,15 @@ export type TabFlags = {
   URL: string
 }
 
-export type ImagesFlags = {
-  ICON: string
-  LOGO: string
+export type OrgImagesFlags = {
+  ORGANIZATION_ICON: {
+    LIGHT: string
+    DARK: string
+  }
+  ORGANIZATION_LOGO: {
+    LIGHT: string
+    DARK: string
+  }
   LOGIN_BACKGROUND: string
   FAVICON_16: string
   FAVICON_32: string
