@@ -34,7 +34,8 @@ const MyListPage = () => {
       },
       onCompleted: (result) => {
         setCategories(result?.categories?.rows)
-      }
+      },
+      fetchPolicy: 'network-only'
     })
 
   // TODO: Implement infinite loading on Cards Grid
@@ -49,7 +50,8 @@ const MyListPage = () => {
       },
       onCompleted: (result) => {
         setPosts(result?.posts?.rows)
-      }
+      },
+      fetchPolicy: 'network-only'
     }
   )
   const isLoading = loadingPinnedCategories || loadingPinnedPosts
