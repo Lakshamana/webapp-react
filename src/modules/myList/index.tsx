@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Divider, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { QUERY_CATEGORIES, QUERY_POSTS } from 'services/graphql'
+import { QUERY_CATEGORIES, QUERY_POSTS_CARDS } from 'services/graphql'
 import { Category, Post } from 'generated/graphql'
 import { useCommonStore } from 'services/stores'
 import {
@@ -29,29 +29,29 @@ const MyListPage = () => {
       variables: {
         filter: {
           pinned: true,
-          account: AccountInfo?.id
+          account: AccountInfo?.id,
         },
       },
       onCompleted: (result) => {
         setCategories(result?.categories?.rows)
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-and-network',
     })
 
   // TODO: Implement infinite loading on Cards Grid
   const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
-    QUERY_POSTS,
+    QUERY_POSTS_CARDS,
     {
       variables: {
         filter: {
           pinned: true,
-          account: AccountInfo?.id
+          account: AccountInfo?.id,
         },
       },
       onCompleted: (result) => {
         setPosts(result?.posts?.rows)
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-and-network',
     }
   )
   const isLoading = loadingPinnedCategories || loadingPinnedPosts
@@ -91,23 +91,20 @@ const MyListPage = () => {
     ></PostsGrid>
   )
 
+  if (isLoading)
+    return (
+      <Box p={sizes.paddingSm} width="100%">
+        <Skeleton kind="cards" numberOfCards={4} />
+      </Box>
+    )
+
+  if (isEmpty) return <EmptyState />
+
   return (
     <Container flexDirection={'column'} width={'100vw'} my={15}>
-      {isLoading && (
-        <Box p={sizes.paddingSm} width="100%">
-          <Skeleton kind="cards" numberOfCards={4} />
-        </Box>
-      )}
-      {!isLoading && (
-        <>
-          {!!categories?.length && renderCategoriesGrid()}
-          {!!categories?.length && (
-            <Divider py={3} my={3} color="transparent" />
-          )}
-          {!!posts?.length && renderPostsGrid()}
-        </>
-      )}
-      {isEmpty && <EmptyState />}
+      {!!categories?.length && renderCategoriesGrid()}
+      {!!categories?.length && <Divider py={3} my={3} color="transparent" />}
+      {!!posts?.length && renderPostsGrid()}
     </Container>
   )
 }
