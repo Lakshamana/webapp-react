@@ -359,10 +359,27 @@ const PT_BR = {
         participants: 'Participantes:',
         reactions: 'Reações',
         comments: 'Comentários',
+        comment: {
+          hide: 'Esconder',
+          see: 'Mostrar',
+          reply: 'resposta',
+          replies: 'respostas',
+          report: 'Denunciar',
+          edit: 'Editar',
+          delete: 'Apagar',
+          comments: 'Comentários',
+          no_comments: 'Sem comentários',
+          comment: 'Comentário',
+        },
+        search_options: {
+          recent: 'Mais Recente',
+          old: 'Mais Antiga',
+        },
         autoplay: 'Reproduzir automaticamente',
         related_videos: 'Próximos vídeos',
         views: 'visualizações',
         add_a_comment: 'Adicionar um comentário...',
+        reply: 'RESPONDER',
         live: {
           live_chat: {
             title: 'Chat ao Vivo',
