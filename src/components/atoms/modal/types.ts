@@ -25,12 +25,13 @@ export interface Props
   cancelButton?: boolean
   loading?: boolean
   defaultActions?: boolean
+  closeOnOverlayClick?: boolean
 }
 
-export const defaultProps = { 
+export const defaultProps = {
   actionButton: true,
   cancelButton: true,
   closeButton: true,
   loading: false,
-  defaultActions: true
-} 
+  defaultActions: true,
+}
