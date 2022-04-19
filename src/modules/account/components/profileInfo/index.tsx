@@ -53,24 +53,30 @@ const ProfileInfo = ({
         })
       case 'phone':
         return (
-          <PhoneInput
-            disableDropdown={true}
-            disabled={true}
-            enableSearch={true}
-            country={'us'}
-            value={value}
-            inputStyle={{
-              color: colors.secondaryText[colorMode],
-              background: 'none',
-              border: 'none',
-              borderBottom: 'none',
-              borderRadius: '0px',
-              width: '100%',
-              paddingLeft: '44px',
-              paddingTop: '0px',
-              paddingBottom: '0px',
-            }}
-          />
+          <>
+          {
+            value ? 
+            <PhoneInput
+              disableDropdown={true}
+              disabled={true}
+              enableSearch={true}
+              country={'us'}
+              value={value}
+              inputStyle={{
+                color: colors.secondaryText[colorMode],
+                background: 'none',
+                border: 'none',
+                borderBottom: 'none',
+                borderRadius: '0px',
+                width: '100%',
+                paddingLeft: '44px',
+                paddingTop: '0px',
+                paddingBottom: '0px',
+              }}
+            /> :
+            ''
+          }
+          </>
         )
       default:
         return values[key]
