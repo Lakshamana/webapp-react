@@ -9,7 +9,6 @@ import {
   DateText
 } from './style'
 import { Avatar } from 'components'
-import { formatDistance } from 'date-fns'
 
 import { Props, defaultProps } from './types'
 

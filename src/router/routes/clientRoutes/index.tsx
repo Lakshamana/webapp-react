@@ -104,7 +104,7 @@ const ClientRoutes = ({ isAccesible }: any) => {
       />
       <ClientRoute
         isAccesible={isAccesible?.tags}
-        path="/c/:channel/tags"
+        path="/c/:channel/tag/:id"
         component={TagPage}
         redirectTo="/c/:channel"
         template={MainLayout}

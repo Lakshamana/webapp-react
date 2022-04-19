@@ -14,7 +14,7 @@ import {
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
-  QUERY_POSTS,
+  QUERY_POSTS_CARDS,
 } from 'services/graphql'
 
 import { HomeCarouselsTypes } from 'types/common'
@@ -55,20 +55,18 @@ const HomePage = () => {
           target: BillboardTarget.Home,
         },
       },
-      fetchPolicy: 'network-only',
     })
 
   const [
     getFeaturedPosts,
     { data: featuredPostsData, loading: loadingFeaturedPosts },
-  ] = useLazyQuery(QUERY_POSTS, {
+  ] = useLazyQuery(QUERY_POSTS_CARDS, {
     variables: {
       filter: {
         featured: true,
         typeIn: [PostType.Video, PostType.OnDemand],
       },
     },
-    fetchPolicy: 'network-only',
   })
 
   const [
@@ -80,7 +78,6 @@ const HomePage = () => {
         featured: true,
       },
     },
-    fetchPolicy: 'no-cache',
   })
 
   const [
@@ -95,7 +92,6 @@ const HomePage = () => {
         isParent: true,
       },
     },
-    fetchPolicy: 'no-cache',
   })
 
   const isLoading =
@@ -186,7 +182,7 @@ const HomePage = () => {
         key={`${item.LABEL[0].VALUE}`}
         items={featuredPostsData?.posts?.rows}
         sectionTitle={getCarouselLabel(item)}
-        hasMoreLink={true}
+        hasMoreLink={false}
       />
     )
 
@@ -197,6 +193,7 @@ const HomePage = () => {
         items={featuredCategoriesData?.categories?.rows}
         sectionTitle={getCarouselLabel(item)}
         hasMoreLink={true}
+        sectionUrl={`/c/${activeChannel?.slug}/categories`}
       />
     )
 
@@ -207,7 +204,7 @@ const HomePage = () => {
         items={category.children}
         sectionTitle={category?.name}
         hasMoreLink={true}
-        sectionUrl={`/c/${activeChannel}/category/${category.id}`}
+        sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
       />
     ))
 
@@ -218,6 +215,10 @@ const HomePage = () => {
       hasMoreLink={true}
       content={item.CONTENT_TYPE}
       sectionTitle={getCarouselLabel(item)}
+      sectionUrl={`/c/${activeChannel?.slug}/tag/${item.TAGS.slice(
+        0,
+        1
+      ).shift()}`}
     />
   )
 

@@ -29,6 +29,7 @@ export const QUERY_POSTS = gql`
         }
         media {
           ... on MediaVideo {
+            id
             duration
           }
         }
@@ -46,3 +47,39 @@ export const QUERY_POSTS = gql`
     }
   }
 `
+
+export const QUERY_POSTS_CARDS = gql`
+  query GetPostsCards($filter: PostFilter) {
+    posts(filters: $filter) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageCount
+      total
+      rows {
+        id
+        access
+        title
+        description
+        kind
+        slug
+        pinnedStatus {
+          pinned
+        }
+        thumbnail {
+          imgPath
+        }
+        media {
+          ... on MediaVideo {
+            id
+            duration
+          }
+        }
+        type
+      }
+    }
+  }
+`
+
