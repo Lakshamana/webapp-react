@@ -1,30 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Grid, GridItem } from '@chakra-ui/react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { useThemeStore } from 'services/stores'
-import { Text, CommentInput, CommentLoading } from 'components'
-import { colors } from 'styles'
+import { CommentInput, CommentLoading } from 'components'
 import { defaultProps, IProps } from './types'
-import { CardHeader, Options, ToggleReplies } from './components'
-import { QUERY_COMMENTS, MUTATION_ADD_COMMENT } from 'services/graphql'
+import { CardHeader, CardText, Options, ToggleReplies } from './components'
+import { QUERY_COMMENTS, MUTATION_ADD_COMMENT, MUTATION_DELETE_COMMENT } from 'services/graphql'
 import { Comment as CommentType } from 'generated/graphql'
 import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
-import { pxToRem } from 'styles/metrics'
 
 const CommentCard = ({ ...props }: IProps) => {
-  const { colorMode } = useThemeStore()
-  const [showReplyInput, setShowReplyInput] = useState(false)
-  const [showReplies, setShowReplies] = useState(false)
+  const [showReplyInput, setShowReplyInput] = useState<boolean>(false)
+  const [showReplies, setShowReplies] = useState<boolean>(false)
+  const [editInput, setEditInput] = useState(null)
 
   const [getReplies, { data: allReplies, loading: allRepliesLoading }] = useLazyQuery(QUERY_COMMENTS, {
     fetchPolicy: 'network-only',
   })
   const [addReply, { data: newReply, loading: addReplyLoading }] = useMutation(MUTATION_ADD_COMMENT)
+  const [deleteReply, { data: deletedReply, loading: deleteLoading }] = useMutation(MUTATION_DELETE_COMMENT)
 
-  useEffect(() => {
-    if (newReply) getAllReplies()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newReply])
+  //TODO refact to prevent append
+  // useEffect(() => {
+  //   if (newReply) getAllReplies()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [newReply])
 
   const getAllReplies = (page: number = 1) => {
     getReplies({
@@ -49,20 +48,36 @@ const CommentCard = ({ ...props }: IProps) => {
     getAllReplies()
   }
 
+  const handleSelectedPopupOption = (selected) => {
+    if (selected.option === 'EDIT') {
+      setEditInput(selected)
+      return
+    }
+
+    if (selected.option === 'DELETE') {
+      deleteReply({
+        variables: {
+          id: selected.id
+        }
+      })
+    }
+  }
+
   return (
     <Grid templateColumns='42px 7fr' gap={2} alignItems={'center'} my={4}>
       <CardHeader
+        id={props.id}
         author={props.author}
         createdAt={props.createdAt}
+        action={handleSelectedPopupOption}
       />
       <GridItem />
       <GridItem w={'100%'}>
-        <Text
-          color={colors.generalText[colorMode]}
-          fontSize={pxToRem(16)}
-        >
-          {props.description}
-        </Text>
+        <CardText
+          editInput={editInput}
+          setEditInput={setEditInput}
+          description={props.description}
+        />
         <Options
           showReply={showReplyInput}
           setShowReply={setShowReplyInput}
@@ -75,8 +90,8 @@ const CommentCard = ({ ...props }: IProps) => {
           <CommentInput
             postId={props.postId || ''}
             parentId={props.id}
-            addComment={addReply}
-            addCommentLoading={addReplyLoading}
+            action={addReply}
+            actionLoading={addReplyLoading}
           />
         }
       </GridItem>
