@@ -50,7 +50,21 @@ const PT_BR = {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
         title: '{{org}} gostaria de enviar notificações.'
-      }
+      },
+      months: {
+        january: 'Janeiro',
+        february: 'Fevereiro',
+        march: 'Março',
+        april: 'Abril',
+        may: 'Maio',
+        june: 'Junho',
+        july: 'Julho',
+        august: 'Agosto',
+        september: 'Setembro',
+        october: 'Outubro',
+        november: 'Novembro',
+        december: 'Dezembro',
+      },
     },
     signin: {
       title: 'Acesse {{org}} agora',
