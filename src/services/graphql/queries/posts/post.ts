@@ -24,6 +24,7 @@ export const QUERY_POST = gql`
       kind
       media {
         ... on MediaVideo {
+          id
           baseUrl
           mp4Path
           duration

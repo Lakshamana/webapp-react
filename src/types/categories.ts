@@ -22,5 +22,6 @@ export type CategoryPostCardProps = {
   description?: Maybe<string>
   isNew?: string
   isPinned?: boolean
+  isExclusive?: boolean
   categoryUnpinned?: (categoryId: string) => void
 }

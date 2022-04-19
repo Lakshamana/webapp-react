@@ -380,6 +380,10 @@ const PT_BR = {
         views: 'visualizações',
         add_a_comment: 'Adicionar um comentário...',
         reply: 'RESPONDER',
+        private_content: {
+          title: 'Conteúdo Privado',
+          subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.'
+        },
         live: {
           live_chat: {
             title: 'Chat ao Vivo',

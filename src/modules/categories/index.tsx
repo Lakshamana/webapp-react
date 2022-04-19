@@ -31,15 +31,10 @@ const CategoriesPage = () => {
           featured: true,
         },
       },
-      skip: !activeChannel,
     })
 
-  const { data: categoriesData, loading: loadingCategories } = useQuery(
-    QUERY_CATEGORIES,
-    {
-      skip: !activeChannel,
-    }
-  )
+  const { data: categoriesData, loading: loadingCategories } =
+    useQuery(QUERY_CATEGORIES)
 
   //TODO: API has to return width and height
   const getImageUrl = (path: string) =>

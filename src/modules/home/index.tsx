@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 
 import { PostType, Category, Billboard } from 'generated/graphql'
 
@@ -14,7 +14,7 @@ import {
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
-  QUERY_POSTS
+  QUERY_POSTS_CARDS,
 } from 'services/graphql'
 
 import { HomeCarouselsTypes } from 'types/common'
@@ -44,71 +44,68 @@ const HomePage = () => {
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
     useState(true)
-  const [categoriesWithChildren, setCategoriesWithChildren] =
-    useState<Category[]>()
+  const [isFeaturedPostsActive, setIsFeaturedPostsActive] = useState<boolean>()
+  const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
+    useState<boolean>()
 
-  const {
-    data: billboardData,
-    refetch: refetchBillboard,
-    loading: loadingBillboard,
-  } = useQuery(QUERY_BILLBOARDS, {
-    variables: {
-      filter: {
-        target: BillboardTarget.Home,
+  const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
+    useLazyQuery(QUERY_BILLBOARDS, {
+      variables: {
+        filter: {
+          target: BillboardTarget.Home,
+        },
       },
-    },
-    skip: !activeChannel,
-  })
+    })
 
-  const {
-    data: featuredPostsData,
-    refetch: refetchFeaturedPosts,
-    loading: loadingFeaturedPosts,
-  } = useQuery(QUERY_POSTS, {
+  const [
+    getFeaturedPosts,
+    { data: featuredPostsData, loading: loadingFeaturedPosts },
+  ] = useLazyQuery(QUERY_POSTS_CARDS, {
     variables: {
       filter: {
         featured: true,
         typeIn: [PostType.Video, PostType.OnDemand],
       },
     },
-    skip: !activeChannel,
   })
 
-  const {
-    data: featuredCategoriesData,
-    refetch: refetchFeaturedCategories,
-    loading: loadingFeaturedCategories,
-  } = useQuery(QUERY_CATEGORIES, {
+  const [
+    getFeaturedCategories,
+    { data: featuredCategoriesData, loading: loadingFeaturedCategories },
+  ] = useLazyQuery(QUERY_CATEGORIES, {
     variables: {
       filter: {
         featured: true,
       },
     },
-    skip: !activeChannel,
   })
 
-  const {
-    data: categoriesData,
-    loading: loadingCategories,
-    refetch: refetchCategories,
-  } = useQuery(QUERY_CATEGORIES, {
-    variables: {
-      filter: {},
+  const [
+    getCategories,
+    {
+      data: categoriesWithChildrenData,
+      loading: loadingCategoriesWithChildren,
     },
-    skip: !isHomeDisplayingCategories || !activeChannel,
+  ] = useLazyQuery(QUERY_CATEGORIES, {
+    variables: {
+      filter: {
+        isParent: true,
+      },
+    },
   })
 
   const isLoading =
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
-    loadingCategories
+    loadingCategoriesWithChildren
 
   const hasResults =
     billboardData?.billboard?.length ||
     featuredPostsData?.posts?.rows?.length ||
     featuredCategoriesData?.categories?.rows?.length ||
-    (isHomeDisplayingCategories && categoriesWithChildren?.length)
+    (isHomeDisplayingCategories &&
+      categoriesWithChildrenData?.categories?.rows?.length)
 
   const isEmpty = !isLoading && !hasResults
 
@@ -118,6 +115,22 @@ const HomePage = () => {
   }, [])
 
   useEffect(() => {
+    getBillboard()
+
+    const defaultCarouselsItems =
+      activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
+        (item) => item.DEFAULT && item.IS_ACTIVE
+      )
+
+    defaultCarouselsItems?.forEach((item) => {
+      if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Posts)
+        setIsFeaturedPostsActive(true)
+      if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Collections)
+        setIsFeaturedCategoriesActive(true)
+    })
+
+    if (activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES) getCategories()
+
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
@@ -125,14 +138,10 @@ const HomePage = () => {
   }, [activeChannelConfig])
 
   useEffect(() => {
-    if (activeChannel) {
-      refetchBillboard()
-      refetchFeaturedPosts()
-      refetchFeaturedCategories()
-      if (isHomeDisplayingCategories) refetchCategories()
-    }
+    if (isFeaturedPostsActive) getFeaturedPosts()
+    if (isFeaturedCategoriesActive) getFeaturedCategories()
     // eslint-disable-next-line
-  }, [activeChannel])
+  }, [isFeaturedCategoriesActive, isFeaturedPostsActive])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path)
@@ -163,14 +172,6 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [billboardData])
 
-  useEffect(() => {
-    const categoriesWithChildren = categoriesData?.categories.rows.filter(
-      (category: Category) => category.children?.length
-    )
-    setCategoriesWithChildren(categoriesWithChildren)
-    // eslint-disable-next-line
-  }, [categoriesData])
-
   const renderBillboard = () => (
     <BillboardScroller items={billboardItems} customButtons={true} />
   )
@@ -181,7 +182,7 @@ const HomePage = () => {
         key={`${item.LABEL[0].VALUE}`}
         items={featuredPostsData?.posts?.rows}
         sectionTitle={getCarouselLabel(item)}
-        hasMoreLink={true}
+        hasMoreLink={false}
       />
     )
 
@@ -192,19 +193,34 @@ const HomePage = () => {
         items={featuredCategoriesData?.categories?.rows}
         sectionTitle={getCarouselLabel(item)}
         hasMoreLink={true}
+        sectionUrl={`/c/${activeChannel?.slug}/categories`}
       />
     )
 
   const renderCategoriesWithChildren = () =>
-    categoriesWithChildren?.map((category: Category) => (
+    categoriesWithChildrenData?.categories?.rows?.map((category: Category) => (
       <CategoriesScroller
         key={category.id}
         items={category.children}
         sectionTitle={category?.name}
         hasMoreLink={true}
-        sectionUrl={`/c/${activeChannel}/category/${category.id}`}
+        sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
       />
     ))
+
+  const renderTagsScroller = (item: CarouselFlags) => (
+    <TagsScroller
+      key={`${item.LABEL[0].VALUE}`}
+      tagID={item.TAGS.slice(0, 1).shift()}
+      hasMoreLink={true}
+      content={item.CONTENT_TYPE}
+      sectionTitle={getCarouselLabel(item)}
+      sectionUrl={`/c/${activeChannel?.slug}/tag/${item.TAGS.slice(
+        0,
+        1
+      ).shift()}`}
+    />
+  )
 
   const getCarouselLabel = (item: CarouselFlags) => {
     const label = item.LABEL.filter((item) =>
@@ -232,16 +248,7 @@ const HomePage = () => {
           return ''
       }
     } else {
-      const tagId = item.TAGS.slice(0, 1).shift()
-      return (
-        <TagsScroller
-          key={`${item.LABEL[0].VALUE}`}
-          tagID={tagId}
-          hasMoreLink={true}
-          content={item.CONTENT_TYPE}
-          sectionTitle={getCarouselLabel(item)}
-        />
-      )
+      return renderTagsScroller(item)
     }
   }
 
@@ -264,7 +271,8 @@ const HomePage = () => {
             homeCarouselsFiltered.map((item: CarouselFlags) =>
               renderCarouselsOrderedByRemoteConfig(item)
             )}
-          {!!categoriesWithChildren?.length && renderCategoriesWithChildren()}
+          {!!categoriesWithChildrenData?.categories?.rows?.length &&
+            renderCategoriesWithChildren()}
           {isEmpty && <EmptyState />}
         </Flex>
       )}

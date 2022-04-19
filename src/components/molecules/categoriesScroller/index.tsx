@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
 import { useTranslation } from 'react-i18next'
 import { CardsScroller } from 'components'
@@ -9,10 +8,11 @@ import { Header, ContentScroller } from './style'
 import { colors, sizes } from 'styles'
 import { useThemeStore, useChannelsStore } from 'services/stores'
 import { CategoryPostCardProps } from 'types/categories'
-import { CategoryPostCard } from 'components/atoms'
+import { CategoryPostCard, Link } from 'components/atoms'
 import { useEffect } from 'react'
 import { Category } from 'generated/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
+import { isEntityBlocked } from 'utils/accessVerifications'
 
 const CategoriesScroller = ({
   items,
@@ -26,17 +26,24 @@ const CategoriesScroller = ({
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] = useState<CategoryPostCardProps[]>()
 
-  // TODO: Change this ANY type when generate graphql fragments work
-  const getImageUrl = (category: any) => {
+  //TODO: Transform this function in a util
+  const getImageUrl = (item: Category) => {
+    const imageOptions: ThumborParams = {
+      size: {
+        height: 400,
+      },
+    }
+
+    if (isEntityBlocked(item)) {
+      imageOptions.blur = 20
+    }
+
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      category?.customization?.thumbnail?.imgPath,
-      {
-        size: {
-          height: 400,
-        },
-      }
+      item.customization?.thumbnail?.imgPath || '',
+      imageOptions
     )
+
     return image
   }
 
@@ -54,6 +61,7 @@ const CategoriesScroller = ({
         description: item.description || '',
         url: url,
         thumbnail: thumbnail,
+        isExclusive: isEntityBlocked(item),
         isPinned: item.pinnedStatus?.pinned,
       }
     })
@@ -77,7 +85,7 @@ const CategoriesScroller = ({
           <Link
             color={colors.brand.action_link[colorMode]}
             fontSize={'1.27rem'}
-            to={sectionUrl}
+            to={sectionUrl || ''}
           >
             {t('common.more')}
           </Link>

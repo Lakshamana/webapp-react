@@ -18,6 +18,7 @@ export const QUERY_CATEGORIES = gql`
         parentId
         slug
         createdAt
+        kind
         customization {
           desktop {
             imgPath
@@ -47,9 +48,11 @@ export const QUERY_CATEGORIES = gql`
             thumbnail {
               imgPath
             }
+            __typename
           }
           geoFence
           id
+          kind
           name
           description
           tags

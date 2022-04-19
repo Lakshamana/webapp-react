@@ -380,6 +380,10 @@ const EN_US = {
         views: 'views',
         add_a_comment: 'Add a comment…',
         reply: 'REPLY',
+        private_content: {
+          title: 'Private Content',
+          subtitle: 'Please enter the password to access the content'
+        },
         live: {
           live_chat: {
             title: 'Live Chat',

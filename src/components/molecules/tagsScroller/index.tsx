@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { useTranslation } from 'react-i18next'
@@ -7,15 +7,15 @@ import { TagsScrollerProps } from 'types/tags'
 import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { Text, CardsScroller, VideoPostCard } from 'components'
+import { Text, CardsScroller, VideoPostCard, Skeleton } from 'components'
 import { Header, ContentScroller } from './styles'
 import { colors, sizes, breakpoints } from 'styles'
 import { isEntityBlocked } from 'utils/accessVerifications'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { QUERY_TAG } from 'services/graphql'
 import { TagScrollerItem } from 'types/tags'
 import { Category, Post } from 'generated/graphql'
-import { CategoryPostCard } from 'components/atoms'
+import { CategoryPostCard, Link } from 'components/atoms'
 
 const TagsScroller = ({
   tagID,
@@ -31,12 +31,16 @@ const TagsScroller = ({
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
-  const { data } = useQuery(QUERY_TAG, {
+  const [getTag, { data, loading }] = useLazyQuery(QUERY_TAG, {
     variables: {
       id: tagID,
-    },
-    skip: !tagID,
+    }
   })
+
+  useEffect(() => {
+    if (tagID) getTag()
+    //eslint-disable-next-line
+  }, [tagID])
 
   useEffect(() => {
     if (data?.tag) {
@@ -61,7 +65,10 @@ const TagsScroller = ({
         return {
           id: item.id,
           slug: item.slug,
-          title: (item.__typename === 'Post' && item.title) || (item.__typename === 'Category' && item.name) || '',
+          title:
+            (item.__typename === 'Post' && item.title) ||
+            (item.__typename === 'Category' && item.name) ||
+            '',
           description: item.description,
           duration:
             item.__typename === 'Post' &&
@@ -102,7 +109,8 @@ const TagsScroller = ({
     return image
   }
 
-  const getPostUrl = (item) => `/c/${activeChannel?.slug}/${item.__typename.toLowerCase()}/${item.slug}`
+  const getPostUrl = (item) =>
+    `/c/${activeChannel?.slug}/${item.__typename.toLowerCase()}/${item.slug}`
 
   const renderHeader = () => {
     return (
@@ -120,7 +128,7 @@ const TagsScroller = ({
           <Link
             color={colors.brand.action_link[colorMode]}
             fontSize={'1.27rem'}
-            to={sectionUrl}
+            to={sectionUrl || ''}
           >
             {t('common.more')}
           </Link>
@@ -132,19 +140,27 @@ const TagsScroller = ({
   const renderScroller = () => {
     return (
       <CardsScroller>
-        {filteredItems?.map((item: TagScrollerItem) => {
-          return (
-            <SwiperSlide key={`slide-${item.id}`}>
-              {item.__typename === 'Post' && <VideoPostCard {...item} />}
-              {item.__typename === 'Category' && <CategoryPostCard {...item} />}
-            </SwiperSlide>
-          )
-        })}
+        {!!filteredItems?.length &&
+          filteredItems?.map((item: TagScrollerItem) => {
+            return (
+              <SwiperSlide key={`slide-${item.id}`}>
+                {item.__typename === 'Post' && <VideoPostCard {...item} />}
+                {item.__typename === 'Category' && (
+                  <CategoryPostCard {...item} />
+                )}
+              </SwiperSlide>
+            )
+          })}
       </CardsScroller>
     )
   }
 
-  if (!filteredItems?.length) return <></>
+  if (loading)
+    return (
+      <Box p={sizes.paddingSm} width="100%">
+        <Skeleton kind="cards" numberOfCards={4} />
+      </Box>
+    )
 
   return (
     <ContentScroller>
