@@ -87,8 +87,8 @@ const Comments = ({ ...props }: Post) => {
       />
       <CommentInput
         postId={props.id}
-        addComment={addComment}
-        addCommentLoading={addCommentLoading}
+        action={addComment}
+        actionLoading={addCommentLoading}
         totalComments={totalComments}
         setTotalComments={setTotalComments}
       />
