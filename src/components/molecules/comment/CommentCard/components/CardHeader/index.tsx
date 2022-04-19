@@ -7,24 +7,34 @@ import { useThemeStore } from 'services/stores'
 import { translateFormatDistance } from 'utils/helperFunctions'
 import { IOption, IProps } from './types'
 
-const CardHeader = ({ author, createdAt }: IProps) => {
+const CardHeader = ({ id, author, createdAt, action }: IProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
 
   const defineOptions = [
     {
       icon: 'bi:flag-fill',
-      text: t('page.post.comment.report')
+      text: t('page.post.comment.report'),
+      action: 'REPORT'
     },
     {
       icon: 'clarity:note-edit-solid',
-      text: t('page.post.comment.edit')
+      text: t('page.post.comment.edit'),
+      action: 'EDIT'
     },
     {
       icon: 'fluent:delete-20-filled',
-      text: t('page.post.comment.delete')
+      text: t('page.post.comment.delete'),
+      action: 'DELETE'
     }
   ]
+
+  const selectOption = (option: string) => () => {
+    action({
+      id,
+      option
+    })
+  }
 
   return (
     <>
@@ -70,7 +80,9 @@ const CardHeader = ({ author, createdAt }: IProps) => {
                 defineOptions.map((option: IOption) => (
                   <MenuItem
                     key={`option-${option.icon}`}
-                    _hover={{ color: colors.brand.primary[colorMode] }}>
+                    _hover={{ color: colors.brand.primary[colorMode] }}
+                    onClick={selectOption(option.action)}
+                  >
                     <Icon icon={option.icon} height={20} />
                     <Text ml={2}>{option.text}</Text>
                   </MenuItem>
