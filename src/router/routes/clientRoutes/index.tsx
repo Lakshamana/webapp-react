@@ -12,8 +12,6 @@ import {
   TagPage,
   SearchPage,
   ChannelsPage,
-  VideoPostView,
-  LivePostView,
   FeedPage,
   RecoverPasswordPage,
   Livestreams,
@@ -22,7 +20,9 @@ import {
   CheckoutCustomField,
   CardInfo,
   Password,
-  ActivateAccount
+  ActivateAccount,
+  VideoPostPage,
+  LivePostPage,
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
@@ -119,14 +119,14 @@ const ClientRoutes = ({ isAccesible }: any) => {
       <ClientRoute
         isAccesible={true}
         path="/c/:channel/live/:id"
-        component={LivePostView}
+        component={LivePostPage}
         redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={true}
         path="/c/:channel/post/:slug"
-        component={VideoPostView}
+        component={VideoPostPage}
         redirectTo="/channels"
         template={MainLayout}
       />

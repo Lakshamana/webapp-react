@@ -1,2 +1,2 @@
-export * from './video'
 export * from './livestream'
+export * from './video'

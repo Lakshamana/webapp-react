@@ -363,6 +363,10 @@ const PT_BR = {
         related_videos: 'Próximos vídeos',
         views: 'visualizações',
         add_a_comment: 'Adicionar um comentário...',
+        private_content: {
+          title: 'Conteúdo Privado',
+          subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.'
+        },
         live: {
           live_chat: {
             title: 'Chat ao Vivo',

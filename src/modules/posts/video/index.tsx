@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Skeleton } from 'components'
-import { QUERY_POST, QUERY_POSTS } from 'services/graphql'
+import { QUERY_POST, QUERY_POSTS_CARDS } from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
@@ -20,23 +20,29 @@ import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
 import { colors, breakpoints } from 'styles'
 import { Post } from 'generated/graphql'
 import { useCustomizationStore } from 'services/stores'
+import { VerifyPostKind } from '../components'
 
-const VideoPostView = () => {
+const VideoPostPage = () => {
   const { colorMode } = useThemeStore()
   const { slug } = useParams<{ channel: string; slug: string }>()
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
+  const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
+    useState<boolean>(true)
   const [postData, setPostData] = useState<Post>()
   const [relatedVideosData, setRelatedVideosData] = useState<Post[]>()
 
-  const { loading: loadingPost } = useQuery(QUERY_POST, {
+  const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
     variables: { slug },
-    onCompleted: (result) => setPostData(result?.post),
+    onCompleted: (result) => {
+      setPostData(result?.post)
+    },
+    fetchPolicy: 'no-cache',
   })
 
-  const [getRelatedPosts] = useLazyQuery(QUERY_POSTS, {
+  const [getRelatedPosts] = useLazyQuery(QUERY_POSTS_CARDS, {
     onCompleted: (result) => {
       const filteredRelatedVideos = result.posts.rows.filter(
         (item) => item.slug !== slug
@@ -62,6 +68,10 @@ const VideoPostView = () => {
     //eslint-disable-next-line
   }, [postData])
 
+  useEffect(() => {
+    setIsVerifyingAccessPermission(true)
+  }, [slug])
+
   const mediaUrl = () => {
     const { media } = postData || {}
     const hlsPath = media?.__typename === 'MediaVideo' ? media.hlsPath : null
@@ -81,7 +91,19 @@ const VideoPostView = () => {
   //     avatar: '',
   //   })) || []
 
-  if (loadingPost || !postData) {
+  if (isVerifyingAccessPermission)
+    return (
+      <VerifyPostKind
+        postSlug={slug}
+        postType={'video'}
+        accessGranted={() => {
+          setIsVerifyingAccessPermission(false)
+          getPost()
+        }}
+      />
+    )
+
+  if (loadingPost)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
         <Box mt={2}>
@@ -89,7 +111,6 @@ const VideoPostView = () => {
         </Box>
       </Center>
     )
-  }
 
   return (
     <Container
@@ -150,6 +171,7 @@ const VideoPostView = () => {
               <VideoPlaylist
                 title={t('page.post.related_videos')}
                 videos={[...relatedVideosData]}
+                autoplay={false}
               />
             </Box>
           )}
@@ -159,4 +181,4 @@ const VideoPostView = () => {
   )
 }
 
-export { VideoPostView }
+export { VideoPostPage }

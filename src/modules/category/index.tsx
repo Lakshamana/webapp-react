@@ -8,7 +8,7 @@ import {
   QUERY_CATEGORY,
   MUTATION_PIN_CATEGORY,
   MUTATION_UNPIN_CATEGORY,
-  QUERY_POSTS,
+  QUERY_POSTS_CARDS,
 } from 'services/graphql'
 import {
   Container,
@@ -44,7 +44,7 @@ const CategoryPage = () => {
   const [
     getCategoryPosts,
     { data: categoryPostsData, loading: loadingCategoryPosts },
-  ] = useLazyQuery(QUERY_POSTS)
+  ] = useLazyQuery(QUERY_POSTS_CARDS)
 
   const [pinCategory, { loading: loadingPinCategory }] = useMutation(
     MUTATION_PIN_CATEGORY,
