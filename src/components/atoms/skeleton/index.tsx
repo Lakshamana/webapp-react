@@ -23,13 +23,13 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
                 <SkeletonLoading
                   key={`loading-${RANDOM_ID()}`}
                   startColor={colors.skeleton.initial[colorMode]}
-                  fadeDuration={0.8}
-                  speed={1}
+                  fadeDuration={0.4}
+                  speed={0.8}
                   borderRadius={'4px'}
                   endColor={colors.skeleton.end[colorMode]}
                   {...props}
                 >
-                  <PostCard>{ }</PostCard>
+                  <PostCard>{}</PostCard>
                 </SkeletonLoading>
               )
             })}
@@ -54,7 +54,7 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
                   endColor={colors.skeleton.end[colorMode]}
                   {...props}
                 >
-                  <FeedContent>{ }</FeedContent>
+                  <FeedContent>{}</FeedContent>
                 </SkeletonLoading>
               )
             })}
