@@ -111,11 +111,11 @@ const defaultColors: any = {
   skeleton: {
     initial: {
       light: '#d8d3d3',
-      dark: '#212020',
+      dark: '#131313',
     },
     end: {
       light: '#F1EEEE',
-      dark: '#2F2D2D',
+      dark: '#181818',
     },
   },
   search: {
