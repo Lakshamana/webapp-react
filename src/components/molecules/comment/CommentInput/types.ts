@@ -1,10 +1,12 @@
 export interface Props {
-  addComment: any
+  editText?: string
+  action: any
   setTotalComments?: any
   totalComments?: number
   postId: string
   parentId?: string
-  addCommentLoading: boolean
+  actionLoading: boolean
+  cancelAction?: any
 }
 
 export interface Payload {

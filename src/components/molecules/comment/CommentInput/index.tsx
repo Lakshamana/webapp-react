@@ -1,5 +1,6 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { InputGroup, InputRightElement, Flex, Spinner } from '@chakra-ui/react'
+import { InputGroup, InputRightElement, Flex, Spinner, Button } from '@chakra-ui/react'
 import { useAuthStore, useThemeStore } from 'services/stores'
 import { useFormik } from 'formik'
 import { Avatar } from 'components'
@@ -11,8 +12,10 @@ import { Props, Payload } from './types'
 const CommentInput = ({
   postId,
   parentId,
-  addComment,
-  addCommentLoading,
+  editText,
+  action,
+  actionLoading,
+  cancelAction,
   totalComments,
   setTotalComments
 }: Props) => {
@@ -20,16 +23,25 @@ const CommentInput = ({
   const { colorMode } = useThemeStore()
   const { user, account } = useAuthStore()
 
+  useEffect(() => {
+    if (editText) formik.setFieldValue('description', editText)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editText])
+
   const onSubmit = async ({ description }: Payload) => {
     const variables = {
-      payload: {
-        description,
-        content: postId,
-        parent: parentId
-      }
+      payload: { description }
     }
+
+    if (editText) {
+      variables['id'] = postId
+    } else {
+      variables.payload['content'] = postId
+      variables.payload['parent'] = parentId
+    }
+
     try {
-      await addComment({ variables })
+      await action({ variables })
       if (totalComments) {
         setTotalComments(totalComments + 1)
       }
@@ -67,7 +79,7 @@ const CommentInput = ({
         />
         <InputRightElement>
           {
-            addCommentLoading
+            actionLoading
               ? <Spinner
                 speed="0.65s"
                 thickness={'3px'}
@@ -82,6 +94,12 @@ const CommentInput = ({
           }
         </InputRightElement>
       </InputGroup>
+      {
+        cancelAction &&
+        <Button ml={2} size='lg' fontSize={14} onClick={cancelAction}>
+          {t('common.cancel')}
+        </Button>
+      }
     </Flex>
   )
 }
