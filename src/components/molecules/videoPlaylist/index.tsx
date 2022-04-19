@@ -78,7 +78,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       >
         {title}
       </Text>
-      <Flex alignItems="center" mb={2}>
+      {autoplay && <Flex alignItems="center" mb={2}>
         <ToggleButton
           checked={!!checked}
           onChange={() => setChecked(!checked)}
@@ -89,7 +89,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
         >
           {t('page.post.autoplay')}
         </Text>
-      </Flex>
+      </Flex>}
       {!!playlist?.length && renderPlaylist()}
     </Flex>
   )

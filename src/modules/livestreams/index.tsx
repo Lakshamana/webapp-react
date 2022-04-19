@@ -3,7 +3,7 @@ import { Flex, Box } from '@chakra-ui/layout'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
-import { QUERY_POSTS, QUERY_BILLBOARDS } from 'services/graphql'
+import { QUERY_POSTS_CARDS, QUERY_BILLBOARDS } from 'services/graphql'
 import { SortDirection, PostType } from 'generated/graphql'
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
@@ -92,7 +92,7 @@ const Livestreams = () => {
   const [
     getOnDemandPostsData,
     { data: onDemandPostsData, loading: loadingOnDemandPostsData },
-  ] = useLazyQuery(QUERY_POSTS, {
+  ] = useLazyQuery(QUERY_POSTS_CARDS, {
     variables: {
       filters: {
         typeIn: [PostType.OnDemand],

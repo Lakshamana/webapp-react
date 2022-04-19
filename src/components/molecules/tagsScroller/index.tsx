@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Box } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +15,7 @@ import { useLazyQuery } from '@apollo/client'
 import { QUERY_TAG } from 'services/graphql'
 import { TagScrollerItem } from 'types/tags'
 import { Category, Post } from 'generated/graphql'
-import { CategoryPostCard } from 'components/atoms'
+import { CategoryPostCard, Link } from 'components/atoms'
 
 const TagsScroller = ({
   tagID,
@@ -34,8 +34,7 @@ const TagsScroller = ({
   const [getTag, { data, loading }] = useLazyQuery(QUERY_TAG, {
     variables: {
       id: tagID,
-    },
-    fetchPolicy: 'network-only',
+    }
   })
 
   useEffect(() => {
@@ -129,7 +128,7 @@ const TagsScroller = ({
           <Link
             color={colors.brand.action_link[colorMode]}
             fontSize={'1.27rem'}
-            to={sectionUrl}
+            to={sectionUrl || ''}
           >
             {t('common.more')}
           </Link>

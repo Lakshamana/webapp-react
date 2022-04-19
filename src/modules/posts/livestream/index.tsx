@@ -14,7 +14,7 @@ import { colors, sizes } from 'styles'
 
 import { LivestreamBadge } from 'types/livestreams'
 
-const LivePostView = () => {
+const LivePostPage = () => {
   const { t } = useTranslation()
   const [optionsState, setOptionsState] = useState()
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
@@ -119,4 +119,4 @@ const LivePostView = () => {
   )
 }
 
-export { LivePostView }
+export { LivePostPage }
