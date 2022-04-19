@@ -54,6 +54,7 @@ const ProfileInfo = ({
       case 'phone':
         return (
           <PhoneInput
+            disableDropdown={true}
             disabled={true}
             enableSearch={true}
             country={'us'}
@@ -65,6 +66,7 @@ const ProfileInfo = ({
               borderBottom: 'none',
               borderRadius: '0px',
               width: '100%',
+              paddingLeft: '44px',
               paddingTop: '0px',
               paddingBottom: '0px',
             }}
