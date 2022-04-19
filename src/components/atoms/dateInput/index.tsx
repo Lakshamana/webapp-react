@@ -1,5 +1,5 @@
 import DatePicker, { registerLocale } from 'react-datepicker'
-import { Button, Flex, Input, Select } from '@chakra-ui/react'
+import { Button, Flex, Input, Select, Text } from '@chakra-ui/react'
 import ptBR from 'date-fns/locale/pt-BR'
 import enUS from 'date-fns/locale/en-US'
 import { InputProps } from './types'
@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 registerLocale('pt-BR', ptBR)
 registerLocale('en-US', enUS)
 
-const DateInput = ({ startValue, onChange }: InputProps) => {
+const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage }: InputProps) => {
   const [date, setDate] = useState(startValue)
   const { t } = useTranslation()
   const range = (start, stop, step) =>
@@ -43,65 +43,70 @@ const DateInput = ({ startValue, onChange }: InputProps) => {
   ]
 
   return (
-    <DatePicker
-      selected={date}
-      dateFormat={i18n.language === 'pt-BR' ? 'dd/MM/yyyy' : 'MM/dd/yyyy'}
-      onChange={(date) => {
-        onChangeDate(date)
-        setDate(date)
-      }}
-      locale={i18n.language}
-      customInput={<Input width={'100%'} variant="flushed" />}
-      renderCustomHeader={({
-        date,
-        changeYear,
-        changeMonth,
-        decreaseMonth,
-        increaseMonth,
-        prevMonthButtonDisabled,
-        nextMonthButtonDisabled,
-      }) => (
-        <Flex alignItems="center" px="8px">
-          <Button
-            onClick={decreaseMonth}
-            disabled={prevMonthButtonDisabled}
-            leftIcon={<Icon icon="ant-design:caret-left-outlined" />}
-          />
+    <>
+      <DatePicker
+        selected={date}
+        dateFormat={i18n.language === 'pt-BR' ? 'dd/MM/yyyy' : 'MM/dd/yyyy'}
+        onChange={(date) => {
+          onChangeDate(date)
+          setDate(date)
+        }}
+        locale={i18n.language}
+        customInput={
+          <Input width={'100%'} variant="flushed" isInvalid={isInvalid}/>
+        }
+        renderCustomHeader={({
+          date,
+          changeYear,
+          changeMonth,
+          decreaseMonth,
+          increaseMonth,
+          prevMonthButtonDisabled,
+          nextMonthButtonDisabled,
+        }) => (
+          <Flex alignItems="center" px="8px">
+            <Button
+              onClick={decreaseMonth}
+              disabled={prevMonthButtonDisabled}
+              leftIcon={<Icon icon="ant-design:caret-left-outlined" />}
+            />
 
-          <Select
-            variant="filled"
-            value={months[getMonth(date)]}
-            onChange={({ target: { value } }) =>
-              changeMonth(months.indexOf(value))
-            }
-          >
-            {months.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Select>
+            <Select
+              variant="filled"
+              value={months[getMonth(date)]}
+              onChange={({ target: { value } }) =>
+                changeMonth(months.indexOf(value))
+              }
+            >
+              {months.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
 
-          <Select
-            variant="filled"
-            value={getYear(date)}
-            onChange={({ target: { value } }) => changeYear(value)}
-          >
-            {years.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Select>
+            <Select
+              variant="filled"
+              value={getYear(date)}
+              onChange={({ target: { value } }) => changeYear(value)}
+            >
+              {years.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
 
-          <Button
-            onClick={increaseMonth}
-            disabled={nextMonthButtonDisabled}
-            leftIcon={<Icon icon="ant-design:caret-right-outlined" />}
-          />
-        </Flex>
-      )}
-    />
+            <Button
+              onClick={increaseMonth}
+              disabled={nextMonthButtonDisabled}
+              leftIcon={<Icon icon="ant-design:caret-right-outlined" />}
+            />
+          </Flex>
+        )}
+      />
+      {isInvalid && <Text fontSize="0.8em" color="red" mt="5px">{errorMessage}</Text>}
+    </>
   )
 }
 
