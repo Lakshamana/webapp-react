@@ -299,7 +299,8 @@ const EN_US = {
         cancel_subscriptions: 'Cancel your Subscriptions',
         add_payment: 'Add Payment Method',
         payment_method: 'Payment Method',
-        verify_password: 'To update your email, you must enter your password to confirm this action.'
+        verify_password: 'To update your email, you must enter your password to confirm this action.',
+        minimum_age: 'You must be at least 13 years old to have an account',
       },
       live: {
         live: 'Live',

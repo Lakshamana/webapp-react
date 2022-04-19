@@ -7,7 +7,6 @@ import { InputProps } from './types'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useState } from 'react'
 import i18n from 'config/i18n'
-import { getMonth, getYear } from 'date-fns'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,7 +25,7 @@ const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage }: In
     let dt = new Date(date)
     onChange(dt.toISOString())
   }
-  const years = range(1900, getYear(new Date()), 1)
+  const years = range(1900, new Date().getFullYear(), 1)
   const months = [
     t('common.months.january'),
     t('common.months.february'),
@@ -73,7 +72,7 @@ const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage }: In
 
             <Select
               variant="filled"
-              value={months[getMonth(date)]}
+              value={months[new Date(date).getMonth()]}
               onChange={({ target: { value } }) =>
                 changeMonth(months.indexOf(value))
               }
@@ -87,7 +86,7 @@ const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage }: In
 
             <Select
               variant="filled"
-              value={getYear(date)}
+              value={new Date(date).getFullYear()}
               onChange={({ target: { value } }) => changeYear(value)}
             >
               {years.map((option) => (

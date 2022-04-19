@@ -299,6 +299,7 @@ const PT_BR = {
         add_payment: 'Adicionar Método de Pagamento',
         payment_method: 'Método de Pagamento',
         verify_password: 'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
+        minimum_age: 'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
       },
       live: {
         live: 'Ao Vivo',

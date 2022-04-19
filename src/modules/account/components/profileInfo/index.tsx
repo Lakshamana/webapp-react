@@ -19,6 +19,7 @@ import { Label } from '../../styles'
 
 import { UpdateButtons } from '../updateButtons'
 import { ProfileData } from './types'
+import * as Yup from 'yup'
 
 const ProfileInfo = ({
   updateProfile,
@@ -29,14 +30,26 @@ const ProfileInfo = ({
   const [isEditing, setIsEditing] = useState(false)
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const minimumAge = 13
 
-  const { values, handleSubmit, handleChange, setFieldValue, resetForm } =
+  const dateYearsInThePast = (years: number) => {
+    let d = new Date();
+    let year = d.getFullYear();
+    let month = d.getMonth();
+    let day = d.getDate();
+    return new Date( year - years, month, day ).toISOString()
+  }
+
+  const { values, errors, touched, handleSubmit, handleChange, setFieldValue, resetForm } =
     useFormik({
       initialValues: {
         address: user.address || '',
         birthday: user.birthday || '',
         phone: user.phone || '',
       },
+      validationSchema: Yup.object({
+        birthday: Yup.date().max(dateYearsInThePast(minimumAge), t('page.account.minimum_age'))
+      }),
       onSubmit: async () => {
         updateProfile({ ...values, locale: locale })
       },
@@ -92,6 +105,8 @@ const ProfileInfo = ({
             onChange={(date) => {
               setFieldValue(key, date)
             }}
+            isInvalid={errors[key] && touched[key]}
+            errorMessage={errors[key]}
           ></DateInput>
         )
       case 'phone':
