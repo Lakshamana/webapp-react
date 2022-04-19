@@ -21,6 +21,7 @@ export * from './emptyHeader'
 export * from './categoriesGrid'
 export * from './postsGrid'
 export * from './heroBanner'
+export * from './privateContent'
 
 // Scrollers
 export * from './videosScroller'
