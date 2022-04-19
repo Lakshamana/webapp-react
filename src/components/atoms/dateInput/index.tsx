@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 registerLocale('pt-BR', ptBR)
 registerLocale('en-US', enUS)
 
-const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage }: InputProps) => {
+const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage, maxDate }: InputProps) => {
   const [date, setDate] = useState(startValue)
   const { t } = useTranslation()
   const range = (start, stop, step) =>
@@ -50,6 +50,7 @@ const DateInput = ({ startValue, onChange, isInvalid = false, errorMessage }: In
           onChangeDate(date)
           setDate(date)
         }}
+        maxDate={maxDate && new Date(maxDate)}
         locale={i18n.language}
         customInput={
           <Input width={'100%'} variant="flushed" isInvalid={isInvalid}/>
