@@ -22,7 +22,8 @@ const Link = ({
             ? colors.generalText[colorMode]
             : colors.brand.action_link[colorMode],
           textTransform: props.textTransform,
-          fontWeight : props.fontWeight
+          fontWeight : props.fontWeight,
+          fontSize: props.fontSize
         }}
       >
         <RouterLink to={to}>{label || children}</RouterLink>
