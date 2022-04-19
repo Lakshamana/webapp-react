@@ -363,6 +363,10 @@ const EN_US = {
         related_videos: 'Related videos',
         views: 'views',
         add_a_comment: 'Add a comment…',
+        private_content: {
+          title: 'Private Content',
+          subtitle: 'Please enter the password to access the content'
+        },
         live: {
           live_chat: {
             title: 'Live Chat',
