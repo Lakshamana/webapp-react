@@ -11,7 +11,7 @@ import { Icon } from '@iconify/react'
 import { useThemeStore } from 'services/stores'
 import { CategoryPostCardProps } from 'types/categories'
 import { colors } from 'styles'
-import { CardWrapper, PostContent } from './style'
+import { CardWrapper, PostContent, BlockedContent } from './style'
 
 const CategoryPostCard = ({
   categoryUnpinned,
@@ -95,7 +95,17 @@ const CategoryPostCard = ({
       onMouseLeave={() => setHover(false)}
       onMouseEnter={() => setHover(true)}
     >
-      <PostContent onClick={selectCategory} {...props} />
+      <PostContent onClick={selectCategory} {...props}>
+      {props.isExclusive && (
+          <BlockedContent>
+            <Icon
+              width={20}
+              color={colors.white}
+              icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
+            ></Icon>
+          </BlockedContent>
+        )}
+      </PostContent>
       {hover && (
         <Box
           position="absolute"
