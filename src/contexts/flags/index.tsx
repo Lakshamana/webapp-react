@@ -6,7 +6,7 @@ import { firebaseRemoteConfig } from 'config/firebase'
 import { LoadingScreen } from 'components'
 import { defaultProps } from './types'
 import { FlagTypes } from 'types/flags'
-import { APP_LOCALE } from 'config/constants'
+import { APP_LOCALE, APP_THEME } from 'config/constants'
 import { getData, saveData } from 'services/storage'
 import { useThemeStore } from 'services/stores'
 
@@ -43,8 +43,9 @@ export const FlagsProvider = ({ children }) => {
 
         if (!getData(APP_LOCALE))
           saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE)
-
-        setColorMode(newFlags?.ORGANIZATION?.THEME?.toLowerCase() || 'dark')
+        
+        const storedTheme = getData(APP_THEME)
+        setColorMode(storedTheme || newFlags?.ORGANIZATION?.THEME?.toLowerCase())
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))
