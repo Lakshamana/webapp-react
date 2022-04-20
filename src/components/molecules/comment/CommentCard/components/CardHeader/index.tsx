@@ -45,7 +45,6 @@ const CardHeader = ({ id, author, createdAt, action }: IProps) => {
           height={'36px'}
           name={String(author?.username)}
           src={''}
-          backgroundColor={colors.brand.primary[colorMode]}
         />
       </GridItem>
       <GridItem>
