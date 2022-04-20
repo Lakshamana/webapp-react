@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { InputGroup, InputRightElement, Flex, Spinner, Button } from '@chakra-ui/react'
+import { InputGroup, InputRightElement, Flex, Spinner, Box } from '@chakra-ui/react'
 import { useAuthStore, useThemeStore } from 'services/stores'
 import { useFormik } from 'formik'
 import { Avatar } from 'components'
 import { initialValues, validationSchema } from './settings'
-import { InputCustom, IconCustom } from './style'
+import { IconCustom } from './style'
 import { colors } from 'styles'
 import { Props, Payload } from './types'
+import { InputDefault } from './components/InputDefault'
+import { InputEdit } from './components/InputEdit'
 
 const CommentInput = ({
   postId,
@@ -19,7 +20,6 @@ const CommentInput = ({
   totalComments,
   setTotalComments
 }: Props) => {
-  const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { user, account } = useAuthStore()
 
@@ -58,48 +58,64 @@ const CommentInput = ({
 
   return (
     <Flex alignItems="center">
-      <Avatar
-        mr={3}
-        width={'40px'}
-        height={'40px'}
-        src={user?.avatar_url || ''}
-        name={account?.username || ''}
-        backgroundColor={colors.brand.primary[colorMode]}
-      />
-      <InputGroup size="lg" display="flex" alignItems="center" my={5}>
-        <InputCustom
-          type="text"
-          focusBorderColor="none"
-          placeholder={t('page.post.add_a_comment')}
-          name="description"
-          value={formik.values.description}
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          onKeyDown={(e: any) => e.keyCode === 13 && formik.handleSubmit()}
+      {
+        !editText &&
+        <Avatar
+          mr={3}
+          width={'40px'}
+          height={'40px'}
+          src={user?.avatar_url || ''}
+          name={account?.username || ''}
         />
-        <InputRightElement>
+      }
+      <InputGroup size="lg" display="flex" alignItems="center" my={5}>
+        {
+          editText
+            ? <InputEdit
+              value={formik.values.description}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              onSubmit={formik.handleSubmit}
+            />
+            : <InputDefault
+              value={formik.values.description}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              onSubmit={formik.handleSubmit}
+            />
+        }
+        <InputRightElement top={-1}>
           {
-            actionLoading
-              ? <Spinner
-                speed="0.65s"
-                thickness={'3px'}
-                size={'md'}
-                color={colors.secondaryText[colorMode]}
-              />
-              : <IconCustom
+            actionLoading &&
+            <Spinner
+              speed="0.65s"
+              thickness={'3px'}
+              size={'md'}
+              color={colors.secondaryText[colorMode]}
+            />
+          }
+          {
+            !actionLoading &&
+            <Flex alignItems="center">
+              <IconCustom
                 icon="mdi:send"
                 color={colors.brand.primary[colorMode]}
                 onClick={formik.handleSubmit}
               />
+              {
+                cancelAction &&
+                <Box ml={3} mr={6}>
+                  <IconCustom
+                    icon="ic:sharp-cancel"
+                    color={colors.inputBg[colorMode]}
+                    onClick={cancelAction}
+                  />
+                </Box>
+              }
+            </Flex>
           }
         </InputRightElement>
       </InputGroup>
-      {
-        cancelAction &&
-        <Button ml={2} size='lg' fontSize={14} onClick={cancelAction}>
-          {t('common.cancel')}
-        </Button>
-      }
     </Flex>
   )
 }
