@@ -81,7 +81,7 @@ const CategoryPage = () => {
 
   useEffect(() => {
     if (categoryData?.category) {
-      setIsCategoryPinned(categoryData?.isPinned || false)
+      setIsCategoryPinned(categoryData?.category?.pinnedStatus?.pinned || false)
 
       const desktopImage = getImageUrl(
         categoryData?.category?.customization?.desktop?.imgPath
