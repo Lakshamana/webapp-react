@@ -105,16 +105,14 @@ const HeaderComponent = () => {
     }
   }
 
-  useEffect(() => {
-    setActiveChannelMenu([])
-    handleCloseMenu()
-    // eslint-disable-next-line
-  }, [activeChannel, pathname])
+  // eslint-disable-next-line
+  useEffect(() => setActiveChannelMenu([]), [activeChannel])
 
   useEffect(() => {
     if (organizationConfig && organizationConfig.HEADER) {
       setTabsList(organizationConfig?.HEADER?.TABS)
     }
+    handleCloseMenu()
     // eslint-disable-next-line
   }, [pathname])
 
@@ -141,7 +139,7 @@ const HeaderComponent = () => {
       ? setActiveTab(defineTab)
       : setActiveTab(UNRELATED_MENU)
     // eslint-disable-next-line
-  }, [tabsList, pathname])
+  }, [tabsList, activeChannel])
 
   useEffect(() => {
     if (state.openMenu && !!!activeChannelMenu?.length) {
