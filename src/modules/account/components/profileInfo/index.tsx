@@ -58,12 +58,17 @@ const ProfileInfo = ({
   const validateDate = (value) =>
     Date.parse(value) ? new Date(value) : new Date()
 
+  const formatDate = (value) => 
+    Date.parse(value) ? 
+    format(parseISO(value), 'P', {
+      locale: locale === 'pt-BR' ? ptBR : enUS,
+    }) :
+    '-'
+
   const renderLabel = (key: string, value: any) => {
     switch (key) {
       case 'birthday':
-        return format(parseISO(values[key]), 'P', {
-          locale: locale === 'pt-BR' ? ptBR : enUS,
-        })
+        return formatDate(values[key])
       case 'phone':
         return (
           <>
