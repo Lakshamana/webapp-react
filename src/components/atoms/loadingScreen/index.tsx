@@ -10,7 +10,7 @@ const LoadingScreen = () => {
       height={'100vh'}
       alignItems={'center'}
       justifyContent={'center'}
-      backgroundColor={colors.bodyBg['dark']}
+      backgroundColor={colors.bodyBg[colorMode]}
     >
       <Spinner
         speed="0.65s"

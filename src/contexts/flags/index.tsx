@@ -8,6 +8,7 @@ import { defaultProps } from './types'
 import { FlagTypes } from 'types/flags'
 import { APP_LOCALE } from 'config/constants'
 import { getData, saveData } from 'services/storage'
+import { useThemeStore } from 'services/stores'
 
 const FlagsContext = React.createContext({})
 
@@ -22,6 +23,7 @@ const configSecret = Object.freeze(REACT_APP_REMOTE_CONFIG_SECRET)
 export const FlagsProvider = ({ children }) => {
   const [flags, setFlags] = useState<FlagTypes>({ ...defaultProps })
   const [loading, setLoading] = useState(true)
+  const { setColorMode } = useThemeStore()
 
   React.useEffect(() => {
     fetchAndActivate(firebaseRemoteConfig)
@@ -41,6 +43,8 @@ export const FlagsProvider = ({ children }) => {
 
         if (!getData(APP_LOCALE))
           saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE)
+
+        setColorMode(newFlags?.ORGANIZATION?.THEME?.toLowerCase() || 'dark')
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))
