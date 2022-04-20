@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const ADD_COMMENT = gql`
+export const MUTATION_ADD_COMMENT = gql`
   mutation addComment($payload: AddComment!) {
     addComment(payload: $payload) {
       countComments
@@ -16,12 +16,3 @@ export const ADD_COMMENT = gql`
     }
   }
 `
-
-export const DELETE_COMMENT = gql`
-  mutation deleteComment($id: String!) {
-    deleteComment(id: $id) {
-      countComments
-    }
-  }
-`
-

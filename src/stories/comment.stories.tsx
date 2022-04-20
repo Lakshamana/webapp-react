@@ -1,15 +1,15 @@
-import { Center, Button } from '@chakra-ui/react'
+import { Center } from '@chakra-ui/react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { Comment } from 'components/molecules'
+import { CommentCard } from 'components/molecules'
 import { useThemeStore } from 'services/stores/theme'
 
 export default {
   title: 'WEBAPP/Comment',
-  component: Comment,
-} as ComponentMeta<typeof Comment>
+  component: CommentCard,
+} as ComponentMeta<typeof CommentCard>
 
-const Template: ComponentStory<typeof Comment> = (args) => {
+const Template: ComponentStory<typeof CommentCard> = (args) => {
   const { colorMode, toggleColorMode } = useThemeStore()
   return (
     <Center
@@ -18,8 +18,8 @@ const Template: ComponentStory<typeof Comment> = (args) => {
       flexDir="column"
       padding="20px"
     >
-      <Comment
-       {...args}
+      <CommentCard
+        {...args}
       />
     </Center>
   )

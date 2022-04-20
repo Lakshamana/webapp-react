@@ -374,10 +374,27 @@ const EN_US = {
         participants: 'Participants:',
         reactions: 'Reactions',
         comments: 'Comments',
+        comment: {
+          hide: 'Hide',
+          see: 'See',
+          reply: 'reply',
+          replies: 'replies',
+          report: 'Report',
+          edit: 'Edit',
+          delete: 'Delete',
+          comments: 'Comments',
+          no_comments: 'No comments',
+          comment: 'Comment',
+        },
+        search_options: {
+          recent: 'Most Recent',
+          old: 'Most Old',
+        },
         autoplay: 'Autoplay next video',
         related_videos: 'Related videos',
         views: 'views',
         add_a_comment: 'Add a comment…',
+        reply: 'REPLY',
         private_content: {
           title: 'Private Content',
           subtitle: 'Please enter the password to access the content'
