@@ -1,3 +1,5 @@
+import { ColorMode } from 'types/common'
+
 interface AccountData {
   username?: string | null
   display_name?: string | null
@@ -5,6 +7,6 @@ interface AccountData {
 
 export interface PropsUserMenu {
   account?: AccountData | undefined
-  colorMode: 'light' | 'dark'
+  colorMode: ColorMode
   avatar_url?: string | null
 }

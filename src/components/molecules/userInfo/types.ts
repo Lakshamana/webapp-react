@@ -1,3 +1,5 @@
+import { ColorMode } from 'types/common';
+
 export interface PropsPopoverOption {
   icon: any;
   text: string;
@@ -14,7 +16,7 @@ export type User = {
 export interface PropsUserInfo {
   display: 'sidebar' | 'menu';
   delimited?: boolean;
-  colorMode: "light" | "dark";
+  colorMode: ColorMode;
   closeSideMenu?: any;
   toggleColorMode: any;
 }
