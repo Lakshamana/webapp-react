@@ -74,8 +74,7 @@ const errorLink = onError(
 
       if (err.extensions.code === 'UNAUTHENTICATED') {
         if (err.message !== 'INVALID_TOKEN') {
-          console.log('Invalid Checkpoint')
-          // invalidData()
+          invalidData()
           return
         }
 
