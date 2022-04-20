@@ -1,11 +1,7 @@
-import { THEME } from "config/constants";
-import { getData, saveData } from "services/storage";
 import create from "zustand";
-
-enum ColorMode {
-  light = "light",
-  dark = "dark",
-}
+import { APP_THEME } from "config/constants";
+import { getData, saveData } from "services/storage";
+import { ColorMode } from 'types/common';
 
 type ThemeState = {
   colorMode: ColorMode;
@@ -14,14 +10,14 @@ type ThemeState = {
 };
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  colorMode: getData(THEME) || ColorMode.dark,
+  colorMode: getData(APP_THEME) || 'dark',
   setColorMode: (colorMode: ColorMode) => {
-    saveData(THEME, colorMode);
+    saveData(APP_THEME, colorMode);
     return set({ colorMode });
   },
   toggleColorMode: () => {
-    const colorMode = get().colorMode !== ColorMode.light ? ColorMode.light : ColorMode.dark
-    saveData(THEME, colorMode);
+    const colorMode = get().colorMode !== 'light' ? 'light' : 'dark'
+    saveData(APP_THEME, colorMode);
     return set({ colorMode });
   },
 }));
