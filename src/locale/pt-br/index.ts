@@ -50,7 +50,21 @@ const PT_BR = {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
         title: '{{org}} gostaria de enviar notificações.'
-      }
+      },
+      months: {
+        january: 'Janeiro',
+        february: 'Fevereiro',
+        march: 'Março',
+        april: 'Abril',
+        may: 'Maio',
+        june: 'Junho',
+        july: 'Julho',
+        august: 'Agosto',
+        september: 'Setembro',
+        october: 'Outubro',
+        november: 'Novembro',
+        december: 'Dezembro',
+      },
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -285,6 +299,7 @@ const PT_BR = {
         add_payment: 'Adicionar Método de Pagamento',
         payment_method: 'Método de Pagamento',
         verify_password: 'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
+        minimum_age: 'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
       },
       live: {
         live: 'Ao Vivo',
