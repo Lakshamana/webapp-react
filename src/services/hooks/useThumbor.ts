@@ -28,7 +28,8 @@ export const useThumbor = () => {
   const generateImage = (
     type: ThumborInstanceTypes,
     path: string,
-    options?: ThumborParams
+    options?: ThumborParams,
+    customBaseUrl?: string | null
   ) => {
     if (!organization || !path) return
 
@@ -42,12 +43,19 @@ export const useThumbor = () => {
     }
 
     const thumbor = Thumbor({
-      serverUrl: getThumborType(),
+      serverUrl: customBaseUrl || getThumborType(),
       // securityKey: '' // encryption key is not required, but your link will be unsafe
     })
 
     if (!thumbor) {
       return ''
+    }
+
+    if(customBaseUrl){
+      return thumbor
+        .setPath(path)
+        .buildUrl()
+        .replace('/unsafe', '')
     }
 
     let image = thumbor.setPath(path)
