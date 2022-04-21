@@ -1,8 +1,10 @@
+import { LiveEvent } from 'generated/graphql'
+
 export type LivestreamsScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
   hasMoreLink?: boolean
-  items?: any[]
+  items?: LiveEvent[]
 }
 
 export type LivestreamPostCardProps = {

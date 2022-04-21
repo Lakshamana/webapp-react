@@ -111,14 +111,14 @@ const ClientRoutes = ({ isAccesible }: any) => {
       />
       <ClientRoute
         isAccesible={true}
-        path="/c/:channel/live"
+        path="/c/:channel/lives"
         component={Livestreams}
         redirectTo="/channels"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={true}
-        path="/c/:channel/live/:id"
+        path="/c/:channel/live/:slug"
         component={LivePostPage}
         redirectTo="/c/:channel"
         template={MainLayout}

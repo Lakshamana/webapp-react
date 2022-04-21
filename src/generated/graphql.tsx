@@ -3413,6 +3413,13 @@ export type CommentsQueryVariables = Exact<{
 
 export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedCommentsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, total: number, isLastPage: boolean, page: number, pageCount: number, pageSize: number, rows: Array<{ __typename?: 'Comment', description: string, id: string, countUpVotes: number, createdAt: any, countComments: number, parent?: Maybe<string>, author: { __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> } }> } };
 
+export type GetLiveEventsQueryVariables = Exact<{
+  filter?: Maybe<LiveEventFilter>;
+}>;
+
+
+export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+
 export type MenusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5151,6 +5158,68 @@ export function useCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
 export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
 export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
+export const GetLiveEventsDocument = gql`
+    query GetLiveEvents($filter: LiveEventFilter) {
+  liveEvents(filter: $filter) {
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageCount
+    pageNumberIsGood
+    pageSize
+    rows {
+      id
+      access
+      createdAt
+      description
+      kind
+      scheduledStartAt
+      slug
+      thumbnail {
+        imgPath
+      }
+      title
+      __typename
+    }
+  }
+}
+    `;
+export type GetLiveEventsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLiveEventsQuery, GetLiveEventsQueryVariables>, 'query'>;
+
+    export const GetLiveEventsComponent = (props: GetLiveEventsComponentProps) => (
+      <ApolloReactComponents.Query<GetLiveEventsQuery, GetLiveEventsQueryVariables> query={GetLiveEventsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetLiveEventsQuery__
+ *
+ * To run a query within a React component, call `useGetLiveEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLiveEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLiveEventsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetLiveEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLiveEventsQuery, GetLiveEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLiveEventsQuery, GetLiveEventsQueryVariables>(GetLiveEventsDocument, options);
+      }
+export function useGetLiveEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiveEventsQuery, GetLiveEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLiveEventsQuery, GetLiveEventsQueryVariables>(GetLiveEventsDocument, options);
+        }
+export type GetLiveEventsQueryHookResult = ReturnType<typeof useGetLiveEventsQuery>;
+export type GetLiveEventsLazyQueryHookResult = ReturnType<typeof useGetLiveEventsLazyQuery>;
+export type GetLiveEventsQueryResult = Apollo.QueryResult<GetLiveEventsQuery, GetLiveEventsQueryVariables>;
 export const MenusDocument = gql`
     query Menus {
   menus {
