@@ -1,12 +1,3 @@
-import {
-  USER_INFO,
-  ACCOUNT_INFO,
-  ORGANIZATION_INFO,
-  CHANNEL_INFO,
-  AUTH_TOKEN,
-  FIREBASE_TOKEN
-} from 'config/constants'
-
 export const saveData = (key: string, data: any) => {
   try {
     const dataToSave = JSON.stringify(data)
@@ -29,12 +20,7 @@ export const getData = (key: string) => {
 
 export const clearData = () => {
   try {
-    localStorage.removeItem(USER_INFO)
-    localStorage.removeItem(ACCOUNT_INFO)
-    localStorage.removeItem(ORGANIZATION_INFO)
-    localStorage.removeItem(CHANNEL_INFO)
-    localStorage.removeItem(AUTH_TOKEN)
-    localStorage.removeItem(FIREBASE_TOKEN)
+    localStorage.clear()
   } catch (error) {
     console.error(`ERROR ON CLEAR DATA`, error)
   }
