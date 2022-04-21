@@ -59,7 +59,6 @@ export interface PropsSideMenu {
   closeMenuAction: any;
   loading: boolean;
   data: [];
-  colorMode: ColorMode;
   children: JSX.Element | JSX.Element[]
 }
 
