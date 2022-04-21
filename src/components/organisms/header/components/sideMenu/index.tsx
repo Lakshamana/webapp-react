@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom'
-import { useTabsStore } from 'services/stores'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useTabsStore, useThemeStore } from 'services/stores'
 import { Box } from '@chakra-ui/layout'
-import { useHistory, useLocation } from 'react-router-dom'
 import { Container, Text } from 'components'
+import { getChannelNameInPath } from 'utils/helperFunctions'
 import { Skeleton } from 'components/atoms'
+import { DefaultItem, SubItem } from './components'
 import { PropsSideMenu } from '../../types'
+import { IMenuItem } from './types'
 import {
   SideContainer,
   ScrollContainer,
@@ -12,7 +14,6 @@ import {
   Circle,
 } from './styles'
 import { colors } from 'styles'
-import { getChannelNameInPath } from 'utils/helperFunctions'
 import { useTranslation } from 'react-i18next'
 import { TabFlags } from 'types/flags'
 
@@ -20,16 +21,21 @@ const SideMenu = ({
   loading,
   open,
   closeMenuAction,
-  colorMode,
   children,
   data,
 }: PropsSideMenu) => {
   const history = useHistory()
   const { pathname } = useLocation()
   const { activeTab, setActiveTab, tabsList } = useTabsStore()
+  const { colorMode } = useThemeStore()
   const { i18n } = useTranslation()
 
-  const redirectTo = (route) => () => {
+  const getTabLabel = (tab: TabFlags) => {
+    const item = tab.LABEL.filter((item) => i18n.language.includes(item.LOCALE))
+    return item[0].VALUE
+  }
+
+  const redirectTo = (route: string) => () => {
     if (!route) return
     closeMenuAction()
     if (route.indexOf('http') === 0) {
@@ -38,11 +44,6 @@ const SideMenu = ({
     }
     const channelName = getChannelNameInPath(pathname)?.toLowerCase()
     history.push(`/c/${channelName}${route}`)
-  }
-
-  const getTabLabel = (tab: TabFlags) => {
-    const item = tab.LABEL.filter((item) => i18n.language.includes(item.LOCALE))
-    return item[0].VALUE
   }
 
   return (
@@ -91,25 +92,18 @@ const SideMenu = ({
               <Skeleton key={each} height='30px' width='100%' my={4} />
             ))
           }
-          {data?.map((menu: any) => (
-            <Container
-              key={`menu-${menu.id}`}
-              width={1}
-              py={3}
-              alignItems={'center'}
-              justifyContent={'left'}
-              onClick={redirectTo(menu?.route)}
-            >
-              <Text
-                style={{
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                }}
-                color={colors.generalText[colorMode]}
-              >
-                {menu.name}
-              </Text>
-            </Container>
+          {data?.map((menuItem: IMenuItem) => (
+            !!menuItem.children.length
+              ? <SubItem
+                key={`menu-${menuItem.id}`}
+                redirectTo={redirectTo}
+                {...menuItem}
+              />
+              : <DefaultItem
+                key={`menu-${menuItem.id}`}
+                action={redirectTo(menuItem.route)}
+                {...menuItem}
+              />
           ))}
         </Box>
       </ChannelsContainer>
