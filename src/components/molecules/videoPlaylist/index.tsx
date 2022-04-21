@@ -32,10 +32,13 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       imageOptions.blur = 20
     }
 
+    const thumbnailPath = post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
+
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || post.media?.['thumbnailPath'],
-      imageOptions
+      post.thumbnail?.imgPath || thumbnailPath || '',
+      imageOptions,
+      post.thumbnail?.imgPath ? null : post.media?.baseUrl
     )
 
     return image
