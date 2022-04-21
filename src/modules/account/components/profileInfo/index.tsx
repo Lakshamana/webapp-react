@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useFormik } from 'formik'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 import { ptBR, enUS } from 'date-fns/locale'
 
 import { Flex, Box } from '@chakra-ui/layout'
@@ -59,11 +59,13 @@ const ProfileInfo = ({
     Date.parse(value) ? new Date(value) : new Date()
 
   const formatDate = (value) => 
-    Date.parse(value) ? 
-    format(parseISO(value), 'P', {
-      locale: locale === 'pt-BR' ? ptBR : enUS,
-    }) :
-    '-'
+    Date.parse(value) ?
+      format(
+        new Date(value),
+        'P',
+        { locale: locale === 'pt-BR' ? ptBR : enUS }
+      ):
+      '-'
 
   const renderLabel = (key: string, value: any) => {
     switch (key) {
