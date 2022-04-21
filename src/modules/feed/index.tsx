@@ -6,7 +6,7 @@ import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
-import { useChannelsStore, useCommonStore } from 'services/stores'
+import { useChannelsStore, useCommonStore, useFeedStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
 import { translateFormatDistance } from "utils/helperFunctions"
 import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
@@ -17,22 +17,47 @@ const FeedPage = () => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
-  const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
-  const [listOfPosts, setListOfPosts] = useState([])
-  const [hasMore, setHasMore] = useState(true)
+  const {stateFeed, setStateFeed} = useFeedStore()
+  const [filterBy, SetFilterBy] = useState<SortDirection>(stateFeed.filterBy)
+  const [listOfPosts, setListOfPosts] = useState(stateFeed.listOfPosts)
+  const [hasMore, setHasMore] = useState(stateFeed.hasMore)
+  const [position, setPosition] = useState(stateFeed.position)
   const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
     fetchPolicy: "network-only"
   })
+
+  const handleScroll = () => {
+    const positionY = window.pageYOffset;
+    setPosition(positionY);
+  };
 
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
     { value: 'ASC', label: t('page.feed.search_options.old') }
   ]
+  
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.scrollTo(0, position)
+    setPageTitle(t('header.tabs.feed'))
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
+  const updateState = () => 
+    setStateFeed({
+      position,
+      filterBy,
+      listOfPosts,
+      hasMore,
+    })
+  
 
   useEffect(() => {
-    if (activeChannel) {
+    if (activeChannel && listOfPosts.length === 0) {
       setListOfPosts([])
       getPosts()
     }
@@ -182,7 +207,7 @@ const FeedPage = () => {
         loader={loadingItems(2)}
       >
         {listOfPosts.map((post, key) =>
-          <FeedPostCard key={key} {...post} />
+          <FeedPostCard key={key} {...post} updateState={updateState}/>
         )}
       </InfiniteScroll>
     </Center >

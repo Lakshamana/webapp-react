@@ -33,6 +33,7 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	isExclusive: boolean
 	isGeolocked: boolean
 	itensQuestions?: Array<any | itensQuestions>
+	updateState: () => void
 }
 
 export interface reactions {
