@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from "@apollo/client"
 import { intervalToDuration } from 'date-fns'
@@ -6,7 +6,7 @@ import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS } from "services/graphql"
 import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
-import { useChannelsStore, useCommonStore } from 'services/stores'
+import { useChannelsStore, useCommonStore, useFeedStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
 import { translateFormatDistance } from "utils/helperFunctions"
 import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
@@ -17,22 +17,49 @@ const FeedPage = () => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
-  const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
-  const [listOfPosts, setListOfPosts] = useState([])
-  const [hasMore, setHasMore] = useState(true)
+  const {stateFeed, setStateFeed} = useFeedStore()
+  const [filterBy, SetFilterBy] = useState<SortDirection>(stateFeed.filterBy)
+  const [listOfPosts, setListOfPosts] = useState(stateFeed.listOfPosts)
+  const [hasMore, setHasMore] = useState(stateFeed.hasMore)
+  const [position, setPosition] = useState(stateFeed.position)
+  const page = useRef(stateFeed.page)
   const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
     fetchPolicy: "network-only"
   })
+
+  const handleScroll = () => {
+    const positionY = window.pageYOffset;
+    setPosition(positionY);
+  };
 
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
     { value: 'ASC', label: t('page.feed.search_options.old') }
   ]
+  
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.scrollTo(0, position)
+    setPageTitle(t('header.tabs.feed'))
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
+  const updateState = () => 
+    setStateFeed({
+      position,
+      filterBy,
+      listOfPosts,
+      hasMore,
+      page: page.current,
+    })
+  
 
   useEffect(() => {
-    if (activeChannel) {
+    if (activeChannel && listOfPosts.length === 0) {
       setListOfPosts([])
       getPosts()
     }
@@ -46,12 +73,12 @@ const FeedPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
 
-  const getPosts = (page: number = 1) => {
+  const getPosts = () => {
     loadPosts({
       context: { headers: { channel: activeChannel?.id } },
       variables: {
         filter: {
-          page,
+          page: page.current,
           pageSize: DEFAULT_PAGESIZE_FEEDS,
           sortBy: getSortByFilter()
         }
@@ -60,7 +87,10 @@ const FeedPage = () => {
   }
 
   const loadMore = () => {
-    if (hasMore) getPosts(dataPosts?.posts.page + 1)
+    if (hasMore) {
+      page.current = page.current + 1
+      getPosts()
+    }
   }
 
   const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
@@ -140,15 +170,15 @@ const FeedPage = () => {
   }
 
   const loadingItems = (number) => (
-    <Center width="100%" height={'100%'} flexDirection={'column'}>
+    <Center width="100%" height="100%" flexDirection="column">
       <Box mt={2}>
-        <Skeleton kind={'posts'} numberOfCards={number} />
+        <Skeleton kind="posts" numberOfCards={number} />
       </Box>
     </Center>
   )
 
   return (
-    <Center width="100%" height={'100%'} flexDirection={'column'}>
+    <Center width="100%" height="100%" flexDirection="column">
       {
         loadingPosts &&
         <>
@@ -162,8 +192,8 @@ const FeedPage = () => {
       {
         !loadingPosts && listOfPosts.length > 0 &&
         <Container
-          flexDirection={"column"}
-          width={"100%"}
+          flexDirection="column"
+          width="100%"
           margin="1em auto 0 auto"
           maxWidth="746px"
           alignItems="flex-end"
@@ -182,7 +212,7 @@ const FeedPage = () => {
         loader={loadingItems(2)}
       >
         {listOfPosts.map((post, key) =>
-          <FeedPostCard key={key} {...post} />
+          <FeedPostCard key={key} {...post} updateState={updateState}/>
         )}
       </InfiniteScroll>
     </Center >

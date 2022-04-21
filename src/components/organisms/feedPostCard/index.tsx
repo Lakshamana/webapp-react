@@ -35,7 +35,7 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   ]
 
   return (
-    <FeedContent>
+    <FeedContent onClick={props.updateState}>
       <CardContent>
         {props.type !== 'POLL' && (
           <Link to={getPostUrl(props.slug)}>

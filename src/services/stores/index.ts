@@ -5,4 +5,4 @@ export * from './channels'
 export * from './tabs'
 export * from './common'
 export * from './customization'
-
+export * from './feed'
