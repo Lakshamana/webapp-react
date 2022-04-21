@@ -6,6 +6,7 @@ type State = {
   filterBy: SortDirection
   listOfPosts: any[]
   hasMore: boolean
+  page: number
 }
 
 type FeedState = {
@@ -19,6 +20,7 @@ export const useFeedStore = create<FeedState>((set) => ({
     filterBy: SortDirection.Desc,
     listOfPosts: [],
     hasMore: true,
+    page: 1,
   },
   setStateFeed: (stateFeed) => set({ stateFeed }),
 }))

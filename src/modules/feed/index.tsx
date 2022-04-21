@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from "@apollo/client"
 import { intervalToDuration } from 'date-fns'
@@ -22,6 +22,7 @@ const FeedPage = () => {
   const [listOfPosts, setListOfPosts] = useState(stateFeed.listOfPosts)
   const [hasMore, setHasMore] = useState(stateFeed.hasMore)
   const [position, setPosition] = useState(stateFeed.position)
+  const page = useRef(stateFeed.page)
   const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
     fetchPolicy: "network-only"
   })
@@ -53,6 +54,7 @@ const FeedPage = () => {
       filterBy,
       listOfPosts,
       hasMore,
+      page: page.current,
     })
   
 
@@ -71,12 +73,12 @@ const FeedPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
 
-  const getPosts = (page: number = 1) => {
+  const getPosts = () => {
     loadPosts({
       context: { headers: { channel: activeChannel?.id } },
       variables: {
         filter: {
-          page,
+          page: page.current,
           pageSize: DEFAULT_PAGESIZE_FEEDS,
           sortBy: getSortByFilter()
         }
@@ -85,7 +87,10 @@ const FeedPage = () => {
   }
 
   const loadMore = () => {
-    if (hasMore) getPosts(dataPosts?.posts.page + 1)
+    if (hasMore) {
+      page.current = page.current + 1
+      getPosts()
+    }
   }
 
   const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
