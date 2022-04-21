@@ -5365,6 +5365,7 @@ export const GetPostsCardsDocument = gql`
         ... on MediaVideo {
           id
           duration
+          thumbnailPath
         }
       }
       type
