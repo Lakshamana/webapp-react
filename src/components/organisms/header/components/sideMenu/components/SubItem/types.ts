@@ -1,4 +1,4 @@
-type SubItem = {
+export type ISubItem = {
   id: string
   name: string
   route: string
@@ -6,7 +6,7 @@ type SubItem = {
 
 export interface IProps {
   id: string
-  children: SubItem[]
+  children: ISubItem[]
   route: string
   name: string
   redirectTo: any
