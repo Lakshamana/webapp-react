@@ -170,15 +170,15 @@ const FeedPage = () => {
   }
 
   const loadingItems = (number) => (
-    <Center width="100%" height={'100%'} flexDirection={'column'}>
+    <Center width="100%" height="100%" flexDirection="column">
       <Box mt={2}>
-        <Skeleton kind={'posts'} numberOfCards={number} />
+        <Skeleton kind="posts" numberOfCards={number} />
       </Box>
     </Center>
   )
 
   return (
-    <Center width="100%" height={'100%'} flexDirection={'column'}>
+    <Center width="100%" height="100%" flexDirection="column">
       {
         loadingPosts &&
         <>
@@ -192,8 +192,8 @@ const FeedPage = () => {
       {
         !loadingPosts && listOfPosts.length > 0 &&
         <Container
-          flexDirection={"column"}
-          width={"100%"}
+          flexDirection="column"
+          width="100%"
           margin="1em auto 0 auto"
           maxWidth="746px"
           alignItems="flex-end"
