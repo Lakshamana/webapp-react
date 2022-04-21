@@ -1,7 +1,7 @@
 import { colors } from 'styles'
 import { Text, Flex, Container, useDisclosure, Collapse } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
-import { IProps } from './types'
+import { IProps, ISubItem } from './types'
 import { IconContainer } from './styles'
 
 const SubItem = ({ name, children, redirectTo }: IProps) => {
@@ -29,8 +29,11 @@ const SubItem = ({ name, children, redirectTo }: IProps) => {
         />
       </Flex>
       {
-        children.map(subItem => (
-          <Collapse in={isOpen} animateOpacity>
+        children.map((subItem: ISubItem) => (
+          <Collapse
+            key={`submenu-${subItem.id}`}
+            in={isOpen}
+            animateOpacity>
             <Container
               py={2}
               cursor={'pointer'}
