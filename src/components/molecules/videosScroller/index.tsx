@@ -39,7 +39,7 @@ const VideosScroller = ({
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || '',
+      post.thumbnail?.imgPath || post.media?.['thumbnailPath'],
       imageOptions
     )
 
