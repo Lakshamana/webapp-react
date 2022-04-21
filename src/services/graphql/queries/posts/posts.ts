@@ -75,6 +75,8 @@ export const QUERY_POSTS_CARDS = gql`
           ... on MediaVideo {
             id
             duration
+            thumbnailPath
+            baseUrl
           }
         }
         type

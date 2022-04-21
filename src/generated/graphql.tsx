@@ -98,15 +98,6 @@ export type AccountSession = {
   refresh_token: Scalars['String'];
 };
 
-export type AccountSortBy = {
-  direction?: Maybe<SortDirection>;
-  field: AccountSortFields;
-};
-
-export enum AccountSortFields {
-  Email = 'email'
-}
-
 export type AccountStatus = {
   __typename?: 'AccountStatus';
   active?: Maybe<Scalars['Boolean']>;
@@ -148,6 +139,21 @@ export type AddedCommentVote = {
   __typename?: 'AddedCommentVote';
   comment: Comment;
   commentVote: CommentVote;
+};
+
+export type AtomicCreateCategory = {
+  access?: Maybe<Scalars['String']>;
+  customization?: Maybe<CategoryCustomizationInput>;
+  description?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Scalars['JSONObject']>;
+  featuredAt?: Maybe<Scalars['DateTime']>;
+  geoFence?: Maybe<Scalars['JSONObject']>;
+  isParent?: Maybe<Scalars['Boolean']>;
+  kind?: Maybe<Kinds>;
+  name: Scalars['String'];
+  parentId?: Maybe<Scalars['ID']>;
+  status?: Maybe<Status>;
+  tags?: Maybe<Array<Scalars['String']>>;
 };
 
 export type AudioInput = {
@@ -297,6 +303,11 @@ export type CategoryInput = {
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
+};
+
+export type CategorySortingOutput = {
+  __typename?: 'CategorySortingOutput';
+  ok: Scalars['Boolean'];
 };
 
 export type Channel = AvailableChannel | GeolockedChannel;
@@ -724,6 +735,9 @@ export type FindAllQueryParamsDto = {
   last_name__contains?: Maybe<Scalars['String']>;
   last_name__exact?: Maybe<Scalars['String']>;
   organization?: Maybe<Scalars['String']>;
+  page?: Maybe<Scalars['Float']>;
+  pageSize?: Maybe<Scalars['Float']>;
+  sortBy?: Maybe<Scalars['String']>;
   status?: Maybe<StatusFilter>;
   tenant_id?: Maybe<Scalars['String']>;
   username__contains?: Maybe<Scalars['String']>;
@@ -749,7 +763,7 @@ export type FindBillboardsInput = {
 };
 
 export type FindManyTagsInput = {
-  channel?: Maybe<Scalars['ID']>;
+  channel: Scalars['ID'];
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
   search?: Maybe<Scalars['String']>;
@@ -845,12 +859,13 @@ export type LiveEvent = {
   reactionsEnabled?: Maybe<Scalars['Boolean']>;
   scheduledStartAt?: Maybe<Scalars['DateTime']>;
   slug?: Maybe<Scalars['String']>;
-  source: Scalars['String'];
+  source?: Maybe<Scalars['String']>;
   status?: Maybe<Status>;
-  streamName: Scalars['String'];
+  streamName?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<Scalars['ID']>>;
   thumbnail?: Maybe<MediaPhoto>;
   title: Scalars['String'];
+  type: LiveEventType;
 };
 
 export type LiveEventConfig = {
@@ -883,6 +898,8 @@ export type LiveEventFilter = {
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
   sortBy?: Maybe<Scalars['String']>;
+  status?: Maybe<Status>;
+  type?: Maybe<LiveEventType>;
 };
 
 export type LiveEventInput = {
@@ -904,7 +921,14 @@ export type LiveEventInput = {
   tags?: Maybe<Array<Scalars['String']>>;
   thumbnail?: Maybe<Scalars['String']>;
   title: Scalars['String'];
+  type: LiveEventType;
 };
+
+export enum LiveEventType {
+  Mp4Pull = 'MP4_PULL',
+  RtmpPull = 'RTMP_PULL',
+  RtmpPush = 'RTMP_PUSH'
+}
 
 export type Me = {
   __typename?: 'Me';
@@ -1055,6 +1079,9 @@ export type Mutation = {
   addReaction: Array<ReactionsAggregate>;
   addReport: Report;
   addVote: AddedCommentVote;
+  atomicCreateCategory: Category;
+  atomicDeleteCategory: Category;
+  atomicUpdateCategorySorting: CategorySortingOutput;
   banAccountPerm: Account;
   banAccountTemp: Account;
   bindChannelAndOrganization: Account;
@@ -1198,6 +1225,21 @@ export type MutationAddReportArgs = {
 
 export type MutationAddVoteArgs = {
   input: AddCommentVote;
+};
+
+
+export type MutationAtomicCreateCategoryArgs = {
+  payload: AtomicCreateCategory;
+};
+
+
+export type MutationAtomicDeleteCategoryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationAtomicUpdateCategorySortingArgs = {
+  payload: UpdateCategoriesSorting;
 };
 
 
@@ -1904,6 +1946,20 @@ export enum OrganizationSortFields {
   Name = 'name'
 }
 
+export type PaginatedAccountsOutput = {
+  __typename?: 'PaginatedAccountsOutput';
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  isFirstPage: Scalars['Boolean'];
+  isLastPage: Scalars['Boolean'];
+  page: Scalars['Float'];
+  pageCount: Scalars['Float'];
+  pageNumberIsGood: Scalars['Boolean'];
+  pageSize: Scalars['Float'];
+  rows: Array<Account>;
+  total: Scalars['Float'];
+};
+
 export type PaginatedBillboardsOutput = {
   __typename?: 'PaginatedBillboardsOutput';
   hasNextPage: Scalars['Boolean'];
@@ -2210,7 +2266,7 @@ export type Query = {
   accountPinnedPosts: Array<AccountPinnedPost>;
   accountSession: AccountSession;
   accountSessions: Array<AccountSession>;
-  accounts: Array<Account>;
+  accounts: PaginatedAccountsOutput;
   accountsCount: ResponseAccountsCount;
   accountsGdprLgpd: Array<AccountGdprLgpd>;
   billboard: Billboard;
@@ -2305,9 +2361,6 @@ export type QueryAccountSessionArgs = {
 
 export type QueryAccountsArgs = {
   filter?: Maybe<FindAllQueryParamsDto>;
-  limit?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  sortBy?: Maybe<AccountSortBy>;
 };
 
 
@@ -2726,7 +2779,12 @@ export type StartMediaUploadInput = {
 
 export enum Status {
   Draft = 'DRAFT',
+  Error = 'ERROR',
+  Finished = 'FINISHED',
+  Live = 'LIVE',
   Published = 'PUBLISHED',
+  Ready = 'READY',
+  Scheduled = 'SCHEDULED',
   Trash = 'TRASH'
 }
 
@@ -2841,6 +2899,10 @@ export type UpdateBillboardInput = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type UpdateCategoriesSorting = {
+  changes: Array<UpdateCategorySortingItem>;
+};
+
 export type UpdateCategoryInput = {
   access?: Maybe<Scalars['String']>;
   customization?: Maybe<CategoryCustomizationInput>;
@@ -2855,6 +2917,12 @@ export type UpdateCategoryInput = {
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
+};
+
+export type UpdateCategorySortingItem = {
+  categoryId: Scalars['ID'];
+  children?: Maybe<Array<UpdateCategorySortingItem>>;
+  sort: Scalars['Int'];
 };
 
 export type UpdateChannelInput = {
@@ -3222,13 +3290,6 @@ export type UnpinCategoryMutationVariables = Exact<{
 
 export type UnpinCategoryMutation = { __typename?: 'Mutation', unpinCategory: { __typename?: 'AccountPinnedCategory', pinned: boolean } };
 
-export type AddReactionMutationVariables = Exact<{
-  input: AddReaction;
-}>;
-
-
-export type AddReactionMutation = { __typename?: 'Mutation', addReaction: Array<{ __typename?: 'ReactionsAggregate', name: string, count: number }> };
-
 export type AddCommentMutationVariables = Exact<{
   payload: AddComment;
 }>;
@@ -3236,12 +3297,19 @@ export type AddCommentMutationVariables = Exact<{
 
 export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', countComments: number, id: string, description: string, createdAt: any, countUpVotes: number, content: string, author: { __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> } } };
 
+export type AddReactionMutationVariables = Exact<{
+  input: AddReaction;
+}>;
+
+
+export type AddReactionMutation = { __typename?: 'Mutation', addReaction: Array<{ __typename?: 'ReactionsAggregate', name: string, count: number }> };
+
 export type DeleteCommentMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', countComments: number } };
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', id: string, description: string } };
 
 export type PinPostMutationVariables = Exact<{
   payload: CreateAccountPinnedPost;
@@ -3263,6 +3331,21 @@ export type UnpinPostMutationVariables = Exact<{
 
 
 export type UnpinPostMutation = { __typename?: 'Mutation', unpinPost: { __typename?: 'AccountPinnedPost', pinned: boolean } };
+
+export type UpdateCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+  payload: UpdateComment;
+}>;
+
+
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, description: string } };
+
+export type AddVoteMutationVariables = Exact<{
+  input: AddCommentVote;
+}>;
+
+
+export type AddVoteMutation = { __typename?: 'Mutation', addVote: { __typename?: 'AddedCommentVote', comment: { __typename?: 'Comment', countUpVotes: number }, commentVote: { __typename?: 'CommentVote', countUpVotes: number, direction: CommentVoteDirectionEnum } } };
 
 export type AccountQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3375,7 +3458,7 @@ export type GetPostsCardsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number> }> }> } };
+export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type GetTagQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -4096,46 +4179,6 @@ export function useUnpinCategoryMutation(baseOptions?: Apollo.MutationHookOption
 export type UnpinCategoryMutationHookResult = ReturnType<typeof useUnpinCategoryMutation>;
 export type UnpinCategoryMutationResult = Apollo.MutationResult<UnpinCategoryMutation>;
 export type UnpinCategoryMutationOptions = Apollo.BaseMutationOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>;
-export const AddReactionDocument = gql`
-    mutation addReaction($input: AddReaction!) {
-  addReaction(input: $input) {
-    name
-    count
-  }
-}
-    `;
-export type AddReactionMutationFn = Apollo.MutationFunction<AddReactionMutation, AddReactionMutationVariables>;
-export type AddReactionComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddReactionMutation, AddReactionMutationVariables>, 'mutation'>;
-
-    export const AddReactionComponent = (props: AddReactionComponentProps) => (
-      <ApolloReactComponents.Mutation<AddReactionMutation, AddReactionMutationVariables> mutation={AddReactionDocument} {...props} />
-    );
-    
-
-/**
- * __useAddReactionMutation__
- *
- * To run a mutation, you first call `useAddReactionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddReactionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addReactionMutation, { data, loading, error }] = useAddReactionMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useAddReactionMutation(baseOptions?: Apollo.MutationHookOptions<AddReactionMutation, AddReactionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddReactionMutation, AddReactionMutationVariables>(AddReactionDocument, options);
-      }
-export type AddReactionMutationHookResult = ReturnType<typeof useAddReactionMutation>;
-export type AddReactionMutationResult = Apollo.MutationResult<AddReactionMutation>;
-export type AddReactionMutationOptions = Apollo.BaseMutationOptions<AddReactionMutation, AddReactionMutationVariables>;
 export const AddCommentDocument = gql`
     mutation addComment($payload: AddComment!) {
   addComment(payload: $payload) {
@@ -4184,10 +4227,51 @@ export function useAddCommentMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>;
 export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
 export type AddCommentMutationOptions = Apollo.BaseMutationOptions<AddCommentMutation, AddCommentMutationVariables>;
+export const AddReactionDocument = gql`
+    mutation addReaction($input: AddReaction!) {
+  addReaction(input: $input) {
+    name
+    count
+  }
+}
+    `;
+export type AddReactionMutationFn = Apollo.MutationFunction<AddReactionMutation, AddReactionMutationVariables>;
+export type AddReactionComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddReactionMutation, AddReactionMutationVariables>, 'mutation'>;
+
+    export const AddReactionComponent = (props: AddReactionComponentProps) => (
+      <ApolloReactComponents.Mutation<AddReactionMutation, AddReactionMutationVariables> mutation={AddReactionDocument} {...props} />
+    );
+    
+
+/**
+ * __useAddReactionMutation__
+ *
+ * To run a mutation, you first call `useAddReactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddReactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addReactionMutation, { data, loading, error }] = useAddReactionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddReactionMutation(baseOptions?: Apollo.MutationHookOptions<AddReactionMutation, AddReactionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddReactionMutation, AddReactionMutationVariables>(AddReactionDocument, options);
+      }
+export type AddReactionMutationHookResult = ReturnType<typeof useAddReactionMutation>;
+export type AddReactionMutationResult = Apollo.MutationResult<AddReactionMutation>;
+export type AddReactionMutationOptions = Apollo.BaseMutationOptions<AddReactionMutation, AddReactionMutationVariables>;
 export const DeleteCommentDocument = gql`
     mutation deleteComment($id: String!) {
   deleteComment(id: $id) {
-    countComments
+    id
+    description
   }
 }
     `;
@@ -4341,6 +4425,92 @@ export function useUnpinPostMutation(baseOptions?: Apollo.MutationHookOptions<Un
 export type UnpinPostMutationHookResult = ReturnType<typeof useUnpinPostMutation>;
 export type UnpinPostMutationResult = Apollo.MutationResult<UnpinPostMutation>;
 export type UnpinPostMutationOptions = Apollo.BaseMutationOptions<UnpinPostMutation, UnpinPostMutationVariables>;
+export const UpdateCommentDocument = gql`
+    mutation UpdateComment($id: String!, $payload: UpdateComment!) {
+  updateComment(id: $id, payload: $payload) {
+    id
+    description
+  }
+}
+    `;
+export type UpdateCommentMutationFn = Apollo.MutationFunction<UpdateCommentMutation, UpdateCommentMutationVariables>;
+export type UpdateCommentComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateCommentMutation, UpdateCommentMutationVariables>, 'mutation'>;
+
+    export const UpdateCommentComponent = (props: UpdateCommentComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateCommentMutation, UpdateCommentMutationVariables> mutation={UpdateCommentDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCommentMutation, { data, loading, error }] = useUpdateCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useUpdateCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCommentMutation, UpdateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument, options);
+      }
+export type UpdateCommentMutationHookResult = ReturnType<typeof useUpdateCommentMutation>;
+export type UpdateCommentMutationResult = Apollo.MutationResult<UpdateCommentMutation>;
+export type UpdateCommentMutationOptions = Apollo.BaseMutationOptions<UpdateCommentMutation, UpdateCommentMutationVariables>;
+export const AddVoteDocument = gql`
+    mutation AddVote($input: AddCommentVote!) {
+  addVote(input: $input) {
+    comment {
+      countUpVotes
+    }
+    commentVote {
+      countUpVotes
+      direction
+    }
+  }
+}
+    `;
+export type AddVoteMutationFn = Apollo.MutationFunction<AddVoteMutation, AddVoteMutationVariables>;
+export type AddVoteComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddVoteMutation, AddVoteMutationVariables>, 'mutation'>;
+
+    export const AddVoteComponent = (props: AddVoteComponentProps) => (
+      <ApolloReactComponents.Mutation<AddVoteMutation, AddVoteMutationVariables> mutation={AddVoteDocument} {...props} />
+    );
+    
+
+/**
+ * __useAddVoteMutation__
+ *
+ * To run a mutation, you first call `useAddVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addVoteMutation, { data, loading, error }] = useAddVoteMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddVoteMutation(baseOptions?: Apollo.MutationHookOptions<AddVoteMutation, AddVoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddVoteMutation, AddVoteMutationVariables>(AddVoteDocument, options);
+      }
+export type AddVoteMutationHookResult = ReturnType<typeof useAddVoteMutation>;
+export type AddVoteMutationResult = Apollo.MutationResult<AddVoteMutation>;
+export type AddVoteMutationOptions = Apollo.BaseMutationOptions<AddVoteMutation, AddVoteMutationVariables>;
 export const AccountDocument = gql`
     query Account($id: ID!) {
   account(id: $id) {
@@ -5365,6 +5535,8 @@ export const GetPostsCardsDocument = gql`
         ... on MediaVideo {
           id
           duration
+          thumbnailPath
+          baseUrl
         }
       }
       type
