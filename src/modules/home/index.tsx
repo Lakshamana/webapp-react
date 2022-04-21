@@ -66,6 +66,7 @@ const HomePage = () => {
       variables: {
         filter: {},
       },
+      notifyOnNetworkStatusChange: true
     })
 
   const [
@@ -78,6 +79,7 @@ const HomePage = () => {
         typeIn: [PostType.Video, PostType.OnDemand],
       },
     },
+    notifyOnNetworkStatusChange: true
   })
 
   const [
@@ -89,6 +91,7 @@ const HomePage = () => {
         featured: true,
       },
     },
+    notifyOnNetworkStatusChange: true
   })
 
   const [
@@ -103,6 +106,7 @@ const HomePage = () => {
         isParent: true,
       },
     },
+    notifyOnNetworkStatusChange: true
   })
 
   const isLoading =
