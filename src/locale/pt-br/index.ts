@@ -397,7 +397,9 @@ const PT_BR = {
         reply: 'RESPONDER',
         private_content: {
           title: 'Conteúdo Privado',
-          subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.'
+          subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.',
+          access: 'Acessar',
+          incorrect_password: 'Senha inválida. Tente novamente.'
         },
         live: {
           live_chat: {
