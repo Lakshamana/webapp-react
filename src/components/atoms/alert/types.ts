@@ -15,7 +15,7 @@ export interface Props
   description: string
   type?: AlertType
   closeable?: boolean
-  onClose: () => void
+  onClose?: () => void
 }
 
 export const defaultProps = {
