@@ -76,6 +76,7 @@ export const QUERY_POSTS_CARDS = gql`
             id
             duration
             thumbnailPath
+            baseUrl
           }
         }
         type
