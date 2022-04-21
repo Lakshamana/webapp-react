@@ -155,7 +155,6 @@ const HeaderComponent = () => {
         open={state.openMenu}
         loading={loadingMenu}
         closeMenuAction={handleCloseMenu}
-        {...{ colorMode }}
       >
         <UserInfo display={'sidebar'} {...{ colorMode, toggleColorMode }} />
       </SideMenu>
