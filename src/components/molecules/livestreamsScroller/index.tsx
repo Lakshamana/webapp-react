@@ -3,22 +3,24 @@ import { useTranslation } from 'react-i18next'
 import { SwiperSlide } from 'swiper/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { compareAsc } from 'date-fns'
-import { Link } from '@chakra-ui/react'
 
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { useThemeStore } from 'services/stores'
 import { useChannelsStore } from 'services/stores'
 
-import { CardsScroller, LivestreamPostCard } from 'components'
+import { CardsScroller, LivestreamPostCard, Link } from 'components'
 import { Text } from 'components'
 
 import { Header, ContentScroller } from './style'
 import { colors, sizes, breakpoints } from 'styles'
 
+import { isEntityBlocked } from 'utils/accessVerifications'
+
 import {
   LivestreamPostCardProps,
   LivestreamsScrollerProps,
 } from 'types/livestreams'
+import { LiveEvent, Status } from 'generated/graphql'
 
 const LivestreamScroller = ({
   items,
@@ -35,20 +37,20 @@ const LivestreamScroller = ({
 
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const getImageUrl = (post: any) => {
+  const getImageUrl = (live: LiveEvent) => {
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
       },
     }
 
-    if (isExclusive(post) || isGeolocked(post)) {
+    if (isEntityBlocked(live)) {
       imageOptions.blur = 20
     }
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || '',
+      live.thumbnail?.imgPath || '',
       {
         size: {
           height: 400,
@@ -58,14 +60,10 @@ const LivestreamScroller = ({
     return image
   }
 
-  const getLivestreamUrl = (id: string) =>
-    `/c/${activeChannel?.slug}/live/${id}`
+  const getLivestreamUrl = (slug: string) =>
+    `/c/${activeChannel?.slug}/live/${slug}`
 
-  const isExclusive = (post: any) => false
-
-  const isGeolocked = (post: any) => false
-
-  const isLive = (post: any) => post.status === 'active'
+  const isLive = (live: LiveEvent) => live.status === Status.Live
 
   useEffect(() => {
     const arrForSort = [...items!]
@@ -78,20 +76,22 @@ const LivestreamScroller = ({
         ? -1
         : compareAsc(a.scheduledStartAt, b.scheduledStartAt)
     })
-    const mappedArr = arrForSort?.map((item: any) => {
+    const mappedArr = arrForSort?.map((item: LiveEvent) => {
       const thumbnail = getImageUrl(item)
-      const url = getLivestreamUrl(`${item.id}`)
+      const url = getLivestreamUrl(item.slug || '')
       return {
-        id: `${item.id}`,
-        title: `${item.title}`,
+        id: item.id,
+        title: item.title,
+        description: item.description,
         url: url,
         status: item.status,
         thumbnail: thumbnail,
-        isExclusive: isExclusive(item),
-        isGeolocked: isGeolocked(item),
+        isExclusive: isEntityBlocked(item),
+        //TODO: Waiting for API
+        isGeolocked: false,
       }
     })
-    setScrollerItems(mappedArr?.length ? mappedArr : [])
+    setScrollerItems(mappedArr)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
@@ -109,8 +109,8 @@ const LivestreamScroller = ({
       {hasMoreLink && (
         <Link
           color={colors.brand.action_link[colorMode]}
-          fontSize={isDesktop ? '1.27rem' : '1.1rem'}
-          to={sectionUrl}
+          fontSize={'1.27rem'}
+          to={sectionUrl || ''}
         >
           {t('common.more')}
         </Link>
