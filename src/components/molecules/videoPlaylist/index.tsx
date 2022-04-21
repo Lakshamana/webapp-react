@@ -34,7 +34,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || '',
+      post.thumbnail?.imgPath || post.media?.['thumbnailPath'],
       imageOptions
     )
 
