@@ -34,7 +34,7 @@ const PostsGrid = ({
 
     return generateImage(
       ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || '',
+      post.thumbnail?.imgPath || post.media?.['thumbnailPath'],
       imageOptions
     )
   }
