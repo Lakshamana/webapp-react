@@ -14,6 +14,7 @@ import {
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES,
+  QUERY_LIVE_EVENTS,
   QUERY_POSTS_CARDS,
 } from 'services/graphql'
 
@@ -28,6 +29,7 @@ import {
   CategoriesScroller,
   VideosScroller,
   TagsScroller,
+  LivestreamScroller,
 } from 'components/molecules'
 import { BillboardTarget } from 'types/common'
 
@@ -47,6 +49,7 @@ const HomePage = () => {
   const [isFeaturedPostsActive, setIsFeaturedPostsActive] = useState<boolean>()
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
+  const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -54,6 +57,14 @@ const HomePage = () => {
         filter: {
           target: BillboardTarget.Home,
         },
+      },
+    })
+
+  const [getLiveEvents, { data: liveEventsData, loading: loadingLiveEvents }] =
+    useLazyQuery(QUERY_LIVE_EVENTS, {
+      //TODO: Add filters! Waiting for API
+      variables: {
+        filter: {},
       },
     })
 
@@ -98,10 +109,12 @@ const HomePage = () => {
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
-    loadingCategoriesWithChildren
+    loadingCategoriesWithChildren ||
+    loadingLiveEvents
 
   const hasResults =
     billboardData?.billboard?.length ||
+    liveEventsData?.liveEvents?.rows?.length ||
     featuredPostsData?.posts?.rows?.length ||
     featuredCategoriesData?.categories?.rows?.length ||
     (isHomeDisplayingCategories &&
@@ -127,6 +140,8 @@ const HomePage = () => {
         setIsFeaturedPostsActive(true)
       if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Collections)
         setIsFeaturedCategoriesActive(true)
+      if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Livestreams)
+        setIsLiveEventsActive(true)
     })
 
     if (activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES) getCategories()
@@ -140,8 +155,9 @@ const HomePage = () => {
   useEffect(() => {
     if (isFeaturedPostsActive) getFeaturedPosts()
     if (isFeaturedCategoriesActive) getFeaturedCategories()
+    if (isLiveEventsActive) getLiveEvents()
     // eslint-disable-next-line
-  }, [isFeaturedCategoriesActive, isFeaturedPostsActive])
+  }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path)
@@ -168,7 +184,6 @@ const HomePage = () => {
       .sort((a, b) => a.sort - b.sort)
 
     setBillboardItems(billboardItems)
-
     // eslint-disable-next-line
   }, [billboardData])
 
@@ -176,8 +191,19 @@ const HomePage = () => {
     <BillboardScroller items={billboardItems} customButtons={true} />
   )
 
+  const renderLiveEventsScroller = (item: CarouselFlags) =>
+    !!liveEventsData?.liveEvents?.rows?.length && (
+      <LivestreamScroller
+        items={liveEventsData?.liveEvents?.rows}
+        key={`${item.LABEL[0].VALUE}`}
+        sectionTitle={getCarouselLabel(item)}
+        hasMoreLink={true}
+        sectionUrl={`/c/${activeChannel?.slug}/lives`}
+      />
+    )
+
   const renderFeaturedPostsScroller = (item: CarouselFlags) =>
-    !!featuredPostsData?.posts?.rows && (
+    !!featuredPostsData?.posts?.rows.length && (
       <VideosScroller
         key={`${item.LABEL[0].VALUE}`}
         items={featuredPostsData?.posts?.rows}
@@ -187,7 +213,7 @@ const HomePage = () => {
     )
 
   const renderFeaturedCategoriesScroller = (item: CarouselFlags) =>
-    !!featuredCategoriesData?.categories?.rows && (
+    !!featuredCategoriesData?.categories?.rows.length && (
       <CategoriesScroller
         key="featured-categories"
         items={featuredCategoriesData?.categories?.rows}
@@ -237,8 +263,7 @@ const HomePage = () => {
     if (!item?.TAGS?.length) {
       switch (item.CONTENT_TYPE[0]) {
         case HomeCarouselsTypes.Livestreams:
-          //TODO: Waiting for API
-          return ''
+          return renderLiveEventsScroller(item)
         case HomeCarouselsTypes.Posts:
           return renderFeaturedPostsScroller(item)
         case HomeCarouselsTypes.Collections:
