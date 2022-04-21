@@ -122,17 +122,15 @@ const Livestreams = () => {
         return live.status === Status.Live
       }
     )
-    console.log(live)
     setLiveItems(live?.length ? live : null)
 
     const upcoming = livestreamsData?.liveEvents?.rows?.filter(
       (live: LiveEvent) => {
         return (
-          live.status === Status.Scheduled || live.status === Status.Published
+          live.status === Status.Scheduled || live.status === Status.Ready
         )
       }
     )
-    console.log(upcoming)
     setUpcomingItems(upcoming)
     // eslint-disable-next-line
   }, [livestreamsData])
