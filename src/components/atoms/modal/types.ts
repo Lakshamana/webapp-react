@@ -26,6 +26,7 @@ export interface Props
   loading?: boolean
   defaultActions?: boolean
   closeOnOverlayClick?: boolean
+  isActionDisabled?: boolean
 }
 
 export const defaultProps = {

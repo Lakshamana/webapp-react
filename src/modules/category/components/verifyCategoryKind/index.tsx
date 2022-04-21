@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { Center, Box } from '@chakra-ui/layout'
 import {
-  MUTATION_POST_PASSWORD_CHECK,
-  QUERY_VERIFY_POST_KIND,
+  QUERY_VERIFY_CATEGORY_KIND,
+  MUTATION_CATEGORY_PASSWORD_CHECK,
 } from 'services/graphql'
 import { PrivateContent, Skeleton } from 'components'
 import { Props } from './types'
@@ -15,41 +15,38 @@ import {
 } from 'utils/accessVerifications'
 import { useTranslation } from 'react-i18next'
 
-const VerifyPostKind = ({ postSlug, postType, accessGranted }: Props) => {
+const VerifyCategoryKind = ({ categorySlug, accessGranted }: Props) => {
   const { t } = useTranslation()
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
 
-  //TODO: implement logic to get post or live
-  const { data: postKind, loading: isLoadingVerifyPostKind } = useQuery(
-    QUERY_VERIFY_POST_KIND,
+  const { data: categoryKind, loading: isLoadingVerifyCategoryKind } = useQuery(
+    QUERY_VERIFY_CATEGORY_KIND,
     {
       variables: {
-        slug: postSlug,
+        slug: categorySlug,
       },
       fetchPolicy: 'no-cache',
     }
   )
 
-  const [requestPostAccess, { loading: isLoadingPasswordCheck }] = useMutation(
-    MUTATION_POST_PASSWORD_CHECK,
-    {
+  const [requestCategoryAccess, { loading: isLoadingPasswordCheck }] =
+    useMutation(MUTATION_CATEGORY_PASSWORD_CHECK, {
       onCompleted: (result) => {
-        if (result?.postPasswordCheck?.correct) accessGranted()
-        if (!result?.postPasswordCheck?.correct)
+        if (result?.categoryPasswordCheck?.correct) accessGranted()
+        if (!result?.categoryPasswordCheck?.correct)
           setErrorOnRequestAccess(
             t('page.post.private_content.incorrect_password')
           )
       },
-    }
-  )
+    })
 
-  const sendRequestToAccessPrivatePost = (password: string) => {
+  const sendRequestToAccessPrivateCategory = (password: string) => {
     setErrorOnRequestAccess('')
-    requestPostAccess({
+    requestCategoryAccess({
       variables: {
-        id: postKind.post.id,
+        id: categoryKind.category.id,
         payload: {
           password,
         },
@@ -58,34 +55,40 @@ const VerifyPostKind = ({ postSlug, postType, accessGranted }: Props) => {
   }
 
   useEffect(() => {
-    if (postKind?.post) {
-      if (isEntityBlocked(postKind.post)) {
-        setIsPrivate(isEntityPrivate(postKind.post))
-        setIsOnPaywall(isEntityOnPaywall(postKind.post))
+    if (categoryKind?.category) {
+      if (isEntityBlocked(categoryKind.category)) {
+        setIsPrivate(isEntityPrivate(categoryKind.category))
+        setIsOnPaywall(isEntityOnPaywall(categoryKind.category))
         return
       }
       accessGranted()
     }
     //eslint-disable-next-line
-  }, [postKind])
-  if (isLoadingVerifyPostKind)
+  }, [categoryKind])
+
+  if (isLoadingVerifyCategoryKind)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
         <Box mt={2}>
-          <Skeleton kind={'posts'} numberOfCards={1} />
+          <Skeleton kind={'cards'} numberOfCards={4} />
         </Box>
       </Center>
     )
+
   if (isPrivate)
     return (
       <PrivateContent
         error={errorOnRequestAccess}
         isLoadingRequest={isLoadingPasswordCheck}
-        requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
+        requestAccess={(password) =>
+          sendRequestToAccessPrivateCategory(password)
+        }
       />
     )
+
   if (isOnPaywall) return <div>Paywall</div>
+
   return <div></div>
 }
 
-export { VerifyPostKind }
+export { VerifyCategoryKind }

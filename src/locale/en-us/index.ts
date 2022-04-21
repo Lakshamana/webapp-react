@@ -397,7 +397,9 @@ const EN_US = {
         reply: 'REPLY',
         private_content: {
           title: 'Private Content',
-          subtitle: 'Please enter the password to access the content'
+          subtitle: 'Please enter the password to access the content',
+          access: 'Access',
+          incorrect_password: 'Incorrect password. Try again.'
         },
         live: {
           live_chat: {

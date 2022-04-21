@@ -28,6 +28,7 @@ const ModalComponent = ({
   cancelButton,
   actionButton,
   defaultActions,
+  isActionDisabled,
   loading,
   ...props
 }: Props) => {
@@ -80,6 +81,7 @@ const ModalComponent = ({
                   label={actionLabel || t('common.confirm')}
                   onClick={onConfirm}
                   isLoading={loading}
+                  isDisabled={isActionDisabled}
                 />
               )}
               {cancelButton && (

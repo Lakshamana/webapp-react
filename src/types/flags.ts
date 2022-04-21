@@ -35,9 +35,9 @@ export type OrgImagesFlags = {
     DARK: string
   }
   LOGIN_BACKGROUND: string
-  FAVICON_16: string
-  FAVICON_32: string
-  FAVICON_64: string
+  FAVICON16: string
+  FAVICON32: string
+  FAVICON64: string
 }
 
 export type ChannelImageFlags = {

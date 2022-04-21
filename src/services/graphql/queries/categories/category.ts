@@ -48,3 +48,15 @@ export const QUERY_CATEGORY = gql`
     }
   }
 `
+
+
+export const QUERY_VERIFY_CATEGORY_KIND = gql`
+  query GetCategoryKind($slug: String) {
+    category(slug: $slug) {
+      id
+      access
+      kind
+      name
+    }
+  }
+`

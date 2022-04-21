@@ -23,6 +23,7 @@ import {
 import { HeroBannerProps } from 'types/common'
 import { sizes, colors } from 'styles'
 import { useThemeStore } from 'services/stores'
+import { VerifyCategoryKind } from './components'
 
 const CategoryPage = () => {
   const { t } = useTranslation()
@@ -31,15 +32,15 @@ const CategoryPage = () => {
   const { generateImage } = useThumbor()
   const [categoryHero, setCategoryHero] = useState<HeroBannerProps>()
   const [isCategoryPinned, setIsCategoryPinned] = useState(false)
+  const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
+    useState<boolean>(true)
 
-  const { data: categoryData, loading: loadingCategory } = useQuery(
-    QUERY_CATEGORY,
-    {
+  const [getCategory, { data: categoryData, loading: loadingCategory }] =
+    useLazyQuery(QUERY_CATEGORY, {
       variables: {
         slug: slug,
       },
-    }
-  )
+    })
 
   const [
     getCategoryPosts,
@@ -111,9 +112,25 @@ const CategoryPage = () => {
 
   const hasResults =
     !!categoryData?.category?.children?.length ||
-    !!categoryPostsData?.posts.rows.length
+    !!categoryPostsData?.posts?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
+
+  if (isVerifyingAccessPermission)
+    return (
+      <VerifyCategoryKind
+        categorySlug={slug}
+        accessGranted={() => {
+          setIsVerifyingAccessPermission(false)
+          getCategory()
+        }}
+      />
+    )
+
+  if (loadingCategory)
+    <Box p={sizes.paddingSm} width="100%">
+      <Skeleton kind="cards" numberOfCards={4} />
+    </Box>
 
   return (
     <Container flexDirection={'column'} width={'100%'}>
@@ -156,11 +173,6 @@ const CategoryPage = () => {
         </Flex>
       </HeroBanner>
       <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'}>
-        {loadingCategory && (
-          <Box p={sizes.paddingSm} width="100%">
-            <Skeleton kind="cards" numberOfCards={4} />
-          </Box>
-        )}
         {!!categoryData?.category?.children?.length && (
           <CategoriesGrid
             sectionTitle={t('page.category.categories')}
@@ -171,9 +183,9 @@ const CategoryPage = () => {
           <PostsGrid
             sectionTitle={t('page.category.videos')}
             items={categoryPostsData?.posts?.rows}
-          ></PostsGrid>
+          />
         )}
-        {isEmpty && <EmptyState />}
+        {isEmpty && <EmptyState/>}
       </Flex>
     </Container>
   )

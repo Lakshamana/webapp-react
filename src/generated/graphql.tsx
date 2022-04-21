@@ -141,21 +141,6 @@ export type AddedCommentVote = {
   commentVote: CommentVote;
 };
 
-export type AtomicCreateCategory = {
-  access?: Maybe<Scalars['String']>;
-  customization?: Maybe<CategoryCustomizationInput>;
-  description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['JSONObject']>;
-  featuredAt?: Maybe<Scalars['DateTime']>;
-  geoFence?: Maybe<Scalars['JSONObject']>;
-  isParent?: Maybe<Scalars['Boolean']>;
-  kind?: Maybe<Kinds>;
-  name: Scalars['String'];
-  parentId?: Maybe<Scalars['ID']>;
-  status?: Maybe<Status>;
-  tags?: Maybe<Array<Scalars['String']>>;
-};
-
 export type AudioInput = {
   duration: Scalars['Int'];
   filename: Scalars['String'];
@@ -253,6 +238,7 @@ export type Category = {
   name: Scalars['String'];
   organization: Scalars['ID'];
   parentId?: Maybe<Scalars['ID']>;
+  password?: Maybe<Scalars['String']>;
   pinnedStatus?: Maybe<AccountPinnedCategory>;
   slug?: Maybe<Scalars['String']>;
   sort: Scalars['Int'];
@@ -300,9 +286,19 @@ export type CategoryInput = {
   kind?: Maybe<Kinds>;
   name: Scalars['String'];
   parentId?: Maybe<Scalars['ID']>;
+  password?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
+};
+
+export type CategoryPasswordCheck = {
+  __typename?: 'CategoryPasswordCheck';
+  correct: Scalars['Boolean'];
+};
+
+export type CategoryPasswordCheckInput = {
+  password: Scalars['String'];
 };
 
 export type CategorySortingOutput = {
@@ -898,7 +894,7 @@ export type LiveEventFilter = {
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
   sortBy?: Maybe<Scalars['String']>;
-  status?: Maybe<Status>;
+  status?: Maybe<Array<Status>>;
   type?: Maybe<LiveEventType>;
 };
 
@@ -927,7 +923,8 @@ export type LiveEventInput = {
 export enum LiveEventType {
   Mp4Pull = 'MP4_PULL',
   RtmpPull = 'RTMP_PULL',
-  RtmpPush = 'RTMP_PUSH'
+  RtmpPush = 'RTMP_PUSH',
+  RtpPush = 'RTP_PUSH'
 }
 
 export type Me = {
@@ -1079,12 +1076,11 @@ export type Mutation = {
   addReaction: Array<ReactionsAggregate>;
   addReport: Report;
   addVote: AddedCommentVote;
-  atomicCreateCategory: Category;
-  atomicDeleteCategory: Category;
   atomicUpdateCategorySorting: CategorySortingOutput;
   banAccountPerm: Account;
   banAccountTemp: Account;
   bindChannelAndOrganization: Account;
+  categoryPasswordCheck: CategoryPasswordCheck;
   createAccount: Account;
   createAccountGdprLgpd: AccountGdprLgpd;
   createAccountSession: AccountSession;
@@ -1131,6 +1127,7 @@ export type Mutation = {
   forgetAccount: Account;
   pinCategory: AccountPinnedCategory;
   pinPost: AccountPinnedPost;
+  postPasswordCheck: PostPasswordCheck;
   publishRemoteConfig: PublishRemoteConfig;
   refreshToken: RefreshSignIn;
   removeAccount: Account;
@@ -1228,16 +1225,6 @@ export type MutationAddVoteArgs = {
 };
 
 
-export type MutationAtomicCreateCategoryArgs = {
-  payload: AtomicCreateCategory;
-};
-
-
-export type MutationAtomicDeleteCategoryArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationAtomicUpdateCategorySortingArgs = {
   payload: UpdateCategoriesSorting;
 };
@@ -1258,6 +1245,12 @@ export type MutationBindChannelAndOrganizationArgs = {
   accountId: Scalars['ID'];
   channelId: Scalars['ID'];
   organizationId: Scalars['ID'];
+};
+
+
+export type MutationCategoryPasswordCheckArgs = {
+  id: Scalars['String'];
+  payload: CategoryPasswordCheckInput;
 };
 
 
@@ -1489,6 +1482,12 @@ export type MutationPinCategoryArgs = {
 
 export type MutationPinPostArgs = {
   payload: CreateAccountPinnedPost;
+};
+
+
+export type MutationPostPasswordCheckArgs = {
+  id: Scalars['String'];
+  payload: PostPasswordCheckInput;
 };
 
 
@@ -2196,6 +2195,15 @@ export type PostFilter = {
   sortBy?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
   typeIn?: Maybe<Array<PostType>>;
+};
+
+export type PostPasswordCheck = {
+  __typename?: 'PostPasswordCheck';
+  correct: Scalars['Boolean'];
+};
+
+export type PostPasswordCheckInput = {
+  password: Scalars['String'];
 };
 
 export type PostReactions = {
@@ -2914,6 +2922,7 @@ export type UpdateCategoryInput = {
   kind?: Maybe<Kinds>;
   name?: Maybe<Scalars['String']>;
   parentId?: Maybe<Scalars['ID']>;
+  password?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -3276,6 +3285,14 @@ export type VerifyMailMutationVariables = Exact<{
 
 export type VerifyMailMutation = { __typename?: 'Mutation', verifyMail: { __typename?: 'VerifyMail', exist: boolean } };
 
+export type CategoryPasswordCheckMutationVariables = Exact<{
+  id: Scalars['String'];
+  payload: CategoryPasswordCheckInput;
+}>;
+
+
+export type CategoryPasswordCheckMutation = { __typename?: 'Mutation', categoryPasswordCheck: { __typename?: 'CategoryPasswordCheck', correct: boolean } };
+
 export type PinCategoryMutationVariables = Exact<{
   payload: CreateAccountPinnnedCategory;
 }>;
@@ -3317,6 +3334,14 @@ export type PinPostMutationVariables = Exact<{
 
 
 export type PinPostMutation = { __typename?: 'Mutation', pinPost: { __typename?: 'AccountPinnedPost', pinned: boolean } };
+
+export type PostPasswordCheckMutationVariables = Exact<{
+  id: Scalars['String'];
+  payload: PostPasswordCheckInput;
+}>;
+
+
+export type PostPasswordCheckMutation = { __typename?: 'Mutation', postPasswordCheck: { __typename?: 'PostPasswordCheck', correct: boolean } };
 
 export type RemoveReactionMutationVariables = Exact<{
   input: RemoveReaction;
@@ -3392,6 +3417,13 @@ export type GetCategoryQueryVariables = Exact<{
 
 export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, tags?: Maybe<Array<string>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, tags?: Maybe<Array<string>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
 
+export type GetCategoryKindQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, kind: Kinds, name: string } };
+
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
 }>;
@@ -3418,7 +3450,7 @@ export type GetLiveEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 export type MenusQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4108,6 +4140,46 @@ export function useVerifyMailMutation(baseOptions?: Apollo.MutationHookOptions<V
 export type VerifyMailMutationHookResult = ReturnType<typeof useVerifyMailMutation>;
 export type VerifyMailMutationResult = Apollo.MutationResult<VerifyMailMutation>;
 export type VerifyMailMutationOptions = Apollo.BaseMutationOptions<VerifyMailMutation, VerifyMailMutationVariables>;
+export const CategoryPasswordCheckDocument = gql`
+    mutation CategoryPasswordCheck($id: String!, $payload: CategoryPasswordCheckInput!) {
+  categoryPasswordCheck(id: $id, payload: $payload) {
+    correct
+  }
+}
+    `;
+export type CategoryPasswordCheckMutationFn = Apollo.MutationFunction<CategoryPasswordCheckMutation, CategoryPasswordCheckMutationVariables>;
+export type CategoryPasswordCheckComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CategoryPasswordCheckMutation, CategoryPasswordCheckMutationVariables>, 'mutation'>;
+
+    export const CategoryPasswordCheckComponent = (props: CategoryPasswordCheckComponentProps) => (
+      <ApolloReactComponents.Mutation<CategoryPasswordCheckMutation, CategoryPasswordCheckMutationVariables> mutation={CategoryPasswordCheckDocument} {...props} />
+    );
+    
+
+/**
+ * __useCategoryPasswordCheckMutation__
+ *
+ * To run a mutation, you first call `useCategoryPasswordCheckMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCategoryPasswordCheckMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [categoryPasswordCheckMutation, { data, loading, error }] = useCategoryPasswordCheckMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useCategoryPasswordCheckMutation(baseOptions?: Apollo.MutationHookOptions<CategoryPasswordCheckMutation, CategoryPasswordCheckMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CategoryPasswordCheckMutation, CategoryPasswordCheckMutationVariables>(CategoryPasswordCheckDocument, options);
+      }
+export type CategoryPasswordCheckMutationHookResult = ReturnType<typeof useCategoryPasswordCheckMutation>;
+export type CategoryPasswordCheckMutationResult = Apollo.MutationResult<CategoryPasswordCheckMutation>;
+export type CategoryPasswordCheckMutationOptions = Apollo.BaseMutationOptions<CategoryPasswordCheckMutation, CategoryPasswordCheckMutationVariables>;
 export const PinCategoryDocument = gql`
     mutation PinCategory($payload: CreateAccountPinnnedCategory!) {
   pinCategory(payload: $payload) {
@@ -4353,6 +4425,46 @@ export function usePinPostMutation(baseOptions?: Apollo.MutationHookOptions<PinP
 export type PinPostMutationHookResult = ReturnType<typeof usePinPostMutation>;
 export type PinPostMutationResult = Apollo.MutationResult<PinPostMutation>;
 export type PinPostMutationOptions = Apollo.BaseMutationOptions<PinPostMutation, PinPostMutationVariables>;
+export const PostPasswordCheckDocument = gql`
+    mutation PostPasswordCheck($id: String!, $payload: PostPasswordCheckInput!) {
+  postPasswordCheck(id: $id, payload: $payload) {
+    correct
+  }
+}
+    `;
+export type PostPasswordCheckMutationFn = Apollo.MutationFunction<PostPasswordCheckMutation, PostPasswordCheckMutationVariables>;
+export type PostPasswordCheckComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<PostPasswordCheckMutation, PostPasswordCheckMutationVariables>, 'mutation'>;
+
+    export const PostPasswordCheckComponent = (props: PostPasswordCheckComponentProps) => (
+      <ApolloReactComponents.Mutation<PostPasswordCheckMutation, PostPasswordCheckMutationVariables> mutation={PostPasswordCheckDocument} {...props} />
+    );
+    
+
+/**
+ * __usePostPasswordCheckMutation__
+ *
+ * To run a mutation, you first call `usePostPasswordCheckMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostPasswordCheckMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postPasswordCheckMutation, { data, loading, error }] = usePostPasswordCheckMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function usePostPasswordCheckMutation(baseOptions?: Apollo.MutationHookOptions<PostPasswordCheckMutation, PostPasswordCheckMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PostPasswordCheckMutation, PostPasswordCheckMutationVariables>(PostPasswordCheckDocument, options);
+      }
+export type PostPasswordCheckMutationHookResult = ReturnType<typeof usePostPasswordCheckMutation>;
+export type PostPasswordCheckMutationResult = Apollo.MutationResult<PostPasswordCheckMutation>;
+export type PostPasswordCheckMutationOptions = Apollo.BaseMutationOptions<PostPasswordCheckMutation, PostPasswordCheckMutationVariables>;
 export const RemoveReactionDocument = gql`
     mutation RemoveReaction($input: RemoveReaction!) {
   removeReaction(input: $input) {
@@ -4963,6 +5075,50 @@ export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
 export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
 export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
+export const GetCategoryKindDocument = gql`
+    query GetCategoryKind($slug: String) {
+  category(slug: $slug) {
+    id
+    access
+    kind
+    name
+  }
+}
+    `;
+export type GetCategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>, 'query'>;
+
+    export const GetCategoryKindComponent = (props: GetCategoryKindComponentProps) => (
+      <ApolloReactComponents.Query<GetCategoryKindQuery, GetCategoryKindQueryVariables> query={GetCategoryKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetCategoryKindQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+      }
+export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+        }
+export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
+export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
+export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFindAllFilter!) {
   channels(filter: $filter) {
@@ -5177,6 +5333,7 @@ export const GetLiveEventsDocument = gql`
       kind
       scheduledStartAt
       slug
+      status
       thumbnail {
         imgPath
       }

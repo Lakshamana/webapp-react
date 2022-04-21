@@ -4,9 +4,11 @@ import { Modal, Text, Input } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores'
 import { useHistory } from 'react-router'
+import { Props } from './types'
 import { colors } from 'styles'
+import { AlertComponent } from 'components'
 
-const PrivateContent = () => {
+const PrivateContent = ({ requestAccess, isLoadingRequest, error }: Props) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { colorMode } = useThemeStore()
@@ -17,13 +19,24 @@ const PrivateContent = () => {
       closeButton={false}
       isOpen={true}
       onClose={() => history.go(-1)}
-      //TODO: Implement action to send password to API to granted post access
-      onConfirm={() => {}}
-      loading={false}
+      onConfirm={() => {
+        requestAccess(password)
+      }}
+      loading={isLoadingRequest}
+      isActionDisabled={!password}
       closeOnOverlayClick={false}
+      actionLabel={t('page.post.private_content.access')}
     >
       <Box textAlign="center">
+        {!!error && (
+          <AlertComponent
+            type={'error'}
+            description={error}
+            closeable={false}
+          />
+        )}
         <Text
+          mt={error && 3}
           color={colors.generalText[colorMode]}
           fontSize={'1.5rem'}
           textAlign={'center'}
@@ -39,10 +52,15 @@ const PrivateContent = () => {
         >
           {t('page.post.private_content.subtitle')}
         </Text>
+
         <Input
-          onChange={(value) => setPassword(value)}
+          type="password"
+          onEnterPress={() => {
+            if (password) requestAccess(password)
+          }}
+          onChange={(value) => setPassword(value.target.value)}
           placeholder={t('signin.label.password')}
-        ></Input>
+        />
       </Box>
     </Modal>
   )
