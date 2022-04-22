@@ -5,19 +5,20 @@ import { intervalToDuration } from 'date-fns'
 import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS } from "services/graphql"
-import { ThumborInstanceTypes, useThumbor } from "services/hooks/useThumbor"
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from "services/hooks/useThumbor"
 import { useChannelsStore, useCommonStore, useFeedStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
 import { translateFormatDistance } from "utils/helperFunctions"
 import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
 import { SortDirection } from "generated/graphql"
+import { isEntityBlocked } from "utils/accessVerifications"
 
 const FeedPage = () => {
   const { t } = useTranslation()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
-  const {stateFeed, setStateFeed} = useFeedStore()
+  const { stateFeed, setStateFeed } = useFeedStore()
   const [filterBy, SetFilterBy] = useState<SortDirection>(stateFeed.filterBy)
   const [listOfPosts, setListOfPosts] = useState(stateFeed.listOfPosts)
   const [hasMore, setHasMore] = useState(stateFeed.hasMore)
@@ -36,19 +37,19 @@ const FeedPage = () => {
     { value: 'DESC', label: t('page.feed.search_options.recent') },
     { value: 'ASC', label: t('page.feed.search_options.old') }
   ]
-  
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.scrollTo(0, position)
     setPageTitle(t('header.tabs.feed'))
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const updateState = () => 
+  const updateState = () =>
     setStateFeed({
       position,
       filterBy,
@@ -56,7 +57,7 @@ const FeedPage = () => {
       hasMore,
       page: page.current,
     })
-  
+
 
   useEffect(() => {
     if (activeChannel && listOfPosts.length === 0) {
@@ -95,17 +96,26 @@ const FeedPage = () => {
 
   const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
 
-  const getUrl = (obj) =>
-    generateImage(
+  const getImageUrl = (post) => {
+    const defineType = post.type === 'IMAGE' ? 'media' : 'thumbnail'
+    const imageOptions: ThumborParams = {
+      size: {
+        height: post?.[defineType]?.height || undefined,
+        width: post?.[defineType]?.width || undefined
+      },
+    }
+
+    if (isEntityBlocked(post)) {
+      imageOptions.blur = 20
+    }
+
+    const imageUrl = generateImage(
       ThumborInstanceTypes.IMAGE ?? '',
-      obj?.imgPath,
-      {
-        size: {
-          height: obj?.height || undefined,
-          width: obj?.width || undefined
-        },
-      }
+      post?.[defineType]?.imgPath || '',
+      imageOptions
     )
+    return imageUrl
+  }
 
   //TODO: refact this soon
   const convertDataPost = (rawPosts) => {
@@ -118,12 +128,7 @@ const FeedPage = () => {
           ? ''
           : `${duration.hours ? `${duration.hours}:` : ''}${duration.minutes}:${duration.seconds}`
 
-        let coverImage
-        if (post?.type) {
-          coverImage = post.type === 'IMAGE'
-            ? getUrl(post?.media)
-            : getUrl(post?.thumbnail)
-        }
+        const coverImage = getImageUrl(post)
 
         const date = () => {
           if (post?.publishedAt) {
@@ -157,7 +162,8 @@ const FeedPage = () => {
           itemQuestion: '',
           percentage: '',
           voted: !!post.myVote,
-          isExclusive: false,
+          isExclusive: isEntityBlocked(post),
+          // TODO: geoLock waiting for API
           isGeolocked: false,
         }
       })
@@ -212,7 +218,7 @@ const FeedPage = () => {
         loader={loadingItems(2)}
       >
         {listOfPosts.map((post, key) =>
-          <FeedPostCard key={key} {...post} updateState={updateState}/>
+          <FeedPostCard key={key} {...post} updateState={updateState} />
         )}
       </InfiniteScroll>
     </Center >
