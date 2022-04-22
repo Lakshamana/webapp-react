@@ -13,28 +13,6 @@ export const VideoContent: any = styled.div`
 	background-color: #000;
 	cursor: pointer;
 `
-
-export const VideoItemPlay = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: absolute;
-	width: 62px;
-	height: 62px;
-	background: ${colors.whiteTransparent["300"]};
-	color: ${colors.white};
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	border: 2px solid ${colors.white};
-	border-radius: 50%;
-
-	@media screen and (max-width: ${breakpoints.sm}) {
-		width: 48px;
-		height: 48px;
-	}
-`
-
 export const CountView = styled.div<SpaceProps>`
 	${space}
 	color: ${colors.white};
@@ -54,24 +32,22 @@ export const MediaLength = styled.div<SpaceProps>`
 	right: 0px;
 	font-size: 12px;
 `
+export const BlockedContent: any = styled.div`
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 51px;
+  height: 50px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: ${({ theme }) =>
+		theme.colors.brand.primary[theme.colorMode]};
 
-export const ExclusiveBlocked: any = styled.div<SpaceProps>`
-	${space}
-
-	width: 41px;
-	height: 40px;
-	border-radius: 50%;
-	margin: auto;
-	background-color: ${colors.blue["300"]};
-`
-
-export const GeolockedBlocked: any = styled.div<SpaceProps>`
-	${space}
-
-	width: 41px;
-	height: 40px;
-	border-radius: 50%;
-	margin: auto;
-	background-color: ${colors.blue["300"]};
-	pointer-events: none;
+  @media screen and (max-width: ${breakpoints.sm}) {
+    width: 41px;
+    height: 40px;
+  }
 `
