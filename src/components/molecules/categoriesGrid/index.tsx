@@ -59,6 +59,7 @@ const CategoriesGrid = ({
         return {
           id: item.id,
           title: item.name,
+          description: item.description,
           url,
           thumbnail,
           isExclusive: isEntityBlocked(item),
