@@ -8,7 +8,7 @@ import {
 } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
-import { AUTH_TOKEN, CHANNEL_INFO } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
 
@@ -91,12 +91,13 @@ const errorLink = onError(
             refreshToken(token)
               .then(({ data }: any) => {
                 const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
-                if (!accessToken) {
-                  console.log('INVALID ACESSTOKEN')
+                const firebaseToken = data?.data?.refreshToken?.refreshToken?.firebaseToken
+                if (!accessToken || !firebaseToken) {
                   invalidData()
                   return
                 }
                 saveData(AUTH_TOKEN, accessToken)
+                saveData(FIREBASE_TOKEN, firebaseToken)
                 const headers = operation.getContext().headers
                 operation.setContext({
                   headers: {
@@ -106,7 +107,7 @@ const errorLink = onError(
                 })
                 return forward(operation)
               })
-              .catch((err) => invalidData())
+              .catch(invalidData)
           ).flatMap(() => {
             resolvePendingRequests()
             setIsRefreshing(false)

@@ -5,6 +5,7 @@ export const MUTATION_REFRESH_TOKEN = gql`
 		refreshToken {
 			refreshToken {
 				accessToken
+				firebaseToken
 			}
 		}
 	}
