@@ -11,9 +11,9 @@ const CommentHeader = ({ totalComments, filterBy, handleFilterChange }: IProps) 
   const { colorMode } = useThemeStore()
 
   const translateMapper = [
-    'page.post.no_comments',
-    'page.post.comment',
-    'page.post.comments'
+    'page.post.comment.no_comments',
+    'page.post.comment.comment',
+    'page.post.comment.comments'
   ]
 
   const filterList = [
