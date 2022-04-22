@@ -27,7 +27,10 @@ const Tab = ({
       >
         {children}
       </Text>
-      <Circle width={[8]} height={[8]} {...{ selected }} />
+      {
+        selected &&
+        <Circle width={[8]} height={[8]} {...{ selected }} />
+      }
     </Container>
   </Link>
 );

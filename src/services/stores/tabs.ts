@@ -6,7 +6,7 @@ import { TabFlags } from 'types/flags'
 export const mapperTabName = {
   HOME: 'HOME',
   FEED: 'FEED',
-  LIVE: 'LIVE',
+  LIVES: 'LIVE',
   CATEGORIES: 'COLLECTIONS',
   CATEGORY: 'COLLECTIONS',
   MYLIST: 'MY_LIST',
