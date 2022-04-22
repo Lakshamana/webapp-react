@@ -38,21 +38,8 @@ const Livestreams = () => {
     variables: {
       filter: {},
     },
-    // variables: {
-    //   filter: {
-    //     statusIn: [
-    //       LivestreamStatus.Active,
-    //       LivestreamStatus.Preparing,
-    //       LivestreamStatus.Scheduled,
-    //     ],
-    //   } as LivestreamFilter,
-    //   orderBy: [
-    //     {
-    //       name: LivestreamTypeSortEnum.StartedAt,
-    //       direction: SortDirection.Asc,
-    //     },
-    //   ],
-    // },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
     pollInterval: DEFAULT_POLLING_INTERVAL,
   })
 
@@ -67,6 +54,8 @@ const Livestreams = () => {
         sortBy: 'publishedAt.asc',
       },
     },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
   })
 
   const { data: billboardData } = useQuery(QUERY_BILLBOARDS, {
@@ -122,13 +111,11 @@ const Livestreams = () => {
         return live.status === Status.Live
       }
     )
-    setLiveItems(live?.length ? live : null)
+    setLiveItems(live)
 
     const upcoming = livestreamsData?.liveEvents?.rows?.filter(
       (live: LiveEvent) => {
-        return (
-          live.status === Status.Scheduled || live.status === Status.Ready
-        )
+        return live.status === Status.Scheduled || live.status === Status.Ready
       }
     )
     setUpcomingItems(upcoming)
@@ -153,7 +140,7 @@ const Livestreams = () => {
       <Skeleton my={4} kind="cards" numberOfCards={4} />
     </Box>
 
-  if (isEmpty) <EmptyState />
+  if (isEmpty) (<EmptyState />)
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
@@ -164,21 +151,21 @@ const Livestreams = () => {
             items={liveItems}
             sectionTitle={t('page.live.live')}
             hasMoreLink={false}
-          ></LivestreamScroller>
+          />
         )}
         {!!upcomingItems?.length && (
           <LivestreamScroller
             items={upcomingItems}
             sectionTitle={t('page.live.upcoming')}
             hasMoreLink={false}
-          ></LivestreamScroller>
+          />
         )}
         {!!onDemandPostsData?.posts?.length && (
           <VideosScroller
             items={onDemandPostsData.posts}
             sectionTitle={t('page.live.past')}
             hasMoreLink={false}
-          ></VideosScroller>
+          />
         )}
       </Flex>
     </Container>

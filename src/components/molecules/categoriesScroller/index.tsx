@@ -1,15 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SwiperSlide } from 'swiper/react'
 import { useTranslation } from 'react-i18next'
-import { CardsScroller } from 'components'
-import { Text } from 'components'
+import { CardsScroller, Text } from 'components'
+import { useMediaQuery } from '@chakra-ui/media-query'
 import { CategoriesScrollerProps } from 'types/categories'
 import { Header, ContentScroller } from './style'
-import { colors, sizes } from 'styles'
+import { colors, sizes, breakpoints } from 'styles'
 import { useThemeStore, useChannelsStore } from 'services/stores'
 import { CategoryPostCardProps } from 'types/categories'
 import { CategoryPostCard, Link } from 'components/atoms'
-import { useEffect } from 'react'
 import { Category } from 'generated/graphql'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { isEntityBlocked } from 'utils/accessVerifications'
@@ -25,6 +24,7 @@ const CategoriesScroller = ({
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] = useState<CategoryPostCardProps[]>()
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   //TODO: Transform this function in a util
   const getImageUrl = (item: Category) => {
@@ -74,7 +74,7 @@ const CategoriesScroller = ({
       <Header>
         <Text
           color={colors.generalText[colorMode]}
-          fontSize={{ sm: '1.3rem', md: '1.55rem' }}
+          fontSize={isDesktop ? '1.55rem' : '1.3rem'}
           paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd]}
           marginRight={'10px'}
           fontWeight={'bolder'}

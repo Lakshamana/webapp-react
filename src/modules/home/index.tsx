@@ -58,6 +58,7 @@ const HomePage = () => {
           target: BillboardTarget.Home,
         },
       },
+      fetchPolicy: 'cache-and-network',
     })
 
   const [getLiveEvents, { data: liveEventsData, loading: loadingLiveEvents }] =
@@ -66,7 +67,8 @@ const HomePage = () => {
       variables: {
         filter: {},
       },
-      notifyOnNetworkStatusChange: true
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'cache-and-network',
     })
 
   const [
@@ -79,7 +81,8 @@ const HomePage = () => {
         typeIn: [PostType.Video, PostType.OnDemand],
       },
     },
-    notifyOnNetworkStatusChange: true
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   })
 
   const [
@@ -91,7 +94,8 @@ const HomePage = () => {
         featured: true,
       },
     },
-    notifyOnNetworkStatusChange: true
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   })
 
   const [
@@ -106,7 +110,8 @@ const HomePage = () => {
         isParent: true,
       },
     },
-    notifyOnNetworkStatusChange: true
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   })
 
   const isLoading =

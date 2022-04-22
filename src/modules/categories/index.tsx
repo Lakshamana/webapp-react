@@ -110,7 +110,7 @@ const CategoriesPage = () => {
               <CategoriesScroller
                 items={categoriesWithoutChildren}
                 sectionTitle={t('page.categories.more_categories')}
-                hasMoreLink={true}
+                hasMoreLink={false}
               />
             )}
             {!!categoriesWithChildren?.length &&

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client'
+import { useMutation, useLazyQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Flex, Box, Spinner } from '@chakra-ui/react'
@@ -40,12 +40,17 @@ const CategoryPage = () => {
       variables: {
         slug: slug,
       },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'cache-and-network',
     })
 
   const [
     getCategoryPosts,
     { data: categoryPostsData, loading: loadingCategoryPosts },
-  ] = useLazyQuery(QUERY_POSTS_CARDS)
+  ] = useLazyQuery(QUERY_POSTS_CARDS, {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
+  })
 
   const [pinCategory, { loading: loadingPinCategory }] = useMutation(
     MUTATION_PIN_CATEGORY,
@@ -185,7 +190,7 @@ const CategoryPage = () => {
             items={categoryPostsData?.posts?.rows}
           />
         )}
-        {isEmpty && <EmptyState/>}
+        {isEmpty && <EmptyState />}
       </Flex>
     </Container>
   )

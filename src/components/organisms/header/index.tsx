@@ -1,5 +1,5 @@
 import { useState, memo, useReducer, useEffect } from 'react'
-import { useLocation, matchPath } from 'react-router-dom'
+import { useLocation, matchPath, useHistory } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/client'
 import { QUERY_MENUS } from 'services/graphql'
 import { useMediaQuery } from '@chakra-ui/media-query'
@@ -33,6 +33,7 @@ const HeaderComponent = () => {
   const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
     useChannelsStore()
   const { generateImage } = useThumbor()
+  const history = useHistory()
 
   const generateOrgLogo = () => {
     const theme = colorMode.toUpperCase()
@@ -132,12 +133,10 @@ const HeaderComponent = () => {
       IS_ACTIVE: true,
       ORDER: 0,
       LABEL: [{ LOCALE: '', VALUE: '' }],
-      URL: ''
+      URL: '',
     }
     const defineTab = tabsList.find((item) => item.TAB === tabName)
-    defineTab
-      ? setActiveTab(defineTab)
-      : setActiveTab(UNRELATED_MENU)
+    defineTab ? setActiveTab(defineTab) : setActiveTab(UNRELATED_MENU)
     // eslint-disable-next-line
   }, [tabsList, activeChannel])
 
@@ -174,11 +173,17 @@ const HeaderComponent = () => {
           <Logo
             mx={2}
             ignoreFallback
+            clickable={true}
             src={
               activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
                 ? channelLogo()
                 : generateOrgLogo()
             }
+            onClick={() => {
+              activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
+                ? history.push(`/c/${activeChannel?.slug}`)
+                : history.push('/')
+            }}
             maxWidth={isDesktop ? '180px' : '120px'}
           />
           <Center height="30px">

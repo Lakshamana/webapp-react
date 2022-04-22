@@ -60,6 +60,7 @@ const PostsGrid = ({
         return {
           id: item.id,
           title: item.title,
+          description: item.description,
           url,
           thumbnail,
           mediaLength:

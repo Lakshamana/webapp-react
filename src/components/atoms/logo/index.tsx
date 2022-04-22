@@ -5,9 +5,10 @@ import { Props, defaultProps } from './types'
 const Logo = ({ ...props }: Props): any => {
   return (
     <Image
+      style={{cursor: props.clickable ? 'pointer' : '' }}
       {...props}
-      fallback={<FanheroLogo></FanheroLogo>}
-    ></Image>
+      fallback={<FanheroLogo/>}
+    />
   )
 }
 

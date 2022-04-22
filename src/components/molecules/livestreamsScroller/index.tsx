@@ -82,7 +82,7 @@ const LivestreamScroller = ({
       return {
         id: item.id,
         title: item.title,
-        description: item.description,
+        description: item.description || '',
         url: url,
         status: item.status,
         thumbnail: thumbnail,
