@@ -10,6 +10,7 @@ export const VideoContent: any = styled.div`
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
+	background-color: #000;
 	cursor: pointer;
 `
 
