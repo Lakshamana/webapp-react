@@ -13,6 +13,7 @@ import { LiveDetails, Title, Subtitle, Live } from './style'
 import { colors, sizes } from 'styles'
 
 import { LivestreamBadge } from 'types/livestreams'
+import { QUERY_LIVE_EVENT } from 'services/graphql'
 
 const LivePostPage = () => {
   const { t } = useTranslation()
@@ -20,44 +21,39 @@ const LivePostPage = () => {
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
   const { colorMode } = useThemeStore()
   const [livechatState, setlivechatState] = useState(true)
-  const { id } = useParams<{ channel: string; id: string }>()
+  const { slug, id } = useParams<{ slug: string, id: string }>()
   const [livestream, setLivestream] = useState<any>()
 
-  // const { data, loading } = useQuery(QUERY_LIVESTREAM, {
-  //   variables: {
-  //     id: id,
-  //   },
-  //   onCompleted: (result) => {
-  //     setLivestream(result.livestream)
-  //   },
-  // })
-  const loading = false
-  const isLive = livestream?.status === 'active'
+  const { loading } = useQuery(QUERY_LIVE_EVENT, {
+    variables: { slug },
+    onCompleted: (result) => setLivestream(result.liveEvent)
+  })
+  const isLive = livestream?.status === 'LIVE'
 
   const statusBadge = (status: any): LivestreamBadge => {
     const Badge = {
-      ACTIVE: { label: 'LIVE', color: colors.brand.live_badges.live },
+      LIVE: { label: 'LIVE', color: colors.brand.primary[colorMode] },
       SCHEDULED: { label: 'UPCOMING', color: colors.brand.live_badges?.upcoming },
       PREPARING: { label: 'UPCOMING', color: colors.brand.live_badges?.upcoming },
       default: { label: 'UPCOMING', color: colors.brand.primary[colorMode] },
     }
-
     return Badge[status] || Badge.default
   }
+
   useEffect(() => {
     setLiveBadge(statusBadge(livestream?.status || 'scheduled'))
     // eslint-disable-next-line
   }, [livestream])
 
-  const renderVideoPlayer = () => (
+  const RenderVideoPlayer = () => (
     <VideoPlayer isLiveStream={true} src={livestream?.hlsPlaybackUrl || ''} />
   )
 
-  const renderCountdown = () => (
+  const RenderCountdown = () => (
     <Countdown
       eventStartDate={livestream?.scheduledStartAt}
       fallbackMessage={t('page.post.live.will_start_soon')}
-    ></Countdown>
+    />
   )
 
   return (
@@ -72,48 +68,48 @@ const LivePostPage = () => {
         </Box>
       )}
       {!loading && (
-        <Live>
-          <Box
-            position="relative"
-            backgroundColor={'black'}
-            height={{ base: '30vh', md: '100%' }}
-            w={{ sm: '100%', md: '55%', lg: '65%', xl: '70%' }}
-          >
-            <Flex
-              gridGap={1}
-              m={4}
-              position={'absolute'}
-              zIndex={999}
-              justifyContent="flex-start"
+        <>
+          <Live>
+            <Box
+              position="relative"
+              backgroundColor={'black'}
+              height={{ base: '30vh', md: '100%' }}
+              w={{ sm: '100%', md: '55%', lg: '65%', xl: '70%' }}
             >
-              <Badge background={liveBadge?.color} color="white">
-                {liveBadge?.label}
-              </Badge>
-              <Badge background={colors.inputBg.dark} color="white">
-                <Text>99k</Text>
-              </Badge>
-            </Flex>
-            {isLive ? renderVideoPlayer() : renderCountdown()}
-          </Box>
-          <Box
-            height={{ base: '62vh', md: '100%' }}
-            w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
-            borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
-          >
-            <Livechat
-              entityId={id}
-              dataChat={[]}
-              onChangeChat={(e) => setOptionsState(e)}
-              onCloseChat={(e) => setlivechatState(!e)}
-            />
-          </Box>
-        </Live>
-      )}
-      {!loading && (
-        <LiveDetails>
-          <Title>{livestream?.title}</Title>
-          <Subtitle>{livestream?.description}</Subtitle>
-        </LiveDetails>
+              <Flex
+                gridGap={1}
+                m={4}
+                position={'absolute'}
+                zIndex={999}
+                justifyContent="flex-start"
+              >
+                <Badge background={liveBadge?.color} color="white">
+                  {liveBadge?.label}
+                </Badge>
+                <Badge background={colors.inputBg.dark} color="white">
+                  <Text>99k</Text>
+                </Badge>
+              </Flex>
+              {isLive ? <RenderVideoPlayer /> : <RenderCountdown />}
+            </Box>
+            <Box
+              height={{ base: '62vh', md: '100%' }}
+              w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
+              borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
+            >
+              <Livechat
+                entityId={id}
+                dataChat={[]}
+                onChangeChat={(e) => setOptionsState(e)}
+                onCloseChat={(e) => setlivechatState(!e)}
+              />
+            </Box>
+          </Live>
+          <LiveDetails>
+            <Title>{livestream?.title}</Title>
+            <Subtitle>{livestream?.description}</Subtitle>
+          </LiveDetails>
+        </>
       )}
     </Container>
   )
