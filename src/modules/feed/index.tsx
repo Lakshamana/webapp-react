@@ -97,12 +97,12 @@ const FeedPage = () => {
 
   const getUrl = (obj) =>
     generateImage(
-      ThumborInstanceTypes.IMAGE,
+      ThumborInstanceTypes.IMAGE ?? '',
       obj?.imgPath,
       {
         size: {
-          height: obj.height || undefined,
-          width: obj.width || undefined
+          height: obj?.height || undefined,
+          width: obj?.width || undefined
         },
       }
     )
@@ -121,17 +121,17 @@ const FeedPage = () => {
         let coverImage
         if (post?.type) {
           coverImage = post.type === 'IMAGE'
-            ? getUrl(post.media)
-            : getUrl(post.thumbnail)
+            ? getUrl(post?.media)
+            : getUrl(post?.thumbnail)
         }
 
         const date = () => {
-          if (post.publishedAt) {
-            return translateFormatDistance(post.publishedAt)
+          if (post?.publishedAt) {
+            return translateFormatDistance(post?.publishedAt)
           }
         }
 
-        const type = post.type &&
+        const type = post?.type &&
           post.type.charAt(0).toUpperCase() + post.type.slice(1)
 
         //TODO: why some items has default value?
