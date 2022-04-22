@@ -10,17 +10,12 @@ import {
   linkWithCredential,
   signInWithCustomToken,
 } from 'firebase/auth'
-import { requestGraphql } from 'services/api/request'
 import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
 import { SocialType } from 'types/common'
-import { getData, saveData } from 'services/storage'
-import { AUTH_TOKEN } from 'config/constants'
+import { getData } from 'services/storage'
 import { FIREBASE_TOKEN, ORGANIZATION_INFO } from 'config/constants'
 import { firebaseApp } from 'config/firebase'
-import { MUTATION_REFRESH_FIREBASE_TOKEN } from 'services/graphql'
-
-const { REACT_APP_ORGANIZATION_URL } = process.env
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
@@ -28,37 +23,8 @@ export const authWithCustomToken = () => {
   const firebaseToken = getData(FIREBASE_TOKEN)
   if (firebaseToken)
     signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
-      .catch(() => {
-        refreshFirebaseToken()
-        return
-      })
 }
 
-export const refreshFirebaseToken = async () => {
-  const accessToken = getData(AUTH_TOKEN)
-  try {
-    await requestGraphql({
-      query: MUTATION_REFRESH_FIREBASE_TOKEN,
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-        organization: REACT_APP_ORGANIZATION_URL,
-      },
-    })
-      .then(({ data }: any) => {
-        const newFirebaseToken =
-          data?.data?.refreshToken?.refreshToken?.firebaseToken
-        if (newFirebaseToken) {
-          saveData(FIREBASE_TOKEN, newFirebaseToken)
-          signInWithCustomToken(CUSTOM_TOKEN_AUTH, newFirebaseToken)
-        }
-      })
-      .catch((error) => console.log(error))
-  } catch (error) {
-    console.warn(`refresh firebase token error -> `, error)
-  }
-}
-
-// FB SOCIAL AUTH CONFIG
 const { REACT_APP_FIREBASE_AUTH_DOMAIN, REACT_APP_FIREBASE_AUTH_API_KEY } =
   process.env
 
@@ -96,7 +62,6 @@ const generateCredential = (kind: SocialType, result: any) => {
     google: GoogleAuthProvider.credentialFromResult(result),
     twitter: TwitterAuthProvider.credentialFromResult(result),
   }
-
   return Credential[kind]
 }
 
@@ -106,13 +71,10 @@ const generatePendingCredential = (kind: SocialType, err: any) => {
     google: GoogleAuthProvider.credentialFromError(err),
     twitter: TwitterAuthProvider.credentialFromError(err),
   }
-
   return Credential[kind]
 }
 
-export const SocialSignIn = (
-  kind: SocialType
-): Promise<CreateAccountSocialSignInDto> => {
+export const SocialSignIn = (kind: SocialType): Promise<CreateAccountSocialSignInDto> => {
   const OrganizationData = getData(ORGANIZATION_INFO)
   AUTH.tenantId = OrganizationData?.tenant_id
   const PROVIDER = getProvider(kind)
@@ -120,11 +82,9 @@ export const SocialSignIn = (
     signInWithPopup(AUTH, PROVIDER)
       .then((result: any) => {
         const credential = generateCredential(kind, result)
-
         if (credential) {
           const { refreshToken, accessToken } = result.user['stsTokenManager']
           const { providerId } = credential
-
           resolve({
             accessToken,
             authProvider: providerId,
@@ -135,7 +95,6 @@ export const SocialSignIn = (
       .catch(function (err: AuthError) {
         const email = err.customData?.email || ''
         const pendingCred = generatePendingCredential(kind, err)
-
         if (err.code === 'auth/account-exists-with-different-credential') {
           fetchSignInMethodsForEmail(AUTH, email).then((methods) => {
             const provider = getProvider(methods[0])
