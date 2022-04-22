@@ -19,9 +19,7 @@ const PrivateContent = ({ requestAccess, isLoadingRequest, error }: Props) => {
       closeButton={false}
       isOpen={true}
       onClose={() => history.go(-1)}
-      onConfirm={() => {
-        requestAccess(password)
-      }}
+      onConfirm={() => requestAccess(password)}
       loading={isLoadingRequest}
       isActionDisabled={!password}
       closeOnOverlayClick={false}
