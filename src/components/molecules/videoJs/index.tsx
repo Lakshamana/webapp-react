@@ -35,10 +35,9 @@ export const VideoJS = (props: any): ReactElement => {
     }
 
     if (playerRef.current) {
-      // you can update player here [update player through props]
-      // const player = playerRef.current;
-      // player.autoplay(options.autoplay);
-      // player.src(options.sources);
+      const player = playerRef.current;
+      player.autoplay(options.autoplay);
+      player.src(options.sources);
     }
     // eslint-disable-next-line
   }, [options])
@@ -59,13 +58,7 @@ export const VideoJS = (props: any): ReactElement => {
 
   return (
     <div data-vjs-player>
-      <video
-        ref={videoRef}
-        className={classes}
-        style={{
-          borderRadius: 0,
-        }}
-      />
+      <video ref={videoRef} className={classes} />
     </div>
   )
 }
