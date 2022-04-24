@@ -60,7 +60,9 @@ const VideoPlayer = ({
     })
   }
 
-  return src ? (
+  if (!src) return <></>
+
+  return (
     <VideoJS
       options={{
         ...defaultOptions,
@@ -72,8 +74,6 @@ const VideoPlayer = ({
       skin={skin}
       onReady={handlePlayerReady}
     />
-  ) : (
-    <></>
   )
 }
 
