@@ -4,6 +4,6 @@ export interface TypeParticipant {
 }
 
 export interface Props {
-  participants: TypeParticipant[];
+  participants: Maybe<TypeParticipant[]>;
 }
 

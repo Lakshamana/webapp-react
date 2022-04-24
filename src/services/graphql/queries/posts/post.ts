@@ -1,9 +1,5 @@
 import { gql } from '@apollo/client'
 
-// TODO: return to list
-// engagedUsers {
-//   username
-// }
 export const QUERY_POST = gql`
   query GetPost($slug: String) {
     post(slug: $slug) {
@@ -22,6 +18,14 @@ export const QUERY_POST = gql`
       featured
       geofence
       kind
+      playlists {
+        id
+        slug
+        title
+      }
+      engagedUsers {
+        username
+      }
       media {
         ... on MediaVideo {
           id
@@ -31,6 +35,15 @@ export const QUERY_POST = gql`
           aspectRatio
           createdAt
           hlsPath
+        }
+        ... on MediaAudio {
+          id
+          duration
+          mp3Path
+        }
+        ... on MediaPhoto {
+          id
+          imgPath
         }
       }
       myReactions {

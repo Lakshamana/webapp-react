@@ -3,7 +3,7 @@ import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
 
-import { PostType, Category, Billboard } from 'generated/graphql'
+import { PostType, Category, Billboard, Status } from 'generated/graphql'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
@@ -63,9 +63,10 @@ const HomePage = () => {
 
   const [getLiveEvents, { data: liveEventsData, loading: loadingLiveEvents }] =
     useLazyQuery(QUERY_LIVE_EVENTS, {
-      //TODO: Add filters! Waiting for API
       variables: {
-        filter: {},
+        filter: {
+          status: [Status.Live, Status.Scheduled, Status.Ready]
+        },
       },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',

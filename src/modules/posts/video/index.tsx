@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Skeleton } from 'components'
-import { QUERY_POST, QUERY_POSTS_CARDS } from 'services/graphql'
+import { QUERY_PLAYLIST, QUERY_POST, QUERY_POSTS_CARDS } from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
@@ -18,9 +18,10 @@ import {
 import { buildUrlFromPath } from 'utils/helperFunctions'
 import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
 import { colors, breakpoints } from 'styles'
-import { Post } from 'generated/graphql'
+import { PlaylistOutput, Post } from 'generated/graphql'
 import { useCustomizationStore } from 'services/stores'
 import { VerifyPostKind } from '../components'
+import { TypeParticipant } from 'components/molecules/participants/types'
 
 const VideoPostPage = () => {
   const { colorMode } = useThemeStore()
@@ -33,30 +34,59 @@ const VideoPostPage = () => {
     useState<boolean>(true)
   const [postData, setPostData] = useState<Post>()
   const [relatedVideosData, setRelatedVideosData] = useState<Post[]>()
+  const [playlistData, setPlaylistData] = useState<PlaylistOutput>()
+  const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
+  const [mediaUrl, setMediaUrl] = useState('')
+  const [activeMedia, setActiveMedia] = useState('')
 
   const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
     variables: { slug },
     onCompleted: (result) => {
-      setPostData(result?.post)
+      if (result?.post) {
+        setPostData(result.post)
+        if (!result.post.playlists.length) setPlaylistData(undefined)
+        if (!result.post.categories.length) setRelatedVideosData(undefined)
+        setActiveMedia(result.post.slug)
+      }
     },
     fetchPolicy: 'no-cache',
   })
 
-  const [getRelatedPosts] = useLazyQuery(QUERY_POSTS_CARDS, {
-    onCompleted: (result) => {
-      const filteredRelatedVideos = result.posts.rows.filter(
-        (item) => item.slug !== slug
-      )
-      setRelatedVideosData(filteredRelatedVideos)
-    },
-    fetchPolicy: 'network-only',
-  })
+  const [getRelatedPosts, { loading: loadingVideosRelated }] = useLazyQuery(
+    QUERY_POSTS_CARDS,
+    {
+      onCompleted: (result) => {
+        const filteredRelatedVideos = result?.posts?.rows?.filter(
+          (item) => item.slug !== slug
+        )
+        setRelatedVideosData(filteredRelatedVideos)
+        return
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  )
+
+  //TODO: Create skeleton loading for palylist cards
+  const [getPlaylist, { loading: loadingPlaylist }] = useLazyQuery(
+    QUERY_PLAYLIST,
+    {
+      onCompleted: (result) => {
+        if (result?.playlist) setPlaylistData(result.playlist)
+      },
+      fetchPolicy: 'no-cache',
+    }
+  )
 
   useEffect(() => {
+    if (!postData) return
     window.scrollTo(0, 0)
-    if (postData?.title) setPageTitle(postData.title)
-    if (postData?.categories?.length) {
-      const filteredCategories = postData.categories.map((item) => item.id)
+
+    setPageTitle(postData?.title || '')
+    setMediaUrl(videoUrl())
+
+    const filteredCategories = postData?.categories?.map((item) => item.id)
+
+    if (!!filteredCategories?.length) {
       getRelatedPosts({
         variables: {
           filter: {
@@ -65,14 +95,40 @@ const VideoPostPage = () => {
         },
       })
     }
+
+    const engagedUsers =
+      postData?.engagedUsers?.map((item) => ({
+        name: item.username || '',
+        avatar: '',
+      })) || []
+
+    setEngagedUsers(engagedUsers)
+
+    if (!!postData?.playlists?.length) {
+      getPlaylist({
+        variables: {
+          id: postData?.playlists[0].id,
+        },
+      })
+    }
+
     //eslint-disable-next-line
   }, [postData])
 
   useEffect(() => {
-    setIsVerifyingAccessPermission(true)
+    if (!isVerifyingAccessPermission) getPost()
+
+    //eslint-disable-next-line
+  }, [isVerifyingAccessPermission])
+
+  useEffect(() => {
+    if (activeMedia && slug && activeMedia !== slug)
+      setIsVerifyingAccessPermission(true)
+
+    //eslint-disable-next-line
   }, [slug])
 
-  const mediaUrl = () => {
+  const videoUrl = () => {
     const { media } = postData || {}
     const hlsPath = media?.__typename === 'MediaVideo' ? media.hlsPath : null
     if (!media || !hlsPath) {
@@ -84,26 +140,16 @@ const VideoPostPage = () => {
   const postHasCommentsAllowed =
     activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
 
-  //TODO: engagedUsers
-  // const engagedUsers =
-  //   postData?.engagedUsers.map((item) => ({
-  //     name: item.username,
-  //     avatar: '',
-  //   })) || []
-
   if (isVerifyingAccessPermission)
     return (
       <VerifyPostKind
         postSlug={slug}
         postType={'video'}
-        accessGranted={() => {
-          setIsVerifyingAccessPermission(false)
-          getPost()
-        }}
+        accessGranted={() => setIsVerifyingAccessPermission(false)}
       />
     )
 
-  if (loadingPost)
+  if (loadingPost || loadingPlaylist || loadingVideosRelated)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
         <Box mt={2}>
@@ -119,11 +165,14 @@ const VideoPostPage = () => {
       alignItems="center"
       mb={'-30px'}
     >
-      {!loadingPost && (
-        <Video>
-          <VideoPlayer src={mediaUrl()} />
-        </Video>
-      )}
+      <Video>
+        <VideoPlayer
+          src={mediaUrl}
+          title={postData?.title}
+          subtitle={postData?.description}
+        />
+      </Video>
+
       <VideoDetails>
         <Title>{postData?.title}</Title>
         <Subtitle>
@@ -141,9 +190,9 @@ const VideoPostPage = () => {
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
-          {/* {postHasCommentsAllowed && (
-            <Participants participants={engagedUsers} />
-          )} */}
+          {postHasCommentsAllowed && (
+            <Participants participants={engagedUsers || []} />
+          )}
         </Flex>
       </VideoDetails>
       <Container
@@ -157,8 +206,8 @@ const VideoPostPage = () => {
           {postHasCommentsAllowed && (
             <Box
               w={
-                !!relatedVideosData?.length
-                  ? { sm: '100%', md: '55%', lg: '60%', xl: '70%' }
+                !!relatedVideosData?.length || !!playlistData?.posts?.length
+                  ? { sm: '100%', md: '53%', lg: '55%', xl: '70%' }
                   : '100%'
               }
             >
@@ -166,15 +215,22 @@ const VideoPostPage = () => {
             </Box>
           )}
           <Spacer mx={3} />
-          {!!relatedVideosData?.length && (
-            <Box w={{ sm: '100%', md: '45%', lg: '40%', xl: '30%' }}>
+          <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
+            {playlistData && (
+              <VideoPlaylist
+                title={playlistData?.title}
+                videos={playlistData?.posts}
+                autoplay={true}
+              />
+            )}
+            {!!relatedVideosData?.length && (
               <VideoPlaylist
                 title={t('page.post.related_videos')}
                 videos={[...relatedVideosData]}
                 autoplay={false}
               />
-            </Box>
-          )}
+            )}
+          </Box>
         </VideoComments>
       </Container>
     </Container>

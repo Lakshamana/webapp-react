@@ -759,7 +759,6 @@ export type FindBillboardsInput = {
 };
 
 export type FindManyTagsInput = {
-  channel: Scalars['ID'];
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
   search?: Maybe<Scalars['String']>;
@@ -898,6 +897,13 @@ export type LiveEventFilter = {
   type?: Maybe<LiveEventType>;
 };
 
+export type LiveEventGoLiveOutput = {
+  __typename?: 'LiveEventGoLiveOutput';
+  live?: Maybe<Scalars['Boolean']>;
+  liveAt?: Maybe<Scalars['String']>;
+  status?: Maybe<Status>;
+};
+
 export type LiveEventInput = {
   access?: Maybe<Scalars['String']>;
   category?: Maybe<Scalars['String']>;
@@ -920,8 +926,14 @@ export type LiveEventInput = {
   type: LiveEventType;
 };
 
+export type LiveEventStopLiveOutput = {
+  __typename?: 'LiveEventStopLiveOutput';
+  live?: Maybe<Scalars['Boolean']>;
+  status?: Maybe<Status>;
+};
+
 export enum LiveEventType {
-  Mp4Pull = 'MP4_PULL',
+  Mp4File = 'MP4_FILE',
   RtmpPull = 'RTMP_PULL',
   RtmpPush = 'RTMP_PUSH',
   RtpPush = 'RTP_PUSH'
@@ -1125,6 +1137,7 @@ export type Mutation = {
   deletePost: Post;
   deleteUpload: ResponseUploadOutput;
   forgetAccount: Account;
+  goLive: LiveEventGoLiveOutput;
   pinCategory: AccountPinnedCategory;
   pinPost: AccountPinnedPost;
   postPasswordCheck: PostPasswordCheck;
@@ -1152,6 +1165,7 @@ export type Mutation = {
   signOut: Scalars['VoidScalar'];
   socialSignIn: SingIn;
   startMediaUpload: ResponseMediaUploadOutput;
+  stopLive: LiveEventStopLiveOutput;
   unbanAccountPerm: Account;
   unbanAccountTemp: Account;
   unpinCategory: AccountPinnedCategory;
@@ -1475,6 +1489,11 @@ export type MutationForgetAccountArgs = {
 };
 
 
+export type MutationGoLiveArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationPinCategoryArgs = {
   payload: CreateAccountPinnnedCategory;
 };
@@ -1603,6 +1622,11 @@ export type MutationSocialSignInArgs = {
 
 export type MutationStartMediaUploadArgs = {
   payload: StartMediaUploadInput;
+};
+
+
+export type MutationStopLiveArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -2569,7 +2593,8 @@ export type QuerySubjectsArgs = {
 
 
 export type QueryTagArgs = {
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
 };
 
 
@@ -2793,6 +2818,7 @@ export enum Status {
   Published = 'PUBLISHED',
   Ready = 'READY',
   Scheduled = 'SCHEDULED',
+  Stopping = 'STOPPING',
   Trash = 'TRASH'
 }
 
@@ -2975,6 +3001,8 @@ export type UpdateGroupDto = {
 
 export type UpdateLiveEventInput = {
   access?: Maybe<Scalars['String']>;
+  backupPublishEndpoint?: Maybe<Scalars['String']>;
+  backupStreamName?: Maybe<Scalars['String']>;
   category?: Maybe<Scalars['String']>;
   commentsEnabled?: Maybe<Scalars['Boolean']>;
   config?: Maybe<LiveEventConfig>;
@@ -2984,6 +3012,8 @@ export type UpdateLiveEventInput = {
   kind: Kinds;
   orientation?: Maybe<Scalars['String']>;
   presenceEnabled?: Maybe<Scalars['Boolean']>;
+  primaryPublishEndpoint?: Maybe<Scalars['String']>;
+  primaryStreamName?: Maybe<Scalars['String']>;
   reactionsEnabled?: Maybe<Scalars['Boolean']>;
   scheduledStartAt?: Maybe<Scalars['DateTime']>;
   slug?: Maybe<Scalars['String']>;
@@ -3240,15 +3270,10 @@ export type ActivateAccountMutationVariables = Exact<{
 
 export type ActivateAccountMutation = { __typename?: 'Mutation', activateAccount: { __typename?: 'AccountActivated', activated: boolean } };
 
-export type RefreshFirebaseTokenMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RefreshFirebaseTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshSignIn', refreshToken: { __typename?: 'RefreshToken', firebaseToken: string } } };
-
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshSignIn', refreshToken: { __typename?: 'RefreshToken', accessToken: string } } };
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'RefreshSignIn', refreshToken: { __typename?: 'RefreshToken', accessToken: string, firebaseToken: string } } };
 
 export type ResetPasswordMutationVariables = Exact<{
   payload: ForgotPassword;
@@ -3445,6 +3470,13 @@ export type CommentsQueryVariables = Exact<{
 
 export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedCommentsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, total: number, isLastPage: boolean, page: number, pageCount: number, pageSize: number, rows: Array<{ __typename?: 'Comment', description: string, id: string, countUpVotes: number, createdAt: any, countComments: number, parent?: Maybe<string>, author: { __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> } }> } };
 
+export type GetLiveEventQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<string>, channel: string, commentsEnabled?: Maybe<boolean>, createdAt: any, description?: Maybe<string>, encodingProfile?: Maybe<string>, geoFence?: Maybe<any>, hlsPlaybackUrl?: Maybe<string>, id: string, isDeleted?: Maybe<boolean>, kind: Kinds, organization: string, orientation?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, source?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, tags?: Maybe<Array<string>>, title: string, type: LiveEventType, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', account?: Maybe<string>, aspectRatio?: Maybe<string>, baseUrl?: Maybe<string>, channel?: Maybe<string>, createdAt: any, filename?: Maybe<string>, height?: Maybe<number>, id: string, imgPath?: Maybe<string>, orientation?: Maybe<MediaOrientation>, status?: Maybe<MediaStatusEnum>, type?: Maybe<MediaTypeEnum>, upload?: Maybe<string>, width?: Maybe<number> }>, config?: Maybe<{ __typename?: 'LiveEventConfigOutput', drm?: Maybe<boolean>, dvr?: Maybe<boolean>, introVideo?: Maybe<string>, loop?: Maybe<boolean>, primarySource?: Maybe<string>, redundancy?: Maybe<boolean>, secondarySource?: Maybe<string>, streamInput?: Maybe<string>, streamProfile?: Maybe<string> }> } };
+
 export type GetLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
 }>;
@@ -3471,12 +3503,19 @@ export type OrganizationPublicSettingsQueryVariables = Exact<{
 
 export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'OrganizationPublic', id: string, name?: Maybe<string>, kind?: Maybe<Kinds>, status?: Maybe<string>, tenant_id?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
 
+export type GetPlaylistQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+
 export type GetPostQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -3848,51 +3887,12 @@ export function useActivateAccountMutation(baseOptions?: Apollo.MutationHookOpti
 export type ActivateAccountMutationHookResult = ReturnType<typeof useActivateAccountMutation>;
 export type ActivateAccountMutationResult = Apollo.MutationResult<ActivateAccountMutation>;
 export type ActivateAccountMutationOptions = Apollo.BaseMutationOptions<ActivateAccountMutation, ActivateAccountMutationVariables>;
-export const RefreshFirebaseTokenDocument = gql`
-    mutation RefreshFirebaseToken {
-  refreshToken {
-    refreshToken {
-      firebaseToken
-    }
-  }
-}
-    `;
-export type RefreshFirebaseTokenMutationFn = Apollo.MutationFunction<RefreshFirebaseTokenMutation, RefreshFirebaseTokenMutationVariables>;
-export type RefreshFirebaseTokenComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RefreshFirebaseTokenMutation, RefreshFirebaseTokenMutationVariables>, 'mutation'>;
-
-    export const RefreshFirebaseTokenComponent = (props: RefreshFirebaseTokenComponentProps) => (
-      <ApolloReactComponents.Mutation<RefreshFirebaseTokenMutation, RefreshFirebaseTokenMutationVariables> mutation={RefreshFirebaseTokenDocument} {...props} />
-    );
-    
-
-/**
- * __useRefreshFirebaseTokenMutation__
- *
- * To run a mutation, you first call `useRefreshFirebaseTokenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRefreshFirebaseTokenMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [refreshFirebaseTokenMutation, { data, loading, error }] = useRefreshFirebaseTokenMutation({
- *   variables: {
- *   },
- * });
- */
-export function useRefreshFirebaseTokenMutation(baseOptions?: Apollo.MutationHookOptions<RefreshFirebaseTokenMutation, RefreshFirebaseTokenMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RefreshFirebaseTokenMutation, RefreshFirebaseTokenMutationVariables>(RefreshFirebaseTokenDocument, options);
-      }
-export type RefreshFirebaseTokenMutationHookResult = ReturnType<typeof useRefreshFirebaseTokenMutation>;
-export type RefreshFirebaseTokenMutationResult = Apollo.MutationResult<RefreshFirebaseTokenMutation>;
-export type RefreshFirebaseTokenMutationOptions = Apollo.BaseMutationOptions<RefreshFirebaseTokenMutation, RefreshFirebaseTokenMutationVariables>;
 export const RefreshTokenDocument = gql`
     mutation RefreshToken {
   refreshToken {
     refreshToken {
       accessToken
+      firebaseToken
     }
   }
 }
@@ -5314,6 +5314,96 @@ export function useCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>;
 export type CommentsLazyQueryHookResult = ReturnType<typeof useCommentsLazyQuery>;
 export type CommentsQueryResult = Apollo.QueryResult<CommentsQuery, CommentsQueryVariables>;
+export const GetLiveEventDocument = gql`
+    query GetLiveEvent($slug: String) {
+  liveEvent(slug: $slug) {
+    access
+    channel
+    commentsEnabled
+    createdAt
+    description
+    encodingProfile
+    geoFence
+    hlsPlaybackUrl
+    id
+    isDeleted
+    kind
+    organization
+    orientation
+    presenceEnabled
+    reactionsEnabled
+    scheduledStartAt
+    slug
+    source
+    status
+    streamName
+    tags
+    thumbnail {
+      account
+      aspectRatio
+      baseUrl
+      channel
+      createdAt
+      filename
+      height
+      id
+      imgPath
+      orientation
+      status
+      type
+      upload
+      width
+    }
+    title
+    type
+    config {
+      drm
+      dvr
+      introVideo
+      loop
+      primarySource
+      redundancy
+      secondarySource
+      streamInput
+      streamProfile
+    }
+  }
+}
+    `;
+export type GetLiveEventComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLiveEventQuery, GetLiveEventQueryVariables>, 'query'>;
+
+    export const GetLiveEventComponent = (props: GetLiveEventComponentProps) => (
+      <ApolloReactComponents.Query<GetLiveEventQuery, GetLiveEventQueryVariables> query={GetLiveEventDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetLiveEventQuery__
+ *
+ * To run a query within a React component, call `useGetLiveEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLiveEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLiveEventQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetLiveEventQuery(baseOptions?: Apollo.QueryHookOptions<GetLiveEventQuery, GetLiveEventQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLiveEventQuery, GetLiveEventQueryVariables>(GetLiveEventDocument, options);
+      }
+export function useGetLiveEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiveEventQuery, GetLiveEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLiveEventQuery, GetLiveEventQueryVariables>(GetLiveEventDocument, options);
+        }
+export type GetLiveEventQueryHookResult = ReturnType<typeof useGetLiveEventQuery>;
+export type GetLiveEventLazyQueryHookResult = ReturnType<typeof useGetLiveEventLazyQuery>;
+export type GetLiveEventQueryResult = Apollo.QueryResult<GetLiveEventQuery, GetLiveEventQueryVariables>;
 export const GetLiveEventsDocument = gql`
     query GetLiveEvents($filter: LiveEventFilter) {
   liveEvents(filter: $filter) {
@@ -5534,6 +5624,72 @@ export function useOrganizationPublicSettingsLazyQuery(baseOptions?: Apollo.Lazy
 export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsQuery>;
 export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
 export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
+export const GetPlaylistDocument = gql`
+    query GetPlaylist($id: ID!) {
+  playlist(id: $id) {
+    id
+    title
+    posts {
+      id
+      access
+      title
+      description
+      kind
+      slug
+      pinnedStatus {
+        pinned
+      }
+      thumbnail {
+        imgPath
+      }
+      media {
+        ... on MediaVideo {
+          id
+          duration
+          thumbnailPath
+          baseUrl
+        }
+      }
+      type
+    }
+    __typename
+  }
+}
+    `;
+export type GetPlaylistComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPlaylistQuery, GetPlaylistQueryVariables>, 'query'> & ({ variables: GetPlaylistQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetPlaylistComponent = (props: GetPlaylistComponentProps) => (
+      <ApolloReactComponents.Query<GetPlaylistQuery, GetPlaylistQueryVariables> query={GetPlaylistDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPlaylistQuery__
+ *
+ * To run a query within a React component, call `useGetPlaylistQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPlaylistQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPlaylistQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPlaylistQuery(baseOptions: Apollo.QueryHookOptions<GetPlaylistQuery, GetPlaylistQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPlaylistQuery, GetPlaylistQueryVariables>(GetPlaylistDocument, options);
+      }
+export function useGetPlaylistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPlaylistQuery, GetPlaylistQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPlaylistQuery, GetPlaylistQueryVariables>(GetPlaylistDocument, options);
+        }
+export type GetPlaylistQueryHookResult = ReturnType<typeof useGetPlaylistQuery>;
+export type GetPlaylistLazyQueryHookResult = ReturnType<typeof useGetPlaylistLazyQuery>;
+export type GetPlaylistQueryResult = Apollo.QueryResult<GetPlaylistQuery, GetPlaylistQueryVariables>;
 export const GetPostDocument = gql`
     query GetPost($slug: String) {
   post(slug: $slug) {
@@ -5552,6 +5708,14 @@ export const GetPostDocument = gql`
     featured
     geofence
     kind
+    playlists {
+      id
+      slug
+      title
+    }
+    engagedUsers {
+      username
+    }
     media {
       ... on MediaVideo {
         id
@@ -5561,6 +5725,15 @@ export const GetPostDocument = gql`
         aspectRatio
         createdAt
         hlsPath
+      }
+      ... on MediaAudio {
+        id
+        duration
+        mp3Path
+      }
+      ... on MediaPhoto {
+        id
+        imgPath
       }
     }
     myReactions {
