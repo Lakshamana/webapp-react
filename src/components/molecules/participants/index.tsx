@@ -11,7 +11,7 @@ const Participants = ({ participants }: Props) => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { t } = useTranslation()
 
-  if (!participants.length) return <div></div>
+  if (!participants?.length) return <div></div>
 
   return (
     <Flex alignItems="center">
@@ -20,7 +20,7 @@ const Participants = ({ participants }: Props) => {
       </Text>
       <AvatarGroup size={isDesktop ? 'md' : 'sm'} max={2}>
         {participants?.map((item) => {
-          return <Avatar showBorder key={item.name} src={item.avatar} />
+          return <Avatar showBorder key={item.name} src={item.avatar} name={item.name} />
         })}
       </AvatarGroup>
     </Flex>
