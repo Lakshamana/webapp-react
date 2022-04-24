@@ -68,6 +68,7 @@ const VerifyPostKind = ({ postSlug, postType, accessGranted }: Props) => {
     }
     //eslint-disable-next-line
   }, [postKind])
+
   if (isLoadingVerifyPostKind)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
@@ -76,6 +77,7 @@ const VerifyPostKind = ({ postSlug, postType, accessGranted }: Props) => {
         </Box>
       </Center>
     )
+    
   if (isPrivate)
     return (
       <PrivateContent
