@@ -24,5 +24,6 @@ export type VideoPostCardProps = {
   isExclusive: boolean
   isGeolocked?: boolean
   isPinned?: boolean
+  isActive?: boolean
   postUnpinned?: (postId: string) => void
 }
