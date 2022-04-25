@@ -14,6 +14,7 @@ import { colors, sizes } from 'styles'
 
 import { LivestreamBadge } from 'types/livestreams'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
+import { stripHTML } from 'utils/helperFunctions'
 
 const LivePostPage = () => {
   const { t } = useTranslation()
@@ -113,8 +114,8 @@ const LivePostPage = () => {
             </Box>
           </Live>
           <LiveDetails>
-            <Title>{livestream?.title}</Title>
-            <Subtitle>{livestream?.description}</Subtitle>
+            <Title>{stripHTML(livestream?.title)}</Title>
+            <Subtitle>{stripHTML(livestream?.description)}</Subtitle>
           </LiveDetails>
         </>
       )}
