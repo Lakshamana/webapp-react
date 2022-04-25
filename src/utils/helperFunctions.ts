@@ -89,6 +89,7 @@ export const formattedSeconds = (seconds: number) => {
 }
 
 export function stripHTML(text: string) {
+  if (!text) return ''
   return text.replace(/(<([^>]+)>)/gi, '')
 }
 
