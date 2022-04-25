@@ -10,7 +10,7 @@ const Input = ({
   type = 'text',
   onChange,
   onBlur,
-  onEnterPress = () => {},
+  onEnterPress = () => { },
   error,
   errorMessage,
   rightIcon = '',
@@ -32,7 +32,7 @@ const Input = ({
         name={name}
         type={showPassword ? 'text' : type}
         inverted={inverted}
-        autocomplete="off"
+        autoComplete="off"
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {
             onEnterPress()
