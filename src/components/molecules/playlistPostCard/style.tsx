@@ -26,7 +26,7 @@ export const InfoBox: any = styled(Flex)`
 
 export const Title: any = styled(Flex)`
   color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: bold;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -44,10 +44,10 @@ export const Title: any = styled(Flex)`
 
 export const Subtitle: any = styled(Flex)`
   color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.2rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 
