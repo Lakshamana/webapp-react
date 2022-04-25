@@ -30,13 +30,14 @@ const Livestreams = () => {
   const [upcomingItems, setUpcomingItems] = useState<any[]>()
   const [billboardItems, setBillboardItems] = useState([])
 
-  //TODO: Waiting for API to send correct filters
   const [
     getLivestreamsScroler,
     { data: livestreamsData, loading: loadingLivestreams },
   ] = useLazyQuery(QUERY_LIVE_EVENTS, {
     variables: {
-      filter: {},
+      filter: {
+        status: [Status.Live, Status.Scheduled, Status.Ready],
+      },
     },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-and-network',
@@ -140,7 +141,7 @@ const Livestreams = () => {
       <Skeleton my={4} kind="cards" numberOfCards={4} />
     </Box>
 
-  if (isEmpty) (<EmptyState />)
+  if (isEmpty) <EmptyState />
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
