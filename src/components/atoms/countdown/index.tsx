@@ -97,6 +97,11 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
   const RenderCountdown = () => {
     const isDiffDays = days() > 0
     const defineLanguage = getData(APP_LOCALE)
+    const dateText = format(
+      new Date(eventStartDate),
+      'PPPpp',
+      { locale: defineLanguage === 'pt-BR' ? ptBR : enUS }
+    )
     return (
       <Box mt={1}>
         <Box>{renderText(t('page.post.live.will_start_in'))}</Box>
@@ -120,17 +125,18 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
             text={t('page.post.live.seconds')}
           />
         </Flex>
-        <Flex
-          justifyContent={'center'}
-          mt={2}
-        >
+        <Flex justifyContent={'center'} >
           {
             Date.parse(eventStartDate) &&
-            renderText(format(
-              new Date(eventStartDate),
-              'P',
-              { locale: defineLanguage === 'pt-BR' ? ptBR : enUS }
-            ))
+            <Text
+              mt={2}
+              fontSize={{ base: '1rem', lg: '2rem' }}
+              fontWeight="bolder"
+              color={'white'}
+              textAlign="center"
+            >
+              {dateText}
+            </Text>
           }
         </Flex>
       </Box>
