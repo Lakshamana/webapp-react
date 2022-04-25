@@ -3,6 +3,10 @@ import { Flex, Text, Box } from '@chakra-ui/react'
 import { Props } from './types'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { format } from 'date-fns'
+import { ptBR, enUS } from 'date-fns/locale'
+import { APP_LOCALE } from 'config/constants'
+import { getData } from 'services/storage'
 
 const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
   const { t } = useTranslation()
@@ -54,9 +58,9 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
 
   const renderText = (value: string) => (
     <Text
-      fontSize={{ base: '1.5rem', sm: '2rem', lg: '2.8rem' }}
+      fontSize={{ base: '1.2rem', lg: '2.8rem' }}
       fontWeight="bolder"
-      color="white"
+      color={'white'}
       textAlign="center"
     >
       {value}
@@ -73,17 +77,65 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
     return value
   }
 
-  const RenderCountdown = () => (
-    <div>
-      <Box>{renderText(t('page.post.live.will_start_in'))}</Box>
-      <Box display="flex">
-        {!!hours.length && <Box mr={4}>{renderText(`${days()}d`)}</Box>}
-        {renderText(`${hours()}h`)}
-        {renderText(`${minutes()}m`)}
-        {renderText(`${seconds()}s`)}
-      </Box>
-    </div>
+  const NumberBox = ({ count, text }) => (
+    <Flex
+      color={'white'}
+      flexDirection={'column'}
+      alignItems={'center'}
+      py={2}
+      mx={{ base: 1, lg: 2 }}
+      width={{ base: '80px', md: '120px' }}
+      border="2px"
+      borderRadius="md"
+      borderColor="gray.200"
+    >
+      {count}
+      {text}
+    </Flex>
   )
+
+  const RenderCountdown = () => {
+    const isDiffDays = days() > 0
+    const defineLanguage = getData(APP_LOCALE)
+    return (
+      <Box mt={1}>
+        <Box>{renderText(t('page.post.live.will_start_in'))}</Box>
+        <Flex justifyContent={'center'}>
+          {!!isDiffDays &&
+            <NumberBox
+              count={renderText(`${days()}`)}
+              text={t('page.post.live.days')}
+            />
+          }
+          <NumberBox
+            count={renderText(`${hours()}`)}
+            text={t('page.post.live.hours')}
+          />
+          <NumberBox
+            count={renderText(`${minutes()}`)}
+            text={t('page.post.live.minutes')}
+          />
+          <NumberBox
+            count={renderText(`${seconds()}`)}
+            text={t('page.post.live.seconds')}
+          />
+        </Flex>
+        <Flex
+          justifyContent={'center'}
+          mt={2}
+        >
+          {
+            Date.parse(eventStartDate) &&
+            renderText(format(
+              new Date(eventStartDate),
+              'P',
+              { locale: defineLanguage === 'pt-BR' ? ptBR : enUS }
+            ))
+          }
+        </Flex>
+      </Box>
+    )
+  }
 
   return (
     <Flex

@@ -409,7 +409,11 @@ const EN_US = {
           will_start_soon: 'Transmission will start soon',
           ended: 'Transmission ended',
           live: 'LIVE',
-          upcoming: 'UPCOMING'
+          upcoming: 'UPCOMING',
+          days: 'Days',
+          hours: 'Hours',
+          minutes: 'Minutes',
+          seconds: 'Seconds',
         },
       },
     },

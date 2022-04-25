@@ -409,7 +409,11 @@ const PT_BR = {
           will_start_soon: 'A transmissão irá começar em breve',
           ended: 'A transmissão terminou',
           live: 'AO VIVO',
-          upcoming: 'EM BREVE'
+          upcoming: 'EM BREVE',
+          days: 'Dias',
+          hours: 'Horas',
+          minutes: 'Minutos',
+          seconds: 'Segundos',
         },
       },
     },
