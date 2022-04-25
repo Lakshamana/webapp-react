@@ -34,10 +34,10 @@ const LivePostPage = () => {
 
   const statusBadge = (status: any): LivestreamBadge => {
     const Badge = {
-      LIVE: { label: 'LIVE', color: colors.brand.primary[colorMode] },
-      SCHEDULED: { label: 'UPCOMING', color: colors.brand.live_badges?.upcoming },
-      PREPARING: { label: 'UPCOMING', color: colors.brand.live_badges?.upcoming },
-      default: { label: 'UPCOMING', color: colors.brand.primary[colorMode] },
+      LIVE: { label: t('page.post.live.live'), color: colors.brand.primary[colorMode] },
+      SCHEDULED: { label: t('page.post.live.upcoming'), color: colors.brand.live_badges?.upcoming },
+      PREPARING: { label: t('page.post.live.upcoming'), color: colors.brand.live_badges?.upcoming },
+      default: { label: t('page.post.live.upcoming'), color: colors.brand.primary[colorMode] },
     }
     return Badge[status] || Badge.default
   }
