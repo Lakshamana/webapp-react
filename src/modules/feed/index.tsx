@@ -61,11 +61,10 @@ const FeedPage = () => {
 
   useEffect(() => {
     if (activeChannel && listOfPosts.length === 0) {
-      setListOfPosts([])
       getPosts()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeChannel, filterBy])
+  }, [activeChannel, listOfPosts])
 
   useEffect(() => {
     if (!dataPosts) return
@@ -173,6 +172,9 @@ const FeedPage = () => {
   const handleFilterChange = (evt: any) => {
     const { value } = evt?.target;
     SetFilterBy(value)
+    page.current = 1
+    setHasMore(true)
+    setListOfPosts([])
   }
 
   const loadingItems = (number) => (
