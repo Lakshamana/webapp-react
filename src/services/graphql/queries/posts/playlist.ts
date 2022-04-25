@@ -25,6 +25,11 @@ export const QUERY_PLAYLIST = gql`
             thumbnailPath
             baseUrl
           }
+          ... on MediaAudio {
+            # id
+            duration
+            mp3Path
+          }
         }
         type
       }
