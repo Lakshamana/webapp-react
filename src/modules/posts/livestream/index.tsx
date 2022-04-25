@@ -29,6 +29,8 @@ const LivePostPage = () => {
     onCompleted: (result) => setLivestream(result.liveEvent)
   })
   const isLive = livestream?.status === 'LIVE'
+  const isScheduled = livestream?.status === 'SCHEDULED'
+  const isFinished = livestream?.status === 'FINISHED'
 
   const statusBadge = (status: any): LivestreamBadge => {
     const Badge = {
@@ -44,17 +46,6 @@ const LivePostPage = () => {
     setLiveBadge(statusBadge(livestream?.status || 'scheduled'))
     // eslint-disable-next-line
   }, [livestream])
-
-  const RenderVideoPlayer = () => (
-    <VideoPlayer isLiveStream={true} src={livestream?.hlsPlaybackUrl || ''} />
-  )
-
-  const RenderCountdown = () => (
-    <Countdown
-      eventStartDate={livestream?.scheduledStartAt}
-      fallbackMessage={t('page.post.live.will_start_soon')}
-    />
-  )
 
   return (
     <Container
@@ -90,7 +81,23 @@ const LivePostPage = () => {
                   <Text>99k</Text>
                 </Badge>
               </Flex>
-              {isLive ? <RenderVideoPlayer /> : <RenderCountdown />}
+              {isLive && livestream &&
+                <VideoPlayer
+                  isLiveStream={true}
+                  src={livestream?.hlsPlaybackUrl || ''}
+                />
+              }
+              {
+                (isScheduled || isFinished) &&
+                <Countdown
+                  eventStartDate={livestream?.scheduledStartAt}
+                  fallbackMessage={
+                    isScheduled
+                      ? t('page.post.live.will_start_soon')
+                      : t('page.post.live.ended')
+                  }
+                />
+              }
             </Box>
             <Box
               height={{ base: '62vh', md: '100%' }}

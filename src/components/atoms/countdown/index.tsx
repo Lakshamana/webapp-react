@@ -48,6 +48,8 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
         setNow(Math.trunc(new Date().getTime() / 1000))
       }, 1000)
     )
+    return () => window.clearInterval(intervalId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const renderText = (value: string) => (
@@ -71,13 +73,13 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
     return value
   }
 
-  const renderCountdown = () => (
+  const RenderCountdown = () => (
     <div>
       <Box>{renderText(t('page.post.live.will_start_in'))}</Box>
       <Box display="flex">
         {!!hours.length && <Box mr={4}>{renderText(`${days()}d`)}</Box>}
-        {renderText(`${hours()}h:`)}
-        {renderText(`${minutes()}m:`)}
+        {renderText(`${hours()}h`)}
+        {renderText(`${minutes()}m`)}
         {renderText(`${seconds()}s`)}
       </Box>
     </div>
@@ -94,7 +96,7 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
       margin="auto"
       padding={5}
     >
-      {isCountdownRunning ? renderCountdown : renderText(fallbackMessage)}
+      {isCountdownRunning ? <RenderCountdown /> : renderText(fallbackMessage)}
     </Flex>
   )
 }

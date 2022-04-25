@@ -407,6 +407,7 @@ const EN_US = {
           },
           will_start_in: 'Transmission will start in',
           will_start_soon: 'Transmission will start soon',
+          ended: 'Transmission ended',
         },
       },
     },

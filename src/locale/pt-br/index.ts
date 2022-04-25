@@ -407,6 +407,7 @@ const PT_BR = {
           },
           will_start_in: 'A transmissão irá começar em',
           will_start_soon: 'A transmissão irá começar em breve',
+          ended: 'A transmissão terminou',
         },
       },
     },
