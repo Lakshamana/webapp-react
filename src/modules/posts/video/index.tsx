@@ -218,6 +218,7 @@ const VideoPostPage = () => {
           <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
             {playlistData && (
               <VideoPlaylist
+                activeVideo={postData?.id}
                 title={playlistData?.title}
                 videos={playlistData?.posts}
                 autoplay={true}

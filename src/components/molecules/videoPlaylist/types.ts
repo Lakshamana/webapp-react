@@ -4,4 +4,5 @@ export interface VideoPlaylistProps {
   title?: string
   autoplay?: boolean
   videos?: Post[]
+  activeVideo?: string
 }
