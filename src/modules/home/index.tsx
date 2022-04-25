@@ -19,8 +19,8 @@ import {
 } from 'services/graphql'
 
 import { HomeCarouselsTypes } from 'types/common'
-
 import { CarouselFlags } from 'types/flags'
+import { BillboardTarget } from 'types/common'
 
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 
@@ -31,8 +31,8 @@ import {
   TagsScroller,
   LivestreamScroller,
 } from 'components/molecules'
-import { BillboardTarget } from 'types/common'
 
+import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { convertToValidColor } from 'utils/helperFunctions'
 import { sizes } from 'styles'
 
@@ -65,9 +65,10 @@ const HomePage = () => {
     useLazyQuery(QUERY_LIVE_EVENTS, {
       variables: {
         filter: {
-          status: [Status.Live, Status.Scheduled, Status.Ready]
+          status: [Status.Live, Status.Scheduled, Status.Ready],
         },
       },
+      pollInterval: DEFAULT_POLLING_INTERVAL,
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',
     })
