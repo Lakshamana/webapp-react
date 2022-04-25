@@ -13,7 +13,12 @@ import { theme } from 'styles/theme'
 import { colors } from 'styles'
 import { isEntityBlocked } from 'utils/accessVerifications'
 
-const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
+const VideoPlaylist = ({
+  title,
+  videos,
+  autoplay,
+  activeVideo,
+}: VideoPlaylistProps) => {
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
@@ -32,7 +37,8 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       imageOptions.blur = 20
     }
 
-    const thumbnailPath = post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
+    const thumbnailPath =
+      post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
@@ -69,7 +75,7 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
   }, [videos])
 
   const renderPlaylist = () =>
-    playlist?.map((item) => <PlaylistPostCard key={item.id} {...item} />)
+    playlist?.map((item) => <PlaylistPostCard key={item.id} isActive={activeVideo === item.id} {...item} />)
 
   return (
     <Flex flexDirection="column" mb={5}>
@@ -81,18 +87,20 @@ const VideoPlaylist = ({ title, videos, autoplay }: VideoPlaylistProps) => {
       >
         {title}
       </Text>
-      {autoplay && <Flex alignItems="center" mb={2}>
-        <ToggleButton
-          checked={!!checked}
-          onChange={() => setChecked(!checked)}
-        />
-        <Text
-          ml={theme.pxToRem(12)}
-          color={theme.colors.generalText[colorMode]}
-        >
-          {t('page.post.autoplay')}
-        </Text>
-      </Flex>}
+      {autoplay && (
+        <Flex alignItems="center" mb={2}>
+          <ToggleButton
+            checked={!!checked}
+            onChange={() => setChecked(!checked)}
+          />
+          <Text
+            ml={theme.pxToRem(12)}
+            color={theme.colors.generalText[colorMode]}
+          >
+            {t('page.post.autoplay')}
+          </Text>
+        </Flex>
+      )}
       {!!playlist?.length && renderPlaylist()}
     </Flex>
   )
