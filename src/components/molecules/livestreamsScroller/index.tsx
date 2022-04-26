@@ -15,6 +15,7 @@ import { Header, ContentScroller } from './style'
 import { colors, sizes, breakpoints } from 'styles'
 
 import { isEntityBlocked } from 'utils/accessVerifications'
+import { parseISO } from 'date-fns'
 
 import {
   LivestreamPostCardProps,
@@ -74,7 +75,7 @@ const LivestreamScroller = ({
         ? 1
         : liveA && !liveB
         ? -1
-        : compareAsc(a.scheduledStartAt, b.scheduledStartAt)
+        : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
     })
     const mappedArr = arrForSort?.map((item: LiveEvent) => {
       const thumbnail = getImageUrl(item)
