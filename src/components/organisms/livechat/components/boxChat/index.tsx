@@ -3,12 +3,11 @@ import {
   BoxChatMain,
   MainContainer,
   BoxContainer,
-  NameUserText,
-  MessageText,
   ContainerCustom,
-  DateText
 } from './style'
-import { Avatar } from 'components'
+import { Avatar, Text } from 'components'
+import { colors } from 'styles'
+import { useThemeStore } from 'services/stores'
 
 import { Props, defaultProps } from './types'
 
@@ -19,23 +18,39 @@ const BoxChat = ({
   date,
   avatarUrl,
 }: Props): ReactElement => {
+  const { colorMode } = useThemeStore()
   return (
     <BoxChatMain justifyContent={isOwnUser ? 'flex-end' : 'flex-start'}>
       <ContainerCustom
         display={'flex'}
         flexDirection={isOwnUser ? 'row-reverse' : 'row'}
         isOwnUser={isOwnUser}
+        alignItems="end"
       >
-        <Avatar mt={'18px'} size="sm" src={avatarUrl} name={username} />
+        {!isOwnUser && <Avatar size="sm" src={avatarUrl} name={username} />}
         <MainContainer isOwnUser={isOwnUser}>
-          <DateText mb={2}>
-            {/* {formatDistance(new Date(date), new Date(), {
-              addSuffix: true,
-            })} */}
-          </DateText>
+          <Text
+            fontSize="0.7rem"
+            mb={1}
+            mr={1}
+            textAlign="right"
+            color={colors.secondaryText[colorMode]}
+          >
+            {date}
+          </Text>
           <BoxContainer isOwnUser={isOwnUser}>
-            <NameUserText isOwnUser={isOwnUser}>{username}</NameUserText>
-            <MessageText isOwnUser={isOwnUser}>{message}</MessageText>
+            {!isOwnUser && (
+              <Text
+                fontSize="0.9rem"
+                color={colors.generalText[colorMode]}
+                fontWeight="bold"
+              >
+                {username}
+              </Text>
+            )}
+            <Text fontSize="0.85rem" color={colors.generalText[colorMode]}>
+              {message}
+            </Text>
           </BoxContainer>
         </MainContainer>
       </ContainerCustom>

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { color, flexbox, layout } from 'styled-system'
-import { breakpoints } from 'styles'
+import { breakpoints, colors } from 'styles'
 import { Container } from '@chakra-ui/react'
 import { Theme } from './types'
 
@@ -42,9 +42,9 @@ export const BoxContainer: any = styled.div`
   ${layout}
   display: flex;
   flex-direction: column;
-  ${({ isOwnUser, theme: { colors, colorMode } }: Theme) => {
-    const defineColor = isOwnUser ? 'me' : colorMode
-    return `background: ${colors.livechatBg[defineColor]};`
+  min-width: 180px;
+  ${({ isOwnUser, theme: { colorMode } }: Theme) => {
+    return `background: ${isOwnUser ? colors.brand.indicator[colorMode] : colors.inputBg[colorMode]};`
   }}
   border-radius: 8px;
   padding: 7px 12px;
