@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { color, flexbox, layout } from 'styled-system'
-import { breakpoints, colors } from 'styles'
+import { colors } from 'styles'
 import { Container } from '@chakra-ui/react'
 import { Theme } from './types'
 
