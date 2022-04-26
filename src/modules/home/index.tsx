@@ -61,7 +61,7 @@ const HomePage = () => {
       fetchPolicy: 'cache-and-network',
     })
 
-  const [getLiveEvents, { data: liveEventsData, loading: loadingLiveEvents }] =
+  const [getLiveEvents, { data: liveEventsData, stopPolling }] =
     useLazyQuery(QUERY_LIVE_EVENTS, {
       variables: {
         filter: {
@@ -120,8 +120,7 @@ const HomePage = () => {
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
-    loadingCategoriesWithChildren ||
-    loadingLiveEvents
+    loadingCategoriesWithChildren
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -135,6 +134,8 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
+
+    return () => stopPolling && stopPolling()
     // eslint-disable-next-line
   }, [])
 
