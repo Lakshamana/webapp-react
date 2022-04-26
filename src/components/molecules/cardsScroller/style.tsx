@@ -13,6 +13,10 @@ export const SwiperStyled = styled(Swiper)`
     padding: 0 1.3rem !important;
   }
 
+  .swiper-wrapper {
+    min-height: auto;
+  }
+
   .swiper-slide {
     &:hover {
       transition: all 250ms ease-out;
