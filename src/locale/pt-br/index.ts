@@ -404,6 +404,7 @@ const PT_BR = {
         live: {
           live_chat: {
             title: 'Chat ao Vivo',
+            say_something: 'Diga alguma coisa...'
           },
           will_start_in: 'A transmissão irá começar em',
           will_start_soon: 'A transmissão irá começar em breve',
