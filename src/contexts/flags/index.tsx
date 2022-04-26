@@ -49,6 +49,7 @@ export const FlagsProvider = ({ children }) => {
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (loading) return <LoadingScreen />
