@@ -18,6 +18,7 @@ export const SwiperStyled = styled(Swiper)`
       transition: all 250ms ease-out;
       -webkit-transition: all 250ms ease-out;
       transition-delay: 250ms;
+      margin-top: -60px;
       transform: scale(1.3);
       z-index: 9999;
 
