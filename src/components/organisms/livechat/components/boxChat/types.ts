@@ -1,5 +1,5 @@
 export interface Props {
-  date: string;
+  date: Date | string;
   username: string;
   message: string;
   isOwnUser?: boolean;
