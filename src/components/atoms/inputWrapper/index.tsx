@@ -1,20 +1,13 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import { Icon } from "@iconify/react";
-
 import { BoxWrapper, BoxWrapperError, LabelError, Box } from "./styles";
-
 import { Props } from "./types";
 import { defaultProps } from "./settings";
 
 const InputWrapper = ({
   children,
-  label,
   error,
   errorMessage,
-  required,
-  maxLength,
-  disabled,
   width,
   height,
   type = "",
@@ -24,7 +17,6 @@ const InputWrapper = ({
   onChangeShowPassword = () => { },
   onEnterPress = () => { },
   inverted = false,
-  ...props
 }: Props): any => {
   const [showPassword, setShowPassword] = useState(type !== "password");
 

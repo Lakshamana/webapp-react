@@ -13,7 +13,7 @@ exports[`Input test suit - Input renders without crashing given the required pro
   type="text"
 >
   <InputInline
-    autocomplete="off"
+    autoComplete="off"
     background="#444444"
     color="#fff"
     onKeyDown={[Function]}

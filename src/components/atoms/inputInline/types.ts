@@ -1,9 +1,5 @@
 import { LayoutProps, SpaceProps, FontSizeProps } from 'styled-system'
-import { InputProps } from '@chakra-ui/react'
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
-// interface SomeChange extends Change, Omit<SomeChangeExtension, 'foo' | 'amount'> {
 export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
   value?: string
   onChange: any
@@ -20,5 +16,5 @@ export interface Props extends LayoutProps, SpaceProps, FontSizeProps {
   background?: string
   inverted?: boolean
   color?: string
-  autocomplete?: string
+  autoComplete?: string
 }
