@@ -404,6 +404,7 @@ const EN_US = {
         live: {
           live_chat: {
             title: 'Live Chat',
+            say_something: 'Say something...'
           },
           will_start_in: 'Transmission will start in',
           will_start_soon: 'Transmission will start soon',

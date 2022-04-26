@@ -105,12 +105,14 @@ const LivePostPage = () => {
               w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
               borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
             >
-              <Livechat
-                entityId={id}
-                dataChat={[]}
-                onChangeChat={(e) => setOptionsState(e)}
-                onCloseChat={(e) => setlivechatState(!e)}
-              />
+              {livestream && (
+                <Livechat
+                  entityId={livestream?.id}
+                  dataChat={[]}
+                  onChangeChat={(e) => setOptionsState(e)}
+                  onCloseChat={(e) => setlivechatState(!e)}
+                />
+              )}
             </Box>
           </Live>
           <LiveDetails>

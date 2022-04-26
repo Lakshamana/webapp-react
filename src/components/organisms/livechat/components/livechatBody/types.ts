@@ -3,9 +3,11 @@ export interface Props {
 }
 
 interface Item {
+  id?: string;
   isOwnUser?: boolean;
   username?: string;
-  createdAt?: string;
-  message?: string;
-  userAvatar?: string;
+  userId?: string;
+  dateAdded?: Date;
+  text?: string;
+  avatarPath?: string;
 }

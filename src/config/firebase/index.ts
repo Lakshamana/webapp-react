@@ -1,6 +1,7 @@
 import { FIREBASE_CONFIG } from './settings'
 import { initializeApp } from 'firebase/app'
 import { getRemoteConfig } from 'firebase/remote-config'
+import { getFirestore } from "firebase/firestore";
 
 import 'firebase/firestore'
 import 'firebase/auth'
@@ -19,3 +20,6 @@ export const firebaseRemoteConfig = getRemoteConfig()
 firebaseRemoteConfig.settings.fetchTimeoutMillis = 15000
 firebaseRemoteConfig.settings.minimumFetchIntervalMillis =
   NODE_ENV === 'development' ? 1000 : parseInt(productionFetchInterval)
+
+// Get a reference to the database service
+export const firebaseDB = getFirestore(firebaseApp)

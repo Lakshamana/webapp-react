@@ -27,7 +27,6 @@ export const Text = styled(TextComponent)<StyledProps>`
   text-transform: uppercase;
   font-size: 1.2rem;
   font-weight: bolder;
-  margin-left: 10px;
   color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
 
   @media screen and (max-width: ${breakpoints.sm}) {

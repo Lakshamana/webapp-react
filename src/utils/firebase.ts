@@ -17,5 +17,9 @@ export const parseResultSnapshot = (snapshot: FirebaseQuerySnapshot) => {
   return snapshot
     .docChanges()
     .filter((row) => row.type === 'added')
-    .map((row) => row.doc)
+    .map((row) => {
+      const obj = row.doc.data()
+      obj['id'] = row.doc.id
+      return obj
+    })
 }
