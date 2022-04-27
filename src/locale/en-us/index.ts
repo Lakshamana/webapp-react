@@ -391,6 +391,7 @@ const EN_US = {
           old: 'Most Old',
         },
         autoplay: 'Autoplay next video',
+        redirect_next_video: 'Redirecting to next video...',
         related_videos: 'Related videos',
         views: 'views',
         add_a_comment: 'Add a comment…',
