@@ -12,10 +12,10 @@ import {
 } from './style'
 import { colors } from 'styles'
 import { Props } from './types'
-import { availableReactions } from './settings'
+import { availableReactions } from '../../settings'
 import { useTranslation } from 'react-i18next'
 
-const LivechatFooter = ({ sendMessage }: Props) => {
+const LivechatFooter = ({ sendMessage, sendReaction }: Props) => {
   const { colorMode } = useThemeStore()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [newMessage, setNewMessage] = useState<string>('')
@@ -48,7 +48,10 @@ const LivechatFooter = ({ sendMessage }: Props) => {
       >
         <PopoverIcon>
           {availableReactions.map((reaction) => (
-            <Reaction key={`${reaction.value}-popover`}>
+            <Reaction
+              key={`${reaction.value}-popover`}
+              onClick={() => sendReaction(reaction.name)}
+            >
               {reaction.value}
             </Reaction>
           ))}
