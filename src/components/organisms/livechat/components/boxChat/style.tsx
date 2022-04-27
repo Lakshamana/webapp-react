@@ -11,6 +11,7 @@ export const BoxChatMain: any = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-top: 5px;
 `
 
 export const MainContainer: any = styled.div`
