@@ -37,16 +37,9 @@ const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
         alignItems="center"
       >
         {props.isActive && (
-          <Badge
-            background={colors.generalText[colorMode]}
-            position="absolute"
-            margin={1}
-            left="0"
-            zIndex="9"
-            top="0"
-          >
-            <Icon width="20px" icon="mdi:play"></Icon>
-          </Badge>
+          <PlayIcon>
+            <Icon width={40} color={colors.white} icon={`mdi:play-circle`} />
+          </PlayIcon>
         )}
         {isContentBlocked && (
           <BlockedContent>
@@ -54,16 +47,12 @@ const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
               width={18}
               color={colors.white}
               icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
-            ></Icon>
+            />
           </BlockedContent>
         )}
         {hover && !isContentBlocked && !props.isActive ? (
           <PlayIcon>
-            <Icon
-              width={40}
-              color={colors.white}
-              icon={`mdi:play-circle`}
-            ></Icon>
+            <Icon width={40} color={colors.white} icon={`mdi:play-circle`} />
           </PlayIcon>
         ) : (
           <></>
@@ -78,7 +67,7 @@ const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
             src={props.thumbnail}
             alt={props.title}
             objectFit="cover"
-          ></Image>
+          />
         </AspectRatio>
       </Box>
 
