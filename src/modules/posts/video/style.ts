@@ -4,6 +4,7 @@ import { pxToRem } from 'styles/metrics'
 import { breakpoints, sizes } from 'styles'
 
 export const Video = styled.div`
+  position: relative;
   height: 72vh;
   width: 75vw;
 
