@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { useParams } from 'react-router-dom'
-import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
+import { Center, Flex, Spacer, Box, } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Skeleton } from 'components'
 import { QUERY_PLAYLIST, QUERY_POST, QUERY_POSTS_CARDS } from 'services/graphql'
@@ -22,13 +22,14 @@ import { PlaylistOutput, Post } from 'generated/graphql'
 import { useCustomizationStore } from 'services/stores'
 import { VerifyPostKind } from '../components'
 import { TypeParticipant } from 'components/molecules/participants/types'
+import { AlertNextVideo } from './AlertNextVideo'
 
 const VideoPostPage = () => {
-  const { colorMode } = useThemeStore()
-  const { slug } = useParams<{ channel: string; slug: string }>()
   const { t } = useTranslation()
+  const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const { slug } = useParams<{ channel: string; slug: string }>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
     useState<boolean>(true)
@@ -111,20 +112,17 @@ const VideoPostPage = () => {
         },
       })
     }
-
     //eslint-disable-next-line
   }, [postData])
 
   useEffect(() => {
     if (!isVerifyingAccessPermission) getPost()
-
     //eslint-disable-next-line
   }, [isVerifyingAccessPermission])
 
   useEffect(() => {
     if (activeMedia && slug && activeMedia !== slug)
       setIsVerifyingAccessPermission(true)
-
     //eslint-disable-next-line
   }, [slug])
 
@@ -171,8 +169,8 @@ const VideoPostPage = () => {
           title={postData?.title}
           subtitle={postData?.description}
         />
+        <AlertNextVideo />
       </Video>
-
       <VideoDetails>
         <Title>{postData?.title}</Title>
         <Subtitle>
@@ -221,14 +219,14 @@ const VideoPostPage = () => {
                 activeVideo={postData?.id}
                 title={playlistData?.title}
                 videos={playlistData?.posts}
-                autoplay={true}
+                showAutoplay={true}
               />
             )}
             {!!relatedVideosData?.length && (
               <VideoPlaylist
                 title={t('page.post.related_videos')}
                 videos={[...relatedVideosData]}
-                autoplay={false}
+                showAutoplay={false}
               />
             )}
           </Box>
