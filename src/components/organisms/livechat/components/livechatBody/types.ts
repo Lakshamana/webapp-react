@@ -1,8 +1,9 @@
 export interface Props {
-  messages?: Array<Item>;
+  messages?: Message[];
+  reactions?: Reaction[]; 
 }
 
-interface Item {
+interface Message {
   id?: string;
   isOwnUser?: boolean;
   username?: string;
@@ -10,4 +11,11 @@ interface Item {
   dateAdded?: Date;
   text?: string;
   avatarPath?: string;
+}
+
+interface Reaction {
+  id?: string;
+  dateAdded?: Date
+  name?: string
+  userId?: string
 }
