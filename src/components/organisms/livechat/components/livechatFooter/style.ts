@@ -36,21 +36,21 @@ export const PopoverIcon = styled.div<StyledProps>`
   ${flexbox}
   ${grid}
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: ${({ theme }) => theme.colors.footerBg[theme.colorMode]};
-  border-radius: 4px;
+  grid-template-columns: repeat(4, 1fr);
+  background: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
+  border-radius: 8px;
+  overflow: hidden;
 `
 
 export const Reaction = styled.div<StyledProps>`
   ${space}
   ${layout}
-  padding: 0.5em 0;
+  padding: 0.3em 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   cursor: pointer;
-  border-radius: 4px;
   :hover {
     background: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
   }

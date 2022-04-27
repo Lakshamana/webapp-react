@@ -12,11 +12,11 @@ import {
   onSnapshot,
   addDoc,
   orderBy,
-  startAfter,
+  startAfter
 } from 'firebase/firestore'
 import { useEffect } from 'react'
 import { timestampNow, parseResultSnapshot } from 'utils/firebase'
-import { MessageDocumentData } from 'types/firebase'
+import { MessageDocumentData, ReactionDocumentData } from 'types/firebase'
 
 const Livechat = ({ entityId, onPressEnter }: Props) => {
   const [messages, setMessagesData] = useState<DocumentData[]>([])
@@ -45,16 +45,13 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
   )
 
   const sendNewMessage = (message: string) => {
-    if (!message) {
-      return
-    }
+    if (!message) return
+
     const filteredMessage = message.trim()
-    if (!filteredMessage) {
-      return
-    }
+    if (!filteredMessage) return
 
     const messageToSend: MessageDocumentData = {
-      userId: account?.id!,
+      userId: account?.id || '',
       username: account?.username || '',
       avatarPath: account?.profile?.avatar_url || '',
       updatedAt: timestampNow(),
@@ -63,6 +60,19 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
     }
 
     addDoc(messagesCollection, messageToSend)
+  }
+
+  const sendNewReaction = (reaction: string) => {
+    if (!reaction) return
+
+    const reactionToSend: ReactionDocumentData = {
+      dateAdded: timestampNow(),
+      name: reaction,
+      userId: account?.id!,
+      filtered: false,
+    }
+
+    addDoc(reactionsCollection, reactionToSend)
   }
 
   useEffect(() => {
@@ -92,8 +102,11 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
       justifyContent={'space-between'}
     >
       <LivechatHeader />
-      <LivechatBody messages={messages} />
-      <LivechatFooter sendMessage={sendNewMessage} />
+      <LivechatBody messages={messages} reactions={reactions} />
+      <LivechatFooter
+        sendMessage={sendNewMessage}
+        sendReaction={sendNewReaction}
+      />
     </Flex>
   )
 }

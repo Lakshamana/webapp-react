@@ -3,6 +3,7 @@ import { LayoutProps, SpaceProps, GridProps } from "styled-system";
 
 export interface Props {
   sendMessage: (message: string) => void
+  sendReaction: (reaction: string) => void
 }
 
 export interface StyledProps

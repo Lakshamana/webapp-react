@@ -6,8 +6,9 @@ export const MainChatBody = styled.div`
   width: 100%;
   height: 100%;
   padding: 1em;
-  gap: 1em;
   overflow-y: scroll;
+  overflow-x: hidden;
   scroll-snap-align: end;
   background: ${({ theme }) => theme.colorMode === 'dark' ? 'black': 'white'};
+  position: relative;
 `

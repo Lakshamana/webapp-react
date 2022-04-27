@@ -111,7 +111,7 @@ export const Live = styled.div`
     height: 55vh;
   }
 
-  @media screen and (max-width: ${breakpoints.md}) {
+  @media screen and (max-width: ${breakpoints.sm}) {
     flex-flow: column;
     height: 100%;
   }
