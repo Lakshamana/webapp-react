@@ -53,13 +53,12 @@ const LivechatBody = ({ messages, reactions }: Props) => {
           (r) => r.name === e.name
         )
         return (
-          <Box position="relative" height="auto">
+          <Box position="relative" height="auto" key={e.id}>
             <Text
               position="absolute"
               bottom="0"
               as={motion.div}
               id={e.id}
-              key={e.id}
               animation={animation}
               fontSize="2rem"
               onAnimationEnd={() => {
