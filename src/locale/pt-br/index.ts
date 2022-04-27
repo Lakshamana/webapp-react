@@ -391,6 +391,7 @@ const PT_BR = {
           old: 'Mais Antiga',
         },
         autoplay: 'Reproduzir automaticamente',
+        redirect_next_video: 'Redirecionando para o próximo vídeo...',
         related_videos: 'Próximos vídeos',
         views: 'visualizações',
         add_a_comment: 'Adicionar um comentário...',

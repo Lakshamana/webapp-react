@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
 
-import { useThemeStore, useChannelsStore } from 'services/stores'
+import { getData, saveData } from 'services/storage'
+import { useThemeStore, useChannelsStore, useVideoPlayerStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 
 import { Text, ToggleButton, PlaylistPostCard } from 'components'
@@ -12,18 +13,22 @@ import { VideoPlaylistProps } from './types'
 import { theme } from 'styles/theme'
 import { colors } from 'styles'
 import { isEntityBlocked } from 'utils/accessVerifications'
+import { VIDEO_AUTOPLAY } from 'config/constants'
 
 const VideoPlaylist = ({
   title,
   videos,
-  autoplay,
-  activeVideo,
+  showAutoplay,
+  activeVideo
 }: VideoPlaylistProps) => {
+  const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
-  const { t } = useTranslation()
-  const [checked, setChecked] = useState(true)
+  const setNextVideo = useVideoPlayerStore(state => state.setNextVideo)
+  const setAutoplay = useVideoPlayerStore(state => state.setAutoplay)
+  const setIsLastVideo = useVideoPlayerStore(state => state.setIsLastVideo)
+  const autoplay = useVideoPlayerStore(state => state.hasAutoplay)
   const [playlist, setPlaylist] = useState<VideoPostCardProps[]>()
 
   const getImageUrl = (post: Post) => {
@@ -71,8 +76,37 @@ const VideoPlaylist = ({
       }
     })
     setPlaylist(mapped)
+
+    const playlistLength = mapped?.length
+    if (playlistLength) {
+      let defineNextVideo
+      mapped.forEach((videoItem, index) => {
+        if (videoItem.id === activeVideo) {
+          defineNextVideo = mapped[index + 1]?.url
+          console.log(mapped[index + 1]?.url)
+        }
+      })
+      if (defineNextVideo) {
+        setNextVideo(defineNextVideo)
+        setIsLastVideo(false)
+      }
+    }
     //eslint-disable-next-line
   }, [videos])
+
+  useEffect(() => {
+    if (!autoplay) {
+      const autoplayPreferences = getData(VIDEO_AUTOPLAY)
+      setAutoplay(autoplayPreferences)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const toggleAutoplay = () => {
+    const UPDATE_STATUS = !autoplay
+    saveData(VIDEO_AUTOPLAY, UPDATE_STATUS)
+    setAutoplay(UPDATE_STATUS)
+  }
 
   const renderPlaylist = () =>
     playlist?.map((item) => <PlaylistPostCard key={item.id} isActive={activeVideo === item.id} {...item} />)
@@ -87,11 +121,11 @@ const VideoPlaylist = ({
       >
         {title}
       </Text>
-      {autoplay && (
+      {showAutoplay && (
         <Flex alignItems="center" mb={2}>
           <ToggleButton
-            checked={!!checked}
-            onChange={() => setChecked(!checked)}
+            checked={autoplay}
+            onChange={toggleAutoplay}
           />
           <Text
             ml={theme.pxToRem(12)}
