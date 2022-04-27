@@ -1,22 +1,18 @@
 import { ReactElement, useRef } from 'react'
-
 import VideoJS from 'components/molecules/videoJs'
-
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
-
 import overlay from 'videojs-overlay'
 import 'videojs-overlay/dist/videojs-overlay.css'
-
 import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
-
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
-
 import 'videojs-mux'
 
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
+import { SHOW_NEXT_VIDEO_IN } from 'config/constants'
+import { useVideoPlayerStore } from 'services/stores'
 
 const VideoPlayer = ({
   src,
@@ -30,6 +26,8 @@ const VideoPlayer = ({
   skin,
   options,
 }: VideoPlayerProps): ReactElement => {
+  const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
+  const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
   const playerRef = useRef(null)
 
   const defaultOptions = getDefaultConfigs(src, muxConfig, title, subtitle)
@@ -43,14 +41,11 @@ const VideoPlayer = ({
       player.registerPlugin('overlay', overlay)
       player.registerPlugin('vttThumbnails', videoJsVttThumbnails)
     })
-
     player?.on('ready', () => {
       player.chromecast()
-
       player.overlay({
         overlays: [...(overlays || [])],
       })
-
       if (vttSrc) {
         player.vttThumbnails({
           src: vttSrc,
@@ -58,12 +53,21 @@ const VideoPlayer = ({
         })
       }
     })
+
+    player?.on('ended', () => setEndedVideo(true))
+
+    player?.on('timeupdate', () => {
+      const remainingTime = Math.round(player.remainingTime())
+      const isRemainingTime = Boolean(remainingTime) && remainingTime < SHOW_NEXT_VIDEO_IN
+      setRemainingTime(isRemainingTime)
+    })
   }
 
   if (!src) return <></>
 
   return (
     <VideoJS
+      ref={playerRef}
       options={{
         ...defaultOptions,
         ...(isLiveStream ? { playbackRates: undefined } : {}),
