@@ -412,6 +412,7 @@ const EN_US = {
           ended: 'Transmission ended',
           live: 'LIVE',
           upcoming: 'UPCOMING',
+          finished: 'FINISHED',
           days: 'Days',
           hours: 'Hours',
           minutes: 'Minutes',

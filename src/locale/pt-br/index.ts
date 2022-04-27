@@ -412,6 +412,7 @@ const PT_BR = {
           ended: 'A transmissão terminou',
           live: 'AO VIVO',
           upcoming: 'EM BREVE',
+          finished: 'FINALIZADA',
           days: 'Dias',
           hours: 'Horas',
           minutes: 'Minutos',
