@@ -1,7 +1,5 @@
 import { useMutation } from '@apollo/client'
-import React from 'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { MUTATION_ACTIVATE_ACCOUNT } from 'services/graphql'
 import { Spinner, Box } from '@chakra-ui/react'
@@ -19,7 +17,8 @@ const ActivateAccount = () => {
   const { t } = useTranslation()
 
   const useQuery = () =>
-    React.useMemo(() => new URLSearchParams(search), [search])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useMemo(() => new URLSearchParams(search), [search])
 
   const query = useQuery()
 
