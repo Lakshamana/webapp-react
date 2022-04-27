@@ -23,7 +23,6 @@ export const QUERY_LIVE_EVENT = gql`
       source
       status
       streamName
-      tags
       thumbnail {
         account
         aspectRatio
