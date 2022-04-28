@@ -15,7 +15,7 @@ import { colors } from 'styles'
 import { useState } from 'react'
 
 export const CardInfo = () => {
-  const [ modalType, setmodalType ] = useState(ModalType.success)
+  const [ modalType ] = useState(ModalType.success)
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
