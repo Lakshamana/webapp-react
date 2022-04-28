@@ -77,20 +77,6 @@ const VideoPlaylist = ({
     })
     setPlaylist(mapped)
 
-    const playlistLength = mapped?.length
-    if (playlistLength) {
-      let defineNextVideo
-      mapped.forEach((videoItem, index) => {
-        if (videoItem.id === activeVideo) {
-          defineNextVideo = mapped[index + 1]?.url
-          console.log(mapped[index + 1]?.url)
-        }
-      })
-      if (defineNextVideo) {
-        setNextVideo(defineNextVideo)
-        setIsLastVideo(false)
-      }
-    }
     //eslint-disable-next-line
   }, [videos])
 
