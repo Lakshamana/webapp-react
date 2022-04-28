@@ -95,7 +95,7 @@ const VideoPlaylist = ({
       }
     }
     //eslint-disable-next-line
-  }, [])
+  }, [playlist])
   
 
   useEffect(() => {
