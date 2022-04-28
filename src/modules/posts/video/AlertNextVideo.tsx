@@ -43,9 +43,6 @@ const AlertNextVideo = () => {
           </Box>
         </Collapse>
       }
-      {
-        console.log(isLastVideo)
-      }
     </>
   )
 }

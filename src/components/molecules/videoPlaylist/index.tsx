@@ -77,13 +77,16 @@ const VideoPlaylist = ({
     })
     setPlaylist(mapped)
 
-    const playlistLength = mapped?.length
+    //eslint-disable-next-line
+  }, [videos])
+
+  useEffect(() => {
+    const playlistLength = playlist?.length
     if (playlistLength) {
       let defineNextVideo
-      mapped.forEach((videoItem, index) => {
+      playlist.forEach((videoItem, index) => {
         if (videoItem.id === activeVideo) {
-          defineNextVideo = mapped[index + 1]?.url
-          console.log(mapped[index + 1]?.url)
+          defineNextVideo = playlist[index + 1]?.url
         }
       })
       if (defineNextVideo) {
@@ -92,7 +95,8 @@ const VideoPlaylist = ({
       }
     }
     //eslint-disable-next-line
-  }, [videos])
+  }, [playlist])
+  
 
   useEffect(() => {
     if (!autoplay) {
