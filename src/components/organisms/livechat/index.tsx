@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { Props } from './types'
 import { LivechatFooter, LivechatHeader, LivechatBody } from './components'
@@ -12,11 +12,12 @@ import {
   onSnapshot,
   addDoc,
   orderBy,
-  startAfter
+  startAfter,
 } from 'firebase/firestore'
 import { useEffect } from 'react'
 import { timestampNow, parseResultSnapshot } from 'utils/firebase'
 import { MessageDocumentData, ReactionDocumentData } from 'types/firebase'
+import throttle from 'lodash.debounce'
 
 const Livechat = ({ entityId, onPressEnter }: Props) => {
   const [messages, setMessagesData] = useState<DocumentData[]>([])
@@ -75,6 +76,12 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
     addDoc(reactionsCollection, reactionToSend)
   }
 
+  const debouncedSendReaction = useMemo(
+    () => throttle(sendNewReaction, 500),
+    //eslint-disable-next-line
+    []
+  )
+
   useEffect(() => {
     const messagesUnsubscriber = onSnapshot(messagesQuery, (snapshot) => {
       const messages = parseResultSnapshot(snapshot)
@@ -90,6 +97,7 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
     return () => {
       messagesUnsubscriber()
       reactionsUnsubscriber()
+      debouncedSendReaction.cancel()
     }
     //eslint-disable-next-line
   }, [])
@@ -105,7 +113,7 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
       <LivechatBody messages={messages} reactions={reactions} />
       <LivechatFooter
         sendMessage={sendNewMessage}
-        sendReaction={sendNewReaction}
+        sendReaction={debouncedSendReaction}
       />
     </Flex>
   )
