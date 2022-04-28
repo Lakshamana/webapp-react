@@ -182,20 +182,6 @@ export const CardInfo = () => {
           </Link>
         </Flex>
       </Flex>
-      {/* ==== EXEMPLO DE USO DO MODAL ==== */}
-      {/* <Flex mt="1em" gridGap="1em">
-        <Button
-          onClick={()=>{
-            setmodalType(ModalType.success);
-            onOpen();
-          }}
-          label="Modal Success"
-        />
-        <Button onClick={()=>{
-          setmodalType(ModalType.failure);
-          onOpen();
-        }} label="Modal Failure" />
-      </Flex> */}
       <ModalNotification {...{ isOpen, onOpen, onClose, modalType }} />
     </Flex>
   )
