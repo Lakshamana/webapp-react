@@ -81,6 +81,24 @@ const VideoPlaylist = ({
   }, [videos])
 
   useEffect(() => {
+    const playlistLength = playlist?.length
+    if (playlistLength) {
+      let defineNextVideo
+      playlist.forEach((videoItem, index) => {
+        if (videoItem.id === activeVideo) {
+          defineNextVideo = playlist[index + 1]?.url
+        }
+      })
+      if (defineNextVideo) {
+        setNextVideo(defineNextVideo)
+        setIsLastVideo(false)
+      }
+    }
+    //eslint-disable-next-line
+  }, [])
+  
+
+  useEffect(() => {
     if (!autoplay) {
       const autoplayPreferences = getData(VIDEO_AUTOPLAY)
       setAutoplay(autoplayPreferences)
