@@ -28,3 +28,9 @@ export const enum BillboardTarget {
   Home = 'HOME',
   Live = 'LIVE',
 }
+
+export type Reaction = {
+  name: string,
+  value: string,
+  html: string
+}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { useThemeStore } from 'services/stores/theme'
 import { Popover } from 'components'
-import { Input, InputGroup, InputRightElement } from '@chakra-ui/input'
+import { Input, InputGroup, InputRightElement, Box } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import {
   LivechatFooterMain,
@@ -14,11 +14,13 @@ import { colors } from 'styles'
 import { Props } from './types'
 import { availableReactions } from '../../settings'
 import { useTranslation } from 'react-i18next'
+import { Reaction as ReactionType } from 'types/common'
 
 const LivechatFooter = ({ sendMessage, sendReaction }: Props) => {
   const { colorMode } = useThemeStore()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [newMessage, setNewMessage] = useState<string>('')
+  const [activeReaction, setActiveReaction] = useState<ReactionType>()
   const { t } = useTranslation()
 
   const colorLayout = {
@@ -50,13 +52,26 @@ const LivechatFooter = ({ sendMessage, sendReaction }: Props) => {
           {availableReactions.map((reaction) => (
             <Reaction
               key={`${reaction.value}-popover`}
-              onClick={() => sendReaction(reaction.name)}
+              onClick={() => {
+                sendReaction(reaction.name)
+                setActiveReaction(reaction)
+                onClose()
+              }}
             >
               {reaction.value}
             </Reaction>
           ))}
         </PopoverIcon>
       </Popover>
+      {activeReaction && (
+        <Box
+          cursor="pointer"
+          onClick={() => sendReaction(activeReaction.name)}
+          fontSize="1.6rem"
+        >
+          {activeReaction.value}
+        </Box>
+      )}
       <InputGroup
         size="lg"
         borderRadius="6px"
