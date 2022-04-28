@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { AspectRatio, Image, Box, Text, Badge } from '@chakra-ui/react'
+import { AspectRatio, Image, Box, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Wrapper, InfoBox, Title, BlockedContent, PlayIcon } from './style'
 import { VideoPostCardProps } from 'types/posts'
