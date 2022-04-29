@@ -248,6 +248,9 @@ const PT_BR = {
         pinned_categories: 'Categorias favoritas',
         pinned_videos: 'Vídeos favoritos',
       },
+      tag: {
+        no_content: 'Tag sem conteúdo'
+      },
       account: {
         title: 'Minha conta',
         push_notifications: 'Notificações Push',

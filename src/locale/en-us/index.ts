@@ -249,6 +249,9 @@ const EN_US = {
         pinned_categories: 'Favorite Categories',
         pinned_videos: 'Favorite Videos',
       },
+      tag: {
+        no_content: 'Tag has no content'
+      },
       account: {
         title: 'My Account',
         push_notifications: 'Push Notifications',
