@@ -23,6 +23,8 @@ import { useCustomizationStore } from 'services/stores'
 import { VerifyPostKind } from '../components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 import { AlertNextVideo } from './AlertNextVideo'
+import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
+import { getData } from 'services/storage'
 
 const VideoPostPage = () => {
   const { t } = useTranslation()
@@ -39,6 +41,8 @@ const VideoPostPage = () => {
   const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
   const [mediaUrl, setMediaUrl] = useState('')
   const [activeMedia, setActiveMedia] = useState('')
+  const definePlayerIsMuted = getData(VIDEO_MUTED)
+  const definePlayerVolume = getData(VIDEO_VOLUME)
 
   const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
     variables: { slug },
@@ -168,6 +172,8 @@ const VideoPostPage = () => {
           src={mediaUrl}
           title={postData?.title}
           subtitle={postData?.description}
+          isMuted={definePlayerIsMuted}
+          setVolumeValue={definePlayerVolume}
         />
         <AlertNextVideo />
       </Video>

@@ -11,8 +11,9 @@ import 'videojs-mux'
 
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
-import { SHOW_NEXT_VIDEO_IN } from 'config/constants'
+import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { useVideoPlayerStore } from 'services/stores'
+import { saveData } from 'services/storage'
 
 const VideoPlayer = ({
   src,
@@ -25,10 +26,12 @@ const VideoPlayer = ({
   muxConfig,
   skin,
   options,
+  isMuted,
+  setVolumeValue
 }: VideoPlayerProps): ReactElement => {
+  const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
-  const playerRef = useRef(null)
 
   const defaultOptions = getDefaultConfigs(src, muxConfig, title, subtitle)
 
@@ -42,6 +45,7 @@ const VideoPlayer = ({
       player.registerPlugin('vttThumbnails', videoJsVttThumbnails)
     })
     player?.on('ready', () => {
+      player.volume(setVolumeValue)
       player.chromecast()
       player.overlay({
         overlays: [...(overlays || [])],
@@ -55,7 +59,12 @@ const VideoPlayer = ({
     })
 
     player?.on('ended', () => setEndedVideo(true))
-
+    player?.on('volumechange', () => {
+      const newVolumeValue = player.volume()
+      saveData(VIDEO_VOLUME, newVolumeValue)
+      const defineIsMuted = player.muted()
+      saveData(VIDEO_MUTED, defineIsMuted)
+    })
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
       const isRemainingTime = Boolean(remainingTime) && remainingTime < SHOW_NEXT_VIDEO_IN
@@ -67,9 +76,9 @@ const VideoPlayer = ({
 
   return (
     <VideoJS
-      ref={playerRef}
       options={{
         ...defaultOptions,
+        muted: isMuted,
         ...(isLiveStream ? { playbackRates: undefined } : {}),
         ...(isLiveStream ? { liveui: true } : {}),
         ...options,

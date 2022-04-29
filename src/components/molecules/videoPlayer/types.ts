@@ -1,5 +1,5 @@
 export interface VideoPlayerProps {
-  src: string; 
+  src: string;
   title?: string | undefined;
   isLiveStream?: boolean;
   subtitle?: string | undefined;
@@ -8,5 +8,7 @@ export interface VideoPlayerProps {
   muxConfig?: Object | undefined;
   options?: Object | undefined;
   skin?: string | undefined;
-  poster?: string
+  poster?: string;
+  isMuted?: boolean;
+  setVolumeValue?: number;
 }
