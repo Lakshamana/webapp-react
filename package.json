@@ -1,6 +1,6 @@
 {
-  "name": "webapp-react",
-  "version": "0.1.0",
+  "name": "@fanhero/webapp",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "yarn": "^1.22.4"
