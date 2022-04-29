@@ -1,0 +1,17 @@
+export const USER_INFO = '@App:user'
+export const AUTH_TOKEN = '@App:token'
+export const FIREBASE_TOKEN = '@App:fbtoken'
+export const ACCOUNT_INFO = '@App:account'
+export const APP_LOCALE = '@App:locale'
+export const APP_THEME = '@App:theme'
+export const ORGANIZATION_INFO = '@App:organization'
+export const CHANNEL_INFO = '@App:channel'
+export const VIDEO_AUTOPLAY = '@App:videoautoplay'
+export const VIDEO_MUTED = '@App:videomuted'
+export const VIDEO_VOLUME = '@App:videovolume'
+export const SHOW_NEXT_VIDEO_IN = 10
+export const MAX_CARDS_SCROLLER_RESULTS = 10
+export const DEFAULT_POLLING_INTERVAL = 20 * 1000
+export const DEFAULT_LIMIT_QUERY = 20
+export const DEFAULT_PAGESIZE_FEEDS = 5
+export const DEFAULT_PAGESIZE_COMMENTS = 10

@@ -1,0 +1,38 @@
+.vjs-vtt-thumbnail-display {
+  width: 160px;
+  height: 90px;
+}
+
+.vjs-chromecast-button {
+  display: block !important;
+}
+
+.vjs-chromecast-button .vjs-icon-placeholder {
+  width: 50% !important;
+  height: 50% !important;
+}
+
+.vjs-quality-selector .vjs-menu-content {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.vjs-quality-selector .vjs-menu-content .vjs-menu-title {
+  display: none;
+}
+
+.vjs-quality-selector .vjs-menu-content li {
+  flex: 0 0 auto;
+}
+
+.vjs-quality-selector .vjs-menu-content li:nth-child(6):after,
+.vjs-quality-selector .vjs-menu-content li:nth-child(7):after {
+  content: " HD";
+  color: #c53911;
+  margin-left: 3px;
+  text-transform: uppercase;
+}
+
+.vjs-layout-medium .vjs-menu-button-popup .vjs-menu .vjs-menu-content {
+  max-height: 20em !important;
+}

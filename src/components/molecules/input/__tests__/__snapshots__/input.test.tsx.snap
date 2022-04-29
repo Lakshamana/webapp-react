@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input test suit - Input renders without crashing given the required props 1`] = `
+<InputWrapper
+  background="#444444"
+  border="1px solid #eaebeb"
+  color="white"
+  disabled={false}
+  onChangeShowPassword={[Function]}
+  placeholderColor="#F2FFF8"
+  required={false}
+  rightIcon=""
+  type="text"
+>
+  <InputInline
+    autoComplete="off"
+    background="#444444"
+    color="#fff"
+    onKeyDown={[Function]}
+    placeholderColor="#F2FFF8"
+    type="text"
+  />
+</InputWrapper>
+`;
