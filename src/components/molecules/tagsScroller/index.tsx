@@ -34,7 +34,7 @@ const TagsScroller = ({
   const [getTag, { data, loading }] = useLazyQuery(QUERY_TAG, {
     variables: {
       id: tagID,
-    }
+    },
   })
 
   useEffect(() => {
@@ -124,7 +124,7 @@ const TagsScroller = ({
         >
           {sectionTitle}
         </Text>
-        {hasMoreLink && (
+        {hasMoreLink && !!filteredItems?.length ? (
           <Link
             color={colors.brand.action_link[colorMode]}
             fontSize={'1.27rem'}
@@ -132,6 +132,10 @@ const TagsScroller = ({
           >
             {t('common.more')}
           </Link>
+        ) : (
+          <Box fontSize={'1.1rem'} color={colors.secondaryText[colorMode]}>
+            {t('page.tag.no_content')}
+          </Box>
         )}
       </Header>
     )
