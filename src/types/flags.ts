@@ -58,7 +58,7 @@ export type CarouselFlags = {
   ORDER: number
   LABEL: LocaleFlags[]
   CONTENT_TYPE: HomeCarouselsTypes[]
-  TAGS: []
+  TAGS: string
 }
 
 export type LocaleFlags = {

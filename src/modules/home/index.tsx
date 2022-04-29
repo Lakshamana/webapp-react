@@ -249,14 +249,11 @@ const HomePage = () => {
   const renderTagsScroller = (item: CarouselFlags) => (
     <TagsScroller
       key={`${item.LABEL[0].VALUE}`}
-      tagID={item.TAGS.slice(0, 1).shift()}
+      tagID={item.TAGS}
       hasMoreLink={true}
       content={item.CONTENT_TYPE}
       sectionTitle={getCarouselLabel(item)}
-      sectionUrl={`/c/${activeChannel?.slug}/tag/${item.TAGS.slice(
-        0,
-        1
-      ).shift()}`}
+      sectionUrl={`/c/${activeChannel?.slug}/tag/${item.TAGS}`}
     />
   )
 
