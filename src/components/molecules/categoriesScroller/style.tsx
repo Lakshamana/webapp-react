@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Header: any = styled.div`
     display: flex;
-    align-items: center;
+    align-items: baseline;
     margin-bottom: 10px;
 `;
 
