@@ -253,7 +253,7 @@ const HomePage = () => {
       hasMoreLink={true}
       content={item.CONTENT_TYPE}
       sectionTitle={getCarouselLabel(item)}
-      sectionUrl={`/c/${activeChannel?.slug}/tag/${item.TAGS}`}
+      sectionUrl={`/c/${activeChannel?.slug}/tag/`}
     />
   )
 
