@@ -1,5 +1,9 @@
-
 {
-    "root": "build",
-    "clean_urls": true
+  "root": "build/",
+  "clean_urls": true,
+  "routes": {
+    "/assets/*": "/assets/",
+    "/**": "index.html",
+    "error_page": "errors/error.html"
+  }
 }
