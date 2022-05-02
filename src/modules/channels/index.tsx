@@ -9,6 +9,7 @@ import { Channel } from 'generated/graphql'
 import { Container, Text, Skeleton } from 'components'
 import { ChannelsGrid } from './components'
 import { colors } from 'styles'
+import { IDefinedChannels } from './types'
 
 const ChannelsPage = () => {
   const { t } = useTranslation()
@@ -17,11 +18,20 @@ const ChannelsPage = () => {
   const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
 
+  const definedChannel = async ({ id, name, slug = '' }: IDefinedChannels) => {
+    await setActiveChannel({ id, name, slug })
+    history.push(`/c/${slug}`)
+  }
+
   const { data, loading } = useQuery(QUERY_CHANNELS, {
     variables: {
       filter: {},
     },
-    onCompleted: (result) => {
+    onCompleted: async (result) => {
+      if (result.channels.length === 1) {
+        await definedChannel({ ...result.channels[0] })
+        return
+      }
       setChannelsList(result.channels)
     },
   })
@@ -31,13 +41,11 @@ const ChannelsPage = () => {
       (channel: Channel) => channel.id === channelId
     )
     if (selected?.length) {
-      const myChannel = selected[0]
-      await setActiveChannel({
-        id: myChannel.id,
-        name: myChannel.name,
-        slug: myChannel.slug || '',
+      await definedChannel({
+        id: selected[0].id,
+        name: selected[0].name,
+        slug: selected[0].slug || ''
       })
-      history.push(`/c/${myChannel.slug}`)
     }
   }
 
