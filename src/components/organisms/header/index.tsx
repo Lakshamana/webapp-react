@@ -30,7 +30,7 @@ const HeaderComponent = () => {
   const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { setTabsList, setActiveTab, tabsList } = useTabsStore()
-  const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
+  const { activeChannel, setActiveChannelMenu, activeChannelMenu, channelsList } =
     useChannelsStore()
   const { generateImage } = useThumbor()
   const history = useHistory()
@@ -186,12 +186,16 @@ const HeaderComponent = () => {
             }}
             maxWidth={isDesktop ? '180px' : '120px'}
           />
-          <Center height="30px">
-            <Divider orientation="vertical" color={colors.grey['700']} />
-          </Center>
-          {!state.openSearch && (
-            <ChannelSelector closeSideMenu={handleCloseMenu} />
-          )}
+          {channelsList && channelsList?.length > 1 &&
+            <>
+              <Center height="30px">
+                <Divider orientation="vertical" color={colors.grey['700']} />
+              </Center>
+              {!state.openSearch && (
+                <ChannelSelector closeSideMenu={handleCloseMenu} />
+              )}
+            </>
+          }
         </Container>
         {!state.openSearch && (
           <Container
