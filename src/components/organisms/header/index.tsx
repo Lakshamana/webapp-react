@@ -186,7 +186,7 @@ const HeaderComponent = () => {
             }}
             maxWidth={isDesktop ? '180px' : '120px'}
           />
-          {channelsList && channelsList?.length > 1 &&
+          {channelsList && !!channelsList?.length &&
             <>
               <Center height="30px">
                 <Divider orientation="vertical" color={colors.grey['700']} />
