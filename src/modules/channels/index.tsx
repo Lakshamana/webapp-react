@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
+import { Spinner, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { QUERY_CHANNELS } from 'services/graphql'
@@ -9,19 +10,31 @@ import { Channel } from 'generated/graphql'
 import { Container, Text, Skeleton } from 'components'
 import { ChannelsGrid } from './components'
 import { colors } from 'styles'
+import { IDefinedChannels } from './types'
 
 const ChannelsPage = () => {
   const { t } = useTranslation()
   const history = useHistory()
   const { colorMode } = useThemeStore()
+  const [loading, setLoading] = useState(true)
   const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
 
-  const { data, loading } = useQuery(QUERY_CHANNELS, {
+  const definedChannel = async ({ id, name, slug = '' }: IDefinedChannels) => {
+    await setActiveChannel({ id, name, slug })
+    history.push(`/c/${slug}`)
+  }
+
+  const { data } = useQuery(QUERY_CHANNELS, {
     variables: {
       filter: {},
     },
-    onCompleted: (result) => {
+    onCompleted: async (result) => {
+      if (result.channels.length === 1) {
+        await definedChannel({ ...result.channels[0] })
+        return
+      }
+      setLoading(false)
       setChannelsList(result.channels)
     },
   })
@@ -31,13 +44,11 @@ const ChannelsPage = () => {
       (channel: Channel) => channel.id === channelId
     )
     if (selected?.length) {
-      const myChannel = selected[0]
-      await setActiveChannel({
-        id: myChannel.id,
-        name: myChannel.name,
-        slug: myChannel.slug || '',
+      await definedChannel({
+        id: selected[0].id,
+        name: selected[0].name,
+        slug: selected[0].slug || ''
       })
-      history.push(`/c/${myChannel.slug}`)
     }
   }
 
@@ -45,6 +56,22 @@ const ChannelsPage = () => {
     setPageTitle(t('page.channels.page_title'))
     //eslint-disable-next-line
   }, [])
+
+  if (loading) return (
+    <Flex
+      width="100vw"
+      alignSelf={'center'}
+      justifyContent={'center'}
+      backgroundColor={colors.bodyBg[colorMode]}
+    >
+      <Spinner
+        speed="0.65s"
+        thickness={'3px'}
+        size={'xl'}
+        color={colors.secondaryText[colorMode]}
+      />
+    </Flex>
+  )
 
   return (
     <Container defaultPadding flexDirection="column" width={'100%'}>
