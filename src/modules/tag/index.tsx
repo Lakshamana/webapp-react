@@ -13,12 +13,12 @@ import { QUERY_TAG } from 'services/graphql'
 import { sizes } from 'styles'
 
 const TagPage = () => {
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
   const { t } = useTranslation()
 
   const { data, loading } = useQuery(QUERY_TAG, {
     variables: {
-      id: id,
+      slug: slug,
     },
   })
 
