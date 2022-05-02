@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_TAG = gql`
-  query GetTag($id: ID!) {
-    tag(id: $id) {
+  query GetTag($id: ID, $slug: String) {
+    tag(id: $id, slug: $slug) {
       id
       title
       description
