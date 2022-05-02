@@ -20,7 +20,7 @@ import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
 import { colors, breakpoints } from 'styles'
 import { PlaylistOutput, Post } from 'generated/graphql'
 import { useCustomizationStore } from 'services/stores'
-import { VerifyPostKind } from '../components'
+import { VerifyContentKind } from '../components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 import { AlertNextVideo } from './AlertNextVideo'
 import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
@@ -144,9 +144,9 @@ const VideoPostPage = () => {
 
   if (isVerifyingAccessPermission)
     return (
-      <VerifyPostKind
-        postSlug={slug}
-        postType={'video'}
+      <VerifyContentKind
+        contentSlug={slug}
+        contentType={'post'}
         accessGranted={() => setIsVerifyingAccessPermission(false)}
       />
     )
