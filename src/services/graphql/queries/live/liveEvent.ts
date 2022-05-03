@@ -55,3 +55,13 @@ export const QUERY_LIVE_EVENT = gql`
     }
   }
 `
+export const QUERY_VERIFY_LIVE_EVENT_KIND = gql`
+  query GetLiveEventKind($slug: String) {
+    liveEvent(slug: $slug) {
+      id
+      title
+      access
+      kind
+    }
+  }
+`

@@ -1,1 +1,1 @@
-export * from './verifyPostKind'
+export * from './verifyContentKind'

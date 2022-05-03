@@ -128,7 +128,7 @@ const TagsScroller = ({
           <Link
             color={colors.brand.action_link[colorMode]}
             fontSize={'1.27rem'}
-            to={sectionUrl || ''}
+            to={`${sectionUrl}${data?.tag?.slug}`}
           >
             {t('common.more')}
           </Link>

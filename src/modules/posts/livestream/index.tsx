@@ -10,6 +10,7 @@ import { useMediaQuery } from '@chakra-ui/react'
 import { Container, Text, Badge, Countdown, Skeleton } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
 import { Livechat } from 'components/organisms'
+import { VerifyContentKind } from '../components'
 import { LiveDetails, Title, Subtitle, Live } from './style'
 import { colors, sizes, breakpoints } from 'styles'
 
@@ -27,6 +28,9 @@ const LivePostPage = () => {
   const { setPageTitle } = useCommonStore()
   const [livechatState, setlivechatState] = useState(true)
   const [userCount, setUserCount] = useState<number>(1)
+  const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
+    useState<boolean>(true)
+
   const { slug } = useParams<{ slug: string }>()
   const [livestream, setLivestream] = useState<LiveEvent>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -48,6 +52,15 @@ const LivePostPage = () => {
     }
     // eslint-disable-next-line
   }, [livestream])
+
+  if (isVerifyingAccessPermission)
+    return (
+      <VerifyContentKind
+        contentSlug={slug}
+        contentType={'live'}
+        accessGranted={() => setIsVerifyingAccessPermission(false)}
+      />
+    )
 
   if (loading)
     <Box p={sizes.paddingSm} width="100%">
