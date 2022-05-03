@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
-import { useLazyQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 import { intervalToDuration } from 'date-fns'
 import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -18,82 +18,30 @@ const FeedPage = () => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
-  const { stateFeed, setStateFeed } = useFeedStore()
-  const [filterBy, SetFilterBy] = useState<SortDirection>(stateFeed.filterBy)
-  const [listOfPosts, setListOfPosts] = useState(stateFeed.listOfPosts)
-  const [hasMore, setHasMore] = useState(stateFeed.hasMore)
-  const [position, setPosition] = useState(stateFeed.position)
-  const page = useRef(stateFeed.page)
-  const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
-    fetchPolicy: "network-only"
+  const lastPositionCard = useFeedStore(state => state.lastPositionCard)
+  const setLastPositionCard = useFeedStore(state => state.setLastPositionCard)
+  const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
+
+  const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
+
+  const { data: dataPosts, loading: loadingPosts, fetchMore, refetch } = useQuery(QUERY_POSTS, {
+    context: { headers: { channel: activeChannel?.id } },
+    variables: {
+      filter: {
+        page: 1,
+        pageSize: DEFAULT_PAGESIZE_FEEDS,
+        sortBy: getSortByFilter()
+      }
+    }
   })
 
-  const handleScroll = () => {
-    const positionY = window.pageYOffset;
-    setPosition(positionY);
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { refetch() }, [filterBy])
 
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
     { value: 'ASC', label: t('page.feed.search_options.old') }
   ]
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.scrollTo(0, position)
-    setPageTitle(t('header.tabs.feed'))
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const updateState = () =>
-    setStateFeed({
-      position,
-      filterBy,
-      listOfPosts,
-      hasMore,
-      page: page.current,
-    })
-
-
-  useEffect(() => {
-    if (activeChannel && listOfPosts.length === 0) {
-      getPosts()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeChannel, listOfPosts])
-
-  useEffect(() => {
-    if (!dataPosts) return
-    setHasMore(dataPosts.posts.hasNextPage)
-    convertDataPost(dataPosts.posts.rows)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataPosts])
-
-  const getPosts = () => {
-    loadPosts({
-      context: { headers: { channel: activeChannel?.id } },
-      variables: {
-        filter: {
-          page: page.current,
-          pageSize: DEFAULT_PAGESIZE_FEEDS,
-          sortBy: getSortByFilter()
-        }
-      }
-    })
-  }
-
-  const loadMore = () => {
-    if (hasMore) {
-      page.current = page.current + 1
-      getPosts()
-    }
-  }
-
-  const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
 
   const getImageUrl = (post) => {
     const defineType = post.type === 'IMAGE' ? 'media' : 'thumbnail'
@@ -117,65 +65,84 @@ const FeedPage = () => {
   }
 
   //TODO: refact this soon
-  const convertDataPost = (rawPosts) => {
-    const preparedPost = rawPosts
-      .filter(({ inFeed }) => inFeed)
-      .map(post => {
-        const duration = post?.duration && intervalToDuration({ start: 0, end: post?.duration * 1000 })
+  const convertDataPost = (post) => {
+    const duration = post?.duration && intervalToDuration({ start: 0, end: post?.duration * 1000 })
+    const mediaLength = !duration
+      ? ''
+      : `${duration.hours ? `${duration.hours}:` : ''}${duration.minutes}:${duration.seconds}`
 
-        const mediaLength = !duration
-          ? ''
-          : `${duration.hours ? `${duration.hours}:` : ''}${duration.minutes}:${duration.seconds}`
+    const coverImage = getImageUrl(post)
+    const date = () => {
+      if (post?.publishedAt) {
+        return translateFormatDistance(post?.publishedAt)
+      }
+    }
+    const type = post?.type &&
+      post.type.charAt(0).toUpperCase() + post.type.slice(1)
 
-        const coverImage = getImageUrl(post)
-
-        const date = () => {
-          if (post?.publishedAt) {
-            return translateFormatDistance(post?.publishedAt)
-          }
-        }
-
-        const type = post?.type &&
-          post.type.charAt(0).toUpperCase() + post.type.slice(1)
-
-        //TODO: why some items has default value?
-        return {
-          id: post.id,
-          slug: post.slug,
-          postTitle: post.title,
-          postDescription: post.description,
-          date: date(),
-          type,
-          hasActivity: true,
-          displayViews: true,
-          countMessages: post.countComments,
-          countReactions: post.countReactions,
-          myReactions: post.myReactions,
-          reactions: post.reactions,
-          coverImage,
-          mediaLength,
-          views: post.counts?.countViews,
-          audioTitle: post.audioTitle,
-          audioArtist: post.audioArtist,
-          timeRemaining: '',
-          itemQuestion: '',
-          percentage: '',
-          voted: !!post.myVote,
-          isExclusive: isEntityBlocked(post),
-          // TODO: geoLock waiting for API
-          isGeolocked: false,
-        }
-      })
-    setListOfPosts(listOfPosts.concat(preparedPost))
+    //TODO: why some items has default value?
+    return {
+      id: post.id,
+      slug: post.slug,
+      postTitle: post.title,
+      postDescription: post.description,
+      date: date(),
+      type,
+      hasActivity: true,
+      displayViews: true,
+      countMessages: post.countComments,
+      countReactions: post.countReactions,
+      myReactions: post.myReactions,
+      reactions: post.reactions,
+      coverImage,
+      mediaLength,
+      views: post.counts?.countViews,
+      audioTitle: post.audioTitle,
+      audioArtist: post.audioArtist,
+      timeRemaining: '',
+      itemQuestion: '',
+      percentage: '',
+      voted: !!post.myVote,
+      isExclusive: isEntityBlocked(post),
+      // TODO: geoLock waiting for API
+      isGeolocked: false,
+    }
   }
 
   const handleFilterChange = (evt: any) => {
     const { value } = evt?.target;
     SetFilterBy(value)
-    page.current = 1
-    setHasMore(true)
-    setListOfPosts([])
   }
+
+  const getNextRecords = () => {
+    if (dataPosts?.posts) {
+      const updatePage = dataPosts?.posts.page + 1
+      fetchMore({
+        variables: {
+          filter: {
+            page: updatePage,
+            pageSize: DEFAULT_PAGESIZE_FEEDS,
+            sortBy: getSortByFilter()
+          }
+        }
+      })
+    }
+  }
+
+  const handleScroll = () => () => {
+    const positionY = window.pageYOffset;
+    setLastPositionCard(positionY);
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
+
+  useEffect(() => {
+    if (window) {
+      window.scrollTo(0, lastPositionCard)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const loadingItems = (number) => (
     <Center width="100%" height="100%" flexDirection="column">
@@ -188,17 +155,12 @@ const FeedPage = () => {
   return (
     <Center width="100%" height="100%" flexDirection="column">
       {
-        loadingPosts &&
-        <>
-          {
-            listOfPosts.length === 0
-              ? loadingItems(4)
-              : <EmptyState />
-          }
-        </>
+        loadingPosts && !!dataPosts?.posts.rows.length &&
+        loadingItems(4)
       }
       {
-        !loadingPosts && listOfPosts.length > 0 &&
+        !loadingPosts &&
+        !!dataPosts?.posts.rows.length &&
         <Container
           flexDirection="column"
           width="100%"
@@ -213,15 +175,29 @@ const FeedPage = () => {
           />
         </Container>
       }
+      {
+        !loadingPosts &&
+        !!!dataPosts?.posts.rows.length &&
+        <EmptyState />
+      }
       <InfiniteScroll
-        dataLength={listOfPosts.length}
-        next={loadMore}
-        hasMore={hasMore}
+        dataLength={dataPosts?.posts?.rows.length || 0}
+        hasMore={dataPosts?.posts.hasNextPage}
         loader={loadingItems(2)}
+        next={getNextRecords}
       >
-        {listOfPosts.map((post, key) =>
-          <FeedPostCard key={key} {...post} updateState={updateState} />
-        )}
+        {dataPosts?.posts?.rows
+          .filter(({ inFeed }) => inFeed)
+          .map((post, key) => {
+            const preparePost = convertDataPost(post)
+            return (
+              <FeedPostCard
+                key={key}
+                updateState={handleScroll}
+                {...preparePost}
+              />
+            )
+          })}
       </InfiniteScroll>
     </Center >
   )
