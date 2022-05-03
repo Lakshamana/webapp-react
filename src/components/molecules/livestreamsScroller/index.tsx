@@ -52,11 +52,7 @@ const LivestreamScroller = ({
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
       live.thumbnail?.imgPath || '',
-      {
-        size: {
-          height: 400,
-        },
-      }
+      imageOptions
     )
     return image
   }
