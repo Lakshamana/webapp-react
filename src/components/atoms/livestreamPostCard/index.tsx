@@ -33,7 +33,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
               width={20}
               color={colors.white}
               icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
-            ></Icon>
+            />
           </BlockedContent>
         )}
         {isLive && (

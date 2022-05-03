@@ -75,7 +75,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
           width="15px"
           height="15px"
           color={colors.brand.primary[colorMode]}
-        ></Spinner>
+        />
       )}
       {!isLoading && (
         <Icon
@@ -85,7 +85,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
               ? colors.brand.primary[colorMode]
               : colors.generalText[colorMode]
           }
-        ></Icon>
+        />
       )}
     </Box>
   )
