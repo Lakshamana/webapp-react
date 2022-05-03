@@ -8,7 +8,7 @@ import {
   MUTATION_CREATE_ACCOUNT_GDPR,
 } from 'services/graphql'
 import { useCommonStore } from 'services/stores'
-import { SocialSignIn } from 'services/firebase'
+import { authWithCustomToken, SocialSignIn } from 'services/firebase'
 import { SocialType } from 'types/common'
 import { saveData } from 'services/storage'
 import {
@@ -32,10 +32,8 @@ const LoginPage = () => {
   const { setPageTitle } = useCommonStore()
   const [account, setAccount] = useState('')
 
-  useEffect(() => {
-    setPageTitle(t('signin.actions.login'))
-    //eslint-disable-next-line
-  }, [])
+  //eslint-disable-next-line
+  useEffect(() => setPageTitle(t('signin.actions.login')), [])
 
   const errorMessage = (type: string) => {
     const Error = {
@@ -46,31 +44,37 @@ const LoginPage = () => {
       ),
       default: t('common.error.generic_api_error'),
     }
-
     return Error[type] || Error.default
   }
 
-  const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
-    onCompleted: async (result) => {
-      await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
-      await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
-      await updateAccount(result.signIn.account)
+  const signInProcess = async ({ accessToken, firebaseToken, account }) => {
+    await saveData(AUTH_TOKEN, accessToken)
+    await saveData(FIREBASE_TOKEN, firebaseToken)
+    await authWithCustomToken()
+    await updateAccount(account)
+  }
 
+  const [signIn, { loading }] = useMutation(MUTATION_SIGNIN, {
+    onCompleted: async ({ signIn }) => {
+      await signInProcess({
+        accessToken: signIn.token.accessToken,
+        firebaseToken: signIn.token.firebaseToken,
+        account: signIn.account
+      })
       history.push('/channels')
     },
-    onError: (error) => {
-      setError(errorMessage(error.message))
-    },
+    onError: ({ message }) => setError(errorMessage(message))
   })
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(
     MUTATION_SOCIAL_SIGNIN,
     {
       onCompleted: async (result) => {
-        await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
-        await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
-        await updateAccount(result.socialSignIn.account)
-
+        await signInProcess({
+          accessToken: result.socialSignIn.token.accessToken,
+          firebaseToken: result.socialSignIn.token.firebaseToken,
+          account: result.socialSignIn.account
+        })
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('LGPD')
           setAccount(result.socialSignIn.account.id)
@@ -78,7 +82,7 @@ const LoginPage = () => {
           history.push('/channels')
         }
       },
-      onError: (error) => setError(errorMessage(error.message)),
+      onError: ({ message }) => setError(errorMessage(message)),
     }
   )
 
@@ -87,9 +91,7 @@ const LoginPage = () => {
       onCompleted: async (result) => {
         if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
       },
-      onError: (error) => {
-        setError(errorMessage(error.message))
-      },
+      onError: ({ message }) => setError(errorMessage(message))
     })
 
   const handleGDPRSubmit = () => {
@@ -103,24 +105,16 @@ const LoginPage = () => {
     })
   }
 
-  const handleFormSubmit = (FormData) => {
-    signIn({
-      variables: { ...FormData },
-    })
-  }
+  const handleFormSubmit = (FormData) => signIn({ variables: { ...FormData } })
 
   const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)
-      .then((input) => {
-        socialSignIn({
-          variables: {
-            input,
-          },
-        })
-      })
-      .catch((error) => {
-        setError(`${error}`)
-      })
+      .then((input) => socialSignIn({
+        variables: {
+          input,
+        }
+      }))
+      .catch((error) => setError(`${error}`))
   }
 
   const renderStep = () => {
@@ -130,12 +124,10 @@ const LoginPage = () => {
           <SigninForm
             handleFormSubmit={handleFormSubmit}
             handleSocialSubmit={handleSocialSignIn}
-            dispatchError={() => {
-              setError('')
-            }}
+            dispatchError={() => setError('')}
             isLoading={loading || SocialLoading}
             error={error}
-          ></SigninForm>
+          />
         )
       case 'LGPD':
         return (
@@ -143,13 +135,13 @@ const LoginPage = () => {
             handleFormSubmit={handleGDPRSubmit}
             onCancel={() => setActiveStep('Login')}
             isLoading={createAccountGDPRLoading}
-          ></GDPRForm>
+          />
         )
       case 'ConfirmEmail':
         return (
           <ConfirmEmailForm
             onClose={() => setActiveStep('Login')}
-          ></ConfirmEmailForm>
+          />
         )
     }
   }

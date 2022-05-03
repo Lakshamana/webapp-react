@@ -11,6 +11,7 @@ import { setContext } from '@apollo/client/link/context'
 import { AUTH_TOKEN, FIREBASE_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
+import { authWithCustomToken, isUserLoggedFB, signOutFB } from 'services/firebase'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
 const httpLink = createHttpLink({
@@ -26,7 +27,7 @@ const setIsRefreshing = (value) => {
 
 const addPendingRequest = (pendingRequest: Function) => pendingRequests.push(pendingRequest)
 
-const resolvePendingRequests = () => {
+const resolvePendingRequests = async () => {
   pendingRequests.map((callback: any) => callback())
   pendingRequests = []
 }
@@ -89,7 +90,7 @@ const errorLink = onError(
           const token = getData(AUTH_TOKEN)
           return fromPromise(
             refreshToken(token)
-              .then(({ data }: any) => {
+              .then(async ({ data }: any) => {
                 const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
                 const firebaseToken = data?.data?.refreshToken?.refreshToken?.firebaseToken
                 if (!accessToken || !firebaseToken) {
@@ -98,6 +99,9 @@ const errorLink = onError(
                 }
                 saveData(AUTH_TOKEN, accessToken)
                 saveData(FIREBASE_TOKEN, firebaseToken)
+                const isFBLogged = await isUserLoggedFB()
+                if (isFBLogged) await signOutFB()
+                await authWithCustomToken()
                 const headers = operation.getContext().headers
                 operation.setContext({
                   headers: {
