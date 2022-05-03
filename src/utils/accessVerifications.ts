@@ -1,8 +1,7 @@
-import { Post, Kinds, Category, LiveEvent } from 'generated/graphql'
+import { Post, Kinds, Category, LiveEvent, PostAccess } from 'generated/graphql'
 
-//TODO: Add LiveEvent
 export const isEntityOnPaywall = (entity: Post | Category | LiveEvent) => {
-  return entity.access === 'DENY' && entity.kind === Kinds.Paywall
+  return entity.access !== PostAccess.Granted && entity.kind === Kinds.Paywall
 }
 
 export const isEntityPrivate = (entity: Post | Category | LiveEvent) => {

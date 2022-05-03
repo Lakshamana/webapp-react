@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex } from '@chakra-ui/react'
 
-import { useThemeStore } from 'services/stores/theme'
+import { useThemeStore, useCommonStore } from 'services/stores'
 import { useMediaQuery } from '@chakra-ui/react'
 
 import { Container, Text, Badge, Countdown, Skeleton } from 'components/atoms'
@@ -17,18 +17,22 @@ import { colors, sizes, breakpoints } from 'styles'
 import { LivestreamBadge } from 'types/livestreams'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
 import { stripHTML } from 'utils/helperFunctions'
-import { Status } from 'generated/graphql'
+import { LiveEvent, Status } from 'generated/graphql'
+import { StatusBadge } from './utils'
+import { Icon } from '@iconify/react'
 
 const LivePostPage = () => {
   const { t } = useTranslation()
-  const [optionsState, setOptionsState] = useState()
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
   const { colorMode } = useThemeStore()
+  const { setPageTitle } = useCommonStore()
   const [livechatState, setlivechatState] = useState(true)
+  const [userCount, setUserCount] = useState<number>(1)
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
     useState<boolean>(true)
+
   const { slug } = useParams<{ slug: string }>()
-  const [livestream, setLivestream] = useState<any>()
+  const [livestream, setLivestream] = useState<LiveEvent>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const { loading } = useQuery(QUERY_LIVE_EVENT, {
@@ -39,34 +43,13 @@ const LivePostPage = () => {
   const isScheduled = livestream?.status === Status.Scheduled
   const isFinished = livestream?.status === Status.Finished
 
-  const statusBadge = (status: Status): LivestreamBadge => {
-    const Badge = {
-      LIVE: {
-        label: t('page.post.live.live'),
-        color: colors.brand.live_badges?.live,
-      },
-      SCHEDULED: {
-        label: t('page.post.live.upcoming'),
-        color: colors.brand.live_badges?.upcoming,
-      },
-      PREPARING: {
-        label: t('page.post.live.upcoming'),
-        color: colors.brand.live_badges?.upcoming,
-      },
-      FINISHED: {
-        label: t('page.post.live.finished'),
-        color: colors.brand.live_badges?.finished,
-      },
-      default: {
-        label: t('page.post.live.upcoming'),
-        color: colors.brand.primary[colorMode],
-      },
-    }
-    return Badge[status] || Badge.default
-  }
-
   useEffect(() => {
-    setLiveBadge(statusBadge(livestream?.status || Status.Scheduled))
+    if (livestream) {
+      setPageTitle(livestream?.title)
+      setLiveBadge(
+        StatusBadge(livestream?.status || Status.Scheduled, colorMode)
+      )
+    }
     // eslint-disable-next-line
   }, [livestream])
 
@@ -108,7 +91,8 @@ const LivePostPage = () => {
               {liveBadge?.label}
             </Badge>
             <Badge background={colors.inputBg.dark} color="white">
-              <Text>99k</Text>
+              <Text mr={1}>{userCount}</Text>
+              <Icon icon="mdi:account"></Icon>
             </Badge>
           </Flex>
           {isLive && livestream && (
@@ -136,15 +120,14 @@ const LivePostPage = () => {
           {livestream && (
             <Livechat
               entityId={livestream?.id}
-              onChangeChat={(e) => setOptionsState(e)}
               onCloseChat={(e) => setlivechatState(!e)}
             />
           )}
         </Box>
       </Live>
       <LiveDetails>
-        <Title>{stripHTML(livestream?.title)}</Title>
-        <Subtitle>{stripHTML(livestream?.description)}</Subtitle>
+        <Title>{stripHTML(livestream?.title!)}</Title>
+        <Subtitle>{stripHTML(livestream?.description!)}</Subtitle>
       </LiveDetails>
     </Container>
   )
