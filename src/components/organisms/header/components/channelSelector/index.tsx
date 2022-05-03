@@ -36,6 +36,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     onCompleted: (result) => setChannelsList(result.channels)
   })
 
+  //TODO: Refact this to use indexedDB instead make new request
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => getChannels(), [])
 
