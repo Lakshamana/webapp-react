@@ -153,7 +153,6 @@ const Client = new ApolloClient({
           posts: {
             keyArgs: [],
             merge(existing = { rows: [] }, incoming) {
-              console.log('POSTS API')
               const { rows } = incoming
               return {
                 ...incoming,
