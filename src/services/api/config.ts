@@ -28,9 +28,6 @@ const setIsRefreshing = (value) => {
 const addPendingRequest = (pendingRequest: Function) => pendingRequests.push(pendingRequest)
 
 const resolvePendingRequests = async () => {
-  const isFBLogged = await isUserLoggedFB()
-  if (isFBLogged) await signOutFB()
-  await authWithCustomToken()
   pendingRequests.map((callback: any) => callback())
   pendingRequests = []
 }
