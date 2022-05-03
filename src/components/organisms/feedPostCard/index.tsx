@@ -24,18 +24,16 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { activeChannel } = useChannelsStore()
   const { activeChannelConfig } = useCustomizationStore()
 
-  const getPostUrl = (slug: string) => {
-    return `/c/${activeChannel?.slug}/post/${slug}`
-  }
-
   const translateMapper = [
     'page.feed.no_comments',
     'page.feed.comment',
     'page.feed.comments',
   ]
 
+  const getPostUrl = (slug: string) => `/c/${activeChannel?.slug}/post/${slug}`
+
   return (
-    <FeedContent onClick={props.updateState}>
+    <FeedContent onClick={props.updateState()}>
       <CardContent>
         {props.type !== 'POLL' && (
           <Link to={getPostUrl(props.slug)}>
