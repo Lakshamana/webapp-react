@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const getAccount = () => {
-    new Promise(async (resolve, reject) => {
+    new Promise(async (resolve) => {
       try {
         const { data } = await client.query({
           query: QUERY_ME,
@@ -181,14 +181,10 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    if (!accessToken && !firebaseToken) return
     loadAccount()
     // eslint-disable-next-line
-  }, [accessToken])
-
-  useEffect(() => {
-    if (accessToken && !isUserLoggedFB()) authWithCustomToken()
-    //eslint-disable-next-line
-  }, [firebaseToken])
+  }, [accessToken, firebaseToken])
 
   useEffect(() => {
     if (activeChannel?.id) {
