@@ -3,7 +3,6 @@ import { useLocation, matchPath, useHistory } from 'react-router-dom'
 import { useLazyQuery } from '@apollo/client'
 import { QUERY_MENUS } from 'services/graphql'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Divider, Center } from '@chakra-ui/react'
 import { Container, Logo, UserInfo } from 'components'
 import {
   Tabs,
@@ -19,7 +18,7 @@ import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { initialState, SEARCH_VALUES } from './settings'
 import { defaultProps, SearchResults } from './types'
 import { handleContentSearch, reducer, getSelectedTab } from './utils'
-import { sizes, breakpoints, colors } from 'styles'
+import { sizes, breakpoints } from 'styles'
 import { HeaderContainer } from './styles'
 import { mapperTabName, useTabsStore } from 'services/stores/tabs'
 
@@ -186,16 +185,9 @@ const HeaderComponent = () => {
             }}
             maxWidth={isDesktop ? '180px' : '120px'}
           />
-          {channelsList && !!channelsList?.length &&
-            <>
-              <Center height="30px">
-                <Divider orientation="vertical" color={colors.grey['700']} />
-              </Center>
-              {!state.openSearch && (
-                <ChannelSelector closeSideMenu={handleCloseMenu} />
-              )}
-            </>
-          }
+          {!state.openSearch && (
+            <ChannelSelector closeSideMenu={handleCloseMenu} />
+          )}
         </Container>
         {!state.openSearch && (
           <Container

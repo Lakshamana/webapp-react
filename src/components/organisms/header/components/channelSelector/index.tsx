@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
 import { Box, Flex } from '@chakra-ui/layout'
-import { useMediaQuery } from '@chakra-ui/react'
+import { useMediaQuery, Divider, Center } from '@chakra-ui/react'
 import { PropsChannelSelector } from './types'
 
 import { Channel } from 'generated/graphql'
@@ -33,10 +33,12 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     variables: {
       filter: {},
     },
-    onCompleted: (result) => {
-      setChannelsList(result.channels)
-    },
+    onCompleted: (result) => setChannelsList(result.channels)
   })
+
+  //TODO: Refact this to use indexedDB instead make new request
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => getChannels(), [])
 
   const openChannelsList = () => {
     if (!channelsList?.length) {
@@ -60,49 +62,56 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     history.push(`/c/${channel.slug}`)
   }
 
+  if (loading || !!!channelsList?.length) return <></>
+
   return (
-    <CustomContainer ml={'12px'}>
-      <Flex alignItems="center">
-        {isDesktop && (
-          <Box mr={1} maxWidth={'70px'} wordBreak="normal">
-            <Text
-              lineHeight={1.2}
-              fontWeight={'100'}
-              color={colors.secondaryText[colorMode]}
-              fontSize="14px"
-            >
-              {t('header.channel_selector.select')}
-            </Text>
-          </Box>
-        )}
-        <Popover
-          isOpen={open}
-          width={'320px'}
-          placement={isDesktop ? 'bottom-start' : 'bottom-end'}
-          onOpen={() => openChannelsList()}
-          onClose={() => setOpen(false)}
-          popoverTrigger={
-            <button>
-              <ChannelSelected {...{ open, colorMode }} />
-            </button>
-          }
-        >
-          <Container flexDirection="column">
-            {/* <ChannelSearch
+    <>
+      <Center height="30px">
+        <Divider orientation="vertical" color={colors.grey['700']} />
+      </Center>
+      <CustomContainer ml={'12px'}>
+        <Flex alignItems="center">
+          {isDesktop && (
+            <Box mr={1} maxWidth={'70px'} wordBreak="normal">
+              <Text
+                lineHeight={1.2}
+                fontWeight={'100'}
+                color={colors.secondaryText[colorMode]}
+                fontSize="14px"
+              >
+                {t('header.channel_selector.select')}
+              </Text>
+            </Box>
+          )}
+          <Popover
+            isOpen={open}
+            width={'320px'}
+            placement={isDesktop ? 'bottom-start' : 'bottom-end'}
+            onOpen={() => openChannelsList()}
+            onClose={() => setOpen(false)}
+            popoverTrigger={
+              <button>
+                <ChannelSelected {...{ open, colorMode }} />
+              </button>
+            }
+          >
+            <Container flexDirection="column">
+              {/* <ChannelSearch
             {...{ search, colorMode }}
             onChange={() => handleSearch}
           /> */}
-            <Channels
-              selected={activeChannel}
-              channels={channelsList || []}
-              isLoading={loading}
-              onSelect={handleSelect}
-              {...{ colorMode }}
-            />
-          </Container>
-        </Popover>
-      </Flex>
-    </CustomContainer>
+              <Channels
+                selected={activeChannel}
+                channels={channelsList || []}
+                isLoading={loading}
+                onSelect={handleSelect}
+                {...{ colorMode }}
+              />
+            </Container>
+          </Popover>
+        </Flex>
+      </CustomContainer>
+    </>
   )
 }
 
