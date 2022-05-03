@@ -39,14 +39,17 @@ const PollPost = ({ ...props }: FeedPostCardProps) => {
 				</PollItem>
 			))}
 			<PollStatus {...props}>
-				<Flex
-					fontSize={14}
-					color={colors.grey["700"]}
-					alignItems={"center"}
-					gridGap={1}>
-					<Icon width={14} icon='mdi:check' />
-					{abbreviateNumber(props.voteCount)} {t("common.votes")}
-				</Flex>
+				{
+					props?.voteCount &&
+					<Flex
+						fontSize={14}
+						color={colors.grey["700"]}
+						alignItems={"center"}
+						gridGap={1}>
+						<Icon width={14} icon='mdi:check' />
+						{abbreviateNumber(props.voteCount)} {t("common.votes")}
+					</Flex>
+				}
 				<Divider
 					orientation='vertical'
 					height={4}
