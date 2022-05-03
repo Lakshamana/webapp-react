@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router'
 import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
+import { useMediaQuery } from '@chakra-ui/media-query'
+
 import {
   MUTATION_PIN_CATEGORY,
   MUTATION_UNPIN_CATEGORY,
@@ -10,8 +12,10 @@ import { Icon } from '@iconify/react'
 
 import { useThemeStore } from 'services/stores'
 import { CategoryPostCardProps } from 'types/categories'
-import { colors } from 'styles'
+import { colors, breakpoints } from 'styles'
 import { CardWrapper, PostContent, BlockedContent } from './style'
+
+import { stripHTML } from 'utils/helperFunctions'
 
 const CategoryPostCard = ({
   categoryUnpinned,
@@ -21,6 +25,7 @@ const CategoryPostCard = ({
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
   const [isCategoryPinned, setIsCategoryPinned] = useState(false)
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   useEffect(() => {
     setIsCategoryPinned(props.isPinned || false)
@@ -96,17 +101,17 @@ const CategoryPostCard = ({
       onMouseEnter={() => setHover(true)}
     >
       <PostContent onClick={selectCategory} {...props}>
-      {props.isExclusive && (
+        {props.isExclusive && (
           <BlockedContent>
             <Icon
               width={20}
               color={colors.white}
               icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
-            ></Icon>
+            />
           </BlockedContent>
         )}
       </PostContent>
-      {hover && (
+      {hover && isDesktop && (
         <Box
           position="absolute"
           padding="0.6rem"
@@ -123,14 +128,14 @@ const CategoryPostCard = ({
                 fontWeight="bolder"
                 color={colors.generalText[colorMode]}
               >
-                {props.title}
+                {stripHTML(props.title || '')}
               </Text>
               <Text
                 fontSize="0.7rem"
                 noOfLines={2}
                 color={colors.secondaryText[colorMode]}
               >
-                {props.description}
+                {stripHTML(props.description || '')}
               </Text>
             </Box>
             <Spacer px={1}></Spacer>

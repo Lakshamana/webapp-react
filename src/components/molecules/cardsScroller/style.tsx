@@ -25,6 +25,11 @@ export const SwiperStyled = styled(Swiper)`
       @media screen and (max-width: ${breakpoints.md}) {
         transform: scale(1.2);
       }
+
+      @media screen and (max-width: ${breakpoints.sm}) {
+        transform: none;
+        margin-top: 0px;
+      }
     }
 
     &:first-child:hover {
