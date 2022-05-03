@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import { useHistory } from 'react-router'
+import { useMediaQuery } from '@chakra-ui/media-query'
 import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +9,7 @@ import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
 
 import { CardWrapper, PostContent, BlockedContent, PlayContent } from './style'
-import { colors } from 'styles'
+import { colors, breakpoints } from 'styles'
 
 import { formattedSeconds, stripHTML } from 'utils/helperFunctions'
 import { VideoPostCardProps } from 'types/posts'
@@ -20,6 +21,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
   const [isPostPinned, setIsPostPinned] = useState(false)
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   useEffect(() => {
     setIsPostPinned(props.isPinned || false)
@@ -175,7 +177,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
           </PlayContent>
         )}
       </PostContent>
-      {hover && renderInfo()}
+      {hover && isDesktop && renderInfo()}
     </CardWrapper>
   )
 }

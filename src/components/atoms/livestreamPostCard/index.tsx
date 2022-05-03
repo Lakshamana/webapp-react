@@ -3,9 +3,11 @@ import { useHistory } from 'react-router'
 import { useThemeStore } from 'services/stores'
 import { Icon } from '@iconify/react'
 import { Flex, Box, Text } from '@chakra-ui/react'
+import { useMediaQuery } from '@chakra-ui/media-query'
+
 import { LivestreamPostCardProps } from 'types/livestreams'
 import { PostContent, BlockedContent, CardWrapper } from './style'
-import { colors } from 'styles'
+import { colors, breakpoints } from 'styles'
 import { Status } from 'generated/graphql'
 import { Badge } from '@chakra-ui/react'
 import { stripHTML } from 'utils/helperFunctions'
@@ -14,6 +16,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const isLive = props.status === Status.Live
 
@@ -42,7 +45,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
             top="0"
             right="0"
             m={2}
-            fontWeight='700'
+            fontWeight="700"
             color={colors.generalText[colorMode]}
             background={colors.brand.live_badges.live}
           >
@@ -50,7 +53,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
           </Badge>
         )}
       </PostContent>
-      {hover && (
+      {hover && isDesktop && (
         <Box
           position="absolute"
           padding="0.6rem"
