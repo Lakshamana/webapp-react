@@ -18,7 +18,7 @@ const TagPage = () => {
 
   const { data, loading } = useQuery(QUERY_TAG, {
     variables: {
-      slug: slug,
+      slug
     },
   })
 
