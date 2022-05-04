@@ -8,12 +8,12 @@ const InputInline = ({
   onChange,
   onBlur,
   placeholder = "",
-  error = false,
+  error,
   errorMessage = "",
   onKeyDown = () => { },
   background = "#444444",
   color = "",
-  inverted = false,
+  inverted,
   ...props
 }: Props) => {
   const ref: any = React.useRef(null);

@@ -2,10 +2,10 @@ import { ReactComponent as FanheroLogo } from './logo.svg'
 import { Image } from '@chakra-ui/react'
 import { Props, defaultProps } from './types'
 
-const Logo = ({ ...props }: Props): any => {
+const Logo = ({ clickable, ...props }: Props): any => {
   return (
     <Image
-      style={{cursor: props.clickable ? 'pointer' : '' }}
+      style={{cursor: clickable ? 'pointer' : '' }}
       {...props}
       fallback={<FanheroLogo/>}
     />
