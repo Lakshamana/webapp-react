@@ -39,7 +39,6 @@ import {
   LivestreamScroller,
 } from 'components/molecules'
 
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { convertToValidColor } from 'utils/helperFunctions'
 import { sizes } from 'styles'
 
@@ -63,7 +62,7 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  const [hasTagsContent, setHasTagsContent] = useState<boolean>(true)
+  const [hasTagsContent, setHasTagsContent] = useState<boolean>(false)
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -75,7 +74,7 @@ const HomePage = () => {
       fetchPolicy: 'cache-and-network',
     })
 
-  const [getLiveEvents, { stopPolling }] = useLazyQuery(
+  const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
     QUERY_LIVE_EVENTS,
     {
       variables: {
@@ -84,11 +83,10 @@ const HomePage = () => {
         },
       },
       onCompleted: (result) => {
-        setLiveEventsData(result.liveEvents.rows)
+        setLiveEventsData(result?.liveEvents?.rows)
       },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',
-      pollInterval: DEFAULT_POLLING_INTERVAL,
     }
   )
 
@@ -138,6 +136,7 @@ const HomePage = () => {
     })
 
   const isLoading =
+    loadingLiveEvents ||
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
@@ -155,11 +154,27 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
-    getBillboard()
-
-    return () => stopPolling && stopPolling()
     // eslint-disable-next-line
   }, [])
+
+  const clearAllItems = () => {
+    setLiveEventsData([])
+    setFeaturedCategoriesData([])
+    setFeaturedPostsData([])
+    setHasTagsContent(false)
+  }
+  const deactivateAllItems = () => {
+    setIsFeaturedPostsActive(false)
+    setIsFeaturedCategoriesActive(false)
+    setIsLiveEventsActive(false)
+  }
+
+  useEffect(() => {
+    getBillboard()
+    deactivateAllItems()
+    clearAllItems()
+    //eslint-disable-next-line
+  }, [activeChannel])
 
   useEffect(() => {
     const defaultCarouselsItems =
@@ -307,28 +322,30 @@ const HomePage = () => {
     }
   }
 
-  if (isLoading)
-    <Box p={sizes.paddingSm} width="100%">
-      <Skeleton kind="cards" numberOfCards={4} />
-    </Box>
-
-  if (isEmpty) return <EmptyState />
-
   return (
     <Container flexDirection={'column'} display={'flex'}>
       {!!billboardItems?.length && renderBillboard()}
-      <Flex
-        gridGap={5}
-        flexDirection={'column'}
-        mt={billboardItems ? 0 : 7}
-        w={'100vw'}
-      >
-        {!!homeCarouselsFiltered?.length &&
-          homeCarouselsFiltered.map((item: CarouselFlags) =>
-            renderCarouselsOrderedByRemoteConfig(item)
-          )}
-        {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
-      </Flex>
+      {isLoading && (
+        <Box p={sizes.paddingSm} width="100%">
+          <Skeleton kind="cards" numberOfCards={3} />
+        </Box>
+      )}
+      {!isLoading && (
+        <Flex
+          gridGap={5}
+          flexDirection={'column'}
+          mt={billboardItems ? 0 : 7}
+          w={'100vw'}
+        >
+          {!!homeCarouselsFiltered?.length &&
+            homeCarouselsFiltered.map((item: CarouselFlags) =>
+              renderCarouselsOrderedByRemoteConfig(item)
+            )}
+          {!!categoriesWithChildrenData?.length &&
+            renderCategoriesWithChildren()}
+          {isEmpty && <EmptyState />}
+        </Flex>
+      )}
     </Container>
   )
 }
