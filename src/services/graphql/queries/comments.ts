@@ -14,7 +14,10 @@ export const QUERY_COMMENTS = gql`
         }
         description
         id
-        countUpVotes
+        commentVoteStats {
+          countDownvotes
+          countUpvotes
+        }
         createdAt
         countComments
         parent
