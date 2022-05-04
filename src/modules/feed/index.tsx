@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
-import { useQuery } from "@apollo/client"
+import { useLazyQuery } from "@apollo/client"
 import { intervalToDuration } from 'date-fns'
 import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -21,22 +21,28 @@ const FeedPage = () => {
   const lastPositionCard = useFeedStore(state => state.lastPositionCard)
   const setLastPositionCard = useFeedStore(state => state.setLastPositionCard)
   const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
+  const [listOfPosts, setListOfPosts] = useState([])
+  const [hasMore, setHasMore] = useState(true)
 
   const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
 
-  const { data: dataPosts, loading: loadingPosts, fetchMore, refetch } = useQuery(QUERY_POSTS, {
-    context: { headers: { channel: activeChannel?.id } },
-    variables: {
-      filter: {
-        page: 1,
-        pageSize: DEFAULT_PAGESIZE_FEEDS,
-        sortBy: getSortByFilter()
-      }
-    }
-  })
+  // const [getPosts, { data: dataPosts, loading: loadingPosts, fetchMore, refetch } = useLazyQuery(QUERY_POSTS, {
+  //   context: { headers: { channel: activeChannel?.id } },
+  //   variables: {
+  //     filter: {
+  //       page: 1,
+  //       pageSize: DEFAULT_PAGESIZE_FEEDS,
+  //       sortBy: getSortByFilter()
+  //     }
+  //   },
+  //   onCompleted: (result) => {
+  //     console.log(result, postData)
+  //   },
+  // })
+  const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { refetch() }, [filterBy])
+  // useEffect(() => { refetch() }, [filterBy])
 
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
@@ -111,38 +117,71 @@ const FeedPage = () => {
 
   const handleFilterChange = (evt: any) => {
     const { value } = evt?.target;
+    setListOfPosts([])
     SetFilterBy(value)
   }
 
-  const getNextRecords = () => {
-    if (dataPosts?.posts) {
-      const updatePage = dataPosts?.posts.page + 1
-      fetchMore({
-        variables: {
-          filter: {
-            page: updatePage,
-            pageSize: DEFAULT_PAGESIZE_FEEDS,
-            sortBy: getSortByFilter()
-          }
-        }
-      })
-    }
-  }
+  // const getNextRecords = () => {
+  //   if (dataPosts?.posts) {
+  //     const updatePage = dataPosts?.posts.page + 1
+  //     fetchMore({
+  //       variables: {
+  //         filter: {
+  //           page: updatePage,
+  //           pageSize: DEFAULT_PAGESIZE_FEEDS,
+  //           sortBy: getSortByFilter()
+  //         }
+  //       }
+  //     })
+  //   }
+  // }
 
   const handleScroll = () => () => {
     const positionY = window.pageYOffset;
     setLastPositionCard(positionY);
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
-
   useEffect(() => {
+    setPageTitle(t('header.tabs.feed'))
     if (window) {
       window.scrollTo(0, lastPositionCard)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (activeChannel && listOfPosts.length === 0) {
+      setListOfPosts([])
+      getPosts()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChannel, filterBy])
+
+  useEffect(() => {
+    if (!dataPosts) return
+    setHasMore(dataPosts.posts.hasNextPage)
+    setListOfPosts(listOfPosts.concat(dataPosts?.posts.rows))
+    // convertDataPost(dataPosts.posts.rows)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataPosts])
+
+
+  const getPosts = (page: number = 1) => {
+    loadPosts({
+      context: { headers: { channel: activeChannel?.id } },
+      variables: {
+        filter: {
+          page,
+          pageSize: DEFAULT_PAGESIZE_FEEDS,
+          sortBy: getSortByFilter()
+        }
+      }
+    })
+  }
+
+  const loadMore = () => {
+    if (hasMore) getPosts(dataPosts?.posts.page + 1)
+  }
 
   const loadingItems = (number) => (
     <Center width="100%" height="100%" flexDirection="column">
@@ -155,12 +194,12 @@ const FeedPage = () => {
   return (
     <Center width="100%" height="100%" flexDirection="column">
       {
-        loadingPosts && !!dataPosts?.posts.rows.length &&
+        loadingPosts && !!listOfPosts?.length &&
         loadingItems(4)
       }
       {
         !loadingPosts &&
-        !!dataPosts?.posts.rows.length &&
+        !!listOfPosts?.length &&
         <Container
           flexDirection="column"
           width="100%"
@@ -177,17 +216,18 @@ const FeedPage = () => {
       }
       {
         !loadingPosts &&
-        !!!dataPosts?.posts.rows.length &&
+        !!!listOfPosts?.length &&
         <EmptyState />
       }
       <InfiniteScroll
-        dataLength={dataPosts?.posts?.rows.length || 0}
-        hasMore={dataPosts?.posts.hasNextPage}
+        dataLength={listOfPosts.length || 0}
+        next={loadMore}
+        hasMore={hasMore}
+        // hasMore={dataPosts?.posts.hasNextPage}
         loader={loadingItems(2)}
-        next={getNextRecords}
+      // next={getNextRecords}
       >
-        {dataPosts?.posts?.rows
-          .filter(({ inFeed }) => inFeed)
+        {listOfPosts?.filter(({ inFeed }) => inFeed)
           .map((post, key) => {
             const preparePost = convertDataPost(post)
             return (
