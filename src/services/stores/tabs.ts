@@ -20,6 +20,7 @@ const getTabURL = (tab: string) => {
     LIVE: '/c/:channel/lives',
     COLLECTIONS: '/c/:channel/categories',
     MY_LIST: '/c/:channel/mylist',
+    MYLIST: '/c/:channel/mylist',
     ROOMS: '',
   }
 
@@ -45,12 +46,12 @@ export const useTabsStore = create<TabsState>((set) => ({
     if (channel) {
       let slug = ''
       for (const tab of tabsList) {
-        tab.URL = getTabURL(tab.TAB)
+        tab.URL = getTabURL(tab.TAB.toUpperCase())
         slug = tab.URL?.substring(
           tab.URL.lastIndexOf('c/') + 2,
           tab.URL.lastIndexOf('/')
         )
-        if (tab.TAB === 'HOME') {
+        if (tab.TAB.toUpperCase() === 'HOME') {
           slug = tab.URL?.substring(tab.URL.indexOf('c/') + 2)
         }
         tab.URL = tab.URL?.replace(slug, channel.slug)
