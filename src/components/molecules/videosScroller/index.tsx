@@ -73,7 +73,7 @@ const VideosScroller = ({
         isPinned: item.pinnedStatus?.pinned,
       }
     })
-    setScrollerItems(mappedArr?.length ? mappedArr : [])
+    setScrollerItems(mappedArr)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
@@ -104,10 +104,10 @@ const VideosScroller = ({
   }
   const renderScroller = () => {
     return (
-      <CardsScroller>
+      <CardsScroller >
         {scrollerItems?.map((item: VideoPostCardProps) => {
           return (
-            <SwiperSlide key={`slide-${item.id}`}>
+            <SwiperSlide key={`slide-${item.id}-featured`}>
               <VideoPostCard {...item} />
             </SwiperSlide>
           )
@@ -118,9 +118,9 @@ const VideosScroller = ({
 
   return (
     <ContentScroller>
-      {scrollerItems?.length && (
+      {!!scrollerItems?.length && (
         <>
-          {sectionTitle && renderHeader()}
+          {renderHeader()}
           {renderScroller()}
         </>
       )}
