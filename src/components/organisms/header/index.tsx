@@ -29,7 +29,7 @@ const HeaderComponent = () => {
   const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { setTabsList, setActiveTab, tabsList } = useTabsStore()
-  const { activeChannel, setActiveChannelMenu, activeChannelMenu, channelsList } =
+  const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
     useChannelsStore()
   const { generateImage } = useThumbor()
   const history = useHistory()
