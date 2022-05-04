@@ -152,23 +152,6 @@ const Client = new ApolloClient({
           },
         },
       },
-      Query: {
-        fields: {
-          posts: {
-            keyArgs: [],
-            merge(existing = { rows: [] }, incoming) {
-              const { rows } = incoming
-              return {
-                ...incoming,
-                rows: [
-                  ...existing.rows,
-                  ...rows
-                ]
-              }
-            },
-          }
-        }
-      }
     },
   }),
 })

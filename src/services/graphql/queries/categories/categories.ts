@@ -55,14 +55,12 @@ export const QUERY_CATEGORIES = gql`
           kind
           name
           description
-          tags
         }
         description
         featuredAt
         geoFence
         id
         name
-        tags
       }
     }
   }

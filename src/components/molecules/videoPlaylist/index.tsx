@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 
 import { getData, saveData } from 'services/storage'
-import { useThemeStore, useChannelsStore, useVideoPlayerStore } from 'services/stores'
+import {
+  useThemeStore,
+  useChannelsStore,
+  useVideoPlayerStore,
+} from 'services/stores'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 
 import { Text, ToggleButton, PlaylistPostCard } from 'components'
@@ -19,16 +23,16 @@ const VideoPlaylist = ({
   title,
   videos,
   showAutoplay,
-  activeVideo
+  activeVideo,
 }: VideoPlaylistProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
-  const setNextVideo = useVideoPlayerStore(state => state.setNextVideo)
-  const setAutoplay = useVideoPlayerStore(state => state.setAutoplay)
-  const setIsLastVideo = useVideoPlayerStore(state => state.setIsLastVideo)
-  const autoplay = useVideoPlayerStore(state => state.hasAutoplay)
+  const setNextVideo = useVideoPlayerStore((state) => state.setNextVideo)
+  const setAutoplay = useVideoPlayerStore((state) => state.setAutoplay)
+  const setIsLastVideo = useVideoPlayerStore((state) => state.setIsLastVideo)
+  const autoplay = useVideoPlayerStore((state) => state.hasAutoplay)
   const [playlist, setPlaylist] = useState<VideoPostCardProps[]>()
 
   const getImageUrl = (post: Post) => {
@@ -84,7 +88,7 @@ const VideoPlaylist = ({
     const playlistLength = playlist?.length
     if (playlistLength) {
       let defineNextVideo
-      playlist.forEach((videoItem, index) => {
+      playlist?.forEach((videoItem, index) => {
         if (videoItem.id === activeVideo) {
           defineNextVideo = playlist[index + 1]?.url
         }
@@ -96,7 +100,6 @@ const VideoPlaylist = ({
     }
     //eslint-disable-next-line
   }, [playlist])
-  
 
   useEffect(() => {
     if (!autoplay) {
@@ -113,7 +116,13 @@ const VideoPlaylist = ({
   }
 
   const renderPlaylist = () =>
-    playlist?.map((item) => <PlaylistPostCard key={item.id} isActive={activeVideo === item.id} {...item} />)
+    playlist?.map((item) => (
+      <PlaylistPostCard
+        key={item.id}
+        isActive={activeVideo === item.id}
+        {...item}
+      />
+    ))
 
   return (
     <Flex flexDirection="column" mb={5}>
@@ -127,10 +136,7 @@ const VideoPlaylist = ({
       </Text>
       {showAutoplay && (
         <Flex alignItems="center" mb={2}>
-          <ToggleButton
-            checked={autoplay}
-            onChange={toggleAutoplay}
-          />
+          <ToggleButton checked={autoplay} onChange={toggleAutoplay} />
           <Text
             ml={theme.pxToRem(12)}
             color={theme.colors.generalText[colorMode]}
@@ -139,7 +145,7 @@ const VideoPlaylist = ({
           </Text>
         </Flex>
       )}
-      {!!playlist?.length && renderPlaylist()}
+      <Box maxHeight={'700px'} overflowY='scroll'>{!!playlist?.length && renderPlaylist()}</Box>
     </Flex>
   )
 }

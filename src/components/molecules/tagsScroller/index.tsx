@@ -22,6 +22,7 @@ const TagsScroller = ({
   sectionTitle,
   sectionUrl,
   hasMoreLink,
+  hasResults
 }: TagsScrollerProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -59,6 +60,7 @@ const TagsScroller = ({
 
   useEffect(() => {
     if (scrollerItems.length) {
+      hasResults()
       const mappedArr = scrollerItems?.map((item: Post | Category) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(item)
@@ -162,7 +164,7 @@ const TagsScroller = ({
   if (loading)
     return (
       <Box p={sizes.paddingSm} width="100%">
-        <Skeleton kind="cards" numberOfCards={4} />
+        <Skeleton kind="cards" numberOfCards={3} />
       </Box>
     )
 

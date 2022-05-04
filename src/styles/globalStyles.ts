@@ -90,7 +90,7 @@ i {
 
 #root {
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 body::before {
   content: 'mobile-small';
