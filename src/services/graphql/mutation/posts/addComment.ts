@@ -11,7 +11,10 @@ export const MUTATION_ADD_COMMENT = gql`
       id
       description
       createdAt
-      countUpVotes
+      commentVoteStats {
+        countUpvotes
+        countDownvotes
+      }
       content
     }
   }

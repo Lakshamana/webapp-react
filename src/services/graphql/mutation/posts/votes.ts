@@ -4,11 +4,15 @@ export const MUTATION_ADD_VOTE = gql`
   mutation AddVote($input: AddCommentVote!) {
     addVote(input: $input) {
       comment {
-        countUpVotes
+        commentVoteStats {
+          countDownvotes
+          countUpvotes
+        }
       }
       commentVote {
-        countUpVotes
         direction
+        countUpvotes
+        countDownvotes
       }
     }
   }
