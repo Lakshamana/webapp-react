@@ -42,14 +42,14 @@ export const FlagsProvider = ({ children }) => {
         })
 
         if (!getData(APP_LOCALE))
-          saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE)
-        
+          saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE || "en-US")
+
         const storedTheme = getData(APP_THEME)
         setColorMode(storedTheme || newFlags?.ORGANIZATION?.THEME?.toLowerCase())
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (loading) return <LoadingScreen />
