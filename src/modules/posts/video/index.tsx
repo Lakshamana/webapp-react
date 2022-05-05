@@ -145,9 +145,6 @@ const VideoPostPage = () => {
   const postHasCommentsAllowed =
     activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
 
-  const handleAddMyReaction = ({ variables }) => addMyReaction({ variables })
-  const handleRemoveMyReaction = ({ variables }) => removeMyReaction({ variables })
-
   if (isVerifyingAccessPermission)
     return (
       <VerifyContentKind
@@ -197,8 +194,8 @@ const VideoPostPage = () => {
               reactions={postData ? [...postData?.reactions] : []}
               totalReactions={postData?.countReactions}
               myReactions={postData?.myReactions ?? []}
-              removeMyReaction={handleRemoveMyReaction}
-              addMyReaction={handleAddMyReaction}
+              removeMyReaction={removeMyReaction}
+              addMyReaction={addMyReaction}
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
