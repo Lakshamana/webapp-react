@@ -244,7 +244,7 @@ const FeedPage = () => {
         loader={loadingItems(2)}
       >
         {listOfPosts?.filter(({ inFeed }) => inFeed)
-          .map((post: any, key) => {
+          .map((post: Post, key) => {
             const preparePost = convertDataPost(post)
             return (
               <FeedPostCard
