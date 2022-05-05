@@ -31,8 +31,6 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   ]
 
   const getPostUrl = (slug: string) => `/c/${activeChannel?.slug}/post/${slug}`
-  const handleAddMyReaction = ({ variables }) => props.addMyReaction({ variables })
-  const handleRemoveMyReaction = ({ variables }) => props.removeMyReaction({ variables })
 
   return (
     <FeedContent onClick={props.updateState()}>
@@ -66,8 +64,8 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
               reactions={[...props.reactions]}
               totalReactions={props.countReactions}
               myReactions={props.myReactions}
-              removeMyReaction={handleRemoveMyReaction}
-              addMyReaction={handleAddMyReaction}
+              removeMyReaction={props.removeMyReaction}
+              addMyReaction={props.addMyReaction}
             />
           </CardReactions>
         )}
