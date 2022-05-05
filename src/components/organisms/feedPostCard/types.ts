@@ -34,6 +34,8 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	isGeolocked: boolean
 	itensQuestions?: Array<any | itensQuestions>
 	updateState: Function
+	addMyReaction: Function
+	removeMyReaction: Function
 }
 
 export interface reactions {
