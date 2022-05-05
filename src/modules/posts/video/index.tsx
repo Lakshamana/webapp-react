@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import { Center, Flex, Spacer, Box, } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Skeleton } from 'components'
-import { QUERY_PLAYLIST, QUERY_POST, QUERY_POSTS_CARDS } from 'services/graphql'
+import { QUERY_PLAYLIST, QUERY_POST, QUERY_POSTS_CARDS, MUTATION_ADD_MY_REACTION, MUTATION_REMOVE_MY_REACTION } from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
@@ -43,6 +43,9 @@ const VideoPostPage = () => {
   const [activeMedia, setActiveMedia] = useState('')
   const definePlayerIsMuted = getData(VIDEO_MUTED)
   const definePlayerVolume = getData(VIDEO_VOLUME)
+
+  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION)
+  const [removeMyReaction] = useMutation(MUTATION_REMOVE_MY_REACTION)
 
   const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
     variables: { slug },
@@ -142,6 +145,9 @@ const VideoPostPage = () => {
   const postHasCommentsAllowed =
     activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
 
+  const handleAddMyReaction = ({ variables }) => addMyReaction({ variables })
+  const handleRemoveMyReaction = ({ variables }) => removeMyReaction({ variables })
+
   if (isVerifyingAccessPermission)
     return (
       <VerifyContentKind
@@ -191,6 +197,8 @@ const VideoPostPage = () => {
               reactions={postData ? [...postData?.reactions] : []}
               totalReactions={postData?.countReactions}
               myReactions={postData?.myReactions ?? []}
+              removeMyReaction={handleRemoveMyReaction}
+              addMyReaction={handleAddMyReaction}
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
