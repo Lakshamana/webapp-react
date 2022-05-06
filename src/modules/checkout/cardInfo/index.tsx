@@ -9,7 +9,6 @@ import imageBg from 'assets/background/bg-checkout-login.png'
 import { Button, Input, SelectInputStyle } from 'components'
 import { ModalNotification, ModalType } from '../components/notification'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 
@@ -175,14 +174,11 @@ export const CardInfo = () => {
               {t('page.checkout.card_info.authorize')}
             </Text>
           </Flex>
-
-          <Link to="/checkout/password">
             <Button
               height="56px"
               width="236px"
-              label={t('page.checkout.card_info.place_you_order')}
-            ></Button>
-          </Link>
+            label={t('page.checkout.card_info.place_you_order')}
+          ></Button>
         </Flex>
       </Flex>
       <ModalNotification {...{ isOpen, onOpen, onClose, modalType }} />
