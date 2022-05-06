@@ -11,6 +11,8 @@ import { ModalNotification, ModalType } from '../components/notification'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { useEffect, useState } from 'react'
+import { InputSpreedly } from './style'
 
 const {
   REACT_APP_SPREENDLY_KEY,
@@ -21,6 +23,72 @@ export const CardInfo = () => {
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  // @ts-ignore
+  const { Spreedly } = window
+  const [state, setstate] = useState({
+    paymentErrors: [],
+    paymentProcessing: false,
+    paymentCaptured: false,
+    route: 'credit-card'
+  })
+
+  const [disabledButton, setdisabledButton] = useState(true)
+
+  useEffect(() => {
+    if (Spreedly) {
+      setupSpreedly()
+    }
+   return () => Spreedly.removeHandlers()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
+  const setupSpreedly = () => {
+    Spreedly.init(REACT_APP_SPREENDLY_KEY, {
+      numberEl: 'spreedly-number',
+      cvvEl: 'spreedly-cvv'
+    });
+    
+    Spreedly.on('ready', () => {
+      setdisabledButton(false)
+      Spreedly.setParam('allow_blank_name', true);
+      Spreedly.setParam('allow_expired_date', true);
+      // credit card number
+      Spreedly.setPlaceholder('number', t("page.checkout.card_info.card_number"));
+      Spreedly.setFieldType('number', 'text');
+      Spreedly.setStyle('number', `font-size: 16px; background: transparent; color: ${colors.generalText[colorMode]}`);
+      Spreedly.setNumberFormat('prettyFormat');
+      // cvv
+      Spreedly.setPlaceholder('cvv', t("page.checkout.card_info.cvv"));
+      Spreedly.setFieldType('cvv', 'text');
+      Spreedly.setStyle('cvv', `font-size: 16px; background: transparent; color: ${colors.generalText[colorMode]}`);
+      // testing
+      // Spreedly.setValue('number', '4111111111111111');
+      // Spreedly.setValue('cvv', '123');
+    });
+
+    Spreedly.on('errors', (errors: any) => {
+      for (let i = 0; i < errors.length; i++) {
+        var error = errors[i];
+        console.log(error);
+      }
+
+      setstate({ ...state, paymentProcessing: false });
+
+      // refresh the form
+      Spreedly.reload();
+      // resetForm()
+
+      const errorMessages = errors.map((err: any) => err.message);
+      setstate({ ...state, paymentErrors: errorMessages });
+    });
+
+    Spreedly.on('paymentMethod', (token: string, pmData: any) =>{
+      // continuar implementação da chamada
+      console.log('tokenizeCreditCard: ',token)
+      console.log(pmData)
+    })
+  }
+
   return (
     <Flex flexDirection="column" alignItems="center">
       <Text
@@ -107,34 +175,14 @@ export const CardInfo = () => {
             type={'text'}
             placeholder={t('page.checkout.card_info.card_name')}
           />
-          <Input
-            name="payload.password"
-            type={'text'}
-            placeholder={t('page.checkout.card_info.card_number')}
-          />
-
+          <InputSpreedly id="spreedly-number" />
           <Flex w="100%" gridGap="1em">
             <Input
               name="payload.password"
               type={'text'}
               placeholder={t('page.checkout.card_info.date')}
             />
-            <Input
-              name="payload.password"
-              type={'text'}
-              placeholder={t('page.checkout.card_info.cvv')}
-            />
-            <SelectInputStyle
-              placeholder={t('page.checkout.card_info.installments')}
-              options={[
-                { value: '1x', label: '1x Aliqua cupidatat id' },
-                { value: '2x', label: '2x Aliqua cupidatat id' },
-              ]}
-              onChange={(evt: any) => {
-                const { value } = evt?.target
-                console.log(value)
-              }}
-            />
+            <InputSpreedly id="spreedly-cvv" />
           </Flex>
           <SelectInputStyle
             placeholder={t('page.checkout.card_info.country')}
