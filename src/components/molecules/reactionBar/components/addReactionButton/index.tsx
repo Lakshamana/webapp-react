@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react'
 import { Spinner } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
 import { Reaction, EmoticonReaction } from './../../styles'
-import { availableReactions } from './../../settings'
+import { availableReactions } from 'utils/availableReactions'
 import { PropsType } from './types'
 import { colors } from 'styles'
 

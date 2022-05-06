@@ -13,11 +13,7 @@ import {
   useChannelsStore,
   useCustomizationStore,
 } from 'services/stores'
-import {
-  signOutFB,
-  authWithCustomToken,
-  isUserLoggedFB,
-} from 'services/firebase'
+import { signOutFB } from 'services/firebase'
 import {
   USER_INFO,
   ORGANIZATION_INFO,
