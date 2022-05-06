@@ -234,9 +234,10 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [billboardData])
 
-  const renderBillboard = () => (
-    <BillboardScroller items={billboardItems} customButtons={true} />
-  )
+  const renderBillboard = () =>
+    !!billboardItems?.length && (
+      <BillboardScroller items={billboardItems} customButtons={true} />
+    )
 
   const renderLiveEventsScroller = (item: CarouselFlags) =>
     !!liveEventsData?.length && (
@@ -324,7 +325,7 @@ const HomePage = () => {
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
-      {!!billboardItems?.length && renderBillboard()}
+      {renderBillboard()}
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
           <Skeleton kind="cards" numberOfCards={3} />
