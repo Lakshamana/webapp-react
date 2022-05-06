@@ -12,7 +12,7 @@ import {
 } from './style'
 import { colors } from 'styles'
 import { Props } from './types'
-import { availableReactions } from '../../settings'
+import { availableReactions } from 'utils/availableReactions'
 import { useTranslation } from 'react-i18next'
 import { Reaction as ReactionType } from 'types/common'
 
