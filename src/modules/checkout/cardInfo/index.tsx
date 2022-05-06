@@ -12,7 +12,10 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
-import { useState } from 'react'
+
+const {
+  REACT_APP_SPREENDLY_KEY,
+}  = process.env
 
 export const CardInfo = () => {
   const [ modalType ] = useState(ModalType.success)
