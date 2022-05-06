@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useThemeStore } from 'services/stores/theme'
 import { useTranslation } from 'react-i18next'
-import { useMutation } from '@apollo/client'
 import { Spinner } from '@chakra-ui/react'
-import { MUTATION_ADD_MY_REACTION, MUTATION_REMOVE_MY_REACTION } from 'services/graphql'
 import { Container, Text } from 'components'
 import { AddReactionButton } from './components'
 import { availableReactions } from './settings'
@@ -18,6 +16,8 @@ const ReactionBar = ({
   myReactions,
   reactions,
   totalReactions,
+  removeMyReaction,
+  addMyReaction
 }: ReactionsCount) => {
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
@@ -27,9 +27,6 @@ const ReactionBar = ({
   const [myActiveReactions, setMyActiveReactions] = useState<MyReactionType[]>([])
   const [updatingReactions, setUpdatingReactions] = useState<UpdateReactions>({ reaction: '', isLoading: false })
 
-  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION)
-  const [removeMyReaction] = useMutation(MUTATION_REMOVE_MY_REACTION)
-
   const translateMapper = [
     'page.feed.no_reactions',
     'page.feed.reaction',
@@ -37,9 +34,12 @@ const ReactionBar = ({
   ]
 
   useEffect(() => {
-    allReactions?.sort((a, b) => b.count - a.count)
-    const threeBiggests = allReactions?.slice(0, 3)
-    setOnlyThreeBiggests(threeBiggests)
+    if (!!allReactions?.length) {
+      const listReactions = [...allReactions]
+      listReactions?.sort((a, b) => b.count - a.count)
+      const threeBiggests = allReactions?.slice(0, 3)
+      setOnlyThreeBiggests(threeBiggests)
+    }
   }, [allReactions])
 
   useEffect(() => {
