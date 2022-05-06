@@ -45,7 +45,7 @@ const VideoPlayer = ({
       player.registerPlugin('vttThumbnails', videoJsVttThumbnails)
     })
     player?.on('ready', () => {
-      player.volume(setVolumeValue)
+      if (setVolumeValue) player.volume(setVolumeValue)
       player.chromecast()
       player.overlay({
         overlays: [...(overlays || [])],
