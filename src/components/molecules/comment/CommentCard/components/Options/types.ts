@@ -6,7 +6,7 @@ export interface IProps {
   setShowReply: any
   id: string
   description: string
-  countUpVotes: number
+  countUpVotes?: number
 }
 
 export const defaultProps = {
