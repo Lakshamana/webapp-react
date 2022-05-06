@@ -10,7 +10,7 @@ import { useChannelsStore, useCommonStore, useFeedStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
 import { translateFormatDistance } from "utils/helperFunctions"
 import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
-import { Post, SortDirection } from "generated/graphql"
+import { Post, SortDirection, Status } from "generated/graphql"
 import { isEntityBlocked } from "utils/accessVerifications"
 
 const FeedPage = () => {
@@ -180,6 +180,7 @@ const FeedPage = () => {
         filter: {
           page,
           pageSize: DEFAULT_PAGESIZE_FEEDS,
+          status: Status.Published,
           sortBy: getSortByFilter()
         }
       }
