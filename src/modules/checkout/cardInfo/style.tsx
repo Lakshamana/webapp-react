@@ -5,7 +5,6 @@ export const InputSpreedly = styled(Flex)`
   background-color: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
   border-radius: 4px;
   height: 56px;
-  width: 100%;
   padding: 16px;
   font-size: 16px;
 `
