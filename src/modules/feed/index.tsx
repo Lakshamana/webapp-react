@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
-import { useLazyQuery } from "@apollo/client"
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { intervalToDuration } from 'date-fns'
 import { Center, Box } from "@chakra-ui/react"
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { QUERY_POSTS } from "services/graphql"
+import { QUERY_POSTS, MUTATION_ADD_MY_REACTION, MUTATION_REMOVE_MY_REACTION } from 'services/graphql'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from "services/hooks/useThumbor"
 import { useChannelsStore, useCommonStore, useFeedStore } from 'services/stores'
 import { Container, FeedPostCard, Select, EmptyState, Skeleton } from "components"
 import { translateFormatDistance } from "utils/helperFunctions"
 import { DEFAULT_PAGESIZE_FEEDS } from 'config/constants'
-import { SortDirection } from "generated/graphql"
+import { Post, SortDirection, Status } from "generated/graphql"
 import { isEntityBlocked } from "utils/accessVerifications"
 
 const FeedPage = () => {
@@ -21,28 +21,50 @@ const FeedPage = () => {
   const lastPositionCard = useFeedStore(state => state.lastPositionCard)
   const setLastPositionCard = useFeedStore(state => state.setLastPositionCard)
   const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
-  const [listOfPosts, setListOfPosts] = useState([])
-  const [hasMore, setHasMore] = useState(true)
+  const [listOfPosts, setListOfPosts] = useState<Post[]>([])
+  const [hasMore, setHasMore] = useState<boolean>(true)
+  const [isPositioned, setIsPositioned] = useState<boolean>(false)
+  const [updateReactions, setUpdateReactions] = useState({ post: '', reaction: '' })
 
   const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
-
-  // const [getPosts, { data: dataPosts, loading: loadingPosts, fetchMore, refetch } = useLazyQuery(QUERY_POSTS, {
-  //   context: { headers: { channel: activeChannel?.id } },
-  //   variables: {
-  //     filter: {
-  //       page: 1,
-  //       pageSize: DEFAULT_PAGESIZE_FEEDS,
-  //       sortBy: getSortByFilter()
-  //     }
-  //   },
-  //   onCompleted: (result) => {
-  //     console.log(result, postData)
-  //   },
-  // })
   const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // useEffect(() => { refetch() }, [filterBy])
+  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION, {
+    onCompleted: ({ addReaction }) => {
+      const updateRows = listOfPosts?.map((postRow: Post) => {
+        if (postRow.id !== updateReactions.post) return postRow
+        const updateMyReactions = [
+          ...postRow.myReactions,
+          { name: updateReactions.reaction, count: 1 }
+        ]
+        return {
+          ...postRow,
+          reactions: addReaction,
+          myReactions: updateMyReactions,
+          countReactions: postRow.countReactions + 1
+        }
+      })
+      setListOfPosts(updateRows)
+      setHasMore(dataPosts.posts.hasNextPage)
+    }
+  })
+
+  const [removeMyReaction] = useMutation(MUTATION_REMOVE_MY_REACTION, {
+    onCompleted: ({ removeReaction }) => {
+      const updateRows = listOfPosts?.map((postRow: Post) => {
+        if (postRow.id !== updateReactions.post) return postRow
+        const updateMyReactions = postRow.myReactions.filter(reactName => reactName.name !== updateReactions.reaction)
+        return {
+          ...postRow,
+          reactions: removeReaction,
+          myReactions: updateMyReactions,
+          countReactions: postRow.countReactions - 1
+        }
+      })
+      setListOfPosts(updateRows)
+      setHasMore(dataPosts.posts.hasNextPage)
+    }
+  })
 
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
@@ -57,11 +79,9 @@ const FeedPage = () => {
         width: post?.[defineType]?.width || undefined
       },
     }
-
     if (isEntityBlocked(post)) {
       imageOptions.blur = 20
     }
-
     const imageUrl = generateImage(
       ThumborInstanceTypes.IMAGE ?? '',
       post?.[defineType]?.imgPath || '',
@@ -121,33 +141,21 @@ const FeedPage = () => {
     SetFilterBy(value)
   }
 
-  // const getNextRecords = () => {
-  //   if (dataPosts?.posts) {
-  //     const updatePage = dataPosts?.posts.page + 1
-  //     fetchMore({
-  //       variables: {
-  //         filter: {
-  //           page: updatePage,
-  //           pageSize: DEFAULT_PAGESIZE_FEEDS,
-  //           sortBy: getSortByFilter()
-  //         }
-  //       }
-  //     })
-  //   }
-  // }
-
   const handleScroll = () => () => {
     const positionY = window.pageYOffset;
     setLastPositionCard(positionY);
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
+
   useEffect(() => {
-    setPageTitle(t('header.tabs.feed'))
-    if (window) {
+    if (!!listOfPosts.length && !isPositioned) {
+      setIsPositioned(true)
       window.scrollTo(0, lastPositionCard)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [listOfPosts])
 
   useEffect(() => {
     if (activeChannel && listOfPosts.length === 0) {
@@ -161,7 +169,6 @@ const FeedPage = () => {
     if (!dataPosts) return
     setHasMore(dataPosts.posts.hasNextPage)
     setListOfPosts(listOfPosts.concat(dataPosts?.posts.rows))
-    // convertDataPost(dataPosts.posts.rows)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
 
@@ -173,6 +180,7 @@ const FeedPage = () => {
         filter: {
           page,
           pageSize: DEFAULT_PAGESIZE_FEEDS,
+          status: Status.Published,
           sortBy: getSortByFilter()
         }
       }
@@ -181,6 +189,17 @@ const FeedPage = () => {
 
   const loadMore = () => {
     if (hasMore) getPosts(dataPosts?.posts.page + 1)
+  }
+
+  const handleAddMyReaction = ({ variables }) => {
+    setHasMore(false)
+    setUpdateReactions({ ...variables.input })
+    return addMyReaction({ variables })
+  }
+  const handleRemoveMyReaction = ({ variables }) => {
+    setHasMore(false)
+    setUpdateReactions({ ...variables.input })
+    return removeMyReaction({ variables })
   }
 
   const loadingItems = (number) => (
@@ -223,17 +242,17 @@ const FeedPage = () => {
         dataLength={listOfPosts.length || 0}
         next={loadMore}
         hasMore={hasMore}
-        // hasMore={dataPosts?.posts.hasNextPage}
         loader={loadingItems(2)}
-      // next={getNextRecords}
       >
         {listOfPosts?.filter(({ inFeed }) => inFeed)
-          .map((post, key) => {
+          .map((post: Post, key) => {
             const preparePost = convertDataPost(post)
             return (
               <FeedPostCard
                 key={key}
                 updateState={handleScroll}
+                addMyReaction={handleAddMyReaction}
+                removeMyReaction={handleRemoveMyReaction}
                 {...preparePost}
               />
             )
