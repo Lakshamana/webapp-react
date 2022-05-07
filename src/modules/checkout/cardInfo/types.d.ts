@@ -4,6 +4,7 @@ export type cardForm = {
   month: string,
   email: string,
   cpf: string,
+  terms: boolean,
 }
 
 export type pmDataType = {
