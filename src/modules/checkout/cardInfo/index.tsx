@@ -315,6 +315,7 @@ export const CardInfo = () => {
             <Checkbox
               fontSize="12px"
               name="terms"
+              isChecked={values.terms}
               onChange={handleChange}
               onBlur={handleBlur}
             />
