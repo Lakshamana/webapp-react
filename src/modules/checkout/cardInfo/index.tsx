@@ -318,6 +318,10 @@ export const CardInfo = () => {
               isChecked={values.terms}
               onChange={handleChange}
               onBlur={handleBlur}
+              isInvalid={
+                !!errors.terms &&
+                touched.terms
+              }
             />
             <Text fontSize="12px" color={colors.generalText[colorMode]}>
               {t('page.checkout.card_info.authorize')}
