@@ -205,7 +205,7 @@ export const CardInfo = () => {
         p={['1em', '1em', '1em', '1em', '0']}
       >
         <Flex
-          maxW="490px"
+          maxW={['auto', 'auto', 'auto', 'auto', '490px']}
           w="100%"
           borderRadius={['8px', '8px', '8px', '8px', '8px 0 0 8px']}
           flexDirection="column"
