@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react'
 import { InputSpreedly } from './style'
 import { FormikHelpers, useFormik } from 'formik'
 import * as Yup from 'yup'
-import { cardForm } from './types'
+import { cardForm, SpreedlyError } from './types'
 
 const { REACT_APP_SPREENDLY_KEY } = process.env
 
@@ -32,6 +32,16 @@ export const CardInfo = () => {
     paymentProcessing: false,
     paymentCaptured: false,
     route: 'credit-card',
+  })
+  const [spreedlyError, setspreedlyError] = useState<SpreedlyError>({
+    allow_blank_name: "",
+    allow_expired_date: "",
+    cardType: "",
+    cvvLength: 0,
+    luhnValid: true,
+    numberLength: 0,
+    validCvv: true,
+    validNumber: true,
   })
 
   const months = [
@@ -79,7 +89,7 @@ export const CardInfo = () => {
       Spreedly.setFieldType('number', 'text')
       Spreedly.setStyle(
         'number',
-        `font-size: 16px; background: transparent; color: ${colors.generalText[colorMode]}`
+        `font-size: 16px; background: transparent; color: ${colors.inputText[colorMode]}; font-size: 1.08rem;`
       )
       Spreedly.setNumberFormat('prettyFormat')
       // cvv
@@ -87,7 +97,7 @@ export const CardInfo = () => {
       Spreedly.setFieldType('cvv', 'text')
       Spreedly.setStyle(
         'cvv',
-        `font-size: 16px; background: transparent; color: ${colors.generalText[colorMode]}`
+        `font-size: 16px; background: transparent; color: ${colors.inputText[colorMode]}; font-size: 1.08rem;`
       )
       // testing
       // Spreedly.setValue('number', '4111111111111111');
@@ -118,12 +128,17 @@ export const CardInfo = () => {
       console.log('tokenizeCreditCard: ', token)
       console.log(pmData)
     })
+
+    Spreedly.on('validation', (inputProperties: SpreedlyError) => {
+      setspreedlyError(inputProperties)
+    });
   }
 
   const submitPaymentForm = (
     values: cardForm,
     actions: FormikHelpers<cardForm>
   ) => {
+    Spreedly.validate()
     setdisabledButton(true)
     const requiredFields: any = values
     Spreedly.tokenizeCreditCard(requiredFields)
@@ -261,7 +276,7 @@ export const CardInfo = () => {
             errorMessage={errors.full_name}
             error={!!errors.full_name && touched.full_name}
           />
-          <InputSpreedly id="spreedly-number" w="100%" mb="8px"/>
+          <InputSpreedly id="spreedly-number" w="100%" mb="8px" error={!spreedlyError.validNumber}/>
           <Flex gridGap="1em" w="100%">
             <Flex gridGap="0.5em" alignItems="center" w="100%">
               <SelectInputStyle
@@ -288,7 +303,7 @@ export const CardInfo = () => {
                 isInvalid={!!errors.year && touched.year}
               />
             </Flex>
-            <InputSpreedly id="spreedly-cvv" w="110px" />
+            <InputSpreedly id="spreedly-cvv" w="110px" error={!spreedlyError.validCvv}/>
           </Flex>
           {/* <Divider color={colors.secondaryText[colorMode]} />
 
