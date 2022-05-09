@@ -1,3 +1,5 @@
+import { FlexProps } from "@chakra-ui/react";
+
 export type cardForm = {
   full_name: string,
   year: string,
@@ -47,4 +49,20 @@ export type pmDataType = {
   fingerprint: string;
   verification_value: string;
   number: string;
+}
+
+
+export interface PropsInputSpreedly extends FlexProps {
+  error?: boolean
+}
+
+export type SpreedlyError = {
+  allow_blank_name: string,
+  allow_expired_date: string,
+  cardType: string,
+  cvvLength: number,
+  luhnValid: boolean,
+  numberLength: number,
+  validCvv: boolean,
+  validNumber: boolean,
 }
