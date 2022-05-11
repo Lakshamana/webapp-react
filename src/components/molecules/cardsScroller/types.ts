@@ -1,3 +1,5 @@
-export interface PostsProps {
-    children: any;
+export interface Props {
+  children: any
+  title?: string
+  moreUrl?: string
 }

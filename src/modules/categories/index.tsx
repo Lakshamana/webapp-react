@@ -31,12 +31,16 @@ const CategoriesPage = () => {
           featured: true,
         },
       },
+      fetchPolicy: 'cache-and-network',
     })
 
-  const { data: categoriesData, loading: loadingCategories } =
-    useQuery(QUERY_CATEGORIES)
+  const { data: categoriesData, loading: loadingCategories } = useQuery(
+    QUERY_CATEGORIES,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  )
 
-  //TODO: API has to return width and height
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path)
 
