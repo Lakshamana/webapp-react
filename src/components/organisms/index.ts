@@ -5,4 +5,4 @@ export * from "./feedPostCard";
 export * from './customForm'
 export * from './comments'
 export * from './livechat'
-
+export * from './plans'
