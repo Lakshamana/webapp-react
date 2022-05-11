@@ -1,6 +1,9 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
 
 export const SelectPlan = () => {
+  const { colorMode } = useThemeStore()
   const plans = [
     {
       imageUrl:
@@ -32,7 +35,11 @@ export const SelectPlan = () => {
   ]
   return (
     <Flex flexDirection="column" mt="44px">
-      <Text fontSize="28px" fontWeight="500">
+      <Text
+        fontSize="28px"
+        fontWeight="500"
+        color={colors.generalText[colorMode]}
+      >
         Title - Lorem ipsum
       </Text>
       <Flex gridGap="24px" mt="16px">
@@ -43,7 +50,7 @@ export const SelectPlan = () => {
             borderRadius="8px"
             overflow="hidden"
             w="340px"
-            background="#222222"
+            background={colors.cardBg[colorMode]}
           >
             <Box
               h="184px"
@@ -54,19 +61,19 @@ export const SelectPlan = () => {
               backgroundRepeat="no-repeat"
             />
             <Box p="20px">
-              <Text color="white" fontWeight="600" fontSize="18px">
-                {plan.title}
-              </Text>
               <Text
-                color="#A4A4A4"
+                color={colors.generalText[colorMode]}
+                fontWeight="600"
+                fontSize="18px"
+              >{plan.title}</Text>
+              <Text
+                color={colors.secondaryText[colorMode]}
                 fontWeight="400"
                 fontSize="12px"
                 maxW="256px"
                 w="100%"
                 mt="6px"
-              >
-                {plan.subtitle}
-              </Text>
+              >{plan.subtitle}</Text>
               <Flex
                 mt="15px"
                 justifyContent="space-between"
@@ -80,12 +87,12 @@ export const SelectPlan = () => {
                   fontSize="12px"
                   textTransform="uppercase"
                   fontWeight="400"
-                >
-                  Select
-                </Button>
-                <Text color="white" fontWeight="400" fontSize="18px">
-                  ${plan.value}
-                </Text>
+                >Select</Button>
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="18px"
+                >${plan.value}</Text>
               </Flex>
             </Box>
           </Box>
