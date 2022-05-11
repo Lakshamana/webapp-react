@@ -16,6 +16,7 @@ import {
 import { signOutFB } from 'services/firebase'
 import {
   USER_INFO,
+  
   ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
@@ -26,7 +27,6 @@ import { saveData, getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
-import { Kinds } from 'generated/graphql'
 
 const AuthContext = createContext({})
 
@@ -48,8 +48,6 @@ export const AuthProvider = ({ children }) => {
   const client = useApolloClient()
 
   const signed = !!user
-
-  const [kind, setKind] = useState<Kinds>(Kinds.Public)
 
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
@@ -93,8 +91,12 @@ export const AuthProvider = ({ children }) => {
       },
     })
     if (data?.channel) {
-      setActiveChannel(data.channel)
-      setLoading(false)
+      setActiveChannel({
+        id: data.channel.id,
+        name: data.channel.name,
+        slug: data.channel.slug || '',
+        kind: data.channel.kind || '',
+      })
     }
     setLoading(false)
   }
@@ -114,6 +116,7 @@ export const AuthProvider = ({ children }) => {
         }
         resolve(data.me)
       } catch {
+      } finally {
         setLoadingAcount(false)
       }
     })
@@ -121,14 +124,12 @@ export const AuthProvider = ({ children }) => {
 
   const loadOrganization = async () => {
     if (organization) {
-      if (organization.kind) setKind(organization.kind as Kinds)
       setLoading(false)
       return
     }
     const organizationData = getData(ORGANIZATION_INFO)
     if (organizationData) {
       setOrganization(organizationData)
-      setKind(organizationData.kind)
       setLoading(false)
       return
     }
@@ -148,12 +149,12 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data.organizationPublicSettings
           saveData(ORGANIZATION_INFO, dataOrganization)
           setOrganization(dataOrganization)
-          setKind(dataOrganization.kind)
           setLoading(false)
         }
         resolve(true)
       } catch (error) {
         reject(error)
+      } finally {
         setLoading(false)
       }
     })
@@ -172,7 +173,7 @@ export const AuthProvider = ({ children }) => {
     }
     await signOutFB()
     await clearData()
-    // TODO: Redirect based on Org kind (public, private, exclusive)
+    // TODO: Redirect based on Org kind
     window.location.href = '/login'
   }
 
@@ -206,7 +207,6 @@ export const AuthProvider = ({ children }) => {
         getAccount,
         updateActiveChannel,
         signed,
-        kind,
         loadingAccount,
       }}
     >
