@@ -51,6 +51,7 @@ export const SelectPlan = () => {
             overflow="hidden"
             w="340px"
             background={colors.cardBg[colorMode]}
+            boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
           >
             <Box
               h="184px"
