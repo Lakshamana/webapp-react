@@ -6,35 +6,44 @@ import { Props } from './types'
 import { useThumbor, ThumborInstanceTypes, ThumborParams } from 'services/hooks'
 import { useFlags } from 'contexts/flags'
 
+import { isEntityPrivate } from 'utils/accessVerifications'
+
 const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const { generateImage } = useThumbor()
   const { CHANNELS } = useFlags()
 
-  const getImageUrl = (path) => {
+  const getImageUrl = (path, channel) => {
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
       },
     }
+
+    if (isEntityPrivate(channel)) {
+      imageOptions.blur = 20
+    }
+
     return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
   }
 
-  const isGeolocked = (channel: Channel) =>
-    channel.__typename === 'GeolockedChannel'
-
   return (
     <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
-      {channelsList?.map((item) => {
-        const channelConfig = CHANNELS[item.id]
-        const channelThumbnail = getImageUrl(channelConfig?.IMAGES?.THUMBNAIL)
+      {channelsList?.map((channel: Channel) => {
+        const channelConfig = CHANNELS[channel.id]
+        const channelThumbnail = getImageUrl(
+          channelConfig?.IMAGES?.THUMBNAIL,
+          channel
+        )
         return (
           <ChannelCard
-            id={item.id}
-            name={item.name}
-            description={item.description}
-            key={item.id}
+            id={channel.id}
+            name={channel.name}
+            description={channel.description}
+            key={channel.id}
             onClick={(value) => channelSelected(value)}
-            isGeolocked={isGeolocked(item)}
+            isExclusive={isEntityPrivate(channel)}
+            //TODO: waiitng for API
+            isGeolocked={false}
             image={channelThumbnail}
           />
         )
