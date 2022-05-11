@@ -123,10 +123,10 @@ const HeaderComponent = () => {
     })
     let tabName =
       getActiveTab && getActiveTab?.params
-        ? getActiveTab?.params['tabUrlName'].toUpperCase()
+        ? getActiveTab?.params['tabUrlName']
         : 'HOME'
 
-    tabName = mapperTabName[tabName]
+    tabName = mapperTabName[tabName.toUpperCase()]
     const UNRELATED_MENU = {
       TAB: '',
       IS_ACTIVE: true,
@@ -134,7 +134,10 @@ const HeaderComponent = () => {
       LABEL: [{ LOCALE: '', VALUE: '' }],
       URL: '',
     }
-    const defineTab = tabsList.find((item) => item.TAB === tabName)
+    const defineTab = tabsList.find(
+      (item) => item.TAB.toUpperCase() === tabName
+    )
+
     defineTab ? setActiveTab(defineTab) : setActiveTab(UNRELATED_MENU)
     // eslint-disable-next-line
   }, [tabsList, activeChannel])
