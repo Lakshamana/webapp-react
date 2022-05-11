@@ -14,7 +14,7 @@ const EmptyState = () => {
 
   return (
     <Flex
-      py={10}
+      p={10}
       w={'100%'}
       direction="column"
       alignItems="center"
@@ -25,7 +25,7 @@ const EmptyState = () => {
       <Text pt={2} fontSize="1.5rem" fontWeight="bold">
         {t('common.empty_content')}
       </Text>
-      <Text pt={2} color={colors.secondaryText[colorMode]}>
+      <Text textAlign='center' pt={2} color={colors.secondaryText[colorMode]}>
         {t('common.try_again_later')}
       </Text>
       <Center>
