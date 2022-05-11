@@ -65,6 +65,8 @@ const Livestreams = () => {
         target: BillboardTarget.Live,
       },
     },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
   })
 
   const getImageUrl = (path: string) => {
@@ -141,8 +143,6 @@ const Livestreams = () => {
       <Skeleton my={4} kind="cards" numberOfCards={4} />
     </Box>
 
-  if (isEmpty) <EmptyState />
-
   return (
     <Container flexDirection={'column'} display={'flex'}>
       {!!billboardItems?.length && renderBillboard()}
@@ -168,6 +168,7 @@ const Livestreams = () => {
             hasMoreLink={false}
           />
         )}
+        {isEmpty && <EmptyState />}
       </Flex>
     </Container>
   )
