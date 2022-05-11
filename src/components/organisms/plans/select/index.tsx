@@ -7,7 +7,7 @@ export const SelectPlan = () => {
   const plans = [
     {
       imageUrl:
-        'https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2021/06/35211_4DA8E347FB9842EB.jpg?w=876&h=484&crop=1',
+        'https://bitcoinist.com/wp-content/uploads/2021/09/dogecoi.jpeg',
       imageAlt: 'Rear view of modern home with pool',
       title: 'Platinum - Subscription Title',
       subtitle:
@@ -16,7 +16,7 @@ export const SelectPlan = () => {
     },
     {
       imageUrl:
-        'https://www.show.news/__export/1629475032162/sites/debate/img/2021/08/20/lana.jpg_839202635.jpg',
+        'https://usethebitcoin.com/wp-content/uploads/2019/08/How-to-sell-Ethereum-728x454.jpg',
       imageAlt: 'Rear view of modern home with pool',
       title: 'Gold - Subscription Title',
       subtitle:
@@ -25,7 +25,7 @@ export const SelectPlan = () => {
     },
     {
       imageUrl:
-        'https://www.show.news/__export/1629475032162/sites/debate/img/2021/08/20/lana.jpg_839202635.jpg',
+        'https://timnews.com.br/system/images/photos/14737039/original/open-uri20211021-19-1xss92r?1634827953',
       imageAlt: 'Rear view of modern home with pool',
       title: 'Silver - Subscription Title',
       subtitle:
