@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Spacer } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
@@ -6,20 +7,28 @@ import { colors } from 'styles'
 import { Vote, Text } from 'components'
 import { useThemeStore } from 'services/stores'
 import { MUTATION_ADD_VOTE } from 'services/graphql'
-import { CommentVoteDirectionEnum } from 'generated/graphql'
-import { defaultProps, IProps } from './types'
+import { CommentVoteDirectionEnum, CommentVoteStats } from 'generated/graphql'
+import { defaultProps, IProps, IUpdateVotes } from './types'
 import { VoteButton } from './style'
 
 const Options = ({ ...props }: IProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const [votes, setUpdateVotes] = useState<IUpdateVotes>({ countUpvotes: 0, countDownvotes: 0 })
+  const [updateMyVote] = useMutation(MUTATION_ADD_VOTE, {
+    onCompleted: ({ addVote }) => updateVotes(addVote.commentVote)
+  })
 
-  const [updateVote] = useMutation(MUTATION_ADD_VOTE)
+  useEffect(() => updateVotes(props.commentVoteStats), [props.commentVoteStats])
 
-  const handleUpdateVote = (direction: CommentVoteDirectionEnum) => async () =>
-    await updateVote({
+  const updateVotes = ({ countUpvotes, countDownvotes }: CommentVoteStats) =>
+    setUpdateVotes({ countUpvotes, countDownvotes })
+
+  const handleUpdateVote = (direction: CommentVoteDirectionEnum) => async () => {
+    await updateMyVote({
       variables: { input: { comment: props.id, direction } }
     })
+  }
 
   const handleToggleShowReply = () => props.setShowReply(!props.showReply)
 
@@ -34,14 +43,14 @@ const Options = ({ ...props }: IProps) => {
       <VoteButton onClick={handleUpdateVote(CommentVoteDirectionEnum.Upvote)}>
         <Vote
           type="upvote"
-          votes={props.countUpVotes || 0}
+          votes={votes.countUpvotes}
         />
       </VoteButton>
       <Spacer w={4} />
       <VoteButton onClick={handleUpdateVote(CommentVoteDirectionEnum.Downvote)}>
         <Vote
           type="downvote"
-          votes={props.countUpVotes || 0}
+          votes={votes.countDownvotes}
         />
       </VoteButton>
       {
