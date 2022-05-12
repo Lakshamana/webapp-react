@@ -2,28 +2,20 @@ import { useState } from 'react'
 import { Grid, GridItem } from '@chakra-ui/react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { CommentInput, CommentLoading } from 'components'
-import { defaultProps, IProps } from './types'
+import { defaultProps, IEditInput, IProps } from './types'
 import { CardHeader, CardText, Options, ToggleReplies } from './components'
-import { QUERY_COMMENTS, MUTATION_ADD_COMMENT, MUTATION_DELETE_COMMENT } from 'services/graphql'
-import { Comment as CommentType } from 'generated/graphql'
+import { QUERY_COMMENTS, MUTATION_ADD_COMMENT } from 'services/graphql'
 import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
 
 const CommentCard = ({ ...props }: IProps) => {
   const [showReplyInput, setShowReplyInput] = useState<boolean>(false)
   const [showReplies, setShowReplies] = useState<boolean>(false)
-  const [editInput, setEditInput] = useState(null)
+  const [editInput, setEditInput] = useState<Maybe<IEditInput>>(null)
 
   const [getReplies, { data: allReplies, loading: allRepliesLoading }] = useLazyQuery(QUERY_COMMENTS, {
     fetchPolicy: 'network-only',
   })
   const [addReply, { data: newReply, loading: addReplyLoading }] = useMutation(MUTATION_ADD_COMMENT)
-  const [deleteReply, { data: deletedReply, loading: deleteLoading }] = useMutation(MUTATION_DELETE_COMMENT)
-
-  //TODO refact to prevent append
-  // useEffect(() => {
-  //   if (newReply) getAllReplies()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [newReply])
 
   const getAllReplies = (page: number = 1) => {
     getReplies({
@@ -48,19 +40,12 @@ const CommentCard = ({ ...props }: IProps) => {
     getAllReplies()
   }
 
-  const handleSelectedPopupOption = (selected) => {
+  const handleEditComment = (selected) => {
     if (selected.option === 'EDIT') {
       setEditInput(selected)
       return
     }
-
-    if (selected.option === 'DELETE') {
-      deleteReply({
-        variables: {
-          id: selected.id
-        }
-      })
-    }
+    props.selectPopupOption(selected)
   }
 
   return (
@@ -69,7 +54,7 @@ const CommentCard = ({ ...props }: IProps) => {
         id={props.id}
         author={props.author}
         createdAt={props.createdAt}
-        action={handleSelectedPopupOption}
+        action={handleEditComment}
       />
       <GridItem />
       <GridItem w={'100%'}>
@@ -77,6 +62,8 @@ const CommentCard = ({ ...props }: IProps) => {
           editInput={editInput}
           setEditInput={setEditInput}
           description={props.description}
+          action={props.editComment}
+          loading={props.editedCommentLoading}
         />
         <Options
           showReply={showReplyInput}
@@ -98,17 +85,17 @@ const CommentCard = ({ ...props }: IProps) => {
       <GridItem />
       {
         props.typeOfCard === 'CARD' &&
+        props?.countComments &&
         <GridItem w={'100%'}>
-          {/* //TODO: add conditional for qtd Replies */}
           <ToggleReplies
-            count={2}
+            count={props.countComments}
             state={showReplies}
             action={handleGetRepliesComments}
           />
         </GridItem>
       }
       <GridItem />
-      <GridItem w={'100%'}>
+      {/* <GridItem w={'100%'}>
         {
           props.typeOfCard === 'CARD' &&
           allRepliesLoading &&
@@ -124,7 +111,7 @@ const CommentCard = ({ ...props }: IProps) => {
               {...reply}
             />
           )}
-      </GridItem>
+      </GridItem> */}
     </Grid>
   )
 }
