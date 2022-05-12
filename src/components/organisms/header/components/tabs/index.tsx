@@ -21,20 +21,27 @@ const Tabs = ({ closeSideMenu }: PropsTabs) => {
     return item[0].VALUE
   }
 
+  const renderTabs = () =>
+    tabsList.map((tab: TabFlags) => (
+      <Tab
+        key={tab.TAB}
+        link={tab.URL}
+        selected={activeTab?.TAB === tab.TAB}
+        onSelect={handleSelect(tab)}
+        color={
+          activeTab?.TAB === tab.TAB
+            ? colors.generalText[colorMode]
+            : colors.secondaryText[colorMode]
+        }
+        mx={15}
+      >
+        {getTabLabel(tab)}
+      </Tab>
+    ))
+
   return (
     <TabContainer display="flex">
-      {tabsList.map((tab: TabFlags) => (
-        <Tab
-          key={tab.TAB}
-          link={tab.URL}
-          selected={activeTab?.TAB === tab.TAB}
-          onSelect={handleSelect(tab)}
-          color={colors.secondaryText[colorMode]}
-          mx={15}
-        >
-          {getTabLabel(tab)}
-        </Tab>
-      ))}
+      {!!tabsList.length && renderTabs()}
     </TabContainer>
   )
 }

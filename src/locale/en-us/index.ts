@@ -37,7 +37,8 @@ const EN_US = {
       close: 'Close',
       send: 'Send',
       empty_content: 'Nothing to see here',
-      try_again_later: 'There is no content at this time. Please check again soon',
+      try_again_later:
+        'There is no content at this time. Please check again soon',
       enjoy_your_content: 'Enjoy your content',
       retry: 'Retry',
       access_your_account: 'Access your account',
@@ -52,7 +53,7 @@ const EN_US = {
       push: {
         allow: 'Allow',
         cancel: 'No thanks',
-        title: '{{org}} would like to send you push notifications'
+        title: '{{org}} would like to send you push notifications',
       },
       months: {
         january: 'January',
@@ -180,9 +181,8 @@ const EN_US = {
     },
     activateAccount: {
       activating: 'Activating your account...',
-      success:
-        'Your account has been successfully activated.',
-      loginLink: 'Click here to access'
+      success: 'Your account has been successfully activated.',
+      loginLink: 'Click here to access',
     },
     header: {
       tabs: {
@@ -219,6 +219,8 @@ const EN_US = {
       channels: {
         title: 'Choose a channel:',
         page_title: 'Channels',
+        private_channel: 'Private Channel',
+        incorrect_password: 'Incorrect password. Try again.',
       },
       feed: {
         comments: 'Comments',
@@ -230,7 +232,7 @@ const EN_US = {
         search_options: {
           recent: 'Most Recent',
           old: 'Most Old',
-        }
+        },
       },
       categories: {
         action: 'Action',
@@ -242,7 +244,7 @@ const EN_US = {
       },
       category: {
         videos: 'Videos',
-        categories: 'Categories'
+        categories: 'Categories',
       },
       my_list: {
         my_list: 'My List',
@@ -250,7 +252,7 @@ const EN_US = {
         pinned_videos: 'Favorite Videos',
       },
       tag: {
-        no_content: 'Tag has no content'
+        no_content: 'Tag has no content',
       },
       account: {
         title: 'My Account',
@@ -302,7 +304,8 @@ const EN_US = {
         cancel_subscriptions: 'Cancel your Subscriptions',
         add_payment: 'Add Payment Method',
         payment_method: 'Payment Method',
-        verify_password: 'To update your email, you must enter your password to confirm this action.',
+        verify_password:
+          'To update your email, you must enter your password to confirm this action.',
         minimum_age: 'You must be at least 13 years old to have an account',
       },
       live: {
@@ -409,12 +412,12 @@ const EN_US = {
           title: 'Private Content',
           subtitle: 'Please enter the password to access the content',
           access: 'Access',
-          incorrect_password: 'Incorrect password. Try again.'
+          incorrect_password: 'Incorrect password. Try again.',
         },
         live: {
           live_chat: {
             title: 'Live Chat',
-            say_something: 'Say something...'
+            say_something: 'Say something...',
           },
           will_start_in: 'Transmission will start in',
           will_start_soon: 'Transmission will start soon',
