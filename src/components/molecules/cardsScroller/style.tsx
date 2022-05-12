@@ -68,6 +68,14 @@ export const SwiperStyled = styled(Swiper)`
     }
   }
 
+  .swiper-pagination-lock {
+    display: block!important;
+  }
+
+  .swiper-pagination-lock .swiper-pagination-bullet {
+    display: none;
+  }
+
   .cards-scroller-pagination .swiper-pagination-bullet {
     width: 15px;
     height: 2px;
@@ -136,3 +144,9 @@ export const SwiperStyled = styled(Swiper)`
     height: 100%;
   }
 `
+export const Header: any = styled.div`
+	display: flex;
+	align-items: baseline;
+	margin-bottom: 10px;
+`
+

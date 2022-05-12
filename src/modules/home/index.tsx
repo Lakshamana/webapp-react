@@ -97,6 +97,7 @@ const HomePage = () => {
         filter: {
           featured: true,
           typeIn: [PostType.Video, PostType.OnDemand],
+          status: Status.Published,
         },
       },
       onCompleted: (result) => {
@@ -256,7 +257,7 @@ const HomePage = () => {
         key={`${item.LABEL[0].VALUE}`}
         items={featuredPostsData}
         sectionTitle={getCarouselLabel(item)}
-        hasMoreLink={false}
+        sectionUrl={''}
       />
     )
 

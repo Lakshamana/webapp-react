@@ -3578,6 +3578,15 @@ export type UnpinCategoryMutationVariables = Exact<{
 
 export type UnpinCategoryMutation = { __typename?: 'Mutation', unpinCategory: { __typename?: 'AccountPinnedCategory', pinned: boolean } };
 
+export type ChannelPasswordCheckMutationVariables = Exact<{
+  channelId: Scalars['ID'];
+  password: Scalars['String'];
+}>;
+
+
+export type ChannelPasswordCheckMutation = { __typename?: 'Mutation', channelPasswordCheck: { __typename?: 'ChannelPasswordCheck', correct: boolean } };
+
+
 export type LiveEventPasswordCheckMutationVariables = Exact<{
   id: Scalars['String'];
   payload: LiveEventPasswordCheckInput;
@@ -3812,7 +3821,7 @@ export type GetTagQueryVariables = Exact<{
 }>;
 
 
-export type GetTagQuery = { __typename?: 'Query', tag: { __typename?: 'TagOutput', id: string, title: string, description: string, slug: string, relatedCategories: Array<{ __typename?: 'Category', access?: Maybe<string>, createdAt: any, slug?: Maybe<string>, id: string, description?: Maybe<string>, name: string, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }>, relatedPosts: Array<{ __typename?: 'Post', access: string, publishedAt?: Maybe<any>, slug?: Maybe<string>, id: string, description: string, title: string, kind: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetTagQuery = { __typename?: 'Query', tag: { __typename?: 'TagOutput', id: string, title: string, description: string, slug: string, relatedCategories: Array<{ __typename?: 'Category', access?: Maybe<string>, slug?: Maybe<string>, id: string, description?: Maybe<string>, name: string, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }>, relatedPosts: Array<{ __typename?: 'Post', access: string, slug?: Maybe<string>, status: string, id: string, description: string, title: string, kind: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 
 export const CreateAccountDocument = gql`
@@ -4527,6 +4536,48 @@ export function useUnpinCategoryMutation(baseOptions?: Apollo.MutationHookOption
 export type UnpinCategoryMutationHookResult = ReturnType<typeof useUnpinCategoryMutation>;
 export type UnpinCategoryMutationResult = Apollo.MutationResult<UnpinCategoryMutation>;
 export type UnpinCategoryMutationOptions = Apollo.BaseMutationOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>;
+
+export const ChannelPasswordCheckDocument = gql`
+    mutation ChannelPasswordCheck($channelId: ID!, $password: String!) {
+  channelPasswordCheck(channelId: $channelId, password: $password) {
+    correct
+  }
+}
+    `;
+export type ChannelPasswordCheckMutationFn = Apollo.MutationFunction<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables>;
+export type ChannelPasswordCheckComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables>, 'mutation'>;
+
+    export const ChannelPasswordCheckComponent = (props: ChannelPasswordCheckComponentProps) => (
+      <ApolloReactComponents.Mutation<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables> mutation={ChannelPasswordCheckDocument} {...props} />
+    );
+    
+
+/**
+ * __useChannelPasswordCheckMutation__
+ *
+ * To run a mutation, you first call `useChannelPasswordCheckMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChannelPasswordCheckMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [channelPasswordCheckMutation, { data, loading, error }] = useChannelPasswordCheckMutation({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useChannelPasswordCheckMutation(baseOptions?: Apollo.MutationHookOptions<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables>(ChannelPasswordCheckDocument, options);
+      }
+export type ChannelPasswordCheckMutationHookResult = ReturnType<typeof useChannelPasswordCheckMutation>;
+export type ChannelPasswordCheckMutationResult = Apollo.MutationResult<ChannelPasswordCheckMutation>;
+export type ChannelPasswordCheckMutationOptions = Apollo.BaseMutationOptions<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables>;
+
 export const LiveEventPasswordCheckDocument = gql`
     mutation LiveEventPasswordCheck($id: String!, $payload: LiveEventPasswordCheckInput!) {
   liveEventPasswordCheck(id: $id, payload: $payload) {
@@ -6387,7 +6438,6 @@ export const GetTagDocument = gql`
     description
     relatedCategories {
       access
-      createdAt
       slug
       pinnedStatus {
         pinned
@@ -6404,8 +6454,8 @@ export const GetTagDocument = gql`
     }
     relatedPosts {
       access
-      publishedAt
       slug
+      status
       pinnedStatus {
         pinned
       }

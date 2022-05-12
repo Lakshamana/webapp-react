@@ -218,6 +218,8 @@ const PT_BR = {
       channels: {
         title: 'Escolha um canal:',
         page_title: 'Canais',
+        private_channel: 'Canal privado',
+        incorrect_password: 'Senha inválida. Tente novamente.'
       },
       feed: {
         comments: 'Comentários',

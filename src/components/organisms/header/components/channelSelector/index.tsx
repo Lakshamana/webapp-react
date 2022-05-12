@@ -24,8 +24,13 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   // const [search, setSearch] = useState('')
-  const { activeChannel, setActiveChannel, channelsList, setChannelsList } =
-    useChannelsStore()
+  const {
+    activeChannel,
+    setActiveChannel,
+    channelsList,
+    setChannelsList,
+    isSingleChannel,
+  } = useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const history = useHistory()
 
@@ -33,12 +38,13 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     variables: {
       filter: {},
     },
-    onCompleted: (result) => setChannelsList(result.channels)
+    onCompleted: (result) => setChannelsList(result.channels),
   })
 
-  //TODO: Refact this to use indexedDB instead make new request
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => getChannels(), [])
+  useEffect(() => {
+    if (isSingleChannel === null) getChannels()
+    //eslint-disable-next-line
+  }, [])
 
   const openChannelsList = () => {
     if (!channelsList?.length) {
@@ -51,18 +57,19 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   // const handleSearch = (e: any) => setSearch(e.target.value)
 
   const handleSelect = (channel: Channel) => {
-    let homeTab = tabsList.filter((item) => item.TAB === 'home')
-    setActiveTab(homeTab[0])
+    let homeTab = tabsList.find((item) => item.TAB === 'home')
+    if (homeTab) setActiveTab(homeTab)
     setActiveChannel({
       id: channel.id,
       name: channel.name,
-      slug: channel.slug || ''
+      slug: channel.slug || '',
+      kind: channel.kind || '',
     })
     setOpen(false)
     history.push(`/c/${channel.slug}`)
   }
 
-  if (loading || !!!channelsList?.length) return <></>
+  if (loading || isSingleChannel) return <></>
 
   return (
     <>

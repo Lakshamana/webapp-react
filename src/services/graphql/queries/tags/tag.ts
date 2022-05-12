@@ -8,7 +8,6 @@ export const QUERY_TAG = gql`
       description
       relatedCategories {
         access
-        createdAt
         slug
         pinnedStatus {
           pinned
@@ -25,8 +24,8 @@ export const QUERY_TAG = gql`
       }
       relatedPosts {
         access
-        publishedAt
         slug
+        status
         pinnedStatus {
           pinned
         }
