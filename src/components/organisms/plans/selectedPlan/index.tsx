@@ -26,7 +26,7 @@ export const SelectedPlan = () => {
     value: 199,
   }
   return (
-    <Flex mt="42px" p="1em">
+    <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
       <Flex
         maxW="556px"
         w="100%"
