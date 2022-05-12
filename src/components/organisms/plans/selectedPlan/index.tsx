@@ -105,6 +105,73 @@ export const SelectedPlan = () => {
           <Text>$16.00/Mês</Text>
         </ButtonSelectOption>
       </CardSelectPlan>
+
+      <CardSelectPlan gridGap="24px">
+        <Flex w="100%" flexDir="column">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="16px"
+          >Have a promo code?</Text>
+          <Text
+            color={colors.secondaryText[colorMode]}
+            fontWeight="400"
+            fontSize="14px"
+          >Apply promo code to get discount</Text>
+        </Flex>
+        <Flex gridGap="12px" w="100%">
+          <Input value="3A21698"/>
+          <Button
+            w="134px"
+            h="56px"
+            textTransform="uppercase"
+            color="#fff"
+            bg="#0660F9"
+            fontWeight="700"
+            fontSize="16px"
+          >apply</Button>
+        </Flex>
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="14px"
+          >Sub total:</Text>
+          <Text
+            color={colors.secondaryText[colorMode]}
+            fontWeight="400"
+            fontSize="16px"
+          >$18,99</Text>
+        </Flex>
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="14px"
+          >Coupon discount:</Text>
+          <Text
+            color={colors.secondaryText[colorMode]}
+            fontWeight="400"
+            fontSize="16px"
+          >-$5,99</Text>
+        </Flex>
+
+        <Divider color={colors.generalText[colorMode]}/>
+
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="700"
+            fontSize="14px"
+          >Total:</Text>
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="28px"
+          >$12,99</Text>
+        </Flex>
+
+      </CardSelectPlan>
     </Flex>
   )
 }
