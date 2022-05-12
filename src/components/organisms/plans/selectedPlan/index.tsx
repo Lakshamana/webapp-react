@@ -1,4 +1,10 @@
-import { Flex, Text } from "@chakra-ui/react"
+import {
+  Button,
+  Divider,
+  Flex,
+  Switch,
+  Text,
+} from "@chakra-ui/react"
 import { Icon } from "@iconify/react"
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
