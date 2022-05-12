@@ -9,6 +9,7 @@ export const QUERY_COMMENTS = gql`
       total
       rows {
         author {
+          id
           displayName
           username
         }
