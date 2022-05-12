@@ -8,5 +8,7 @@ interface IEditInput {
 export interface IProps {
   description: string
   editInput: Maybe<IEditInput>
-  setEditInput: any
+  setEditInput: Function
+  action: Function
+  loading: boolean
 }
