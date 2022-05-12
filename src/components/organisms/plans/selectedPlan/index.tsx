@@ -6,6 +6,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { Icon } from "@iconify/react"
+import { Input } from "components/molecules"
+import {
+  ButtonSelectOption,
+  CardSelectPlan,
+} from "./style"
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 
