@@ -1,5 +1,8 @@
 import { Comment } from 'generated/graphql'
 
+type TypeOptions = 'REPORT' | 'EDIT' | 'DELETE'
+export type typeOfCard = 'CARD' | 'REPLY'
+
 export interface CommentType {
   username: string,
   createdAt: string,
@@ -8,15 +11,19 @@ export interface CommentType {
   answers?: CommentType[] | undefined
 }
 
-export type typeOfCard = 'CARD' | 'REPLY'
+export interface IEditInput {
+  id: string
+  option: TypeOptions
+}
 
 export interface IProps extends Comment {
   typeOfCard: typeOfCard
-  addComment?: any
-  setTotalComments?: any
-  totalComments?: number
+  addComment: Function
+  editComment: Function
+  selectPopupOption: Function
   postId?: string
-  addCommentLoading?: boolean
+  newCommentLoading: boolean
+  editedCommentLoading: boolean
 }
 
 export const defaultProps = {
@@ -25,4 +32,7 @@ export const defaultProps = {
   createdAt: '',
   comment: '',
   answers: [],
+  newCommentLoading: false,
+  editedCommentLoading: false,
+  deleteCommentLoading: false
 };
