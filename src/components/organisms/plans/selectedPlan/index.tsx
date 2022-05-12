@@ -172,6 +172,57 @@ export const SelectedPlan = () => {
         </Flex>
 
       </CardSelectPlan>
+
+      <CardSelectPlan gridGap="24px">
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="700"
+            fontSize="16px"
+          >Split payment cards and payment methods?</Text>
+          <Switch
+            defaultChecked
+          />
+        </Flex>
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="14px"
+          >Discount:</Text>
+          <Text
+            color="#ED0039"
+            fontWeight="400"
+            fontSize="16px"
+            textDecoration="line-through"
+          >$10.00</Text>
+        </Flex>
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="14px"
+          >Paymanents:</Text>
+          <Text
+            color={colors.secondaryText[colorMode]}
+            fontWeight="400"
+            fontSize="16px"
+          >$10.00</Text>
+        </Flex>
+        <Flex w="100%" justifyContent="space-between" alignItems="center">
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="14px"
+          >Balance:</Text>
+          <Text
+            color={colors.generalText[colorMode]}
+            fontWeight="400"
+            fontSize="28px"
+          >$40.00</Text>
+        </Flex>
+
+      </CardSelectPlan>
     </Flex>
   )
 }
