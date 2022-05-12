@@ -78,6 +78,33 @@ export const SelectedPlan = () => {
           </Flex>
         </Flex>
       </Flex>
+
+      <CardSelectPlan gridGap="24px">
+        <Text
+          color={colors.secondaryText[colorMode]}
+          fontWeight="400"
+          fontSize="18px"
+        >Select option:</Text>
+        <ButtonSelectOption>
+          <Text>A vista</Text>
+          <Text>$180.00</Text>
+        </ButtonSelectOption>
+        <ButtonSelectOption gridGap="24px">
+          <Flex
+            justifyContent="space-between"
+            w="100%"
+          >
+            <Text>Parcelado</Text>
+            <Text>2x $12.00</Text>
+          </Flex>
+          <Divider orientation='vertical' />
+          <Text>$34.00</Text>
+        </ButtonSelectOption>
+        <ButtonSelectOption>
+          <Text>Plano Mensal</Text>
+          <Text>$16.00/Mês</Text>
+        </ButtonSelectOption>
+      </CardSelectPlan>
     </Flex>
   )
 }
