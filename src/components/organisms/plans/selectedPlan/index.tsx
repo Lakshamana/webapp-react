@@ -223,6 +223,18 @@ export const SelectedPlan = () => {
         </Flex>
 
       </CardSelectPlan>
+
+      <CardSelectPlan gridGap="24px">
+        <Flex w="100%">
+          <Text
+            color={colors.secondaryText[colorMode]}
+            fontWeight="700"
+            fontSize="20px"
+          >Choose a payment method</Text>
+        </Flex>
+        {/* TODO: Adicionar credit card do signup depois de concluido */}
+
+      </CardSelectPlan>
     </Flex>
   )
 }
