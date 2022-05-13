@@ -1,4 +1,4 @@
-import { LiveEvent } from 'generated/graphql'
+import { LiveEvent, Status } from 'generated/graphql'
 
 export type LivestreamsScrollerProps = {
   sectionTitle?: string
@@ -21,4 +21,12 @@ export type LivestreamPostCardProps = {
 export type LivestreamBadge = {
   label: string
   color: string
+}
+
+export type LivestreamSnapshot = {
+  isPresenceEnabled?: boolean
+  status?: Status
+  isCommentsEnabled?: boolean
+  isReactionsEnabled?: boolean
+  hlsPlaybackUrl?: string
 }
