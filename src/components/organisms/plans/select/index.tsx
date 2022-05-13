@@ -1,38 +1,10 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Props } from './types'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 
-export const SelectPlan = () => {
+export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   const { colorMode } = useThemeStore()
-  const plans = [
-    {
-      imageUrl:
-        'https://bitcoinist.com/wp-content/uploads/2021/09/dogecoi.jpeg',
-      imageAlt: 'Rear view of modern home with pool',
-      title: 'Platinum - Subscription Title',
-      subtitle:
-        'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-      value: 199,
-    },
-    {
-      imageUrl:
-        'https://usethebitcoin.com/wp-content/uploads/2019/08/How-to-sell-Ethereum-728x454.jpg',
-      imageAlt: 'Rear view of modern home with pool',
-      title: 'Gold - Subscription Title',
-      subtitle:
-        'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-      value: 165,
-    },
-    {
-      imageUrl:
-        'https://timnews.com.br/system/images/photos/14737039/original/open-uri20211021-19-1xss92r?1634827953',
-      imageAlt: 'Rear view of modern home with pool',
-      title: 'Silver - Subscription Title',
-      subtitle:
-        'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-      value: 85,
-    },
-  ]
   return (
     <Flex flexDirection="column" mt="44px">
       <Text
@@ -40,7 +12,7 @@ export const SelectPlan = () => {
         fontWeight="500"
         color={colors.generalText[colorMode]}
       >
-        Title - Lorem ipsum
+        Select Your Plan
       </Text>
       <Flex gridGap="24px" mt="16px">
         {plans.map((plan) => (
@@ -88,6 +60,10 @@ export const SelectPlan = () => {
                   fontSize="12px"
                   textTransform="uppercase"
                   fontWeight="400"
+                  onClick={()=>{
+                    selectPlan(plan);
+                    nextStep()
+                  }}
                 >Select</Button>
                 <Text
                   color={colors.generalText[colorMode]}

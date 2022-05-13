@@ -13,18 +13,10 @@ import {
 } from "./style"
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { Props } from "./types"
 
-export const SelectedPlan = () => {
+export const SelectOption = ( { plan }: Props) => {
   const { colorMode } = useThemeStore()
-  const plan = {
-    imageUrl:
-      'https://bitcoinist.com/wp-content/uploads/2021/09/dogecoi.jpeg',
-    imageAlt: 'Rear view of modern home with pool',
-    title: 'Platinum - Subscription Title',
-    subtitle:
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-    value: 199,
-  }
   return (
     <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
       <Flex

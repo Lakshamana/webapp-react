@@ -7,7 +7,7 @@ import {
   QUERY_VERIFY_LIVE_EVENT_KIND,
   QUERY_VERIFY_POST_KIND,
 } from 'services/graphql'
-import { PrivateContent, Skeleton } from 'components'
+import { PrivateContent, PlanSelectFlow, Skeleton } from 'components'
 import { Props } from './types'
 import { useEffect } from 'react'
 import {
@@ -115,7 +115,7 @@ const VerifyContentKind = ({
         requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
       />
     )
-  if (isOnPaywall) return <div>Paywall</div>
+  if (isOnPaywall) return <PlanSelectFlow />
   return <div></div>
 }
 
