@@ -55,6 +55,7 @@ const EN_US = {
         cancel: 'No thanks',
         title: '{{org}} would like to send you push notifications',
       },
+      disabled_chat: 'Disabled chat',
       months: {
         january: 'January',
         february: 'February',
