@@ -247,6 +247,37 @@ export const SelectOption = ( { plan }: Props) => {
                 >Choose a payment method</Text>
               </Flex>
               {/* TODO: Adicionar credit card do signup depois de concluido */}
+              <Accordion allowToggle w="100%" bg={colors.white} borderRadius="8px">
+                <AccordionItem>
+                  <AccordionButton h="80px">
+                    <Flex w="100%" flexDir="column" alignItems="flex-start">
+                      <Text
+                        color={colors.black}
+                        fontWeight="600"
+                        fontSize="14px"
+                      >Bank Card</Text>
+                      <Text
+                        color={colors.black}
+                        fontWeight="300"
+                        fontSize="14px"
+                        w="277px"
+                        textAlign="start"
+                      >Pay with Visa, Mastercard, Maestro and Amex</Text>
+                    </Flex>
+                    <CreditCards height="26px"/>
+                    <AccordionIcon ml="29px" mr="10px"/>
+                  </AccordionButton>
+                  <AccordionPanel pb={4} w="100%">
+                    <Text
+                      color={colors.black}
+                      fontWeight="500"
+                      fontSize="14px"
+                      w="100%"
+                      textAlign="center"
+                    >Coming Soon!</Text>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
 
             </CardSelectPlan>
           </>
