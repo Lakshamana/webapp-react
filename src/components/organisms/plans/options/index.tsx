@@ -15,6 +15,7 @@ import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { Props } from "./types"
 import { useState } from "react"
+import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
 
 export const SelectOption = ( { plan }: Props) => {
   const { colorMode } = useThemeStore()
