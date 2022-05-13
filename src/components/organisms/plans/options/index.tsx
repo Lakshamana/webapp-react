@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Button,
+  Checkbox,
   Divider,
   Flex,
   Switch,
@@ -15,6 +16,7 @@ import { Input } from "components/molecules"
 import {
   ButtonSelectOption,
   CardSelectPlan,
+  InputCustomCreditCard,
 } from "./style"
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
@@ -268,13 +270,34 @@ export const SelectOption = ( { plan }: Props) => {
                     <AccordionIcon ml="29px" mr="10px"/>
                   </AccordionButton>
                   <AccordionPanel pb={4} w="100%">
-                    <Text
-                      color={colors.black}
-                      fontWeight="500"
-                      fontSize="14px"
-                      w="100%"
-                      textAlign="center"
-                    >Coming Soon!</Text>
+                    <Flex w="100%" flexDirection="column" gridGap="16px" alignItems="center">
+                      <InputCustomCreditCard placeholder="Name on Card"/>
+                      <InputCustomCreditCard placeholder="Card number"/>
+                      <Flex w="100%" gridGap="18px">
+                        <InputCustomCreditCard placeholder="MM/YY"/>
+                        <InputCustomCreditCard placeholder="CVV"/>
+                      </Flex>
+                      <InputCustomCreditCard placeholder="Country"/>
+                      <Flex alignItems="flex-start" gridGap="12px" mt="1em">
+                        <Checkbox
+                          fontSize="12px"
+                          name="terms"
+                          isChecked={true}
+                        />
+                        <Text fontSize="12px" color="#222222">
+                        I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.
+                        </Text>
+                      </Flex>
+                      <Button
+                        w="236px"
+                        h="56px"
+                        textTransform="uppercase"
+                        color="#fff"
+                        bg="#0660F9"
+                        fontWeight="700"
+                        fontSize="16px"
+                      >place your order</Button>
+                    </Flex>
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
