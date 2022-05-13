@@ -20,6 +20,7 @@ import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
 import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg'
 import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
 import { ReactComponent as Paypall } from 'assets/icons/payment/paypall.svg'
+import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
 
 export const SelectOption = ( { plan }: Props) => {
   const { colorMode } = useThemeStore()
