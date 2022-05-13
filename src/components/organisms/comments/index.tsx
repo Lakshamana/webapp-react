@@ -209,10 +209,24 @@ const Comments = ({ ...props }: Post) => {
         onConfirm={modalOption.action}
         isActionDisabled={modalOption.loadingAction}
         loading={modalOption.loadingAction}
-        closeOnOverlayClick={false}
+        closeOnOverlayClick={true}
         actionLabel={modalOption.text}
+        closeButton={true}
       >
         <>
+          {
+            modalOption.typeEvent === 'DELETE' &&
+            <Box textAlign="center">
+              <Text
+                color={colors.generalText[colorMode]}
+                fontSize={'1.5rem'}
+                textAlign={'center'}
+                fontWeight={500}
+              >
+                {t('page.post.comment.delete')}
+              </Text>
+            </Box>
+          }
           {
             modalOption.typeEvent === 'REPORT' &&
             <Box textAlign="center">
@@ -238,6 +252,7 @@ const Comments = ({ ...props }: Post) => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 color={colors.inputText[colorMode]}
+                backgroundColor={colors.inputBg[colorMode]}
               />
               {
                 !!formik.errors.reportReason && formik.touched.reportReason &&
