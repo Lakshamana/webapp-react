@@ -515,6 +515,21 @@ export type CreateEmailTemplateDto = {
   type: Scalars['String'];
 };
 
+export type CreateEnvConfigInput = {
+  apiEndpoint: Scalars['String'];
+  firebaseApiKey: Scalars['String'];
+  firebaseAppId: Scalars['String'];
+  firebaseAuthApiKey: Scalars['String'];
+  firebaseAuthDomain: Scalars['String'];
+  firebaseBucket: Scalars['String'];
+  firebaseDatabaseUrl: Scalars['String'];
+  firebaseDomain: Scalars['String'];
+  firebaseMeasurementId: Scalars['String'];
+  firebaseProject: Scalars['String'];
+  firebaseSender: Scalars['String'];
+  remoteConfigSecret: Scalars['String'];
+};
+
 export type CreateGroupDto = {
   default?: Maybe<Scalars['Boolean']>;
   /** Group description */
@@ -706,6 +721,12 @@ export type EmbedInput = {
   customization: Scalars['JSONObject'];
 };
 
+export type EncryptedEnvConfig = {
+  __typename?: 'EncryptedEnvConfig';
+  iv: Scalars['String'];
+  result: Scalars['String'];
+};
+
 export type EngagedUser = {
   __typename?: 'EngagedUser';
   displayName?: Maybe<Scalars['String']>;
@@ -716,6 +737,24 @@ export type EngagedUser = {
   organization: Scalars['String'];
   tenant: Scalars['String'];
   username?: Maybe<Scalars['String']>;
+};
+
+export type EnvConfig = {
+  __typename?: 'EnvConfig';
+  apiEndpoint: Scalars['String'];
+  firebaseApiKey: Scalars['String'];
+  firebaseAppId: Scalars['String'];
+  firebaseAuthApiKey: Scalars['String'];
+  firebaseAuthDomain: Scalars['String'];
+  firebaseBucket: Scalars['String'];
+  firebaseDatabaseUrl: Scalars['String'];
+  firebaseDomain: Scalars['String'];
+  firebaseMeasurementId: Scalars['String'];
+  firebaseProject: Scalars['String'];
+  firebaseSender: Scalars['String'];
+  id: Scalars['ID'];
+  organization: Scalars['ID'];
+  remoteConfigSecret: Scalars['String'];
 };
 
 export type FilterFindAll = {
@@ -1177,6 +1216,7 @@ export type Mutation = {
   createCustomField: ResponseCustomFieldsOutput;
   createEmailTemplate: EmailTemplate;
   createEmbed: Embed;
+  createEnvConfig: EnvConfig;
   createGroup: GroupDto;
   createLiveEvent: LiveEvent;
   createMedia: Media;
@@ -1203,6 +1243,7 @@ export type Mutation = {
   deleteComment: Comment;
   deleteCustomField: ResponseCustomFieldsOutput;
   deleteEmbed: Embed;
+  deleteEnvConfig: EnvConfig;
   deleteLiveEvent: LiveEvent;
   deleteMedia: MediaUnion;
   deleteMenu: Menu;
@@ -1259,6 +1300,7 @@ export type Mutation = {
   updateCustomField: ResponseCustomFieldsOutput;
   updateEmailTemplate: EmailTemplate;
   updateEmbed: Embed;
+  updateEnvConfig: EnvConfig;
   updateGroup: GroupDto;
   updateIsAdminAccount: Account;
   updateLiveEvent: LiveEvent;
@@ -1425,6 +1467,11 @@ export type MutationCreateEmbedArgs = {
 };
 
 
+export type MutationCreateEnvConfigArgs = {
+  payload: CreateEnvConfigInput;
+};
+
+
 export type MutationCreateGroupArgs = {
   payload: CreateGroupDto;
 };
@@ -1552,6 +1599,11 @@ export type MutationDeleteCustomFieldArgs = {
 
 export type MutationDeleteEmbedArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteEnvConfigArgs = {
+  envConfigId: Scalars['ID'];
 };
 
 
@@ -1833,6 +1885,12 @@ export type MutationUpdateEmailTemplateArgs = {
 export type MutationUpdateEmbedArgs = {
   id: Scalars['String'];
   payload: UpdateEmbed;
+};
+
+
+export type MutationUpdateEnvConfigArgs = {
+  envConfigId: Scalars['ID'];
+  payload: UpdateEnvConfigInput;
 };
 
 
@@ -2468,6 +2526,7 @@ export type Query = {
   embed: Embed;
   embeds: Array<Embed>;
   embedsCount: Scalars['Float'];
+  envConfig: EncryptedEnvConfig;
   group: GroupDto;
   groups: Array<GroupDto>;
   liveEvent: LiveEvent;
@@ -2627,6 +2686,11 @@ export type QueryEmbedsArgs = {
 
 export type QueryEmbedsCountArgs = {
   filter?: Maybe<EmbedFilterInput>;
+};
+
+
+export type QueryEnvConfigArgs = {
+  origin: Scalars['String'];
 };
 
 
@@ -3142,6 +3206,21 @@ export type UpdateEmbed = {
   customization?: Maybe<Scalars['JSONObject']>;
 };
 
+export type UpdateEnvConfigInput = {
+  apiEndpoint?: Maybe<Scalars['String']>;
+  firebaseApiKey?: Maybe<Scalars['String']>;
+  firebaseAppId?: Maybe<Scalars['String']>;
+  firebaseAuthApiKey?: Maybe<Scalars['String']>;
+  firebaseAuthDomain?: Maybe<Scalars['String']>;
+  firebaseBucket?: Maybe<Scalars['String']>;
+  firebaseDatabaseUrl?: Maybe<Scalars['String']>;
+  firebaseDomain?: Maybe<Scalars['String']>;
+  firebaseMeasurementId?: Maybe<Scalars['String']>;
+  firebaseProject?: Maybe<Scalars['String']>;
+  firebaseSender?: Maybe<Scalars['String']>;
+  remoteConfigSecret?: Maybe<Scalars['String']>;
+};
+
 export type UpdateGroupDto = {
   default?: Maybe<Scalars['Boolean']>;
   /** Group description */
@@ -3507,6 +3586,7 @@ export type ChannelPasswordCheckMutationVariables = Exact<{
 
 export type ChannelPasswordCheckMutation = { __typename?: 'Mutation', channelPasswordCheck: { __typename?: 'ChannelPasswordCheck', correct: boolean } };
 
+
 export type LiveEventPasswordCheckMutationVariables = Exact<{
   id: Scalars['String'];
   payload: LiveEventPasswordCheckInput;
@@ -3528,6 +3608,13 @@ export type AddReactionMutationVariables = Exact<{
 
 
 export type AddReactionMutation = { __typename?: 'Mutation', addReaction: Array<{ __typename?: 'ReactionsAggregate', name: string, count: number }> };
+
+export type AddReportMutationVariables = Exact<{
+  payload: AddReport;
+}>;
+
+
+export type AddReportMutation = { __typename?: 'Mutation', addReport: { __typename?: 'Report', status: string } };
 
 export type DeleteCommentMutationVariables = Exact<{
   id: Scalars['String'];
@@ -3651,7 +3738,7 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 
-export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedCommentsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, total: number, isLastPage: boolean, page: number, pageCount: number, pageSize: number, rows: Array<{ __typename?: 'Comment', description: string, id: string, createdAt: any, countComments: number, parent?: Maybe<string>, author: { __typename?: 'CommentAuthor', displayName?: Maybe<string>, username?: Maybe<string> }, commentVoteStats: { __typename?: 'CommentVoteStats', countDownvotes: number, countUpvotes: number } }> } };
+export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedCommentsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, total: number, isLastPage: boolean, page: number, pageCount: number, pageSize: number, rows: Array<{ __typename?: 'Comment', description: string, id: string, createdAt: any, countComments: number, parent?: Maybe<string>, author: { __typename?: 'CommentAuthor', id?: Maybe<string>, displayName?: Maybe<string>, username?: Maybe<string> }, commentVoteStats: { __typename?: 'CommentVoteStats', countDownvotes: number, countUpvotes: number } }> } };
 
 export type GetLiveEventQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -4449,6 +4536,7 @@ export function useUnpinCategoryMutation(baseOptions?: Apollo.MutationHookOption
 export type UnpinCategoryMutationHookResult = ReturnType<typeof useUnpinCategoryMutation>;
 export type UnpinCategoryMutationResult = Apollo.MutationResult<UnpinCategoryMutation>;
 export type UnpinCategoryMutationOptions = Apollo.BaseMutationOptions<UnpinCategoryMutation, UnpinCategoryMutationVariables>;
+
 export const ChannelPasswordCheckDocument = gql`
     mutation ChannelPasswordCheck($channelId: ID!, $password: String!) {
   channelPasswordCheck(channelId: $channelId, password: $password) {
@@ -4489,6 +4577,7 @@ export function useChannelPasswordCheckMutation(baseOptions?: Apollo.MutationHoo
 export type ChannelPasswordCheckMutationHookResult = ReturnType<typeof useChannelPasswordCheckMutation>;
 export type ChannelPasswordCheckMutationResult = Apollo.MutationResult<ChannelPasswordCheckMutation>;
 export type ChannelPasswordCheckMutationOptions = Apollo.BaseMutationOptions<ChannelPasswordCheckMutation, ChannelPasswordCheckMutationVariables>;
+
 export const LiveEventPasswordCheckDocument = gql`
     mutation LiveEventPasswordCheck($id: String!, $payload: LiveEventPasswordCheckInput!) {
   liveEventPasswordCheck(id: $id, payload: $payload) {
@@ -4620,6 +4709,45 @@ export function useAddReactionMutation(baseOptions?: Apollo.MutationHookOptions<
 export type AddReactionMutationHookResult = ReturnType<typeof useAddReactionMutation>;
 export type AddReactionMutationResult = Apollo.MutationResult<AddReactionMutation>;
 export type AddReactionMutationOptions = Apollo.BaseMutationOptions<AddReactionMutation, AddReactionMutationVariables>;
+export const AddReportDocument = gql`
+    mutation AddReport($payload: AddReport!) {
+  addReport(payload: $payload) {
+    status
+  }
+}
+    `;
+export type AddReportMutationFn = Apollo.MutationFunction<AddReportMutation, AddReportMutationVariables>;
+export type AddReportComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddReportMutation, AddReportMutationVariables>, 'mutation'>;
+
+    export const AddReportComponent = (props: AddReportComponentProps) => (
+      <ApolloReactComponents.Mutation<AddReportMutation, AddReportMutationVariables> mutation={AddReportDocument} {...props} />
+    );
+    
+
+/**
+ * __useAddReportMutation__
+ *
+ * To run a mutation, you first call `useAddReportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddReportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addReportMutation, { data, loading, error }] = useAddReportMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useAddReportMutation(baseOptions?: Apollo.MutationHookOptions<AddReportMutation, AddReportMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddReportMutation, AddReportMutationVariables>(AddReportDocument, options);
+      }
+export type AddReportMutationHookResult = ReturnType<typeof useAddReportMutation>;
+export type AddReportMutationResult = Apollo.MutationResult<AddReportMutation>;
+export type AddReportMutationOptions = Apollo.BaseMutationOptions<AddReportMutation, AddReportMutationVariables>;
 export const DeleteCommentDocument = gql`
     mutation deleteComment($id: String!) {
   deleteComment(id: $id) {
@@ -5537,6 +5665,7 @@ export const CommentsDocument = gql`
     total
     rows {
       author {
+        id
         displayName
         username
       }

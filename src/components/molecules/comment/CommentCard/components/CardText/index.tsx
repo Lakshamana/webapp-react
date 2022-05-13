@@ -1,30 +1,28 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { colors } from 'styles'
 import { pxToRem } from 'styles/metrics'
 import { useThemeStore } from 'services/stores'
 import { Text, CommentInput } from 'components'
-import { useMutation } from '@apollo/client'
-import { MUTATION_UPDATE_COMMENT } from 'services/graphql'
 import { IProps } from './types'
 
-const CardText = ({ description, editInput, setEditInput }: IProps) => {
+const CardText = ({ description, editInput, setEditInput, action, loading }: IProps) => {
   const { colorMode } = useThemeStore()
-  const [editComment, { data, loading }] = useMutation(MUTATION_UPDATE_COMMENT)
-  const handleCancel = () => setEditInput(null)
+  const [comment, setComment] = useState<string>('')
 
-  useEffect(() => {
-    if (data?.updateComment) {
-      setEditInput(null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+  useEffect(() => setComment(description), [description])
+
+  const handleCancel = () => setEditInput(null)
+  const handleUpdate = (values) => {
+    action(values)
+    setEditInput(null)
+  }
 
   if (editInput) {
     return (
       <CommentInput
         postId={editInput.id}
-        editText={description}
-        action={editComment}
+        editText={comment}
+        action={handleUpdate}
         actionLoading={loading}
         cancelAction={handleCancel}
       />
