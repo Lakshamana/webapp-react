@@ -21,6 +21,7 @@ import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg
 import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
 import { ReactComponent as Paypall } from 'assets/icons/payment/paypall.svg'
 import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
+import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
 
 export const SelectOption = ( { plan }: Props) => {
   const { colorMode } = useThemeStore()
