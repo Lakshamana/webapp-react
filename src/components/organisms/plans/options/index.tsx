@@ -238,7 +238,7 @@ export const SelectOption = ( { plan }: Props) => {
 
             </CardSelectPlan>
 
-            <CardSelectPlan gridGap="24px">
+            <CardSelectPlan gridGap="16px">
               <Flex w="100%">
                 <Text
                   color={colors.secondaryText[colorMode]}
