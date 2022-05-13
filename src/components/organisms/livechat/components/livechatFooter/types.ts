@@ -5,6 +5,8 @@ export interface Props {
   sendMessage: (message: string) => void
   sendReaction: (reaction: string) => void
   reactions?: Reaction[]
+  commentsEnabled?: boolean
+  reactionsEnabled?: boolean
 }
 
 interface Reaction {
