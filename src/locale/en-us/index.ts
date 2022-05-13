@@ -345,7 +345,8 @@ const EN_US = {
           subtitle: 'Please complete your purchase and enjoy your content',
           card_name: 'Name on Card',
           card_number: 'Card number',
-          date: 'MM/AA',
+          date_month: 'MM',
+          date_year: 'YYYY',
           cvv: 'CVV',
           country: 'Country',
           installments: 'Installments',
@@ -355,6 +356,11 @@ const EN_US = {
           authorize:
             'I authorize {{org}} LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
           place_you_order: 'Place your order',
+          mistakes: {
+            full_name_required: 'Full name is required',
+            month_required: 'Month is required',
+            year_required: 'Year is required',
+          },
         },
         modal: {
           success: {

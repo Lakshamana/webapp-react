@@ -344,7 +344,8 @@ const PT_BR = {
           subtitle: 'Finalize o pagamento e aproveite o conteúdo.',
           card_name: 'Nome no Cartão',
           card_number: 'Número do Cartão',
-          date: 'MM/AA',
+          date_month: 'MM',
+          date_year: 'AAAA',
           cvv: 'CVV',
           country: 'Country',
           installments: 'Parcelas',
@@ -354,6 +355,11 @@ const PT_BR = {
           authorize:
             'Autorizo ​​a FanHero LLC, a enviar instruções à instituição financeira que emitiu meu cartão para receber pagamentos da conta do cartão, de acordo com os termos do meu contrato com você.',
           place_you_order: 'Faça seu pedido',
+          mistakes: {
+            full_name_required: 'Nome Completo é obrigatorio',
+            month_required: 'Mês é obrigatorio',
+            year_required: 'Ano é obrigatorio',
+          },
         },
         modal: {
           success: {
