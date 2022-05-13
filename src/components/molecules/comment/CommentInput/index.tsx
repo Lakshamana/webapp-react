@@ -61,7 +61,13 @@ const CommentInput = ({
           name={account?.username || ''}
         />
       }
-      <InputGroup size="lg" display="flex" alignItems="center" my={5}>
+      <InputGroup
+        size="lg"
+        display="flex"
+        alignItems="center"
+        my={editText ? 0 : 5}
+        maxW={editText ? '90%' : '99%'}
+      >
         {
           editText
             ? <InputEdit
@@ -97,7 +103,7 @@ const CommentInput = ({
               />
               {
                 cancelAction &&
-                <Box ml={3} mr={6}>
+                <Box ml={3}>
                   <IconCustom
                     icon="ic:sharp-cancel"
                     color={colors.inputBg[colorMode]}

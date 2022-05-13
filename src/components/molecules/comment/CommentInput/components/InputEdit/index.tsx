@@ -23,6 +23,7 @@ const InputEdit = ({
       onBlur={onBlur}
       onChange={onChange}
       onKeyDown={(e: any) => e.keyCode === 13 && onSubmit()}
+      borderBottomColor={colors.brand.primary[colorMode]}
     />
   )
 }
