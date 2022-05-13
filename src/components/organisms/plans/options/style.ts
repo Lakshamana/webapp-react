@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Input } from "@chakra-ui/react";
 import styled from "styled-components";
 
 export const ButtonSelectOption = styled(Flex)`
@@ -25,4 +25,26 @@ export const CardSelectPlan = styled(Flex)`
   flex-direction: column;
   padding: 24px;
   align-items: center;
+`
+
+export const InputCustomCreditCard = styled(Input)`
+  background: #E1E1E1;
+  border: none;
+  border-radius: 0;
+  height: 56px;
+  &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-weight: 400;
+    color: #666666;
+    opacity: 1; /* Firefox */
+  }
+
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    font-weight: 400;
+    color: #666666;
+  }
+
+  &::-ms-input-placeholder { /* Microsoft Edge */
+    font-weight: 400;
+    color: #666666;
+  }
 `
