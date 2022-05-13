@@ -21,6 +21,10 @@ export const StatusBadge = (
       label: i18n.t('page.post.live.upcoming'),
       color: colors.brand.live_badges?.upcoming,
     },
+    READY: {
+      label: i18n.t('page.post.live.upcoming'),
+      color: colors.brand.live_badges?.upcoming,
+    },
     FINISHED: {
       label: i18n.t('page.post.live.finished'),
       color: colors.brand.live_badges?.finished,
