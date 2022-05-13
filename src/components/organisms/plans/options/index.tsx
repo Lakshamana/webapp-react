@@ -14,9 +14,11 @@ import {
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { Props } from "./types"
+import { useState } from "react"
 
 export const SelectOption = ( { plan }: Props) => {
   const { colorMode } = useThemeStore()
+  const [selectedOption, setselectedOption] = useState(false)
   return (
     <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
       <Flex
@@ -61,6 +63,7 @@ export const SelectOption = ( { plan }: Props) => {
             justifyContent="center"
             alignItems="center"
             pl="30px"
+            onClick={()=>setselectedOption(!selectedOption)}
           >
             <Icon
               icon="ic:baseline-expand-more"
@@ -71,162 +74,173 @@ export const SelectOption = ( { plan }: Props) => {
         </Flex>
       </Flex>
 
-      <CardSelectPlan gridGap="24px">
-        <Text
-          color={colors.secondaryText[colorMode]}
-          fontWeight="400"
-          fontSize="18px"
-        >Select option:</Text>
-        <ButtonSelectOption>
-          <Text>A vista</Text>
-          <Text>$180.00</Text>
-        </ButtonSelectOption>
-        <ButtonSelectOption gridGap="24px">
-          <Flex
-            justifyContent="space-between"
-            w="100%"
-          >
-            <Text>Parcelado</Text>
-            <Text>2x $12.00</Text>
-          </Flex>
-          <Divider orientation='vertical' />
-          <Text>$34.00</Text>
-        </ButtonSelectOption>
-        <ButtonSelectOption>
-          <Text>Plano Mensal</Text>
-          <Text>$16.00/Mês</Text>
-        </ButtonSelectOption>
-      </CardSelectPlan>
+      {
+        !selectedOption && (
+          <CardSelectPlan gridGap="24px">
+            <Text
+              color={colors.secondaryText[colorMode]}
+              fontWeight="400"
+              fontSize="18px"
+            >Select option:</Text>
+            <ButtonSelectOption onClick={()=>setselectedOption(true)}>
+              <Text>A vista</Text>
+              <Text>$180.00</Text>
+            </ButtonSelectOption>
+            <ButtonSelectOption gridGap="24px" onClick={()=>setselectedOption(true)}>
+              <Flex
+                justifyContent="space-between"
+                w="100%"
+              >
+                <Text>Parcelado</Text>
+                <Text>2x $12.00</Text>
+              </Flex>
+              <Divider orientation='vertical' />
+              <Text>$34.00</Text>
+            </ButtonSelectOption>
+            <ButtonSelectOption onClick={()=>setselectedOption(true)}>
+              <Text>Plano Mensal</Text>
+              <Text>$16.00/Mês</Text>
+            </ButtonSelectOption>
+          </CardSelectPlan>
+        )
+      }
 
-      <CardSelectPlan gridGap="24px">
-        <Flex w="100%" flexDir="column">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="16px"
-          >Have a promo code?</Text>
-          <Text
-            color={colors.secondaryText[colorMode]}
-            fontWeight="400"
-            fontSize="14px"
-          >Apply promo code to get discount</Text>
-        </Flex>
-        <Flex gridGap="12px" w="100%">
-          <Input value="3A21698"/>
-          <Button
-            w="134px"
-            h="56px"
-            textTransform="uppercase"
-            color="#fff"
-            bg="#0660F9"
-            fontWeight="700"
-            fontSize="16px"
-          >apply</Button>
-        </Flex>
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="14px"
-          >Sub total:</Text>
-          <Text
-            color={colors.secondaryText[colorMode]}
-            fontWeight="400"
-            fontSize="16px"
-          >$18,99</Text>
-        </Flex>
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="14px"
-          >Coupon discount:</Text>
-          <Text
-            color={colors.secondaryText[colorMode]}
-            fontWeight="400"
-            fontSize="16px"
-          >-$5,99</Text>
-        </Flex>
+      {
+        selectedOption && (
+          <>
+            <CardSelectPlan gridGap="24px">
+              <Flex w="100%" flexDir="column">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="16px"
+                >Have a promo code?</Text>
+                <Text
+                  color={colors.secondaryText[colorMode]}
+                  fontWeight="400"
+                  fontSize="14px"
+                >Apply promo code to get discount</Text>
+              </Flex>
+              <Flex gridGap="12px" w="100%">
+                <Input value="3A21698"/>
+                <Button
+                  w="134px"
+                  h="56px"
+                  textTransform="uppercase"
+                  color="#fff"
+                  bg="#0660F9"
+                  fontWeight="700"
+                  fontSize="16px"
+                >apply</Button>
+              </Flex>
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="14px"
+                >Sub total:</Text>
+                <Text
+                  color={colors.secondaryText[colorMode]}
+                  fontWeight="400"
+                  fontSize="16px"
+                >$18,99</Text>
+              </Flex>
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="14px"
+                >Coupon discount:</Text>
+                <Text
+                  color={colors.secondaryText[colorMode]}
+                  fontWeight="400"
+                  fontSize="16px"
+                >-$5,99</Text>
+              </Flex>
 
-        <Divider color={colors.generalText[colorMode]}/>
+              <Divider color={colors.generalText[colorMode]}/>
 
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="700"
-            fontSize="14px"
-          >Total:</Text>
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="28px"
-          >$12,99</Text>
-        </Flex>
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="700"
+                  fontSize="14px"
+                >Total:</Text>
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="28px"
+                >$12,99</Text>
+              </Flex>
 
-      </CardSelectPlan>
+            </CardSelectPlan>
 
-      <CardSelectPlan gridGap="24px">
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="700"
-            fontSize="16px"
-          >Split payment cards and payment methods?</Text>
-          <Switch
-            defaultChecked
-          />
-        </Flex>
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="14px"
-          >Discount:</Text>
-          <Text
-            color="#ED0039"
-            fontWeight="400"
-            fontSize="16px"
-            textDecoration="line-through"
-          >$10.00</Text>
-        </Flex>
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="14px"
-          >Paymanents:</Text>
-          <Text
-            color={colors.secondaryText[colorMode]}
-            fontWeight="400"
-            fontSize="16px"
-          >$10.00</Text>
-        </Flex>
-        <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="14px"
-          >Balance:</Text>
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="28px"
-          >$40.00</Text>
-        </Flex>
+            <CardSelectPlan gridGap="24px">
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="700"
+                  fontSize="16px"
+                >Split payment cards and payment methods?</Text>
+                <Switch
+                  defaultChecked
+                />
+              </Flex>
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="14px"
+                >Discount:</Text>
+                <Text
+                  color="#ED0039"
+                  fontWeight="400"
+                  fontSize="16px"
+                  textDecoration="line-through"
+                >$10.00</Text>
+              </Flex>
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="14px"
+                >Paymanents:</Text>
+                <Text
+                  color={colors.secondaryText[colorMode]}
+                  fontWeight="400"
+                  fontSize="16px"
+                >$10.00</Text>
+              </Flex>
+              <Flex w="100%" justifyContent="space-between" alignItems="center">
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="14px"
+                >Balance:</Text>
+                <Text
+                  color={colors.generalText[colorMode]}
+                  fontWeight="400"
+                  fontSize="28px"
+                >$40.00</Text>
+              </Flex>
 
-      </CardSelectPlan>
+            </CardSelectPlan>
 
-      <CardSelectPlan gridGap="24px">
-        <Flex w="100%">
-          <Text
-            color={colors.secondaryText[colorMode]}
-            fontWeight="700"
-            fontSize="20px"
-          >Choose a payment method</Text>
-        </Flex>
-        {/* TODO: Adicionar credit card do signup depois de concluido */}
+            <CardSelectPlan gridGap="24px">
+              <Flex w="100%">
+                <Text
+                  color={colors.secondaryText[colorMode]}
+                  fontWeight="700"
+                  fontSize="20px"
+                >Choose a payment method</Text>
+              </Flex>
+              {/* TODO: Adicionar credit card do signup depois de concluido */}
 
-      </CardSelectPlan>
+            </CardSelectPlan>
+          </>
+        )
+      }
+
     </Flex>
   )
 }
