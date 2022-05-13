@@ -19,7 +19,11 @@ import { timestampNow, parseResultSnapshot } from 'utils/firebase'
 import { MessageDocumentData, ReactionDocumentData } from 'types/firebase'
 import throttle from 'lodash.debounce'
 
-const Livechat = ({ entityId }: Props) => {
+const Livechat = ({
+  entityId,
+  isCommentsEnabled,
+  isReactionsEnabled,
+}: Props) => {
   const [messages, setMessagesData] = useState<DocumentData[]>([])
   const [reactions, setReactionsData] = useState<DocumentData[]>([])
   const { account } = useAuthStore()
@@ -110,11 +114,13 @@ const Livechat = ({ entityId }: Props) => {
       justifyContent={'space-between'}
     >
       <LivechatHeader />
-      <LivechatBody messages={messages}/>
+      <LivechatBody enabled={isCommentsEnabled} messages={messages} />
       <LivechatFooter
         sendMessage={sendNewMessage}
         sendReaction={debouncedSendReaction}
         reactions={reactions}
+        reactionsEnabled={isReactionsEnabled}
+        commentsEnabled={isCommentsEnabled}
       />
     </Flex>
   )
