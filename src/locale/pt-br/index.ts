@@ -49,8 +49,9 @@ const PT_BR = {
       push: {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
-        title: '{{org}} gostaria de enviar notificações.'
+        title: '{{org}} gostaria de enviar notificações.',
       },
+      disabled_chat: 'Chat desabilitado',
       months: {
         january: 'Janeiro',
         february: 'Fevereiro',
@@ -179,8 +180,7 @@ const PT_BR = {
     },
     activateAccount: {
       activating: 'Ativando a sua conta...',
-      success:
-        'Sua conta foi ativada com sucesso!',
+      success: 'Sua conta foi ativada com sucesso!',
       loginLink: 'Clique aqui para acessar',
     },
     header: {
@@ -219,7 +219,7 @@ const PT_BR = {
         title: 'Escolha um canal:',
         page_title: 'Canais',
         private_channel: 'Canal privado',
-        incorrect_password: 'Senha inválida. Tente novamente.'
+        incorrect_password: 'Senha inválida. Tente novamente.',
       },
       feed: {
         comments: 'Comentários',
@@ -231,7 +231,7 @@ const PT_BR = {
         search_options: {
           recent: 'Mais Recente',
           old: 'Mais Antiga',
-        }
+        },
       },
       categories: {
         action: 'Ação',
@@ -243,7 +243,7 @@ const PT_BR = {
       },
       category: {
         videos: 'Vídeos',
-        categories: 'Categorias'
+        categories: 'Categorias',
       },
       my_list: {
         my_list: 'Minha Lista',
@@ -251,7 +251,7 @@ const PT_BR = {
         pinned_videos: 'Vídeos favoritos',
       },
       tag: {
-        no_content: 'Tag sem conteúdo'
+        no_content: 'Tag sem conteúdo',
       },
       account: {
         title: 'Minha conta',
@@ -303,8 +303,10 @@ const PT_BR = {
         cancel_subscriptions: 'Cancelar Assinaturas',
         add_payment: 'Adicionar Método de Pagamento',
         payment_method: 'Método de Pagamento',
-        verify_password: 'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
-        minimum_age: 'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
+        verify_password:
+          'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
+        minimum_age:
+          'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
       },
       live: {
         live: 'Ao Vivo',
@@ -413,12 +415,12 @@ const PT_BR = {
           title: 'Conteúdo Privado',
           subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.',
           access: 'Acessar',
-          incorrect_password: 'Senha inválida. Tente novamente.'
+          incorrect_password: 'Senha inválida. Tente novamente.',
         },
         live: {
           live_chat: {
             title: 'Chat ao Vivo',
-            say_something: 'Diga alguma coisa...'
+            say_something: 'Diga alguma coisa...',
           },
           will_start_in: 'A transmissão irá começar em',
           will_start_soon: 'A transmissão irá começar em breve',
