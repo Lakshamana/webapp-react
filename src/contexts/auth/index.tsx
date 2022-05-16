@@ -16,7 +16,6 @@ import {
 import { signOutFB } from 'services/firebase'
 import {
   USER_INFO,
-  
   ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
@@ -47,11 +46,10 @@ export const AuthProvider = ({ children }) => {
 
   const client = useApolloClient()
 
-  const signed = !!user
-
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
 
+  const signed = !!accessToken
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
   const updateAccount = async (account) => {
@@ -178,6 +176,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    if (!accessToken) clearData()
     if (!accessToken && !firebaseToken) return
     loadAccount()
     // eslint-disable-next-line
