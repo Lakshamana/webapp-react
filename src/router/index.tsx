@@ -1,52 +1,38 @@
-import { BrowserRouter } from 'react-router-dom'
-
+import { useEffect } from 'react'
+import { BrowserRouter, useLocation } from 'react-router-dom'
 import { ClientRoutes } from './routes'
-import {
-  publicPermissionUnauthenticated,
-  publicPermissionAuthenticated,
-  exclusivePermissionUnauthenticated,
-  exclusivePermissionAuthenticated,
-  defaultPermission,
-} from './permission'
+import { getChannelName } from 'utils/helperFunctions'
+import { useChannelsStore } from 'services/stores'
 import { useAuth } from 'contexts/auth'
-import { useEffect, useState } from 'react'
 import { getData } from 'services/storage'
-import { AUTH_TOKEN } from 'config/constants'
-import { Kinds } from 'generated/graphql'
+import { CHANNEL_INFO } from 'config/constants'
 
 const Router = () => {
-  const { kind } = useAuth()
-
-  const accessToken = getData(AUTH_TOKEN)
-
-  const [currentPermissions, setCurrentPermissions] =
-    useState(defaultPermission)
+  const { activeChannel, setActiveChannel } = useChannelsStore()
+  const { updateActiveChannel } = useAuth()
+  const location = useLocation()
+  const storedChannel = getData(CHANNEL_INFO)
 
   useEffect(() => {
-    const permission = () => {
-      switch (kind) {
-        case Kinds.Public:
-          setCurrentPermissions(
-            accessToken
-              ? publicPermissionAuthenticated
-              : publicPermissionUnauthenticated
-          )
-          break
-        case Kinds.Exclusive:
-          setCurrentPermissions(
-            accessToken
-              ? exclusivePermissionAuthenticated
-              : exclusivePermissionUnauthenticated
-          )
-          break
-        default:
-          setCurrentPermissions(defaultPermission)
+    if (!activeChannel) {
+      const channelUrl = location.pathname
+      const channelSlug = getChannelName(channelUrl)
+      if (channelSlug) {
+        if (storedChannel?.slug === channelSlug) {
+          setActiveChannel(storedChannel)
+        } else {
+          updateActiveChannel(channelSlug)
+        }
+      }
+
+      if (storedChannel && !channelSlug) {
+        setActiveChannel(storedChannel)
       }
     }
-    permission()
-  }, [kind, accessToken])
+    //eslint-disable-next-line
+  }, [activeChannel])
 
-  return <ClientRoutes isAccesible={currentPermissions} />
+  return <ClientRoutes />
 }
 
 const AppRouter = () => (
