@@ -11,7 +11,11 @@ import { setContext } from '@apollo/client/link/context'
 import { AUTH_TOKEN, FIREBASE_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
-import { authWithCustomToken, isUserLoggedFB, signOutFB } from 'services/firebase'
+import {
+  authWithCustomToken,
+  isUserLoggedFB,
+  signOutFB,
+} from 'services/firebase'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
 const httpLink = createHttpLink({
@@ -25,7 +29,8 @@ const setIsRefreshing = (value) => {
   isRefreshing = value
 }
 
-const addPendingRequest = (pendingRequest: Function) => pendingRequests.push(pendingRequest)
+const addPendingRequest = (pendingRequest: Function) =>
+  pendingRequests.push(pendingRequest)
 
 const resolvePendingRequests = async () => {
   pendingRequests.map((callback: any) => callback())
@@ -74,6 +79,12 @@ const errorLink = onError(
       }
 
       if (err.extensions.code === 'UNAUTHENTICATED') {
+        if (
+          err.message === 'exception:PASSWORD_MISMATCH' ||
+          err.message === 'exception:TOO_MANY_ATTEMPTS_TRY_LATER'
+        )
+          return
+
         if (err.message !== 'INVALID_TOKEN') {
           invalidData()
           return
@@ -91,8 +102,10 @@ const errorLink = onError(
           return fromPromise(
             refreshToken(token)
               .then(async ({ data }: any) => {
-                const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
-                const firebaseToken = data?.data?.refreshToken?.refreshToken?.firebaseToken
+                const accessToken =
+                  data?.data?.refreshToken?.refreshToken?.accessToken
+                const firebaseToken =
+                  data?.data?.refreshToken?.refreshToken?.firebaseToken
                 if (!accessToken || !firebaseToken) {
                   invalidData()
                   return
