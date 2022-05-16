@@ -17,6 +17,8 @@ import { Channels, ChannelSelected } from './components'
 
 import { CustomContainer } from './styles'
 import { colors, breakpoints } from 'styles'
+import { getData } from 'services/storage'
+import { APP_SINGLE_CHANNEL } from 'config/constants'
 
 const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { colorMode } = useThemeStore()
@@ -34,6 +36,8 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const history = useHistory()
 
+  const storedSingleChannel = getData(APP_SINGLE_CHANNEL)
+
   const [getChannels, { loading }] = useLazyQuery(QUERY_CHANNELS, {
     variables: {
       filter: {},
@@ -42,7 +46,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   })
 
   useEffect(() => {
-    if (isSingleChannel === null) getChannels()
+    if (isSingleChannel === null && storedSingleChannel === null) getChannels()
     //eslint-disable-next-line
   }, [])
 
@@ -69,7 +73,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     history.push(`/c/${channel.slug}`)
   }
 
-  if (loading || isSingleChannel) return <></>
+  if (isSingleChannel || storedSingleChannel) return <></>
 
   return (
     <>
