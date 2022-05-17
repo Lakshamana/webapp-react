@@ -7,9 +7,9 @@ import { useThemeStore, useAuthStore } from 'services/stores'
 import { translateFormatDistance } from 'utils/helperFunctions'
 import { IOption, IProps } from './types'
 
-const CardHeader = ({ id, author, createdAt, action }: IProps) => {
+const CardHeader = ({ id, authorId, author, createdAt, action }: IProps) => {
   const { t } = useTranslation()
-  const { user } = useAuthStore()
+  const { account } = useAuthStore()
   const { colorMode } = useThemeStore()
 
   const defineOptions = [
@@ -17,7 +17,7 @@ const CardHeader = ({ id, author, createdAt, action }: IProps) => {
       icon: 'bi:flag-fill',
       text: t('page.post.comment.report'),
       action: 'REPORT',
-      onlyOwner: true   //TODO: waiting fix on API
+      onlyOwner: false
     },
     {
       icon: 'clarity:note-edit-solid',
@@ -34,7 +34,7 @@ const CardHeader = ({ id, author, createdAt, action }: IProps) => {
   ]
 
   const selectOption = (option: string) => () => action({ id, option })
-  const isOwnerOfPost = user?.id !== id
+  const isOwnerOfPost = account?.id === authorId
 
   return (
     <>

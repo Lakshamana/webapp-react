@@ -52,6 +52,7 @@ const CommentCard = ({ ...props }: IProps) => {
     <Grid templateColumns='42px 7fr' gap={2} alignItems={'center'} my={4}>
       <CardHeader
         id={props.id}
+        authorId={props.account}
         author={props.author}
         createdAt={props.createdAt}
         action={handleEditComment}
