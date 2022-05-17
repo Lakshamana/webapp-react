@@ -4,6 +4,7 @@ interface IAuthor {
 
 export interface IProps {
   id: string
+  authorId: string
   author?: IAuthor
   createdAt: Date
   action: any
