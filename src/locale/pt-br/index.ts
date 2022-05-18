@@ -66,6 +66,9 @@ const PT_BR = {
         november: 'Novembro',
         december: 'Dezembro',
       },
+      content_not_exists: "Não foi possível encontrar esta página",
+      content_not_exists_description:
+        'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -399,7 +402,7 @@ const PT_BR = {
           no_comments: 'Sem comentários',
           comment: 'Comentário',
           confirm_delete: 'Apagar comentário?',
-          report_reason: 'Por que você está reportando este conteúdo?'
+          report_reason: 'Por que você está reportando este conteúdo?',
         },
         search_options: {
           recent: 'Mais Recente',
