@@ -42,6 +42,11 @@ const invalidData = () => {
   window.location.href = '/'
 }
 
+//TODO: Refactor routes structure to use history outside of a react component
+const show404 = () => {
+  window.location.href = '/404'
+}
+
 const refreshToken = async (token) => {
   try {
     return requestGraphql({
@@ -68,6 +73,11 @@ const errorLink = onError(
       if (!err.extensions.code) {
         console.log('This error is not mapped: ', JSON.stringify(graphQLErrors))
         invalidData()
+        return
+      }
+
+      if (err.extensions.code === '404') {
+        show404()
         return
       }
 
