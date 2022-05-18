@@ -39,145 +39,125 @@ const ClientRoutes = () => {
         isAccesible={signed}
         path="/c/:channel/mylist"
         component={MyListPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/account"
         component={AccountPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/checkout/login"
         component={CheckoutLogin}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/checkout/more-info"
         component={CheckoutCustomField}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/checkout/card-info"
         component={CardInfo}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/checkout/password"
         component={Password}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/categories"
         component={CategoriesPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/category/:slug"
         component={CategoryPage}
-        redirectTo="/c/:channel/categories"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/search"
         component={SearchPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/feed"
         component={FeedPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/tag/:slug"
         component={TagPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/lives"
         component={Livestreams}
-        redirectTo="/channels"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/live/:slug"
         component={LivePostPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/post/:slug"
         component={VideoPostPage}
-        redirectTo="/channels"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel"
         component={HomePage}
-        redirectTo="/login"
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/channels"
         component={ChannelsPage}
-        redirectTo="/login"
         template={EmptyLayout}
       />
       <ClientRoute
         isAccesible={!signed}
         path="/signup"
         component={SignupPage}
-        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
         isAccesible={!signed}
         path="/login"
         component={LoginPage}
-        redirectTo="/"
         template={LoginLayout}
       />
       <ClientRoute
         isAccesible={!signed}
         path="/activation"
         component={ActivateAccount}
-        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
         isAccesible={!signed}
         path="/recoverPassword"
         component={RecoverPasswordPage}
-        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
         isAccesible={signed}
-        template={MainLayout}
+        template={EmptyLayout}
         component={NotFound}
       />
     </Switch>
