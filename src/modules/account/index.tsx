@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { Box } from '@chakra-ui/layout'
 import OneSignal from 'react-onesignal'
 
@@ -14,6 +14,7 @@ import {
 
 import {
   ContentBlock,
+  CustomFormProfile,
   AccountInfo,
   SingleConfiguration,
   ConfigBox,
@@ -29,6 +30,7 @@ import {
   MUTATION_UPDATE_PROFILE,
   MUTATION_UPDATE_PASSWORD_ONLY,
   MUTATION_FORGET_ACCOUNT,
+  QUERY_CUSTOM_FIELDS,
 } from 'services/graphql'
 import { sizes } from 'styles'
 import { useThemeStore } from 'services/stores/theme'
@@ -55,6 +57,11 @@ const AccountPage = () => {
     useState<AlertObjectType | null>()
   const { user, account } = useAuthStore()
   const { setPageTitle } = useCommonStore()
+
+  const {
+    data: customFieldsData,
+    loading: customFieldsLoading,
+  } = useQuery(QUERY_CUSTOM_FIELDS)
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -234,6 +241,38 @@ const AccountPage = () => {
           </ConfigBox>
         </Skeleton>
       </ContentBlock>
+
+      <ContentBlock
+        mb={[3, 3, 3, 4]}
+        title={t('page.account.profile_info')}
+        {...{ colorMode }}
+      >
+        <Skeleton isLoaded={!customFieldsLoading}>
+          <ConfigBox>
+            {updateProfileError && (
+              <Box mb={4}>
+                <AlertComponent
+                  type={'error'}
+                  description={updateProfileError}
+                  onClose={() => setUpdateProfileError('')}
+                ></AlertComponent>
+              </Box>
+            )}
+            {!customFieldsLoading &&
+              customFieldsData?.customFields[0]?.fields && (
+                <CustomFormProfile
+                  fields={customFieldsData?.customFields[0]?.fields || []}
+                  handleFormSubmit={(data) => {
+                    console.log(data)
+                  }}
+                  isLoading={loadingUpdateProfile}
+                />
+              )
+            }
+          </ConfigBox>
+        </Skeleton>
+      </ContentBlock>
+
       <ContentBlock
         mb={[3, 3, 3, 4]}
         title={t('page.account.account_info')}
