@@ -244,7 +244,7 @@ const AccountPage = () => {
 
       <ContentBlock
         mb={[3, 3, 3, 4]}
-        title={t('page.account.profile_info')}
+        title={t('page.account.other_info')}
         {...{ colorMode }}
       >
         <Skeleton isLoaded={!customFieldsLoading}>
@@ -258,14 +258,13 @@ const AccountPage = () => {
                 ></AlertComponent>
               </Box>
             )}
-            {!customFieldsLoading &&
+            {!customFieldsLoading && user &&
               customFieldsData?.customFields[0]?.fields && (
                 <CustomFormProfile
                   fields={customFieldsData?.customFields[0]?.fields || []}
-                  handleFormSubmit={(data) => {
-                    console.log(data)
-                  }}
+                  handleFormSubmit={callUpdateMyProfile}
                   isLoading={loadingUpdateProfile}
+                  user={user}
                 />
               )
             }

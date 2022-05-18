@@ -14,9 +14,10 @@ import { useState } from 'react'
 const CustomFormProfile = ({
   handleFormSubmit,
   fields,
-  initialValues,
   isLoading,
+  user,
 }: Props) => {
+  const { custom_fields } = user
   const { colorMode } = useThemeStore()
   const [isEditing, setIsEditing] = useState(false)
   const shape = fields.reduce((memo, curr) => {
@@ -47,19 +48,20 @@ const CustomFormProfile = ({
     values,
     handleSubmit,
     handleChange,
-    resetForm
+    resetForm,
   } = useFormik({
-    initialValues: { ...(initialValues || {}) },
+    initialValues: { ...(custom_fields || {}) },
     validationSchema: Yup.object().shape(shape),
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: async () => {
-      handleFormSubmit(values)
+      handleFormSubmit({ custom_fields: values })
     },
   })
 
   return (
     <Flex width="100%" alignItems="left" flexDirection="column">
+      {/* <pre>{JSON.stringify(user, null, 2) }</pre> */}
       {fields.map(({ label, required, ...field }, index) => (
         <Box
           width={'100%'}
@@ -80,12 +82,13 @@ const CustomFormProfile = ({
             (
               <Input
                 {...field}
+                value={values[field.name]}
                 placeholder={field.name}
                 key={`${index}formFieldInput${field.name}`}
                 onChange={handleChange}
                 variant="flushed"
               />
-            ) : field.value
+            ) : values[field.name]
           }
         </Box>
       ))}
