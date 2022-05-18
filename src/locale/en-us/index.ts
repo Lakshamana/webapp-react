@@ -287,6 +287,7 @@ const EN_US = {
         phone: 'Phone',
         account_info: 'Your Account Information',
         profile_info: 'Your Profile Information',
+        other_info: 'Other Information',
         account_settings: 'Account Settings',
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
