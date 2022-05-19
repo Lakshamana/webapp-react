@@ -55,9 +55,7 @@ const ProfileInfo = ({
     resetForm,
   } = useFormik({
     initialValues: {
-      address: user.address || '',
       birthday: user.birthday || '',
-      phone: user.phone || '',
       custom_fields: user.custom_fields,
     },
     validationSchema: Yup.object({
