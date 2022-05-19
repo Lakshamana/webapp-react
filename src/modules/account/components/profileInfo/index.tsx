@@ -41,14 +41,14 @@ const ProfileInfo = ({
   const shape = (customFieldsData?.customFields[0]?.fields || []).reduce(
     (memo, curr) => {
       switch (curr.type) {
-        case 'number':
+        case 'NUMBER':
           const validationNumber = Yup.number()
           if (curr.required)
             validationNumber.required(t('common.error.field_required'))
           memo[curr.name] = validationNumber
           break
 
-        case 'text':
+        case 'STRING':
           const validationText = Yup.string()
           if (curr.required)
             validationText.required(t('common.error.field_required'))
@@ -56,9 +56,10 @@ const ProfileInfo = ({
           break
 
         default:
-          memo[curr.name] = Yup.string()
-            .trim()
-            .required(t('common.error.field_required'))
+          const validation = Yup.string()
+          if (curr.required)
+            validation.required(t('common.error.field_required'))
+          memo[curr.name] = validation
           break
       }
       return memo
@@ -294,6 +295,11 @@ const ProfileInfo = ({
                       :
                     </Label>
                     {renderInputCustomField(field, index)}
+                    {
+                      errors.custom_fields?.[field.name] &&
+                      touched.custom_fields?.[field.name] &&
+                      (<Text fontSize="0.8em" color="#ff0000" mt="5px">{ errors.custom_fields[field.name] }</Text>)
+                    }
                   </Box>
                 )
               )}
@@ -318,6 +324,9 @@ const ProfileInfo = ({
 
   return (
     <>
+      <Box color={colors.secondaryText[colorMode]}>
+        <pre>{JSON.stringify(shape, null, 2) }</pre>
+      </Box>
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={user?.avatar_url || ''}></Avatar>
