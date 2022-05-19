@@ -22,7 +22,7 @@ import { ProfileData } from './types'
 import * as Yup from 'yup'
 import { useQuery } from '@apollo/client'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
-import InputMask from 'react-input-mask';
+import InputMask from 'react-input-mask'
 
 const ProfileInfo = ({
   updateProfile,
@@ -31,7 +31,7 @@ const ProfileInfo = ({
   locale,
 }: ProfileData) => {
   const [isEditing, setIsEditing] = useState(false)
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
   const minimumAge = 13
 
@@ -112,7 +112,7 @@ const ProfileInfo = ({
       case 'cpf':
         return (
           <InputMask
-            mask='999.999.999-99'
+            mask="999.999.999-99"
             value={values.custom_fields[field.name]}
             name={`custom_fields.${field.name}`}
             disabled
@@ -153,7 +153,10 @@ const ProfileInfo = ({
                     display="flex"
                   >
                     <Label fontSize={pxToRem(16)} fontWeight="500">
-                      {field.name}:
+                      {i18n.exists(`common.custom_field.${field.name}`)
+                        ? t(`common.custom_field.${field.name}`)
+                        : field.name}
+                      :
                     </Label>
                     {renderLabelCustomField(field)}
                   </Box>
@@ -193,18 +196,19 @@ const ProfileInfo = ({
       case 'cpf':
         return (
           <InputMask
-            mask='999.999.999-99'
+            mask="999.999.999-99"
             value={values.custom_fields[field.name]}
             name={`custom_fields.${field.name}`}
             onChange={handleChange}
           >
-            {(inputProps) => 
+            {(inputProps) => (
               <Input
                 width="100%"
                 variant="flushed"
-                placeholder='000.000.000-00'
+                placeholder="000.000.000-00"
                 {...inputProps}
-              />}
+              />
+            )}
           </InputMask>
         )
       default:
@@ -255,7 +259,10 @@ const ProfileInfo = ({
                       </Text>
                     )}
                     <Label fontSize={pxToRem(16)} fontWeight="500">
-                      {field.name}:
+                      {i18n.exists(`common.custom_field.${field.name}`)
+                        ? t(`common.custom_field.${field.name}`)
+                        : field.name}
+                      :
                     </Label>
                     {renderInputCustomField(field, index)}
                   </Box>
