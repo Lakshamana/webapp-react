@@ -173,6 +173,7 @@ const AccountPage = () => {
 
   const handleLanguageChange = (evt: any) => {
     const { value } = evt?.target
+    callUpdateMyProfile({ locale: value })
     i18n.changeLanguage(value)
     saveData(APP_LOCALE, value)
   }
