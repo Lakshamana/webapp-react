@@ -18,11 +18,9 @@ const Router = () => {
       const channelUrl = location.pathname
       const channelSlug = getChannelName(channelUrl)
       if (channelSlug) {
-        if (storedChannel?.slug === channelSlug) {
-          setActiveChannel(storedChannel)
-        } else {
-          updateActiveChannel(channelSlug)
-        }
+        storedChannel?.slug === channelSlug
+          ? setActiveChannel(storedChannel)
+          : updateActiveChannel(channelSlug)
       }
 
       if (storedChannel && !channelSlug) {
