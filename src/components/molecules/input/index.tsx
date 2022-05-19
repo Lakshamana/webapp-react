@@ -14,7 +14,7 @@ const Input = ({
   error,
   errorMessage,
   rightIcon = '',
-  inverted = false,
+  inverted,
   color = '',
   background = '',
 }: Props) => {

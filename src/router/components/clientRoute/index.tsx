@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { Props } from './types'
+import { useAuth } from 'contexts/auth'
 
 const ClientRoute = ({
   component: Component,
@@ -10,6 +11,7 @@ const ClientRoute = ({
   template: Template,
   ...rest
 }: Props) => {
+  const { signed } = useAuth()
 
 
   useEffect(() => {
@@ -26,7 +28,7 @@ const ClientRoute = ({
             <Component />
           </Template>
         ) : (
-          <Redirect to={redirectTo || ''} />
+          <Redirect to={signed ? '/channels' : '/login'} />
         )
       }
     />

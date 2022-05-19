@@ -16,7 +16,7 @@ const InputWrapper = ({
   leftIcon = "",
   onChangeShowPassword = () => { },
   onEnterPress = () => { },
-  inverted = false,
+  inverted,
 }: Props): any => {
   const [showPassword, setShowPassword] = useState(type !== "password");
 

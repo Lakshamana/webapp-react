@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { useParams } from 'react-router-dom'
-import { Center, Flex, Spacer, Box, } from '@chakra-ui/react'
+import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Skeleton } from 'components'
-import { QUERY_PLAYLIST, QUERY_POST, QUERY_POSTS_CARDS, MUTATION_ADD_MY_REACTION, MUTATION_REMOVE_MY_REACTION } from 'services/graphql'
+import {
+  QUERY_PLAYLIST,
+  QUERY_POST,
+  QUERY_POSTS_CARDS,
+  MUTATION_ADD_MY_REACTION,
+  MUTATION_REMOVE_MY_REACTION,
+} from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
@@ -41,6 +47,7 @@ const VideoPostPage = () => {
   const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
   const [mediaUrl, setMediaUrl] = useState('')
   const [activeMedia, setActiveMedia] = useState('')
+
   const definePlayerIsMuted = getData(VIDEO_MUTED)
   const definePlayerVolume = getData(VIDEO_VOLUME)
 
