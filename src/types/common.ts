@@ -23,6 +23,11 @@ export const enum HomeCarouselsTypes {
   ContinueWatching = 'CONTINUE_WATCHING',
   Collections = 'COLLECTIONS',
 }
+export const enum LiveCarouselTypes {
+  Live = 'LIVE',
+  Upcoming = 'UPCOMING',
+  Past = 'PAST'
+}
 
 export const enum BillboardTarget {
   Home = 'HOME',
