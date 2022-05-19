@@ -39,4 +39,5 @@ export const Label = styled.span<TypographyProps>`
   ${typography}
   color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
   margin-right: 10px;
+  text-transform: capitalize;
 `

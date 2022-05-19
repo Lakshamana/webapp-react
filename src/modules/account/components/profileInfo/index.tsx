@@ -22,6 +22,7 @@ import { ProfileData } from './types'
 import * as Yup from 'yup'
 import { useQuery } from '@apollo/client'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
+import InputMask from 'react-input-mask';
 
 const ProfileInfo = ({
   updateProfile,
@@ -56,7 +57,7 @@ const ProfileInfo = ({
   } = useFormik({
     initialValues: {
       birthday: user.birthday || '',
-      custom_fields: user.custom_fields,
+      custom_fields: user.custom_fields || {},
     },
     validationSchema: Yup.object({
       birthday: Yup.date().max(
@@ -79,20 +80,18 @@ const ProfileInfo = ({
         })
       : '-'
 
-  const renderLabel = (key: string, value: any) => {
-    switch (key) {
-      case 'birthday':
-        return formatDate(values[key])
+  const renderLabelCustomField = (field) => {
+    switch (field.name) {
       case 'phone':
         return (
           <>
-            {value ? (
+            {values.custom_fields[field.name] ? (
               <PhoneInput
                 disableDropdown={true}
                 disabled={true}
                 enableSearch={true}
                 country={'us'}
-                value={value}
+                value={values.custom_fields[field.name]}
                 inputStyle={{
                   color: colors.secondaryText[colorMode],
                   background: 'none',
@@ -110,6 +109,35 @@ const ProfileInfo = ({
             )}
           </>
         )
+      case 'cpf':
+        return (
+          <InputMask
+            mask='999.999.999-99'
+            value={values.custom_fields[field.name]}
+            name={`custom_fields.${field.name}`}
+            disabled
+            style={{
+              color: colors.secondaryText[colorMode],
+              background: 'none',
+              border: 'none',
+              borderBottom: 'none',
+              borderRadius: '0px',
+              width: '100%',
+              paddingLeft: '0px',
+              paddingTop: '0px',
+              paddingBottom: '0px',
+            }}
+          />
+        )
+      default:
+        return values.custom_fields[field.name]
+    }
+  }
+
+  const renderLabel = (key: string, value: any) => {
+    switch (key) {
+      case 'birthday':
+        return formatDate(values[key])
       case 'custom_fields':
         return (
           <Flex width="100%" alignItems="left" flexDirection="column">
@@ -122,11 +150,12 @@ const ProfileInfo = ({
                     color={colors.secondaryText[colorMode]}
                     py="10px"
                     flexDirection="row"
+                    display="flex"
                   >
                     <Label fontSize={pxToRem(16)} fontWeight="500">
                       {field.name}:
                     </Label>
-                    {values.custom_fields[field.name]}
+                    {renderLabelCustomField(field)}
                   </Box>
                 )
               )}
@@ -134,6 +163,62 @@ const ProfileInfo = ({
         )
       default:
         return values[key]
+    }
+  }
+
+  const renderInputCustomField = (field, index) => {
+    switch (field.name) {
+      case 'phone':
+        return (
+          <PhoneInput
+            enableSearch={true}
+            country={'us'}
+            value={values.custom_fields[field.name]}
+            onChange={(phone) =>
+              setFieldValue(`custom_fields.${field.name}`, phone)
+            }
+            inputStyle={{
+              color: colors.secondaryText[colorMode],
+              background: 'none',
+              border: 'none',
+              borderBottom: '1px solid',
+              borderColor: colors.secondaryText[colorMode],
+              borderRadius: '0px',
+              width: '100%',
+              paddingTop: '8px',
+              paddingBottom: '7px',
+            }}
+          />
+        )
+      case 'cpf':
+        return (
+          <InputMask
+            mask='999.999.999-99'
+            value={values.custom_fields[field.name]}
+            name={`custom_fields.${field.name}`}
+            onChange={handleChange}
+          >
+            {(inputProps) => 
+              <Input
+                width="100%"
+                variant="flushed"
+                placeholder='000.000.000-00'
+                {...inputProps}
+              />}
+          </InputMask>
+        )
+      default:
+        return (
+          <Input
+            {...field}
+            value={values.custom_fields[field.name]}
+            name={`custom_fields.${field.name}`}
+            placeholder={field.name}
+            key={`${index}formFieldInput${field.name}`}
+            onChange={handleChange}
+            variant="flushed"
+          />
+        )
     }
   }
 
@@ -150,26 +235,6 @@ const ProfileInfo = ({
             errorMessage={errors[key]}
             maxDate={dateYearsInThePast(minimumAge)}
           ></DateInput>
-        )
-      case 'phone':
-        return (
-          <PhoneInput
-            enableSearch={true}
-            country={'us'}
-            value={value}
-            onChange={(phone) => setFieldValue(key, phone)}
-            inputStyle={{
-              color: colors.secondaryText[colorMode],
-              background: 'none',
-              border: 'none',
-              borderBottom: '1px solid',
-              borderColor: colors.secondaryText[colorMode],
-              borderRadius: '0px',
-              width: '100%',
-              paddingTop: '8px',
-              paddingBottom: '7px',
-            }}
-          />
         )
       case 'custom_fields':
         return (
@@ -192,15 +257,7 @@ const ProfileInfo = ({
                     <Label fontSize={pxToRem(16)} fontWeight="500">
                       {field.name}:
                     </Label>
-                    <Input
-                      {...field}
-                      value={values.custom_fields[field.name]}
-                      name={`custom_fields.${field.name}`}
-                      placeholder={field.name}
-                      key={`${index}formFieldInput${field.name}`}
-                      onChange={handleChange}
-                      variant="flushed"
-                    />
+                    {renderInputCustomField(field, index)}
                   </Box>
                 )
               )}
@@ -225,9 +282,9 @@ const ProfileInfo = ({
 
   return (
     <>
-      {/* <Box color={colors.secondaryText[colorMode]}>
-        <pre>{JSON.stringify(values, null, 2) }</pre>
-      </Box> */}
+      <Box color={colors.secondaryText[colorMode]}>
+        <pre>{JSON.stringify(values, null, 2)}</pre>
+      </Box>
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={user?.avatar_url || ''}></Avatar>
