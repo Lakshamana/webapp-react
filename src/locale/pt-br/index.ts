@@ -284,6 +284,7 @@ const PT_BR = {
         password: 'Senha',
         phone: 'Telefone',
         account_info: 'Informações da Conta',
+        profile_info: 'Informações de Perfil',
         other_info: 'Outras Informações',
         account_settings: 'Configurações da Conta',
         language_selection: 'Seleção de Idioma',
