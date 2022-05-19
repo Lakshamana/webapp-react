@@ -282,9 +282,6 @@ const ProfileInfo = ({
 
   return (
     <>
-      <Box color={colors.secondaryText[colorMode]}>
-        <pre>{JSON.stringify(values, null, 2)}</pre>
-      </Box>
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={user?.avatar_url || ''}></Avatar>
