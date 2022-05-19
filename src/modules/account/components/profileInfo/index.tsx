@@ -38,6 +38,34 @@ const ProfileInfo = ({
   const { data: customFieldsData, loading: customFieldsLoading } =
     useQuery(QUERY_CUSTOM_FIELDS)
 
+  const shape = (customFieldsData?.customFields[0]?.fields || []).reduce(
+    (memo, curr) => {
+      switch (curr.type) {
+        case 'number':
+          const validationNumber = Yup.number()
+          if (curr.required)
+            validationNumber.required(t('common.error.field_required'))
+          memo[curr.name] = validationNumber
+          break
+
+        case 'text':
+          const validationText = Yup.string()
+          if (curr.required)
+            validationText.required(t('common.error.field_required'))
+          memo[curr.name] = validationText
+          break
+
+        default:
+          memo[curr.name] = Yup.string()
+            .trim()
+            .required(t('common.error.field_required'))
+          break
+      }
+      return memo
+    },
+    {}
+  )
+
   const dateYearsInThePast = (years: number) => {
     let d = new Date()
     let year = d.getFullYear()
@@ -64,6 +92,7 @@ const ProfileInfo = ({
         dateYearsInThePast(minimumAge),
         t('page.account.minimum_age')
       ),
+      custom_fields: Yup.object().shape(shape),
     }),
     onSubmit: async () => {
       updateProfile({ ...values, locale: locale })
