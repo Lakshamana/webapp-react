@@ -43,22 +43,25 @@ const ProfileInfo = ({
       switch (curr.type) {
         case 'NUMBER':
           const validationNumber = Yup.number()
-          if (curr.required)
+          if (curr.required){
             validationNumber.required(t('common.error.field_required'))
+          }
           memo[curr.name] = validationNumber
           break
 
         case 'STRING':
           const validationText = Yup.string()
-          if (curr.required)
-            validationText.required(t('common.error.field_required'))
+          if (curr.required){
+            validationText.trim().required(t('common.error.field_required'))
+          }
           memo[curr.name] = validationText
           break
 
         default:
           const validation = Yup.string()
-          if (curr.required)
-            validation.required(t('common.error.field_required'))
+          if (curr.required){
+            validation.trim().required(t('common.error.field_required'))
+          }
           memo[curr.name] = validation
           break
       }
@@ -324,9 +327,9 @@ const ProfileInfo = ({
 
   return (
     <>
-      <Box color={colors.secondaryText[colorMode]}>
+      {/* <Box color={colors.secondaryText[colorMode]}>
         <pre>{JSON.stringify(shape, null, 2) }</pre>
-      </Box>
+      </Box> */}
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={user?.avatar_url || ''}></Avatar>
