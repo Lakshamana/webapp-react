@@ -71,7 +71,7 @@ const EN_US = {
         december: 'December',
       },
       content_not_exists: "We couldn't find this page",
-      content_not_exists_description: 'You may have typed the address incorretly or you are using a outdated link.'
+      content_not_exists_description: 'You may have typed the address incorrectly or you are using an outdated link.'
     },
     signin: {
       title: 'Access {{org}} now',
