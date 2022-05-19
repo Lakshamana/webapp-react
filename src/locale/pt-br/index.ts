@@ -1,6 +1,11 @@
 const PT_BR = {
   translations: {
     common: {
+      custom_field: {
+        cpf: 'CPF',
+        phone: 'Telefone',
+        rg: 'RG',
+      },
       back_to_home: 'Voltar para o início',
       or: 'ou',
       error: {
