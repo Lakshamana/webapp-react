@@ -7,6 +7,15 @@ interface IComments {
   allComments: Comment[]
 }
 
+interface IReplies {
+  [id: string]: IComments
+}
+interface IRepliesUpdate {
+  id: string
+  totalComments: number
+  allComments: Comment[]
+}
+
 interface IModal {
   status: boolean,
   typeEvent: 'DELETE' | 'REPORT' | null
@@ -18,15 +27,18 @@ interface IModal {
 
 type CommentsState = {
   commentsStore: IComments
+  repliesStore: IReplies
   modalOption: IModal
   setTotalComments: (value: number) => void
   setUpdateCommentsStore: (value: IComments) => void
+  setUpdateRepliesStore: (value: IRepliesUpdate) => void
   setModalOption: (values: IModal) => void
   resetModal: () => void
 }
 
 export const useCommentsStore = create<CommentsState>((set) => ({
   commentsStore: { hasMore: false, totalComments: 0, allComments: [] },
+  repliesStore: {},
   modalOption: {
     status: false,
     typeEvent: null,
@@ -44,6 +56,15 @@ export const useCommentsStore = create<CommentsState>((set) => ({
     commentsStore: {
       ...state.commentsStore,
       ...values
+    }
+  })),
+  setUpdateRepliesStore: (values: IRepliesUpdate) => set(state => ({
+    repliesStore: {
+      ...state.repliesStore,
+      [values.id]: {
+        totalComments: values.totalComments,
+        allComments: [...values.allComments]
+      }
     }
   })),
   setModalOption: (values: IModal) => set(state => ({

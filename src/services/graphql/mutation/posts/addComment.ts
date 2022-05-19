@@ -8,6 +8,7 @@ export const MUTATION_ADD_COMMENT = gql`
         displayName
         username
       }
+      parent
       id
       description
       createdAt
@@ -16,6 +17,8 @@ export const MUTATION_ADD_COMMENT = gql`
         countDownvotes
       }
       content
+      account
+      myVote
     }
   }
 `
