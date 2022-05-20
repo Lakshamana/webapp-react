@@ -26,12 +26,9 @@ const CustomFormProfile = ({
         case 'number':
           const validation = Yup.number()
           if (curr.min) validation.min(curr.min.value, curr.min.error)
-
           if (curr.max) validation.max(curr.max.value, curr.max.error)
-
           memo[curr.name] = validation
           break
-
         case 'text':
         case 'select':
         case 'checkbox':
@@ -40,7 +37,6 @@ const CustomFormProfile = ({
           break
       }
     }
-
     return memo
   }, {})
 
@@ -61,7 +57,6 @@ const CustomFormProfile = ({
 
   return (
     <Flex width="100%" alignItems="left" flexDirection="column">
-      {/* <pre>{JSON.stringify(user, null, 2) }</pre> */}
       {fields.map(({ label, required, ...field }, index) => (
         <Box
           width={'100%'}
@@ -98,7 +93,7 @@ const CustomFormProfile = ({
         handleIsEditing={(value) => setIsEditing(value)}
         handleSubmit={handleSubmit}
         resetValues={resetForm}
-      ></UpdateButtons>
+      />
     </Flex>
   )
 }
