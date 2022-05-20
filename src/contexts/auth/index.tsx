@@ -111,7 +111,7 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
-          i18n.changeLanguage(data.me.profile.locale)
+          if(data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
           setLoadingAcount(false)
         }
