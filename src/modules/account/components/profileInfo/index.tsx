@@ -272,7 +272,7 @@ const ProfileInfo = ({
             isInvalid={errors[key] && touched[key]}
             errorMessage={errors[key]}
             maxDate={dateYearsInThePast(minimumAge)}
-          ></DateInput>
+          />
         )
       case 'custom_fields':
         return (
