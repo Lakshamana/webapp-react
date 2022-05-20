@@ -23,6 +23,7 @@ import * as Yup from 'yup'
 import { useQuery } from '@apollo/client'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
 import InputMask from 'react-input-mask'
+import { CustomFieldTypesEnum } from 'generated/graphql'
 
 const ProfileInfo = ({
   updateProfile,
@@ -41,26 +42,26 @@ const ProfileInfo = ({
   const shape = (customFieldsData?.customFields[0]?.fields || []).reduce(
     (memo, curr) => {
       switch (curr.type) {
-        case 'NUMBER':
-          const validationNumber = Yup.number()
+        case CustomFieldTypesEnum.Number:
+          let validationNumber = Yup.number()
           if (curr.required){
-            validationNumber.required(t('common.error.field_required'))
+            validationNumber = validationNumber.required(t('common.error.field_required'))
           }
           memo[curr.name] = validationNumber
           break
 
-        case 'STRING':
-          const validationText = Yup.string()
+        case CustomFieldTypesEnum.String:
+          let validationText = Yup.string()
           if (curr.required){
-            validationText.trim().required(t('common.error.field_required'))
+            validationText = validationText.required(t('common.error.field_required'))
           }
           memo[curr.name] = validationText
           break
 
         default:
-          const validation = Yup.string()
+          let validation = Yup.string()
           if (curr.required){
-            validation.trim().required(t('common.error.field_required'))
+            validation = validation.required(t('common.error.field_required'))
           }
           memo[curr.name] = validation
           break
@@ -327,9 +328,6 @@ const ProfileInfo = ({
 
   return (
     <>
-      {/* <Box color={colors.secondaryText[colorMode]}>
-        <pre>{JSON.stringify(shape, null, 2) }</pre>
-      </Box> */}
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={user?.avatar_url || ''}></Avatar>
