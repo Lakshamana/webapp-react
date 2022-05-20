@@ -1,6 +1,11 @@
 const PT_BR = {
   translations: {
     common: {
+      custom_field: {
+        cpf: 'CPF',
+        phone: 'Telefone',
+        rg: 'RG',
+      },
       back_to_home: 'Voltar para o início',
       or: 'ou',
       error: {
@@ -288,6 +293,7 @@ const PT_BR = {
         phone: 'Telefone',
         account_info: 'Informações da Conta',
         profile_info: 'Informações de Perfil',
+        other_info: 'Outras Informações',
         account_settings: 'Configurações da Conta',
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',

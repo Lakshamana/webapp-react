@@ -26,6 +26,7 @@ import { saveData, getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
+import { useTranslation } from 'react-i18next'
 
 const AuthContext = createContext({})
 
@@ -35,6 +36,7 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
+  const { i18n } = useTranslation()
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
@@ -109,6 +111,7 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
+          if(data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
           setLoadingAcount(false)
         }
