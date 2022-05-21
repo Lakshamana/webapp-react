@@ -2,7 +2,11 @@
 ## FanHero's browser-based brand-app client
 
 ## Access the project on: 
-- [develop] https://webapp-development.pages.dev/
+- [marvel] https://webapp-development.pages.dev/
+- [valetudo] https://valetudo.fanhero.tv/
+- [heroflix] https://heroflix-dev.fanhero.tv/
+- [herotube] https://herotube-dev.fanhero.tv/
+- [spacex] spacex-stg.fanhero.tv
 - [storybook] https://storybook.fanhero.net/?path=/story/introduction--page
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
