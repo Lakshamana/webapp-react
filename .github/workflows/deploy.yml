@@ -1,0 +1,37 @@
+name: Push to Heroku
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Release Valetudo
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "valetudo-dev" #Must be unique in Heroku
+          heroku_email: "bianca@fanhero.com"
+      - name: Release Heroflix
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "heroflix-dev" #Must be unique in Heroku
+          heroku_email: "bianca@fanhero.com"
+      - name: Release Herotube
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "herotube-dev" #Must be unique in Heroku
+          heroku_email: "bianca@fanhero.com"
+      - name: Release SpaceX
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "spacex-stg" #Must be unique in Heroku
+          heroku_email: "bianca@fanhero.com"
+      
