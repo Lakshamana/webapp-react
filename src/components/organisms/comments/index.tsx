@@ -17,19 +17,30 @@ import { useCommentsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { initialValues, validationSchema } from './settings'
 import { useFormik } from 'formik'
+import { ISelectPopup, typeOfCard } from './types'
 
 const Comments = ({ ...props }: Post) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const { commentsStore, setUpdateCommentsStore, modalOption, setModalOption, resetModal } = useCommentsStore()
+  const {
+    commentsStore,
+    repliesStore,
+    setUpdateCommentsStore,
+    setUpdateRepliesStore,
+    modalOption,
+    setModalOption,
+    resetModal
+  } = useCommentsStore()
   const [filterBy, setFilterBy] = useState<SortDirection>(SortDirection.Desc)
   const [filterPage, setFilterPage] = useState<number>(0)
+  const [replyData, setReplyData] = useState({ replyId: '', postId: '' })
   const [getComments, { data, loading: dataLoading }] = useLazyQuery(QUERY_COMMENTS, {
     fetchPolicy: 'no-cache'
   })
   const [addComment, { data: newComment, loading: newCommentLoading }] = useMutation(MUTATION_ADD_COMMENT)
   const [editComment, { data: editedComment, loading: editedCommentLoading }] = useMutation(MUTATION_UPDATE_COMMENT)
   const [deleteComment, { data: deletedComment, loading: deleteCommentLoading }] = useMutation(MUTATION_DELETE_COMMENT)
+  const [deleteReply, { data: deletedReply, loading: deleteReplyLoading }] = useMutation(MUTATION_DELETE_COMMENT)
   const [reportComment, { data: reportedComment, loading: reportCommentLoading }] = useMutation(MUTATION_ADD_REPORT)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,8 +131,38 @@ const Comments = ({ ...props }: Post) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deletedComment])
 
+  useEffect(() => {
+    if (!deletedReply) return
+    const getRepliesComments = repliesStore[replyData.postId]
+    const { allComments, totalComments } = getRepliesComments
+    const updateTotalComments = totalComments - 1
+    const updateRepliesComments = allComments.filter(each => each.id !== replyData.replyId)
+    setUpdateRepliesStore({
+      id: replyData.postId,
+      totalComments: updateTotalComments,
+      allComments: [...updateRepliesComments]
+    })
+    updateCountCommentsStore(replyData.postId)
+    resetModal()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deletedReply])
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => resetModal(), [reportedComment])
+
+  const updateCountCommentsStore = (postId: string) => {
+    const { totalComments, allComments } = commentsStore
+    const updateComments = allComments.map(each => {
+      if (each.id === postId) {
+        return { ...each, countComments: each.countComments - 1 }
+      }
+      return each
+    })
+    setUpdateCommentsStore({
+      totalComments,
+      allComments: [...updateComments]
+    })
+  }
 
   const getAllComments = (page: number = 1) => {
     getComments({
@@ -163,8 +204,19 @@ const Comments = ({ ...props }: Post) => {
     })
   }
 
-  const handleSelectPopupOption = (selected) => {
+  const handleSelectPopupOption = (selected: ISelectPopup, typeOfCard: typeOfCard, postId: string) => {
     if (selected.option === 'DELETE') {
+      if (typeOfCard === 'REPLY') {
+        setReplyData({ replyId: selected.id, postId })
+        setModalOption({
+          status: true,
+          typeEvent: selected.option,
+          text: t('page.post.comment.confirm_delete'),
+          action: () => deleteReply({ variables: { id: selected.id } }),
+          loadingAction: deleteReplyLoading
+        })
+        return
+      }
       setModalOption({
         status: true,
         typeEvent: selected.option,
@@ -209,10 +261,24 @@ const Comments = ({ ...props }: Post) => {
         onConfirm={modalOption.action}
         isActionDisabled={modalOption.loadingAction}
         loading={modalOption.loadingAction}
-        closeOnOverlayClick={false}
+        closeOnOverlayClick={true}
         actionLabel={modalOption.text}
+        closeButton={true}
       >
         <>
+          {
+            modalOption.typeEvent === 'DELETE' &&
+            <Box textAlign="center">
+              <Text
+                color={colors.generalText[colorMode]}
+                fontSize={'1.5rem'}
+                textAlign={'center'}
+                fontWeight={500}
+              >
+                {t('page.post.comment.delete')}
+              </Text>
+            </Box>
+          }
           {
             modalOption.typeEvent === 'REPORT' &&
             <Box textAlign="center">
@@ -238,6 +304,7 @@ const Comments = ({ ...props }: Post) => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 color={colors.inputText[colorMode]}
+                backgroundColor={colors.inputBg[colorMode]}
               />
               {
                 !!formik.errors.reportReason && formik.touched.reportReason &&
@@ -286,7 +353,6 @@ const Comments = ({ ...props }: Post) => {
                 selectPopupOption={handleSelectPopupOption}
                 newCommentLoading={newCommentLoading}
                 editedCommentLoading={editedCommentLoading}
-                deleteCommentLoading={deleteCommentLoading}
                 {...comment}
               />
             )}

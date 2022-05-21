@@ -1,6 +1,11 @@
 const PT_BR = {
   translations: {
     common: {
+      custom_field: {
+        cpf: 'CPF',
+        phone: 'Telefone',
+        rg: 'RG',
+      },
       back_to_home: 'Voltar para o início',
       or: 'ou',
       error: {
@@ -66,6 +71,9 @@ const PT_BR = {
         november: 'Novembro',
         december: 'Dezembro',
       },
+      content_not_exists: "Não foi possível encontrar esta página",
+      content_not_exists_description:
+        'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -285,6 +293,7 @@ const PT_BR = {
         phone: 'Telefone',
         account_info: 'Informações da Conta',
         profile_info: 'Informações de Perfil',
+        other_info: 'Outras Informações',
         account_settings: 'Configurações da Conta',
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',
@@ -399,7 +408,7 @@ const PT_BR = {
           no_comments: 'Sem comentários',
           comment: 'Comentário',
           confirm_delete: 'Apagar comentário?',
-          report_reason: 'Por que você está reportando este conteúdo?'
+          report_reason: 'Por que você está reportando este conteúdo?',
         },
         search_options: {
           recent: 'Mais Recente',

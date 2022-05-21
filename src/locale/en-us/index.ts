@@ -1,6 +1,11 @@
 const EN_US = {
   translations: {
     common: {
+      custom_field: {
+        cpf: 'CPF',
+        phone: 'Phone',
+        rg: 'RG',
+      },
       back_to_home: 'Back to home',
       or: 'or',
       error: {
@@ -70,6 +75,8 @@ const EN_US = {
         november: 'November',
         december: 'December',
       },
+      content_not_exists: "We couldn't find this page",
+      content_not_exists_description: 'You may have typed the address incorrectly or you are using an outdated link.'
     },
     signin: {
       title: 'Access {{org}} now',
@@ -287,6 +294,7 @@ const EN_US = {
         phone: 'Phone',
         account_info: 'Your Account Information',
         profile_info: 'Your Profile Information',
+        other_info: 'Other Information',
         account_settings: 'Account Settings',
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',

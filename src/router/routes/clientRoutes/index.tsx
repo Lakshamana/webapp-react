@@ -26,155 +26,138 @@ import {
 } from 'modules'
 
 import { MainLayout, LoginLayout, EmptyLayout } from 'components'
+import { useAuth } from 'contexts/auth'
 
-const ClientRoutes = ({ isAccesible }: any) => {
+const ClientRoutes = () => {
+  const { signed } = useAuth()
+
   return (
     <Switch>
       {/* TODO temporary redirects. Should not exist when the API returns posts without the need to send a channel */}
       <Redirect exact from="/" to="/channels" />
       <ClientRoute
-        isAccesible={isAccesible?.mylist}
+        isAccesible={signed}
         path="/c/:channel/mylist"
         component={MyListPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.account}
+        isAccesible={signed}
         path="/account"
         component={AccountPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.checkout}
+        isAccesible={signed}
         path="/checkout/login"
         component={CheckoutLogin}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.checkout}
+        isAccesible={signed}
         path="/checkout/more-info"
         component={CheckoutCustomField}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.checkout}
+        isAccesible={signed}
         path="/checkout/card-info"
         component={CardInfo}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.checkout}
+        isAccesible={signed}
         path="/checkout/password"
         component={Password}
-        redirectTo="/c/:channel"
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.collections}
+        isAccesible={signed}
         path="/c/:channel/categories"
         component={CategoriesPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={true}
+        isAccesible={signed}
         path="/c/:channel/category/:slug"
         component={CategoryPage}
-        redirectTo="/c/:channel/categories"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.search}
+        isAccesible={signed}
         path="/c/:channel/search"
         component={SearchPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.feed}
+        isAccesible={signed}
         path="/c/:channel/feed"
         component={FeedPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.tags}
+        isAccesible={signed}
         path="/c/:channel/tag/:slug"
         component={TagPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={true}
+        isAccesible={signed}
         path="/c/:channel/lives"
         component={Livestreams}
-        redirectTo="/channels"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={true}
+        isAccesible={signed}
         path="/c/:channel/live/:slug"
         component={LivePostPage}
-        redirectTo="/c/:channel"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={true}
+        isAccesible={signed}
         path="/c/:channel/post/:slug"
         component={VideoPostPage}
-        redirectTo="/channels"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.home}
+        isAccesible={signed}
         path="/c/:channel"
         component={HomePage}
-        redirectTo="/login"
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.channels}
+        isAccesible={signed}
         path="/channels"
         component={ChannelsPage}
-        redirectTo="/login"
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.signup}
+        isAccesible={!signed}
         path="/signup"
         component={SignupPage}
-        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.login}
+        isAccesible={!signed}
         path="/login"
         component={LoginPage}
-        redirectTo="/"
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={true}
+        isAccesible={!signed}
         path="/activation"
         component={ActivateAccount}
-        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={isAccesible?.recoverPassword}
+        isAccesible={!signed}
         path="/recoverPassword"
         component={RecoverPasswordPage}
-        redirectTo="/login"
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={true}
-        template={MainLayout}
+        isAccesible={signed}
+        template={EmptyLayout}
         component={NotFound}
       />
     </Switch>

@@ -22,6 +22,7 @@ export const QUERY_COMMENTS = gql`
         createdAt
         countComments
         parent
+        account
       }
       isLastPage
       page
