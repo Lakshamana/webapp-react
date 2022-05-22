@@ -39,7 +39,7 @@ export const PlanSelectFlow = ({ entitlement }: { entitlement: any[] | undefined
 
   if(currentState === Steps.SELECT_PLAN){
     return (
-      <SelectPlan plans={plans} selectPlan={setselectedPlan} nextStep={nextStep}/>
+      <SelectPlan plans={entitlement} selectPlan={setselectedPlan} nextStep={nextStep}/>
     )
   }
   if(currentState === Steps.SELECT_OPTION){

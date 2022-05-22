@@ -15,7 +15,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
         Select Your Plan
       </Text>
       <Flex gridGap="24px" mt="16px">
-        {plans.map((plan) => (
+        {plans && plans.map((plan) => (
           <Box
             maxW="sm"
             borderWidth="1px"
@@ -28,7 +28,8 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
             <Box
               h="184px"
               w="100%"
-              backgroundImage={`url(${plan.imageUrl})`}
+              // TODO: add imagem 
+              backgroundImage={`url(https://picsum.photos/340/184)`}
               backgroundSize="100%"
               backgroundPosition="center"
               backgroundRepeat="no-repeat"
@@ -38,7 +39,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                 color={colors.generalText[colorMode]}
                 fontWeight="600"
                 fontSize="18px"
-              >{plan.title}</Text>
+              >{plan.name}</Text>
               <Text
                 color={colors.secondaryText[colorMode]}
                 fontWeight="400"
@@ -46,7 +47,8 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                 maxW="256px"
                 w="100%"
                 mt="6px"
-              >{plan.subtitle}</Text>
+                // TODO: add description
+              >Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.</Text>
               <Flex
                 mt="15px"
                 justifyContent="space-between"
@@ -69,7 +71,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                   color={colors.generalText[colorMode]}
                   fontWeight="400"
                   fontSize="18px"
-                >${plan.value}</Text>
+                >{plan.startingPrice}</Text>
               </Flex>
             </Box>
           </Box>
