@@ -49,7 +49,7 @@ export const SelectOption = ( { plan }: Props) => {
           w="100%"
           minH="184px"
           h="100%"
-          backgroundImage={`url(${plan.imageUrl})`}
+          backgroundImage={`url(https://picsum.photos/340/184)`}
           backgroundSize="100%"
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
@@ -65,12 +65,12 @@ export const SelectOption = ( { plan }: Props) => {
               color={colors.generalText[colorMode]}
               fontWeight="600"
               fontSize="18px"
-            >{plan.title}</Text>
+            >{plan.name}</Text>
             <Text
               color={colors.secondaryText[colorMode]}
               fontWeight="400"
               fontSize="12px"
-            >{plan.subtitle}</Text>
+            >Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.</Text>
           </Flex>
           <Flex
             h="100%"
