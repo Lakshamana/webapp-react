@@ -115,7 +115,7 @@ const VerifyContentKind = ({
         requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
       />
     )
-  if (isOnPaywall) return <PlanSelectFlow />
+  if (isOnPaywall) return <PlanSelectFlow entitlement={contentKind?.entitlements} />
   return <div></div>
 }
 

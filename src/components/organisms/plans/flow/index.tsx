@@ -3,7 +3,7 @@ import { useState } from "react"
 import { SelectPlan } from "../select"
 import { SelectOption } from "components/organisms/plans/options";
 
-export const PlanSelectFlow = () => {
+export const PlanSelectFlow = ({ entitlement }: { entitlement: any[] | undefined}) => {
   const plans = [
     {
       imageUrl:
