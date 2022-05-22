@@ -1,7 +1,5 @@
-import { Plan } from "../types"
-
 export type Props = {
   plans: any[] | undefined
-  selectPlan: (value: Plan) => void
+  selectPlan: (value: any) => void
   nextStep: () => void
 }
