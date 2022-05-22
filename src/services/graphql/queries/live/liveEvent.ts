@@ -24,6 +24,7 @@ export const QUERY_VERIFY_LIVE_EVENT_KIND = gql`
       title
       access
       kind
+      entitlements
     }
   }
 `
