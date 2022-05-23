@@ -218,7 +218,7 @@ const HomePage = () => {
 
         memo.push({
           ...curr,
-          actions: curr.actions.map((action) => ({
+          actions: curr.actions?.map((action) => ({
             ...action,
             bgColor: convertToValidColor(action.bgColor),
             borderColor: convertToValidColor(action.borderColor),
