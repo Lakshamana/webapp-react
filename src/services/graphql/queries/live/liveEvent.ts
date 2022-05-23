@@ -9,6 +9,10 @@ export const QUERY_LIVE_EVENT = gql`
       id
       kind
       scheduledStartAt
+      commentsEnabled
+      hlsPlaybackUrl
+      presenceEnabled
+      reactionsEnabled
       slug
       status
       streamName
