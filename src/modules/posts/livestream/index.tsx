@@ -19,7 +19,7 @@ import { VerifyContentKind } from '../components'
 import { LiveDetails, Title, Subtitle, Live } from './style'
 import { colors, sizes, breakpoints } from 'styles'
 
-import { LivestreamBadge, LivestreamSnapshot } from 'types/livestreams'
+import { LivestreamBadge } from 'types/livestreams'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
 import { stripHTML } from 'utils/helperFunctions'
 import { LiveEvent, Status } from 'generated/graphql'
@@ -30,10 +30,16 @@ const LivePostPage = () => {
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
-  const [liveSnapshot, setLiveSnapshot] = useState<LivestreamSnapshot>()
-  const [userCount, setUserCount] = useState<number>(1)
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
     useState<boolean>(true)
+
+  // snapshots
+  const [hlsPlaybackUrl, setHlsPlaybackUrl] = useState<string>('')
+  const [isCommentsEnabled, setIsCommentsEnabled] = useState<Maybe<boolean>>(null)
+  const [isReactionsEnabled, setIsReactionsEnabled] = useState<Maybe<boolean>>(null)
+  const [isPresenceEnabled, setIsPresenceEnabled] = useState<Maybe<boolean>>(null)
+  const [userCount, setUserCount] = useState<number>(1)
+  const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
 
   const { slug } = useParams<{ slug: string }>()
   const [livestream, setLivestream] = useState<LiveEvent>()
@@ -44,9 +50,9 @@ const LivePostPage = () => {
     onCompleted: (result) => setLivestream(result.liveEvent),
   })
 
-  const isLive = liveSnapshot?.status === Status.Live
-  const isScheduled = liveSnapshot?.status === Status.Scheduled
-  const isFinished = liveSnapshot?.status === Status.Finished
+  const isLive = liveStatus === Status.Live
+  const isScheduled = liveStatus === Status.Scheduled
+  const isFinished = liveStatus === Status.Finished
 
   const liveCollection = collection(
     firebaseDB,
@@ -60,11 +66,26 @@ const LivePostPage = () => {
       snapshot.forEach((doc) => {
         const updatedLiveSnapshot = doc.data()
 
-        if (!liveSnapshot) setLiveSnapshot(updatedLiveSnapshot)
-
         for (const [key, value] of Object.entries(updatedLiveSnapshot)) {
-          if (liveSnapshot && liveSnapshot[key] !== value) {
-            setLiveSnapshot((prevState) => ({ ...prevState, [key]: [value] }))
+          switch (key) {
+            case 'hlsPlaybackUrl':
+              hlsPlaybackUrl !== value && setHlsPlaybackUrl(value)
+              break
+            case 'isCommentsEnabled':
+              isCommentsEnabled !== value && setIsCommentsEnabled(value)
+              break
+            case 'isReactionsEnabled':
+              isReactionsEnabled !== value && setIsReactionsEnabled(value)
+              break
+            case 'isPresenceEnabled':
+              isPresenceEnabled !== value && setIsPresenceEnabled(value)
+              break
+            case 'count':
+              userCount !== value && setUserCount(value)
+              break
+            case 'status':
+              liveStatus !== value && setLiveStatus(value)
+              break
           }
         }
       })
@@ -82,13 +103,9 @@ const LivePostPage = () => {
   }, [livestream])
 
   useEffect(() => {
-    if (liveSnapshot) {
-      setLiveBadge(
-        StatusBadge(liveSnapshot?.status || Status.Scheduled, colorMode)
-      )
-    }
+    if (liveStatus) setLiveBadge(StatusBadge(liveStatus, colorMode))
     // eslint-disable-next-line
-  }, [liveSnapshot])
+  }, [liveStatus])
 
   if (isVerifyingAccessPermission)
     return (
@@ -124,21 +141,20 @@ const LivePostPage = () => {
             zIndex={999}
             justifyContent="flex-start"
           >
-            <Badge background={liveBadge?.color} color="white">
-              {liveBadge?.label}
-            </Badge>
-            {liveSnapshot?.isPresenceEnabled && (
+            {liveStatus && (
+              <Badge background={liveBadge?.color} color="white">
+                {liveBadge?.label}
+              </Badge>
+            )}
+            {isPresenceEnabled && (
               <Badge background={colors.inputBg.dark} color="white">
                 <Text mr={1}>{userCount}</Text>
                 <Icon icon="mdi:account"></Icon>
               </Badge>
             )}
           </Flex>
-          {isLive && liveSnapshot?.hlsPlaybackUrl && (
-            <VideoPlayer
-              isLiveStream={true}
-              src={liveSnapshot?.hlsPlaybackUrl}
-            />
+          {isLive && hlsPlaybackUrl && (
+            <VideoPlayer isLiveStream={true} src={hlsPlaybackUrl} />
           )}
           {(isScheduled || isFinished) && (
             <Countdown
@@ -156,10 +172,10 @@ const LivePostPage = () => {
           w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
           borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
         >
-          {liveSnapshot && livestream && (
+          {livestream && (
             <Livechat
-              isCommentsEnabled={liveSnapshot?.isCommentsEnabled}
-              isReactionsEnabled={liveSnapshot?.isReactionsEnabled}
+              isCommentsEnabled={isCommentsEnabled || livestream.commentsEnabled || false}
+              isReactionsEnabled={isReactionsEnabled || livestream.reactionsEnabled || false}
               entityId={livestream?.id}
             />
           )}
