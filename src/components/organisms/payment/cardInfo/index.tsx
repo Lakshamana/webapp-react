@@ -12,6 +12,8 @@ import { ModalType } from 'modules/checkout/components/notification'
 import { useMutation } from '@apollo/client'
 import { MUTATION_CONFIRM_ORDER } from 'services/graphql'
 import { pmDataType, Props } from './types'
+import { OrderStatus } from 'generated/graphql'
+import { ModalNotification } from '../components'
 
 const { REACT_APP_SPREENDLY_KEY } = process.env
 
@@ -19,7 +21,7 @@ export const CardInfoSpreedly = ({
   productPrice,
   product,
 }: Props) => {
-  const [modalType] = useState(ModalType.success)
+  const [modalType, setmodalType] = useState(ModalType.success)
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -46,11 +48,18 @@ export const CardInfoSpreedly = ({
     MUTATION_CONFIRM_ORDER,
     {
       onCompleted: async (result) => {
-        console.log(result)
         setdisabledButton(false)
+        const { confirmOrder: { status } } = result
+        if(OrderStatus.Active === status) {
+          setmodalType(ModalType.success)
+          onOpen()
+          return
+        }
+        setmodalType(ModalType.failure)
+        onOpen()
       },
       onError: (error) => {
-        console.error(error)
+        setmodalType(ModalType.failure)
         setdisabledButton(false)
       },
     }
@@ -292,6 +301,7 @@ export const CardInfoSpreedly = ({
       >
         {t('page.checkout.card_info.place_you_order')}
       </Button>
+      <ModalNotification {...{ isOpen, onClose, modalType }} />
     </Flex>
   )
 }
