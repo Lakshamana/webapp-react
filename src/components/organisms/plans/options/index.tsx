@@ -4,14 +4,14 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Button,
-  Divider,
+  // Button,
+  // Divider,
   Flex,
-  Switch,
+  // Switch,
   Text,
 } from "@chakra-ui/react"
 import { Icon } from "@iconify/react"
-import { Input } from "components/molecules"
+// import { Input } from "components/molecules"
 import {
   ButtonSelectOption,
   CardSelectPlan,
@@ -36,9 +36,9 @@ export const SelectOption = ( { plan }: Props) => {
   const [selectedOption, setselectedOption] = useState({})
   return (
     <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
-      <Text color={colors.secondaryText[colorMode]}>
+      {/* <Text color={colors.secondaryText[colorMode]}>
         <pre>{JSON.stringify(selectedOption, null, 2) }</pre>
-      </Text>
+      </Text> */}
       <Flex
         maxW="556px"
         w="100%"
@@ -138,7 +138,7 @@ export const SelectOption = ( { plan }: Props) => {
       {
         selectedOptionState && (
           <>
-            <CardSelectPlan gridGap="24px">
+            {/* <CardSelectPlan gridGap="24px">
               <Flex w="100%" flexDir="column">
                 <Text
                   color={colors.generalText[colorMode]}
@@ -203,9 +203,9 @@ export const SelectOption = ( { plan }: Props) => {
                 >$12,99</Text>
               </Flex>
 
-            </CardSelectPlan>
+            </CardSelectPlan> */}
 
-            <CardSelectPlan gridGap="24px">
+            {/* <CardSelectPlan gridGap="24px">
               <Flex w="100%" justifyContent="space-between" alignItems="center">
                 <Text
                   color={colors.generalText[colorMode]}
@@ -254,7 +254,7 @@ export const SelectOption = ( { plan }: Props) => {
                 >$40.00</Text>
               </Flex>
 
-            </CardSelectPlan>
+            </CardSelectPlan> */}
 
             <CardSelectPlan gridGap="16px">
               <Flex w="100%">
