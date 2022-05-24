@@ -284,7 +284,10 @@ export const SelectOption = ( { plan }: Props) => {
                     <AccordionIcon ml="29px" mr="10px"/>
                   </AccordionButton>
                   <AccordionPanel pb={4} w="100%">
-                    <CardInfoSpreedly />
+                    <CardInfoSpreedly
+                      product={selectedOption['productsId']}
+                      productPrice={selectedOption['billingTypes'].id}
+                    />
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
