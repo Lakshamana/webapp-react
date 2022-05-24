@@ -9,10 +9,16 @@ import { FormikHelpers, useFormik } from 'formik'
 import * as Yup from 'yup'
 import { cardForm, SpreedlyError } from './types'
 import { ModalType } from 'modules/checkout/components/notification'
+import { useMutation } from '@apollo/client'
+import { MUTATION_CONFIRM_ORDER } from 'services/graphql'
+import { pmDataType, Props } from './types'
 
 const { REACT_APP_SPREENDLY_KEY } = process.env
 
-export const CardInfoSpreedly = () => {
+export const CardInfoSpreedly = ({
+  productPrice,
+  product,
+}: Props) => {
   const [modalType] = useState(ModalType.success)
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
@@ -36,6 +42,20 @@ export const CardInfoSpreedly = () => {
     validNumber: true,
   })
 
+  const [confirmOrder] = useMutation(
+    MUTATION_CONFIRM_ORDER,
+    {
+      onCompleted: async (result) => {
+        console.log(result)
+        setdisabledButton(false)
+      },
+      onError: (error) => {
+        console.error(error)
+        setdisabledButton(false)
+      },
+    }
+  )
+
   const months = [
     '01',
     '02',
@@ -53,6 +73,7 @@ export const CardInfoSpreedly = () => {
   const years = [...new Array(100)].map(
     (_, index) => new Date().getFullYear() + index
   )
+  const formatMonth = (month: number) => month < 10 ? `0${month}` : `${month}`
   const [disabledButton, setdisabledButton] = useState(true)
 
   useEffect(() => {
@@ -113,9 +134,21 @@ export const CardInfoSpreedly = () => {
       setstate({ ...state, paymentErrors: errorMessages })
     })
 
-    Spreedly.on('paymentMethod', (token: string, pmData: any) => {
+    Spreedly.on('paymentMethod', (token: string, pmData: pmDataType) => {
       // continuar implementação da chamada
-      setdisabledButton(false)
+      const { card_type, last_four_digits, month, year } = pmData
+      confirmOrder({
+        variables: {
+          payload: {
+            cardBrand: card_type,
+            lastDigits: last_four_digits,
+            expirationDate: `${year}/${formatMonth(month)}`,
+            paymentGatewayToken: token,
+            productPrice,
+            product,
+          }
+        }
+      })
       onOpen()
       console.log('tokenizeCreditCard: ', token)
       console.log(pmData)
