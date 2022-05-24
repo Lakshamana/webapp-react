@@ -275,7 +275,7 @@ const Comments = ({ ...props }: Post) => {
                 textAlign={'center'}
                 fontWeight={500}
               >
-                {t('page.post.comment.delete')}
+                {`${t('page.post.comment.delete') + ' ?'}`}
               </Text>
             </Box>
           }
