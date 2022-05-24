@@ -66,3 +66,8 @@ export type SpreedlyError = {
   validCvv: boolean,
   validNumber: boolean,
 }
+
+export interface Props {
+  productPrice: string
+  product: string
+}
