@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Button,
-  Checkbox,
   Divider,
   Flex,
   Switch,
@@ -16,25 +15,30 @@ import { Input } from "components/molecules"
 import {
   ButtonSelectOption,
   CardSelectPlan,
-  InputCustomCreditCard,
+  // InputCustomCreditCard,
 } from "./style"
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { Props } from "./types"
 import { useState } from "react"
 import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
-import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
-import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg'
-import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
-import { ReactComponent as Paypall } from 'assets/icons/payment/paypall.svg'
-import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
-import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
+import { CardInfoSpreedly } from "components"
+// import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
+// import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg'
+// import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
+// import { ReactComponent as Paypall } from 'assets/icons/payment/paypall.svg'
+// import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
+// import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
 
 export const SelectOption = ( { plan }: Props) => {
   const { colorMode } = useThemeStore()
-  const [selectedOption, setselectedOption] = useState(false)
+  const [selectedOptionState, setselectedOptionState] = useState(false)
+  const [selectedOption, setselectedOption] = useState({})
   return (
     <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
+      <Text color={colors.secondaryText[colorMode]}>
+        <pre>{JSON.stringify(selectedOption, null, 2) }</pre>
+      </Text>
       <Flex
         maxW="556px"
         w="100%"
@@ -77,10 +81,10 @@ export const SelectOption = ( { plan }: Props) => {
             justifyContent="center"
             alignItems="center"
             pl="30px"
-            onClick={()=>setselectedOption(!selectedOption)}
+            onClick={()=>setselectedOptionState(!selectedOptionState)}
           >
             <Icon
-              icon="ic:baseline-expand-more"
+              icon={selectedOptionState ? "ic:baseline-expand-more" : "ic:baseline-expand-less"}
               fontSize="30px"
               color={colors.generalText[colorMode]}
             />
@@ -89,18 +93,30 @@ export const SelectOption = ( { plan }: Props) => {
       </Flex>
 
       {
-        !selectedOption && (
+        !selectedOptionState && (
           <CardSelectPlan gridGap="24px">
             <Text
               color={colors.secondaryText[colorMode]}
               fontWeight="400"
               fontSize="18px"
             >Select option:</Text>
-            <ButtonSelectOption onClick={()=>setselectedOption(true)}>
+            {
+              plan.productPrices.map((option) => (
+                <ButtonSelectOption onClick={()=>{
+                  setselectedOptionState(true)
+                  setselectedOption(option)
+                }}>
+                  <Text>{option.billingTypes.name}</Text>
+                  {/* TODO: add price in productPrices */}
+                  <Text>$180.00</Text>
+                </ButtonSelectOption>
+              ))
+            }
+            {/* <ButtonSelectOption onClick={()=>setselectedOptionState(true)}>
               <Text>A vista</Text>
               <Text>$180.00</Text>
             </ButtonSelectOption>
-            <ButtonSelectOption gridGap="24px" onClick={()=>setselectedOption(true)}>
+            <ButtonSelectOption gridGap="24px" onClick={()=>setselectedOptionState(true)}>
               <Flex
                 justifyContent="space-between"
                 w="100%"
@@ -111,16 +127,16 @@ export const SelectOption = ( { plan }: Props) => {
               <Divider orientation='vertical' />
               <Text>$34.00</Text>
             </ButtonSelectOption>
-            <ButtonSelectOption onClick={()=>setselectedOption(true)}>
+            <ButtonSelectOption onClick={()=>setselectedOptionState(true)}>
               <Text>Plano Mensal</Text>
               <Text>$16.00/Mês</Text>
-            </ButtonSelectOption>
+            </ButtonSelectOption> */}
           </CardSelectPlan>
         )
       }
 
       {
-        selectedOption && (
+        selectedOptionState && (
           <>
             <CardSelectPlan gridGap="24px">
               <Flex w="100%" flexDir="column">
@@ -249,17 +265,15 @@ export const SelectOption = ( { plan }: Props) => {
                 >Choose a payment method</Text>
               </Flex>
               {/* TODO: Adicionar credit card do signup depois de concluido */}
-              <Accordion allowToggle w="100%" bg={colors.white} borderRadius="8px">
+              <Accordion allowToggle w="100%" bg={colors.bodyBg[colorMode]} borderRadius="8px" color={colors.generalText[colorMode]}>
                 <AccordionItem>
                   <AccordionButton h="80px">
                     <Flex w="100%" flexDir="column" alignItems="flex-start">
                       <Text
-                        color={colors.black}
                         fontWeight="600"
                         fontSize="14px"
                       >Bank Card</Text>
                       <Text
-                        color={colors.black}
                         fontWeight="300"
                         fontSize="14px"
                         w="277px"
@@ -270,39 +284,12 @@ export const SelectOption = ( { plan }: Props) => {
                     <AccordionIcon ml="29px" mr="10px"/>
                   </AccordionButton>
                   <AccordionPanel pb={4} w="100%">
-                    <Flex w="100%" flexDirection="column" gridGap="16px" alignItems="center">
-                      <InputCustomCreditCard placeholder="Name on Card"/>
-                      <InputCustomCreditCard placeholder="Card number"/>
-                      <Flex w="100%" gridGap="18px">
-                        <InputCustomCreditCard placeholder="MM/YY"/>
-                        <InputCustomCreditCard placeholder="CVV"/>
-                      </Flex>
-                      <InputCustomCreditCard placeholder="Country"/>
-                      <Flex alignItems="flex-start" gridGap="12px" mt="1em">
-                        <Checkbox
-                          fontSize="12px"
-                          name="terms"
-                          isChecked={true}
-                        />
-                        <Text fontSize="12px" color="#222222">
-                        I authorize FanHero LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.
-                        </Text>
-                      </Flex>
-                      <Button
-                        w="236px"
-                        h="56px"
-                        textTransform="uppercase"
-                        color="#fff"
-                        bg="#0660F9"
-                        fontWeight="700"
-                        fontSize="16px"
-                      >place your order</Button>
-                    </Flex>
+                    <CardInfoSpreedly />
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
 
-              <Accordion allowToggle w="100%" bg={colors.white} borderRadius="8px">
+              {/* <Accordion allowToggle w="100%" bg={colors.white} borderRadius="8px">
                 <AccordionItem>
                   <AccordionButton h="80px">
                     <Flex w="100%" flexDir="column" alignItems="flex-start">
@@ -492,7 +479,7 @@ export const SelectOption = ( { plan }: Props) => {
                     >Coming Soon!</Text>
                   </AccordionPanel>
                 </AccordionItem>
-              </Accordion>
+              </Accordion> */}
 
             </CardSelectPlan>
           </>
