@@ -116,6 +116,13 @@ export type AccountStatus = {
   pending_activation?: Maybe<Scalars['Boolean']>;
 };
 
+export enum Actions {
+  Create = 'CREATE',
+  Delete = 'DELETE',
+  Read = 'READ',
+  Update = 'UPDATE'
+}
+
 export type ActivateAccount = {
   activationCode: Scalars['String'];
   id: Scalars['ID'];
@@ -598,6 +605,11 @@ export type CreateMenu = {
   sort?: Maybe<Scalars['Int']>;
 };
 
+export type CreateNestedPermissionsInput = {
+  actions?: Maybe<Array<Actions>>;
+  subjectId: Scalars['ID'];
+};
+
 export type CreateOrganizationInput = {
   kind: Kinds;
   name: Scalars['String'];
@@ -637,7 +649,7 @@ export type CreateRoleInput = {
   default?: Maybe<Scalars['Boolean']>;
   description: Scalars['String'];
   name: Scalars['String'];
-  permissions: Array<Scalars['ID']>;
+  permissions: Array<CreateNestedPermissionsInput>;
   public?: Maybe<Scalars['Boolean']>;
 };
 
@@ -923,6 +935,7 @@ export type GeolockedChannel = {
 export type GroupDto = {
   __typename?: 'GroupDto';
   channel?: Maybe<Scalars['ID']>;
+  createdAt: Scalars['DateTime'];
   default: Scalars['Boolean'];
   /** Group description */
   description: Scalars['String'];
@@ -1088,6 +1101,7 @@ export enum LiveEventType {
 export type Me = {
   __typename?: 'Me';
   account: Account;
+  createdAt: Scalars['DateTime'];
   /** Id */
   id: Scalars['String'];
   organization: OrganizationPublicOutput;
@@ -2223,6 +2237,7 @@ export type OrganizationPublicOutput = {
   __typename?: 'OrganizationPublicOutput';
   audioCdnBaseUrl?: Maybe<Scalars['String']>;
   avatarCdnBaseUrl?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
   current_version?: Maybe<Scalars['String']>;
   customization?: Maybe<OrganizationPublicCustomization>;
   /** Id */
@@ -2420,6 +2435,7 @@ export type PasswordOnlyChanged = {
 export type PermissionDto = {
   __typename?: 'PermissionDto';
   actions: Array<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   /** Id */
   id: Scalars['String'];
@@ -2594,6 +2610,7 @@ export type Profile = {
   avatar_url?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   cpf?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
   created_at?: Maybe<Scalars['DateTime']>;
   custom_fields?: Maybe<Scalars['JSONObject']>;
   gender?: Maybe<Scalars['String']>;
@@ -3024,6 +3041,7 @@ export type RefreshSignIn = {
 export type RefreshToken = {
   __typename?: 'RefreshToken';
   accessToken: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   firebaseToken: Scalars['String'];
   /** Id */
   id?: Maybe<Scalars['String']>;
@@ -3065,6 +3083,7 @@ export type ResendActivateAccount = {
 export type ResponseAccountsCount = {
   __typename?: 'ResponseAccountsCount';
   count: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
   /** Id */
   id: Scalars['String'];
 };
@@ -3077,6 +3096,7 @@ export type ResponseAvailabilityOutput = {
 
 export type ResponseCustomFieldsOutput = {
   __typename?: 'ResponseCustomFieldsOutput';
+  createdAt: Scalars['DateTime'];
   fields: Array<ResponseFieldOutput>;
   /** Id */
   id: Scalars['String'];
@@ -3142,14 +3162,21 @@ export type ResponseUploadOutput = {
 
 export type RolesDto = {
   __typename?: 'RolesDto';
+  createdAt: Scalars['DateTime'];
   default: Scalars['Boolean'];
   description: Scalars['String'];
   /** Id */
   id: Scalars['String'];
+  membersAggregate: RolesMembersOutput;
   name: Scalars['String'];
-  numberOfMembers: Scalars['Int'];
   permissions: Array<PermissionDto>;
   public?: Maybe<Scalars['Boolean']>;
+};
+
+export type RolesMembersOutput = {
+  __typename?: 'RolesMembersOutput';
+  members: Array<Account>;
+  total: Scalars['Int'];
 };
 
 export type SearchFilterOperator = {
@@ -3206,6 +3233,7 @@ export type StatusFilter = {
 
 export type SubjectDto = {
   __typename?: 'SubjectDto';
+  createdAt: Scalars['DateTime'];
   entity?: Maybe<Scalars['String']>;
   fields?: Maybe<Array<Scalars['String']>>;
   /** Id */
@@ -3920,7 +3948,7 @@ export type GetLiveEventQueryVariables = Exact<{
 }>;
 
 
-export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
+export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
 
 export type GetLiveEventKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5906,6 +5934,10 @@ export const GetLiveEventDocument = gql`
     id
     kind
     scheduledStartAt
+    commentsEnabled
+    hlsPlaybackUrl
+    presenceEnabled
+    reactionsEnabled
     slug
     status
     streamName
