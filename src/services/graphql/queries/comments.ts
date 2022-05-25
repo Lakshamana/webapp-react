@@ -23,6 +23,7 @@ export const QUERY_COMMENTS = gql`
         countComments
         parent
         account
+        myVote
       }
       isLastPage
       page
