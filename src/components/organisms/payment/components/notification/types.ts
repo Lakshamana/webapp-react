@@ -1,7 +1,8 @@
 export interface Props {
   isOpen, 
   onClose, 
-  modalType: ModalType
+  modalType: ModalType,
+  refetch: () => void
 }
 
 export enum ModalType {

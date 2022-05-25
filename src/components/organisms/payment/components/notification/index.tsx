@@ -14,6 +14,7 @@ export const ModalNotification = ({
   isOpen,
   onClose,
   modalType,
+  refetch
 }: Props) => {
   const { t } = useTranslation();
   return (
@@ -68,7 +69,10 @@ export const ModalNotification = ({
                 color="#4C26F0"
                 fontSize="16px"
                 textTransform="uppercase"
-                onClick={onClose}
+                onClick={()=>{
+                  onClose()
+                  refetch()
+                }}
               >
                 {t('page.checkout.modal.success.close')}
               </Text>
