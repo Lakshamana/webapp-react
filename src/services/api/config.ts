@@ -76,7 +76,7 @@ const errorLink = onError(
         return
       }
 
-      if (err.extensions.code === '404') {
+      if (err.extensions.code === '404' && operation.operationName !== 'VerifyMail') {
         show404()
         return
       }
