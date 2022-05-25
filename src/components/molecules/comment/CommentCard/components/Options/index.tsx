@@ -1,32 +1,55 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Spacer } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { Icon } from "@iconify/react"
 import { colors } from 'styles'
 import { Vote, Text } from 'components'
-import { useThemeStore } from 'services/stores'
+import { useThemeStore, useCommentsStore } from 'services/stores'
 import { MUTATION_ADD_VOTE } from 'services/graphql'
-import { CommentVoteDirectionEnum, CommentVoteStats } from 'generated/graphql'
-import { defaultProps, IProps, IUpdateVotes } from './types'
+import { CommentVoteDirectionEnum } from 'generated/graphql'
+import { defaultProps, IProps } from './types'
 import { VoteButton } from './style'
 
 const Options = ({ ...props }: IProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const [votes, setUpdateVotes] = useState<IUpdateVotes>({ countUpvotes: 0, countDownvotes: 0 })
-  const [updateMyVote] = useMutation(MUTATION_ADD_VOTE, {
-    onCompleted: ({ addVote }) => updateVotes(addVote.commentVote)
-  })
+  const {
+    commentsStore,
+    setUpdateCommentsStore,
+  } = useCommentsStore()
+  const [updateMyVote, { data }] = useMutation(MUTATION_ADD_VOTE)
 
-  useEffect(() => updateVotes(props.commentVoteStats), [props.commentVoteStats])
-
-  const updateVotes = ({ countUpvotes, countDownvotes }: CommentVoteStats) =>
-    setUpdateVotes({ countUpvotes, countDownvotes })
+  useEffect(() => {
+    if (!data) return
+    const { countDownvotes, countUpvotes, direction } = data.addVote.commentVote
+    const { allComments } = commentsStore
+    const updateAllComments = allComments.map(comment => {
+      if (comment.id === props.id) {
+        return {
+          ...comment,
+          myVote: direction,
+          commentVoteStats: { countDownvotes, countUpvotes }
+        }
+      }
+      return comment
+    })
+    setUpdateCommentsStore({
+      ...commentsStore,
+      allComments: updateAllComments
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
 
   const handleUpdateVote = (direction: CommentVoteDirectionEnum) => async () => {
     await updateMyVote({
-      variables: { input: { comment: props.id, direction } }
+      variables: {
+        input:
+        {
+          comment: props.id,
+          direction: direction === props.myVote ? CommentVoteDirectionEnum.Novote : direction
+        }
+      }
     })
   }
 
@@ -42,15 +65,17 @@ const Options = ({ ...props }: IProps) => {
     >
       <VoteButton onClick={handleUpdateVote(CommentVoteDirectionEnum.Upvote)}>
         <Vote
-          type="upvote"
-          votes={votes.countUpvotes}
+          type="UPVOTE"
+          votes={props.commentVoteStats.countUpvotes}
+          {...props}
         />
       </VoteButton>
       <Spacer w={4} />
       <VoteButton onClick={handleUpdateVote(CommentVoteDirectionEnum.Downvote)}>
         <Vote
-          type="downvote"
-          votes={votes.countDownvotes}
+          type="DOWNVOTE"
+          votes={props.commentVoteStats.countDownvotes}
+          {...props}
         />
       </VoteButton>
       {
