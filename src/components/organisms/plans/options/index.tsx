@@ -30,7 +30,10 @@ import { CardInfoSpreedly } from "components"
 // import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
 // import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
 
-export const SelectOption = ( { plan }: Props) => {
+export const SelectOption = ({
+  plan,
+  refetch
+}: Props) => {
   const { colorMode } = useThemeStore()
   const [selectedOptionState, setselectedOptionState] = useState(false)
   const [selectedOption, setselectedOption] = useState({})
@@ -287,6 +290,7 @@ export const SelectOption = ( { plan }: Props) => {
                     <CardInfoSpreedly
                       product={selectedOption['productsId']}
                       productPrice={selectedOption['billingTypes'].id}
+                      refetch={refetch}
                     />
                   </AccordionPanel>
                 </AccordionItem>
