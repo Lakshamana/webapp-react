@@ -5,7 +5,9 @@ export const QUERY_PROFILE = gql`
     profile(account: $account) {
       id
       address
-      avatar_url
+      avatar {
+        imgPath
+      }
       birthday
       phone
     }
