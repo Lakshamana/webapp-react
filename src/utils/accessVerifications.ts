@@ -3,12 +3,12 @@ import {
   Kinds,
   Category,
   LiveEvent,
-  PostAccess,
   Channel,
 } from 'generated/graphql'
+import { AccessEnum } from 'types/access'
 
 export const isEntityOnPaywall = (entity: Post | Category | LiveEvent) => {
-  return entity.access !== PostAccess.Granted && entity.kind === Kinds.Paywall
+  return entity.access !== AccessEnum.AVAILABLE && entity.kind === Kinds.Paywall
 }
 
 export const isEntityPrivate = (
