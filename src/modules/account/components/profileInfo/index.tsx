@@ -330,7 +330,7 @@ const ProfileInfo = ({
     <>
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
-          <Avatar size="xl" src={user?.avatar_url || ''}></Avatar>
+          <Avatar size="xl" src={user?.avatar?.imgPath || ''}></Avatar>
         </Flex>
         {Object.keys(values).map((key) => {
           return (

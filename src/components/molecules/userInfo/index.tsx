@@ -54,7 +54,7 @@ const UserInfo = ({
               <UserContainer
                 onClick={closeSideMenu}
                 {...{ delimited }}>
-                <UserMenu {...{ colorMode, account, avatar_url: user?.avatar_url }} />
+                <UserMenu {...{ colorMode, account, avatar_url: user?.avatar?.imgPath }} />
               </UserContainer>
             </button>
           }
