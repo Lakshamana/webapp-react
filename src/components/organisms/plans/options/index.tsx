@@ -109,8 +109,7 @@ export const SelectOption = ({
                   setselectedOption(option)
                 }}>
                   <Text>{option.billingTypes.name}</Text>
-                  {/* TODO: add price in productPrices */}
-                  <Text>$180.00</Text>
+                  <Text>{option.price}{ option?.billingPeriods && ` / ${option.billingPeriods.name}` }</Text>
                 </ButtonSelectOption>
               ))
             }
