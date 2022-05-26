@@ -66,6 +66,7 @@ export const QUERY_VERIFY_POST_KIND = gql`
       title
       access
       kind
+      entitlements
     }
   }
 `

@@ -4001,7 +4001,7 @@ export type GetPostKindQueryVariables = Exact<{
 }>;
 
 
-export type GetPostKindQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, title: string, access: string, kind: string } };
+export type GetPostKindQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, title: string, access: string, kind: string, entitlements: Array<any> } };
 
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
@@ -6417,6 +6417,7 @@ export const GetPostKindDocument = gql`
     title
     access
     kind
+    entitlements
   }
 }
     `;

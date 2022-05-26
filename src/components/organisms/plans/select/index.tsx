@@ -1,49 +1,21 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Props } from './types'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { useTranslation } from 'react-i18next'
 
-export const SelectPlan = () => {
+export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   const { colorMode } = useThemeStore()
-  const plans = [
-    {
-      imageUrl:
-        'https://bitcoinist.com/wp-content/uploads/2021/09/dogecoi.jpeg',
-      imageAlt: 'Rear view of modern home with pool',
-      title: 'Platinum - Subscription Title',
-      subtitle:
-        'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-      value: 199,
-    },
-    {
-      imageUrl:
-        'https://usethebitcoin.com/wp-content/uploads/2019/08/How-to-sell-Ethereum-728x454.jpg',
-      imageAlt: 'Rear view of modern home with pool',
-      title: 'Gold - Subscription Title',
-      subtitle:
-        'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-      value: 165,
-    },
-    {
-      imageUrl:
-        'https://timnews.com.br/system/images/photos/14737039/original/open-uri20211021-19-1xss92r?1634827953',
-      imageAlt: 'Rear view of modern home with pool',
-      title: 'Silver - Subscription Title',
-      subtitle:
-        'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.',
-      value: 85,
-    },
-  ]
+  const { t } = useTranslation()
   return (
     <Flex flexDirection="column" mt="44px">
       <Text
         fontSize="28px"
         fontWeight="500"
         color={colors.generalText[colorMode]}
-      >
-        Title - Lorem ipsum
-      </Text>
+      >{t('page.plan.selectPlan.title')}</Text>
       <Flex gridGap="24px" mt="16px">
-        {plans.map((plan) => (
+        {plans && plans.map((plan, key) => (
           <Box
             maxW="sm"
             borderWidth="1px"
@@ -52,6 +24,7 @@ export const SelectPlan = () => {
             w="340px"
             background={colors.cardBg[colorMode]}
             boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+            key={key}
           >
             <Box
               h="184px"
@@ -66,7 +39,7 @@ export const SelectPlan = () => {
                 color={colors.generalText[colorMode]}
                 fontWeight="600"
                 fontSize="18px"
-              >{plan.title}</Text>
+              >{plan.name}</Text>
               <Text
                 color={colors.secondaryText[colorMode]}
                 fontWeight="400"
@@ -74,7 +47,8 @@ export const SelectPlan = () => {
                 maxW="256px"
                 w="100%"
                 mt="6px"
-              >{plan.subtitle}</Text>
+                // TODO: add description
+              >Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.</Text>
               <Flex
                 mt="15px"
                 justifyContent="space-between"
@@ -88,12 +62,16 @@ export const SelectPlan = () => {
                   fontSize="12px"
                   textTransform="uppercase"
                   fontWeight="400"
-                >Select</Button>
+                  onClick={()=>{
+                    selectPlan(plan);
+                    nextStep()
+                  }}
+                >{t('page.plan.selectPlan.select')}</Button>
                 <Text
                   color={colors.generalText[colorMode]}
                   fontWeight="400"
                   fontSize="18px"
-                >${plan.value}</Text>
+                >{plan.startingPrice}</Text>
               </Flex>
             </Box>
           </Box>

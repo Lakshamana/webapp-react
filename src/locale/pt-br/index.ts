@@ -443,6 +443,17 @@ const PT_BR = {
           seconds: 'Segundos',
         },
       },
+      plan: {
+        selectPlan: {
+          title: 'Selecione o seu plano',
+          select: 'selecionar',
+        },
+        selectOption: {
+          title: 'Selecione a opção:',
+          choosePaymentMethod: 'Escolha um método de pagamento',
+          bankCard: 'Cartão',
+        }
+      }
     },
     cookieConsent: {
       notice: 'Aviso prévio.',
