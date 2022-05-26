@@ -6,7 +6,6 @@ import { Props } from "./types";
 
 export const PlanSelectFlow = ({
     entitlement,
-    refetch,
   }: Props) => {
   const [currentState, setcurrentState] = useState(Steps.SELECT_PLAN);
   const [selectedPlan, setselectedPlan] = useState()
@@ -19,7 +18,7 @@ export const PlanSelectFlow = ({
   }
   if(currentState === Steps.SELECT_OPTION){
     return (
-      <SelectOption plan={selectedPlan} nextStep={nextStep} refetch={refetch}/>
+      <SelectOption plan={selectedPlan} nextStep={nextStep} />
     )
   }
   return <div></div>
