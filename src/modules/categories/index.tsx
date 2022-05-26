@@ -94,44 +94,48 @@ const CategoriesPage = () => {
 
   const isEmpty = !isLoading && !hasResults
 
+  const renderCategoriesWithoutChildren = () => (
+    <CategoriesScroller
+      items={categoriesWithoutChildren}
+      sectionTitle={t('page.categories.more_categories')}
+      hasMoreLink={false}
+    />
+  )
+
+  const renderCategoriesWithChildren = () => {
+    return categoriesWithChildren?.map((category: Category) => (
+      <CategoriesScroller
+        key={category.id}
+        items={category.children as Category[]}
+        sectionTitle={category?.name}
+        hasMoreLink={true}
+        sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
+      />
+    ))
+  }
+
   return (
-    <>
+    <Container flexDirection={'column'} width={'100%'}>
+      {!!categoriesBillboardItems?.length && (
+        <BillboardScroller
+          items={categoriesBillboardItems}
+          customButtons={false}
+        />
+      )}
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
           <Skeleton kind="cards" numberOfCards={4} />
         </Box>
       )}
       {!isLoading && (
-        <Container flexDirection={'column'} width={'100%'}>
-          {!!categoriesBillboardItems?.length && (
-            <BillboardScroller
-              items={categoriesBillboardItems}
-              customButtons={false}
-            />
-          )}
-          <Flex pb={10} gridGap={10} flexDirection={'column'}>
-            {!!categoriesWithoutChildren?.length && (
-              <CategoriesScroller
-                items={categoriesWithoutChildren}
-                sectionTitle={t('page.categories.more_categories')}
-                hasMoreLink={false}
-              />
-            )}
-            {!!categoriesWithChildren?.length &&
-              categoriesWithChildren?.map((category: Category) => (
-                <CategoriesScroller
-                  key={category.id}
-                  items={category.children as Category[]}
-                  sectionTitle={category?.name}
-                  hasMoreLink={true}
-                  sectionUrl={`/c/${activeChannel}/category/${category.id}`}
-                />
-              ))}
-          </Flex>
-          {isEmpty && <EmptyState />}
-        </Container>
+        <Flex pb={10} gridGap={10} flexDirection={'column'}>
+          {!!categoriesWithoutChildren?.length &&
+            renderCategoriesWithoutChildren()}
+          {!!categoriesWithChildren?.length && renderCategoriesWithChildren()}
+        </Flex>
       )}
-    </>
+      ){isEmpty && <EmptyState />}
+    </Container>
   )
 }
 
