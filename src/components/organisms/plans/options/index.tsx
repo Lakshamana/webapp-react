@@ -103,11 +103,13 @@ export const SelectOption = ({
               fontSize="18px"
             >Select option:</Text>
             {
-              plan.productPrices.map((option) => (
+              plan.productPrices.map((option, key) => (
                 <ButtonSelectOption onClick={()=>{
                   setselectedOptionState(true)
                   setselectedOption(option)
-                }}>
+                }}
+                key={key}
+                >
                   <Text>{option.billingTypes.name}</Text>
                   <Text>{option.price}{ option?.billingPeriods && ` / ${option.billingPeriods.name}` }</Text>
                 </ButtonSelectOption>

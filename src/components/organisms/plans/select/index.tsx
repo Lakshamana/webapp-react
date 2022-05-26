@@ -15,7 +15,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
         Select Your Plan
       </Text>
       <Flex gridGap="24px" mt="16px">
-        {plans && plans.map((plan) => (
+        {plans && plans.map((plan, key) => (
           <Box
             maxW="sm"
             borderWidth="1px"
@@ -24,6 +24,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
             w="340px"
             background={colors.cardBg[colorMode]}
             boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+            key={key}
           >
             <Box
               h="184px"
