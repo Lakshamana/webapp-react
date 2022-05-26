@@ -442,6 +442,17 @@ const EN_US = {
           seconds: 'Seconds',
         },
       },
+      plan: {
+        selectPlan: {
+          title: 'Select Your Plan',
+          select: 'Select',
+        },
+        selectOption: {
+          title: 'Select option:',
+          choosePaymentMethod: 'Choose a payment method',
+          bankCard: 'Bank Card',
+        }
+      }
     },
     cookieConsent: {
       notice: 'Notice.',
