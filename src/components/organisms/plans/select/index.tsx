@@ -2,18 +2,18 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import { Props } from './types'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { useTranslation } from 'react-i18next'
 
 export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   const { colorMode } = useThemeStore()
+  const { t } = useTranslation()
   return (
     <Flex flexDirection="column" mt="44px">
       <Text
         fontSize="28px"
         fontWeight="500"
         color={colors.generalText[colorMode]}
-      >
-        Select Your Plan
-      </Text>
+      >{t('page.plan.selectPlan.title')}</Text>
       <Flex gridGap="24px" mt="16px">
         {plans && plans.map((plan, key) => (
           <Box
@@ -66,7 +66,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                     selectPlan(plan);
                     nextStep()
                   }}
-                >Select</Button>
+                >{t('page.plan.selectPlan.select')}</Button>
                 <Text
                   color={colors.generalText[colorMode]}
                   fontWeight="400"

@@ -23,6 +23,7 @@ import { Props } from "./types"
 import { useState } from "react"
 import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
 import { CardInfoSpreedly } from "components"
+import { useTranslation } from "react-i18next"
 // import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
 // import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg'
 // import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
@@ -36,6 +37,7 @@ export const SelectOption = ({
   const { colorMode } = useThemeStore()
   const [selectedOptionState, setselectedOptionState] = useState(false)
   const [selectedOption, setselectedOption] = useState({})
+  const { t } = useTranslation()
   return (
     <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
       {/* <Text color={colors.secondaryText[colorMode]}>
@@ -101,7 +103,7 @@ export const SelectOption = ({
               color={colors.secondaryText[colorMode]}
               fontWeight="400"
               fontSize="18px"
-            >Select option:</Text>
+            >{t('page.plan.selectOption.title')}</Text>
             {
               plan.productPrices.map((option, key) => (
                 <ButtonSelectOption onClick={()=>{
@@ -265,7 +267,7 @@ export const SelectOption = ({
                   color={colors.secondaryText[colorMode]}
                   fontWeight="700"
                   fontSize="20px"
-                >Choose a payment method</Text>
+                >{t('page.plan.selectOption.choosePaymentMethod')}</Text>
               </Flex>
               {/* TODO: Adicionar credit card do signup depois de concluido */}
               <Accordion allowToggle w="100%" bg={colors.bodyBg[colorMode]} borderRadius="8px" color={colors.generalText[colorMode]}>
@@ -275,7 +277,7 @@ export const SelectOption = ({
                       <Text
                         fontWeight="600"
                         fontSize="14px"
-                      >Bank Card</Text>
+                      >{t('page.plan.selectOption.bankCard')}</Text>
                       <Text
                         fontWeight="300"
                         fontSize="14px"
