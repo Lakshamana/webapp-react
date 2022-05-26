@@ -9,17 +9,21 @@ import {
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 import { Props, ModalType } from './types'
+import { useHistory } from 'react-router'
 
 export const ModalNotification = ({
   isOpen,
   onClose,
   modalType,
-  refetch
 }: Props) => {
   const { t } = useTranslation();
+  const history = useHistory()
   return (
     <Modal
-      onClose={onClose}
+      onClose={()=>{
+        onClose()
+        history.go(0)
+      }}
       isOpen={isOpen}
       isCentered
       motionPreset="slideInBottom"
@@ -71,7 +75,7 @@ export const ModalNotification = ({
                 textTransform="uppercase"
                 onClick={()=>{
                   onClose()
-                  refetch()
+                  history.go(0)
                 }}
               >
                 {t('page.checkout.modal.success.close')}
