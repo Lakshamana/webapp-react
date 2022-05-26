@@ -30,7 +30,7 @@ const VerifyContentKind = ({
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<Post | LiveEvent>()
 
-  const { loading: isLoadingVerifyContentKind, refetch } = useQuery(
+  const { loading: isLoadingVerifyContentKind } = useQuery(
     contentType === 'live'
       ? QUERY_VERIFY_LIVE_EVENT_KIND
       : QUERY_VERIFY_POST_KIND,
@@ -115,7 +115,7 @@ const VerifyContentKind = ({
         requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
       />
     )
-  if (isOnPaywall) return <PlanSelectFlow entitlement={contentKind?.entitlements} refetch={refetch}/>
+  if (isOnPaywall) return <PlanSelectFlow entitlement={contentKind?.entitlements} />
   return <div></div>
 }
 
