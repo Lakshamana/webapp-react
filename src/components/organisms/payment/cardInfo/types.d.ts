@@ -70,5 +70,4 @@ export type SpreedlyError = {
 export interface Props {
   productPrice: string
   product: string
-  refetch: () => void
 }

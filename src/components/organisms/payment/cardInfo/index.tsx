@@ -20,7 +20,6 @@ const { REACT_APP_SPREENDLY_KEY } = process.env
 export const CardInfoSpreedly = ({
   productPrice,
   product,
-  refetch
 }: Props) => {
   const [modalType, setmodalType] = useState(ModalType.success)
   const { colorMode } = useThemeStore()
@@ -302,7 +301,7 @@ export const CardInfoSpreedly = ({
       >
         {t('page.checkout.card_info.place_you_order')}
       </Button>
-      <ModalNotification {...{ isOpen, onClose, modalType, refetch }} />
+      <ModalNotification {...{ isOpen, onClose, modalType }} />
     </Flex>
   )
 }
