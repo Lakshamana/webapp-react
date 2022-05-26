@@ -22,7 +22,9 @@ export const ModalNotification = ({
     <Modal
       onClose={()=>{
         onClose()
-        history.go(0)
+        if(modalType === ModalType.success) {
+          history.go(0)
+        }
       }}
       isOpen={isOpen}
       isCentered
