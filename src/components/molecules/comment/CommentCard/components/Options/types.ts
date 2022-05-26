@@ -9,6 +9,7 @@ export interface IProps {
   id: string
   description: string
   commentVoteStats: CommentVoteStats
+  myVote: string
 }
 
 export interface IUpdateVotes {

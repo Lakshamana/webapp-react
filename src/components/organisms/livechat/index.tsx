@@ -58,7 +58,7 @@ const Livechat = ({
     const messageToSend: MessageDocumentData = {
       userId: account?.id || '',
       username: account?.username || '',
-      avatarPath: account?.profile?.avatar_url || '',
+      avatarPath: account?.profile?.avatar?.imgPath || '',
       updatedAt: timestampNow(),
       text: filteredMessage,
       dateAdded: timestampNow(),

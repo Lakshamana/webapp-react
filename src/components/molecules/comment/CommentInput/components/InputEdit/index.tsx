@@ -17,6 +17,7 @@ const InputEdit = ({
     <Input
       name="description"
       variant='flushed'
+      paddingRight={'13%'}
       placeholder={t('page.post.add_a_comment')}
       value={value}
       color={colors.inputText[colorMode]}

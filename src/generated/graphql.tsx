@@ -528,7 +528,7 @@ export type CreateBillboardInput = {
   description?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   target?: Maybe<BillboardTarget>;
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
 };
 
 export type CreateChannelInput = {
@@ -768,7 +768,6 @@ export type EmbedInput = {
 
 export type EncryptedEnvConfig = {
   __typename?: 'EncryptedEnvConfig';
-  iv: Scalars['String'];
   result: Scalars['String'];
 };
 
@@ -2605,9 +2604,7 @@ export type Profile = {
   __typename?: 'Profile';
   account: Scalars['ID'];
   address?: Maybe<Scalars['String']>;
-  avatar: ProfileAvatar;
-  avatar_dynamic_url?: Maybe<Scalars['String']>;
-  avatar_url?: Maybe<Scalars['String']>;
+  avatar?: Maybe<ProfileAvatar>;
   birthday?: Maybe<Scalars['DateTime']>;
   cpf?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
@@ -2624,6 +2621,7 @@ export type Profile = {
 export type ProfileAvatar = {
   __typename?: 'ProfileAvatar';
   aspectRatio?: Maybe<Scalars['String']>;
+  baseUrl?: Maybe<Scalars['String']>;
   height?: Maybe<Scalars['Int']>;
   imgPath?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
@@ -3125,6 +3123,7 @@ export type ResponseEmailSendedDto = {
 
 export type ResponseFieldOutput = {
   __typename?: 'ResponseFieldOutput';
+  createdAt: Scalars['DateTime'];
   /** Id */
   id: Scalars['String'];
   name: Scalars['String'];
@@ -3253,7 +3252,7 @@ export type TagOutput = {
   __typename?: 'TagOutput';
   channel: Scalars['ID'];
   createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   relatedCategories: Array<Category>;
   relatedPosts: Array<Post>;
@@ -3885,14 +3884,14 @@ export type CustomFieldsQuery = { __typename?: 'Query', customFields: Array<{ __
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> }, profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, avatar_url?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string> } } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> }, profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } } };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, avatar_url?: Maybe<string>, birthday?: Maybe<any>, phone?: Maybe<string> } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, birthday?: Maybe<any>, phone?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } };
 
 export type GetBillboardsQueryVariables = Exact<{
   filter?: Maybe<FindBillboardsInput>;
@@ -3941,7 +3940,7 @@ export type CommentsQueryVariables = Exact<{
 }>;
 
 
-export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedCommentsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, total: number, isLastPage: boolean, page: number, pageCount: number, pageSize: number, rows: Array<{ __typename?: 'Comment', description: string, id: string, createdAt: any, countComments: number, parent?: Maybe<string>, account: string, author: { __typename?: 'CommentAuthor', id?: Maybe<string>, displayName?: Maybe<string>, username?: Maybe<string> }, commentVoteStats: { __typename?: 'CommentVoteStats', countDownvotes: number, countUpvotes: number } }> } };
+export type CommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedCommentsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, total: number, isLastPage: boolean, page: number, pageCount: number, pageSize: number, rows: Array<{ __typename?: 'Comment', description: string, id: string, createdAt: any, countComments: number, parent?: Maybe<string>, account: string, myVote: string, author: { __typename?: 'CommentAuthor', id?: Maybe<string>, displayName?: Maybe<string>, username?: Maybe<string> }, commentVoteStats: { __typename?: 'CommentVoteStats', countDownvotes: number, countUpvotes: number } }> } };
 
 export type GetLiveEventQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -4024,7 +4023,7 @@ export type GetTagQueryVariables = Exact<{
 }>;
 
 
-export type GetTagQuery = { __typename?: 'Query', tag: { __typename?: 'TagOutput', id: string, title: string, description: string, slug: string, relatedCategories: Array<{ __typename?: 'Category', access?: Maybe<string>, slug?: Maybe<string>, id: string, description?: Maybe<string>, name: string, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }>, relatedPosts: Array<{ __typename?: 'Post', access: string, slug?: Maybe<string>, status: string, id: string, description: string, title: string, kind: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetTagQuery = { __typename?: 'Query', tag: { __typename?: 'TagOutput', id: string, title: string, description?: Maybe<string>, slug: string, relatedCategories: Array<{ __typename?: 'Category', access?: Maybe<string>, slug?: Maybe<string>, id: string, description?: Maybe<string>, name: string, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }>, relatedPosts: Array<{ __typename?: 'Post', access: string, slug?: Maybe<string>, status: string, id: string, description: string, title: string, kind: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 
 export const CreateAccountDocument = gql`
@@ -5345,7 +5344,9 @@ export const MeDocument = gql`
     profile {
       id
       address
-      avatar_url
+      avatar {
+        imgPath
+      }
       birthday
       custom_fields
       locale
@@ -5392,7 +5393,9 @@ export const ProfileDocument = gql`
   profile(account: $account) {
     id
     address
-    avatar_url
+    avatar {
+      imgPath
+    }
     birthday
     phone
   }
@@ -5883,6 +5886,7 @@ export const CommentsDocument = gql`
       countComments
       parent
       account
+      myVote
     }
     isLastPage
     page

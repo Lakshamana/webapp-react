@@ -57,7 +57,7 @@ const CommentInput = ({
           mr={3}
           width={'40px'}
           height={'40px'}
-          src={user?.avatar_url || ''}
+          src={user?.avatar?.imgPath || ''}
           name={account?.username || ''}
         />
       }
