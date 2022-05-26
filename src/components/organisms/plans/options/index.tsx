@@ -32,7 +32,6 @@ import { CardInfoSpreedly } from "components"
 
 export const SelectOption = ({
   plan,
-  refetch
 }: Props) => {
   const { colorMode } = useThemeStore()
   const [selectedOptionState, setselectedOptionState] = useState(false)
@@ -290,7 +289,6 @@ export const SelectOption = ({
                     <CardInfoSpreedly
                       product={selectedOption['productsId']}
                       productPrice={selectedOption['billingTypes'].id}
-                      refetch={refetch}
                     />
                   </AccordionPanel>
                 </AccordionItem>
