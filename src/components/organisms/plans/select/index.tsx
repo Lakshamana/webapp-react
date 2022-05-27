@@ -29,7 +29,8 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
             <Box
               h="184px"
               w="100%"
-              backgroundImage={`url(${plan.imageUrl})`}
+              // backgroundImage={`url(${plan.imageUrl})`}
+              backgroundImage={`url(https://picsum.photos/340/184)`}
               backgroundSize="100%"
               backgroundPosition="center"
               backgroundRepeat="no-repeat"
