@@ -46,6 +46,7 @@ export const FirebaseSession = ( { children, idLivestream }) => {
     return () => {
       goOffline()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idLivestream])
 
   return (
