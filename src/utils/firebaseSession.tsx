@@ -25,7 +25,6 @@ export const FirebaseSession = ( { children, idLivestream }) => {
 
   const mobileDeviceBehavior = () => {
     document.addEventListener('visibilitychange', () => {
-      console.log('visible: ',document.visibilityState)
       if (document.visibilityState !== 'visible') {
         goOffline()
       } else {
