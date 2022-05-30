@@ -24,6 +24,7 @@ import { QUERY_LIVE_EVENT } from 'services/graphql'
 import { stripHTML } from 'utils/helperFunctions'
 import { LiveEvent, Status } from 'generated/graphql'
 import { StatusBadge } from './utils'
+import { FirebaseSession } from 'utils/firebaseSession'
 
 const LivePostPage = () => {
   const { t } = useTranslation()
@@ -122,70 +123,72 @@ const LivePostPage = () => {
     </Box>
 
   return (
-    <Container
-      flexDirection={'column'}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Live>
-        <Box
-          position="relative"
-          backgroundColor={'black'}
-          height={{ base: '30vh', md: '100%' }}
-          w={{ sm: '100%', md: '55%', lg: '65%', xl: '70%' }}
-        >
-          <Flex
-            gridGap={1}
-            m={isDesktop ? 4 : 2}
-            position={'absolute'}
-            zIndex={999}
-            justifyContent="flex-start"
+    <FirebaseSession idLivestream={livestream?.id}>
+      <Container
+        flexDirection={'column'}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Live>
+          <Box
+            position="relative"
+            backgroundColor={'black'}
+            height={{ base: '30vh', md: '100%' }}
+            w={{ sm: '100%', md: '55%', lg: '65%', xl: '70%' }}
           >
-            {liveStatus && (
-              <Badge background={liveBadge?.color} color="white">
-                {liveBadge?.label}
-              </Badge>
+            <Flex
+              gridGap={1}
+              m={isDesktop ? 4 : 2}
+              position={'absolute'}
+              zIndex={999}
+              justifyContent="flex-start"
+            >
+              {liveStatus && (
+                <Badge background={liveBadge?.color} color="white">
+                  {liveBadge?.label}
+                </Badge>
+              )}
+              {isPresenceEnabled && (
+                <Badge background={colors.inputBg.dark} color="white">
+                  <Text mr={1}>{userCount}</Text>
+                  <Icon icon="mdi:account"></Icon>
+                </Badge>
+              )}
+            </Flex>
+            {isLive && hlsPlaybackUrl && (
+              <VideoPlayer isLiveStream={true} src={hlsPlaybackUrl} />
             )}
-            {isPresenceEnabled && (
-              <Badge background={colors.inputBg.dark} color="white">
-                <Text mr={1}>{userCount}</Text>
-                <Icon icon="mdi:account"></Icon>
-              </Badge>
+            {(isScheduled || isFinished) && (
+              <Countdown
+                eventStartDate={livestream?.scheduledStartAt}
+                fallbackMessage={
+                  isScheduled
+                    ? t('page.post.live.will_start_soon')
+                    : t('page.post.live.ended')
+                }
+              />
             )}
-          </Flex>
-          {isLive && hlsPlaybackUrl && (
-            <VideoPlayer isLiveStream={true} src={hlsPlaybackUrl} />
-          )}
-          {(isScheduled || isFinished) && (
-            <Countdown
-              eventStartDate={livestream?.scheduledStartAt}
-              fallbackMessage={
-                isScheduled
-                  ? t('page.post.live.will_start_soon')
-                  : t('page.post.live.ended')
-              }
-            />
-          )}
-        </Box>
-        <Box
-          height={{ base: '62vh', md: '100%' }}
-          w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
-          borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
-        >
-          {livestream && (
-            <Livechat
-              isCommentsEnabled={isCommentsEnabled || livestream.commentsEnabled || false}
-              isReactionsEnabled={isReactionsEnabled || livestream.reactionsEnabled || false}
-              entityId={livestream?.id}
-            />
-          )}
-        </Box>
-      </Live>
-      <LiveDetails>
-        <Title>{stripHTML(livestream?.title!)}</Title>
-        <Subtitle>{stripHTML(livestream?.description!)}</Subtitle>
-      </LiveDetails>
-    </Container>
+          </Box>
+          <Box
+            height={{ base: '62vh', md: '100%' }}
+            w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
+            borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
+          >
+            {livestream && (
+              <Livechat
+                isCommentsEnabled={isCommentsEnabled || livestream.commentsEnabled || false}
+                isReactionsEnabled={isReactionsEnabled || livestream.reactionsEnabled || false}
+                entityId={livestream?.id}
+              />
+            )}
+          </Box>
+        </Live>
+        <LiveDetails>
+          <Title>{stripHTML(livestream?.title!)}</Title>
+          <Subtitle>{stripHTML(livestream?.description!)}</Subtitle>
+        </LiveDetails>
+      </Container>
+    </FirebaseSession>
   )
 }
 
