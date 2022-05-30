@@ -13,12 +13,21 @@ export const FirebaseSession = ( { children, idLivestream }) => {
   const { account } = useAuthStore()
   const db = getDatabase(firebaseApp)
   const dbRef = ref(db, 'livestream/presence')
+
+  const goOnline = () => {
+    set(child(dbRef, `${idLivestream}/${account?.id}/sessions/${account?.id}`), account)
+  }
+
+  const goOffline = () => {
+    remove(child(dbRef, `${idLivestream}/${account?.id}/sessions/${account?.id}`))
+  }
+
   useEffect(() => {
-    if(idLivestream && account?.id) {
-      set(child(dbRef, `${idLivestream}/${account?.id}/sessions/${account?.id}`), account)
+    if(idLivestream) {
+      goOnline()
     }
     return () => {
-      remove(child(dbRef, `${idLivestream}/${account?.id}/sessions/${account?.id}`))
+      goOffline()
     }
   }, [idLivestream])
 
