@@ -1,4 +1,4 @@
-import { ReactElement, useRef } from 'react'
+import { memo, ReactElement, useRef } from 'react'
 import VideoJS from 'components/molecules/videoJs'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
@@ -15,7 +15,7 @@ import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { useVideoPlayerStore } from 'services/stores'
 import { saveData } from 'services/storage'
 
-const VideoPlayer = ({
+const VideoPlayerComponent = ({
   src,
   title,
   isLiveStream,
@@ -90,4 +90,4 @@ const VideoPlayer = ({
   )
 }
 
-export { VideoPlayer }
+export const VideoPlayer = memo(VideoPlayerComponent)
