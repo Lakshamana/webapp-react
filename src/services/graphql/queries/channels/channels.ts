@@ -10,34 +10,12 @@ export const QUERY_CHANNELS = gql`
         geofence
         slug
         name
-        customization {
-          icon {
-            dark
-            light
-          }
-          logo {
-            dark
-            light
-          }
-          thumbnail
-        }
         __typename
       }
       ... on GeolockedChannel {
         id
         name
         thumbnail
-        customization {
-          icon {
-            dark
-            light
-          }
-          logo {
-            dark
-            light
-          }
-          thumbnail
-        }
         kind
         __typename
       }
