@@ -29,6 +29,7 @@ const CategoriesPage = () => {
       variables: {
         filter: {
           featured: true,
+          sortBy: 'sort.desc',
         },
       },
       fetchPolicy: 'cache-and-network',
@@ -37,6 +38,11 @@ const CategoriesPage = () => {
   const { data: categoriesData, loading: loadingCategories } = useQuery(
     QUERY_CATEGORIES,
     {
+      variables: {
+        filter: {
+          sortBy: 'sort.desc',
+        },
+      },
       fetchPolicy: 'cache-and-network',
     }
   )
