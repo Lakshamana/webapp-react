@@ -22,6 +22,7 @@ export const QUERY_CATEGORY = gql`
         }
       }
       children {
+        sort
         description
         featuredAt
         geoFence

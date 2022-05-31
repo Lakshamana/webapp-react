@@ -113,6 +113,7 @@ const HomePage = () => {
       variables: {
         filter: {
           featured: true,
+          sortBy: 'sort.desc',
         },
       },
       onCompleted: (result) => {
@@ -127,6 +128,7 @@ const HomePage = () => {
       variables: {
         filter: {
           isParent: true,
+          sortBy: 'sort.desc',
         },
       },
       onCompleted: (result) => {
@@ -327,26 +329,23 @@ const HomePage = () => {
   return (
     <Container flexDirection={'column'} display={'flex'}>
       {renderBillboard()}
+      <Flex
+        gridGap={5}
+        flexDirection={'column'}
+        mt={billboardItems ? 0 : 7}
+        w={'100vw'}
+      >
+        {!!homeCarouselsFiltered?.length &&
+          homeCarouselsFiltered.map((item: CarouselFlags) =>
+            renderCarouselsOrderedByRemoteConfig(item)
+          )}
+        {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
+        {isEmpty && <EmptyState />}
+      </Flex>
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
           <Skeleton kind="cards" numberOfCards={3} />
         </Box>
-      )}
-      {!isLoading && (
-        <Flex
-          gridGap={5}
-          flexDirection={'column'}
-          mt={billboardItems ? 0 : 7}
-          w={'100vw'}
-        >
-          {!!homeCarouselsFiltered?.length &&
-            homeCarouselsFiltered.map((item: CarouselFlags) =>
-              renderCarouselsOrderedByRemoteConfig(item)
-            )}
-          {!!categoriesWithChildrenData?.length &&
-            renderCategoriesWithChildren()}
-          {isEmpty && <EmptyState />}
-        </Flex>
       )}
     </Container>
   )

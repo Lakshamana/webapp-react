@@ -29,6 +29,7 @@ const MyListPage = () => {
       filter: {
         pinned: true,
         account: AccountInfo?.id,
+        sortBy: 'sort.desc',
       },
     },
     onCompleted: (result) => {
