@@ -66,4 +66,4 @@ export interface MediaTypeProps {
 	mediaType: MediaType
 }
 
-type MediaType = "AUDIO" | "VIDEO" | "BLOG" | "IMAGE" | "POLL"
+type MediaType = "AUDIO" | "VIDEO" | "BLOG" | "IMAGE" | "POLL" | "ON_DEMAND"
