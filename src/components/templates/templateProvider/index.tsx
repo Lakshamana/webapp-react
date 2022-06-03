@@ -20,6 +20,7 @@ import {
   useOrganizationStore,
 } from 'services/stores'
 import { useCommonStore } from 'services/stores'
+import AccessVerificationsProvider from 'contexts/accessVerifications'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
 
@@ -50,9 +51,7 @@ const TemplateProvider = ({ children }: any) => {
 
   return (
     <ThemeProvider theme={{ ...theme, colorMode }}>
-      <Helmet
-        title={pageTitleConfigured}
-      />
+      <Helmet title={pageTitleConfigured} />
       <ChakraProvider theme={customTheme}>
         <FlagsProvider>
           <Global
@@ -60,7 +59,11 @@ const TemplateProvider = ({ children }: any) => {
               ${globalStyles}
             `}
           />
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <AccessVerificationsProvider>
+              {children}
+            </AccessVerificationsProvider>
+          </AuthProvider>
         </FlagsProvider>
       </ChakraProvider>
     </ThemeProvider>

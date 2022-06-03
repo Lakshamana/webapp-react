@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react'
-import { Spinner, Flex } from '@chakra-ui/react'
+import { Spinner, Flex, Badge } from '@chakra-ui/react'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { Channel } from 'generated/graphql'
 import { Container, Text, Avatar } from 'components'
@@ -7,6 +7,7 @@ import { ChannelItem, ChannelList } from './styles'
 import { colors } from 'styles'
 import { PropsChannels } from './types'
 import { useFlags } from 'contexts/flags'
+import { isEntityPrivate } from 'utils/accessVerifications'
 
 const Channels = ({
   selected,
@@ -73,6 +74,18 @@ const Channels = ({
                   >
                     {channel.name}
                   </Text>
+                  {isEntityPrivate(channel) && (
+                    <Badge
+                      ml={2}
+                      backgroundColor={colors.brand.indicator[colorMode]}
+                      color="white"
+                      display="flex"
+                      alignItems="center"
+                    >
+                      <Icon color="white" icon="mdi:lock" />
+                      <Text ml={1}>Private </Text>
+                    </Badge>
+                  )}
                 </Container>
               </ChannelItem>
             )

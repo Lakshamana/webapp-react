@@ -8,17 +8,32 @@ import { Props } from './types'
 import { colors } from 'styles'
 import { AlertComponent } from 'components'
 
-const PrivateContent = ({ requestAccess, isLoadingRequest, error }: Props) => {
+const PrivateContent = ({
+  requestAccess,
+  isLoadingRequest,
+  error,
+  type,
+}: Props) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [password, setPassword] = useState<string>('')
+
+  const getTitleByType = () => {
+    let title = {
+      channel: t('page.channels.private_channel'),
+      default: t('page.post.private_content.title'),
+    }
+    return title[type || 'default']
+  }
   return (
     <Modal
       isCentered
       closeButton={false}
       isOpen={true}
-      onClose={() => history.go(-1)}
+      onClose={() =>
+        type === 'channel' ? (window.location.href = '/') : history.go(-1)
+      }
       onConfirm={() => requestAccess(password)}
       loading={isLoadingRequest}
       isActionDisabled={!password}
@@ -40,7 +55,7 @@ const PrivateContent = ({ requestAccess, isLoadingRequest, error }: Props) => {
           textAlign={'center'}
           fontWeight={500}
         >
-          {t('page.post.private_content.title')}
+          {getTitleByType()}
         </Text>
         <Text
           pt={3}

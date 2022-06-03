@@ -8,7 +8,7 @@ import {
 export interface Props {
   children?: any
   label?: string | Number
-  error?: string | boolean
+  error?: boolean
   errorMessage?: string
   required?: boolean
   disabled?: boolean

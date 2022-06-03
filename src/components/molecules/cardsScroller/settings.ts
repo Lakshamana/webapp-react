@@ -12,7 +12,7 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   watchOverflow: true,
   autoplay: false,
   lazy: true,
-  allowTouchMove: false,
+  allowTouchMove: true,
   touchMoveStopPropagation: true,
   touchStartPreventDefault: true,
   grabCursor: false,

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Text, ReactionBar, Participants } from 'components'
 import { SetMediaType } from './components'
@@ -5,7 +6,6 @@ import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { FeedPostCardProps, defaultProps } from './types'
 import { convertCountMessage } from 'utils/helperFunctions'
-import { Link } from 'react-router-dom'
 import { colors } from 'styles'
 import {
   FeedContent,
@@ -24,18 +24,16 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { activeChannel } = useChannelsStore()
   const { activeChannelConfig } = useCustomizationStore()
 
-  const getPostUrl = (slug: string) => {
-    return `/c/${activeChannel?.slug}/post/${slug}`
-  }
-
   const translateMapper = [
     'page.feed.no_comments',
     'page.feed.comment',
     'page.feed.comments',
   ]
 
+  const getPostUrl = (slug: string) => `/c/${activeChannel?.slug}/post/${slug}`
+
   return (
-    <FeedContent onClick={props.updateState}>
+    <FeedContent onClick={props.updateState()}>
       <CardContent>
         {props.type !== 'POLL' && (
           <Link to={getPostUrl(props.slug)}>
@@ -66,6 +64,8 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
               reactions={[...props.reactions]}
               totalReactions={props.countReactions}
               myReactions={props.myReactions}
+              removeMyReaction={props.removeMyReaction}
+              addMyReaction={props.addMyReaction}
             />
           </CardReactions>
         )}

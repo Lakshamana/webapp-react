@@ -1,11 +1,19 @@
-import { Post, Kinds, Category, LiveEvent } from 'generated/graphql'
+import {
+  Post,
+  Kinds,
+  Category,
+  LiveEvent,
+  Channel,
+} from 'generated/graphql'
+import { AccessEnum } from 'types/access'
 
-//TODO: Add LiveEvent
 export const isEntityOnPaywall = (entity: Post | Category | LiveEvent) => {
-  return entity.access === 'DENY' && entity.kind === Kinds.Paywall
+  return entity.access !== AccessEnum.AVAILABLE && entity.kind === Kinds.Paywall
 }
 
-export const isEntityPrivate = (entity: Post | Category | LiveEvent) => {
+export const isEntityPrivate = (
+  entity: Post | Category | LiveEvent | Channel
+) => {
   return entity.kind === Kinds.Private
 }
 

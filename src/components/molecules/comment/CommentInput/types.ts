@@ -1,12 +1,10 @@
 export interface Props {
   editText?: string
-  action: any
-  setTotalComments?: any
-  totalComments?: number
+  action: Function
   postId: string
   parentId?: string
   actionLoading: boolean
-  cancelAction?: any
+  cancelAction?: Function
 }
 
 export interface Payload {

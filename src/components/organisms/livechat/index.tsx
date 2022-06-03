@@ -19,7 +19,11 @@ import { timestampNow, parseResultSnapshot } from 'utils/firebase'
 import { MessageDocumentData, ReactionDocumentData } from 'types/firebase'
 import throttle from 'lodash.debounce'
 
-const Livechat = ({ entityId, onPressEnter }: Props) => {
+const Livechat = ({
+  entityId,
+  isCommentsEnabled,
+  isReactionsEnabled,
+}: Props) => {
   const [messages, setMessagesData] = useState<DocumentData[]>([])
   const [reactions, setReactionsData] = useState<DocumentData[]>([])
   const { account } = useAuthStore()
@@ -54,7 +58,7 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
     const messageToSend: MessageDocumentData = {
       userId: account?.id || '',
       username: account?.username || '',
-      avatarPath: account?.profile?.avatar_url || '',
+      avatarPath: account?.profile?.avatar?.imgPath || '',
       updatedAt: timestampNow(),
       text: filteredMessage,
       dateAdded: timestampNow(),
@@ -110,10 +114,13 @@ const Livechat = ({ entityId, onPressEnter }: Props) => {
       justifyContent={'space-between'}
     >
       <LivechatHeader />
-      <LivechatBody messages={messages} reactions={reactions} />
+      <LivechatBody enabled={isCommentsEnabled} messages={messages} />
       <LivechatFooter
         sendMessage={sendNewMessage}
         sendReaction={debouncedSendReaction}
+        reactions={reactions}
+        reactionsEnabled={isReactionsEnabled}
+        commentsEnabled={isCommentsEnabled}
       />
     </Flex>
   )

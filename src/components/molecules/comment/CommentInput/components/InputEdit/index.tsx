@@ -17,12 +17,14 @@ const InputEdit = ({
     <Input
       name="description"
       variant='flushed'
+      paddingRight={'13%'}
       placeholder={t('page.post.add_a_comment')}
       value={value}
       color={colors.inputText[colorMode]}
       onBlur={onBlur}
       onChange={onChange}
       onKeyDown={(e: any) => e.keyCode === 13 && onSubmit()}
+      borderBottomColor={colors.brand.primary[colorMode]}
     />
   )
 }

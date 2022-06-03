@@ -1,14 +1,13 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_TAG = gql`
-  query GetTag($id: ID!) {
-    tag(id: $id) {
+  query GetTag($id: ID, $slug: String) {
+    tag(id: $id, slug: $slug) {
       id
       title
       description
       relatedCategories {
         access
-        createdAt
         slug
         pinnedStatus {
           pinned
@@ -25,8 +24,8 @@ export const QUERY_TAG = gql`
       }
       relatedPosts {
         access
-        publishedAt
         slug
+        status
         pinnedStatus {
           pinned
         }

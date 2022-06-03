@@ -3,38 +3,38 @@ import { Flex, GridItem, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui
 import { Icon } from '@iconify/react'
 import { Text, Avatar } from 'components'
 import { colors } from 'styles'
-import { useThemeStore } from 'services/stores'
+import { useThemeStore, useAuthStore } from 'services/stores'
 import { translateFormatDistance } from 'utils/helperFunctions'
 import { IOption, IProps } from './types'
 
-const CardHeader = ({ id, author, createdAt, action }: IProps) => {
+const CardHeader = ({ id, authorId, author, createdAt, action }: IProps) => {
   const { t } = useTranslation()
+  const { account } = useAuthStore()
   const { colorMode } = useThemeStore()
 
   const defineOptions = [
     {
       icon: 'bi:flag-fill',
       text: t('page.post.comment.report'),
-      action: 'REPORT'
+      action: 'REPORT',
+      onlyOwner: false
     },
     {
       icon: 'clarity:note-edit-solid',
       text: t('page.post.comment.edit'),
-      action: 'EDIT'
+      action: 'EDIT',
+      onlyOwner: true
     },
     {
       icon: 'fluent:delete-20-filled',
       text: t('page.post.comment.delete'),
-      action: 'DELETE'
+      action: 'DELETE',
+      onlyOwner: true
     }
   ]
 
-  const selectOption = (option: string) => () => {
-    action({
-      id,
-      option
-    })
-  }
+  const selectOption = (option: string) => () => action({ id, option })
+  const isOwnerOfPost = account?.id === authorId
 
   return (
     <>
@@ -76,16 +76,18 @@ const CardHeader = ({ id, author, createdAt, action }: IProps) => {
               backgroundColor={colors.livechatBg[colorMode]}
             >
               {
-                defineOptions.map((option: IOption) => (
-                  <MenuItem
-                    key={`option-${option.icon}`}
-                    _hover={{ color: colors.brand.primary[colorMode] }}
-                    onClick={selectOption(option.action)}
-                  >
-                    <Icon icon={option.icon} height={20} />
-                    <Text ml={2}>{option.text}</Text>
-                  </MenuItem>
-                ))
+                defineOptions
+                  .filter(option => option.onlyOwner === isOwnerOfPost)
+                  .map((option: IOption) => (
+                    <MenuItem
+                      key={`option-${option.icon}`}
+                      _hover={{ color: colors.brand.primary[colorMode] }}
+                      onClick={selectOption(option.action)}
+                    >
+                      <Icon icon={option.icon} height={20} />
+                      <Text ml={2}>{option.text}</Text>
+                    </MenuItem>
+                  ))
               }
             </MenuList>
           </Menu>

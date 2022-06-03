@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { useParams } from 'react-router-dom'
-import { Center, Flex, Spacer, Box, } from '@chakra-ui/react'
+import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Skeleton } from 'components'
-import { QUERY_PLAYLIST, QUERY_POST, QUERY_POSTS_CARDS } from 'services/graphql'
+import {
+  QUERY_PLAYLIST,
+  QUERY_POST,
+  QUERY_POSTS_CARDS,
+  MUTATION_ADD_MY_REACTION,
+  MUTATION_REMOVE_MY_REACTION,
+} from 'services/graphql'
 import { useThemeStore, useCommonStore } from 'services/stores'
 import { useTranslation } from 'react-i18next'
 import {
@@ -20,7 +26,7 @@ import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
 import { colors, breakpoints } from 'styles'
 import { PlaylistOutput, Post } from 'generated/graphql'
 import { useCustomizationStore } from 'services/stores'
-import { VerifyPostKind } from '../components'
+import { VerifyContentKind } from '../components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 import { AlertNextVideo } from './AlertNextVideo'
 import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
@@ -41,8 +47,12 @@ const VideoPostPage = () => {
   const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
   const [mediaUrl, setMediaUrl] = useState('')
   const [activeMedia, setActiveMedia] = useState('')
+
   const definePlayerIsMuted = getData(VIDEO_MUTED)
   const definePlayerVolume = getData(VIDEO_VOLUME)
+
+  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION)
+  const [removeMyReaction] = useMutation(MUTATION_REMOVE_MY_REACTION)
 
   const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
     variables: { slug },
@@ -144,9 +154,9 @@ const VideoPostPage = () => {
 
   if (isVerifyingAccessPermission)
     return (
-      <VerifyPostKind
-        postSlug={slug}
-        postType={'video'}
+      <VerifyContentKind
+        contentSlug={slug}
+        contentType={'post'}
         accessGranted={() => setIsVerifyingAccessPermission(false)}
       />
     )
@@ -191,6 +201,8 @@ const VideoPostPage = () => {
               reactions={postData ? [...postData?.reactions] : []}
               totalReactions={postData?.countReactions}
               myReactions={postData?.myReactions ?? []}
+              removeMyReaction={removeMyReaction}
+              addMyReaction={addMyReaction}
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />

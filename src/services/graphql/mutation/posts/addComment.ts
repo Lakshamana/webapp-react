@@ -8,11 +8,17 @@ export const MUTATION_ADD_COMMENT = gql`
         displayName
         username
       }
+      parent
       id
       description
       createdAt
-      countUpVotes
+      commentVoteStats {
+        countUpvotes
+        countDownvotes
+      }
       content
+      account
+      myVote
     }
   }
 `

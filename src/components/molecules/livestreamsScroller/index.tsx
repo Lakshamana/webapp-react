@@ -1,19 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { SwiperSlide } from 'swiper/react'
-import { useMediaQuery } from '@chakra-ui/media-query'
 import { compareAsc } from 'date-fns'
-
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { useThemeStore } from 'services/stores'
 import { useChannelsStore } from 'services/stores'
-
-import { CardsScroller, LivestreamPostCard, Link } from 'components'
-import { Text } from 'components'
-
-import { Header, ContentScroller } from './style'
-import { colors, sizes, breakpoints } from 'styles'
-
+import { CardsScroller, LivestreamPostCard } from 'components'
+import { ContentScroller } from './style'
 import { isEntityBlocked } from 'utils/accessVerifications'
 import { parseISO } from 'date-fns'
 
@@ -27,16 +18,11 @@ const LivestreamScroller = ({
   items,
   sectionTitle,
   sectionUrl,
-  hasMoreLink,
 }: LivestreamsScrollerProps) => {
-  const { t } = useTranslation()
-  const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] =
     useState<LivestreamPostCardProps[]>()
-
-  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const getImageUrl = (live: LiveEvent) => {
     const imageOptions: ThumborParams = {
@@ -52,11 +38,7 @@ const LivestreamScroller = ({
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
       live.thumbnail?.imgPath || '',
-      {
-        size: {
-          height: 400,
-        },
-      }
+      imageOptions
     )
     return image
   }
@@ -96,31 +78,8 @@ const LivestreamScroller = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  const renderHeader = () => (
-    <Header>
-      <Text
-        color={colors.generalText[colorMode]}
-        fontSize={isDesktop ? '1.55rem' : '1.3rem'}
-        paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd]}
-        fontWeight={'bolder'}
-        marginRight={'10px'}
-      >
-        {sectionTitle}
-      </Text>
-      {hasMoreLink && (
-        <Link
-          color={colors.brand.action_link[colorMode]}
-          fontSize={'1.27rem'}
-          to={sectionUrl || ''}
-        >
-          {t('common.more')}
-        </Link>
-      )}
-    </Header>
-  )
-
   const renderScroller = () => (
-    <CardsScroller>
+    <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
       {scrollerItems?.map((item: LivestreamPostCardProps) => {
         return (
           <SwiperSlide key={`slide-${item.id}-livestream`}>
@@ -133,12 +92,7 @@ const LivestreamScroller = ({
 
   return (
     <ContentScroller>
-      {!!scrollerItems?.length && (
-        <>
-          {renderHeader()}
-          {renderScroller()}
-        </>
-      )}
+      {!!scrollerItems?.length && renderScroller()}
     </ContentScroller>
   )
 }

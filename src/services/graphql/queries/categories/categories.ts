@@ -18,6 +18,7 @@ export const QUERY_CATEGORIES = gql`
         parentId
         slug
         createdAt
+        sort
         kind
         customization {
           desktop {
@@ -35,6 +36,7 @@ export const QUERY_CATEGORIES = gql`
           slug
           description
           featuredAt
+          sort
           pinnedStatus {
             pinned
           }
@@ -55,14 +57,12 @@ export const QUERY_CATEGORIES = gql`
           kind
           name
           description
-          tags
         }
         description
         featuredAt
         geoFence
         id
         name
-        tags
       }
     }
   }

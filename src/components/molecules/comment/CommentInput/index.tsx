@@ -17,8 +17,6 @@ const CommentInput = ({
   action,
   actionLoading,
   cancelAction,
-  totalComments,
-  setTotalComments
 }: Props) => {
   const { colorMode } = useThemeStore()
   const { user, account } = useAuthStore()
@@ -29,9 +27,7 @@ const CommentInput = ({
   }, [editText])
 
   const onSubmit = async ({ description }: Payload) => {
-    const variables = {
-      payload: { description }
-    }
+    const variables = { payload: { description } }
 
     if (editText) {
       variables['id'] = postId
@@ -42,9 +38,6 @@ const CommentInput = ({
 
     try {
       await action({ variables })
-      if (totalComments) {
-        setTotalComments(totalComments + 1)
-      }
       formik.resetForm()
     }
     catch (error) { }
@@ -64,11 +57,17 @@ const CommentInput = ({
           mr={3}
           width={'40px'}
           height={'40px'}
-          src={user?.avatar_url || ''}
+          src={user?.avatar?.imgPath || ''}
           name={account?.username || ''}
         />
       }
-      <InputGroup size="lg" display="flex" alignItems="center" my={5}>
+      <InputGroup
+        size="lg"
+        display="flex"
+        alignItems="center"
+        my={editText ? 0 : 5}
+        maxW={editText ? '90%' : '99%'}
+      >
         {
           editText
             ? <InputEdit
@@ -104,7 +103,7 @@ const CommentInput = ({
               />
               {
                 cancelAction &&
-                <Box ml={3} mr={6}>
+                <Box ml={3}>
                   <IconCustom
                     icon="ic:sharp-cancel"
                     color={colors.inputBg[colorMode]}

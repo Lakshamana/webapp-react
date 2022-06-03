@@ -1,6 +1,11 @@
 const PT_BR = {
   translations: {
     common: {
+      custom_field: {
+        cpf: 'CPF',
+        phone: 'Telefone',
+        rg: 'RG',
+      },
       back_to_home: 'Voltar para o início',
       or: 'ou',
       error: {
@@ -49,8 +54,9 @@ const PT_BR = {
       push: {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
-        title: '{{org}} gostaria de enviar notificações.'
+        title: '{{org}} gostaria de enviar notificações.',
       },
+      disabled_chat: 'Chat desabilitado',
       months: {
         january: 'Janeiro',
         february: 'Fevereiro',
@@ -65,6 +71,9 @@ const PT_BR = {
         november: 'Novembro',
         december: 'Dezembro',
       },
+      content_not_exists: "Não foi possível encontrar esta página",
+      content_not_exists_description:
+        'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -179,8 +188,7 @@ const PT_BR = {
     },
     activateAccount: {
       activating: 'Ativando a sua conta...',
-      success:
-        'Sua conta foi ativada com sucesso!',
+      success: 'Sua conta foi ativada com sucesso!',
       loginLink: 'Clique aqui para acessar',
     },
     header: {
@@ -218,6 +226,8 @@ const PT_BR = {
       channels: {
         title: 'Escolha um canal:',
         page_title: 'Canais',
+        private_channel: 'Canal privado',
+        incorrect_password: 'Senha inválida. Tente novamente.',
       },
       feed: {
         comments: 'Comentários',
@@ -229,7 +239,7 @@ const PT_BR = {
         search_options: {
           recent: 'Mais Recente',
           old: 'Mais Antiga',
-        }
+        },
       },
       categories: {
         action: 'Ação',
@@ -241,12 +251,15 @@ const PT_BR = {
       },
       category: {
         videos: 'Vídeos',
-        categories: 'Categorias'
+        categories: 'Categorias',
       },
       my_list: {
         my_list: 'Minha Lista',
         pinned_categories: 'Categorias favoritas',
         pinned_videos: 'Vídeos favoritos',
+      },
+      tag: {
+        no_content: 'Tag sem conteúdo',
       },
       account: {
         title: 'Minha conta',
@@ -280,6 +293,7 @@ const PT_BR = {
         phone: 'Telefone',
         account_info: 'Informações da Conta',
         profile_info: 'Informações de Perfil',
+        other_info: 'Outras Informações',
         account_settings: 'Configurações da Conta',
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',
@@ -298,8 +312,10 @@ const PT_BR = {
         cancel_subscriptions: 'Cancelar Assinaturas',
         add_payment: 'Adicionar Método de Pagamento',
         payment_method: 'Método de Pagamento',
-        verify_password: 'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
-        minimum_age: 'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
+        verify_password:
+          'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
+        minimum_age:
+          'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
       },
       live: {
         live: 'Ao Vivo',
@@ -339,7 +355,8 @@ const PT_BR = {
           subtitle: 'Finalize o pagamento e aproveite o conteúdo.',
           card_name: 'Nome no Cartão',
           card_number: 'Número do Cartão',
-          date: 'MM/AA',
+          date_month: 'MM',
+          date_year: 'AAAA',
           cvv: 'CVV',
           country: 'Country',
           installments: 'Parcelas',
@@ -349,6 +366,11 @@ const PT_BR = {
           authorize:
             'Autorizo ​​a FanHero LLC, a enviar instruções à instituição financeira que emitiu meu cartão para receber pagamentos da conta do cartão, de acordo com os termos do meu contrato com você.',
           place_you_order: 'Faça seu pedido',
+          mistakes: {
+            full_name_required: 'Nome Completo é obrigatorio',
+            month_required: 'Mês é obrigatorio',
+            year_required: 'Ano é obrigatorio',
+          },
         },
         modal: {
           success: {
@@ -385,6 +407,8 @@ const PT_BR = {
           comments: 'Comentários',
           no_comments: 'Sem comentários',
           comment: 'Comentário',
+          confirm_delete: 'Apagar comentário?',
+          report_reason: 'Por que você está reportando este conteúdo?',
         },
         search_options: {
           recent: 'Mais Recente',
@@ -400,12 +424,12 @@ const PT_BR = {
           title: 'Conteúdo Privado',
           subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.',
           access: 'Acessar',
-          incorrect_password: 'Senha inválida. Tente novamente.'
+          incorrect_password: 'Senha inválida. Tente novamente.',
         },
         live: {
           live_chat: {
             title: 'Chat ao Vivo',
-            say_something: 'Diga alguma coisa...'
+            say_something: 'Diga alguma coisa...',
           },
           will_start_in: 'A transmissão irá começar em',
           will_start_soon: 'A transmissão irá começar em breve',
@@ -419,6 +443,17 @@ const PT_BR = {
           seconds: 'Segundos',
         },
       },
+      plan: {
+        selectPlan: {
+          title: 'Selecione o seu plano',
+          select: 'selecionar',
+        },
+        selectOption: {
+          title: 'Selecione a opção:',
+          choosePaymentMethod: 'Escolha um método de pagamento',
+          bankCard: 'Cartão',
+        }
+      }
     },
     cookieConsent: {
       notice: 'Aviso prévio.',

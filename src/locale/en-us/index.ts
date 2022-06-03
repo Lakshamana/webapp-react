@@ -1,6 +1,11 @@
 const EN_US = {
   translations: {
     common: {
+      custom_field: {
+        cpf: 'CPF',
+        phone: 'Phone',
+        rg: 'RG',
+      },
       back_to_home: 'Back to home',
       or: 'or',
       error: {
@@ -37,7 +42,8 @@ const EN_US = {
       close: 'Close',
       send: 'Send',
       empty_content: 'Nothing to see here',
-      try_again_later: 'There is no content at this time. Please check again soon',
+      try_again_later:
+        'There is no content at this time. Please check again soon',
       enjoy_your_content: 'Enjoy your content',
       retry: 'Retry',
       access_your_account: 'Access your account',
@@ -52,8 +58,9 @@ const EN_US = {
       push: {
         allow: 'Allow',
         cancel: 'No thanks',
-        title: '{{org}} would like to send you push notifications'
+        title: '{{org}} would like to send you push notifications',
       },
+      disabled_chat: 'Disabled chat',
       months: {
         january: 'January',
         february: 'February',
@@ -68,6 +75,8 @@ const EN_US = {
         november: 'November',
         december: 'December',
       },
+      content_not_exists: "We couldn't find this page",
+      content_not_exists_description: 'You may have typed the address incorrectly or you are using an outdated link.'
     },
     signin: {
       title: 'Access {{org}} now',
@@ -180,9 +189,8 @@ const EN_US = {
     },
     activateAccount: {
       activating: 'Activating your account...',
-      success:
-        'Your account has been successfully activated.',
-      loginLink: 'Click here to access'
+      success: 'Your account has been successfully activated.',
+      loginLink: 'Click here to access',
     },
     header: {
       tabs: {
@@ -219,6 +227,8 @@ const EN_US = {
       channels: {
         title: 'Choose a channel:',
         page_title: 'Channels',
+        private_channel: 'Private Channel',
+        incorrect_password: 'Incorrect password. Try again.',
       },
       feed: {
         comments: 'Comments',
@@ -230,7 +240,7 @@ const EN_US = {
         search_options: {
           recent: 'Most Recent',
           old: 'Most Old',
-        }
+        },
       },
       categories: {
         action: 'Action',
@@ -242,12 +252,15 @@ const EN_US = {
       },
       category: {
         videos: 'Videos',
-        categories: 'Categories'
+        categories: 'Categories',
       },
       my_list: {
         my_list: 'My List',
         pinned_categories: 'Favorite Categories',
         pinned_videos: 'Favorite Videos',
+      },
+      tag: {
+        no_content: 'Tag has no content',
       },
       account: {
         title: 'My Account',
@@ -281,6 +294,7 @@ const EN_US = {
         phone: 'Phone',
         account_info: 'Your Account Information',
         profile_info: 'Your Profile Information',
+        other_info: 'Other Information',
         account_settings: 'Account Settings',
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
@@ -299,7 +313,8 @@ const EN_US = {
         cancel_subscriptions: 'Cancel your Subscriptions',
         add_payment: 'Add Payment Method',
         payment_method: 'Payment Method',
-        verify_password: 'To update your email, you must enter your password to confirm this action.',
+        verify_password:
+          'To update your email, you must enter your password to confirm this action.',
         minimum_age: 'You must be at least 13 years old to have an account',
       },
       live: {
@@ -339,7 +354,8 @@ const EN_US = {
           subtitle: 'Please complete your purchase and enjoy your content',
           card_name: 'Name on Card',
           card_number: 'Card number',
-          date: 'MM/AA',
+          date_month: 'MM',
+          date_year: 'YYYY',
           cvv: 'CVV',
           country: 'Country',
           installments: 'Installments',
@@ -349,6 +365,11 @@ const EN_US = {
           authorize:
             'I authorize {{org}} LLC, to send instructions to the financial institution that issued my card to receive payments from the card account, in accordance with the terms of my contract with you.',
           place_you_order: 'Place your order',
+          mistakes: {
+            full_name_required: 'Full name is required',
+            month_required: 'Month is required',
+            year_required: 'Year is required',
+          },
         },
         modal: {
           success: {
@@ -385,6 +406,8 @@ const EN_US = {
           comments: 'Comments',
           no_comments: 'No comments',
           comment: 'Comment',
+          confirm_delete: 'Confirm delete?',
+          report_reason: 'Give us the reason why you are reporting this content'
         },
         search_options: {
           recent: 'Most Recent',
@@ -400,12 +423,12 @@ const EN_US = {
           title: 'Private Content',
           subtitle: 'Please enter the password to access the content',
           access: 'Access',
-          incorrect_password: 'Incorrect password. Try again.'
+          incorrect_password: 'Incorrect password. Try again.',
         },
         live: {
           live_chat: {
             title: 'Live Chat',
-            say_something: 'Say something...'
+            say_something: 'Say something...',
           },
           will_start_in: 'Transmission will start in',
           will_start_soon: 'Transmission will start soon',
@@ -419,6 +442,17 @@ const EN_US = {
           seconds: 'Seconds',
         },
       },
+      plan: {
+        selectPlan: {
+          title: 'Select Your Plan',
+          select: 'Select',
+        },
+        selectOption: {
+          title: 'Select option:',
+          choosePaymentMethod: 'Choose a payment method',
+          bankCard: 'Bank Card',
+        }
+      }
     },
     cookieConsent: {
       notice: 'Notice.',

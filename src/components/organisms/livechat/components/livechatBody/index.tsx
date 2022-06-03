@@ -1,23 +1,20 @@
 import { MainChatBody } from './style'
+import { Icon } from '@iconify/react'
+import { Text } from 'components'
 import { Props } from './types'
 import { formatDistance } from 'date-fns'
 import { useRef, useEffect } from 'react'
+import { useThemeStore } from 'services/stores'
+import { useTranslation } from 'react-i18next'
 import { BoxChat } from '../boxChat'
 import { useAuthStore } from 'services/stores'
-import { availableReactions } from '../../settings'
-import { Text, keyframes, Box } from '@chakra-ui/react'
+import { Center } from '@chakra-ui/layout'
+import { colors } from 'styles'
 
-import { motion } from 'framer-motion'
-
-const LivechatBody = ({ messages, reactions }: Props) => {
+const LivechatBody = ({ messages, enabled }: Props) => {
   const { account } = useAuthStore()
-
-  const animationKeyframes = keyframes`
-  0% { transform: translateY(0px); rotate(0); opacity: 1 }
-  100% { transform: translateY(-550px); rotate(30px); opacity: 0 }
-`
-
-  const animation = `${animationKeyframes} 10s ease-out`
+  const { colorMode } = useThemeStore()
+  const { t } = useTranslation()
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
 
@@ -36,6 +33,16 @@ const LivechatBody = ({ messages, reactions }: Props) => {
     })
   }
 
+  if (!enabled)
+    return (
+      <Center color={colors.secondaryText[colorMode]} flexDirection={'column'}>
+        <Icon width={60} icon="mdi:message-bulleted-off" />
+        <Text fontSize={'1rem'} mt={2} fontWeight="bolder">
+          {t('common.disabled_chat')}
+        </Text>
+      </Center>
+    )
+
   return (
     <MainChatBody>
       {messages?.map((e) => (
@@ -48,28 +55,6 @@ const LivechatBody = ({ messages, reactions }: Props) => {
           avatarUrl={e.avatarPath}
         />
       ))}
-      {reactions?.map((e) => {
-        const filteredReaction = availableReactions.find(
-          (r) => r.name === e.name
-        )
-        return (
-          <Box position="relative" height="auto" key={e.id}>
-            <Text
-              position="absolute"
-              bottom="0"
-              as={motion.div}
-              id={e.id}
-              animation={animation}
-              fontSize="2rem"
-              onAnimationEnd={() => {
-                document.getElementById(`${e.id}`)!.style.display = 'none'
-              }}
-            >
-              {filteredReaction?.value}
-            </Text>
-          </Box>
-        )
-      })}
       <div ref={messagesEndRef} />
     </MainChatBody>
   )

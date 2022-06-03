@@ -1,3 +1,5 @@
+import { CommentVoteStats } from "generated/graphql"
+
 type typeOfOptions = 'CARD' | 'REPLY'
 
 export interface IProps {
@@ -6,7 +8,13 @@ export interface IProps {
   setShowReply: any
   id: string
   description: string
-  countUpVotes: number
+  commentVoteStats: CommentVoteStats
+  myVote: string
+}
+
+export interface IUpdateVotes {
+  countUpvotes: number
+  countDownvotes: number
 }
 
 export const defaultProps = {

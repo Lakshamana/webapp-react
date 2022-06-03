@@ -11,6 +11,11 @@ import { setContext } from '@apollo/client/link/context'
 import { AUTH_TOKEN, FIREBASE_TOKEN, CHANNEL_INFO } from 'config/constants'
 import { getData, clearData, saveData } from 'services/storage'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
+import {
+  authWithCustomToken,
+  isUserLoggedFB,
+  signOutFB,
+} from 'services/firebase'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
 const httpLink = createHttpLink({
@@ -24,9 +29,10 @@ const setIsRefreshing = (value) => {
   isRefreshing = value
 }
 
-const addPendingRequest = (pendingRequest: Function) => pendingRequests.push(pendingRequest)
+const addPendingRequest = (pendingRequest: Function) =>
+  pendingRequests.push(pendingRequest)
 
-const resolvePendingRequests = () => {
+const resolvePendingRequests = async () => {
   pendingRequests.map((callback: any) => callback())
   pendingRequests = []
 }
@@ -34,6 +40,11 @@ const resolvePendingRequests = () => {
 const invalidData = () => {
   clearData()
   window.location.href = '/'
+}
+
+//TODO: Refactor routes structure to use history outside of a react component
+const show404 = () => {
+  window.location.href = '/404'
 }
 
 const refreshToken = async (token) => {
@@ -65,6 +76,11 @@ const errorLink = onError(
         return
       }
 
+      if (err.extensions.code === '404' && operation.operationName !== 'VerifyMail') {
+        show404()
+        return
+      }
+
       if (err.extensions.code === 'FORBIDDEN') {
         console.log(
           'User dont have permission to execute this action -> ',
@@ -73,6 +89,12 @@ const errorLink = onError(
       }
 
       if (err.extensions.code === 'UNAUTHENTICATED') {
+        if (
+          err.message === 'exception:PASSWORD_MISMATCH' ||
+          err.message === 'exception:TOO_MANY_ATTEMPTS_TRY_LATER'
+        )
+          return
+
         if (err.message !== 'INVALID_TOKEN') {
           invalidData()
           return
@@ -89,15 +111,20 @@ const errorLink = onError(
           const token = getData(AUTH_TOKEN)
           return fromPromise(
             refreshToken(token)
-              .then(({ data }: any) => {
-                const accessToken = data?.data?.refreshToken?.refreshToken?.accessToken
-                const firebaseToken = data?.data?.refreshToken?.refreshToken?.firebaseToken
+              .then(async ({ data }: any) => {
+                const accessToken =
+                  data?.data?.refreshToken?.refreshToken?.accessToken
+                const firebaseToken =
+                  data?.data?.refreshToken?.refreshToken?.firebaseToken
                 if (!accessToken || !firebaseToken) {
                   invalidData()
                   return
                 }
                 saveData(AUTH_TOKEN, accessToken)
                 saveData(FIREBASE_TOKEN, firebaseToken)
+                const isFBLogged = await isUserLoggedFB()
+                if (isFBLogged) await signOutFB()
+                await authWithCustomToken()
                 const headers = operation.getContext().headers
                 operation.setContext({
                   headers: {

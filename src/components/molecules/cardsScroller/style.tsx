@@ -25,6 +25,11 @@ export const SwiperStyled = styled(Swiper)`
       @media screen and (max-width: ${breakpoints.md}) {
         transform: scale(1.2);
       }
+
+      @media screen and (max-width: ${breakpoints.sm}) {
+        transform: none;
+        margin-top: 0px;
+      }
     }
 
     &:first-child:hover {
@@ -61,6 +66,14 @@ export const SwiperStyled = styled(Swiper)`
     @media screen and (max-width: ${breakpoints.sm}) {
       padding-right: ${sizes.paddingSm};
     }
+  }
+
+  .swiper-pagination-lock {
+    display: block!important;
+  }
+
+  .swiper-pagination-lock .swiper-pagination-bullet {
+    display: none;
   }
 
   .cards-scroller-pagination .swiper-pagination-bullet {
@@ -131,3 +144,9 @@ export const SwiperStyled = styled(Swiper)`
     height: 100%;
   }
 `
+export const Header: any = styled.div`
+	display: flex;
+	align-items: baseline;
+	margin-bottom: 10px;
+`
+

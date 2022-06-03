@@ -4,9 +4,10 @@ import { useThemeStore } from 'services/stores'
 import { kFormatterTranslate } from 'utils/helperFunctions'
 import { colors } from 'styles'
 import { Text, Select } from 'components'
-import { IProps } from './types'
+import { defaultProps, IProps } from './types'
+import { SortDirection } from 'generated/graphql'
 
-const CommentHeader = ({ totalComments, filterBy, handleFilterChange }: IProps) => {
+const CommentHeader = ({ totalComments, filterBy, handleFilterChange, loading }: IProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
 
@@ -17,8 +18,8 @@ const CommentHeader = ({ totalComments, filterBy, handleFilterChange }: IProps) 
   ]
 
   const filterList = [
-    { value: 'DESC', label: t('page.post.search_options.recent') },
-    { value: 'ASC', label: t('page.post.search_options.old') }
+    { value: SortDirection.Desc, label: t('page.post.search_options.recent') },
+    { value: SortDirection.Asc, label: t('page.post.search_options.old') }
   ]
 
   return (
@@ -28,7 +29,7 @@ const CommentHeader = ({ totalComments, filterBy, handleFilterChange }: IProps) 
         fontSize="1.4rem"
         color={colors.comments[colorMode]}
       >
-        {kFormatterTranslate(t, totalComments, translateMapper)}
+        {!loading && kFormatterTranslate(t, totalComments, translateMapper)}
       </Text>
       <Select
         options={filterList}
@@ -38,5 +39,7 @@ const CommentHeader = ({ totalComments, filterBy, handleFilterChange }: IProps) 
     </Flex>
   )
 }
+
+CommentHeader.defaultProps = defaultProps
 
 export { CommentHeader }

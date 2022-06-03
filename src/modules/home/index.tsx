@@ -3,7 +3,14 @@ import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
 
-import { PostType, Category, Billboard, Status } from 'generated/graphql'
+import {
+  PostType,
+  Category,
+  Billboard,
+  Status,
+  Post,
+  LiveEvent,
+} from 'generated/graphql'
 
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
@@ -32,7 +39,6 @@ import {
   LivestreamScroller,
 } from 'components/molecules'
 
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { convertToValidColor } from 'utils/helperFunctions'
 import { sizes } from 'styles'
 
@@ -41,6 +47,12 @@ const HomePage = () => {
   const { generateImage } = useThumbor()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const [featuredPostsData, setFeaturedPostsData] = useState<Post[]>()
+  const [liveEventsData, setLiveEventsData] = useState<LiveEvent[]>()
+  const [featuredCategoriesData, setFeaturedCategoriesData] =
+    useState<Category[]>()
+  const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
+    useState<Category[]>()
 
   const { activeChannel } = useChannelsStore()
   const [billboardItems, setBillboardItems] = useState([])
@@ -50,6 +62,7 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
+  const [hasTagsContent, setHasTagsContent] = useState<boolean>(false)
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -61,62 +74,72 @@ const HomePage = () => {
       fetchPolicy: 'cache-and-network',
     })
 
-  const [getLiveEvents, { data: liveEventsData, stopPolling }] =
-    useLazyQuery(QUERY_LIVE_EVENTS, {
+  const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
+    QUERY_LIVE_EVENTS,
+    {
       variables: {
         filter: {
           status: [Status.Live, Status.Scheduled, Status.Ready],
         },
       },
-      pollInterval: DEFAULT_POLLING_INTERVAL,
+      onCompleted: (result) => {
+        setLiveEventsData(result?.liveEvents?.rows)
+      },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',
+    }
+  )
+
+  const [getFeaturedPosts, { loading: loadingFeaturedPosts }] = useLazyQuery(
+    QUERY_POSTS_CARDS,
+    {
+      variables: {
+        filter: {
+          featured: true,
+          typeIn: [PostType.Video, PostType.OnDemand],
+          status: Status.Published,
+        },
+      },
+      onCompleted: (result) => {
+        setFeaturedPostsData(result?.posts?.rows)
+      },
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
+    }
+  )
+
+  const [getFeaturedCategories, { loading: loadingFeaturedCategories }] =
+    useLazyQuery(QUERY_CATEGORIES, {
+      variables: {
+        filter: {
+          featured: true,
+          sortBy: 'sort.desc',
+        },
+      },
+      onCompleted: (result) => {
+        setFeaturedCategoriesData(result?.categories?.rows)
+      },
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
     })
 
-  const [
-    getFeaturedPosts,
-    { data: featuredPostsData, loading: loadingFeaturedPosts },
-  ] = useLazyQuery(QUERY_POSTS_CARDS, {
-    variables: {
-      filter: {
-        featured: true,
-        typeIn: [PostType.Video, PostType.OnDemand],
+  const [getCategories, { loading: loadingCategoriesWithChildren }] =
+    useLazyQuery(QUERY_CATEGORIES, {
+      variables: {
+        filter: {
+          isParent: true,
+          sortBy: 'sort.desc',
+        },
       },
-    },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-  })
-
-  const [
-    getFeaturedCategories,
-    { data: featuredCategoriesData, loading: loadingFeaturedCategories },
-  ] = useLazyQuery(QUERY_CATEGORIES, {
-    variables: {
-      filter: {
-        featured: true,
+      onCompleted: (result) => {
+        setCategoriesWithChildrenData(result?.categories?.rows)
       },
-    },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-  })
-
-  const [
-    getCategories,
-    {
-      data: categoriesWithChildrenData,
-      loading: loadingCategoriesWithChildren,
-    },
-  ] = useLazyQuery(QUERY_CATEGORIES, {
-    variables: {
-      filter: {
-        isParent: true,
-      },
-    },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-  })
+      fetchPolicy: 'cache-and-network',
+      notifyOnNetworkStatusChange: true,
+    })
 
   const isLoading =
+    loadingLiveEvents ||
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
@@ -124,24 +147,39 @@ const HomePage = () => {
 
   const hasResults =
     billboardData?.billboard?.length ||
-    liveEventsData?.liveEvents?.rows?.length ||
-    featuredPostsData?.posts?.rows?.length ||
-    featuredCategoriesData?.categories?.rows?.length ||
-    (isHomeDisplayingCategories &&
-      categoriesWithChildrenData?.categories?.rows?.length)
+    liveEventsData?.length ||
+    featuredPostsData?.length ||
+    featuredCategoriesData?.length ||
+    (isHomeDisplayingCategories && categoriesWithChildrenData?.length) ||
+    hasTagsContent
 
   const isEmpty = !isLoading && !hasResults
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
-
-    return () => stopPolling && stopPolling()
     // eslint-disable-next-line
   }, [])
 
+  const clearAllItems = () => {
+    setLiveEventsData([])
+    setFeaturedCategoriesData([])
+    setFeaturedPostsData([])
+    setHasTagsContent(false)
+  }
+  const deactivateAllItems = () => {
+    setIsFeaturedPostsActive(false)
+    setIsFeaturedCategoriesActive(false)
+    setIsLiveEventsActive(false)
+  }
+
   useEffect(() => {
     getBillboard()
+    deactivateAllItems()
+    clearAllItems()
+    //eslint-disable-next-line
+  }, [activeChannel])
 
+  useEffect(() => {
     const defaultCarouselsItems =
       activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
         (item) => item.DEFAULT && item.IS_ACTIVE
@@ -182,7 +220,7 @@ const HomePage = () => {
 
         memo.push({
           ...curr,
-          actions: curr.actions.map((action) => ({
+          actions: curr.actions?.map((action) => ({
             ...action,
             bgColor: convertToValidColor(action.bgColor),
             borderColor: convertToValidColor(action.borderColor),
@@ -199,14 +237,15 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [billboardData])
 
-  const renderBillboard = () => (
-    <BillboardScroller items={billboardItems} customButtons={true} />
-  )
+  const renderBillboard = () =>
+    !!billboardItems?.length && (
+      <BillboardScroller items={billboardItems} customButtons={true} />
+    )
 
   const renderLiveEventsScroller = (item: CarouselFlags) =>
-    !!liveEventsData?.liveEvents?.rows?.length && (
+    !!liveEventsData?.length && (
       <LivestreamScroller
-        items={liveEventsData?.liveEvents?.rows}
+        items={liveEventsData}
         key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
         hasMoreLink={true}
@@ -215,20 +254,20 @@ const HomePage = () => {
     )
 
   const renderFeaturedPostsScroller = (item: CarouselFlags) =>
-    !!featuredPostsData?.posts?.rows.length && (
+    !!featuredPostsData?.length && (
       <VideosScroller
         key={`${item.LABEL[0].VALUE}`}
-        items={featuredPostsData?.posts?.rows}
+        items={featuredPostsData}
         sectionTitle={getCarouselLabel(item)}
-        hasMoreLink={false}
+        sectionUrl={''}
       />
     )
 
   const renderFeaturedCategoriesScroller = (item: CarouselFlags) =>
-    !!featuredCategoriesData?.categories?.rows.length && (
+    !!featuredCategoriesData?.length && (
       <CategoriesScroller
         key="featured-categories"
-        items={featuredCategoriesData?.categories?.rows}
+        items={featuredCategoriesData}
         sectionTitle={getCarouselLabel(item)}
         hasMoreLink={true}
         sectionUrl={`/c/${activeChannel?.slug}/categories`}
@@ -236,7 +275,7 @@ const HomePage = () => {
     )
 
   const renderCategoriesWithChildren = () =>
-    categoriesWithChildrenData?.categories?.rows?.map((category: Category) => (
+    categoriesWithChildrenData?.map((category: Category) => (
       <CategoriesScroller
         key={category.id}
         items={category.children}
@@ -250,10 +289,11 @@ const HomePage = () => {
     <TagsScroller
       key={`${item.LABEL[0].VALUE}`}
       tagID={item.TAGS}
+      hasResults={() => setHasTagsContent(true)}
       hasMoreLink={true}
       content={item.CONTENT_TYPE}
       sectionTitle={getCarouselLabel(item)}
-      sectionUrl={`/c/${activeChannel?.slug}/tag/${item.TAGS}`}
+      sectionUrl={`/c/${activeChannel?.slug}/tag/`}
     />
   )
 
@@ -288,27 +328,24 @@ const HomePage = () => {
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
-      {!!billboardItems?.length && renderBillboard()}
+      {renderBillboard()}
+      <Flex
+        gridGap={5}
+        flexDirection={'column'}
+        mt={billboardItems ? 0 : 7}
+        w={'100vw'}
+      >
+        {!!homeCarouselsFiltered?.length &&
+          homeCarouselsFiltered.map((item: CarouselFlags) =>
+            renderCarouselsOrderedByRemoteConfig(item)
+          )}
+        {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
+        {isEmpty && <EmptyState />}
+      </Flex>
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
-          <Skeleton kind="cards" numberOfCards={4} />
+          <Skeleton kind="cards" numberOfCards={3} />
         </Box>
-      )}
-      {!isLoading && (
-        <Flex
-          gridGap={5}
-          flexDirection={'column'}
-          mt={billboardItems ? 0 : 7}
-          w={'100vw'}
-        >
-          {!!homeCarouselsFiltered?.length &&
-            homeCarouselsFiltered.map((item: CarouselFlags) =>
-              renderCarouselsOrderedByRemoteConfig(item)
-            )}
-          {!!categoriesWithChildrenData?.categories?.rows?.length &&
-            renderCategoriesWithChildren()}
-          {isEmpty && <EmptyState />}
-        </Flex>
       )}
     </Container>
   )

@@ -9,15 +9,21 @@ export const QUERY_COMMENTS = gql`
       total
       rows {
         author {
+          id
           displayName
           username
         }
         description
         id
-        countUpVotes
+        commentVoteStats {
+          countDownvotes
+          countUpvotes
+        }
         createdAt
         countComments
         parent
+        account
+        myVote
       }
       isLastPage
       page

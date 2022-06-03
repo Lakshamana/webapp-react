@@ -10,21 +10,21 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	slug: string
 	postTitle: string
 	postDescription: string
-	date: string
+	date: string | undefined
 	postUrl?: string
 	countReactions: number
 	myReactions: Array<myReactions>
 	reactions: Array<reactions>
 	countMessages: number
 	hasActivity: boolean
-	coverImage: string
+	coverImage?: string
 	type: MediaType
 	mediaLength: string
 	views: number
 	displayViews: boolean
 	audioTitle: string
 	audioArtist: string
-	voteCount: number
+	voteCount?: number
 	timeRemaining: string
 	itemQuestion: string
 	percentage: string
@@ -33,7 +33,9 @@ export interface FeedPostCardProps extends SpaceProps, LayoutProps, TypographyPr
 	isExclusive: boolean
 	isGeolocked: boolean
 	itensQuestions?: Array<any | itensQuestions>
-	updateState: () => void
+	updateState: Function
+	addMyReaction: Function
+	removeMyReaction: Function
 }
 
 export interface reactions {
@@ -64,4 +66,4 @@ export interface MediaTypeProps {
 	mediaType: MediaType
 }
 
-type MediaType = "AUDIO" | "VIDEO" | "BLOG" | "IMAGE" | "POLL"
+type MediaType = "AUDIO" | "VIDEO" | "BLOG" | "IMAGE" | "POLL" | "ON_DEMAND"

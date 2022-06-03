@@ -13,11 +13,7 @@ import {
   useChannelsStore,
   useCustomizationStore,
 } from 'services/stores'
-import {
-  signOutFB,
-  authWithCustomToken,
-  isUserLoggedFB,
-} from 'services/firebase'
+import { signOutFB } from 'services/firebase'
 import {
   USER_INFO,
   ORGANIZATION_INFO,
@@ -30,7 +26,7 @@ import { saveData, getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
-import { Kinds } from 'generated/graphql'
+import { useTranslation } from 'react-i18next'
 
 const AuthContext = createContext({})
 
@@ -40,6 +36,7 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
+  const { i18n } = useTranslation()
   const { user, setUser, setAccount, account } = useAuthStore()
   const { organization, setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
@@ -51,13 +48,10 @@ export const AuthProvider = ({ children }) => {
 
   const client = useApolloClient()
 
-  const signed = !!user
-
-  const [kind, setKind] = useState<Kinds>(Kinds.Public)
-
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
 
+  const signed = !!accessToken
   const { REACT_APP_ORGANIZATION_ID } = process.env
 
   const updateAccount = async (account) => {
@@ -97,14 +91,18 @@ export const AuthProvider = ({ children }) => {
       },
     })
     if (data?.channel) {
-      setActiveChannel(data.channel)
-      setLoading(false)
+      setActiveChannel({
+        id: data.channel.id,
+        name: data.channel.name,
+        slug: data.channel.slug || '',
+        kind: data.channel.kind || '',
+      })
     }
     setLoading(false)
   }
 
   const getAccount = () => {
-    new Promise(async (resolve, reject) => {
+    new Promise(async (resolve) => {
       try {
         const { data } = await client.query({
           query: QUERY_ME,
@@ -113,11 +111,13 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
+          if(data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
           setLoadingAcount(false)
         }
         resolve(data.me)
       } catch {
+      } finally {
         setLoadingAcount(false)
       }
     })
@@ -125,14 +125,12 @@ export const AuthProvider = ({ children }) => {
 
   const loadOrganization = async () => {
     if (organization) {
-      if (organization.kind) setKind(organization.kind as Kinds)
       setLoading(false)
       return
     }
     const organizationData = getData(ORGANIZATION_INFO)
     if (organizationData) {
       setOrganization(organizationData)
-      setKind(organizationData.kind)
       setLoading(false)
       return
     }
@@ -152,12 +150,12 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data.organizationPublicSettings
           saveData(ORGANIZATION_INFO, dataOrganization)
           setOrganization(dataOrganization)
-          setKind(dataOrganization.kind)
           setLoading(false)
         }
         resolve(true)
       } catch (error) {
         reject(error)
+      } finally {
         setLoading(false)
       }
     })
@@ -176,19 +174,16 @@ export const AuthProvider = ({ children }) => {
     }
     await signOutFB()
     await clearData()
-    // TODO: Redirect based on Org kind (public, private, exclusive)
+    // TODO: Redirect based on Org kind
     window.location.href = '/login'
   }
 
   useEffect(() => {
+    if (!accessToken) clearData()
+    if (!accessToken && !firebaseToken) return
     loadAccount()
     // eslint-disable-next-line
-  }, [accessToken])
-
-  useEffect(() => {
-    if (accessToken && !isUserLoggedFB()) authWithCustomToken()
-    //eslint-disable-next-line
-  }, [firebaseToken])
+  }, [accessToken, firebaseToken])
 
   useEffect(() => {
     if (activeChannel?.id) {
@@ -214,7 +209,6 @@ export const AuthProvider = ({ children }) => {
         getAccount,
         updateActiveChannel,
         signed,
-        kind,
         loadingAccount,
       }}
     >

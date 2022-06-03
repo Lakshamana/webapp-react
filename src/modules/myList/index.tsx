@@ -24,36 +24,33 @@ const MyListPage = () => {
 
   const AccountInfo = getData(ACCOUNT_INFO)
 
-  const { data: pinnedCategoriesData, loading: loadingPinnedCategories } =
-    useQuery(QUERY_CATEGORIES, {
-      variables: {
-        filter: {
-          pinned: true,
-          account: AccountInfo?.id,
-        },
+  const { loading: loadingPinnedCategories } = useQuery(QUERY_CATEGORIES, {
+    variables: {
+      filter: {
+        pinned: true,
+        account: AccountInfo?.id,
+        sortBy: 'sort.desc',
       },
-      onCompleted: (result) => {
-        setCategories(result?.categories?.rows)
-      },
-      fetchPolicy: 'cache-and-network',
-    })
+    },
+    onCompleted: (result) => {
+      setCategories(result?.categories?.rows)
+    },
+    fetchPolicy: 'cache-and-network',
+  })
 
   // TODO: Implement infinite loading on Cards Grid
-  const { data: pinnedPostsData, loading: loadingPinnedPosts } = useQuery(
-    QUERY_POSTS_CARDS,
-    {
-      variables: {
-        filter: {
-          pinned: true,
-          account: AccountInfo?.id,
-        },
+  const { loading: loadingPinnedPosts } = useQuery(QUERY_POSTS_CARDS, {
+    variables: {
+      filter: {
+        pinned: true,
+        account: AccountInfo?.id,
       },
-      onCompleted: (result) => {
-        setPosts(result?.posts?.rows)
-      },
-      fetchPolicy: 'cache-and-network',
-    }
-  )
+    },
+    onCompleted: (result) => {
+      setPosts(result?.posts?.rows)
+    },
+    fetchPolicy: 'cache-and-network',
+  })
   const isLoading = loadingPinnedCategories || loadingPinnedPosts
 
   const hasResults = categories?.length || posts?.length

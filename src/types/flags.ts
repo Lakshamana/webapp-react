@@ -94,6 +94,13 @@ export type ColorFlags = {
   }
 }
 
+export type LiveCarouselFlags = {
+  TAB: string
+  IS_ACTIVE: boolean
+  ORDER: number
+  LABEL: LocaleFlags[]
+}
+
 export type ChannelFlags = {
   COLORS: ColorFlags
   HOME_ITEMS: {
@@ -101,14 +108,7 @@ export type ChannelFlags = {
     CAROUSELS: CarouselFlags[]
   }
   IMAGES?: ChannelImageFlags
-  LIVESTREAM: [
-    {
-      ACTIVE: boolean
-      LABEL: LocaleFlags[]
-      ORDER: number
-      TAB: string
-    }
-  ]
+  LIVESTREAM: LiveCarouselFlags[]
   SETTINGS: {
     DISPLAY_CHANNEL_LOGO: boolean
     DISPLAY_COMMENTS: boolean

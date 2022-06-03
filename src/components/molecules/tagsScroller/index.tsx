@@ -1,32 +1,27 @@
 import { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
-import { useMediaQuery } from '@chakra-ui/media-query'
-import { useTranslation } from 'react-i18next'
 import { TagsScrollerProps } from 'types/tags'
-import { useThemeStore } from 'services/stores/theme'
 import { useChannelsStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { Text, CardsScroller, VideoPostCard, Skeleton } from 'components'
-import { Header, ContentScroller } from './styles'
-import { colors, sizes, breakpoints } from 'styles'
+import { CardsScroller, VideoPostCard, Skeleton } from 'components'
+import { ContentScroller } from './styles'
+import { sizes } from 'styles'
 import { isEntityBlocked } from 'utils/accessVerifications'
 import { useLazyQuery } from '@apollo/client'
 import { QUERY_TAG } from 'services/graphql'
 import { TagScrollerItem } from 'types/tags'
 import { Category, Post } from 'generated/graphql'
-import { CategoryPostCard, Link } from 'components/atoms'
+import { CategoryPostCard } from 'components/atoms'
 
 const TagsScroller = ({
   tagID,
   sectionTitle,
   sectionUrl,
-  hasMoreLink,
+  hasResults,
 }: TagsScrollerProps) => {
-  const { t } = useTranslation()
-  const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
-  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
+
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
@@ -34,7 +29,7 @@ const TagsScroller = ({
   const [getTag, { data, loading }] = useLazyQuery(QUERY_TAG, {
     variables: {
       id: tagID,
-    }
+    },
   })
 
   useEffect(() => {
@@ -59,6 +54,7 @@ const TagsScroller = ({
 
   useEffect(() => {
     if (scrollerItems.length) {
+      hasResults()
       const mappedArr = scrollerItems?.map((item: Post | Category) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(item)
@@ -112,45 +108,20 @@ const TagsScroller = ({
   const getPostUrl = (item) =>
     `/c/${activeChannel?.slug}/${item.__typename.toLowerCase()}/${item.slug}`
 
-  const renderHeader = () => {
-    return (
-      <Header>
-        <Text
-          color={colors.generalText[colorMode]}
-          fontSize={isDesktop ? '1.55rem' : '1.3rem'}
-          paddingLeft={[sizes.paddingSm, sizes.paddingSm, sizes.paddingMd]}
-          marginRight={'10px'}
-          fontWeight={'bolder'}
-        >
-          {sectionTitle}
-        </Text>
-        {hasMoreLink && (
-          <Link
-            color={colors.brand.action_link[colorMode]}
-            fontSize={'1.27rem'}
-            to={sectionUrl || ''}
-          >
-            {t('common.more')}
-          </Link>
-        )}
-      </Header>
-    )
-  }
-
   const renderScroller = () => {
     return (
-      <CardsScroller>
-        {!!filteredItems?.length &&
-          filteredItems?.map((item: TagScrollerItem) => {
-            return (
-              <SwiperSlide key={`slide-${item.id}`}>
-                {item.__typename === 'Post' && <VideoPostCard {...item} />}
-                {item.__typename === 'Category' && (
-                  <CategoryPostCard {...item} />
-                )}
-              </SwiperSlide>
-            )
-          })}
+      <CardsScroller
+        title={sectionTitle}
+        moreUrl={`${sectionUrl}${data?.tag?.slug}`}
+      >
+        {filteredItems?.map((item: TagScrollerItem) => {
+          return (
+            <SwiperSlide key={`slide-${item.id}`}>
+              {item.__typename === 'Post' && <VideoPostCard {...item} />}
+              {item.__typename === 'Category' && <CategoryPostCard {...item} />}
+            </SwiperSlide>
+          )
+        })}
       </CardsScroller>
     )
   }
@@ -158,14 +129,13 @@ const TagsScroller = ({
   if (loading)
     return (
       <Box p={sizes.paddingSm} width="100%">
-        <Skeleton kind="cards" numberOfCards={4} />
+        <Skeleton kind="cards" numberOfCards={3} />
       </Box>
     )
 
   return (
     <ContentScroller>
-      {sectionTitle && renderHeader()}
-      {renderScroller()}
+      {!!filteredItems?.length && renderScroller()}
     </ContentScroller>
   )
 }

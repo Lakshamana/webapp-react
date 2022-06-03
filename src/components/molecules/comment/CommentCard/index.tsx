@@ -1,29 +1,71 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Grid, GridItem } from '@chakra-ui/react'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { CommentInput, CommentLoading } from 'components'
-import { defaultProps, IProps } from './types'
+import { defaultProps, IEditInput, IProps } from './types'
 import { CardHeader, CardText, Options, ToggleReplies } from './components'
-import { QUERY_COMMENTS, MUTATION_ADD_COMMENT, MUTATION_DELETE_COMMENT } from 'services/graphql'
-import { Comment as CommentType } from 'generated/graphql'
+import { QUERY_COMMENTS, MUTATION_ADD_COMMENT } from 'services/graphql'
 import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
+import { useCommentsStore } from 'services/stores'
 
 const CommentCard = ({ ...props }: IProps) => {
+  const {
+    commentsStore,
+    repliesStore,
+    setUpdateRepliesStore,
+    setUpdateCommentsStore
+  } = useCommentsStore()
   const [showReplyInput, setShowReplyInput] = useState<boolean>(false)
   const [showReplies, setShowReplies] = useState<boolean>(false)
-  const [editInput, setEditInput] = useState(null)
+  const [editInput, setEditInput] = useState<Maybe<IEditInput>>(null)
 
-  const [getReplies, { data: allReplies, loading: allRepliesLoading }] = useLazyQuery(QUERY_COMMENTS, {
-    fetchPolicy: 'network-only',
+  const [getReplies, { data, loading: allRepliesLoading }] = useLazyQuery(QUERY_COMMENTS, {
+    fetchPolicy: 'network-only'
   })
-  const [addReply, { data: newReply, loading: addReplyLoading }] = useMutation(MUTATION_ADD_COMMENT)
-  const [deleteReply, { data: deletedReply, loading: deleteLoading }] = useMutation(MUTATION_DELETE_COMMENT)
+  const [addReply, { data: newReply, loading: replyCommentLoading }] = useMutation(MUTATION_ADD_COMMENT)
 
-  //TODO refact to prevent append
-  // useEffect(() => {
-  //   if (newReply) getAllReplies()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [newReply])
+  useEffect(() => {
+    if (!data) return
+    setUpdateRepliesStore({
+      id: props.id,
+      totalComments: data.comments?.total,
+      allComments: [...data.comments?.rows]
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  const updateCountCommentsStore = () => {
+    const { totalComments, allComments } = commentsStore
+    const updateComments = allComments.map(each => {
+      if (each.id === props.id) {
+        return { ...each, countComments: each.countComments + 1 }
+      }
+      return each
+    })
+    setUpdateCommentsStore({
+      totalComments,
+      allComments: [...updateComments]
+    })
+  }
+
+  useEffect(() => {
+    if (!newReply || !props.id) return
+    if (props.countComments > 0 && showReplies === true) {
+      const getRepliesComments = repliesStore[props.id]
+      const { allComments, totalComments } = getRepliesComments
+      const updateTotalComments = totalComments + 1
+      setUpdateRepliesStore({
+        id: props.id,
+        totalComments: updateTotalComments,
+        allComments: [
+          { ...newReply.addComment },
+          ...allComments
+        ]
+      })
+    }
+    updateCountCommentsStore()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newReply])
 
   const getAllReplies = (page: number = 1) => {
     getReplies({
@@ -48,28 +90,22 @@ const CommentCard = ({ ...props }: IProps) => {
     getAllReplies()
   }
 
-  const handleSelectedPopupOption = (selected) => {
+  const handleEditComment = (selected) => {
     if (selected.option === 'EDIT') {
       setEditInput(selected)
       return
     }
-
-    if (selected.option === 'DELETE') {
-      deleteReply({
-        variables: {
-          id: selected.id
-        }
-      })
-    }
+    props.selectPopupOption(selected, props.typeOfCard, props.parent)
   }
 
   return (
     <Grid templateColumns='42px 7fr' gap={2} alignItems={'center'} my={4}>
       <CardHeader
         id={props.id}
+        authorId={props.account}
         author={props.author}
         createdAt={props.createdAt}
-        action={handleSelectedPopupOption}
+        action={handleEditComment}
       />
       <GridItem />
       <GridItem w={'100%'}>
@@ -77,6 +113,8 @@ const CommentCard = ({ ...props }: IProps) => {
           editInput={editInput}
           setEditInput={setEditInput}
           description={props.description}
+          action={props.editComment}
+          loading={props.editedCommentLoading}
         />
         <Options
           showReply={showReplyInput}
@@ -91,17 +129,17 @@ const CommentCard = ({ ...props }: IProps) => {
             postId={props.postId || ''}
             parentId={props.id}
             action={addReply}
-            actionLoading={addReplyLoading}
+            actionLoading={replyCommentLoading}
           />
         }
       </GridItem>
       <GridItem />
       {
         props.typeOfCard === 'CARD' &&
+        !!props?.countComments &&
         <GridItem w={'100%'}>
-          {/* //TODO: add conditional for qtd Replies */}
           <ToggleReplies
-            count={2}
+            count={props.countComments}
             state={showReplies}
             action={handleGetRepliesComments}
           />
@@ -117,13 +155,21 @@ const CommentCard = ({ ...props }: IProps) => {
         {
           props.typeOfCard === 'CARD' &&
           showReplies &&
-          allReplies?.comments?.rows?.map((reply: CommentType) =>
+          repliesStore[props.id] &&
+          repliesStore[props.id].allComments?.map((reply) =>
             <CommentCard
               key={`reply-${reply.id}`}
               typeOfCard='REPLY'
+              postId={reply.id}
+              addComment={props.addComment}
+              editComment={props.editComment}
+              selectPopupOption={props.selectPopupOption}
+              newCommentLoading={props.newCommentLoading}
+              editedCommentLoading={props.editedCommentLoading}
               {...reply}
             />
-          )}
+          )
+        }
       </GridItem>
     </Grid>
   )

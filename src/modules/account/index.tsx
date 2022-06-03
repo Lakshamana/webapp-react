@@ -173,6 +173,7 @@ const AccountPage = () => {
 
   const handleLanguageChange = (evt: any) => {
     const { value } = evt?.target
+    callUpdateMyProfile({ locale: value })
     i18n.changeLanguage(value)
     saveData(APP_LOCALE, value)
   }
@@ -234,6 +235,7 @@ const AccountPage = () => {
           </ConfigBox>
         </Skeleton>
       </ContentBlock>
+
       <ContentBlock
         mb={[3, 3, 3, 4]}
         title={t('page.account.account_info')}

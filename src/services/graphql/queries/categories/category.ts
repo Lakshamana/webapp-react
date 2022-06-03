@@ -22,6 +22,7 @@ export const QUERY_CATEGORY = gql`
         }
       }
       children {
+        sort
         description
         featuredAt
         geoFence
@@ -32,7 +33,6 @@ export const QUERY_CATEGORY = gql`
         slug
         id
         description
-        tags
         customization {
           thumbnail {
             imgPath
@@ -44,7 +44,6 @@ export const QUERY_CATEGORY = gql`
       geoFence
       id
       name
-      tags
     }
   }
 `

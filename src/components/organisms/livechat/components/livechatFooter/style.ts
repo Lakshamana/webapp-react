@@ -9,7 +9,8 @@ export const LivechatFooterMain = styled.div<StyledProps>`
   width: 100%;
   border-top: 2px solid ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
   display: flex;
-  gap: 1em;
+  position: relative;
+  gap: 0.7em;
   flex-direction: row;
   align-items: center;
   padding: 0.5em 1em;
@@ -29,7 +30,7 @@ export const InputContainer = styled.div<StyledProps>`
 `
 
 export const AnimatedIcon = styled(Icon)`
-  //Implements animation emote here
+  z-index: 999999;
 `
 
 export const PopoverIcon = styled.div<StyledProps>`

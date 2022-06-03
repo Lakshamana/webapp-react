@@ -14,7 +14,9 @@ export const QUERY_ME = gql`
       profile {
         id
         address
-        avatar_url
+        avatar {
+          imgPath
+        }
         birthday
         custom_fields
         locale

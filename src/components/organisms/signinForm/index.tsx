@@ -70,15 +70,15 @@ const SigninForm = ({
         <SocialSigninButton
           onClick={() => handleSocialSubmit('google')}
           kind={'google'}
-        ></SocialSigninButton>
+        />
         <SocialSigninButton
           onClick={() => handleSocialSubmit('facebook')}
           kind={'facebook'}
-        ></SocialSigninButton>
+        />
         <SocialSigninButton
           onClick={() => handleSocialSubmit('twitter')}
           kind={'twitter'}
-        ></SocialSigninButton>
+        />
       </Flex>
 
       <Text
@@ -101,7 +101,7 @@ const SigninForm = ({
             type={'error'}
             description={error}
             onClose={dispatchError}
-          ></AlertComponent>
+          />
         )}
         <Input
           name="payload.email"
@@ -132,7 +132,7 @@ const SigninForm = ({
           label={t('signin.actions.login')}
           onClick={() => handleSubmit()}
           isLoading={isLoading}
-        ></Button>
+        />
         <Box textAlign={'center'} marginTop={5}>
           <Link
             to={'/recoverPassword'}
