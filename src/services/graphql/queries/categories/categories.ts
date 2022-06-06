@@ -31,7 +31,7 @@ export const QUERY_CATEGORIES = gql`
             imgPath
           }
         }
-        children {
+        children(filter: { sortBy: "sort.asc" }) {
           parentId
           slug
           description
@@ -63,6 +63,52 @@ export const QUERY_CATEGORIES = gql`
         geoFence
         id
         name
+      }
+    }
+  }
+`
+
+export const QUERY_CATEGORIES_CARDS = gql`
+  query GetCategories($filter: CategoryFilter) {
+    categories(filter: $filter) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageNumberIsGood
+      pageSize
+      rows {
+        id
+        name
+        access
+        description
+        pinnedStatus {
+          pinned
+        }
+        slug
+        kind
+        customization {
+          thumbnail {
+            imgPath
+          }
+        }
+        children(filter: { sortBy: "sort.asc" }) {
+          id
+          name
+          access
+          description
+          pinnedStatus {
+            pinned
+          }
+          slug
+          kind
+          customization {
+            thumbnail {
+              imgPath
+            }
+          }
+        }
       }
     }
   }

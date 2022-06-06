@@ -21,7 +21,7 @@ export const QUERY_CATEGORY = gql`
           imgPath
         }
       }
-      children {
+      children(filter: { sortBy: "sort.asc" }) {
         sort
         description
         featuredAt
@@ -47,7 +47,6 @@ export const QUERY_CATEGORY = gql`
     }
   }
 `
-
 
 export const QUERY_VERIFY_CATEGORY_KIND = gql`
   query GetCategoryKind($slug: String) {
