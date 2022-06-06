@@ -29,7 +29,7 @@ const CategoriesPage = () => {
       variables: {
         filter: {
           featured: true,
-          sortBy: 'sort.desc',
+          sortBy: 'sort.asc',
         },
       },
       fetchPolicy: 'cache-and-network',
@@ -40,7 +40,7 @@ const CategoriesPage = () => {
     {
       variables: {
         filter: {
-          sortBy: 'sort.desc',
+          sortBy: 'sort.asc',
         },
       },
       fetchPolicy: 'cache-and-network',

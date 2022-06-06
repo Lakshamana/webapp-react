@@ -20,7 +20,7 @@ import {
 } from 'services/stores'
 import {
   QUERY_BILLBOARDS,
-  QUERY_CATEGORIES,
+  QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
   QUERY_POSTS_CARDS,
 } from 'services/graphql'
@@ -109,11 +109,11 @@ const HomePage = () => {
   )
 
   const [getFeaturedCategories, { loading: loadingFeaturedCategories }] =
-    useLazyQuery(QUERY_CATEGORIES, {
+    useLazyQuery(QUERY_CATEGORIES_CARDS, {
       variables: {
         filter: {
           featured: true,
-          sortBy: 'sort.desc',
+          sortBy: 'sort.asc',
         },
       },
       onCompleted: (result) => {
@@ -124,11 +124,11 @@ const HomePage = () => {
     })
 
   const [getCategories, { loading: loadingCategoriesWithChildren }] =
-    useLazyQuery(QUERY_CATEGORIES, {
+    useLazyQuery(QUERY_CATEGORIES_CARDS, {
       variables: {
         filter: {
           isParent: true,
-          sortBy: 'sort.desc',
+          sortBy: 'sort.asc',
         },
       },
       onCompleted: (result) => {
