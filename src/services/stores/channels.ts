@@ -1,6 +1,6 @@
 import create from 'zustand'
 import { Channel, Kinds } from 'generated/graphql'
-import { getData, saveData } from 'services/storage'
+import { getData, removeData, saveData } from 'services/storage'
 import { CHANNEL_INFO, APP_SINGLE_CHANNEL } from 'config/constants'
 import { ChannelStorageData } from 'types/channel'
 
@@ -15,6 +15,7 @@ type ChannelsState = {
   setChannelsList: (channelsList: Channel[]) => void
   setIsSingleChannel: (isSingleChannel: boolean) => void
   setActiveChannelKind: (kind: Kinds) => void
+  clearActiveChannel: () => void
 }
 
 export const useChannelsStore = create<ChannelsState>((set) => ({
@@ -44,4 +45,8 @@ export const useChannelsStore = create<ChannelsState>((set) => ({
   setIsSingleChannel: (isSingleChannel: boolean) => set({ isSingleChannel }),
   setActiveChannelKind: (activeChannelKind: Kinds) =>
     set({ activeChannelKind }),
+  clearActiveChannel: () => {
+    removeData(CHANNEL_INFO)
+    set({ activeChannel: null })
+  },
 }))
