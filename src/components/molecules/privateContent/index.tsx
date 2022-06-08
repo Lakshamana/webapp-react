@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { Modal, Text, Input } from 'components'
 import { useTranslation } from 'react-i18next'
-import { useThemeStore } from 'services/stores'
+import { useChannelsStore, useThemeStore } from 'services/stores'
 import { useHistory } from 'react-router'
 import { Props } from './types'
 import { colors } from 'styles'
@@ -18,6 +18,7 @@ const PrivateContent = ({
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [password, setPassword] = useState<string>('')
+  const { clearActiveChannel } = useChannelsStore()
 
   const getTitleByType = () => {
     let title = {
@@ -26,13 +27,19 @@ const PrivateContent = ({
     }
     return title[type || 'default']
   }
+
+  const clearChannelAndRedirect = () => {
+    clearActiveChannel()
+    window.location.href = '/'
+  }
+
   return (
     <Modal
       isCentered
       closeButton={false}
       isOpen={true}
       onClose={() =>
-        type === 'channel' ? (window.location.href = '/') : history.go(-1)
+        type === 'channel' ? clearChannelAndRedirect() : history.go(-1)
       }
       onConfirm={() => requestAccess(password)}
       loading={isLoadingRequest}
