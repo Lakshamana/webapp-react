@@ -58,6 +58,11 @@ const HeaderComponent = () => {
   }
 
   const [getMenus, { loading: loadingMenu }] = useLazyQuery(QUERY_MENUS, {
+    variables: {
+      filter: {
+        isChild: false,
+      },
+    },
     fetchPolicy: 'network-only',
     onCompleted: (result) => setActiveChannelMenu(result?.menus?.rows),
   })
