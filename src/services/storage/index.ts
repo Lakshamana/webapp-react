@@ -26,6 +26,14 @@ export const getData = (key: string) => {
   }
   return null
 }
+export const removeData = (key: string) => {
+  try {
+    localStorage.removeItem(CHANNEL_INFO)
+  } catch (error) {
+    console.error(`ERROR ON REMOVE STORAGE DATA ${key}`, error)
+  }
+  return null
+}
 
 export const clearData = () => {
   try {
