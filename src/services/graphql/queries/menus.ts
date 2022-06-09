@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_MENUS = gql`
-  query Menus {
-    menus {
+  query Menus($filter: MenuFilter) {
+    menus(filter: $filter) {
       rows {
         id
         channel
