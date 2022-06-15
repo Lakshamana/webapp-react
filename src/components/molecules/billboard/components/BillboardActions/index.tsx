@@ -14,6 +14,8 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
       return
     }
 
+    if (route.charAt(0) !== '/') route = `/${route}`
+
     history.push(route)
   }
 
