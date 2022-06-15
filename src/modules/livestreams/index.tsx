@@ -86,7 +86,7 @@ const Livestreams = () => {
     const activeCarouselItems = activeChannelConfig?.LIVESTREAM.sort(
       (a, b) => a.ORDER - b.ORDER
     ).filter((item) => item.IS_ACTIVE)
-    
+
     setCarousels(activeCarouselItems)
 
     //eslint-disable-next-line
@@ -113,6 +113,7 @@ const Livestreams = () => {
           ...curr,
           actions: curr.actions.map((action) => ({
             ...action,
+            route: action.route && action?.route['content'],
             bgColor: convertToValidColor(action.bgColor),
             borderColor: convertToValidColor(action.borderColor),
             textColor: convertToValidColor(action.textColor),
