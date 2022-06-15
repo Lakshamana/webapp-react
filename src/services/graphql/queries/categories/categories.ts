@@ -69,7 +69,7 @@ export const QUERY_CATEGORIES = gql`
 `
 
 export const QUERY_CATEGORIES_CARDS = gql`
-  query GetCategories($filter: CategoryFilter) {
+  query GetCategoriesCards($filter: CategoryFilter) {
     categories(filter: $filter) {
       hasNextPage
       hasPreviousPage
