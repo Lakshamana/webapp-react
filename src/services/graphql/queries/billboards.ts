@@ -19,7 +19,11 @@ export const QUERY_BILLBOARDS = gql`
           borderColor
           icon
           label
-          route
+          route {
+            ... on MediaRouteContent {
+              content
+            }
+          }
           textColor
         }
         customization {
