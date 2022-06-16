@@ -222,6 +222,7 @@ const HomePage = () => {
           ...curr,
           actions: curr.actions?.map((action) => ({
             ...action,
+            route: action.route && action?.route['content'],
             bgColor: convertToValidColor(action.bgColor),
             borderColor: convertToValidColor(action.borderColor),
             textColor: convertToValidColor(action.textColor),
