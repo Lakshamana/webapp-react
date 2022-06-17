@@ -20,14 +20,17 @@ const FeedPage = () => {
   const { setPageTitle } = useCommonStore()
   const lastPositionCard = useFeedStore(state => state.lastPositionCard)
   const setLastPositionCard = useFeedStore(state => state.setLastPositionCard)
-  const [filterBy, SetFilterBy] = useState<SortDirection>(SortDirection.Desc)
+  const [filterBy, setFilterBy] = useState<SortDirection>(SortDirection.Desc)
   const [listOfPosts, setListOfPosts] = useState<Post[]>([])
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [isPositioned, setIsPositioned] = useState<boolean>(false)
   const [updateReactions, setUpdateReactions] = useState({ post: '', reaction: '' })
 
   const getSortByFilter = () => filterBy === 'ASC' ? "publishedAt.asc" : "publishedAt.desc"
-  const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS)
+
+  const [loadPosts, { data: dataPosts, loading: loadingPosts }] = useLazyQuery(QUERY_POSTS, {
+    notifyOnNetworkStatusChange: true
+  })
 
   const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION, {
     onCompleted: ({ addReaction }) => {
@@ -138,7 +141,7 @@ const FeedPage = () => {
   const handleFilterChange = (evt: any) => {
     const { value } = evt?.target;
     setListOfPosts([])
-    SetFilterBy(value)
+    setFilterBy(value)
   }
 
   const handleScroll = () => () => {
@@ -171,7 +174,6 @@ const FeedPage = () => {
     setListOfPosts(listOfPosts.concat(dataPosts?.posts.rows))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPosts])
-
 
   const getPosts = (page: number = 1) => {
     loadPosts({
@@ -210,34 +212,37 @@ const FeedPage = () => {
     </Center>
   )
 
+  const hasResults = dataPosts?.posts?.rows?.length
+
+  const isEmpty = !loadingPosts && !hasResults
+
+  if (loadingPosts) return (
+    <Center width="100%" height="100%" flexDirection="column">
+      {loadingItems(4)}
+    </Center>
+  )
+
+  if (isEmpty) return (
+    <Center width="100%" height="100%" flexDirection="column">
+      <EmptyState />
+    </Center>
+  )
+
   return (
     <Center width="100%" height="100%" flexDirection="column">
-      {
-        loadingPosts && !!listOfPosts?.length &&
-        loadingItems(4)
-      }
-      {
-        !loadingPosts &&
-        !!listOfPosts?.length &&
-        <Container
-          flexDirection="column"
-          width="100%"
-          margin="1em auto 0 auto"
-          maxWidth="746px"
-          alignItems="flex-end"
-        >
-          <Select
-            options={filterList}
-            value={filterBy}
-            onChange={handleFilterChange}
-          />
-        </Container>
-      }
-      {
-        !loadingPosts &&
-        !!!listOfPosts?.length &&
-        <EmptyState />
-      }
+      <Container
+        flexDirection="column"
+        width="100%"
+        margin="1em auto 0 auto"
+        maxWidth="746px"
+        alignItems="flex-end"
+      >
+        <Select
+          options={filterList}
+          value={filterBy}
+          onChange={handleFilterChange}
+        />
+      </Container>
       <InfiniteScroll
         dataLength={listOfPosts.length || 0}
         next={loadMore}
