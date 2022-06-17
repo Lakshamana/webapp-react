@@ -407,7 +407,7 @@ const PT_BR = {
           comments: 'Comentários',
           no_comments: 'Sem comentários',
           comment: 'Comentário',
-          confirm_delete: 'Apagar comentário?',
+          confirm_delete: 'Apagar comentário',
           report_reason: 'Por que você está reportando este conteúdo?',
         },
         search_options: {

@@ -88,15 +88,15 @@ const RegistrationForm = ({
         <SocialSigninButton
           onClick={() => handleSocialSignUp('google')}
           kind={'google'}
-        ></SocialSigninButton>
+        />
         <SocialSigninButton
           onClick={() => handleSocialSignUp('facebook')}
           kind={'facebook'}
-        ></SocialSigninButton>
-        <SocialSigninButton
+        />
+        {/* <SocialSigninButton
           onClick={() => handleSocialSignUp('twitter')}
           kind={'twitter'}
-        ></SocialSigninButton>
+        ></SocialSigninButton> */}
       </Flex>
       <Text
         fontSize={16}

@@ -406,7 +406,7 @@ const EN_US = {
           comments: 'Comments',
           no_comments: 'No comments',
           comment: 'Comment',
-          confirm_delete: 'Confirm delete?',
+          confirm_delete: 'Confirm delete',
           report_reason: 'Give us the reason why you are reporting this content'
         },
         search_options: {
