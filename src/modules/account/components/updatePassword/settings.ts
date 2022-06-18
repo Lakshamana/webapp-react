@@ -2,13 +2,13 @@ import * as Yup from 'yup'
 import i18n from 'config/i18n'
 
 export const initialValues = {
-  currectPassword: '',
+  currentPassword: '',
   newPassword: '',
   newPasswordConfirmation: '',
 }
 
 export const validationSchema = Yup.object().shape({
-  currectPassword: Yup.string().required(
+  currentPassword: Yup.string().required(
     i18n.t('common.error.field_required', {
       field_name: i18n.t('page.account.current_password'),
     })
@@ -20,7 +20,7 @@ export const validationSchema = Yup.object().shape({
       })
     )
     .notOneOf(
-      [Yup.ref('currectPassword'), null],
+      [Yup.ref('currentPassword'), null],
       i18n.t('common.error.same_password_error')
     )
     .matches(
