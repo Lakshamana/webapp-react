@@ -3404,7 +3404,7 @@ export type UpdateAccountInput = {
   email?: Maybe<Scalars['String']>;
   first_name?: Maybe<Scalars['String']>;
   last_name?: Maybe<Scalars['String']>;
-  roles: Array<Scalars['String']>;
+  roles?: Maybe<Array<Scalars['String']>>;
   username?: Maybe<Scalars['String']>;
 };
 
@@ -3646,7 +3646,7 @@ export type UpdatePassword = {
 };
 
 export type UpdatePasswordOnlyInput = {
-  currectPassword: Scalars['String'];
+  currentPassword: Scalars['String'];
   newPassword: Scalars['String'];
   newPasswordConfirmation: Scalars['String'];
 };

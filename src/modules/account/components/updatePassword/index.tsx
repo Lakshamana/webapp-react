@@ -94,12 +94,12 @@ const UpdatePassword = ({
           </Text>
           <Input
             type="password"
-            name="currectPassword"
-            value={values.currectPassword}
+            name="currentPassword"
+            value={values.currentPassword}
             onChange={handleChange}
             onBlur={handleBlur}
-            errorMessage={errors.currectPassword}
-            error={!!errors.currectPassword && touched.currectPassword}
+            errorMessage={errors.currentPassword}
+            error={!!errors.currentPassword && touched.currentPassword}
             placeholder={t('page.account.current_password')}
           />
           <Input
