@@ -18,6 +18,7 @@ import { SocialType } from 'types/common'
 import { getData } from 'services/storage'
 import { FIREBASE_TOKEN, ORGANIZATION_INFO } from 'config/constants'
 import { firebaseApp } from 'config/firebase'
+import { configEnvs } from 'config/envs'
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
@@ -31,8 +32,8 @@ const { REACT_APP_FIREBASE_AUTH_DOMAIN, REACT_APP_FIREBASE_AUTH_API_KEY } =
   process.env
 
 const AUTH_CONFIG = {
-  apiKey: REACT_APP_FIREBASE_AUTH_API_KEY,
-  authDomain: REACT_APP_FIREBASE_AUTH_DOMAIN,
+  apiKey: configEnvs.firebaseAuthApiKey,
+  authDomain: configEnvs.firebaseAuthDomain,
 }
 
 const FirebaseAuth = initializeApp(AUTH_CONFIG, 'Auth')
