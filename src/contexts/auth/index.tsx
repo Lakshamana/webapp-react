@@ -28,6 +28,8 @@ import { LoadingScreen } from 'components'
 import { AuthTypes } from './types'
 import { useTranslation } from 'react-i18next'
 
+import { configEnvs } from 'config/envs'
+
 const AuthContext = createContext({})
 
 export const useAuth = () => {
@@ -52,7 +54,6 @@ export const AuthProvider = ({ children }) => {
   const firebaseToken = getData(FIREBASE_TOKEN)
 
   const signed = !!accessToken
-  const { REACT_APP_ORGANIZATION_ID } = process.env
 
   const updateAccount = async (account) => {
     await saveData(ACCOUNT_INFO, account)
@@ -143,7 +144,7 @@ export const AuthProvider = ({ children }) => {
         const { data } = await client.query({
           query: QUERY_ORGANIZATION_PUBLIC_SETTINGS,
           variables: {
-            id: REACT_APP_ORGANIZATION_ID,
+            id: configEnvs?.organization,
           },
         })
         if (data?.organizationPublicSettings) {
