@@ -10,7 +10,7 @@ import {
   MUTATION_DELETE_COMMENT,
   MUTATION_ADD_REPORT
 } from 'services/graphql'
-import { Post, SortDirection, Comment as CommentType } from 'generated/graphql'
+import { Post, SortDirection, Comment as CommentType, ReportType } from 'generated/graphql'
 import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
 import { CommentHeader, CommentInput, CommentCard, CommentLoading, Modal } from 'components'
 import { useCommentsStore, useThemeStore } from 'services/stores'
@@ -197,7 +197,7 @@ const Comments = ({ ...props }: Post) => {
       variables: {
         payload: {
           idReported: modalOption.id,
-          type: 'POST',
+          type: ReportType.Comment,
           reason: reportReason
         }
       }
