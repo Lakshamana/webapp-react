@@ -12,7 +12,7 @@ import 'videojs-mux'
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
-import { useAuthStore, useVideoPlayerStore } from 'services/stores'
+import { useAuthStore, useChannelsStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
 import { saveData } from 'services/storage'
 
 const VideoPlayerComponent = ({
@@ -31,21 +31,29 @@ const VideoPlayerComponent = ({
   videoId,
   categoryId,
   post_type,
+  video_duration,
 }: VideoPlayerProps): ReactElement => {
   const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
   const { account } = useAuthStore()
+  const { organization } = useOrganizationStore()
+  const { activeChannel } = useChannelsStore()
 
   const defaultOptions = getDefaultConfigs(
     src,
     muxConfig,
-    title,
-    subtitle,
     account?.id,
     videoId,
     categoryId,
+    title,
+    subtitle,
+    isLiveStream ? 'onDemand ': 'livestream',
+    video_duration,
     post_type,
+    organization?.id,
+    activeChannel?.id,
+    organization?.web_url,
   )
 
   const handlePlayerReady = (player: any) => {
