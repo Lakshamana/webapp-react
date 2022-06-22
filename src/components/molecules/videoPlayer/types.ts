@@ -1,3 +1,5 @@
+import { PostType } from "generated/graphql";
+
 export interface VideoPlayerProps {
   src: string;
   title?: string | undefined;
@@ -11,4 +13,7 @@ export interface VideoPlayerProps {
   poster?: string;
   isMuted?: boolean;
   setVolumeValue?: number;
+  videoId?: string
+  categoryId?: string;
+  post_type?: PostType | string;
 }
