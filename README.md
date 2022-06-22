@@ -1,15 +1,15 @@
-# Web-app (WIP)
-## FanHero's browser-based brand-app client
+# @fh-webapp
+ FanHero's browser-based brand-app client.
 
 ## Access the project on: 
-- [marvel] https://webapp-development.pages.dev/
-- [valetudo] https://valetudo.fanhero.tv/
-- [heroflix] https://heroflix-dev.fanhero.tv/
-- [herotube] https://herotube-dev.fanhero.tv/
-- [spacex] spacex-stg.fanhero.tv
+- [marvel] https://marvel.fanhero.tv
+- [valetudo] https://valetudo.fanhero.tv
+- [heroflix] https://heroflix-dev.fanhero.tv
+- [herotube] https://herotube-dev.fanhero.tv
+- [spacex] https://spacex-stg.fanhero.tv
 - [storybook] https://storybook.fanhero.net/?path=/story/introduction--page
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Requirements
 - [node](https://nodejs.org) `nvm install --lts`
