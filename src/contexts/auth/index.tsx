@@ -14,13 +14,11 @@ import {
 } from 'services/stores'
 import { signOutFB } from 'services/firebase'
 import {
-  USER_INFO,
   AUTH_TOKEN,
-  ACCOUNT_INFO,
   FIREBASE_TOKEN,
 } from 'config/constants'
 
-import { saveData, getData, clearData } from 'services/storage'
+import { getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
 
 import { AuthTypes } from './types'
@@ -63,26 +61,16 @@ export const AuthProvider = ({ children }) => {
       : window.location.origin
 
   const updateAccount = async (account) => {
-    await saveData(ACCOUNT_INFO, account)
     await setAccount(account)
   }
 
   const updateUser = async (user) => {
-    await saveData(USER_INFO, user)
     await setUser(user)
   }
 
   const loadAccount = async () => {
     setLoadingAcount(true)
     if (account && user) {
-      setLoadingAcount(false)
-      return
-    }
-    const accountData = getData(ACCOUNT_INFO)
-    const userData = getData(USER_INFO)
-    if (accountData && userData) {
-      setAccount(accountData)
-      setUser(userData)
       setLoadingAcount(false)
       return
     }
