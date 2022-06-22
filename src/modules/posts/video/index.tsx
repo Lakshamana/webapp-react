@@ -184,6 +184,9 @@ const VideoPostPage = () => {
           subtitle={postData?.description}
           isMuted={definePlayerIsMuted}
           setVolumeValue={definePlayerVolume}
+          videoId={postData?.id}
+          categoryId={postData?.categories[0].id}
+          post_type={postData?.type}
         />
         <AlertNextVideo />
       </Video>
