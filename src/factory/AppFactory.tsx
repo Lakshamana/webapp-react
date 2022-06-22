@@ -1,6 +1,6 @@
 import React, { Suspense, useState, useLayoutEffect } from 'react'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { Center } from '@chakra-ui/layout'
+import { Center, Flex, Spinner, Text } from '@chakra-ui/react'
 import { QUERY_ENV_CONFIG } from 'services/graphql'
 import * as crypto from 'crypto-js'
 import { getData, saveData } from 'services/storage'
@@ -9,8 +9,9 @@ import { setConfigEnvs } from 'config/envs'
 
 const AppFactory = () => {
     const [error, setError] = useState(false)
-    const TemplateProvider = React.lazy(() => import('components/templates/templateProvider/index'))
-    const App = React.lazy(() => import('App'))
+    const [envs, setEnvs] = useState(null)
+
+    const TemplateProvider = envs ? React.lazy(() => import('components/templates/templateProvider/index')) : undefined
 
     const {
         REACT_APP_ORGANIZATION_URL,
@@ -37,6 +38,7 @@ const AppFactory = () => {
         const decryptedEnv = crypto.AES.decrypt(encryptedEnv, REACT_APP_REMOTE_ENV_SECRET)
         const data = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
         await setConfigEnvs(data)
+        await setEnvs(data)
     }
 
     const getEnvs = async (origin) => {
@@ -57,13 +59,11 @@ const AppFactory = () => {
     }
 
     //TODO: Create screen for not found organization
-    if (error) return <Center w={'98vw'} h={'98vh'}>{error}</Center>
+    if (error) return <Center w={'98vw'} h={'98vh'}>Organization not found!</Center>
 
     return (
         <Suspense fallback={<></>}>
-            <TemplateProvider>
-                <App />
-            </TemplateProvider>
+            {TemplateProvider && <TemplateProvider />}
         </Suspense>
     )
 }
