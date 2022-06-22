@@ -1,17 +1,17 @@
 import React, { Suspense, useState, useLayoutEffect } from 'react'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { Center, Flex, Spinner, Text } from '@chakra-ui/react'
-import { QUERY_ENV_CONFIG } from 'services/graphql'
+import { Center } from '@chakra-ui/react'
 import * as crypto from 'crypto-js'
-import { getData, saveData } from 'services/storage'
-import { APP_ENVS } from 'config/constants'
+import axios from 'axios'
+
 import { setConfigEnvs } from 'config/envs'
 
 const AppFactory = () => {
     const [error, setError] = useState(false)
     const [envs, setEnvs] = useState(null)
 
-    const TemplateProvider = envs ? React.lazy(() => import('components/templates/templateProvider/index')) : undefined
+    const TemplateProvider = envs
+        ? React.lazy(() => import('components/templates/templateProvider/index'))
+        : undefined
 
     const {
         REACT_APP_ORGANIZATION_URL,
@@ -20,46 +20,48 @@ const AppFactory = () => {
         REACT_APP_API_ENDPOINT,
     } = process.env
 
+    const origin =
+        NODE_ENV === 'development'
+            ? REACT_APP_ORGANIZATION_URL
+            : window.location.origin
+
     useLayoutEffect(() => {
-        const storedEncryptedEnv = getData(APP_ENVS)
-
-        const origin = NODE_ENV === 'development' ? REACT_APP_ORGANIZATION_URL : window.location.origin
-
-        storedEncryptedEnv ? decryptEnv(storedEncryptedEnv) : getEnvs(origin)
+        getEnvs()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const client = new ApolloClient({
-        uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
-        cache: new InMemoryCache(),
-    })
-
     const decryptEnv = async (encryptedEnv) => {
-        const decryptedEnv = crypto.AES.decrypt(encryptedEnv, REACT_APP_REMOTE_ENV_SECRET)
+        const decryptedEnv = crypto.AES.decrypt(
+            encryptedEnv,
+            REACT_APP_REMOTE_ENV_SECRET
+        )
         const data = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
         await setConfigEnvs(data)
         await setEnvs(data)
     }
 
-    const getEnvs = async (origin) => {
-        await client
-            .query({
-                query: QUERY_ENV_CONFIG,
-                variables: {
-                    origin
-                },
-            })
-            .then((result) => {
-                saveData(APP_ENVS, result.data.envConfig.result)
-                decryptEnv(result.data.envConfig.result)
-            })
-            .catch((error) => {
-                setError(error.message)
-            })
+    const getEnvs = async () => {
+        await axios.get(
+            `https://${REACT_APP_API_ENDPOINT}/env-config`,
+            {
+                headers: {
+                    organization: origin || ''
+                }
+            }
+        ).then((result) => {
+            decryptEnv(result.data.body.data.result)
+        }).catch((error) => {
+            setError(error.message)
+        })
     }
 
     //TODO: Create screen for not found organization
-    if (error) return <Center w={'98vw'} h={'98vh'}>Organization not found!</Center>
+    if (error)
+        return (
+            <Center w={'98vw'} h={'98vh'}>
+                Organization not found!
+            </Center>
+        )
 
     return (
         <Suspense fallback={<></>}>
