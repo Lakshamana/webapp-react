@@ -14,6 +14,7 @@ import {
 import { AuthProvider } from 'contexts/auth'
 import { FlagsProvider } from 'contexts/flags'
 import { ThemeProvider } from 'styled-components'
+import App from 'App'
 
 import {
   useThemeStore,
@@ -55,9 +56,9 @@ const TemplateProvider = ({ children }: any) => {
   return (
     <ApolloProvider client={Client}>
       <ThemeProvider theme={{ ...theme, colorMode }}>
-        <HelmetProvider>
-          <Helmet title={pageTitleConfigured} />
-          <ChakraProvider theme={customTheme}>
+        <ChakraProvider theme={customTheme}>
+          <HelmetProvider>
+            <Helmet title={pageTitleConfigured} />
             <FlagsProvider>
               <Global
                 styles={css`
@@ -66,12 +67,12 @@ const TemplateProvider = ({ children }: any) => {
               />
               <AuthProvider>
                 <AccessVerificationsProvider>
-                  {children}
+                  <App />
                 </AccessVerificationsProvider>
               </AuthProvider>
             </FlagsProvider>
-          </ChakraProvider>
-        </HelmetProvider>
+          </HelmetProvider>
+        </ChakraProvider>
       </ThemeProvider>
     </ApolloProvider>
   )
