@@ -17,7 +17,10 @@ import {
   signOutFB,
 } from 'services/firebase'
 
-const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL } = process.env
+const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } = process.env
+
+const ORGANIZATION_URL = NODE_ENV === 'development' ? REACT_APP_ORGANIZATION_URL : window.location.origin
+
 const httpLink = createHttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
 })
@@ -53,7 +56,7 @@ const refreshToken = async (token) => {
       query: MUTATION_REFRESH_TOKEN,
       headers: {
         authorization: token ? `Bearer ${token}` : '',
-        organization: REACT_APP_ORGANIZATION_URL,
+        organization: ORGANIZATION_URL,
       },
     })
   } catch (error) {
@@ -155,7 +158,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
-      organization: REACT_APP_ORGANIZATION_URL,
+      organization: ORGANIZATION_URL,
       // TO-DO: REACT_APP_HOME_CHANNEL_ID is a temporary env as we will not have a home channel,
       // instead we will have a home page with the content of all channels,
       // so the user can select a specific channel or not. We don't have an API for that yet.
