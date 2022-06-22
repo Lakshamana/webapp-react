@@ -15,7 +15,7 @@ import { pmDataType, Props } from './types'
 import { OrderStatus } from 'generated/graphql'
 import { ModalNotification } from '../components'
 
-const { REACT_APP_SPREENDLY_KEY } = process.env
+const { REACT_APP_SPREEDLY_KEY } = process.env
 
 export const CardInfoSpreedly = ({
   productPrice,
@@ -94,7 +94,7 @@ export const CardInfoSpreedly = ({
   }, [])
 
   const setupSpreedly = () => {
-    Spreedly.init(REACT_APP_SPREENDLY_KEY, {
+    Spreedly.init(REACT_APP_SPREEDLY_KEY, {
       numberEl: 'spreedly-number',
       cvvEl: 'spreedly-cvv',
     })
