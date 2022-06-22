@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { FormikHelpers, useFormik } from 'formik'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { Flex } from '@chakra-ui/layout'
-import { useThemeStore } from 'services/stores'
+import { useAuthStore, useThemeStore } from 'services/stores'
 import { SingleConfiguration } from '..'
 import { Button, Modal, Input, Text } from 'components'
 import { initialValues, validationSchema } from './settings'
@@ -11,7 +11,7 @@ import { Box } from '@chakra-ui/react'
 import { useMutation } from '@apollo/client'
 import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT, MUTATION_VERIFY_MAIL } from 'services/graphql'
 import { getData, saveData } from 'services/storage'
-import { ACCOUNT_INFO, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { FormProps } from './types'
 import { useState } from 'react'
 import { useAuth } from 'contexts/auth'
@@ -34,6 +34,7 @@ export const UpdateEmail = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [loading, setloading] = useState(false)
   const { updateAccount } = useAuth()
+  const { account } = useAuthStore()
 
   const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL)
   const [testPassword] = useMutation(MUTATION_SIGNIN, {
@@ -49,7 +50,7 @@ export const UpdateEmail = () => {
 
   const emailUpdateFlow = async(values: FormProps, actions: FormikHelpers<FormProps>) => {
     setloading(true)
-    const email = getData(ACCOUNT_INFO)?.email
+    const email = account?.email
     const { password } = values
 
     await verifyMail({variables: {payload: { email: values.newEmail }}})

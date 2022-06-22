@@ -3,12 +3,12 @@ import { Button, Input, Modal, Text } from 'components'
 import { useFormik } from 'formik'
 import { initialValues, validationSchema } from './settings'
 import { useTranslation } from 'react-i18next'
-import { useThemeStore } from 'services/stores'
+import { useAuthStore, useThemeStore } from 'services/stores'
 import { colors, sizes } from 'styles'
 import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT } from 'services/graphql'
 import { useMutation } from '@apollo/client'
-import { getData, saveData } from 'services/storage'
-import { ACCOUNT_INFO, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { saveData } from 'services/storage'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useState } from 'react'
 import { useAuth } from 'contexts/auth'
 
@@ -41,6 +41,7 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
   })
   const [updateAccount] = useMutation(MUTATION_UPDATE_ACCOUNT)
   const { updateAccount: updateAccountHook } = useAuth()
+  const { account: accountStore } = useAuthStore()
 
   const {
     values,
@@ -62,11 +63,11 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
     validateOnBlur: false,
     onSubmit: async (values) => {
       setloading(true)
-      const email = getData(ACCOUNT_INFO)?.email
+      const email = accountStore?.email
       const isPasswordValid = await verifyPassword({
         variables: { payload: { password: values.password, email } },
       })
-      if(isPasswordValid.errors) {
+      if (isPasswordValid.errors) {
         setloading(false)
         return null
       }
