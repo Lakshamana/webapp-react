@@ -22,7 +22,7 @@ import { colors, sizes, breakpoints } from 'styles'
 import { LivestreamBadge } from 'types/livestreams'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
 import { stripHTML } from 'utils/helperFunctions'
-import { LiveEvent, Status } from 'generated/graphql'
+import { LiveEvent, PostType, Status } from 'generated/graphql'
 import { StatusBadge } from './utils'
 import { FirebaseSession } from 'utils/firebaseSession'
 
@@ -156,7 +156,14 @@ const LivePostPage = () => {
               )}
             </Flex>
             {isLive && hlsPlaybackUrl && (
-              <VideoPlayer isLiveStream={true} src={hlsPlaybackUrl} />
+              <VideoPlayer
+                isLiveStream={true}
+                src={hlsPlaybackUrl}
+                title={livestream?.title}
+                videoId={livestream?.id}
+                categoryId={livestream?.category?.id}
+                post_type={PostType.OnDemand}
+              />
             )}
             {(isScheduled || isFinished) && (
               <Countdown
