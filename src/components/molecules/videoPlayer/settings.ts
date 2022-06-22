@@ -1,8 +1,12 @@
 export const getDefaultConfigs = (
   src,
   muxConfig = {},
-  title = '',
-  subtitle = ''
+  userId,
+  videoId,
+  categoryId,
+  title,
+  subtitle,
+  post_type,
 ) => ({
   autoplay: true,
   controls: true,
@@ -29,13 +33,13 @@ export const getDefaultConfigs = (
     mux: {
       data: {
         env_key: 'f79842543033c226c5d396a7d',
-        viewer_user_id: 'viewer_user_id',
-        video_id: 'video_id',
-        video_title: title || 'title',
-        video_series: 'series',
+        viewer_user_id: userId || '',
+        video_id: videoId || '',
+        video_title: title || '',
+        video_series: categoryId || '',
         player_name: 'Clappr-ContentVideo',
         player_init_time: Date.now(),
-        video_stream_type: 'on-demand',
+        video_stream_type: post_type || '',
         ...muxConfig,
       },
     },

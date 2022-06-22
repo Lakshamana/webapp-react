@@ -12,7 +12,7 @@ import 'videojs-mux'
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
-import { useVideoPlayerStore } from 'services/stores'
+import { useAuthStore, useVideoPlayerStore } from 'services/stores'
 import { saveData } from 'services/storage'
 
 const VideoPlayerComponent = ({
@@ -27,13 +27,26 @@ const VideoPlayerComponent = ({
   skin,
   options,
   isMuted,
-  setVolumeValue
+  setVolumeValue,
+  videoId,
+  categoryId,
+  post_type,
 }: VideoPlayerProps): ReactElement => {
   const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
+  const { account } = useAuthStore()
 
-  const defaultOptions = getDefaultConfigs(src, muxConfig, title, subtitle)
+  const defaultOptions = getDefaultConfigs(
+    src,
+    muxConfig,
+    title,
+    subtitle,
+    account?.id,
+    videoId,
+    categoryId,
+    post_type,
+  )
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player
