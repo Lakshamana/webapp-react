@@ -1,3 +1,5 @@
+import { dependencies } from './../../../../package.json';
+
 export const getDefaultConfigs = (
   src,
   muxConfig = {},
@@ -7,6 +9,11 @@ export const getDefaultConfigs = (
   title,
   subtitle,
   post_type,
+  video_duration,
+  video_stream_type,
+  organization_id,
+  channel_id,
+  organization_url,
 ) => ({
   autoplay: true,
   controls: true,
@@ -39,7 +46,20 @@ export const getDefaultConfigs = (
         video_series: categoryId || '',
         player_name: 'Clappr-ContentVideo',
         player_init_time: Date.now(),
-        video_stream_type: post_type || '',
+        video_stream_type: video_stream_type, // de acordo com o isLiveStream no videoplayer 'onDemand or livestream'
+        // Site Metadata
+        experiment_name: '',
+        page_type: 'watchpage',
+        view_session_id: '', // ainda não tem
+        // Player Metadata
+        player_version: dependencies['video.js'],
+        // Video Metadata
+        video_duration: video_duration || null, //miliseconds
+        video_content_type: post_type,
+        video_producer: organization_url,
+        // CUSTOM Metadata
+        custom_1: organization_id,
+        custom_2: channel_id,
         ...muxConfig,
       },
     },
