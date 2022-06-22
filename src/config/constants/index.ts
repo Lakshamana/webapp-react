@@ -1,7 +1,5 @@
-export const USER_INFO = '@App:user'
 export const AUTH_TOKEN = '@App:token'
 export const FIREBASE_TOKEN = '@App:fbtoken'
-export const ACCOUNT_INFO = '@App:account'
 export const APP_LOCALE = '@App:locale'
 export const APP_THEME = '@App:theme'
 export const APP_SINGLE_CHANNEL = '@App:schannel'
