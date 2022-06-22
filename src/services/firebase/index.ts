@@ -29,9 +29,6 @@ export const authWithCustomToken = () => {
     signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
 }
 
-const { REACT_APP_FIREBASE_AUTH_DOMAIN, REACT_APP_FIREBASE_AUTH_API_KEY } =
-  process.env
-
 const AUTH_CONFIG = {
   apiKey: configEnvs.firebaseAuthApiKey,
   authDomain: configEnvs.firebaseAuthDomain,
