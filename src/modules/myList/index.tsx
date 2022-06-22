@@ -4,7 +4,7 @@ import { Divider, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 import { QUERY_CATEGORIES, QUERY_POSTS_CARDS } from 'services/graphql'
 import { Category, Post } from 'generated/graphql'
-import { useCommonStore } from 'services/stores'
+import { useAuthStore, useCommonStore } from 'services/stores'
 import {
   Container,
   EmptyState,
@@ -13,22 +13,19 @@ import {
   CategoriesGrid,
 } from 'components'
 import { sizes } from 'styles'
-import { getData } from 'services/storage'
-import { ACCOUNT_INFO } from 'config/constants'
 
 const MyListPage = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const [categories, setCategories] = useState<Category[]>()
   const [posts, setPosts] = useState<Post[]>()
-
-  const AccountInfo = getData(ACCOUNT_INFO)
+  const { account } = useAuthStore()
 
   const { loading: loadingPinnedCategories } = useQuery(QUERY_CATEGORIES, {
     variables: {
       filter: {
         pinned: true,
-        account: AccountInfo?.id,
+        account: account?.id,
         sortBy: 'sort.desc',
       },
     },
@@ -43,7 +40,7 @@ const MyListPage = () => {
     variables: {
       filter: {
         pinned: true,
-        account: AccountInfo?.id,
+        account: account?.id,
       },
     },
     onCompleted: (result) => {
