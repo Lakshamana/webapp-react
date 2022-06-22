@@ -1,7 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react'
 import { useApolloClient } from '@apollo/client'
 import {
-  QUERY_ORGANIZATION_PUBLIC_SETTINGS,
   QUERY_ME,
   MUTATION_SIGNOUT,
   QUERY_CHANNEL,
@@ -16,7 +15,6 @@ import {
 import { signOutFB } from 'services/firebase'
 import {
   USER_INFO,
-  ORGANIZATION_INFO,
   AUTH_TOKEN,
   ACCOUNT_INFO,
   FIREBASE_TOKEN,
@@ -30,6 +28,10 @@ import { useTranslation } from 'react-i18next'
 
 import { configEnvs } from 'config/envs'
 
+import { setOrganizationData } from 'config/organization'
+
+import axios from 'axios'
+
 const AuthContext = createContext({})
 
 export const useAuth = () => {
@@ -40,7 +42,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const { i18n } = useTranslation()
   const { user, setUser, setAccount, account } = useAuthStore()
-  const { organization, setOrganization } = useOrganizationStore()
+  const { setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
     useCustomizationStore()
   const [loading, setLoading] = useState(true)
@@ -54,6 +56,11 @@ export const AuthProvider = ({ children }) => {
   const firebaseToken = getData(FIREBASE_TOKEN)
 
   const signed = !!accessToken
+  const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } = process.env
+  const origin =
+    NODE_ENV === 'development'
+      ? REACT_APP_ORGANIZATION_URL
+      : window.location.origin
 
   const updateAccount = async (account) => {
     await saveData(ACCOUNT_INFO, account)
@@ -112,7 +119,7 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
-          if(data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
+          if (data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
           setLoadingAcount(false)
         }
@@ -124,32 +131,21 @@ export const AuthProvider = ({ children }) => {
     })
   }
 
-  const loadOrganization = async () => {
-    if (organization) {
-      setLoading(false)
-      return
-    }
-    const organizationData = getData(ORGANIZATION_INFO)
-    if (organizationData) {
-      setOrganization(organizationData)
-      setLoading(false)
-      return
-    }
-    await getOrganization()
-  }
-
   const getOrganization = () => {
     new Promise(async (resolve, reject) => {
       try {
-        const { data } = await client.query({
-          query: QUERY_ORGANIZATION_PUBLIC_SETTINGS,
-          variables: {
-            id: configEnvs?.organization,
-          },
-        })
-        if (data?.organizationPublicSettings) {
-          const dataOrganization = data.organizationPublicSettings
-          saveData(ORGANIZATION_INFO, dataOrganization)
+        const { data } = await axios.get(
+          `https://${REACT_APP_API_ENDPOINT}/organizations/public/${configEnvs.organization} `,
+          {
+            headers: {
+              organization: origin || ''
+            }
+          }
+        )
+
+        if (data?.body?.data) {
+          const dataOrganization = data?.body?.data
+          setOrganizationData(dataOrganization)
           setOrganization(dataOrganization)
           setLoading(false)
         }
@@ -194,7 +190,7 @@ export const AuthProvider = ({ children }) => {
   }, [activeChannel])
 
   useEffect(() => {
-    loadOrganization()
+    getOrganization()
     setOrganizationConfig(ORGANIZATION)
     // eslint-disable-next-line
   }, [])

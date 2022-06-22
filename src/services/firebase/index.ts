@@ -16,9 +16,10 @@ import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
 import { SocialType } from 'types/common'
 import { getData } from 'services/storage'
-import { FIREBASE_TOKEN, ORGANIZATION_INFO } from 'config/constants'
+import { FIREBASE_TOKEN } from 'config/constants'
 import { firebaseApp } from 'config/firebase'
 import { configEnvs } from 'config/envs'
+import { organizationData } from 'config/organization'
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
@@ -77,9 +78,11 @@ const generatePendingCredential = (kind: SocialType, err: any) => {
   return Credential[kind]
 }
 
-export const SocialSignIn = (kind: SocialType): Promise<CreateAccountSocialSignInDto> => {
-  const OrganizationData = getData(ORGANIZATION_INFO)
-  AUTH.tenantId = OrganizationData?.tenant_id
+export const SocialSignIn = (
+  kind: SocialType
+): Promise<CreateAccountSocialSignInDto> => {
+
+  AUTH.tenantId = organizationData?.tenant_id || ''
   const PROVIDER = getProvider(kind)
   return new Promise(function (resolve, reject) {
     signInWithPopup(AUTH, PROVIDER)
