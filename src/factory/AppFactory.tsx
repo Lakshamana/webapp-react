@@ -1,9 +1,10 @@
 import React, { Suspense, useState, useLayoutEffect } from 'react'
-import { Center } from '@chakra-ui/react'
+import { Center, Flex, Text } from '@chakra-ui/react'
 import * as crypto from 'crypto-js'
 import axios from 'axios'
 
 import { setConfigEnvs } from 'config/envs'
+import { Icon } from '@iconify/react'
 
 const AppFactory = () => {
     const [error, setError] = useState(false)
@@ -59,7 +60,43 @@ const AppFactory = () => {
     if (error)
         return (
             <Center w={'98vw'} h={'98vh'}>
-                Organization not found!
+                <Flex
+                    borderRadius='8px'
+                    w='100%'
+                    maxW="500px"
+                    h="360px"
+                    bg='#F6F6F6'
+                    flexDirection="column"
+                    boxShadow='0px 4px 4px rgba(0, 0, 0, 0.25)'
+                    fontFamily='Arial, Helvetica, sans-serif'
+                >
+                    <Flex
+                        bg='red'
+                        w="100%"
+                        h="60%"
+                        borderRadius='8px 8px 0px 0px'
+                        justifyContent='center'
+                        alignItems='center'
+                        color='white'
+                        fontWeight='600'
+                        flexDir='column'
+                        gridGap='1em'
+                    >
+                        <Icon icon='ci:off-outline-close' width='40px' />
+                        <Text>Platform Not Found!</Text>
+                    </Flex>
+                    <Flex
+                        w='100%'
+                        h='40%'
+                        justifyContent='center'
+                        alignItems='center'
+                        fontWeight='500'
+                    >
+                        <Text
+                            color='#666666'
+                        >Please check your url and try again!</Text>
+                    </Flex>
+                </Flex>
             </Center>
         )
 
