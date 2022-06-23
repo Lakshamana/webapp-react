@@ -20,13 +20,16 @@ export interface BillboardItemActions extends ButtonProps {
     borderColor?: string,
     icon?: string,
     label: string,
-    route?: string,
+    route?: BillboardRouteType,
     textColor?: string
+}
+
+export interface BillboardRouteType {
+    content: string,
+    contentWeb: string,
 }
 
 export interface Props {
     items?: Array<BillboardItem>,
     customButtons: boolean
 }
-
-
