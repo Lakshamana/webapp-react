@@ -83,7 +83,7 @@ const AppFactory = () => {
                         gridGap='1em'
                     >
                         <Icon icon='ci:off-outline-close' width='40px' />
-                        <Text>Organization Not Found!</Text>
+                        <Text>Platform Not Found!</Text>
                     </Flex>
                     <Flex
                         w='100%'
@@ -94,7 +94,7 @@ const AppFactory = () => {
                     >
                         <Text
                             color='#666666'
-                        >Please check that you accessed the url correctly!</Text>
+                        >Please check your url and try again!</Text>
                     </Flex>
                 </Flex>
             </Center>
