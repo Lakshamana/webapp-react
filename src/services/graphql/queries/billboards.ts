@@ -22,6 +22,7 @@ export const QUERY_BILLBOARDS = gql`
           route {
             ... on MediaRouteContent {
               content
+              contentWeb
             }
           }
           textColor

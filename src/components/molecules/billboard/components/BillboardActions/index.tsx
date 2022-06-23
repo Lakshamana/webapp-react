@@ -23,7 +23,7 @@ const ActionsList = ({ actions }: { actions: BillboardItemActions[] }) => {
     <Actions>
       {actions?.map((action: BillboardItemActions) => {
         return (
-          <ContentButton key={`${action.label}-${action.route}`}>
+          <ContentButton key={`${action.label}-${action?.route}`}>
             <Button
               width="auto"
               size='lg'
