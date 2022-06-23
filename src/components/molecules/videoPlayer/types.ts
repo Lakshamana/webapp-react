@@ -16,4 +16,5 @@ export interface VideoPlayerProps {
   videoId?: string
   categoryId?: string;
   post_type?: PostType | string;
+  video_duration?: number;
 }

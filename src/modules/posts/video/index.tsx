@@ -187,6 +187,7 @@ const VideoPostPage = () => {
           videoId={postData?.id}
           categoryId={postData?.categories[0].id}
           post_type={postData?.type}
+          video_duration={postData?.media?.['duration']}
         />
         <AlertNextVideo />
       </Video>
