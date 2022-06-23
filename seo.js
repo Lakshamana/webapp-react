@@ -1,17 +1,22 @@
 module.exports = [
   {
     path: "/",
+    title: "MARVEL",
+    description: "Text MARVEL description",
+  },
+  {
+    path: "/test/",
     title: "TESTE",
-    description: "Main page description",
+    description: "Test description",
   },
   {
     path: "/login",
     title: "LOGIN!",
-    description: "Main page description",
+    description: "Login page description",
   },
   {
     path: "/login/",
     title: "LOGIN!",
-    description: "Main page description",
+    description: "Login page description",
   },
 ];
