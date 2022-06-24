@@ -173,10 +173,10 @@ const Livestreams = () => {
   )
 
   const getCarouselLabel = (item: LiveCarouselFlags) => {
-    const label = item.LABEL.filter((item) =>
-      i18n.language.includes(item.LOCALE)
+    const label = item.LABEL.find((item) =>
+      i18n.language.includes(item.LOCALE || 'en-US')
     )
-    return label[0].VALUE
+    return label?.VALUE || ''
   }
 
   const renderLiveEventsScroller = (item: LiveCarouselFlags) =>
