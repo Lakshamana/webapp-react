@@ -152,6 +152,13 @@ const VideoPostPage = () => {
   const postHasCommentsAllowed =
     activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
 
+  const getCategoryId = (post: any) => {
+    if (post && post.categories) {
+      return post.categories.map((el) => { return el.id}).join(',');
+    }
+    return '';
+  }
+
   if (isVerifyingAccessPermission)
     return (
       <VerifyContentKind
@@ -185,7 +192,7 @@ const VideoPostPage = () => {
           isMuted={definePlayerIsMuted}
           setVolumeValue={definePlayerVolume}
           videoId={postData?.id}
-          categoryId={postData?.categories[0].id}
+          categoryId={getCategoryId(postData)}
           post_type={postData?.type}
           video_duration={postData?.media?.['duration']}
         />
