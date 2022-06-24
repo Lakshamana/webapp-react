@@ -17,8 +17,8 @@ const Tabs = ({ closeSideMenu }: PropsTabs) => {
   }
 
   const getTabLabel = (tab: TabFlags) => {
-    const item = tab.LABEL.filter((item) => i18n.language.includes(item.LOCALE))
-    return item[0].VALUE
+    const item = tab.LABEL.find((item) => i18n.language.includes(item.LOCALE || 'en-US'))
+    return item?.VALUE || ''
   }
 
   const renderTabs = () =>
