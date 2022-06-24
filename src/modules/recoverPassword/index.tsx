@@ -23,8 +23,9 @@ const RecoverPasswordPage = () => {
     MUTATION_RESET_PASSWORD,
     {
       onCompleted: async (result) => {
-        if (result.resetPassword.sent) setActiveStep('Update')
-        else setrequestPasswordError(t('common.error.generic_api_error'))
+        result.resetPassword.sent
+          ? setActiveStep('Update')
+          : setrequestPasswordError(t('common.error.generic_api_error'))
       },
       onError: (error) => setrequestPasswordError(`${error}`),
     }
@@ -62,10 +63,8 @@ const RecoverPasswordPage = () => {
             isLoading={resetPasswordLoading}
             handleFormSubmit={handleRequestResetSubmit}
             error={requestPasswordError}
-            dispatchError={() => {
-              setrequestPasswordError('')
-            }}
-          ></RequestPasswordResetForm>
+            dispatchError={() => setrequestPasswordError('')}
+          />
         )
       case 'Update':
         return (
@@ -73,10 +72,8 @@ const RecoverPasswordPage = () => {
             isLoading={updatePasswordLoading}
             handleFormSubmit={handleUpdatePasswordSubmit}
             error={updatePasswordError}
-            dispatchError={() => {
-              setupdatePasswordError('')
-            }}
-          ></UpdatePasswordForm>
+            dispatchError={() => setupdatePasswordError('')}
+          />
         )
       case 'Success':
         return (
@@ -86,7 +83,7 @@ const RecoverPasswordPage = () => {
             description={t('recoverPassword.success.description')}
             actionLabel={t('common.access_your_account')}
             toRoute={'login'}
-          ></AlertCard>
+          />
         )
       case 'Error':
         return (
@@ -96,7 +93,7 @@ const RecoverPasswordPage = () => {
             description={t('recoverPassword.error.description')}
             actionLabel={t('common.retry')}
             toRoute={'recoverPassword'}
-          ></AlertCard>
+          />
         )
     }
   }

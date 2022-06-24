@@ -34,9 +34,7 @@ const RequestPasswordResetForm = ({
     },
     validationSchema,
     validateOnChange: true,
-    onSubmit: async () => {
-      handleFormSubmit({ payload: { ...values } })
-    },
+    onSubmit: async () => handleFormSubmit({ payload: { ...values } })
   })
 
   return (
@@ -79,6 +77,7 @@ const RequestPasswordResetForm = ({
           name="email"
           onChange={handleChange}
           onBlur={handleBlur}
+          onEnterPress={handleSubmit}
           type="text"
           value={values.email}
           placeholder={t('signin.label.email')}
