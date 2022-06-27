@@ -29,14 +29,10 @@ const UpdatePasswordForm = ({
     isValid,
     touched,
   } = useFormik({
-    initialValues: {
-      ...initialValues,
-    },
+    initialValues,
     validationSchema,
     validateOnChange: true,
-    onSubmit: async () => {
-      handleFormSubmit({ payload: { ...values } })
-    },
+    onSubmit: async () => handleFormSubmit({ payload: { ...values } })
   })
 
   return (
@@ -68,7 +64,7 @@ const UpdatePasswordForm = ({
             type={'error'}
             description={error}
             onClose={dispatchError}
-          ></AlertComponent>
+          />
         )}
       </>
       <Flex
@@ -91,6 +87,7 @@ const UpdatePasswordForm = ({
           name="password"
           onChange={handleChange}
           onBlur={handleBlur}
+          onEnterPress={handleSubmit}
           type="password"
           value={values.password}
           placeholder={t('signin.label.password')}
@@ -104,13 +101,13 @@ const UpdatePasswordForm = ({
           isLoading={isLoading}
           label={t('common.send')}
           onClick={() => handleSubmit()}
-        ></Button>
+        />
         <Button
           width={[sizes.loginButtonWidth]}
           variant="ghost"
           label={t('common.cancel')}
           onClick={() => history.push('/login')}
-        ></Button>
+        />
       </Flex>
     </Card>
   )
