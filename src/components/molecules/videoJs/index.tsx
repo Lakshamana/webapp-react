@@ -53,7 +53,7 @@ export const VideoJS = (props: any): ReactElement => {
   }, [])
 
   const classes = `video-js ${
-    props?.skin || 'vjs-default-skin'
+    `${props?.skin}-skin` || 'vjs-default-skin'
   } vjs-big-play-centered`
 
   return (
