@@ -106,7 +106,7 @@ const VideoPlayerComponent = ({
         ...options,
       }}
       islivestream
-      skin={activeChannelConfig?.PLAYER.SKIN}
+      skin={activeChannelConfig?.PLAYER.SKIN || ''}
       onReady={handlePlayerReady}
     />
   )
