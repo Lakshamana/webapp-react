@@ -8,6 +8,7 @@ import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import 'videojs-mux'
+import { useCustomizationStore } from 'services/stores'
 
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
@@ -24,7 +25,6 @@ const VideoPlayerComponent = ({
   poster,
   overlays,
   muxConfig,
-  skin,
   options,
   isMuted,
   setVolumeValue,
@@ -33,6 +33,7 @@ const VideoPlayerComponent = ({
   post_type,
   video_duration,
 }: VideoPlayerProps): ReactElement => {
+  const { activeChannelConfig } = useCustomizationStore()
   const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
@@ -105,7 +106,7 @@ const VideoPlayerComponent = ({
         ...options,
       }}
       islivestream
-      skin={skin}
+      skin={activeChannelConfig?.PLAYER.SKIN}
       onReady={handlePlayerReady}
     />
   )
