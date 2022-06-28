@@ -227,6 +227,7 @@ const Comments = ({ ...props }: Post) => {
       return
     }
 
+    formik.resetForm()
     if (selected.option === 'REPORT') {
       setModalOption({
         status: true,
