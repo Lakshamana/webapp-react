@@ -21,6 +21,8 @@ const PT_BR = {
         same_password_error: 'A nova senha deve ser diferente da senha atual',
         confirm_email:
           'Por favor, digite o mesmo email utilizado para o cadastro.',
+        deactivated_account:
+          'Sua conta ainda não foi ativada. Por favor, verifique o link de ativação enviado para o seu email.',
       },
       what_is_this: 'O que é isso?',
       more: 'mais',
@@ -71,7 +73,7 @@ const PT_BR = {
         november: 'Novembro',
         december: 'Dezembro',
       },
-      content_not_exists: "Não foi possível encontrar esta página",
+      content_not_exists: 'Não foi possível encontrar esta página',
       content_not_exists_description:
         'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
     },
@@ -452,8 +454,8 @@ const PT_BR = {
           title: 'Selecione a opção:',
           choosePaymentMethod: 'Escolha um método de pagamento',
           bankCard: 'Cartão',
-        }
-      }
+        },
+      },
     },
     cookieConsent: {
       notice: 'Aviso prévio.',

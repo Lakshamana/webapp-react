@@ -17,9 +17,13 @@ import {
   signOutFB,
 } from 'services/firebase'
 
-const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } = process.env
+const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
+  process.env
 
-const ORGANIZATION_URL = NODE_ENV === 'development' ? REACT_APP_ORGANIZATION_URL : window.location.origin
+const ORGANIZATION_URL =
+  NODE_ENV === 'development'
+    ? REACT_APP_ORGANIZATION_URL
+    : window.location.origin
 
 const httpLink = createHttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
@@ -79,7 +83,10 @@ const errorLink = onError(
         return
       }
 
-      if (err.extensions.code === '404' && operation.operationName !== 'VerifyMail') {
+      if (
+        err.extensions.code === '404' &&
+        operation.operationName !== 'VerifyMail'
+      ) {
         show404()
         return
       }
@@ -94,7 +101,8 @@ const errorLink = onError(
       if (err.extensions.code === 'UNAUTHENTICATED') {
         if (
           err.message === 'exception:PASSWORD_MISMATCH' ||
-          err.message === 'exception:TOO_MANY_ATTEMPTS_TRY_LATER'
+          err.message === 'exception:TOO_MANY_ATTEMPTS_TRY_LATER' ||
+          err.message === 'exception:DEACTIVED_ACCOUNT'
         )
           return
 
