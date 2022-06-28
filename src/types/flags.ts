@@ -109,6 +109,9 @@ export type ChannelFlags = {
   }
   IMAGES?: ChannelImageFlags
   LIVESTREAM: LiveCarouselFlags[]
+  PLAYER: {
+    SKIN: string
+  }
   SETTINGS: {
     DISPLAY_CHANNEL_LOGO: boolean
     DISPLAY_COMMENTS: boolean
