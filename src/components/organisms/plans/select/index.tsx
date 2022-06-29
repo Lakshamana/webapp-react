@@ -29,8 +29,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
             <Box
               h="184px"
               w="100%"
-              // backgroundImage={`url(${plan.imageUrl})`}
-              backgroundImage={`url(https://picsum.photos/340/184)`}
+              backgroundImage={`url(${plan.imageUrl})`}
               backgroundSize="100%"
               backgroundPosition="center"
               backgroundRepeat="no-repeat"
@@ -48,8 +47,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                 maxW="256px"
                 w="100%"
                 mt="6px"
-                // TODO: add description
-              >Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.</Text>
+              >{plan.description}</Text>
               <Flex
                 mt="15px"
                 justifyContent="space-between"
