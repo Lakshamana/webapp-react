@@ -6,7 +6,16 @@ import { useTranslation } from 'react-i18next'
 
 export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   const { colorMode } = useThemeStore()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const formatCurrency = (value: string | number, symbol: string = 'USD') => {
+    if(typeof value === 'string') {
+      value = parseFloat(value)
+    }
+    return Intl.NumberFormat(
+      i18n.language,
+      { style: 'currency', currency: symbol, minimumFractionDigits: 2 },
+    ).format(value)
+  }
   return (
     <Flex flexDirection="column" mt="44px">
       <Text
@@ -70,7 +79,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                   color={colors.generalText[colorMode]}
                   fontWeight="400"
                   fontSize="18px"
-                >{plan.startingPrice}</Text>
+                >{formatCurrency(plan.productPrices[0].unitPrice, plan.productPrices[0].currency.isoCode)}</Text>
               </Flex>
             </Box>
           </Box>
