@@ -1,4 +1,4 @@
-import { memo, ReactElement, useRef } from 'react'
+import { memo, ReactElement, useEffect, useRef } from 'react'
 import VideoJS from 'components/molecules/videoJs'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
@@ -49,12 +49,12 @@ const VideoPlayerComponent = ({
     categoryId,
     title,
     subtitle,
-    isLiveStream ? 'onDemand ': 'livestream',
+    isLiveStream ? 'livestream': 'onDemand',
     video_duration,
     post_type,
     organization?.id,
     activeChannel?.id,
-    organization?.web_url,
+    organization?.web_url?.[0],
   )
 
   const handlePlayerReady = (player: any) => {
