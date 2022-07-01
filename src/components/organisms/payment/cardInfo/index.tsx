@@ -44,6 +44,8 @@ export const CardInfoSpreedly = ({
     validCvv: true,
     validNumber: true,
   })
+  const [allCountries, setallCountries] = useState([])
+  const [allStatesById, setallStatesById] = useState([])
 
   const [confirmOrder] = useMutation(
     MUTATION_CONFIRM_ORDER,
@@ -243,19 +245,34 @@ export const CardInfoSpreedly = ({
     onSubmit: submitPaymentForm,
   })
 
+  const getCountries = async () => {
+    const result = await axios.get(
+      'https://api-payment-staging.inspireplatform.io/countries',
+      {
+        headers: {
+          tenant: 'Marvel-wu61z',
+        },
+      }
+    )
+    const options = result.data.body.data.map(({ id, name }) => ({ value: id, label: name }))
+    setallCountries(options)
+  }
+
+  const getStatesById = async (id: string) => {
+    const result = await axios.get(
+      `https://api-payment-staging.inspireplatform.io/states?countryId=${id}`,
+      {
+        headers: {
+          tenant: 'Marvel-wu61z',
+        },
+      }
+    )
+    const options = result.data.body.data.map(({ id, name }) => ({ value: id, label: name }))
+    setallStatesById(options)
+  }
+
   useEffect(() => {
-      axios.get(
-          'https://api-payment-staging.inspireplatform.io/countries',
-          {
-            headers: {
-              tenant: 'Marvel-wu61z',
-            }
-          }
-      ).then((result) => {
-          console.log(result.data.body.data)
-      }).catch((error) => {
-          console.error(error.message)
-      })
+    getCountries()
   }, [])
   
 
@@ -343,6 +360,29 @@ export const CardInfoSpreedly = ({
           error={!!errors.cpf && touched.cpf}
         />
       </Flex>
+      <SelectInputStyle
+        name="country"
+        placeholder={t('page.checkout.card_info.country')}
+        value={values.country}
+        options={allCountries}
+        onChange={(e) => {
+          handleChange(e);
+          getStatesById(e.target.value)
+        }}
+        onBlur={handleBlur}
+        errorBorderColor="#d9534f"
+        isInvalid={!!errors.country && touched.country}
+      />
+      <SelectInputStyle
+        name="state"
+        placeholder={t('page.checkout.card_info.state')}
+        value={values.state}
+        options={allStatesById}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorBorderColor="#d9534f"
+        isInvalid={!!errors.state && touched.state}
+      />
       <Input
         name="address1"
         type="text"
@@ -402,26 +442,6 @@ export const CardInfoSpreedly = ({
         onBlur={handleBlur}
         errorMessage={errors.city}
         error={!!errors.city && touched.city}
-      />
-      <Input
-        name="country"
-        type="text"
-        value={values.country}
-        placeholder={t('page.checkout.card_info.country')}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        errorMessage={errors.country}
-        error={!!errors.country && touched.country}
-      />
-      <Input
-        name="state"
-        type="text"
-        value={values.state}
-        placeholder={t('page.checkout.card_info.state')}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        errorMessage={errors.state}
-        error={!!errors.state && touched.state}
       />
       <Flex alignItems="flex-start" gridGap="12px" mt="1em">
         <Checkbox
