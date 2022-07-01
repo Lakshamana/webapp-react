@@ -186,6 +186,7 @@ const VideoPostPage = () => {
     >
       <Video>
         <VideoPlayer
+          isLiveStream={false}
           src={mediaUrl}
           title={postData?.title}
           subtitle={postData?.description}

@@ -1,4 +1,4 @@
-import { memo, ReactElement, useRef } from 'react'
+import { memo, ReactElement, useEffect, useRef } from 'react'
 import VideoJS from 'components/molecules/videoJs'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
@@ -8,6 +8,7 @@ import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import 'videojs-mux'
+import { useCustomizationStore } from 'services/stores'
 
 import { VideoPlayerProps } from './types'
 import { getDefaultConfigs } from './settings'
@@ -24,7 +25,6 @@ const VideoPlayerComponent = ({
   poster,
   overlays,
   muxConfig,
-  skin,
   options,
   isMuted,
   setVolumeValue,
@@ -33,6 +33,7 @@ const VideoPlayerComponent = ({
   post_type,
   video_duration,
 }: VideoPlayerProps): ReactElement => {
+  const { activeChannelConfig } = useCustomizationStore()
   const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
@@ -48,12 +49,12 @@ const VideoPlayerComponent = ({
     categoryId,
     title,
     subtitle,
-    isLiveStream ? 'onDemand ': 'livestream',
+    isLiveStream ? 'livestream': 'onDemand',
     video_duration,
     post_type,
     organization?.id,
     activeChannel?.id,
-    organization?.web_url,
+    organization?.web_url?.[0],
   )
 
   const handlePlayerReady = (player: any) => {
@@ -105,7 +106,7 @@ const VideoPlayerComponent = ({
         ...options,
       }}
       islivestream
-      skin={skin}
+      skin={activeChannelConfig?.PLAYER.SKIN || ''}
       onReady={handlePlayerReady}
     />
   )

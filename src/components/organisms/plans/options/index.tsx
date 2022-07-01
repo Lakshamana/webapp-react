@@ -37,9 +37,18 @@ export const SelectOption = ({
   const { colorMode } = useThemeStore()
   const [selectedOptionState, setselectedOptionState] = useState(false)
   const [selectedOption, setselectedOption] = useState({})
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const formatCurrency = (value: string | number, symbol: string = 'USD') => {
+    if(typeof value === 'string') {
+      value = parseFloat(value)
+    }
+    return Intl.NumberFormat(
+      i18n.language,
+      { style: 'currency', currency: symbol, minimumFractionDigits: 2 },
+    ).format(value)
+  }
   return (
-    <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column">
+    <Flex mt="42px" p="1em" gridGap="4px" flexDirection="column" w="100%" alignItems="center">
       {/* <Text color={colors.secondaryText[colorMode]}>
         <pre>{JSON.stringify(selectedOption, null, 2) }</pre>
       </Text> */}
@@ -54,11 +63,8 @@ export const SelectOption = ({
         flexDirection="column"
       >
         <Flex
-          w="100%"
-          minH="184px"
-          h="100%"
-          // backgroundImage={`url(${plan.imageUrl})`}
-          backgroundImage={`url(https://picsum.photos/340/184)`}
+          flex='1'
+          backgroundImage={`url(${plan.imageUrl})`}
           backgroundSize="100%"
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
@@ -66,6 +72,7 @@ export const SelectOption = ({
         />
         <Flex w="100%" h="100%" p="20px 25px" alignItems="center">
           <Flex
+            flex="1"
             flexDirection="column"
             borderRight={`1px solid ${colors.secondaryText[colorMode]}`}
             paddingRight="1em"
@@ -79,7 +86,8 @@ export const SelectOption = ({
               color={colors.secondaryText[colorMode]}
               fontWeight="400"
               fontSize="12px"
-            >Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.</Text>
+              w="100%"
+            >{plan.description}</Text>
           </Flex>
           <Flex
             h="100%"
@@ -114,7 +122,7 @@ export const SelectOption = ({
                 key={key}
                 >
                   <Text>{option.billingTypes.name}</Text>
-                  <Text>{option.price}{ option?.billingPeriods && ` / ${option.billingPeriods.name}` }</Text>
+                  <Text>{formatCurrency(option.unitPrice, option.currency.isoCode)}{ option?.billingPeriods && ` / ${option.billingPeriods.name}` }</Text>
                 </ButtonSelectOption>
               ))
             }

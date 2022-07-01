@@ -22,6 +22,8 @@ const EN_US = {
           'New password must be different of current password',
         confirm_email:
           'Please use the email previously entered during registration',
+        deactivated_account:
+          'Your account has not yet been activated. Please check the link sent to your email.',
       },
       what_is_this: 'What is this?',
       more: 'more',
@@ -76,7 +78,8 @@ const EN_US = {
         december: 'December',
       },
       content_not_exists: "We couldn't find this page",
-      content_not_exists_description: 'You may have typed the address incorrectly or you are using an outdated link.'
+      content_not_exists_description:
+        'You may have typed the address incorrectly or you are using an outdated link.',
     },
     signin: {
       title: 'Access {{org}} now',
@@ -370,6 +373,14 @@ const EN_US = {
             month_required: 'Month is required',
             year_required: 'Year is required',
           },
+          address01: 'Address 1',
+          address02: 'Address 2',
+          number: 'Number',
+          complement: 'Complement',
+          zip_code: 'Zip Code',
+          district: 'Neighborhood',
+          city: 'City',
+          state: 'State',
         },
         modal: {
           success: {
@@ -407,7 +418,8 @@ const EN_US = {
           no_comments: 'No comments',
           comment: 'Comment',
           confirm_delete: 'Confirm delete',
-          report_reason: 'Give us the reason why you are reporting this content'
+          report_reason:
+            'Give us the reason why you are reporting this content',
         },
         search_options: {
           recent: 'Most Recent',
@@ -451,8 +463,8 @@ const EN_US = {
           title: 'Select option:',
           choosePaymentMethod: 'Choose a payment method',
           bankCard: 'Bank Card',
-        }
-      }
+        },
+      },
     },
     cookieConsent: {
       notice: 'Notice.',

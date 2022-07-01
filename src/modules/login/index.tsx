@@ -42,6 +42,7 @@ const LoginPage = () => {
       'exception:TOO_MANY_ATTEMPTS_TRY_LATER': t(
         'signin.error.too_many_attempts'
       ),
+      'exception:DEACTIVED_ACCOUNT': t('common.error.deactivated_account'),
       default: t('common.error.generic_api_error'),
     }
     return Error[type] || Error.default
@@ -59,11 +60,11 @@ const LoginPage = () => {
       await signInProcess({
         accessToken: signIn.token.accessToken,
         firebaseToken: signIn.token.firebaseToken,
-        account: signIn.account
+        account: signIn.account,
       })
       history.push('/channels')
     },
-    onError: ({ message }) => setError(errorMessage(message))
+    onError: ({ message }) => setError(errorMessage(message)),
   })
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(
@@ -73,7 +74,7 @@ const LoginPage = () => {
         await signInProcess({
           accessToken: result.socialSignIn.token.accessToken,
           firebaseToken: result.socialSignIn.token.firebaseToken,
-          account: result.socialSignIn.account
+          account: result.socialSignIn.account,
         })
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('LGPD')
@@ -91,7 +92,7 @@ const LoginPage = () => {
       onCompleted: async (result) => {
         if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
       },
-      onError: ({ message }) => setError(errorMessage(message))
+      onError: ({ message }) => setError(errorMessage(message)),
     })
 
   const handleGDPRSubmit = () => {
@@ -109,11 +110,13 @@ const LoginPage = () => {
 
   const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)
-      .then((input) => socialSignIn({
-        variables: {
-          input,
-        }
-      }))
+      .then((input) =>
+        socialSignIn({
+          variables: {
+            input,
+          },
+        })
+      )
       .catch((error) => setError(`${error}`))
   }
 
@@ -138,11 +141,7 @@ const LoginPage = () => {
           />
         )
       case 'ConfirmEmail':
-        return (
-          <ConfirmEmailForm
-            onClose={() => setActiveStep('Login')}
-          />
-        )
+        return <ConfirmEmailForm onClose={() => setActiveStep('Login')} />
     }
   }
 

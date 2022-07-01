@@ -42,7 +42,11 @@ export const FlagsProvider = ({ children }) => {
           saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE || "en-US")
 
         const storedTheme = getData(APP_THEME)
-        setColorMode(storedTheme || newFlags?.ORGANIZATION?.THEME?.toLowerCase())
+        setColorMode(
+          storedTheme
+          || (newFlags?.ORGANIZATION?.THEME && newFlags?.ORGANIZATION?.THEME?.toLowerCase())
+          || 'dark'
+        )
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))

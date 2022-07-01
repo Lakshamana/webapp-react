@@ -6,7 +6,16 @@ import { useTranslation } from 'react-i18next'
 
 export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   const { colorMode } = useThemeStore()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const formatCurrency = (value: string | number, symbol: string = 'USD') => {
+    if(typeof value === 'string') {
+      value = parseFloat(value)
+    }
+    return Intl.NumberFormat(
+      i18n.language,
+      { style: 'currency', currency: symbol, minimumFractionDigits: 2 },
+    ).format(value)
+  }
   return (
     <Flex flexDirection="column" mt="44px">
       <Text
@@ -29,8 +38,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
             <Box
               h="184px"
               w="100%"
-              // backgroundImage={`url(${plan.imageUrl})`}
-              backgroundImage={`url(https://picsum.photos/340/184)`}
+              backgroundImage={`url(${plan.imageUrl})`}
               backgroundSize="100%"
               backgroundPosition="center"
               backgroundRepeat="no-repeat"
@@ -48,8 +56,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                 maxW="256px"
                 w="100%"
                 mt="6px"
-                // TODO: add description
-              >Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ate incididunt ut labore et.</Text>
+              >{plan.description}</Text>
               <Flex
                 mt="15px"
                 justifyContent="space-between"
@@ -72,7 +79,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                   color={colors.generalText[colorMode]}
                   fontWeight="400"
                   fontSize="18px"
-                >{plan.startingPrice}</Text>
+                >{formatCurrency(plan.productPrices[0].unitPrice, plan.productPrices[0].currency.isoCode)}</Text>
               </Flex>
             </Box>
           </Box>
