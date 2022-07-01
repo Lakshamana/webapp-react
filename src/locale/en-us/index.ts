@@ -378,7 +378,7 @@ const EN_US = {
           number: 'Number',
           complement: 'Complement',
           zip_code: 'Zip Code',
-          district: 'District',
+          district: 'Neighborhood',
           city: 'City',
           state: 'State',
         },
