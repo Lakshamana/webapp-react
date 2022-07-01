@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, Checkbox, Divider, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { Input, SelectInputStyle } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores'
@@ -14,6 +14,7 @@ import { MUTATION_CONFIRM_ORDER } from 'services/graphql'
 import { pmDataType, Props } from './types'
 import { OrderStatus } from 'generated/graphql'
 import { ModalNotification } from '../components'
+import axios from 'axios'
 
 const { REACT_APP_SPREEDLY_KEY } = process.env
 
@@ -43,6 +44,8 @@ export const CardInfoSpreedly = ({
     validCvv: true,
     validNumber: true,
   })
+  const [allCountries, setallCountries] = useState([])
+  const [allStatesById, setallStatesById] = useState([])
 
   const [confirmOrder] = useMutation(
     MUTATION_CONFIRM_ORDER,
@@ -144,17 +147,28 @@ export const CardInfoSpreedly = ({
     })
 
     Spreedly.on('paymentMethod', (token: string, pmData: pmDataType) => {
-      // continuar implementação da chamada
       const { card_type, last_four_digits, month, year } = pmData
       confirmOrder({
         variables: {
           payload: {
             cardBrand: card_type,
+            cardHolderName: pmData.full_name,
             lastDigits: last_four_digits,
             expirationDate: `${year}/${formatMonth(month)}`,
             paymentGatewayToken: token,
             productPrice,
             product,
+            cpf: pmData.metadata.cpf,
+            billingAddress: {
+              billingAddress1: pmData.address1,
+              billingAddress2: pmData.address2,
+              billingCity: pmData.city,
+              billingStateId: pmData.state,
+              billingCountryId: pmData.country,
+              billingPostalCode: pmData.metadata.postalCode,
+              billingNeighborhood: pmData.metadata.neighborhood,
+              billingStreetNumber: pmData.metadata.streetNumber,
+            }
           }
         }
       })
@@ -174,7 +188,15 @@ export const CardInfoSpreedly = ({
   ) => {
     Spreedly.validate()
     setdisabledButton(true)
-    const requiredFields: any = values
+    const requiredFields: any = {
+      ...values,
+      metadata: {
+        cpf: values.cpf,
+        neighborhood: values.district,
+        postalCode: values.zip,
+        streetNumber: values.number,
+      }
+    }
     Spreedly.tokenizeCreditCard(requiredFields)
     setstate({ ...state, paymentProcessing: true })
   }
@@ -194,6 +216,14 @@ export const CardInfoSpreedly = ({
       year: '',
       email: '',
       cpf: '',
+      country: '',
+      address1: '',
+      address2: '',
+      number: '',
+      zip: '',
+      district: '',
+      city: '',
+      state: '',
       terms: false,
     },
     validationSchema: Yup.object({
@@ -206,7 +236,67 @@ export const CardInfoSpreedly = ({
       year: Yup.string().required(
         t('page.checkout.card_info.mistakes.year_required')
       ),
-      email: Yup.string().email(t('common.error.valid_email')),
+      email: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.email'),
+          })
+        )
+        .email(t('common.error.valid_email')),
+      cpf: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.CPF'),
+          })
+        ),
+      country: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.country'),
+          })
+        ),
+      state: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.state'),
+          })
+        ),
+      address1: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.address01'),
+          })
+        ),
+      address2: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.address02'),
+          })
+        ),
+      number: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.number'),
+          })
+        ),
+      zip: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.zip_code'),
+          })
+        ),
+      district: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.district'),
+          })
+        ),
+      city: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.city'),
+          })
+        ),
       terms: Yup.bool().oneOf(
         [true],
         t('common.error.accept_terms_and_conditions')
@@ -214,6 +304,37 @@ export const CardInfoSpreedly = ({
     }),
     onSubmit: submitPaymentForm,
   })
+
+  const getCountries = async () => {
+    const result = await axios.get(
+      'https://api-payment-staging.inspireplatform.io/countries',
+      {
+        headers: {
+          tenant: 'Marvel-wu61z',
+        },
+      }
+    )
+    const options = result.data.body.data.map(({ id, name }) => ({ value: id, label: name }))
+    setallCountries(options)
+  }
+
+  const getStatesById = async (id: string) => {
+    const result = await axios.get(
+      `https://api-payment-staging.inspireplatform.io/states?countryId=${id}`,
+      {
+        headers: {
+          tenant: 'Marvel-wu61z',
+        },
+      }
+    )
+    const options = result.data.body.data.map(({ id, name }) => ({ value: id, label: name }))
+    setallStatesById(options)
+  }
+
+  useEffect(() => {
+    getCountries()
+  }, [])
+  
 
   return (
     <Flex
@@ -224,6 +345,9 @@ export const CardInfoSpreedly = ({
       flexDirection="column"
       gridGap="1em"
     >
+      {/* <pre>
+        <code>{JSON.stringify(values, null, 4)}</code>
+      </pre> */}
       <Input
         name="full_name"
         type="text"
@@ -272,7 +396,112 @@ export const CardInfoSpreedly = ({
           error={!spreedlyError.validCvv}
         />
       </Flex>
-
+      <Divider />
+      <Flex gridGap="1em" w="100%">
+        <Input
+          name="email"
+          type="text"
+          value={values.email}
+          placeholder={t('page.checkout.card_info.email')}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          errorMessage={errors.email}
+          error={!!errors.email && touched.email}
+        />
+        <Input
+          name="cpf"
+          type="text"
+          value={values.cpf}
+          placeholder={t('page.checkout.card_info.CPF')}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          errorMessage={errors.cpf}
+          error={!!errors.cpf && touched.cpf}
+        />
+      </Flex>
+      <SelectInputStyle
+        name="country"
+        placeholder={t('page.checkout.card_info.country')}
+        value={values.country}
+        options={allCountries}
+        onChange={(e) => {
+          handleChange(e);
+          getStatesById(e.target.value)
+        }}
+        onBlur={handleBlur}
+        errorBorderColor="#d9534f"
+        isInvalid={!!errors.country && touched.country}
+      />
+      <SelectInputStyle
+        name="state"
+        placeholder={t('page.checkout.card_info.state')}
+        value={values.state}
+        options={allStatesById}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorBorderColor="#d9534f"
+        isInvalid={!!errors.state && touched.state}
+      />
+      <Input
+        name="address1"
+        type="text"
+        value={values.address1}
+        placeholder={t('page.checkout.card_info.address01')}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={errors.address1}
+        error={!!errors.address1 && touched.address1}
+      />
+      <Input
+        name="address2"
+        type="text"
+        value={values.address2}
+        placeholder={t('page.checkout.card_info.address02')}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={errors.address2}
+        error={!!errors.address2 && touched.address2}
+      />
+      <Input
+        name="number"
+        type="text"
+        value={values.number}
+        placeholder={t('page.checkout.card_info.number')}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={errors.number}
+        error={!!errors.number && touched.number}
+      />
+      <Input
+        name="zip"
+        type="text"
+        value={values.zip}
+        placeholder={t('page.checkout.card_info.zip_code')}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={errors.zip}
+        error={!!errors.zip && touched.zip}
+      />
+      <Input
+        name="district"
+        type="text"
+        value={values.district}
+        placeholder={t('page.checkout.card_info.district')}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={errors.district}
+        error={!!errors.district && touched.district}
+      />
+      <Input
+        name="city"
+        type="text"
+        value={values.city}
+        placeholder={t('page.checkout.card_info.city')}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={errors.city}
+        error={!!errors.city && touched.city}
+      />
       <Flex alignItems="flex-start" gridGap="12px" mt="1em">
         <Checkbox
           fontSize="12px"
