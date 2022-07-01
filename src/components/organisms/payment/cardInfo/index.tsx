@@ -236,7 +236,67 @@ export const CardInfoSpreedly = ({
       year: Yup.string().required(
         t('page.checkout.card_info.mistakes.year_required')
       ),
-      email: Yup.string().email(t('common.error.valid_email')),
+      email: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.email'),
+          })
+        )
+        .email(t('common.error.valid_email')),
+      cpf: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.CPF'),
+          })
+        ),
+      country: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.country'),
+          })
+        ),
+      state: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.state'),
+          })
+        ),
+      address1: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.address01'),
+          })
+        ),
+      address2: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.address02'),
+          })
+        ),
+      number: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.number'),
+          })
+        ),
+      zip: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.zip_code'),
+          })
+        ),
+      district: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.district'),
+          })
+        ),
+      city: Yup.string()
+        .required(
+          t('common.error.field_required', {
+            field_name: t('page.checkout.card_info.city'),
+          })
+        ),
       terms: Yup.bool().oneOf(
         [true],
         t('common.error.accept_terms_and_conditions')
@@ -285,8 +345,7 @@ export const CardInfoSpreedly = ({
       flexDirection="column"
       gridGap="1em"
     >
-      {/* <div>spreendly: {REACT_APP_SPREEDLY_KEY}</div>
-      <pre>
+      {/* <pre>
         <code>{JSON.stringify(values, null, 4)}</code>
       </pre> */}
       <Input
