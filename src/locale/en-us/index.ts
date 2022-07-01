@@ -373,6 +373,14 @@ const EN_US = {
             month_required: 'Month is required',
             year_required: 'Year is required',
           },
+          address01: 'Address 1',
+          address02: 'Address 2',
+          number: 'Number',
+          complement: 'Complement',
+          zip_code: 'Zip Code',
+          district: 'District',
+          city: 'City',
+          state: 'State',
         },
         modal: {
           success: {

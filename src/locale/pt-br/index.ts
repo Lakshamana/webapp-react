@@ -360,7 +360,7 @@ const PT_BR = {
           date_month: 'MM',
           date_year: 'AAAA',
           cvv: 'CVV',
-          country: 'Country',
+          country: 'País',
           installments: 'Parcelas',
           full_name: 'Nome Completo',
           email: 'E-mail',
@@ -373,6 +373,14 @@ const PT_BR = {
             month_required: 'Mês é obrigatorio',
             year_required: 'Ano é obrigatorio',
           },
+          address01: 'Endereço 1',
+          address02: 'Endereço 2',
+          number: 'Número',
+          complement: 'Complemento',
+          zip_code: 'CEP',
+          district: 'Bairro',
+          city: 'Cidade',
+          state: 'Estado',
         },
         modal: {
           success: {
