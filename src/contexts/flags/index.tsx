@@ -28,7 +28,10 @@ export const FlagsProvider = ({ children }) => {
         return getValue(firebaseRemoteConfig, 'configuration').asString()
       })
       .then((remoteFlags: string) => {
-        const decryptedEnv = crypto.AES.decrypt(remoteFlags, configEnvs.remoteConfigSecret)
+        const decryptedEnv = crypto.AES.decrypt(
+          remoteFlags,
+          configEnvs.remoteConfigSecret
+        )
         const data = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
         const newFlags = {
           ...data,
@@ -38,8 +41,7 @@ export const FlagsProvider = ({ children }) => {
           CHANNELS: newFlags.CHANNELS,
         })
 
-        if (!getData(APP_LOCALE))
-          saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE || "en-US")
+        saveData(APP_LOCALE, newFlags.ORGANIZATION.LOCALE || 'en-US')
 
         const storedTheme = getData(APP_THEME)
         setColorMode(
