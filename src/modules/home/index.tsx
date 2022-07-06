@@ -71,7 +71,7 @@ const HomePage = () => {
           target: BillboardTarget.Home,
         },
       },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'no-cache',
     })
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
@@ -165,6 +165,7 @@ const HomePage = () => {
     setFeaturedCategoriesData([])
     setFeaturedPostsData([])
     setHasTagsContent(false)
+    setBillboardItems([])
   }
   const deactivateAllItems = () => {
     setIsFeaturedPostsActive(false)
@@ -173,16 +174,16 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    getBillboard()
     deactivateAllItems()
     clearAllItems()
+    getBillboard()
     //eslint-disable-next-line
   }, [activeChannel])
 
   useEffect(() => {
     const defaultCarouselsItems =
       activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
-        (item) => item.DEFAULT && item.IS_ACTIVE
+        (item) => !item?.TAGS?.length && item.IS_ACTIVE
       )
 
     defaultCarouselsItems?.forEach((item) => {
@@ -238,10 +239,9 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [billboardData])
 
-  const renderBillboard = () =>
-    !!billboardItems?.length && (
-      <BillboardScroller items={billboardItems} customButtons={true} />
-    )
+  const renderBillboard = () => (
+    <BillboardScroller items={billboardItems} customButtons={true} />
+  )
 
   const renderLiveEventsScroller = (item: CarouselFlags) =>
     !!liveEventsData?.length && (
@@ -329,14 +329,15 @@ const HomePage = () => {
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
-      {renderBillboard()}
+      {!!billboardItems?.length && renderBillboard()}
       <Flex
         gridGap={5}
         flexDirection={'column'}
         mt={billboardItems ? 0 : 7}
         w={'100vw'}
       >
-        {!!homeCarouselsFiltered?.length &&
+        {!isLoading &&
+          !!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags) =>
             renderCarouselsOrderedByRemoteConfig(item)
           )}
@@ -345,7 +346,7 @@ const HomePage = () => {
       </Flex>
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
-          <Skeleton kind="cards" numberOfCards={3} />
+          <Skeleton kind="cards" numberOfCards={4} />
         </Box>
       )}
     </Container>
