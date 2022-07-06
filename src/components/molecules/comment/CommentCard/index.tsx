@@ -103,7 +103,7 @@ const CommentCard = ({ ...props }: IProps) => {
       <CardHeader
         id={props.id}
         authorId={props.account}
-        author={props.author}
+        author={props.author || undefined}
         createdAt={props.createdAt}
         action={handleEditComment}
       />
