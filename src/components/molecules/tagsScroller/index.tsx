@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Box } from '@chakra-ui/react'
 import { SwiperSlide } from 'swiper/react'
 import { TagsScrollerProps } from 'types/tags'
 import { useChannelsStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { CardsScroller, VideoPostCard, Skeleton } from 'components'
+import { CardsScroller, VideoPostCard } from 'components'
 import { ContentScroller } from './styles'
-import { sizes } from 'styles'
 import { isEntityBlocked } from 'utils/accessVerifications'
 import { useLazyQuery } from '@apollo/client'
 import { QUERY_TAG } from 'services/graphql'
@@ -26,7 +24,7 @@ const TagsScroller = ({
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
-  const [getTag, { data, loading }] = useLazyQuery(QUERY_TAG, {
+  const [getTag, { data }] = useLazyQuery(QUERY_TAG, {
     variables: {
       id: tagID,
     },
@@ -125,13 +123,6 @@ const TagsScroller = ({
       </CardsScroller>
     )
   }
-
-  if (loading)
-    return (
-      <Box p={sizes.paddingSm} width="100%">
-        <Skeleton kind="cards" numberOfCards={3} />
-      </Box>
-    )
 
   return (
     <ContentScroller>
