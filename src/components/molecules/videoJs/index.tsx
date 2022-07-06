@@ -35,9 +35,9 @@ export const VideoJS = (props: any): ReactElement => {
     }
 
     if (playerRef.current) {
-      const player = playerRef.current;
-      player.autoplay(options.autoplay);
-      player.src(options.sources);
+      const player = playerRef.current
+      player.autoplay(options.autoplay)
+      player.src(options.sources)
     }
     // eslint-disable-next-line
   }, [options])
@@ -53,7 +53,7 @@ export const VideoJS = (props: any): ReactElement => {
   }, [])
 
   const classes = `video-js ${
-    `${props?.skin}-skin` || 'vjs-default-skin'
+    props?.skin ? `${props.skin}-skin` : 'vjs-default-skin'
   } vjs-big-play-centered`
 
   return (
