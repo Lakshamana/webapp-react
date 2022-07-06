@@ -1,11 +1,9 @@
-interface IAuthor {
-  username?: Maybe<string>
-}
+import { CommentAuthor } from 'generated/graphql'
 
 export interface IProps {
   id: string
   authorId: string
-  author?: IAuthor
+  author?: CommentAuthor
   createdAt: Date
   action: any
 }

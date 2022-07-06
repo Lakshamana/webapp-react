@@ -27,11 +27,9 @@ export type SearchResults = {
 
 export interface PropsSearchBar {
   open: boolean;
-  onSearch: any;
   onOpen: any;
   onClose: any;
   search: string;
-  data: Array<SearchResults>;
   colorMode: ColorMode;
 }
 

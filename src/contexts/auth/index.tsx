@@ -11,6 +11,7 @@ import {
   useOrganizationStore,
   useChannelsStore,
   useCustomizationStore,
+  useThemeStore
 } from 'services/stores'
 import { signOutFB } from 'services/firebase'
 import {
@@ -29,6 +30,7 @@ import { configEnvs } from 'config/envs'
 import { setOrganizationData } from 'config/organization'
 
 import axios from 'axios'
+import { ColorMode } from 'types/common'
 
 const AuthContext = createContext({})
 
@@ -47,6 +49,7 @@ export const AuthProvider = ({ children }) => {
   const [loadingAccount, setLoadingAcount] = useState(false)
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { CHANNELS, ORGANIZATION } = useFlags()
+  const { setColorMode } = useThemeStore()
 
   const client = useApolloClient()
 
@@ -173,6 +176,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (activeChannel?.id) {
       setActiveChannelConfig(CHANNELS[activeChannel.id])
+      if (CHANNELS[activeChannel.id]?.THEME) setColorMode(CHANNELS[activeChannel.id]?.THEME.toLowerCase() as ColorMode)
     }
     // eslint-disable-next-line
   }, [activeChannel])
