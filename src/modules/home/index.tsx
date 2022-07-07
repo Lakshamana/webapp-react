@@ -16,8 +16,8 @@ import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
-  QUERY_POSTS_CARDS,
-  QUERY_TAG
+  QUERY_LOOP_TAGS,
+  QUERY_POSTS_CARDS
 } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
@@ -25,6 +25,8 @@ import {
   useCommonStore,
   useCustomizationStore
 } from 'services/stores'
+
+import { Client } from 'services/api'
 
 import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
@@ -62,8 +64,9 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  const [tagsIds, setTagsIds] = useState<string[]>()
-  const [tagsData, setTagsData] = useState<any[]>()
+  const [tagsIds, setTagsIds] = useState<string[]>([])
+  const [tagsData, setTagsData] = useState({})
+  const [loadingTags, setLoadingTags] = useState(false)
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -139,19 +142,13 @@ const HomePage = () => {
       notifyOnNetworkStatusChange: true,
     })
 
-  const [getTags, { loading: loadingTag }] = useLazyQuery(QUERY_TAG, {
-    onCompleted: (result) => {
-      setTagsData((oldState) => [{ ...oldState }, result?.tag])
-    },
-  })
-
   const isLoading =
     loadingLiveEvents ||
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
     loadingCategoriesWithChildren ||
-    loadingTag
+    loadingTags
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -159,7 +156,7 @@ const HomePage = () => {
     featuredPostsData?.length ||
     featuredCategoriesData?.length ||
     (isHomeDisplayingCategories && categoriesWithChildrenData?.length) ||
-    tagsData?.length
+    Object.keys(tagsData).length !== 0
 
   const isEmpty = !isLoading && !hasResults
 
@@ -172,10 +169,11 @@ const HomePage = () => {
     setLiveEventsData([])
     setFeaturedCategoriesData([])
     setFeaturedPostsData([])
+    setCategoriesWithChildrenData([])
     setBillboardItems([])
-    setTagsIds([])
-    setTagsData([])
+    setTagsData({})
   }
+
   const deactivateAllItems = () => {
     setIsFeaturedPostsActive(false)
     setIsFeaturedCategoriesActive(false)
@@ -183,9 +181,11 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    deactivateAllItems()
-    clearAllItems()
     getBillboard()
+    return () => {
+      deactivateAllItems()
+      clearAllItems()
+    }
     //eslint-disable-next-line
   }, [activeChannel])
 
@@ -203,7 +203,7 @@ const HomePage = () => {
       ?.filter((item) => item.TAGS && item.TAGS.length)
       .map((item) => item.TAGS)
 
-    setTagsIds(ids)
+    ids?.length && setTagsIds(ids)
 
     defaultCarouselsItems?.forEach((item) => {
       if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Posts)
@@ -219,6 +219,10 @@ const HomePage = () => {
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
+
+    return () => {
+      setTagsIds([])
+    }
     //eslint-disable-next-line
   }, [activeChannelConfig])
 
@@ -229,10 +233,26 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
 
+  const loadTags = async () => {
+    setLoadingTags(true)
+
+    const { data } = await Client.query({
+      query: QUERY_LOOP_TAGS(tagsIds),
+      notifyOnNetworkStatusChange: true,
+    })
+
+    if (data) setTagsData(data)
+
+    setLoadingTags(false)
+  }
+
   useEffect(() => {
-    if (tagsIds?.length) {
-      tagsIds.forEach((item) => getTags({ variables: { id: item } }))
+    if (!tagsIds?.length) {
+      setTagsData({})
+      return
     }
+
+    loadTags()
     //eslint-disable-next-line
   }, [tagsIds])
 
@@ -313,11 +333,11 @@ const HomePage = () => {
     ))
 
   const renderTagsScroller = (item: CarouselFlags) => {
-    const currentTag = tagsData?.find((tag) => tag.id === item.TAGS)
+    const currentTag = tagsData[`tag${item.TAGS}`]
     if (currentTag)
       return (
         <TagsScroller
-          key={`${item.LABEL[0].VALUE}`}
+          key={`${item.TAGS}`}
           tagData={currentTag}
           hasMoreLink={true}
           content={item.CONTENT_TYPE}
