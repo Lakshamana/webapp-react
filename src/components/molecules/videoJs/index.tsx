@@ -2,16 +2,22 @@ import React, { ReactElement } from 'react'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
 
+import './blue.css'
 import './facebook.css'
+import './flow.css'
 import './magnified.css'
+import './nuevo.css'
+import './pinko.css'
 import './rotten-tomatoes.css'
+import './shaka.css'
+import './styles.css'
 import './sunrise.css'
 import './techskin.css'
+import './treso.css'
 import './twitch-tv.css'
 import './twitter.css'
 import './vsg.css'
 import './youtube.css'
-import './styles.css'
 
 require('@silvermine/videojs-chromecast')(videojs)
 require('videojs-vtt-thumbnails')
