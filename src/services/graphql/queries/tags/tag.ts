@@ -41,3 +41,48 @@ export const QUERY_TAG = gql`
     }
   }
 `
+
+export const QUERY_LOOP_TAGS = (ids) => gql`
+query Tags{
+  ${ids?.map(
+    (id, index) =>
+      `tag${id}: tag(id: "${id}") {
+        id
+        title
+        description
+        relatedCategories {
+          access
+          slug
+          pinnedStatus {
+            pinned
+          }
+          id
+          description
+          name
+          kind
+          customization {
+            thumbnail {
+              imgPath
+            }
+          }
+        }
+        relatedPosts {
+          access
+          slug
+          status
+          pinnedStatus {
+            pinned
+          }
+          id
+          description
+          title
+          kind
+          thumbnail {
+            imgPath
+          }
+        }
+        slug
+      }`
+  )}
+}
+`
