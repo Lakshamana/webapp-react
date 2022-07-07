@@ -37,10 +37,11 @@ const SearchBar = ({ open, onClose, onOpen, colorMode }: PropsSearchBar) => {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      history.push({
-        pathname: `/c/${activeChannel?.slug}/search`,
-        search: `?s=${search}`,
-      })
+      if (search)
+        history.push({
+          pathname: `/c/${activeChannel?.slug}/search`,
+          search: `?s=${search}`,
+        })
     }, 800)
 
     return () => clearTimeout(delayDebounceFn)
