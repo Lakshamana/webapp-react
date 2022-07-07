@@ -1,22 +1,18 @@
-import { useEffect, useState } from 'react'
-import { SwiperSlide } from 'swiper/react'
-import { TagsScrollerProps } from 'types/tags'
-import { useChannelsStore } from 'services/stores'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { CardsScroller, VideoPostCard } from 'components'
-import { ContentScroller } from './styles'
-import { isEntityBlocked } from 'utils/accessVerifications'
-import { useLazyQuery } from '@apollo/client'
-import { QUERY_TAG } from 'services/graphql'
-import { TagScrollerItem } from 'types/tags'
-import { Category, Post } from 'generated/graphql'
 import { CategoryPostCard } from 'components/atoms'
+import { Category, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { SwiperSlide } from 'swiper/react'
+import { TagScrollerItem, TagsScrollerProps } from 'types/tags'
+import { isEntityBlocked } from 'utils/accessVerifications'
+import { ContentScroller } from './styles'
 
 const TagsScroller = ({
-  tagID,
+  tagData,
   sectionTitle,
   sectionUrl,
-  hasResults,
 }: TagsScrollerProps) => {
   const { generateImage } = useThumbor()
 
@@ -24,35 +20,21 @@ const TagsScroller = ({
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
-  const [getTag, { data }] = useLazyQuery(QUERY_TAG, {
-    variables: {
-      id: tagID,
-    },
-  })
-
   useEffect(() => {
-    if (tagID) getTag()
-    //eslint-disable-next-line
-  }, [tagID])
+    const postItems = tagData?.relatedPosts
+    const categoryItems = tagData?.relatedCategories
+    const myArr = postItems
+      .concat(categoryItems)
+      .sort(
+        (a, b) =>
+          (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt)
+      )
 
-  useEffect(() => {
-    if (data?.tag) {
-      const postItems = data?.tag?.relatedPosts
-      const categoryItems = data?.tag?.relatedCategories
-      const myArr = postItems
-        .concat(categoryItems)
-        .sort(
-          (a, b) =>
-            (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt)
-        )
-
-      setScrollerItems(myArr)
-    }
-  }, [data])
+    setScrollerItems(myArr)
+  }, [])
 
   useEffect(() => {
     if (scrollerItems.length) {
-      hasResults()
       const mappedArr = scrollerItems?.map((item: Post | Category) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(item)
@@ -110,7 +92,7 @@ const TagsScroller = ({
     return (
       <CardsScroller
         title={sectionTitle}
-        moreUrl={`${sectionUrl}${data?.tag?.slug}`}
+        moreUrl={`${sectionUrl}${tagData?.slug}`}
       >
         {filteredItems?.map((item: TagScrollerItem) => {
           return (

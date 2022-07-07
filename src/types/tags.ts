@@ -6,9 +6,8 @@ export type TagsScrollerProps = {
   sectionUrl?: string
   hasMoreLink?: boolean
   tagContent?: TagOutput[]
-  tagID?: string
+  tagData: any
   content?: HomeCarouselsTypes[]
-  hasResults: () => void
 }
 
 export type TagScrollerItem = {

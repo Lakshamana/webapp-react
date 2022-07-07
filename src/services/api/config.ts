@@ -83,9 +83,11 @@ const errorLink = onError(
         return
       }
 
+      //TODO: backend needs to change errors messages related to WRONG CREDENTIALS on Login
       if (
         err.extensions.code === '404' &&
-        operation.operationName !== 'VerifyMail'
+        operation.operationName !== 'VerifyMail' &&
+        err.message !== 'exception:ACCOUNT_NOT_FOUND'
       ) {
         show404()
         return

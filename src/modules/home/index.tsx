@@ -1,46 +1,46 @@
-import { useEffect, useState } from 'react'
-import { Flex, Box } from '@chakra-ui/layout'
-import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
+import { Box, Flex } from '@chakra-ui/layout'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
-  PostType,
-  Category,
   Billboard,
-  Status,
-  Post,
+  Category,
   LiveEvent,
+  Post,
+  PostType,
+  Status
 } from 'generated/graphql'
 
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import {
-  useChannelsStore,
-  useCommonStore,
-  useCustomizationStore,
-} from 'services/stores'
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
-  QUERY_POSTS_CARDS,
+  QUERY_LOOP_TAGS,
+  QUERY_POSTS_CARDS
 } from 'services/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import {
+  useChannelsStore,
+  useCommonStore,
+  useCustomizationStore
+} from 'services/stores'
 
-import { HomeCarouselsTypes } from 'types/common'
+import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
-import { BillboardTarget } from 'types/common'
 
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 
 import {
   BillboardScroller,
   CategoriesScroller,
-  VideosScroller,
-  TagsScroller,
   LivestreamScroller,
+  TagsScroller,
+  VideosScroller
 } from 'components/molecules'
 
-import { convertToValidColor } from 'utils/helperFunctions'
 import { sizes } from 'styles'
+import { convertToValidColor } from 'utils/helperFunctions'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
@@ -62,7 +62,8 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  const [hasTagsContent, setHasTagsContent] = useState<boolean>(false)
+  const [tagsIds, setTagsIds] = useState<string[]>()
+  const [tagsData, setTagsData] = useState({})
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -138,12 +139,20 @@ const HomePage = () => {
       notifyOnNetworkStatusChange: true,
     })
 
+  const [getTags, { loading: loadingTags }] = useLazyQuery(
+    QUERY_LOOP_TAGS(tagsIds),
+    {
+      onCompleted: (result) => setTagsData(result),
+    }
+  )
+
   const isLoading =
     loadingLiveEvents ||
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
-    loadingCategoriesWithChildren
+    loadingCategoriesWithChildren ||
+    loadingTags
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -151,7 +160,7 @@ const HomePage = () => {
     featuredPostsData?.length ||
     featuredCategoriesData?.length ||
     (isHomeDisplayingCategories && categoriesWithChildrenData?.length) ||
-    hasTagsContent
+    tagsData
 
   const isEmpty = !isLoading && !hasResults
 
@@ -164,7 +173,6 @@ const HomePage = () => {
     setLiveEventsData([])
     setFeaturedCategoriesData([])
     setFeaturedPostsData([])
-    setHasTagsContent(false)
     setBillboardItems([])
   }
   const deactivateAllItems = () => {
@@ -186,6 +194,14 @@ const HomePage = () => {
         (item) => !item?.TAGS?.length && item.IS_ACTIVE
       )
 
+    const tagsCarouselItems = activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
+      (item) => item?.TAGS && item.IS_ACTIVE
+    )
+
+    const ids = tagsCarouselItems?.map((item) => item.TAGS)
+
+    setTagsIds(ids)
+
     defaultCarouselsItems?.forEach((item) => {
       if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Posts)
         setIsFeaturedPostsActive(true)
@@ -202,6 +218,11 @@ const HomePage = () => {
     )
     //eslint-disable-next-line
   }, [activeChannelConfig])
+
+  useEffect(() => {
+    if (tagsIds?.length) getTags()
+    //eslint-disable-next-line
+  }, [tagsIds])
 
   useEffect(() => {
     if (isFeaturedPostsActive) getFeaturedPosts()
@@ -286,17 +307,21 @@ const HomePage = () => {
       />
     ))
 
-  const renderTagsScroller = (item: CarouselFlags) => (
-    <TagsScroller
-      key={`${item.LABEL[0].VALUE}`}
-      tagID={item.TAGS}
-      hasResults={() => setHasTagsContent(true)}
-      hasMoreLink={true}
-      content={item.CONTENT_TYPE}
-      sectionTitle={getCarouselLabel(item)}
-      sectionUrl={`/c/${activeChannel?.slug}/tag/`}
-    />
-  )
+  const renderTagsScroller = (item: CarouselFlags) => {
+    const currentTag = tagsData[`tag${item.TAGS}`]
+    if (currentTag)
+      return (
+        <TagsScroller
+          key={`${item.LABEL[0].VALUE}`}
+          tagData={currentTag}
+          hasMoreLink={true}
+          content={item.CONTENT_TYPE}
+          sectionTitle={getCarouselLabel(item)}
+          sectionUrl={`/c/${activeChannel?.slug}/tag/`}
+        />
+      )
+    else return <></>
+  }
 
   const getCarouselLabel = (item: CarouselFlags) => {
     const label = item.LABEL.find((item) =>
