@@ -16,8 +16,8 @@ import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
-  QUERY_LOOP_TAGS,
-  QUERY_POSTS_CARDS
+  QUERY_POSTS_CARDS,
+  QUERY_TAG
 } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
@@ -63,7 +63,7 @@ const HomePage = () => {
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
   const [tagsIds, setTagsIds] = useState<string[]>()
-  const [tagsData, setTagsData] = useState({})
+  const [tagsData, setTagsData] = useState<any[]>()
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -139,12 +139,11 @@ const HomePage = () => {
       notifyOnNetworkStatusChange: true,
     })
 
-  const [getTags, { loading: loadingTags }] = useLazyQuery(
-    QUERY_LOOP_TAGS(tagsIds),
-    {
-      onCompleted: (result) => setTagsData(result),
-    }
-  )
+  const [getTags, { loading: loadingTag }] = useLazyQuery(QUERY_TAG, {
+    onCompleted: (result) => {
+      setTagsData((oldState) => [{ ...oldState }, result?.tag])
+    },
+  })
 
   const isLoading =
     loadingLiveEvents ||
@@ -152,7 +151,7 @@ const HomePage = () => {
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
     loadingCategoriesWithChildren ||
-    loadingTags
+    loadingTag
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -160,7 +159,7 @@ const HomePage = () => {
     featuredPostsData?.length ||
     featuredCategoriesData?.length ||
     (isHomeDisplayingCategories && categoriesWithChildrenData?.length) ||
-    tagsData
+    tagsData?.length
 
   const isEmpty = !isLoading && !hasResults
 
@@ -174,6 +173,8 @@ const HomePage = () => {
     setFeaturedCategoriesData([])
     setFeaturedPostsData([])
     setBillboardItems([])
+    setTagsIds([])
+    setTagsData([])
   }
   const deactivateAllItems = () => {
     setIsFeaturedPostsActive(false)
@@ -198,7 +199,9 @@ const HomePage = () => {
       (item) => item?.TAGS && item.IS_ACTIVE
     )
 
-    const ids = tagsCarouselItems?.map((item) => item.TAGS)
+    const ids = tagsCarouselItems
+      ?.filter((item) => item.TAGS && item.TAGS.length)
+      .map((item) => item.TAGS)
 
     setTagsIds(ids)
 
@@ -220,16 +223,18 @@ const HomePage = () => {
   }, [activeChannelConfig])
 
   useEffect(() => {
-    if (tagsIds?.length) getTags()
-    //eslint-disable-next-line
-  }, [tagsIds])
-
-  useEffect(() => {
     if (isFeaturedPostsActive) getFeaturedPosts()
     if (isFeaturedCategoriesActive) getFeaturedCategories()
     if (isLiveEventsActive) getLiveEvents()
     // eslint-disable-next-line
   }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
+
+  useEffect(() => {
+    if (tagsIds?.length) {
+      tagsIds.forEach((item) => getTags({ variables: { id: item } }))
+    }
+    //eslint-disable-next-line
+  }, [tagsIds])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path)
@@ -308,7 +313,7 @@ const HomePage = () => {
     ))
 
   const renderTagsScroller = (item: CarouselFlags) => {
-    const currentTag = tagsData[`tag${item.TAGS}`]
+    const currentTag = tagsData?.find((tag) => tag.id === item.TAGS)
     if (currentTag)
       return (
         <TagsScroller
@@ -320,7 +325,7 @@ const HomePage = () => {
           sectionUrl={`/c/${activeChannel?.slug}/tag/`}
         />
       )
-    else return <></>
+    return <></>
   }
 
   const getCarouselLabel = (item: CarouselFlags) => {
