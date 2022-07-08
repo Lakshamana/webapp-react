@@ -1,20 +1,19 @@
+import { useMutation } from '@apollo/client'
 import { Button, Checkbox, Divider, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import axios from 'axios'
 import { Input, SelectInputStyle } from 'components'
+import { FormikHelpers, useFormik } from 'formik'
+import { OrderStatus } from 'generated/graphql'
+import { ModalType } from 'modules/checkout/components/notification'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { MUTATION_CONFIRM_ORDER } from 'services/graphql'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
-import { useEffect, useState } from 'react'
-import { InputSpreedly } from './style'
-import { FormikHelpers, useFormik } from 'formik'
 import * as Yup from 'yup'
-import { cardForm, SpreedlyError } from './types'
-import { ModalType } from 'modules/checkout/components/notification'
-import { useMutation } from '@apollo/client'
-import { MUTATION_CONFIRM_ORDER } from 'services/graphql'
-import { pmDataType, Props } from './types'
-import { OrderStatus } from 'generated/graphql'
 import { ModalNotification } from '../components'
-import axios from 'axios'
+import { InputSpreedly } from './style'
+import { cardForm, pmDataType, Props, SpreedlyError } from './types'
 
 const { REACT_APP_SPREEDLY_KEY } = process.env
 
@@ -151,6 +150,7 @@ export const CardInfoSpreedly = ({
       confirmOrder({
         variables: {
           payload: {
+            paymentMethodType: 'CREDIT_CARD',
             cardBrand: card_type,
             cardHolderName: pmData.full_name,
             lastDigits: last_four_digits,
@@ -159,15 +159,16 @@ export const CardInfoSpreedly = ({
             productPrice,
             product,
             cpf: pmData.metadata.cpf,
+            phone: pmData.phone_number,
             billingAddress: {
-              billingAddress1: pmData.address1,
-              billingAddress2: pmData.address2,
-              billingCity: pmData.city,
-              billingStateId: pmData.state,
-              billingCountryId: pmData.country,
-              billingPostalCode: pmData.metadata.postalCode,
-              billingNeighborhood: pmData.metadata.neighborhood,
-              billingStreetNumber: pmData.metadata.streetNumber,
+              address1: pmData.address1,
+              address2: pmData.address2,
+              city: pmData.city,
+              stateId: pmData.state,
+              countryId: pmData.country,
+              zipCode: pmData.metadata.postalCode,
+              neighborhood: pmData.metadata.neighborhood,
+              streetNumber: pmData.metadata.streetNumber,
             }
           }
         }
@@ -225,8 +226,15 @@ export const CardInfoSpreedly = ({
       city: '',
       state: '',
       terms: false,
+      phone_number: '',
     },
     validationSchema: Yup.object({
+      phone_number: Yup.string()
+      .required(
+        t('common.error.field_required', {
+          field_name: t('common.custom_field.phone'),
+        })
+      ),
       full_name: Yup.string().required(
         t('page.checkout.card_info.mistakes.full_name_required')
       ),
@@ -419,6 +427,16 @@ export const CardInfoSpreedly = ({
           error={!!errors.cpf && touched.cpf}
         />
       </Flex>
+      <Input
+          name="phone_number"
+          type="text"
+          value={values.phone_number}
+          placeholder={t('common.custom_field.phone')}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          errorMessage={errors.phone_number}
+          error={!!errors.phone_number && touched.phone_number}
+        />
       <SelectInputStyle
         name="country"
         placeholder={t('page.checkout.card_info.country')}

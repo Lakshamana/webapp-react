@@ -15,6 +15,7 @@ export type cardForm = {
   city: string,
   state: string,
   terms: boolean,
+  phone_number: string,
 }
 
 export type pmDataType = {

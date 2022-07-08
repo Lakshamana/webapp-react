@@ -8,22 +8,21 @@ import {
   // Divider,
   Flex,
   // Switch,
-  Text,
+  Text
 } from "@chakra-ui/react"
 import { Icon } from "@iconify/react"
 // import { Input } from "components/molecules"
-import {
-  ButtonSelectOption,
-  CardSelectPlan,
-  // InputCustomCreditCard,
-} from "./style"
-import { useThemeStore } from 'services/stores'
-import { colors } from 'styles'
-import { Props } from "./types"
-import { useState } from "react"
 import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
 import { CardInfoSpreedly } from "components"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
+import {
+  ButtonSelectOption,
+  CardSelectPlan
+} from "./style"
+import { Props } from "./types"
 // import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
 // import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg'
 // import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
@@ -300,7 +299,7 @@ export const SelectOption = ({
                   <AccordionPanel pb={4} w="100%">
                     <CardInfoSpreedly
                       product={selectedOption['productsId']}
-                      productPrice={selectedOption['billingTypes'].id}
+                      productPrice={selectedOption['id']}
                     />
                   </AccordionPanel>
                 </AccordionItem>
