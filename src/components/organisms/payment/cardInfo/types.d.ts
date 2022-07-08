@@ -80,3 +80,10 @@ export interface Props {
   productPrice: string
   product: string
 }
+
+
+export enum OrderType {
+  pending = 'PENDING',
+  active = 'ACTIVE',
+  failed = 'FAILED',
+}
