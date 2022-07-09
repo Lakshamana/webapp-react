@@ -1,5 +1,7 @@
+import { useMutation } from '@apollo/client'
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { MUTATION_ADD_PENDING_ORDER } from 'services/graphql'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { Props } from './types'
@@ -17,8 +19,14 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
     ).format(value)
   }
 
-  const handleAction = (plan: string) => () => {
-    selectPlan(plan)
+  const [orderData, { loading }] = useMutation(MUTATION_ADD_PENDING_ORDER)
+
+  const handleAction = (plan) => async () => {
+    const getOrderData = await orderData({
+      variables: { product: plan.id },
+    })
+    const updatePlan = { ...plan, orderId: getOrderData.data.addPendingOrder.id }
+    selectPlan(updatePlan)
     nextStep()
   }
 
@@ -76,8 +84,15 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                   fontSize="12px"
                   textTransform="uppercase"
                   fontWeight="400"
+                  disabled={loading}
                   onClick={handleAction(plan)}
-                >{t('page.plan.selectPlan.select')}</Button>
+                >
+                  {t(
+                    loading
+                      ? 'page.plan.selectPlan.loading'
+                      : 'page.plan.selectPlan.select'
+                  )}
+                </Button>
                 <Text
                   color={colors.generalText[colorMode]}
                   fontWeight="400"

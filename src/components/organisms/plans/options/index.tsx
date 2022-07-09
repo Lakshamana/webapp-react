@@ -1,5 +1,6 @@
+import { useEffect } from "react"
 // import { Input } from "components/molecules"
-import { useQuery } from "@apollo/client"
+import { useLazyQuery } from "@apollo/client"
 import { Flex } from "@chakra-ui/react"
 import { useHistory } from "react-router-dom"
 import { QUERY_GET_ORDER_RESULT } from "services/graphql"
@@ -10,19 +11,26 @@ import { OrderType, Props } from "./types"
 export const SelectOption = ({ plan }: Props) => {
   const history = useHistory()
 
-  useQuery(QUERY_GET_ORDER_RESULT, {
-    variables: { id: plan.id },
+
+  const [getPendingOrder, { data: orderResult, loading }] = useLazyQuery(QUERY_GET_ORDER_RESULT, {
     fetchPolicy: 'network-only',
     pollInterval: 5000,
-    onCompleted(orderResult) {
-      if (orderResult) {
-        const { status } = orderResult?.order
-        if (status === OrderType.active) {
-          history.go(0)
-        }
+  })
+
+  useEffect(() => {
+    getPendingOrder({ variables: { id: plan.orderId } })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (orderResult) {
+      if (orderResult.order.status === OrderType.active) {
+        history.go(0)
       }
     }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderResult, loading])
+
   // const { colorMode } = useThemeStore()
   // const [selectedOptionState, setselectedOptionState] = useState(false)
   // const [selectedOption, setselectedOption] = useState({})
