@@ -458,6 +458,7 @@ const EN_US = {
         selectPlan: {
           title: 'Select Your Plan',
           select: 'Select',
+          loading: 'Loading'
         },
         selectOption: {
           title: 'Select option:',
