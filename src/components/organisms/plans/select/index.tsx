@@ -13,10 +13,11 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
     if (typeof value === 'string') {
       value = parseFloat(value)
     }
-    return Intl.NumberFormat(
-      i18n.language,
-      { style: 'currency', currency: symbol, minimumFractionDigits: 2 },
-    ).format(value)
+    return Intl.NumberFormat(i18n.language, {
+      style: 'currency',
+      currency: symbol,
+      minimumFractionDigits: 2,
+    }).format(value)
   }
 
   const [orderData, { loading }] = useMutation(MUTATION_ADD_PENDING_ORDER)
@@ -25,7 +26,11 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
     const getOrderData = await orderData({
       variables: { product: plan.id },
     })
-    const updatePlan = { ...plan, orderId: getOrderData.data.addPendingOrder.id }
+    const updatePlan = {
+      ...plan,
+      orderId: getOrderData.data.addPendingOrder.id,
+      account: getOrderData.data.addPendingOrder.account,
+    }
     selectPlan(updatePlan)
     nextStep()
   }
@@ -36,72 +41,88 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
         fontSize="28px"
         fontWeight="500"
         color={colors.generalText[colorMode]}
-      >{t('page.plan.selectPlan.title')}</Text>
-      <Flex gridGap="24px" mt="16px" flexDirection={{ base: 'column', md: 'row' }}>
-        {plans && plans.map((plan, key) => (
-          <Box
-            key={`plan-${key}`}
-            maxW="sm"
-            borderWidth="1px"
-            borderRadius="8px"
-            overflow="hidden"
-            w="340px"
-            background={colors.cardBg[colorMode]}
-            boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
-          >
+      >
+        {t('page.plan.selectPlan.title')}
+      </Text>
+      <Flex
+        gridGap="24px"
+        mt="16px"
+        flexDirection={{ base: 'column', md: 'row' }}
+      >
+        {plans &&
+          plans.map((plan, key) => (
             <Box
-              h="184px"
-              w="100%"
-              backgroundImage={`url(${plan.imageUrl})`}
-              backgroundSize="100%"
-              backgroundPosition="center"
-              backgroundRepeat="no-repeat"
-            />
-            <Box p="20px">
-              <Text
-                color={colors.generalText[colorMode]}
-                fontWeight="600"
-                fontSize="18px"
-              >{plan.name}</Text>
-              <Text
-                color={colors.secondaryText[colorMode]}
-                fontWeight="400"
-                fontSize="12px"
-                maxW="256px"
+              key={`plan-${key}`}
+              maxW="sm"
+              borderWidth="1px"
+              borderRadius="8px"
+              overflow="hidden"
+              w="340px"
+              background={colors.cardBg[colorMode]}
+              boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+            >
+              <Box
+                h="184px"
                 w="100%"
-                mt="6px"
-              >{plan.description}</Text>
-              <Flex
-                mt="15px"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Button
-                  h="36px"
-                  w="156px"
-                  bg="#0660F9"
-                  color="white"
-                  fontSize="12px"
-                  textTransform="uppercase"
-                  fontWeight="400"
-                  disabled={loading}
-                  onClick={handleAction(plan)}
-                >
-                  {t(
-                    loading
-                      ? 'page.plan.selectPlan.loading'
-                      : 'page.plan.selectPlan.select'
-                  )}
-                </Button>
+                backgroundImage={`url(${plan.imageUrl})`}
+                backgroundSize="100%"
+                backgroundPosition="center"
+                backgroundRepeat="no-repeat"
+              />
+              <Box p="20px">
                 <Text
                   color={colors.generalText[colorMode]}
-                  fontWeight="400"
+                  fontWeight="600"
                   fontSize="18px"
-                >{formatCurrency(plan.productPrices[0].unitPrice, plan.productPrices[0].currency.isoCode)}</Text>
-              </Flex>
+                >
+                  {plan.name}
+                </Text>
+                <Text
+                  color={colors.secondaryText[colorMode]}
+                  fontWeight="400"
+                  fontSize="12px"
+                  maxW="256px"
+                  w="100%"
+                  mt="6px"
+                >
+                  {plan.description}
+                </Text>
+                <Flex
+                  mt="15px"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Button
+                    h="36px"
+                    w="156px"
+                    bg="#0660F9"
+                    color="white"
+                    fontSize="12px"
+                    textTransform="uppercase"
+                    fontWeight="400"
+                    disabled={loading}
+                    onClick={handleAction(plan)}
+                  >
+                    {t(
+                      loading
+                        ? 'page.plan.selectPlan.loading'
+                        : 'page.plan.selectPlan.select'
+                    )}
+                  </Button>
+                  <Text
+                    color={colors.generalText[colorMode]}
+                    fontWeight="400"
+                    fontSize="18px"
+                  >
+                    {formatCurrency(
+                      plan.productPrices[0].unitPrice,
+                      plan.productPrices[0].currency.isoCode
+                    )}
+                  </Text>
+                </Flex>
+              </Box>
             </Box>
-          </Box>
-        ))}
+          ))}
       </Flex>
     </Flex>
   )

@@ -1,21 +1,24 @@
-import { useEffect } from "react"
+import { useEffect } from 'react'
 // import { Input } from "components/molecules"
-import { useLazyQuery } from "@apollo/client"
-import { Flex } from "@chakra-ui/react"
-import { useHistory } from "react-router-dom"
-import { QUERY_GET_ORDER_RESULT } from "services/graphql"
-import { OrderType, Props } from "./types"
+import { useLazyQuery } from '@apollo/client'
+import { Flex } from '@chakra-ui/react'
+import { useHistory } from 'react-router-dom'
+import { QUERY_GET_ORDER_RESULT } from 'services/graphql'
+import { OrderType, Props } from './types'
 // import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
 // import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
 
 export const SelectOption = ({ plan }: Props) => {
   const history = useHistory()
+  const url = `${plan.linkUrl}?userId=${plan.account}`;
 
-
-  const [getPendingOrder, { data: orderResult, loading }] = useLazyQuery(QUERY_GET_ORDER_RESULT, {
-    fetchPolicy: 'network-only',
-    pollInterval: 5000,
-  })
+  const [getPendingOrder, { data: orderResult, loading }] = useLazyQuery(
+    QUERY_GET_ORDER_RESULT,
+    {
+      fetchPolicy: 'network-only',
+      pollInterval: 5000,
+    }
+  )
 
   useEffect(() => {
     getPendingOrder({ variables: { id: plan.orderId } })
@@ -46,15 +49,24 @@ export const SelectOption = ({ plan }: Props) => {
   // }
 
   return (
-    <Flex p="1em" gridGap="4px" flexDirection="column" w="100%" alignItems="center">
-      <iframe
-        title="Payment Frame"
-        style={{
-          width: 'inherit',
-          height: '100vh'
-        }}
-        src={`${plan.linkUrl}?userId=${orderResult?.order.account}`} />
-    </Flex>
+    plan.account && (
+      <Flex
+        p="1em"
+        gridGap="4px"
+        flexDirection="column"
+        w="100%"
+        alignItems="center"
+      >
+        <iframe
+          title="Payment Frame"
+          style={{
+            width: 'inherit',
+            height: '100vh',
+          }}
+          src={url}
+        />
+      </Flex>
+    )
   )
 }
 
