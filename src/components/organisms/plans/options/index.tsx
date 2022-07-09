@@ -53,7 +53,7 @@ export const SelectOption = ({ plan }: Props) => {
           width: 'inherit',
           height: '100vh'
         }}
-        src={plan.linkUrl} />
+        src={`${plan.linkUrl}?userId=${orderResult?.order.account}`} />
     </Flex>
   )
 }
