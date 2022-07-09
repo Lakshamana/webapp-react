@@ -11,6 +11,7 @@ export const SelectOption = ({ plan }: Props) => {
   const history = useHistory()
 
   useQuery(QUERY_GET_ORDER_RESULT, {
+    variables: { id: plan.id },
     fetchPolicy: 'network-only',
     pollInterval: 5000,
     onCompleted(orderResult) {
@@ -38,16 +39,13 @@ export const SelectOption = ({ plan }: Props) => {
 
   return (
     <Flex p="1em" gridGap="4px" flexDirection="column" w="100%" alignItems="center">
-      {/* <div
-        style={{ color: 'white' }}
-      >{JSON.stringify(plan)}</div> */}
       <iframe
         title="Payment Frame"
         style={{
           width: 'inherit',
           height: '100vh'
         }}
-        src={plan.paymentLink || "https://inspire-billing-staging.inspireplatform.io/checkout/U2FsdGVkX1+lMQ+5UIdudWKvrdSBm16SK59HHvAKGYunqtWywIvzJyW3vau2dhIifS8Gp34zR2dlbKp4_RnOXw=="} />
+        src={plan.linkUrl} />
     </Flex>
   )
 }
