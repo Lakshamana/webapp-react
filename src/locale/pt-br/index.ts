@@ -457,6 +457,7 @@ const PT_BR = {
         selectPlan: {
           title: 'Selecione o seu plano',
           select: 'selecionar',
+          loading: 'Aguarde'
         },
         selectOption: {
           title: 'Selecione a opção:',
