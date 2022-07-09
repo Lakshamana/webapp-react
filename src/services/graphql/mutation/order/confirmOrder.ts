@@ -5,6 +5,7 @@ export const MUTATION_CONFIRM_ORDER = gql`
     confirmOrder(payload: $payload) {
       id
       status
+      subscription
     }
   }
 `
