@@ -463,6 +463,9 @@ const EN_US = {
           title: 'Select option:',
           choosePaymentMethod: 'Choose a payment method',
           bankCard: 'Bank Card',
+          bankCardDesc: 'Pay with Visa, Mastercard, Maestro and Amex',
+          pix: 'PIX',
+          pixDesc: 'Fast, your payment approved on time'
         },
       },
     },
