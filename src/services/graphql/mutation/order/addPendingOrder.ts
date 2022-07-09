@@ -5,6 +5,7 @@ export const MUTATION_ADD_PENDING_ORDER = gql`
     addPendingOrder(payload: { product: $product }) {
       id
       status
+      account
     }
   }
 `
