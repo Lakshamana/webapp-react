@@ -8,38 +8,35 @@ import {
   // Divider,
   Flex,
   // Switch,
-  Text,
+  Text
 } from "@chakra-ui/react"
 import { Icon } from "@iconify/react"
 // import { Input } from "components/molecules"
-import {
-  ButtonSelectOption,
-  CardSelectPlan,
-  // InputCustomCreditCard,
-} from "./style"
+import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
+import { CardInfoSpreedly, PixInfoSpreedly } from "components"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import {
+  ButtonSelectOption,
+  CardSelectPlan
+} from "./style"
 import { Props } from "./types"
-import { useState } from "react"
-import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
-import { CardInfoSpreedly } from "components"
-import { useTranslation } from "react-i18next"
 // import { ReactComponent as ApplePay } from 'assets/icons/payment/apple-pay.svg'
 // import { ReactComponent as GooglePay } from 'assets/icons/payment/google-pay.svg'
 // import { ReactComponent as Cryptocurrencies } from 'assets/icons/payment/cryptocurrencies.svg'
 // import { ReactComponent as Paypall } from 'assets/icons/payment/paypall.svg'
-// import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
+import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
 // import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
 
-export const SelectOption = ({
-  plan,
-}: Props) => {
+export const SelectOption = ({ plan }: Props) => {
   const { colorMode } = useThemeStore()
   const [selectedOptionState, setselectedOptionState] = useState(false)
   const [selectedOption, setselectedOption] = useState({})
   const { t, i18n } = useTranslation()
   const formatCurrency = (value: string | number, symbol: string = 'USD') => {
-    if(typeof value === 'string') {
+    if (typeof value === 'string') {
       value = parseFloat(value)
     }
     return Intl.NumberFormat(
@@ -94,7 +91,7 @@ export const SelectOption = ({
             justifyContent="center"
             alignItems="center"
             pl="30px"
-            onClick={()=>setselectedOptionState(!selectedOptionState)}
+            onClick={() => setselectedOptionState(!selectedOptionState)}
           >
             <Icon
               icon={selectedOptionState ? "ic:baseline-expand-more" : "ic:baseline-expand-less"}
@@ -115,14 +112,14 @@ export const SelectOption = ({
             >{t('page.plan.selectOption.title')}</Text>
             {
               plan.productPrices.map((option, key) => (
-                <ButtonSelectOption onClick={()=>{
+                <ButtonSelectOption onClick={() => {
                   setselectedOptionState(true)
                   setselectedOption(option)
                 }}
-                key={key}
+                  key={key}
                 >
                   <Text>{option.billingTypes.name}</Text>
-                  <Text>{formatCurrency(option.unitPrice, option.currency.isoCode)}{ option?.billingPeriods && ` / ${option.billingPeriods.name}` }</Text>
+                  <Text>{formatCurrency(option.unitPrice, option.currency.isoCode)}{option?.billingPeriods && ` / ${option.billingPeriods.name}`}</Text>
                 </ButtonSelectOption>
               ))
             }
@@ -276,7 +273,9 @@ export const SelectOption = ({
                   color={colors.secondaryText[colorMode]}
                   fontWeight="700"
                   fontSize="20px"
-                >{t('page.plan.selectOption.choosePaymentMethod')}</Text>
+                >
+                  {t('page.plan.selectOption.choosePaymentMethod')}
+                </Text>
               </Flex>
               {/* TODO: Adicionar credit card do signup depois de concluido */}
               <Accordion allowToggle w="100%" bg={colors.bodyBg[colorMode]} borderRadius="8px" color={colors.generalText[colorMode]}>
@@ -286,21 +285,25 @@ export const SelectOption = ({
                       <Text
                         fontWeight="600"
                         fontSize="14px"
-                      >{t('page.plan.selectOption.bankCard')}</Text>
+                      >
+                        {t('page.plan.selectOption.bankCard')}
+                      </Text>
                       <Text
                         fontWeight="300"
                         fontSize="14px"
                         w="277px"
                         textAlign="start"
-                      >Pay with Visa, Mastercard, Maestro and Amex</Text>
+                      >
+                        {t('page.plan.selectOption.bankCardDesc')}
+                      </Text>
                     </Flex>
-                    <CreditCards height="26px"/>
-                    <AccordionIcon ml="29px" mr="10px"/>
+                    <CreditCards height="26px" />
+                    <AccordionIcon ml="29px" mr="10px" />
                   </AccordionButton>
                   <AccordionPanel pb={4} w="100%">
                     <CardInfoSpreedly
                       product={selectedOption['productsId']}
-                      productPrice={selectedOption['billingTypes'].id}
+                      productPrice={selectedOption['id']}
                     />
                   </AccordionPanel>
                 </AccordionItem>
@@ -433,39 +436,39 @@ export const SelectOption = ({
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
+          */}
 
-              <Accordion allowToggle w="100%" bg={colors.white} borderRadius="8px">
+              <Accordion allowToggle w="100%" bg={colors.bodyBg[colorMode]} borderRadius="8px" color={colors.generalText[colorMode]}>
                 <AccordionItem>
                   <AccordionButton h="80px">
                     <Flex w="100%" flexDir="column" alignItems="flex-start">
                       <Text
-                        color={colors.black}
                         fontWeight="600"
                         fontSize="14px"
-                      >Pix</Text>
+                      >
+                        {t('page.plan.selectOption.pix')}
+                      </Text>
                       <Text
-                        color={colors.black}
                         fontWeight="300"
                         fontSize="14px"
                         w="277px"
                         textAlign="start"
-                      >Fast, your payment approved on time </Text>
+                      >
+                        {t('page.plan.selectOption.pixDesc')}
+                      </Text>
                     </Flex>
-                    <Pix height="26px"/>
-                    <AccordionIcon ml="29px" mr="10px"/>
+                    <Pix height="26px" />
+                    <AccordionIcon ml="29px" mr="10px" />
                   </AccordionButton>
                   <AccordionPanel pb={4} w="100%">
-                    <Text
-                      color={colors.black}
-                      fontWeight="500"
-                      fontSize="14px"
-                      w="100%"
-                      textAlign="center"
-                    >Coming Soon!</Text>
+                    <PixInfoSpreedly
+                      product={selectedOption['productsId']}
+                      productPrice={selectedOption['id']}
+                    />
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
-
+              {/*
               <Accordion allowToggle w="100%" bg={colors.white} borderRadius="8px">
                 <AccordionItem>
                   <AccordionButton h="80px">

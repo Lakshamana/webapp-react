@@ -462,6 +462,9 @@ const PT_BR = {
           title: 'Selecione a opção:',
           choosePaymentMethod: 'Escolha um método de pagamento',
           bankCard: 'Cartão',
+          bankCardDesc: 'Pague com Visa, Mastercard, Maestro ou Amex',
+          pix: 'PIX',
+          pixDesc: 'Seu pagamento aprovado rapidamente'
         },
       },
     },
