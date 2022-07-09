@@ -1,14 +1,14 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import { Props } from './types'
+import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
-import { useTranslation } from 'react-i18next'
+import { Props } from './types'
 
 export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   const { colorMode } = useThemeStore()
   const { t, i18n } = useTranslation()
   const formatCurrency = (value: string | number, symbol: string = 'USD') => {
-    if(typeof value === 'string') {
+    if (typeof value === 'string') {
       value = parseFloat(value)
     }
     return Intl.NumberFormat(
@@ -16,6 +16,12 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
       { style: 'currency', currency: symbol, minimumFractionDigits: 2 },
     ).format(value)
   }
+
+  const handleAction = (plan: string) => () => {
+    selectPlan(plan)
+    nextStep()
+  }
+
   return (
     <Flex flexDirection="column" mt="44px">
       <Text
@@ -23,9 +29,10 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
         fontWeight="500"
         color={colors.generalText[colorMode]}
       >{t('page.plan.selectPlan.title')}</Text>
-      <Flex gridGap="24px" mt="16px">
+      <Flex gridGap="24px" mt="16px" flexDirection={{ base: 'column', md: 'row' }}>
         {plans && plans.map((plan, key) => (
           <Box
+            key={`plan-${key}`}
             maxW="sm"
             borderWidth="1px"
             borderRadius="8px"
@@ -33,7 +40,6 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
             w="340px"
             background={colors.cardBg[colorMode]}
             boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
-            key={key}
           >
             <Box
               h="184px"
@@ -70,10 +76,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                   fontSize="12px"
                   textTransform="uppercase"
                   fontWeight="400"
-                  onClick={()=>{
-                    selectPlan(plan);
-                    nextStep()
-                  }}
+                  onClick={handleAction(plan)}
                 >{t('page.plan.selectPlan.select')}</Button>
                 <Text
                   color={colors.generalText[colorMode]}
