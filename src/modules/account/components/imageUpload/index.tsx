@@ -18,6 +18,7 @@ import { Icon } from '@iconify/react';
 import { Button } from 'components';
 import { useCallback, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
+import { useTranslation } from 'react-i18next';
 import { useThemeStore } from 'services/stores';
 import { colors } from 'styles';
 import { getCroppedImg } from './canvasUtils';
@@ -27,6 +28,7 @@ export const ImageUpload = () => {
   const [imageSrc, setImageSrc] = useState<any>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { colorMode } = useThemeStore()
+  const { t } = useTranslation()
   const [showTooltipZoom, setShowTooltipZoom] = useState(false)
   const [showTooltipRotation, setShowTooltipRotation] = useState(false)
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -89,9 +91,7 @@ export const ImageUpload = () => {
             fontSize={'1.5rem'}
             textAlign={'center'}
             fontWeight={500}
-          >
-            Edit Image
-          </ModalHeader>
+          >{t('page.account.edit_avatar')}</ModalHeader>
           <ModalBody>
             <Container>
               <Cropper
@@ -113,7 +113,7 @@ export const ImageUpload = () => {
               <Button
                 w="100%"
                 onClick={clickOnHiddenInput}
-                label='Escolher Nova Foto'
+                label={t('page.account.choose_new_photo')}
                 iconName='file-image-plus-outline'
                 variant='link'
               />
@@ -125,7 +125,7 @@ export const ImageUpload = () => {
                 accept="image/*"
               />
               <Flex flexDirection='column' gridGap='1em'>
-                <Text>Zoom: {zoomPercent(zoom)}</Text>
+                <Text>{t('page.account.zoom')}: {zoomPercent(zoom)}</Text>
                 <Slider
                   defaultValue={zoom}
                   min={1}
@@ -153,7 +153,7 @@ export const ImageUpload = () => {
               </Flex>
 
               <Flex flexDirection='column' gridGap='1em'>
-                <Text>Rotation: {rotation + '°'}</Text>
+                <Text>{t('page.account.rotation')}: {rotation + '°'}</Text>
                 <Slider
                   defaultValue={rotation}
                   min={0}
@@ -182,10 +182,10 @@ export const ImageUpload = () => {
                 <Button
                   mr={3}
                   onClick={onClose}
-                  label='close'
+                  label={t('page.account.close')}
                   variant='ghost'
                 />
-                <Button onClick={showCroppedImage} label='Crop Image' iconName='crop'/>
+                <Button onClick={showCroppedImage} label={t('page.account.crop_image')} iconName='crop'/>
               </Flex>
             </Flex>
           </ModalFooter>
