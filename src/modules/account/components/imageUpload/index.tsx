@@ -1,5 +1,4 @@
 import {
-  Button,
   Flex,
   Modal,
   ModalBody,
@@ -16,7 +15,8 @@ import {
   useDisclosure
 } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
-import { useCallback, useState } from 'react';
+import { Button } from 'components';
+import { useCallback, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { useThemeStore } from 'services/stores';
 import { colors } from 'styles';
@@ -33,6 +33,11 @@ export const ImageUpload = () => {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  const clickOnHiddenInput = (event) => {
+    hiddenFileInput.current!.click()
+  }
 
   const onCropChange = (crop) => {
     setCrop(crop);
@@ -105,8 +110,20 @@ export const ImageUpload = () => {
 
           <ModalFooter>
             <Flex flexDirection='column' w="100%" gridGap='1em'>
-              <input type="file" onChange={onFileChange} accept="image/*"/>
-
+              <Button
+                w="100%"
+                onClick={clickOnHiddenInput}
+                label='Escolher Nova Foto'
+                iconName='file-image-plus-outline'
+                variant='link'
+              />
+              <input
+                type="file"
+                onChange={onFileChange}
+                ref={hiddenFileInput}
+                style={{display:'none'}} 
+                accept="image/*"
+              />
               <Flex flexDirection='column' gridGap='1em'>
                 <Text>Zoom: {zoomPercent(zoom)}</Text>
                 <Slider
@@ -161,14 +178,15 @@ export const ImageUpload = () => {
                   <SliderThumb />
                 </Slider>
               </Flex>
-
               <Flex>
-                <Button colorScheme='red' mr={3} onClick={onClose}>
-                  Close
-                </Button>
-                <Button colorScheme='blue' onClick={showCroppedImage}>Crop Image</Button>
+                <Button
+                  mr={3}
+                  onClick={onClose}
+                  label='close'
+                  variant='ghost'
+                />
+                <Button onClick={showCroppedImage} label='Crop Image' iconName='crop'/>
               </Flex>
-
             </Flex>
           </ModalFooter>
         </ModalContent>
