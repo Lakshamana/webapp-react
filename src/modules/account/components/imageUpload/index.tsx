@@ -23,9 +23,13 @@ import { useThemeStore } from 'services/stores';
 import { colors } from 'styles';
 import { getCroppedImg } from './canvasUtils';
 import { Container } from './styles';
+import { ImageUploadProps } from './types';
 
-export const ImageUpload = () => {
-  const [imageSrc, setImageSrc] = useState<any>(null)
+export const ImageUpload = ({
+  image,
+  uploadImage,
+} : ImageUploadProps) => {
+  const [imageSrc, setImageSrc] = useState<any>(image)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
@@ -68,7 +72,7 @@ export const ImageUpload = () => {
         croppedAreaPixels,
         rotation
       )
-      console.log({ croppedImage })
+      uploadImage(croppedImage)
     } catch (e) {
       console.error(e)
     }
@@ -185,7 +189,12 @@ export const ImageUpload = () => {
                   label={t('page.account.close')}
                   variant='ghost'
                 />
-                <Button onClick={showCroppedImage} label={t('page.account.crop_image')} iconName='crop'/>
+                <Button
+                  onClick={showCroppedImage}
+                  label={t('page.account.crop_image')}
+                  iconName='crop'
+                  disabled={imageSrc === '' && true}
+                />
               </Flex>
             </Flex>
           </ModalFooter>
