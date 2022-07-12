@@ -1,10 +1,9 @@
-import { Card, SignupForm } from 'components'
-import { useTranslation } from 'react-i18next'
 import { Flex } from '@chakra-ui/react'
-import { Link, Text } from 'components'
-import { Container } from './style'
-import { sizes, colors } from 'styles'
+import { Card, Link, SignupForm, Text } from 'components'
+import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
+import { colors, sizes } from 'styles'
+import { Container } from './style'
 
 const SignupPage = () => {
   const { t } = useTranslation()
@@ -26,7 +25,7 @@ const SignupPage = () => {
               textTransform={'uppercase'}
               label={t('signup.actions.signin_here')}
               to={'/login'}
-            ></Link>
+            />
           </Flex>
         </Card>
       </Container>
