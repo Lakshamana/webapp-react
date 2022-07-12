@@ -1,6 +1,6 @@
-import { typography, space } from 'styled-system';
 import styled from 'styled-components';
-import { breakpoints, colors } from 'styles';
+import { space, typography } from 'styled-system';
+import { breakpoints } from 'styles';
 
 export const FeedContent = styled.div`
     width: 100vw;
@@ -26,7 +26,7 @@ export const CardHeader: any = styled.div`
 `;
 
 export const Date: any = styled.span`
-    color: ${colors.grey["700"]};
+    color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};  
     margin-left: auto;
 
     ${typography}
@@ -34,9 +34,9 @@ export const Date: any = styled.span`
 `;
 
 export const CardDescription: any = styled.p`
-    color: ${colors.grey["700"]};           
+    color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};           
     width: 100%;
-    padding: 4px 16px 0px 16px;
+    padding: 6px 16px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -48,7 +48,7 @@ export const CardDescription: any = styled.p`
 
 export const CardReactions: any = styled.div`
     width: 100%;
-    padding: 16px 16px 8px 16px;
+    padding: 16px;
 `;
 
 export const CardFooter: any = styled.div`
