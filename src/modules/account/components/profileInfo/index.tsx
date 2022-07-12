@@ -30,6 +30,7 @@ import { ProfileData } from './types'
 
 const ProfileInfo = ({
   updateProfile,
+  updateAvatar,
   isLoading,
   user,
   locale,
@@ -329,43 +330,6 @@ const ProfileInfo = ({
     setIsEditing(false)
   }, [user])
 
-  const acceptedMimes = ['image/jpeg', 'image/png'];
-
-  // const uploadAvatar = (event) => {
-
-  //   const { file = null } = event.detail
-  //   if (!file) {
-  //     return
-  //   }
-
-  //   try {
-  //     let image
-  //     // feature: try rotate image by exif (possible fix for iPhone picture sideways)
-  //     const imgResult = await exifImageRotate(file)
-  //     if (imgResult) {
-  //       image = imgResult.split('base64,')[1] || ''
-  //     }
-  //     // fallback
-  //     if (!image) {
-  //       image = await fileToBase64(file)
-  //     }
-  //     this.$emit('account:edit:updatePicture', image)
-  //   } catch (error) {
-  //     handleException(error)
-  //     this.uploadAvatarError = this.$t('Error.unknown-error') as string
-  //   }
-  // }
-
-  const onUpload = (event) => {
-      const element = event.target
-      const file = element.files[0];
-      if (!file) {
-          return;
-      }
-      // uploadAvatar(file)
-  }
-
-
   return (
     <>
       <Flex width={'100%'} alignItems="left" direction="column">
@@ -373,7 +337,10 @@ const ProfileInfo = ({
           <Avatar size="xl" src={user?.avatar?.imgPath || ''}>
             <AvatarBadge boxSize='1.25em' bg='green.500'>
               <Icon icon='eva:edit-outline'/>
-              <ImageUpload />
+              <ImageUpload
+                image={user?.avatar?.imgPath || ''}
+                uploadImage={updateAvatar}
+              />
             </AvatarBadge>
           </Avatar>
         </Flex>
