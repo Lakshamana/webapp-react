@@ -1,11 +1,11 @@
-import { Container, Popover } from 'components'
-import { Icon } from '@iconify/react'
 import { Spinner } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
+import { Container, Popover } from 'components'
 import { useThemeStore } from 'services/stores/theme'
-import { Reaction, EmoticonReaction } from './../../styles'
-import { availableReactions } from 'utils/availableReactions'
-import { PropsType } from './types'
 import { colors } from 'styles'
+import { availableReactions } from 'utils/availableReactions'
+import { EmoticonReaction, Reaction } from './../../styles'
+import { PropsType } from './types'
 
 const AddReactionButton = ({ myActiveReactions, updateMyReaction, updateReactions }: PropsType) => {
   const { colorMode } = useThemeStore()
