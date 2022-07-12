@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router'
-import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
 import { Box, Flex } from '@chakra-ui/layout'
-import { useMediaQuery, Divider, Center } from '@chakra-ui/react'
+import { Center, Divider, useMediaQuery } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
 import { PropsChannelSelector } from './types'
 
 import { Channel } from 'generated/graphql'
 
-import { useChannelsStore, useTabsStore } from 'services/stores'
 import { QUERY_CHANNELS } from 'services/graphql'
-import { useThemeStore } from 'services/stores'
+import { useChannelsStore, useTabsStore, useThemeStore } from 'services/stores'
 
 import { Container, Popover, Text } from 'components'
 import { Channels, ChannelSelected } from './components'
 
-import { CustomContainer } from './styles'
-import { colors, breakpoints } from 'styles'
-import { getData } from 'services/storage'
 import { APP_SINGLE_CHANNEL } from 'config/constants'
+import { useAuth } from 'contexts/auth'
+import { getData } from 'services/storage'
+import { breakpoints, colors } from 'styles'
+import { CustomContainer } from './styles'
 
 const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { colorMode } = useThemeStore()
@@ -35,6 +35,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   } = useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const history = useHistory()
+  const { isAnonymousAccess } = useAuth()
 
   const storedSingleChannel = getData(APP_SINGLE_CHANNEL)
 
@@ -46,12 +47,12 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   })
 
   useEffect(() => {
-    if (isSingleChannel === null && storedSingleChannel === null) getChannels()
+    if (isSingleChannel === null && storedSingleChannel === null && !isAnonymousAccess) getChannels()
     //eslint-disable-next-line
   }, [])
 
   const openChannelsList = () => {
-    if (!channelsList?.length) {
+    if (!channelsList?.length && !isAnonymousAccess) {
       getChannels()
     }
     closeSideMenu()
