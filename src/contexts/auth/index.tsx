@@ -1,29 +1,25 @@
-import { useState, useEffect, createContext, useContext } from 'react'
 import { useApolloClient } from '@apollo/client'
 import {
-  QUERY_ME,
-  MUTATION_SIGNOUT,
-  QUERY_CHANNEL,
-} from 'services/graphql'
+  AUTH_TOKEN,
+  FIREBASE_TOKEN
+} from 'config/constants'
 import { useFlags } from 'contexts/flags'
-import {
-  useAuthStore,
-  useOrganizationStore,
-  useChannelsStore,
-  useCustomizationStore,
-  useThemeStore
-} from 'services/stores'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { signOutFB } from 'services/firebase'
 import {
-  AUTH_TOKEN,
-  FIREBASE_TOKEN,
-} from 'config/constants'
+  MUTATION_SIGNOUT,
+  QUERY_CHANNEL, QUERY_ME
+} from 'services/graphql'
+import {
+  useAuthStore, useChannelsStore,
+  useCustomizationStore, useOrganizationStore, useThemeStore
+} from 'services/stores'
 
-import { getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
+import { clearData, getData } from 'services/storage'
 
-import { AuthTypes } from './types'
 import { useTranslation } from 'react-i18next'
+import { AuthTypes } from './types'
 
 import { configEnvs } from 'config/envs'
 

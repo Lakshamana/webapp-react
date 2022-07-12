@@ -15,6 +15,7 @@ export type cardForm = {
   city: string,
   state: string,
   terms: boolean,
+  phone_number: string,
 }
 
 export type pmDataType = {
@@ -78,4 +79,11 @@ export type SpreedlyError = {
 export interface Props {
   productPrice: string
   product: string
+}
+
+
+export enum OrderType {
+  pending = 'PENDING',
+  active = 'ACTIVE',
+  failed = 'FAILED',
 }

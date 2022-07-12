@@ -463,11 +463,15 @@ const PT_BR = {
         selectPlan: {
           title: 'Selecione o seu plano',
           select: 'selecionar',
+          loading: 'Aguarde'
         },
         selectOption: {
           title: 'Selecione a opção:',
           choosePaymentMethod: 'Escolha um método de pagamento',
           bankCard: 'Cartão',
+          bankCardDesc: 'Pague com Visa, Mastercard, Maestro ou Amex',
+          pix: 'PIX',
+          pixDesc: 'Seu pagamento aprovado rapidamente'
         },
       },
     },
