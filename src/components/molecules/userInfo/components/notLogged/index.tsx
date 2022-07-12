@@ -1,45 +1,54 @@
+import { Button, Container } from 'components'
+import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
-import { Link } from '@chakra-ui/react'
-import { Container, Text, Button } from 'components'
-import { colors } from 'styles'
-import { TextContainer, OptionsContainer } from './styles'
 import { PropsNotLogged } from './types'
 
 const NotLogged = ({ display, colorMode }: PropsNotLogged) => {
+  const { t } = useTranslation()
   const history = useHistory()
+
+  const redirectTo = (route: string) => history.push(`/${route}`)
+
   return (
     <Container alignSelf={'center'}>
-      {
-        display === 'menu' &&
+      {display === 'menu' && (
         <Container display={['none', 'none', 'flex']}>
-          <TextContainer maxWidth={['150px']}>
-            <Text ellipsis color={colors.secondaryText[colorMode]}>
-              <Link href='/login'>
-                Login
-              </Link>
-            </Text>
-          </TextContainer>
+          <Button
+            size="md"
+            mr={2}
+            label={t('signup.actions.signup')}
+            onClick={() => redirectTo('signup')}
+          />
+          <Button
+            variant={'outline'}
+            size="md"
+            label={t('signin.actions.login')}
+            onClick={() => redirectTo('login')}
+          />
         </Container>
-      }
-      {
-        display === 'sidebar' &&
-        <Container display={['flex', 'flex', 'none']}>
-          <OptionsContainer>
-            <Button
-              label='Sign Up'
-              width={254}
-              onClick={() => history.push('/signup')}
-            />
-            <Button
-              variant={'outline'}
-              mt={2}
-              label='Log In'
-              width={254}
-              onClick={() => history.push('/login')}
-            />
-          </OptionsContainer>
+      )}
+      {display === 'sidebar' && (
+        <Container
+          mt={4}
+          mx={3}
+          width="100%"
+          display={['flex', 'flex', 'none']}
+        >
+          <Button
+            label={t('signup.actions.signup')}
+            mr={1}
+            size={'md'}
+            onClick={() => redirectTo('signup')}
+          />
+          <Button
+            label={t('signin.actions.login')}
+            variant={'outline'}
+            ml={1}
+            size={'md'}
+            onClick={() => redirectTo('login')}
+          />
         </Container>
-      }
+      )}
     </Container>
   )
 }

@@ -1,20 +1,20 @@
-import { useTranslation } from 'react-i18next'
-import { FormikHelpers, useFormik } from 'formik'
+import { useMutation } from '@apollo/client'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { Flex } from '@chakra-ui/layout'
-import { useAuthStore, useThemeStore } from 'services/stores'
-import { SingleConfiguration } from '..'
-import { Button, Modal, Input, Text } from 'components'
-import { initialValues, validationSchema } from './settings'
-import { sizes, colors } from 'styles'
 import { Box } from '@chakra-ui/react'
-import { useMutation } from '@apollo/client'
+import { Button, Input, Modal, Text } from 'components'
+import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useAuth } from 'contexts/auth'
+import { FormikHelpers, useFormik } from 'formik'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT, MUTATION_VERIFY_MAIL } from 'services/graphql'
 import { saveData } from 'services/storage'
-import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useAuthStore, useThemeStore } from 'services/stores'
+import { colors, sizes } from 'styles'
+import { SingleConfiguration } from '..'
+import { initialValues, validationSchema } from './settings'
 import { FormProps } from './types'
-import { useState } from 'react'
-import { useAuth } from 'contexts/auth'
 
 export const UpdateEmail = () => {
   const errorMessageLogin = (type: string) => {
@@ -44,6 +44,7 @@ export const UpdateEmail = () => {
   const [signIn] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
+      await saveData(ANONYMOUS_AUTH, false)
       await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
     }
   })

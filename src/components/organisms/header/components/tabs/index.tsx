@@ -1,10 +1,10 @@
+import { Tab } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useTabsStore, useThemeStore } from 'services/stores'
-import { Tab } from 'components'
 import { colors } from 'styles'
+import { TabFlags } from 'types/flags'
 import { TabContainer } from './styles'
 import { PropsTabs } from './types'
-import { TabFlags } from 'types/flags'
 
 const Tabs = ({ closeSideMenu }: PropsTabs) => {
   const { colorMode } = useThemeStore()
@@ -17,8 +17,9 @@ const Tabs = ({ closeSideMenu }: PropsTabs) => {
   }
 
   const getTabLabel = (tab: TabFlags) => {
-    const item = tab.LABEL.find((item) => i18n.language.includes(item.LOCALE || 'en-US'))
-    return item?.VALUE || ''
+    const language = i18n.language || 'en-US'
+    const item = tab.LABEL.find((item) => item.LOCALE === language)
+    return item?.VALUE
   }
 
   const renderTabs = () =>

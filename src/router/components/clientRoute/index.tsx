@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
-import { Route, Redirect } from 'react-router-dom'
-import { Props } from './types'
 import { useAuth } from 'contexts/auth'
+import { useEffect } from 'react'
+import { Redirect, Route } from 'react-router-dom'
+import { Props } from './types'
 
 const ClientRoute = ({
   component: Component,
@@ -12,7 +12,6 @@ const ClientRoute = ({
   ...rest
 }: Props) => {
   const { signed } = useAuth()
-
 
   useEffect(() => {
     window.scrollTo(0, 0)

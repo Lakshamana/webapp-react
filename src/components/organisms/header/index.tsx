@@ -9,9 +9,10 @@ import {
   MenuIcon,
   SearchBar,
   SideMenu,
-  Tabs,
+  Tabs
 } from './components'
 
+import { useAuth } from 'contexts/auth'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { mapperTabName, useTabsStore } from 'services/stores/tabs'
@@ -25,6 +26,7 @@ import { getSelectedTab, reducer } from './utils'
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
+  const { isAnonymousAccess } = useAuth()
   const { pathname } = useLocation()
   const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -141,7 +143,7 @@ const HeaderComponent = () => {
   }, [tabsList, activeChannel])
 
   useEffect(() => {
-    if (state.openMenu && !!!activeChannelMenu?.length) {
+    if (state.openMenu && !!!activeChannelMenu?.length && !isAnonymousAccess) {
       getMenus()
     }
     //eslint-disable-next-line
@@ -170,22 +172,31 @@ const HeaderComponent = () => {
       >
         <Container alignItems="center" display={visibleMobile}>
           <MenuIcon open={state.openMenu} setOpen={handleToggleMenu} />
-          <Logo
-            mx={2}
-            ignoreFallback
-            clickable={true}
-            src={
-              activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
-                ? channelLogo()
-                : generateOrgLogo()
-            }
-            onClick={() => {
-              activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
-                ? history.push(`/c/${activeChannel?.slug}`)
-                : history.push('/')
-            }}
-            maxWidth={isDesktop ? '180px' : '120px'}
-          />
+          {isAnonymousAccess ? (
+            <Logo
+              mx={2}
+              ignoreFallback
+              src={generateOrgLogo()}
+              maxWidth={isDesktop ? '180px' : '120px'}
+            />
+          ) : (
+            <Logo
+              mx={2}
+              ignoreFallback
+              clickable
+              src={
+                activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
+                  ? channelLogo()
+                  : generateOrgLogo()
+              }
+              onClick={() => {
+                activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
+                  ? history.push(`/c/${activeChannel?.slug}`)
+                  : history.push('/')
+              }}
+              maxWidth={isDesktop ? '180px' : '120px'}
+            />
+          )}
           {!state.openSearch && (
             <ChannelSelector closeSideMenu={handleCloseMenu} />
           )}
@@ -206,13 +217,15 @@ const HeaderComponent = () => {
           flex={state.openSearch ? 1 : 'none'}
           zIndex={1000}
         >
-          <SearchBar
-            open={state.openSearch}
-            onOpen={handleOpenSearch}
-            onClose={handleCloseSearch}
-            search={state.search}
-            {...{ colorMode }}
-          />
+          {!isAnonymousAccess && (
+            <SearchBar
+              open={state.openSearch}
+              onOpen={handleOpenSearch}
+              onClose={handleCloseSearch}
+              search={state.search}
+              {...{ colorMode }}
+            />
+          )}
           <UserInfo
             display={'menu'}
             closeSideMenu={handleCloseMenu}

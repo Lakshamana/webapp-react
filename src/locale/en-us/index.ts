@@ -80,6 +80,8 @@ const EN_US = {
       content_not_exists: "We couldn't find this page",
       content_not_exists_description:
         'You may have typed the address incorrectly or you are using an outdated link.',
+      action_not_allowed: 'You need to have an account to perform this action',
+      create_a_new_account: "Creating an account is easy and free, create your own to have access to the platform's content!"
     },
     signin: {
       title: 'Access {{org}} now',
@@ -113,6 +115,7 @@ const EN_US = {
         subtitle:
           'Provide your email address and choose a password to create your account and enjoy access to exclusive content.',
         already_have_account: 'You already have an account?',
+        free_registration: 'Signup now!'
       },
       GDPR: {
         citizen: 'Are you a citizen or resident of the European Union?',
