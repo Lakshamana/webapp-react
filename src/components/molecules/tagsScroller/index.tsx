@@ -31,6 +31,7 @@ const TagsScroller = ({
       )
 
     setScrollerItems(myArr)
+    //eslint-disable-next-line
   }, [])
 
   useEffect(() => {
@@ -97,8 +98,12 @@ const TagsScroller = ({
         {filteredItems?.map((item: TagScrollerItem) => {
           return (
             <SwiperSlide key={`slide-${item.id}`}>
-              {item.__typename === 'Post' && <VideoPostCard {...item} />}
-              {item.__typename === 'Category' && <CategoryPostCard {...item} />}
+              {item.__typename === 'Post' && (
+                <VideoPostCard key={`post-${item.id}`} {...item} />
+              )}
+              {item.__typename === 'Category' && (
+                <CategoryPostCard key={`category-${item.id}`} {...item} />
+              )}
             </SwiperSlide>
           )
         })}

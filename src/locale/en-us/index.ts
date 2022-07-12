@@ -458,11 +458,15 @@ const EN_US = {
         selectPlan: {
           title: 'Select Your Plan',
           select: 'Select',
+          loading: 'Loading'
         },
         selectOption: {
           title: 'Select option:',
           choosePaymentMethod: 'Choose a payment method',
           bankCard: 'Bank Card',
+          bankCardDesc: 'Pay with Visa, Mastercard, Maestro and Amex',
+          pix: 'PIX',
+          pixDesc: 'Fast, your payment approved on time'
         },
       },
     },
