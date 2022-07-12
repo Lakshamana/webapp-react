@@ -1,46 +1,40 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
 import { Box } from '@chakra-ui/layout'
-import OneSignal from 'react-onesignal'
-
+import axios from 'axios'
 import {
-  Container,
+  AlertComponent, Container,
   Select,
-  Skeleton,
-  AlertComponent,
-  ToggleButton,
+  Skeleton, ToggleButton
 } from 'components'
-
-import {
-  ContentBlock,
-  AccountInfo,
-  SingleConfiguration,
-  ConfigBox,
-  ProfileInfo,
-  Navbar,
-  UpdatePassword,
-  ForgetAccount,
-} from './components'
-
 import { APP_LOCALE } from 'config/constants'
-import {
-  MUTATION_UPDATE_ACCOUNT,
-  MUTATION_UPDATE_PROFILE,
-  MUTATION_UPDATE_PASSWORD_ONLY,
-  MUTATION_FORGET_ACCOUNT,
-} from 'services/graphql'
-import { sizes } from 'styles'
-import { useThemeStore } from 'services/stores/theme'
-
 import { useAuth } from 'contexts/auth'
-import { useAuthStore, useCommonStore } from 'services/stores'
-import { LANGUAGES } from './settings'
-
-import { saveData } from 'services/storage'
-import { useEffect } from 'react'
 import { ForgetAccountInput, UpdatePasswordOnlyInput } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import OneSignal from 'react-onesignal'
+import {
+  MUTATION_CREATE_UPLOAD,
+  MUTATION_FORGET_ACCOUNT,
+  MUTATION_UPDATE_ACCOUNT,
+  MUTATION_UPDATE_PASSWORD_ONLY,
+  MUTATION_UPDATE_PROFILE
+} from 'services/graphql'
+import { saveData } from 'services/storage'
+import { useAuthStore, useCommonStore } from 'services/stores'
+import { useThemeStore } from 'services/stores/theme'
+import { sizes } from 'styles'
 import { AlertObjectType } from 'types/common'
+import {
+  AccountInfo,
+  ConfigBox,
+  ContentBlock,
+  ForgetAccount,
+  Navbar,
+  ProfileInfo,
+  SingleConfiguration,
+  UpdatePassword
+} from './components'
+import { LANGUAGES } from './settings'
 
 const AccountPage = () => {
   const { t, i18n } = useTranslation()
@@ -151,6 +145,19 @@ const AccountPage = () => {
     }
   )
 
+  const [createUpload] = useMutation(
+    MUTATION_CREATE_UPLOAD,
+    {
+      variables: {
+        payload: {
+          expireIn: 3600,
+          filename: 'avatar-image.jpeg',
+          isAvatar: true,
+        },
+      },
+    }
+  )
+
   const callForgetAccount = (input: ForgetAccountInput) => {
     forgetAccount({
       variables: {
@@ -198,6 +205,14 @@ const AccountPage = () => {
     })
   }
 
+  const callUpdateAvatar = async (image: any) => {
+    console.log(image)
+    const { data: { createUpload: { upload } } } = await createUpload()
+    const res = await axios.put(upload.url, image)
+    console.log(res)
+    // console.log(image)
+  }
+
   return (
     <Container
       width={1}
@@ -229,6 +244,7 @@ const AccountPage = () => {
                 user={user}
                 updateProfile={callUpdateMyProfile}
                 isLoading={loadingUpdateProfile}
+                updateAvatar={callUpdateAvatar}
               />
             )}
           </ConfigBox>
@@ -448,3 +464,4 @@ const AccountPage = () => {
 }
 
 export { AccountPage }
+
