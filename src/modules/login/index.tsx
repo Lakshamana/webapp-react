@@ -1,25 +1,23 @@
-import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
-import {
-  MUTATION_SIGNIN,
-  MUTATION_SOCIAL_SIGNIN,
-  MUTATION_CREATE_ACCOUNT_GDPR,
-} from 'services/graphql'
-import { useCommonStore } from 'services/stores'
-import { authWithCustomToken, SocialSignIn } from 'services/firebase'
-import { SocialType } from 'types/common'
-import { saveData } from 'services/storage'
-import {
-  GDPRForm,
-  ConfirmEmailForm,
-} from 'components/organisms/signupForm/components'
 import { Card, SigninForm } from 'components'
-import { Container } from './styles'
-import { sizes } from 'styles'
+import {
+  ConfirmEmailForm, GDPRForm
+} from 'components/organisms/signupForm/components'
+import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useAuth } from 'contexts/auth'
-import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { authWithCustomToken, SocialSignIn } from 'services/firebase'
+import {
+  MUTATION_CREATE_ACCOUNT_GDPR, MUTATION_SIGNIN,
+  MUTATION_SOCIAL_SIGNIN
+} from 'services/graphql'
+import { saveData } from 'services/storage'
+import { useCommonStore } from 'services/stores'
+import { sizes } from 'styles'
+import { SocialType } from 'types/common'
+import { Container } from './styles'
 import { SignInSteps } from './types'
 
 const LoginPage = () => {
@@ -50,6 +48,7 @@ const LoginPage = () => {
 
   const signInProcess = async ({ accessToken, firebaseToken, account }) => {
     await saveData(AUTH_TOKEN, accessToken)
+    await saveData(ANONYMOUS_AUTH, false)
     await saveData(FIREBASE_TOKEN, firebaseToken)
     await authWithCustomToken()
     await updateAccount(account)

@@ -1,31 +1,32 @@
-import { Switch, Redirect } from 'react-router-dom'
+import { Redirect, Switch } from 'react-router-dom'
 
-import { ClientRoute } from '../../components'
 import {
-  HomePage,
-  LoginPage,
-  SignupPage,
   AccountPage,
+  ActivateAccount,
+  CardInfo,
   CategoriesPage,
   CategoryPage,
-  MyListPage,
-  TagPage,
-  SearchPage,
   ChannelsPage,
-  FeedPage,
-  RecoverPasswordPage,
-  Livestreams,
-  NotFound,
-  CheckoutLogin,
   CheckoutCustomField,
-  CardInfo,
-  Password,
-  ActivateAccount,
-  VideoPostPage,
+  CheckoutLogin,
+  FeedPage,
+  HomePage,
   LivePostPage,
+  Livestreams,
+  LoginPage,
+  MyListPage,
+  NotAuthorized,
+  NotFound,
+  Password,
+  RecoverPasswordPage,
+  SearchPage,
+  SignupPage,
+  TagPage,
+  VideoPostPage
 } from 'modules'
+import { ClientRoute } from '../../components'
 
-import { MainLayout, LoginLayout, EmptyLayout } from 'components'
+import { EmptyLayout, LoginLayout, MainLayout } from 'components'
 import { useAuth } from 'contexts/auth'
 
 const ClientRoutes = () => {
@@ -132,31 +133,37 @@ const ClientRoutes = () => {
         template={EmptyLayout}
       />
       <ClientRoute
-        isAccesible={!signed}
+        isAccesible={true}
         path="/signup"
         component={SignupPage}
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={!signed}
+        isAccesible={true}
         path="/login"
         component={LoginPage}
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={!signed}
+        isAccesible={true}
         path="/activation"
         component={ActivateAccount}
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={!signed}
+        isAccesible={true}
         path="/recoverPassword"
         component={RecoverPasswordPage}
         template={LoginLayout}
       />
       <ClientRoute
-        isAccesible={signed}
+        isAccesible={true}
+        path="/notAuthorized"
+        template={EmptyLayout}
+        component={NotAuthorized}
+      />
+      <ClientRoute
+        isAccesible={true}
         template={EmptyLayout}
         component={NotFound}
       />

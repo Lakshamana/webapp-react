@@ -1,27 +1,22 @@
+import { useMutation, useQuery } from '@apollo/client'
+import { AlertComponent } from 'components'
+import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useAuth } from 'contexts/auth'
+import { CreateAccountInput } from 'generated/graphql'
 import { useState } from 'react'
-import { useHistory } from 'react-router'
-import { useQuery, useMutation } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
+import { SocialSignIn } from 'services/firebase'
 import {
   MUTATION_CREATE_ACCOUNT,
-  MUTATION_CREATE_ACCOUNT_GDPR,
-  MUTATION_VERIFY_MAIL,
-  MUTATION_SOCIAL_SIGNIN,
-  QUERY_CUSTOM_FIELDS,
+  MUTATION_CREATE_ACCOUNT_GDPR, MUTATION_SOCIAL_SIGNIN, MUTATION_VERIFY_MAIL, QUERY_CUSTOM_FIELDS
 } from 'services/graphql'
-import { useAuth } from 'contexts/auth'
-import {
-  RegistrationForm,
-  GDPRForm,
-  ConfirmEmailForm,
-  CustomFieldsForm,
-} from './components'
 import { saveData } from 'services/storage'
-import { SocialSignIn } from 'services/firebase'
-import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
-import { AlertComponent } from 'components'
+import {
+  ConfirmEmailForm,
+  CustomFieldsForm, GDPRForm, RegistrationForm
+} from './components'
 import { SignUpSteps } from './types'
-import { CreateAccountInput } from 'generated/graphql'
 
 const SignupForm = () => {
   const { t } = useTranslation()
@@ -54,8 +49,8 @@ const SignupForm = () => {
         }
 
         if (
-          !customFieldsData?.customFields?.length 
-          || !customFieldsData?.customFields[0]?.fields?.length
+          !customFieldsData?.customFields?.length ||
+          !customFieldsData?.customFields[0]?.fields?.length
         ) {
           setActiveStep('GDPR')
           return
@@ -76,6 +71,7 @@ const SignupForm = () => {
         }
 
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
+        await saveData(ANONYMOUS_AUTH, false)
         await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)
