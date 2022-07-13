@@ -6,7 +6,7 @@ const app = new express();
 const PORT = process.env.PORT || 3003
 
 app.use("/static", express.static(path.join(__dirname, "build/static")));
-app.get('/test', (req, res) => res.send('ok test'))
+app.get('/test', (req, res) => res.send('ok test again'))
 app.get("*", (req, res) => {
   let pathname = req.pathname || req.originalUrl;
   let page = seo.find((item) => item.path === pathname);
