@@ -115,7 +115,7 @@ const EN_US = {
         subtitle:
           'Provide your email address and choose a password to create your account and enjoy access to exclusive content.',
         already_have_account: 'You already have an account?',
-        free_registration: 'Signup now!'
+        free_registration: 'Sign Up now!'
       },
       GDPR: {
         citizen: 'Are you a citizen or resident of the European Union?',
@@ -157,7 +157,7 @@ const EN_US = {
         subtitle: 'We need a little more information about you',
       },
       actions: {
-        signup: 'Signup',
+        signup: 'Sign Up',
         signin_here: 'Sign In here',
         accept_terms: 'I accept all Terms and Conditions.',
         confirm: 'Confirm',
@@ -338,7 +338,7 @@ const EN_US = {
           input_label_email: 'Email',
           term_service:
             'By signing up, I agree to the {{org}} Privacy and Policy of Term of Service.',
-          signup_btn: 'Sign up',
+          signup_btn: 'Sign Up',
           already_have_account: 'Already have an account? Log in here',
         },
         more_info: {
