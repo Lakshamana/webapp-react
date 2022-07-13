@@ -10,7 +10,7 @@ import { OrderType, Props } from './types'
 
 export const SelectOption = ({ plan }: Props) => {
   const history = useHistory()
-  const url = `${plan.linkUrl}?userId=${plan.account}&${plan.product}`;
+  const url = `${plan.linkUrl}?userId=${plan.account}&product=${plan.product}`;
 
   const [getPendingOrder, { data: orderResult, loading }] = useLazyQuery(
     QUERY_GET_ORDER_RESULT,
