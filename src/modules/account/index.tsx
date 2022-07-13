@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { Box } from '@chakra-ui/layout'
+import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 import {
   AlertComponent, Container,
@@ -49,6 +50,7 @@ const AccountPage = () => {
     useState<AlertObjectType | null>()
   const { user, account } = useAuthStore()
   const { setPageTitle } = useCommonStore()
+  const useDisclosureProps = useDisclosure()
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -206,9 +208,14 @@ const AccountPage = () => {
   }
 
   const callUpdateAvatar = async (image: any) => {
-    const { data: { createUpload: { upload, media } } } = await createUpload()
-    await axios.put(upload.url, image, { headers: { 'Content-Type': 'image/jpg' } })
-    await callUpdateMyProfile({ avatar: media.id })
+    try {
+      const { data: { createUpload: { upload, media } } } = await createUpload()
+      await axios.put(upload.url, image, { headers: { 'Content-Type': 'image/jpg' } })
+      await callUpdateMyProfile({ avatar: media.id })
+      useDisclosureProps.onClose()
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   return (
@@ -243,6 +250,7 @@ const AccountPage = () => {
                 updateProfile={callUpdateMyProfile}
                 isLoading={loadingUpdateProfile}
                 updateAvatar={callUpdateAvatar}
+                useDisclosureProps={useDisclosureProps}
               />
             )}
           </ConfigBox>

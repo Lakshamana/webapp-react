@@ -32,6 +32,7 @@ import { ProfileData } from './types'
 const ProfileInfo = ({
   updateProfile,
   updateAvatar,
+  useDisclosureProps,
   isLoading,
   user,
   locale,
@@ -352,6 +353,7 @@ const ProfileInfo = ({
               <ImageUpload
                 image={getImageUrl(user?.avatar?.imgPath || '') || ''}
                 uploadImage={updateAvatar}
+                useDisclosureProps={useDisclosureProps}
               />
             </AvatarBadge>
           </Avatar>

@@ -11,8 +11,7 @@ import {
   SliderThumb,
   SliderTrack,
   Text,
-  Tooltip,
-  useDisclosure
+  Tooltip
 } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import { Button } from 'components';
@@ -28,9 +27,10 @@ import { ImageUploadProps } from './types';
 export const ImageUpload = ({
   image,
   uploadImage,
+  useDisclosureProps,
 } : ImageUploadProps) => {
   const [imageSrc, setImageSrc] = useState<any>(image)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosureProps
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
   const [showTooltipZoom, setShowTooltipZoom] = useState(false)
