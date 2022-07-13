@@ -109,6 +109,7 @@ export const ImageUpload = ({
                 onZoomChange={onZoomChange}
                 onCropComplete={onCropComplete}
                 objectFit="contain"
+                cropShape='round'
               />
             </Container>
           </ModalBody>
