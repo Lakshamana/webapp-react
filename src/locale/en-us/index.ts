@@ -8,6 +8,7 @@ const EN_US = {
       },
       back_to_home: 'Back to home',
       or: 'or',
+      next: 'Next',
       error: {
         generic_api_error:
           'Something went wrong. We are going to fix it. Try again later.',
