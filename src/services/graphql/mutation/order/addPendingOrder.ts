@@ -6,6 +6,7 @@ export const MUTATION_ADD_PENDING_ORDER = gql`
       id
       status
       account
+      product
     }
   }
 `
