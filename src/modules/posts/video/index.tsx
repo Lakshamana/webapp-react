@@ -12,7 +12,6 @@ import {
 } from 'components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
-import { useAuth } from 'contexts/auth'
 import { PlaylistOutput, Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +25,7 @@ import {
 } from 'services/graphql'
 import { getData } from 'services/storage'
 import {
+  useAuthStore,
   useCommonStore,
   useCustomizationStore,
   useThemeStore
@@ -38,7 +38,7 @@ import { Subtitle, Title, Video, VideoComments, VideoDetails } from './style'
 
 const VideoPostPage = () => {
   const { t } = useTranslation()
-  const { isAnonymousAccess } = useAuth()
+  const { isAnonymousAccess } = useAuthStore()
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()

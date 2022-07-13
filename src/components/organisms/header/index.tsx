@@ -1,6 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Container, Logo, UserInfo } from 'components'
+import { Box } from '@chakra-ui/react'
+import { Container, LanguageSelector, Logo, UserInfo } from 'components'
 import { memo, useEffect, useReducer, useState } from 'react'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { QUERY_MENUS } from 'services/graphql'
@@ -12,9 +13,8 @@ import {
   Tabs
 } from './components'
 
-import { useAuth } from 'contexts/auth'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
-import { useChannelsStore, useCustomizationStore } from 'services/stores'
+import { useAuthStore, useChannelsStore, useCustomizationStore } from 'services/stores'
 import { mapperTabName, useTabsStore } from 'services/stores/tabs'
 import { useThemeStore } from 'services/stores/theme'
 import { breakpoints, sizes } from 'styles'
@@ -26,7 +26,7 @@ import { getSelectedTab, reducer } from './utils'
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
-  const { isAnonymousAccess } = useAuth()
+  const { isAnonymousAccess } = useAuthStore()
   const { pathname } = useLocation()
   const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
@@ -225,6 +225,11 @@ const HeaderComponent = () => {
               search={state.search}
               {...{ colorMode }}
             />
+          )}
+          {isAnonymousAccess && (
+            <Box marginLeft={'auto'} mr={3}>
+              <LanguageSelector/>
+            </Box>
           )}
           <UserInfo
             display={'menu'}

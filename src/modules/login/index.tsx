@@ -4,7 +4,7 @@ import {
   ConfirmEmailForm,
   GDPRForm
 } from 'components/organisms/signupForm/components'
-import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useAuth } from 'contexts/auth'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,7 @@ import {
   MUTATION_SOCIAL_SIGNIN
 } from 'services/graphql'
 import { saveData } from 'services/storage'
-import { useCommonStore } from 'services/stores'
+import { useAuthStore, useCommonStore } from 'services/stores'
 import { sizes } from 'styles'
 import { SocialType } from 'types/common'
 import { Container } from './styles'
@@ -31,6 +31,7 @@ const LoginPage = () => {
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
   const { setPageTitle } = useCommonStore()
   const [account, setAccount] = useState('')
+  const { setAnonymous } = useAuthStore()
   const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   //eslint-disable-next-line
@@ -50,8 +51,8 @@ const LoginPage = () => {
   }
 
   const signInProcess = async ({ accessToken, firebaseToken, account }) => {
+    setAnonymous(false)
     await saveData(AUTH_TOKEN, accessToken)
-    await saveData(ANONYMOUS_AUTH, false)
     await saveData(FIREBASE_TOKEN, firebaseToken)
     await authWithCustomToken()
     await updateAccount(account)

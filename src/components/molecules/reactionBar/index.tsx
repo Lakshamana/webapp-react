@@ -1,8 +1,8 @@
 import { Spinner, useDisclosure } from '@chakra-ui/react'
 import { ActionNotAllowed, Container, Text } from 'components'
-import { useAuth } from 'contexts/auth'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 import { availableReactions } from 'utils/availableReactions'
@@ -26,7 +26,7 @@ const ReactionBar = ({
   addMyReaction,
 }: ReactionsCount) => {
   const { colorMode } = useThemeStore()
-  const { isAnonymousAccess } = useAuth()
+  const { isAnonymousAccess } = useAuthStore()
   const { t } = useTranslation()
   const [onlyThreeBiggests, setOnlyThreeBiggests] = useState<ReactionType[]>()
   const [allReactions, setAllReactions] = useState<ReactionType[]>()
