@@ -1,20 +1,24 @@
-import { useTranslation } from 'react-i18next'
-import { FormikHelpers, useFormik } from 'formik'
+import { useMutation } from '@apollo/client'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { Flex } from '@chakra-ui/layout'
-import { useAuthStore, useThemeStore } from 'services/stores'
-import { SingleConfiguration } from '..'
-import { Button, Modal, Input, Text } from 'components'
-import { initialValues, validationSchema } from './settings'
-import { sizes, colors } from 'styles'
 import { Box } from '@chakra-ui/react'
-import { useMutation } from '@apollo/client'
-import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT, MUTATION_VERIFY_MAIL } from 'services/graphql'
-import { saveData } from 'services/storage'
+import { Button, Input, Modal, Text } from 'components'
 import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
-import { FormProps } from './types'
-import { useState } from 'react'
 import { useAuth } from 'contexts/auth'
+import { FormikHelpers, useFormik } from 'formik'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  MUTATION_SIGNIN,
+  MUTATION_UPDATE_ACCOUNT,
+  MUTATION_VERIFY_MAIL
+} from 'services/graphql'
+import { saveData } from 'services/storage'
+import { useAuthStore, useThemeStore } from 'services/stores'
+import { colors, sizes } from 'styles'
+import { SingleConfiguration } from '..'
+import { initialValues, validationSchema } from './settings'
+import { FormProps } from './types'
 
 export const UpdateEmail = () => {
   const errorMessageLogin = (type: string) => {
@@ -34,44 +38,53 @@ export const UpdateEmail = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [loading, setloading] = useState(false)
   const { updateAccount } = useAuth()
-  const { account } = useAuthStore()
+  const { account, setAnonymous } = useAuthStore()
 
   const [verifyMail] = useMutation(MUTATION_VERIFY_MAIL)
   const [testPassword] = useMutation(MUTATION_SIGNIN, {
-    onError: (error) => setFieldError('password', errorMessageLogin(error.message)),
+    onError: (error) =>
+      setFieldError('password', errorMessageLogin(error.message)),
   })
   const [updateEmailOnly] = useMutation(MUTATION_UPDATE_ACCOUNT)
   const [signIn] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
+      setAnonymous(false)
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
+
       await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
-    }
+    },
   })
 
-  const emailUpdateFlow = async(values: FormProps, actions: FormikHelpers<FormProps>) => {
+  const emailUpdateFlow = async (
+    values: FormProps,
+    actions: FormikHelpers<FormProps>
+  ) => {
     setloading(true)
     const email = account?.email
     const { password } = values
 
-    await verifyMail({variables: {payload: { email: values.newEmail }}})
-    .then((res)=>{
-      actions.setFieldError('newEmail', t('signup.error.email_exists'))
-      setloading(false)
-    })
-    .catch( async (err)=>{
-      try {
-        await testPassword({variables: {payload: { password, email }}})
-        const account = await updateEmailOnly({variables: {payload: { email: values.newEmail }}})
-        await signIn({variables: {payload: { password, email: values.newEmail }}})
-        await updateAccount(account.data.updateMyAccount)
+    await verifyMail({ variables: { payload: { email: values.newEmail } } })
+      .then((res) => {
+        actions.setFieldError('newEmail', t('signup.error.email_exists'))
         setloading(false)
-        onClose()
-        resetForm()
-      } catch(err) {
-        setloading(false)
-      }
-    })
-
+      })
+      .catch(async (err) => {
+        try {
+          await testPassword({ variables: { payload: { password, email } } })
+          const account = await updateEmailOnly({
+            variables: { payload: { email: values.newEmail } },
+          })
+          await signIn({
+            variables: { payload: { password, email: values.newEmail } },
+          })
+          await updateAccount(account.data.updateMyAccount)
+          setloading(false)
+          onClose()
+          resetForm()
+        } catch (err) {
+          setloading(false)
+        }
+      })
   }
 
   const {
@@ -145,8 +158,7 @@ export const UpdateEmail = () => {
             onBlur={handleBlur}
             errorMessage={errors.newEmailConfirmation}
             error={
-              !!errors.newEmailConfirmation &&
-              touched.newEmailConfirmation
+              !!errors.newEmailConfirmation && touched.newEmailConfirmation
             }
             placeholder={t('page.account.confirm_new_email')}
           />

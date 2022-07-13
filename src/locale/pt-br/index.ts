@@ -8,6 +8,7 @@ const PT_BR = {
       },
       back_to_home: 'Voltar para o início',
       or: 'ou',
+      next: 'próximo',
       error: {
         generic_api_error:
           'Algo deu errado. Nós vamos consertar isso. Tente mais tarde.',
@@ -76,6 +77,8 @@ const PT_BR = {
       content_not_exists: 'Não foi possível encontrar esta página',
       content_not_exists_description:
         'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
+      action_not_allowed: 'Você precisa ter uma conta para executar essa ação',
+      create_a_new_account: 'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!'
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -110,6 +113,7 @@ const PT_BR = {
         subtitle:
           'Insira seu endereço de e-mail e escolha uma senha para criar sua conta e ter acesso a conteúdos exclusivos.',
         already_have_account: 'Voce já tem uma conta?',
+        free_registration: 'Crie uma conta agora!',
       },
       GDPR: {
         citizen: 'Você é cidadão ou residente da União Europeia?',
@@ -463,7 +467,7 @@ const PT_BR = {
         selectPlan: {
           title: 'Selecione o seu plano',
           select: 'selecionar',
-          loading: 'Aguarde'
+          loading: 'Aguarde',
         },
         selectOption: {
           title: 'Selecione a opção:',
@@ -471,7 +475,7 @@ const PT_BR = {
           bankCard: 'Cartão',
           bankCardDesc: 'Pague com Visa, Mastercard, Maestro ou Amex',
           pix: 'PIX',
-          pixDesc: 'Seu pagamento aprovado rapidamente'
+          pixDesc: 'Seu pagamento aprovado rapidamente',
         },
       },
     },

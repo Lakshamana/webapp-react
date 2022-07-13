@@ -1,18 +1,20 @@
 import { useApolloClient } from '@apollo/client'
-import {
-  AUTH_TOKEN,
-  FIREBASE_TOKEN
-} from 'config/constants'
+import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useFlags } from 'contexts/flags'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { signOutFB } from 'services/firebase'
+import { anonymousAuth, signOutFB } from 'services/firebase'
 import {
   MUTATION_SIGNOUT,
-  QUERY_CHANNEL, QUERY_ME
+  QUERY_CHANNEL,
+  QUERY_ME,
+  QUERY_PUBLIC_CHANNEL
 } from 'services/graphql'
 import {
-  useAuthStore, useChannelsStore,
-  useCustomizationStore, useOrganizationStore, useThemeStore
+  useAuthStore,
+  useChannelsStore,
+  useCustomizationStore,
+  useOrganizationStore,
+  useThemeStore
 } from 'services/stores'
 
 import { LoadingScreen } from 'components'
@@ -37,7 +39,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const { i18n } = useTranslation()
-  const { user, setUser, setAccount, account } = useAuthStore()
+  const { user, setUser, setAccount, account, setAnonymous } = useAuthStore()
   const { setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
     useCustomizationStore()
@@ -51,9 +53,12 @@ export const AuthProvider = ({ children }) => {
 
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
+  const isAnonymous = !!getData(ANONYMOUS_AUTH)
 
   const signed = !!accessToken
-  const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } = process.env
+
+  const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
+    process.env
   const origin =
     NODE_ENV === 'development'
       ? REACT_APP_ORGANIZATION_URL
@@ -80,17 +85,20 @@ export const AuthProvider = ({ children }) => {
     if (!channelSlug) return
     setLoading(true)
     const { data } = await client.query({
-      query: QUERY_CHANNEL,
+      query: isAnonymous ? QUERY_PUBLIC_CHANNEL : QUERY_CHANNEL,
       variables: {
         slug: channelSlug,
       },
     })
-    if (data?.channel) {
+
+    const channel = data?.channel || data?.getPublicChannel
+
+    if (channel) {
       setActiveChannel({
-        id: data.channel.id,
-        name: data.channel.name,
-        slug: data.channel.slug || '',
-        kind: data.channel.kind || '',
+        id: channel.id,
+        name: channel.name,
+        slug: channel.slug || '',
+        kind: channel.kind || '',
       })
     }
     setLoading(false)
@@ -106,7 +114,8 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
-          if (data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
+          if (data.me.profile?.locale)
+            i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
           setLoadingAcount(false)
         }
@@ -125,8 +134,8 @@ export const AuthProvider = ({ children }) => {
           `https://${REACT_APP_API_ENDPOINT}/organizations/public/${configEnvs.organization} `,
           {
             headers: {
-              organization: origin || ''
-            }
+              organization: origin || '',
+            },
           }
         )
 
@@ -162,17 +171,29 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login'
   }
 
+  const doAnonymousAuth = async () => {
+    setLoading(true)
+    await anonymousAuth()
+      .then(() => setAnonymous(true))
+      .finally(() => setLoading(false))
+  }
+
   useEffect(() => {
-    if (!accessToken) clearData()
-    if (!accessToken && !firebaseToken) return
-    loadAccount()
+    setAnonymous(isAnonymous)
+
+    if (!accessToken && window.location.pathname !== '/login') doAnonymousAuth()
+
+    if (!isAnonymous) loadAccount()
     // eslint-disable-next-line
   }, [accessToken, firebaseToken])
 
   useEffect(() => {
     if (activeChannel?.id) {
       setActiveChannelConfig(CHANNELS[activeChannel.id])
-      if (CHANNELS[activeChannel.id]?.THEME) setColorMode(CHANNELS[activeChannel.id]?.THEME.toLowerCase() as ColorMode)
+      if (CHANNELS[activeChannel.id]?.THEME)
+        setColorMode(
+          CHANNELS[activeChannel.id]?.THEME.toLowerCase() as ColorMode
+        )
     }
     // eslint-disable-next-line
   }, [activeChannel])

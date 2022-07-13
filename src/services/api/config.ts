@@ -1,21 +1,28 @@
-import { requestGraphql } from './request'
 import {
   ApolloClient,
   createHttpLink,
-  InMemoryCache,
   from,
   fromPromise,
+  InMemoryCache
 } from '@apollo/client'
-import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
-import { AUTH_TOKEN, FIREBASE_TOKEN, CHANNEL_INFO } from 'config/constants'
-import { getData, clearData, saveData } from 'services/storage'
-import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
+import { onError } from '@apollo/client/link/error'
+import {
+  ANONYMOUS_AUTH,
+  AUTH_TOKEN,
+  CHANNEL_INFO,
+  FIREBASE_TOKEN
+} from 'config/constants'
 import {
   authWithCustomToken,
   isUserLoggedFB,
-  signOutFB,
+  signOutFB
 } from 'services/firebase'
+import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
+import { clearData, getData, saveData } from 'services/storage'
+import { requestGraphql } from './request'
+
+const isAnonymousUser = getData(ANONYMOUS_AUTH)
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
   process.env
@@ -110,6 +117,11 @@ const errorLink = onError(
 
         if (err.message !== 'INVALID_TOKEN') {
           invalidData()
+          return
+        }
+
+        if (isAnonymousUser && err.message === 'INVALID_TOKEN') {
+          window.location.href = '/notAuthorized'
           return
         }
 

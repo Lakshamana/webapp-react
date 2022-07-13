@@ -1,27 +1,28 @@
+import { useMutation, useQuery } from '@apollo/client'
+import { AlertComponent } from 'components'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useAuth } from 'contexts/auth'
+import { CreateAccountInput } from 'generated/graphql'
 import { useState } from 'react'
-import { useHistory } from 'react-router'
-import { useQuery, useMutation } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
+import { SocialSignIn } from 'services/firebase'
 import {
   MUTATION_CREATE_ACCOUNT,
   MUTATION_CREATE_ACCOUNT_GDPR,
-  MUTATION_VERIFY_MAIL,
   MUTATION_SOCIAL_SIGNIN,
-  QUERY_CUSTOM_FIELDS,
+  MUTATION_VERIFY_MAIL,
+  QUERY_CUSTOM_FIELDS
 } from 'services/graphql'
-import { useAuth } from 'contexts/auth'
+import { saveData } from 'services/storage'
+import { useAuthStore } from 'services/stores'
 import {
-  RegistrationForm,
-  GDPRForm,
   ConfirmEmailForm,
   CustomFieldsForm,
+  GDPRForm,
+  RegistrationForm
 } from './components'
-import { saveData } from 'services/storage'
-import { SocialSignIn } from 'services/firebase'
-import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
-import { AlertComponent } from 'components'
 import { SignUpSteps } from './types'
-import { CreateAccountInput } from 'generated/graphql'
 
 const SignupForm = () => {
   const { t } = useTranslation()
@@ -33,6 +34,8 @@ const SignupForm = () => {
   const [socialSignUpError, setSocialSignUpError] = useState('')
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
+  const { setAnonymous } = useAuthStore()
+  const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>({ email: '', password: '' })
@@ -54,8 +57,8 @@ const SignupForm = () => {
         }
 
         if (
-          !customFieldsData?.customFields?.length 
-          || !customFieldsData?.customFields[0]?.fields?.length
+          !customFieldsData?.customFields?.length ||
+          !customFieldsData?.customFields[0]?.fields?.length
         ) {
           setActiveStep('GDPR')
           return
@@ -74,11 +77,12 @@ const SignupForm = () => {
           setSocialSignUpError(t('common.error.generic_api_error'))
           return
         }
-
+        setAnonymous(false)
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
         await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)
+        setIsSocialSignin(true)
 
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('GDPR')
@@ -114,7 +118,9 @@ const SignupForm = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin)
+          setActiveStep('ConfirmEmail')
+        isSocialSignin && history.push('/channels')
       },
       onError: (error) => {
         setCreateAccountError(`${error.message}`)

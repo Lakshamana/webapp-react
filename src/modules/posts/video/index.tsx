@@ -1,39 +1,44 @@
-import { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { useParams } from 'react-router-dom'
-import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Skeleton } from 'components'
+import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
 import {
-  QUERY_PLAYLIST,
-  QUERY_POST,
-  QUERY_POSTS_CARDS,
+  Comments,
+  Container,
+  Participants,
+  ReactionBar,
+  Skeleton,
+  VideoPlayer,
+  VideoPlaylist
+} from 'components'
+import { TypeParticipant } from 'components/molecules/participants/types'
+import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
+import { PlaylistOutput, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import {
   MUTATION_ADD_MY_REACTION,
   MUTATION_REMOVE_MY_REACTION,
+  QUERY_PLAYLIST,
+  QUERY_POST,
+  QUERY_POSTS_CARDS
 } from 'services/graphql'
-import { useThemeStore, useCommonStore } from 'services/stores'
-import { useTranslation } from 'react-i18next'
-import {
-  VideoPlayer,
-  ReactionBar,
-  VideoPlaylist,
-  Participants,
-  Container,
-  Comments,
-} from 'components'
-import { buildUrlFromPath } from 'utils/helperFunctions'
-import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
-import { colors, breakpoints } from 'styles'
-import { PlaylistOutput, Post } from 'generated/graphql'
-import { useCustomizationStore } from 'services/stores'
-import { VerifyContentKind } from '../components'
-import { TypeParticipant } from 'components/molecules/participants/types'
-import { AlertNextVideo } from './AlertNextVideo'
-import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { getData } from 'services/storage'
+import {
+  useAuthStore,
+  useCommonStore,
+  useCustomizationStore,
+  useThemeStore
+} from 'services/stores'
+import { breakpoints, colors } from 'styles'
+import { buildUrlFromPath } from 'utils/helperFunctions'
+import { VerifyContentKind } from '../components'
+import { AlertNextVideo } from './AlertNextVideo'
+import { Subtitle, Title, Video, VideoComments, VideoDetails } from './style'
 
 const VideoPostPage = () => {
   const { t } = useTranslation()
+  const { isAnonymousAccess } = useAuthStore()
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
@@ -75,7 +80,6 @@ const VideoPostPage = () => {
           (item) => item.slug !== slug
         )
         setRelatedVideosData(filteredRelatedVideos)
-        return
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -101,7 +105,7 @@ const VideoPostPage = () => {
 
     const filteredCategories = postData?.categories?.map((item) => item.id)
 
-    if (!!filteredCategories?.length) {
+    if (!!filteredCategories?.length && !isAnonymousAccess) {
       getRelatedPosts({
         variables: {
           filter: {
@@ -119,7 +123,7 @@ const VideoPostPage = () => {
 
     setEngagedUsers(engagedUsers)
 
-    if (!!postData?.playlists?.length) {
+    if (!!postData?.playlists?.length && !isAnonymousAccess) {
       getPlaylist({
         variables: {
           id: postData?.playlists[0].id,
@@ -154,9 +158,13 @@ const VideoPostPage = () => {
 
   const getCategoryId = (post: any) => {
     if (post && post.categories) {
-      return post.categories.map((el) => { return el.id}).join(',');
+      return post.categories
+        .map((el) => {
+          return el.id
+        })
+        .join(',')
     }
-    return '';
+    return ''
   }
 
   if (isVerifyingAccessPermission)
@@ -239,7 +247,7 @@ const VideoPostPage = () => {
                   : '100%'
               }
             >
-              {postData && <Comments {...postData} />}
+              {postData && !isAnonymousAccess && <Comments {...postData} />}
             </Box>
           )}
           <Spacer mx={3} />

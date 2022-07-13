@@ -29,6 +29,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
     const updatePlan = {
       ...plan,
       orderId: getOrderData.data.addPendingOrder.id,
+      product: getOrderData.data.addPendingOrder.product,
       account: getOrderData.data.addPendingOrder.account,
     }
     selectPlan(updatePlan)
@@ -36,7 +37,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
   }
 
   return (
-    <Flex flexDirection="column" mt="44px">
+    <Flex flexDirection="column" mt="44px" mx={'2rem'}>
       <Text
         fontSize="28px"
         fontWeight="500"
@@ -48,6 +49,8 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
         gridGap="24px"
         mt="16px"
         flexDirection={{ base: 'column', md: 'row' }}
+        wrap={'wrap'}
+        placeContent={'center'}
       >
         {plans &&
           plans.map((plan, key) => (

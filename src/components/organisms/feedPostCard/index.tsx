@@ -1,22 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Participants, ReactionBar, Text } from 'components'
 import { useTranslation } from 'react-i18next'
-import { Text, ReactionBar, Participants } from 'components'
-import { SetMediaType } from './components'
-import { useThemeStore } from 'services/stores/theme'
+import { Link } from 'react-router-dom'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
-import { FeedPostCardProps, defaultProps } from './types'
-import { convertCountMessage } from 'utils/helperFunctions'
+import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
+import { convertCountMessage, stripHTML } from 'utils/helperFunctions'
+import { SetMediaType } from './components'
 import {
-  FeedContent,
-  CardContent,
-  CardHeader,
-  Date,
-  CardDescription,
-  CardReactions,
-  CardFooter,
-  CountComment,
+  CardContent, CardDescription, CardFooter, CardHeader, CardReactions, CountComment, Date, FeedContent
 } from './style'
+import { defaultProps, FeedPostCardProps } from './types'
 
 const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
   const { t } = useTranslation()
@@ -50,12 +43,12 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
             >
               {props.postTitle}
             </Text>
-            <Date fontSize="12px" fontWeight={'Bold'}>
+            <Date fontSize={14}>
               {props.date}
             </Date>
           </CardHeader>
         </Link>
-        <CardDescription fontSize={15}>{props.postDescription}</CardDescription>
+        <CardDescription fontSize={16}>{stripHTML(props.postDescription)}</CardDescription>
         {props.type === 'POLL' && <SetMediaType {...props} />}
         {activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
           <CardReactions>

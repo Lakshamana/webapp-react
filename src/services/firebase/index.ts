@@ -1,32 +1,46 @@
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { configEnvs } from 'config/envs'
+import { firebaseApp } from 'config/firebase'
+import { organizationData } from 'config/organization'
+import { initializeApp } from 'firebase/app'
 import {
+  AuthError,
   FacebookAuthProvider,
-  GoogleAuthProvider,
-  TwitterAuthProvider,
+  fetchSignInMethodsForEmail,
   getAuth,
+  GoogleAuthProvider,
+  linkWithCredential,
+  linkWithPopup,
+  signInAnonymously,
+  signInWithCustomToken,
   signInWithPopup,
   signOut,
-  AuthError,
-  fetchSignInMethodsForEmail,
-  linkWithCredential,
-  signInWithCustomToken,
-  linkWithPopup,
-  UserCredential,
+  TwitterAuthProvider,
+  UserCredential
 } from 'firebase/auth'
-import { initializeApp } from 'firebase/app'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
+import { getData, saveData } from 'services/storage'
 import { SocialType } from 'types/common'
-import { getData } from 'services/storage'
-import { FIREBASE_TOKEN } from 'config/constants'
-import { firebaseApp } from 'config/firebase'
-import { configEnvs } from 'config/envs'
-import { organizationData } from 'config/organization'
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
 
 export const authWithCustomToken = () => {
   const firebaseToken = getData(FIREBASE_TOKEN)
-  if (firebaseToken)
-    signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
+  if (firebaseToken) signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
+}
+
+export const anonymousAuth = (): Promise<string> => {
+  return new Promise(function (resolve, reject) {
+    signInAnonymously(CUSTOM_TOKEN_AUTH).then((result) => {
+      result.user
+        .getIdToken()
+        .then((result) => {
+          saveData(AUTH_TOKEN, result)
+          resolve(result)
+        })
+        .catch((error) => reject(error))
+    })
+  })
 }
 
 const AUTH_CONFIG = {
@@ -78,7 +92,6 @@ const generatePendingCredential = (kind: SocialType, err: any) => {
 export const SocialSignIn = (
   kind: SocialType
 ): Promise<CreateAccountSocialSignInDto> => {
-
   AUTH.tenantId = organizationData?.tenant_id || ''
   const PROVIDER = getProvider(kind)
   return new Promise(function (resolve, reject) {
@@ -104,15 +117,15 @@ export const SocialSignIn = (
           // console.log("==> fluxo erro 'auth/account-exists-with-different-credential'")
           fetchSignInMethodsForEmail(AUTH, email).then((methods) => {
             // console.log(methods)
-            if(methods[0] === 'password') {
+            if (methods[0] === 'password') {
               // console.log("==> fluxo erro method 'password'")
               return reject(err)
             }
             const provider = getProvider(methods[0])
-            if(methods[0]!==kind) {
+            if (methods[0] !== kind) {
               // console.log("==> fluxo erro if kind diferente do method")
               const { currentUser } = AUTH
-              if(currentUser){
+              if (currentUser) {
                 // console.log("==> fluxo de link de provinders")
                 linkWithPopup(currentUser, provider)
                   .then((resultLink) => {
@@ -120,7 +133,8 @@ export const SocialSignIn = (
                     // console.log(resultLink)
                     const credential = generateCredential(kind, resultLink)
                     if (credential) {
-                      const { refreshToken, accessToken } = resultLink.user['stsTokenManager']
+                      const { refreshToken, accessToken } =
+                        resultLink.user['stsTokenManager']
                       const { providerId } = credential
                       resolve({
                         accessToken,
@@ -128,10 +142,11 @@ export const SocialSignIn = (
                         refreshToken,
                       })
                     }
-                  }).catch((error) => {
+                  })
+                  .catch((error) => {
                     // console.log("==> erro no fluxo de link de multiplas contas")
                     return reject(error)
-                  });
+                  })
               }
             }
             signInWithPopup(AUTH, provider)

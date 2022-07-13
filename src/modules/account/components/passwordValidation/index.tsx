@@ -1,16 +1,16 @@
+import { useMutation } from '@apollo/client'
 import { Box, Flex } from '@chakra-ui/react'
 import { Button, Input, Modal, Text } from 'components'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useAuth } from 'contexts/auth'
 import { useFormik } from 'formik'
-import { initialValues, validationSchema } from './settings'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT } from 'services/graphql'
+import { saveData } from 'services/storage'
 import { useAuthStore, useThemeStore } from 'services/stores'
 import { colors, sizes } from 'styles'
-import { MUTATION_SIGNIN, MUTATION_UPDATE_ACCOUNT } from 'services/graphql'
-import { useMutation } from '@apollo/client'
-import { saveData } from 'services/storage'
-import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
-import { useState } from 'react'
-import { useAuth } from 'contexts/auth'
+import { initialValues, validationSchema } from './settings'
 
 export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
   const errorMessageLogin = (type: string) => {
@@ -28,6 +28,7 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const [loading, setloading] = useState(false)
+  const { setAnonymous } = useAuthStore()
 
   const [verifyPassword] = useMutation(MUTATION_SIGNIN, {
     onError: (error) =>
@@ -35,6 +36,7 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
   })
   const [signin] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
+      setAnonymous(false)
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
       await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
     },
