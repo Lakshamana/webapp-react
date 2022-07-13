@@ -126,7 +126,7 @@ export const ImageUpload = ({
                 onChange={onFileChange}
                 ref={hiddenFileInput}
                 style={{display:'none'}} 
-                accept="image/*"
+                accept="image/jpeg"
               />
               <Flex flexDirection='column' gridGap='1em'>
                 <Text>{t('page.account.zoom')}: {zoomPercent(zoom)}</Text>
