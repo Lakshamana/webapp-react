@@ -347,7 +347,7 @@ const ProfileInfo = ({
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={getImageUrl(user?.avatar?.imgPath || '')}>
-            <AvatarBadge boxSize='1.25em' bg='green.500'>
+            <AvatarBadge boxSize='44px' bg={colors.brand.primary[colorMode]} border='4px solid'>
               <Icon icon='eva:edit-outline'/>
               <ImageUpload
                 image={getImageUrl(user?.avatar?.imgPath || '') || ''}
