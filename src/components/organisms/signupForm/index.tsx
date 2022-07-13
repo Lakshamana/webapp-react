@@ -9,12 +9,17 @@ import { useHistory } from 'react-router'
 import { SocialSignIn } from 'services/firebase'
 import {
   MUTATION_CREATE_ACCOUNT,
-  MUTATION_CREATE_ACCOUNT_GDPR, MUTATION_SOCIAL_SIGNIN, MUTATION_VERIFY_MAIL, QUERY_CUSTOM_FIELDS
+  MUTATION_CREATE_ACCOUNT_GDPR,
+  MUTATION_SOCIAL_SIGNIN,
+  MUTATION_VERIFY_MAIL,
+  QUERY_CUSTOM_FIELDS
 } from 'services/graphql'
 import { saveData } from 'services/storage'
 import {
   ConfirmEmailForm,
-  CustomFieldsForm, GDPRForm, RegistrationForm
+  CustomFieldsForm,
+  GDPRForm,
+  RegistrationForm
 } from './components'
 import { SignUpSteps } from './types'
 
@@ -28,6 +33,7 @@ const SignupForm = () => {
   const [socialSignUpError, setSocialSignUpError] = useState('')
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
+  const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>({ email: '', password: '' })
@@ -75,6 +81,7 @@ const SignupForm = () => {
         await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)
+        setIsSocialSignin(true)
 
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('GDPR')
@@ -110,7 +117,9 @@ const SignupForm = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin)
+          setActiveStep('ConfirmEmail')
+        isSocialSignin && history.push('/channels')
       },
       onError: (error) => {
         setCreateAccountError(`${error.message}`)
