@@ -39,7 +39,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const { i18n } = useTranslation()
-  const { user, setUser, setAccount, account } = useAuthStore()
+  const { user, setUser, setAccount, account, setAnonymous } = useAuthStore()
   const { setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
     useCustomizationStore()
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
-  const isAnonymousAccess = !!getData(ANONYMOUS_AUTH)
+  const isAnonymous = !!getData(ANONYMOUS_AUTH)
 
   const signed = !!accessToken
 
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
     if (!channelSlug) return
     setLoading(true)
     const { data } = await client.query({
-      query: isAnonymousAccess ? QUERY_PUBLIC_CHANNEL : QUERY_CHANNEL,
+      query: isAnonymous ? QUERY_PUBLIC_CHANNEL : QUERY_CHANNEL,
       variables: {
         slug: channelSlug,
       },
@@ -173,15 +173,17 @@ export const AuthProvider = ({ children }) => {
 
   const doAnonymousAuth = async () => {
     setLoading(true)
-    await anonymousAuth().finally(() => setLoading(false))
+    await anonymousAuth()
+      .then(() => setAnonymous(true))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
-    if (!accessToken) doAnonymousAuth()
+    setAnonymous(isAnonymous)
 
-    if (!accessToken && !firebaseToken) return
+    if (!accessToken && window.location.pathname !== '/login') doAnonymousAuth()
 
-    if (!isAnonymousAccess) loadAccount()
+    if (!isAnonymous) loadAccount()
     // eslint-disable-next-line
   }, [accessToken, firebaseToken])
 
@@ -213,7 +215,6 @@ export const AuthProvider = ({ children }) => {
         getAccount,
         updateActiveChannel,
         signed,
-        isAnonymousAccess,
         loadingAccount,
       }}
     >

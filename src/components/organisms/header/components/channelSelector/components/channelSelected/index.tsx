@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react'
 import { useMediaQuery } from '@chakra-ui/react'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { Container, Avatar } from 'components'
+import { useAuthStore, useChannelsStore, useCustomizationStore } from 'services/stores'
 import { colors, breakpoints } from 'styles'
 import { IconContainer } from './styles'
 import { PropsChannelSelected } from './types'
@@ -12,6 +12,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
   const { generateImage } = useThumbor()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { activeChannelConfig } = useCustomizationStore()
+  const { isAnonymousAccess } = useAuthStore()
 
   const generateChannelImage = () => {
     const theme = colorMode.toUpperCase()

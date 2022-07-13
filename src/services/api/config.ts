@@ -120,7 +120,7 @@ const errorLink = onError(
           return
         }
 
-        if (isAnonymousUser && err.message === 'INVALID_TOKEN') { 
+        if (isAnonymousUser && err.message === 'INVALID_TOKEN') {
           window.location.href = '/notAuthorized'
           return
         }
@@ -146,7 +146,6 @@ const errorLink = onError(
                   return
                 }
                 saveData(AUTH_TOKEN, accessToken)
-                saveData(ANONYMOUS_AUTH, false)
                 saveData(FIREBASE_TOKEN, firebaseToken)
                 const isFBLogged = await isUserLoggedFB()
                 if (isFBLogged) await signOutFB()

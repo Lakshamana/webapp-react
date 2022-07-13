@@ -14,7 +14,7 @@ import {
 
 import { useAuth } from 'contexts/auth'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
-import { useChannelsStore, useCustomizationStore } from 'services/stores'
+import { useAuthStore, useChannelsStore, useCustomizationStore } from 'services/stores'
 import { mapperTabName, useTabsStore } from 'services/stores/tabs'
 import { useThemeStore } from 'services/stores/theme'
 import { breakpoints, sizes } from 'styles'
@@ -26,7 +26,7 @@ import { getSelectedTab, reducer } from './utils'
 const HeaderComponent = () => {
   const [visibleMobile, setVisibleMobile] = useState('flex')
   const { colorMode, toggleColorMode } = useThemeStore()
-  const { isAnonymousAccess } = useAuth()
+  const { isAnonymousAccess } = useAuthStore()
   const { pathname } = useLocation()
   const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
