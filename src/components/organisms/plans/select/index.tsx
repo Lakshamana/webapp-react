@@ -29,6 +29,7 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
     const updatePlan = {
       ...plan,
       orderId: getOrderData.data.addPendingOrder.id,
+      product: getOrderData.data.addPendingOrder.product,
       account: getOrderData.data.addPendingOrder.account,
     }
     selectPlan(updatePlan)
