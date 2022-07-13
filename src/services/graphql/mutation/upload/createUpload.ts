@@ -16,6 +16,7 @@ mutation CreateUpload($payload: CreateUploadInput!) {
     }
     media {
       account
+      id
     }
   }
 }
