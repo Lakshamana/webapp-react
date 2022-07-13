@@ -206,11 +206,9 @@ const AccountPage = () => {
   }
 
   const callUpdateAvatar = async (image: any) => {
-    console.log(image)
-    const { data: { createUpload: { upload } } } = await createUpload()
-    const res = await axios.put(upload.url, image)
-    console.log(res)
-    // console.log(image)
+    const { data: { createUpload: { upload, media } } } = await createUpload()
+    await axios.put(upload.url, image, { headers: { 'Content-Type': 'image/jpg' } })
+    await callUpdateMyProfile({ avatar: media.id })
   }
 
   return (
