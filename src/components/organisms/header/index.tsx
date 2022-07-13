@@ -1,6 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Container, Logo, UserInfo } from 'components'
+import { Box } from '@chakra-ui/react'
+import { Container, LanguageSelector, Logo, UserInfo } from 'components'
 import { memo, useEffect, useReducer, useState } from 'react'
 import { matchPath, useHistory, useLocation } from 'react-router-dom'
 import { QUERY_MENUS } from 'services/graphql'
@@ -12,7 +13,6 @@ import {
   Tabs
 } from './components'
 
-import { useAuth } from 'contexts/auth'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { useAuthStore, useChannelsStore, useCustomizationStore } from 'services/stores'
 import { mapperTabName, useTabsStore } from 'services/stores/tabs'
@@ -225,6 +225,11 @@ const HeaderComponent = () => {
               search={state.search}
               {...{ colorMode }}
             />
+          )}
+          {isAnonymousAccess && (
+            <Box marginLeft={'auto'} mr={3}>
+              <LanguageSelector/>
+            </Box>
           )}
           <UserInfo
             display={'menu'}
