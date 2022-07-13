@@ -46,7 +46,12 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   })
 
   useEffect(() => {
-    if (isSingleChannel === null && storedSingleChannel === null && !isAnonymousAccess) getChannels()
+    if (
+      isSingleChannel === null &&
+      storedSingleChannel === null &&
+      !isAnonymousAccess
+    )
+      getChannels()
     //eslint-disable-next-line
   }, [])
 
@@ -82,7 +87,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
       </Center>
       <CustomContainer ml={'12px'}>
         <Flex alignItems="center">
-          {isDesktop && (
+          {isDesktop && !isAnonymousAccess && (
             <Box mr={1} maxWidth={'70px'} wordBreak="normal">
               <Text
                 lineHeight={1.2}
