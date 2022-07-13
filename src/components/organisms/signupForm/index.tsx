@@ -35,6 +35,7 @@ const SignupForm = () => {
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
   const { setAnonymous } = useAuthStore()
+  const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   const [createAccountData, setCreateAccountData] =
     useState<CreateAccountInput>({ email: '', password: '' })
@@ -81,6 +82,7 @@ const SignupForm = () => {
         await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)
+        setIsSocialSignin(true)
 
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('GDPR')
@@ -116,7 +118,9 @@ const SignupForm = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin)
+          setActiveStep('ConfirmEmail')
+        isSocialSignin && history.push('/channels')
       },
       onError: (error) => {
         setCreateAccountError(`${error.message}`)

@@ -245,7 +245,7 @@ const EN_US = {
         reaction: 'Reaction',
         search_options: {
           recent: 'Most Recent',
-          old: 'Most Old',
+          old: 'Oldest',
         },
       },
       categories: {
@@ -426,7 +426,7 @@ const EN_US = {
         },
         search_options: {
           recent: 'Most Recent',
-          old: 'Most Old',
+          old: 'Oldest',
         },
         autoplay: 'Autoplay next video',
         redirect_next_video: 'Redirecting to next video...',
