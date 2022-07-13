@@ -24,6 +24,7 @@ import { CustomFieldTypesEnum } from 'generated/graphql'
 import { ImageUpload } from 'modules/account/components/imageUpload'
 import InputMask from 'react-input-mask'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import * as Yup from 'yup'
 import { UpdateButtons } from '../updateButtons'
 import { ProfileData } from './types'
@@ -39,6 +40,17 @@ const ProfileInfo = ({
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
   const minimumAge = 13
+  const { generateImage } = useThumbor()
+
+  const getImageUrl = (imagePath: string) => {
+
+    const image = generateImage(
+      ThumborInstanceTypes.IMAGE,
+      imagePath,
+    )
+
+    return image
+  }
 
   const { data: customFieldsData, loading: customFieldsLoading } =
     useQuery(QUERY_CUSTOM_FIELDS)
@@ -334,11 +346,11 @@ const ProfileInfo = ({
     <>
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
-          <Avatar size="xl" src={user?.avatar?.imgPath || ''}>
+          <Avatar size="xl" src={getImageUrl(user?.avatar?.imgPath || '')}>
             <AvatarBadge boxSize='1.25em' bg='green.500'>
               <Icon icon='eva:edit-outline'/>
               <ImageUpload
-                image={user?.avatar?.imgPath || ''}
+                image={getImageUrl(user?.avatar?.imgPath || '') || ''}
                 uploadImage={updateAvatar}
               />
             </AvatarBadge>
