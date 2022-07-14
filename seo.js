@@ -1,7 +1,7 @@
 module.exports = [
   {
     path: "/",
-    favicon: '%PUBLIC_URL%',
+    favicon: 'https://express-favicon.herokuapp.com/favicon2',
     title: "MARVEL - Fan Hero",
     description: "O Marvel Cinematic Universe é uma franquia de mídia americana e um universo compartilhado centrado em uma série de filmes de super-heróis.",
     url: '<url-here>',
