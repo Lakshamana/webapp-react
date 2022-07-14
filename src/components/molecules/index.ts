@@ -10,6 +10,7 @@ export * from './externalHeader'
 export * from './heroBanner'
 export * from './input'
 export * from './internalFooter'
+export * from './liveEventsGrid'
 export * from './livestreamsScroller'
 export * from './participants'
 export * from './playlistPostCard'
@@ -27,7 +28,6 @@ export * from './videoJs'
 export * from './videoPlayer'
 export * from './videoPlaylist'
 export * from './videoRelated'
-// Scrollers
 export * from './videosScroller'
 
 

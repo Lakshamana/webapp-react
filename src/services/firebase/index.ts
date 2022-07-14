@@ -29,15 +29,15 @@ export const authWithCustomToken = () => {
   if (firebaseToken) signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
 }
 
-export const anonymousAuth = (): Promise<string> => {
+export const anonymousAuth = (): Promise<boolean> => {
   return new Promise(function (resolve, reject) {
     signInAnonymously(CUSTOM_TOKEN_AUTH).then((result) => {
       result.user
         .getIdToken()
         .then((result) => {
           saveData(AUTH_TOKEN, result)
-          resolve(result)
         })
+        .then(() => resolve(true))
         .catch((error) => reject(error))
     })
   })

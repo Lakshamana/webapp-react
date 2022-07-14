@@ -1,11 +1,15 @@
 import { Flex } from '@chakra-ui/react'
+import { Button, Text } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
-import { Button, Text } from 'components'
+import { colors, sizes } from 'styles'
 import { ConfirmAgeProps } from './types'
-import { sizes, colors } from 'styles'
 
-const Reconfirm = ({ handleFormSubmit, gdprAge, onCancel }: ConfirmAgeProps) => {
+const Reconfirm = ({
+  handleFormSubmit,
+  gdprAge,
+  onCancel,
+}: ConfirmAgeProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
 
@@ -15,7 +19,7 @@ const Reconfirm = ({ handleFormSubmit, gdprAge, onCancel }: ConfirmAgeProps) => 
         fontSize={24}
         textAlign={'center'}
         fontWeight={'bolder'}
-        color={'white'}
+        color={colors.generalText[colorMode]}
       >
         {t('signup.reconfirm_age.title')}
       </Text>
@@ -35,7 +39,7 @@ const Reconfirm = ({ handleFormSubmit, gdprAge, onCancel }: ConfirmAgeProps) => 
       ></Button>
       <Button
         width={[sizes.loginButtonWidth]}
-        variant='ghost'
+        variant="ghost"
         label={t('signup.reconfirm_age.under_age', { age: gdprAge })}
         onClick={onCancel}
       ></Button>

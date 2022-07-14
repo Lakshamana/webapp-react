@@ -1,20 +1,20 @@
-import { memo, ReactElement, useEffect, useRef } from 'react'
+import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import VideoJS from 'components/molecules/videoJs'
+import { memo, ReactElement, useRef } from 'react'
+import { useCustomizationStore } from 'services/stores'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
+import 'videojs-mux'
 import overlay from 'videojs-overlay'
 import 'videojs-overlay/dist/videojs-overlay.css'
 import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
-import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
-import 'videojs-mux'
-import { useCustomizationStore } from 'services/stores'
 
-import { VideoPlayerProps } from './types'
-import { getDefaultConfigs } from './settings'
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
-import { useAuthStore, useChannelsStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
 import { saveData } from 'services/storage'
+import { useAuthStore, useChannelsStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
+import { getDefaultConfigs } from './settings'
+import { VideoPlayerProps } from './types'
 
 const VideoPlayerComponent = ({
   src,
