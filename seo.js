@@ -21,7 +21,7 @@ module.exports = [
     path: "/valetudo",
     favicon: 'https://express-favicon.herokuapp.com/favicon1',
     title: 'VALE TUDO!!',
-    image: 'https://www.coca-cola.com.br/assets/images/home/no-sugar/mobile/414w/no-sugar-banner.png?v=69c479da55b6816037a616641ef3f4bd',
+    image: 'https://pt.wikipedia.org/wiki/Vale_Tudo#/media/Ficheiro:Logotipo_de_Vale_Tudo.png',
     domain: 'cocacola.fanhero.tv'
   }
 ];
