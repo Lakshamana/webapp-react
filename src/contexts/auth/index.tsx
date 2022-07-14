@@ -1,32 +1,34 @@
-import { useState, useEffect, createContext, useContext } from 'react'
 import { useApolloClient } from '@apollo/client'
+import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useFlags } from 'contexts/flags'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { anonymousAuth, signOutFB } from 'services/firebase'
 import {
-  QUERY_ORGANIZATION_PUBLIC_SETTINGS,
-  QUERY_ME,
   MUTATION_SIGNOUT,
   QUERY_CHANNEL,
+  QUERY_ME,
+  QUERY_PUBLIC_CHANNEL
 } from 'services/graphql'
-import { useFlags } from 'contexts/flags'
 import {
   useAuthStore,
-  useOrganizationStore,
   useChannelsStore,
   useCustomizationStore,
+  useOrganizationStore,
+  useThemeStore
 } from 'services/stores'
-import { signOutFB } from 'services/firebase'
-import {
-  USER_INFO,
-  ORGANIZATION_INFO,
-  AUTH_TOKEN,
-  ACCOUNT_INFO,
-  FIREBASE_TOKEN,
-} from 'config/constants'
 
-import { saveData, getData, clearData } from 'services/storage'
 import { LoadingScreen } from 'components'
+import { clearData, getData } from 'services/storage'
 
-import { AuthTypes } from './types'
 import { useTranslation } from 'react-i18next'
+import { AuthTypes } from './types'
+
+import { configEnvs } from 'config/envs'
+
+import { setOrganizationData } from 'config/organization'
+
+import axios from 'axios'
+import { ColorMode } from 'types/common'
 
 const AuthContext = createContext({})
 
@@ -37,44 +39,45 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const { i18n } = useTranslation()
-  const { user, setUser, setAccount, account } = useAuthStore()
-  const { organization, setOrganization } = useOrganizationStore()
+  const { user, setUser, setAccount, account, setAnonymous } = useAuthStore()
+  const { setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
     useCustomizationStore()
-  const [loading, setLoading] = useState(true)
-  const [loadingAccount, setLoadingAcount] = useState(false)
+
+  const [loadingOrg, setLoadingOrg] = useState<boolean>(true)
+  const [loadingAnonymous, setLoadingAnonymous] = useState<boolean>(true)
+  const [loadingAccount, setLoadingAcount] = useState(true)
+
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { CHANNELS, ORGANIZATION } = useFlags()
+  const { setColorMode } = useThemeStore()
 
   const client = useApolloClient()
 
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
+  const isAnonymous = !!getData(ANONYMOUS_AUTH)
 
   const signed = !!accessToken
-  const { REACT_APP_ORGANIZATION_ID } = process.env
+
+  const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
+    process.env
+
+  const origin =
+    NODE_ENV === 'development'
+      ? REACT_APP_ORGANIZATION_URL
+      : window.location.origin
 
   const updateAccount = async (account) => {
-    await saveData(ACCOUNT_INFO, account)
     await setAccount(account)
   }
 
   const updateUser = async (user) => {
-    await saveData(USER_INFO, user)
     await setUser(user)
   }
 
   const loadAccount = async () => {
-    setLoadingAcount(true)
     if (account && user) {
-      setLoadingAcount(false)
-      return
-    }
-    const accountData = getData(ACCOUNT_INFO)
-    const userData = getData(USER_INFO)
-    if (accountData && userData) {
-      setAccount(accountData)
-      setUser(userData)
       setLoadingAcount(false)
       return
     }
@@ -83,22 +86,23 @@ export const AuthProvider = ({ children }) => {
 
   const updateActiveChannel = async (channelSlug?: string) => {
     if (!channelSlug) return
-    setLoading(true)
     const { data } = await client.query({
-      query: QUERY_CHANNEL,
+      query: isAnonymous ? QUERY_PUBLIC_CHANNEL : QUERY_CHANNEL,
       variables: {
         slug: channelSlug,
       },
     })
-    if (data?.channel) {
-      setActiveChannel({
-        id: data.channel.id,
-        name: data.channel.name,
-        slug: data.channel.slug || '',
-        kind: data.channel.kind || '',
+
+    const channel = data?.channel || data?.getPublicChannel
+
+    if (channel) {
+      await setActiveChannel({
+        id: channel.id,
+        name: channel.name,
+        slug: channel.slug || '',
+        kind: channel.kind || '',
       })
     }
-    setLoading(false)
   }
 
   const getAccount = () => {
@@ -111,9 +115,9 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
-          if(data.me.profile?.locale) i18n.changeLanguage(data.me.profile.locale)
+          if (data.me.profile?.locale)
+            i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
-          setLoadingAcount(false)
         }
         resolve(data.me)
       } catch {
@@ -123,40 +127,28 @@ export const AuthProvider = ({ children }) => {
     })
   }
 
-  const loadOrganization = async () => {
-    if (organization) {
-      setLoading(false)
-      return
-    }
-    const organizationData = getData(ORGANIZATION_INFO)
-    if (organizationData) {
-      setOrganization(organizationData)
-      setLoading(false)
-      return
-    }
-    await getOrganization()
-  }
-
   const getOrganization = () => {
     new Promise(async (resolve, reject) => {
       try {
-        const { data } = await client.query({
-          query: QUERY_ORGANIZATION_PUBLIC_SETTINGS,
-          variables: {
-            id: REACT_APP_ORGANIZATION_ID,
-          },
-        })
-        if (data?.organizationPublicSettings) {
-          const dataOrganization = data.organizationPublicSettings
-          saveData(ORGANIZATION_INFO, dataOrganization)
+        const { data } = await axios.get(
+          `https://${REACT_APP_API_ENDPOINT}/organizations/public/${configEnvs.organization} `,
+          {
+            headers: {
+              organization: origin || '',
+            },
+          }
+        )
+
+        if (data?.body?.data) {
+          const dataOrganization = data?.body?.data
+          setOrganizationData(dataOrganization)
           setOrganization(dataOrganization)
-          setLoading(false)
         }
         resolve(true)
       } catch (error) {
         reject(error)
       } finally {
-        setLoading(false)
+        setLoadingOrg(false)
       }
     })
   }
@@ -178,25 +170,42 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login'
   }
 
+  const doAnonymousAuth = async () => {
+    await anonymousAuth()
+      .then(() => setAnonymous(true))
+      .then(() => setLoadingAnonymous(false))
+  }
+
   useEffect(() => {
-    if (!accessToken) clearData()
-    if (!accessToken && !firebaseToken) return
-    loadAccount()
+    setAnonymous(isAnonymous)
+
+    if (!accessToken && window.location.pathname !== '/login') doAnonymousAuth()
+    else setLoadingAnonymous(false)
+
+    if (!isAnonymous) loadAccount()
+    else setLoadingAcount(false)
     // eslint-disable-next-line
   }, [accessToken, firebaseToken])
 
   useEffect(() => {
     if (activeChannel?.id) {
       setActiveChannelConfig(CHANNELS[activeChannel.id])
+      if (CHANNELS[activeChannel.id]?.THEME)
+        setColorMode(
+          CHANNELS[activeChannel.id]?.THEME.toLowerCase() as ColorMode
+        )
     }
     // eslint-disable-next-line
   }, [activeChannel])
 
   useEffect(() => {
-    loadOrganization()
+    getOrganization()
     setOrganizationConfig(ORGANIZATION)
     // eslint-disable-next-line
   }, [])
+
+  const loading =
+    loadingAnonymous || loadingOrg
 
   if (loading) return <LoadingScreen />
 

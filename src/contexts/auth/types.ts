@@ -1,8 +1,8 @@
-import { Account, Profile } from 'generated/graphql'
-import { Kinds } from 'generated/graphql'
+import { Account, Kinds, Profile } from 'generated/graphql'
 
 export interface AuthTypes {
   signed: boolean
+  isAnonymousAccess: boolean
   kind: Kinds
   user?: object
   loadingAccount: boolean

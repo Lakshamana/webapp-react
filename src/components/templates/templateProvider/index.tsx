@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { createBreakpoints } from '@chakra-ui/theme-tools'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { Global, css } from '@emotion/react'
 import {
   colors,
@@ -14,6 +14,8 @@ import {
 import { AuthProvider } from 'contexts/auth'
 import { FlagsProvider } from 'contexts/flags'
 import { ThemeProvider } from 'styled-components'
+import App from 'App'
+
 import {
   useThemeStore,
   useChannelsStore,
@@ -21,6 +23,8 @@ import {
 } from 'services/stores'
 import { useCommonStore } from 'services/stores'
 import AccessVerificationsProvider from 'contexts/accessVerifications'
+import { ApolloProvider } from '@apollo/client'
+import { Client } from 'services/api'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
 
@@ -50,23 +54,27 @@ const TemplateProvider = ({ children }: any) => {
     .join(' - ')}`
 
   return (
-    <ThemeProvider theme={{ ...theme, colorMode }}>
-      <Helmet title={pageTitleConfigured} />
-      <ChakraProvider theme={customTheme}>
-        <FlagsProvider>
-          <Global
-            styles={css`
+    <ApolloProvider client={Client}>
+      <ThemeProvider theme={{ ...theme, colorMode }}>
+        <ChakraProvider theme={customTheme}>
+          <HelmetProvider>
+            <Helmet title={pageTitleConfigured} />
+            <FlagsProvider>
+              <Global
+                styles={css`
               ${globalStyles}
             `}
-          />
-          <AuthProvider>
-            <AccessVerificationsProvider>
-              {children}
-            </AccessVerificationsProvider>
-          </AuthProvider>
-        </FlagsProvider>
-      </ChakraProvider>
-    </ThemeProvider>
+              />
+              <AuthProvider>
+                <AccessVerificationsProvider>
+                  <App />
+                </AccessVerificationsProvider>
+              </AuthProvider>
+            </FlagsProvider>
+          </HelmetProvider>
+        </ChakraProvider>
+      </ThemeProvider>
+    </ApolloProvider>
   )
 }
 
@@ -74,4 +82,4 @@ TemplateProvider.propTypes = {
   children: PropTypes.node,
 }
 
-export { TemplateProvider }
+export default TemplateProvider

@@ -1,15 +1,21 @@
+import { Spinner, useDisclosure } from '@chakra-ui/react'
+import { ActionNotAllowed, Container, Text } from 'components'
 import { useEffect, useState } from 'react'
-import { useThemeStore } from 'services/stores/theme'
 import { useTranslation } from 'react-i18next'
-import { Spinner } from '@chakra-ui/react'
-import { Container, Text } from 'components'
-import { AddReactionButton } from './components'
-import { availableReactions } from 'utils/availableReactions'
-import { Reaction } from './styles'
+import { useAuthStore } from 'services/stores'
+import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
-import { MyReactionType, ReactionsCount, ReactionType, UpdateReactionMode } from './types'
-import { formatNumber, convertCountMessage } from 'utils/helperFunctions'
+import { availableReactions } from 'utils/availableReactions'
+import { convertCountMessage, formatNumber } from 'utils/helperFunctions'
+import { AddReactionButton } from './components'
 import { UpdateReactions } from './components/addReactionButton/types'
+import { Reaction } from './styles'
+import {
+  MyReactionType,
+  ReactionsCount,
+  ReactionType,
+  UpdateReactionMode
+} from './types'
 
 const ReactionBar = ({
   postId,
@@ -17,20 +23,27 @@ const ReactionBar = ({
   reactions,
   totalReactions,
   removeMyReaction,
-  addMyReaction
+  addMyReaction,
 }: ReactionsCount) => {
   const { colorMode } = useThemeStore()
+  const { isAnonymousAccess } = useAuthStore()
   const { t } = useTranslation()
   const [onlyThreeBiggests, setOnlyThreeBiggests] = useState<ReactionType[]>()
   const [allReactions, setAllReactions] = useState<ReactionType[]>()
   const [totalOfReactions, setTotalOfReactions] = useState<number>(0)
-  const [myActiveReactions, setMyActiveReactions] = useState<MyReactionType[]>([])
-  const [updatingReactions, setUpdatingReactions] = useState<UpdateReactions>({ reaction: '', isLoading: false })
+  const [myActiveReactions, setMyActiveReactions] = useState<MyReactionType[]>(
+    []
+  )
+  const [updatingReactions, setUpdatingReactions] = useState<UpdateReactions>({
+    reaction: '',
+    isLoading: false,
+  })
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const translateMapper = [
     'page.feed.no_reactions',
     'page.feed.reaction',
-    'page.feed.reactions'
+    'page.feed.reactions',
   ]
 
   useEffect(() => {
@@ -52,7 +65,8 @@ const ReactionBar = ({
     setAllReactions(data)
     endOfUpdate()
   }
-  const endOfUpdate = () => setUpdatingReactions({ reaction: '', isLoading: false })
+  const endOfUpdate = () =>
+    setUpdatingReactions({ reaction: '', isLoading: false })
   const updateTotalReactions = (mode: UpdateReactionMode) => {
     if (mode === 'INCREASE') {
       setTotalOfReactions(totalOfReactions + 1)
@@ -63,19 +77,27 @@ const ReactionBar = ({
   }
 
   const updateMyReaction = (reaction: string) => () => {
+    if (isAnonymousAccess) {
+      onOpen()
+      return
+    }
     if (updatingReactions.isLoading) return
     const variables = {
       input: {
         post: postId,
-        reaction
-      }
+        reaction,
+      },
     }
     setUpdatingReactions({ reaction, isLoading: true })
-    const myReactionsContains = myActiveReactions.find(each => each.name === reaction)
+    const myReactionsContains = myActiveReactions.find(
+      (each) => each.name === reaction
+    )
     if (myReactionsContains) {
       removeMyReaction({ variables })
         .then(({ data }) => {
-          const updateMyReaction = myActiveReactions?.filter(each => each.name !== reaction)
+          const updateMyReaction = myActiveReactions?.filter(
+            (each) => each.name !== reaction
+          )
           setMyActiveReactions(updateMyReaction)
           updateAllReactions(data.removeReaction)
           updateTotalReactions('DECREASE')
@@ -95,13 +117,14 @@ const ReactionBar = ({
   return (
     <Container alignItems="center">
       <Container>
-        {
-          !!onlyThreeBiggests?.length &&
+        {!!onlyThreeBiggests?.length &&
           onlyThreeBiggests?.map((reaction) => {
             const ifContainsName = ({ name }) => name === reaction?.name
             const reactionValue = availableReactions.find(ifContainsName)
             const isMyReaction = myActiveReactions.find(ifContainsName)
-            const isUpdating = updatingReactions.reaction === reaction.name && updatingReactions.isLoading
+            const isUpdating =
+              updatingReactions.reaction === reaction.name &&
+              updatingReactions.isLoading
             return (
               <Reaction
                 key={`${reaction?.name}-reaction`}
@@ -111,28 +134,23 @@ const ReactionBar = ({
                 myReaction={isMyReaction}
                 onClick={updateMyReaction(reaction?.name)}
               >
-                {
-                  isUpdating &&
+                {isUpdating && (
                   <Spinner
                     speed="0.65s"
                     thickness={'3px'}
                     size={'md'}
                     color={colors.secondaryText[colorMode]}
                   />
-                }
-                {
-                  !isUpdating &&
+                )}
+                {!isUpdating && (
                   <>
                     {reactionValue?.value}
-                    <Text ml={2}>
-                      {formatNumber(reaction?.count || 0, 1)}
-                    </Text>
+                    <Text ml={2}>{formatNumber(reaction?.count || 0, 1)}</Text>
                   </>
-                }
+                )}
               </Reaction>
             )
-          })
-        }
+          })}
       </Container>
       <AddReactionButton
         updateReactions={updatingReactions}
@@ -146,6 +164,7 @@ const ReactionBar = ({
           </Text>
         )}
       </Container>
+      <ActionNotAllowed isOpen={isOpen} onClose={onClose} />
     </Container>
   )
 }

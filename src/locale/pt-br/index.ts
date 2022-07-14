@@ -8,6 +8,7 @@ const PT_BR = {
       },
       back_to_home: 'Voltar para o início',
       or: 'ou',
+      next: 'próximo',
       error: {
         generic_api_error:
           'Algo deu errado. Nós vamos consertar isso. Tente mais tarde.',
@@ -21,6 +22,8 @@ const PT_BR = {
         same_password_error: 'A nova senha deve ser diferente da senha atual',
         confirm_email:
           'Por favor, digite o mesmo email utilizado para o cadastro.',
+        deactivated_account:
+          'Sua conta ainda não foi ativada. Por favor, verifique o link de ativação enviado para o seu email.',
       },
       what_is_this: 'O que é isso?',
       more: 'mais',
@@ -71,9 +74,12 @@ const PT_BR = {
         november: 'Novembro',
         december: 'Dezembro',
       },
-      content_not_exists: "Não foi possível encontrar esta página",
+      content_not_exists: 'Não foi possível encontrar esta página',
       content_not_exists_description:
         'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
+      action_not_allowed: 'Você precisa ter uma conta para executar essa ação',
+      create_a_new_account:
+        'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!',
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -108,6 +114,7 @@ const PT_BR = {
         subtitle:
           'Insira seu endereço de e-mail e escolha uma senha para criar sua conta e ter acesso a conteúdos exclusivos.',
         already_have_account: 'Voce já tem uma conta?',
+        free_registration: 'Crie uma conta agora!',
       },
       GDPR: {
         citizen: 'Você é cidadão ou residente da União Europeia?',
@@ -216,6 +223,12 @@ const PT_BR = {
       },
     },
     page: {
+      search: {
+        results_for: '{{count}} resultados encontrados para {{string}}:',
+        videos_section: 'Vídeos',
+        categories_section: 'Categorias',
+        live_events_section: 'Ao vivo',
+      },
       home: {
         live: 'Ao vivo',
         featured_posts: 'Destaques',
@@ -358,7 +371,7 @@ const PT_BR = {
           date_month: 'MM',
           date_year: 'AAAA',
           cvv: 'CVV',
-          country: 'Country',
+          country: 'País',
           installments: 'Parcelas',
           full_name: 'Nome Completo',
           email: 'E-mail',
@@ -371,6 +384,14 @@ const PT_BR = {
             month_required: 'Mês é obrigatorio',
             year_required: 'Ano é obrigatorio',
           },
+          address01: 'Endereço 1',
+          address02: 'Endereço 2',
+          number: 'Número',
+          complement: 'Complemento',
+          zip_code: 'CEP',
+          district: 'Bairro',
+          city: 'Cidade',
+          state: 'Estado',
         },
         modal: {
           success: {
@@ -447,13 +468,17 @@ const PT_BR = {
         selectPlan: {
           title: 'Selecione o seu plano',
           select: 'selecionar',
+          loading: 'Aguarde',
         },
         selectOption: {
           title: 'Selecione a opção:',
           choosePaymentMethod: 'Escolha um método de pagamento',
           bankCard: 'Cartão',
-        }
-      }
+          bankCardDesc: 'Pague com Visa, Mastercard, Maestro ou Amex',
+          pix: 'PIX',
+          pixDesc: 'Seu pagamento aprovado rapidamente',
+        },
+      },
     },
     cookieConsent: {
       notice: 'Aviso prévio.',

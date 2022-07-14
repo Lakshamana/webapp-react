@@ -1,39 +1,44 @@
-import { useEffect, useState } from 'react'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { useParams } from 'react-router-dom'
-import { Center, Flex, Spacer, Box } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Skeleton } from 'components'
+import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
 import {
-  QUERY_PLAYLIST,
-  QUERY_POST,
-  QUERY_POSTS_CARDS,
+  Comments,
+  Container,
+  Participants,
+  ReactionBar,
+  Skeleton,
+  VideoPlayer,
+  VideoPlaylist
+} from 'components'
+import { TypeParticipant } from 'components/molecules/participants/types'
+import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
+import { PlaylistOutput, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import {
   MUTATION_ADD_MY_REACTION,
   MUTATION_REMOVE_MY_REACTION,
+  QUERY_PLAYLIST,
+  QUERY_POST,
+  QUERY_POSTS_CARDS
 } from 'services/graphql'
-import { useThemeStore, useCommonStore } from 'services/stores'
-import { useTranslation } from 'react-i18next'
-import {
-  VideoPlayer,
-  ReactionBar,
-  VideoPlaylist,
-  Participants,
-  Container,
-  Comments,
-} from 'components'
-import { buildUrlFromPath } from 'utils/helperFunctions'
-import { Title, Subtitle, VideoDetails, Video, VideoComments } from './style'
-import { colors, breakpoints } from 'styles'
-import { PlaylistOutput, Post } from 'generated/graphql'
-import { useCustomizationStore } from 'services/stores'
-import { VerifyContentKind } from '../components'
-import { TypeParticipant } from 'components/molecules/participants/types'
-import { AlertNextVideo } from './AlertNextVideo'
-import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { getData } from 'services/storage'
+import {
+  useAuthStore,
+  useCommonStore,
+  useCustomizationStore,
+  useThemeStore
+} from 'services/stores'
+import { breakpoints, colors } from 'styles'
+import { buildUrlFromPath } from 'utils/helperFunctions'
+import { VerifyContentKind } from '../components'
+import { AlertNextVideo } from './AlertNextVideo'
+import { Subtitle, Title, Video, VideoComments, VideoDetails } from './style'
 
 const VideoPostPage = () => {
   const { t } = useTranslation()
+  const { isAnonymousAccess } = useAuthStore()
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
@@ -75,7 +80,6 @@ const VideoPostPage = () => {
           (item) => item.slug !== slug
         )
         setRelatedVideosData(filteredRelatedVideos)
-        return
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -101,7 +105,7 @@ const VideoPostPage = () => {
 
     const filteredCategories = postData?.categories?.map((item) => item.id)
 
-    if (!!filteredCategories?.length) {
+    if (!!filteredCategories?.length && !isAnonymousAccess) {
       getRelatedPosts({
         variables: {
           filter: {
@@ -119,7 +123,7 @@ const VideoPostPage = () => {
 
     setEngagedUsers(engagedUsers)
 
-    if (!!postData?.playlists?.length) {
+    if (!!postData?.playlists?.length && !isAnonymousAccess) {
       getPlaylist({
         variables: {
           id: postData?.playlists[0].id,
@@ -152,6 +156,17 @@ const VideoPostPage = () => {
   const postHasCommentsAllowed =
     activeChannelConfig?.SETTINGS.DISPLAY_COMMENTS && postData?.allowComments
 
+  const getCategoryId = (post: any) => {
+    if (post && post.categories) {
+      return post.categories
+        .map((el) => {
+          return el.id
+        })
+        .join(',')
+    }
+    return ''
+  }
+
   if (isVerifyingAccessPermission)
     return (
       <VerifyContentKind
@@ -175,15 +190,20 @@ const VideoPostPage = () => {
       flexDirection={'column'}
       justifyContent="center"
       alignItems="center"
-      mb={'-30px'}
+      mb={isAnonymousAccess ? '-60px' : '-30px'}
     >
       <Video>
         <VideoPlayer
+          isLiveStream={false}
           src={mediaUrl}
           title={postData?.title}
           subtitle={postData?.description}
           isMuted={definePlayerIsMuted}
           setVolumeValue={definePlayerVolume}
+          videoId={postData?.id}
+          categoryId={getCategoryId(postData)}
+          post_type={postData?.type}
+          video_duration={postData?.media?.['duration']}
         />
         <AlertNextVideo />
       </Video>
@@ -218,37 +238,39 @@ const VideoPostPage = () => {
         backgroundColor={colors.cardBg[colorMode]}
         justifyContent="center"
       >
-        <VideoComments>
-          {postHasCommentsAllowed && (
-            <Box
-              w={
-                !!relatedVideosData?.length || !!playlistData?.posts?.length
-                  ? { sm: '100%', md: '53%', lg: '55%', xl: '70%' }
-                  : '100%'
-              }
-            >
-              {postData && <Comments {...postData} />}
+        {!isAnonymousAccess && (
+          <VideoComments>
+            {postHasCommentsAllowed && (
+              <Box
+                w={
+                  !!relatedVideosData?.length || !!playlistData?.posts?.length
+                    ? { sm: '100%', md: '53%', lg: '55%', xl: '70%' }
+                    : '100%'
+                }
+              >
+                {postData && <Comments {...postData} />}
+              </Box>
+            )}
+            <Spacer mx={3} />
+            <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
+              {playlistData && (
+                <VideoPlaylist
+                  activeVideo={postData?.id}
+                  title={playlistData?.title}
+                  videos={playlistData?.posts}
+                  showAutoplay={true}
+                />
+              )}
+              {!!relatedVideosData?.length && (
+                <VideoPlaylist
+                  title={t('page.post.related_videos')}
+                  videos={[...relatedVideosData]}
+                  showAutoplay={false}
+                />
+              )}
             </Box>
-          )}
-          <Spacer mx={3} />
-          <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
-            {playlistData && (
-              <VideoPlaylist
-                activeVideo={postData?.id}
-                title={playlistData?.title}
-                videos={playlistData?.posts}
-                showAutoplay={true}
-              />
-            )}
-            {!!relatedVideosData?.length && (
-              <VideoPlaylist
-                title={t('page.post.related_videos')}
-                videos={[...relatedVideosData]}
-                showAutoplay={false}
-              />
-            )}
-          </Box>
-        </VideoComments>
+          </VideoComments>
+        )}
       </Container>
     </Container>
   )

@@ -12,6 +12,7 @@ export const BoxChatMain: any = styled.div`
   flex-direction: row;
   align-items: center;
   margin-top: 5px;
+  max-width: 100%;
 `
 
 export const MainContainer: any = styled.div`
@@ -20,6 +21,7 @@ export const MainContainer: any = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  max-width: 89%;
 `
 
 export const DateText: any = styled.div`

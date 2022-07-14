@@ -1,22 +1,34 @@
-import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Flex, Box, Text, Textarea } from '@chakra-ui/react'
 import { useLazyQuery, useMutation } from '@apollo/client'
+import { Box, Flex, Text, Textarea, useDisclosure } from '@chakra-ui/react'
+import {
+  ActionNotAllowed,
+  CommentCard,
+  CommentHeader,
+  CommentInput,
+  CommentLoading,
+  Modal
+} from 'components'
+import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
+import { useFormik } from 'formik'
+import {
+  Comment as CommentType,
+  Post,
+  ReportType,
+  SortDirection
+} from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {
-  QUERY_COMMENTS,
   MUTATION_ADD_COMMENT,
-  MUTATION_UPDATE_COMMENT,
+  MUTATION_ADD_REPORT,
   MUTATION_DELETE_COMMENT,
-  MUTATION_ADD_REPORT
+  MUTATION_UPDATE_COMMENT,
+  QUERY_COMMENTS
 } from 'services/graphql'
-import { Post, SortDirection, Comment as CommentType } from 'generated/graphql'
-import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
-import { CommentHeader, CommentInput, CommentCard, CommentLoading, Modal } from 'components'
-import { useCommentsStore, useThemeStore } from 'services/stores'
+import { useAuthStore, useCommentsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { initialValues, validationSchema } from './settings'
-import { useFormik } from 'formik'
 import { ISelectPopup, typeOfCard } from './types'
 
 const Comments = ({ ...props }: Post) => {
@@ -29,19 +41,33 @@ const Comments = ({ ...props }: Post) => {
     setUpdateRepliesStore,
     modalOption,
     setModalOption,
-    resetModal
+    resetModal,
   } = useCommentsStore()
   const [filterBy, setFilterBy] = useState<SortDirection>(SortDirection.Desc)
   const [filterPage, setFilterPage] = useState<number>(0)
   const [replyData, setReplyData] = useState({ replyId: '', postId: '' })
-  const [getComments, { data, loading: dataLoading }] = useLazyQuery(QUERY_COMMENTS, {
-    fetchPolicy: 'no-cache'
-  })
-  const [addComment, { data: newComment, loading: newCommentLoading }] = useMutation(MUTATION_ADD_COMMENT)
-  const [editComment, { data: editedComment, loading: editedCommentLoading }] = useMutation(MUTATION_UPDATE_COMMENT)
-  const [deleteComment, { data: deletedComment, loading: deleteCommentLoading }] = useMutation(MUTATION_DELETE_COMMENT)
-  const [deleteReply, { data: deletedReply, loading: deleteReplyLoading }] = useMutation(MUTATION_DELETE_COMMENT)
-  const [reportComment, { data: reportedComment, loading: reportCommentLoading }] = useMutation(MUTATION_ADD_REPORT)
+  const [getComments, { data, loading: dataLoading }] = useLazyQuery(
+    QUERY_COMMENTS,
+    {
+      fetchPolicy: 'no-cache',
+    }
+  )
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isAnonymousAccess } = useAuthStore()
+  const [addComment, { data: newComment, loading: newCommentLoading }] =
+    useMutation(MUTATION_ADD_COMMENT)
+  const [editComment, { data: editedComment, loading: editedCommentLoading }] =
+    useMutation(MUTATION_UPDATE_COMMENT)
+  const [
+    deleteComment,
+    { data: deletedComment, loading: deleteCommentLoading },
+  ] = useMutation(MUTATION_DELETE_COMMENT)
+  const [deleteReply, { data: deletedReply, loading: deleteReplyLoading }] =
+    useMutation(MUTATION_DELETE_COMMENT)
+  const [
+    reportComment,
+    { data: reportedComment, loading: reportCommentLoading },
+  ] = useMutation(MUTATION_ADD_REPORT)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => getAllComments(), [])
@@ -55,19 +81,19 @@ const Comments = ({ ...props }: Post) => {
       setUpdateCommentsStore({
         hasMore: data.comments?.hasNextPage,
         totalComments: data.comments?.total,
-        allComments: data.comments?.rows
+        allComments: data.comments?.rows,
       })
       return
     }
 
     const updateComments = [
       ...commentsStore.allComments,
-      ...data.comments?.rows
+      ...data.comments?.rows,
     ]
     setUpdateCommentsStore({
       hasMore: data.comments?.hasNextPage,
       totalComments: data.comments?.total,
-      allComments: updateComments
+      allComments: updateComments,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
@@ -78,22 +104,22 @@ const Comments = ({ ...props }: Post) => {
     if (filterBy === SortDirection.Desc) {
       const updateComments = [
         newComment.addComment,
-        ...commentsStore.allComments
+        ...commentsStore.allComments,
       ]
       setUpdateCommentsStore({
         totalComments,
-        allComments: [...updateComments]
+        allComments: [...updateComments],
       })
       return
     }
     if (!commentsStore.hasMore) {
       const updateComments = [
         ...commentsStore.allComments,
-        newComment.addComment
+        newComment.addComment,
       ]
       setUpdateCommentsStore({
         totalComments,
-        allComments: [...updateComments]
+        allComments: [...updateComments],
       })
       return
     }
@@ -103,18 +129,18 @@ const Comments = ({ ...props }: Post) => {
   useEffect(() => {
     if (!editedComment) return
     const totalComments = commentsStore.totalComments
-    const updateComments = commentsStore.allComments.map(each => {
+    const updateComments = commentsStore.allComments.map((each) => {
       if (each.id === editedComment.updateComment.id) {
         return {
           ...each,
-          description: editedComment.updateComment.description
+          description: editedComment.updateComment.description,
         }
       }
       return each
     })
     setUpdateCommentsStore({
       totalComments,
-      allComments: [...updateComments]
+      allComments: [...updateComments],
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editedComment])
@@ -122,10 +148,12 @@ const Comments = ({ ...props }: Post) => {
   useEffect(() => {
     if (!deletedComment) return
     const totalComments = commentsStore.totalComments - 1
-    const updateComments = commentsStore.allComments.filter(each => each.id !== deletedComment.deleteComment.id)
+    const updateComments = commentsStore.allComments.filter(
+      (each) => each.id !== deletedComment.deleteComment.id
+    )
     setUpdateCommentsStore({
       totalComments,
-      allComments: [...updateComments]
+      allComments: [...updateComments],
     })
     resetModal()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,11 +164,13 @@ const Comments = ({ ...props }: Post) => {
     const getRepliesComments = repliesStore[replyData.postId]
     const { allComments, totalComments } = getRepliesComments
     const updateTotalComments = totalComments - 1
-    const updateRepliesComments = allComments.filter(each => each.id !== replyData.replyId)
+    const updateRepliesComments = allComments.filter(
+      (each) => each.id !== replyData.replyId
+    )
     setUpdateRepliesStore({
       id: replyData.postId,
       totalComments: updateTotalComments,
-      allComments: [...updateRepliesComments]
+      allComments: [...updateRepliesComments],
     })
     updateCountCommentsStore(replyData.postId)
     resetModal()
@@ -152,7 +182,7 @@ const Comments = ({ ...props }: Post) => {
 
   const updateCountCommentsStore = (postId: string) => {
     const { totalComments, allComments } = commentsStore
-    const updateComments = allComments.map(each => {
+    const updateComments = allComments.map((each) => {
       if (each.id === postId) {
         return { ...each, countComments: each.countComments - 1 }
       }
@@ -160,7 +190,7 @@ const Comments = ({ ...props }: Post) => {
     })
     setUpdateCommentsStore({
       totalComments,
-      allComments: [...updateComments]
+      allComments: [...updateComments],
     })
   }
 
@@ -171,9 +201,9 @@ const Comments = ({ ...props }: Post) => {
           post: props.id,
           page,
           pageSize: DEFAULT_PAGESIZE_COMMENTS,
-          sortBy: getSortByFilter()
-        }
-      }
+          sortBy: getSortByFilter(),
+        },
+      },
     })
   }
 
@@ -181,30 +211,41 @@ const Comments = ({ ...props }: Post) => {
     if (commentsStore.hasMore) getAllComments(filterPage + 1)
   }
 
-  const getSortByFilter = () => filterBy === SortDirection.Asc
-    ? "createdAt.asc"
-    : "createdAt.desc"
+  const getSortByFilter = () =>
+    filterBy === SortDirection.Asc ? 'createdAt.asc' : 'createdAt.desc'
 
   const handleFilterChange = (evt: any) => {
-    const { value } = evt?.target;
-    setUpdateCommentsStore({ allComments: [], hasMore: false, totalComments: 0 })
+    const { value } = evt?.target
+    setUpdateCommentsStore({
+      allComments: [],
+      hasMore: false,
+      totalComments: 0,
+    })
     setFilterPage(0)
     setFilterBy(value)
   }
 
   const handleReportComment = ({ reportReason }) => {
+    if (isAnonymousAccess) {
+      onOpen()
+      return
+    }
     reportComment({
       variables: {
         payload: {
           idReported: modalOption.id,
-          type: 'POST',
-          reason: reportReason
-        }
-      }
+          type: ReportType.Comment,
+          reason: reportReason,
+        },
+      },
     })
   }
 
-  const handleSelectPopupOption = (selected: ISelectPopup, typeOfCard: typeOfCard, postId: string) => {
+  const handleSelectPopupOption = (
+    selected: ISelectPopup,
+    typeOfCard: typeOfCard,
+    postId: string
+  ) => {
     if (selected.option === 'DELETE') {
       if (typeOfCard === 'REPLY') {
         setReplyData({ replyId: selected.id, postId })
@@ -213,7 +254,7 @@ const Comments = ({ ...props }: Post) => {
           typeEvent: selected.option,
           text: t('page.post.comment.confirm_delete'),
           action: () => deleteReply({ variables: { id: selected.id } }),
-          loadingAction: deleteReplyLoading
+          loadingAction: deleteReplyLoading,
         })
         return
       }
@@ -222,11 +263,12 @@ const Comments = ({ ...props }: Post) => {
         typeEvent: selected.option,
         text: t('page.post.comment.confirm_delete'),
         action: () => deleteComment({ variables: { id: selected.id } }),
-        loadingAction: deleteCommentLoading
+        loadingAction: deleteCommentLoading,
       })
       return
     }
 
+    formik.resetForm()
     if (selected.option === 'REPORT') {
       setModalOption({
         status: true,
@@ -234,7 +276,7 @@ const Comments = ({ ...props }: Post) => {
         text: '',
         id: selected.id,
         action: formik.handleSubmit,
-        loadingAction: reportCommentLoading
+        loadingAction: reportCommentLoading,
       })
     }
   }
@@ -249,7 +291,7 @@ const Comments = ({ ...props }: Post) => {
     validationSchema,
     validateOnChange: true,
     validateOnBlur: false,
-    onSubmit: handleReportComment
+    onSubmit: handleReportComment,
   })
 
   return (
@@ -266,8 +308,7 @@ const Comments = ({ ...props }: Post) => {
         closeButton={true}
       >
         <>
-          {
-            modalOption.typeEvent === 'DELETE' &&
+          {modalOption.typeEvent === 'DELETE' && (
             <Box textAlign="center">
               <Text
                 color={colors.generalText[colorMode]}
@@ -278,9 +319,8 @@ const Comments = ({ ...props }: Post) => {
                 {`${t('page.post.comment.delete') + ' ?'}`}
               </Text>
             </Box>
-          }
-          {
-            modalOption.typeEvent === 'REPORT' &&
+          )}
+          {modalOption.typeEvent === 'REPORT' && (
             <Box textAlign="center">
               <Text
                 color={colors.generalText[colorMode]}
@@ -306,8 +346,7 @@ const Comments = ({ ...props }: Post) => {
                 color={colors.inputText[colorMode]}
                 backgroundColor={colors.inputBg[colorMode]}
               />
-              {
-                !!formik.errors.reportReason && formik.touched.reportReason &&
+              {!!formik.errors.reportReason && formik.touched.reportReason && (
                 <Text
                   color={colors.generalText[colorMode]}
                   textAlign={'center'}
@@ -315,9 +354,9 @@ const Comments = ({ ...props }: Post) => {
                 >
                   {formik.errors.reportReason}
                 </Text>
-              }
+              )}
             </Box>
-          }
+          )}
         </>
       </Modal>
       <Flex flexDirection="column" width={'100%'}>
@@ -329,35 +368,33 @@ const Comments = ({ ...props }: Post) => {
         />
         <CommentInput
           postId={props.id}
-          action={addComment}
+          action={isAnonymousAccess ? onOpen : addComment}
           actionLoading={newCommentLoading}
         />
-        {
-          newCommentLoading &&
-          commentsStore.totalComments === 0 &&
+        {newCommentLoading && commentsStore.totalComments === 0 && (
           <CommentLoading show={3} />
-        }
+        )}
         <InfiniteScroll
           dataLength={commentsStore.allComments?.length}
           next={loadMore}
           hasMore={commentsStore?.hasMore || false}
           loader={<CommentLoading show={3} />}
         >
-          {
-            commentsStore.allComments?.map((comment: CommentType) =>
-              <CommentCard
-                key={`comment-${comment.id}`}
-                postId={props.id}
-                addComment={addComment}
-                editComment={editComment}
-                selectPopupOption={handleSelectPopupOption}
-                newCommentLoading={newCommentLoading}
-                editedCommentLoading={editedCommentLoading}
-                {...comment}
-              />
-            )}
+          {commentsStore.allComments?.map((comment: CommentType) => (
+            <CommentCard
+              key={`comment-${comment.id}`}
+              postId={props.id}
+              addComment={isAnonymousAccess ? onOpen : addComment}
+              editComment={isAnonymousAccess ? onOpen : editComment}
+              selectPopupOption={handleSelectPopupOption}
+              newCommentLoading={newCommentLoading}
+              editedCommentLoading={editedCommentLoading}
+              {...comment}
+            />
+          ))}
         </InfiniteScroll>
       </Flex>
+      <ActionNotAllowed isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

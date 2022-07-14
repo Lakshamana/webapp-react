@@ -17,14 +17,10 @@ const CategoriesPage = () => {
   const { setPageTitle } = useCommonStore()
   const { activeChannel } = useChannelsStore()
   const [categoriesBillboardItems, setCategoriesBillboardItems] = useState([])
-  const [categoriesWithoutChildren, setCategoriesWithouChildren] =
-    useState<Category[]>()
-  const [categoriesWithChildren, setCategoriesWithChildren] =
-    useState<Category[]>()
 
   const { generateImage } = useThumbor()
 
-  const { data: featuredCategoriesData, loading: loadingFeaturedCategories } =
+  const { data: featuredCategoriesData } =
     useQuery(QUERY_CATEGORIES, {
       variables: {
         filter: {
@@ -35,12 +31,27 @@ const CategoriesPage = () => {
       fetchPolicy: 'cache-and-network',
     })
 
-  const { data: categoriesData, loading: loadingCategories } = useQuery(
+  const { data: categoriesWithoutChildren, loading: loadingCategoriesWithoutChildren } = useQuery(
     QUERY_CATEGORIES,
     {
       variables: {
         filter: {
           sortBy: 'sort.asc',
+          isParent: false,
+          isChild: false
+        },
+      },
+      fetchPolicy: 'cache-and-network'
+    }
+  )
+
+  const { data: categoriesWithChildren, loading: loadingCategoriesWithChildren } = useQuery(
+    QUERY_CATEGORIES,
+    {
+      variables: {
+        filter: {
+          sortBy: 'sort.asc',
+          isParent: true
         },
       },
       fetchPolicy: 'cache-and-network',
@@ -73,43 +84,27 @@ const CategoriesPage = () => {
   }, [featuredCategoriesData])
 
   useEffect(() => {
-    if (categoriesData?.categories.rows.length) {
-      const categoriesWithChildren = categoriesData?.categories.rows.filter(
-        (category: Category) => category.children?.length
-      )
-
-      const noChildren = categoriesData?.categories.rows.filter(
-        (category: Category) => !category.children?.length && !category.parentId
-      )
-
-      setCategoriesWithChildren(categoriesWithChildren)
-
-      setCategoriesWithouChildren(noChildren)
-    }
-  }, [categoriesData])
-
-  useEffect(() => {
     setPageTitle(t('header.tabs.categories'))
     //eslint-disable-next-line
   }, [])
 
-  const isLoading = loadingFeaturedCategories || loadingCategories
+  const isLoading = loadingCategoriesWithChildren || loadingCategoriesWithoutChildren
 
   const hasResults =
-    categoriesWithChildren?.length || categoriesWithoutChildren?.length
+    categoriesWithChildren?.categories?.rows?.length || categoriesWithoutChildren?.categories?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
   const renderCategoriesWithoutChildren = () => (
     <CategoriesScroller
-      items={categoriesWithoutChildren}
+      items={categoriesWithoutChildren?.categories?.rows}
       sectionTitle={t('page.categories.more_categories')}
       hasMoreLink={false}
     />
   )
 
   const renderCategoriesWithChildren = () => {
-    return categoriesWithChildren?.map((category: Category) => (
+    return categoriesWithChildren?.categories.rows.map((category: Category) => (
       <CategoriesScroller
         key={category.id}
         items={category.children as Category[]}
@@ -135,9 +130,9 @@ const CategoriesPage = () => {
       )}
       {!isLoading && (
         <Flex pb={10} gridGap={10} flexDirection={'column'}>
-          {!!categoriesWithoutChildren?.length &&
+          {!!categoriesWithoutChildren?.categories?.rows?.length &&
             renderCategoriesWithoutChildren()}
-          {!!categoriesWithChildren?.length && renderCategoriesWithChildren()}
+          {!!categoriesWithChildren?.categories?.rows?.length && renderCategoriesWithChildren()}
         </Flex>
       )}
       ){isEmpty && <EmptyState />}

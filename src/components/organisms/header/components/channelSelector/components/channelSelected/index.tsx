@@ -1,9 +1,9 @@
-import { Icon } from '@iconify/react'
 import { useMediaQuery } from '@chakra-ui/react'
-import { useChannelsStore, useCustomizationStore } from 'services/stores'
+import { Icon } from '@iconify/react'
+import { Avatar, Container } from 'components'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { Container, Avatar } from 'components'
-import { colors, breakpoints } from 'styles'
+import { useAuthStore, useChannelsStore, useCustomizationStore } from 'services/stores'
+import { breakpoints, colors } from 'styles'
 import { IconContainer } from './styles'
 import { PropsChannelSelected } from './types'
 
@@ -12,6 +12,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
   const { generateImage } = useThumbor()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { activeChannelConfig } = useCustomizationStore()
+  const { isAnonymousAccess } = useAuthStore()
 
   const generateChannelImage = () => {
     const theme = colorMode.toUpperCase()
@@ -38,14 +39,16 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
           />
         </Container>
       )}
-      <IconContainer {...{ open }}>
-        <Icon
-          width={20}
-          height={20}
-          icon="mdi:chevron-down"
-          color={colors.secondaryText[colorMode]}
-        />
-      </IconContainer>
+      {!isAnonymousAccess && (
+        <IconContainer {...{ open }}>
+          <Icon
+            width={20}
+            height={20}
+            icon="mdi:chevron-down"
+            color={colors.secondaryText[colorMode]}
+          />
+        </IconContainer>
+      )}
     </Container>
   )
 }

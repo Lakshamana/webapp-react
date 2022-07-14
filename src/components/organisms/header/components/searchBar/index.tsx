@@ -1,40 +1,18 @@
-import { useMemo } from 'react'
 import { Icon } from '@iconify/react'
-import { useEffect, useRef } from 'react'
-import { Container, Popover, InputInline } from 'components'
-import { SearchPopover } from '..'
+import { Container, InputInline, Popover } from 'components'
+import { useEffect, useRef, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useChannelsStore } from 'services/stores'
 
-import { PropsSearchBar } from '../../types'
-import { SearchContainer, CustomContainer, Section } from './styles'
 import { colors, sizes } from 'styles'
+import { PropsSearchBar } from '../../types'
+import { CustomContainer, SearchContainer, Section } from './styles'
 
-const SearchBar = ({
-  data,
-  open,
-  onSearch,
-  onClose,
-  search,
-  onOpen,
-  colorMode,
-}: PropsSearchBar) => {
+const SearchBar = ({ open, onClose, onOpen, colorMode }: PropsSearchBar) => {
   const triggerRef = useRef<any>()
-  const colorSchema = useMemo(
-    () =>
-      colorMode === 'light'
-        ? {
-            primary: colors.generalText.light,
-            background: colors.search.result.light,
-            results: colors.search.result.light,
-            section: colors.search.section.light,
-          }
-        : {
-            primary: colors.generalText.dark,
-            background: colors.search.result.dark,
-            results: colors.search.result.dark,
-            section: colors.search.section.dark,
-          },
-    [colorMode]
-  )
+  const history = useHistory()
+  const [search, setSearch] = useState<string>('')
+  const { activeChannel } = useChannelsStore()
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -53,10 +31,27 @@ const SearchBar = ({
     // eslint-disable-next-line
   }, [open])
 
+  const handleSearch = (evt) => {
+    setSearch(evt.target.value)
+  }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (search)
+        history.push({
+          pathname: `/c/${activeChannel?.slug}/search`,
+          search: `?s=${search}`,
+        })
+    }, 800)
+
+    return () => clearTimeout(delayDebounceFn)
+    //eslint-disable-next-line
+  }, [search])
+
   return (
     <Section display="flex" alignItems="center" flex={1}>
       <Popover
-        background={colorSchema.results}
+        background={colors.search.result[colorMode]}
         isOpen={open}
         onOpen={onOpen}
         isLazy={true}
@@ -66,7 +61,7 @@ const SearchBar = ({
           <CustomContainer
             px={[3]}
             flex={1}
-            background={colorSchema.results}
+            background={colors.search.result[colorMode]}
             height={[
               sizes.headerMobileHeight,
               sizes.headerMobileHeight,
@@ -80,43 +75,37 @@ const SearchBar = ({
                 width={20}
                 height={20}
                 icon="bx:bx-search"
-                color={colorSchema.primary}
+                color={colors.generalText[colorMode]}
               />
             </Container>
 
             <InputInline
               height="inherit"
               placeholder="Search"
-              background={colorSchema.results}
+              background={colors.search.result[colorMode]}
               value={search}
-              onChange={onSearch}
-              color={colorSchema.primary}
+              onChange={handleSearch}
+              color={colors.generalText[colorMode]}
             />
             <Container ml={2} onClick={onClose}>
               <Icon
                 width={20}
                 height={20}
                 icon="bi:x"
-                color={colorSchema.primary}
+                color={colors.generalText[colorMode]}
               />
             </Container>
           </CustomContainer>
         }
       >
-        <Container>
-          <SearchPopover
-            data={data}
-            textColor={colorSchema.primary}
-            section={colorSchema.section}
-          />
-        </Container>
+        <div></div>
       </Popover>
       <SearchContainer onClick={onOpen} px={0} {...{ open }}>
         <Icon
           width={28}
           height={28}
           icon="mdi:magnify"
-          color={colorSchema.primary}
+          color={colors.generalText[colorMode]}
         />
       </SearchContainer>
     </Section>

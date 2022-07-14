@@ -1,11 +1,11 @@
+import { CHANNEL_INFO } from 'config/constants'
+import { useAuth } from 'contexts/auth'
 import { useEffect } from 'react'
 import { BrowserRouter, useLocation } from 'react-router-dom'
-import { ClientRoutes } from './routes'
-import { getChannelName } from 'utils/helperFunctions'
-import { useChannelsStore } from 'services/stores'
-import { useAuth } from 'contexts/auth'
 import { getData } from 'services/storage'
-import { CHANNEL_INFO } from 'config/constants'
+import { useChannelsStore } from 'services/stores'
+import { getChannelName } from 'utils/helperFunctions'
+import { ClientRoutes } from './routes'
 
 const Router = () => {
   const { activeChannel, setActiveChannel } = useChannelsStore()

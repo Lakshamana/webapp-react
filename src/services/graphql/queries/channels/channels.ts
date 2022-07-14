@@ -46,3 +46,12 @@ export const QUERY_CHANNEL = gql`
     }
   }
 `
+
+export const QUERY_PUBLIC_CHANNEL = gql`
+  query PublicChannel($slug: String) {
+    getPublicChannel(slug: $slug) {
+      id
+      slug
+    }
+  }
+`

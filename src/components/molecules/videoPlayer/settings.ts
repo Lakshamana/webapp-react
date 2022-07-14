@@ -1,8 +1,21 @@
+import { dependencies } from './../../../../package.json';
+const { REACT_APP_MUX_KEY } = process.env
+
+
 export const getDefaultConfigs = (
   src,
   muxConfig = {},
-  title = '',
-  subtitle = ''
+  userId,
+  videoId,
+  categoryId,
+  title,
+  subtitle,
+  post_type,
+  video_duration,
+  video_stream_type,
+  organization_id,
+  channel_id,
+  organization_url,
 ) => ({
   autoplay: true,
   controls: true,
@@ -28,14 +41,27 @@ export const getDefaultConfigs = (
     },
     mux: {
       data: {
-        env_key: 'f79842543033c226c5d396a7d',
-        viewer_user_id: 'viewer_user_id',
-        video_id: 'video_id',
-        video_title: title || 'title',
-        video_series: 'series',
-        player_name: 'Clappr-ContentVideo',
+        env_key: REACT_APP_MUX_KEY,
+        viewer_user_id: userId || '',
+        video_id: videoId || '',
+        video_title: title || '',
+        video_series: categoryId || '',
+        player_name: 'Video.js',
         player_init_time: Date.now(),
-        video_stream_type: 'on-demand',
+        video_stream_type: post_type, // de acordo com o isLiveStream no videoplayer 'onDemand or livestream'
+        // Site Metadata
+        experiment_name: '',
+        page_type: 'watchpage',
+        view_session_id: '', // ainda não tem
+        // Player Metadata
+        player_version: dependencies['video.js'],
+        // Video Metadata
+        video_duration: video_duration || null, //miliseconds
+        video_content_type: video_stream_type,
+        video_producer: organization_url,
+        // CUSTOM Metadata
+        custom_1: organization_id,
+        custom_2: channel_id,
         ...muxConfig,
       },
     },

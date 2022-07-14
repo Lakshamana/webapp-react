@@ -1,24 +1,18 @@
-import { useEffect, useState } from 'react'
-import { Box } from '@chakra-ui/react'
-import { SwiperSlide } from 'swiper/react'
-import { TagsScrollerProps } from 'types/tags'
-import { useChannelsStore } from 'services/stores'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { CardsScroller, VideoPostCard, Skeleton } from 'components'
-import { ContentScroller } from './styles'
-import { sizes } from 'styles'
-import { isEntityBlocked } from 'utils/accessVerifications'
-import { useLazyQuery } from '@apollo/client'
-import { QUERY_TAG } from 'services/graphql'
-import { TagScrollerItem } from 'types/tags'
-import { Category, Post } from 'generated/graphql'
+import { CardsScroller, VideoPostCard } from 'components'
 import { CategoryPostCard } from 'components/atoms'
+import { Category, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { SwiperSlide } from 'swiper/react'
+import { TagScrollerItem, TagsScrollerProps } from 'types/tags'
+import { isEntityBlocked } from 'utils/accessVerifications'
+import { ContentScroller } from './styles'
 
 const TagsScroller = ({
-  tagID,
+  tagData,
   sectionTitle,
   sectionUrl,
-  hasResults,
 }: TagsScrollerProps) => {
   const { generateImage } = useThumbor()
 
@@ -26,35 +20,22 @@ const TagsScroller = ({
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
-  const [getTag, { data, loading }] = useLazyQuery(QUERY_TAG, {
-    variables: {
-      id: tagID,
-    },
-  })
-
   useEffect(() => {
-    if (tagID) getTag()
+    const postItems = tagData?.relatedPosts
+    const categoryItems = tagData?.relatedCategories
+    const myArr = postItems
+      .concat(categoryItems)
+      .sort(
+        (a, b) =>
+          (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt)
+      )
+
+    setScrollerItems(myArr)
     //eslint-disable-next-line
-  }, [tagID])
-
-  useEffect(() => {
-    if (data?.tag) {
-      const postItems = data?.tag?.relatedPosts
-      const categoryItems = data?.tag?.relatedCategories
-      const myArr = postItems
-        .concat(categoryItems)
-        .sort(
-          (a, b) =>
-            (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt)
-        )
-
-      setScrollerItems(myArr)
-    }
-  }, [data])
+  }, [])
 
   useEffect(() => {
     if (scrollerItems.length) {
-      hasResults()
       const mappedArr = scrollerItems?.map((item: Post | Category) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(item)
@@ -112,26 +93,23 @@ const TagsScroller = ({
     return (
       <CardsScroller
         title={sectionTitle}
-        moreUrl={`${sectionUrl}${data?.tag?.slug}`}
+        moreUrl={`${sectionUrl}${tagData?.slug}`}
       >
         {filteredItems?.map((item: TagScrollerItem) => {
           return (
             <SwiperSlide key={`slide-${item.id}`}>
-              {item.__typename === 'Post' && <VideoPostCard {...item} />}
-              {item.__typename === 'Category' && <CategoryPostCard {...item} />}
+              {item.__typename === 'Post' && (
+                <VideoPostCard key={`post-${item.id}`} {...item} />
+              )}
+              {item.__typename === 'Category' && (
+                <CategoryPostCard key={`category-${item.id}`} {...item} />
+              )}
             </SwiperSlide>
           )
         })}
       </CardsScroller>
     )
   }
-
-  if (loading)
-    return (
-      <Box p={sizes.paddingSm} width="100%">
-        <Skeleton kind="cards" numberOfCards={3} />
-      </Box>
-    )
 
   return (
     <ContentScroller>

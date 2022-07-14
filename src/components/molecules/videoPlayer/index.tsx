@@ -1,19 +1,20 @@
-import { memo, ReactElement, useRef } from 'react'
+import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import VideoJS from 'components/molecules/videoJs'
+import { memo, ReactElement, useRef } from 'react'
+import { useCustomizationStore } from 'services/stores'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
+import 'videojs-mux'
 import overlay from 'videojs-overlay'
 import 'videojs-overlay/dist/videojs-overlay.css'
 import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
-import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
-import 'videojs-mux'
 
-import { VideoPlayerProps } from './types'
-import { getDefaultConfigs } from './settings'
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
-import { useVideoPlayerStore } from 'services/stores'
 import { saveData } from 'services/storage'
+import { useAuthStore, useChannelsStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
+import { getDefaultConfigs } from './settings'
+import { VideoPlayerProps } from './types'
 
 const VideoPlayerComponent = ({
   src,
@@ -24,16 +25,37 @@ const VideoPlayerComponent = ({
   poster,
   overlays,
   muxConfig,
-  skin,
   options,
   isMuted,
-  setVolumeValue
+  setVolumeValue,
+  videoId,
+  categoryId,
+  post_type,
+  video_duration,
 }: VideoPlayerProps): ReactElement => {
+  const { activeChannelConfig } = useCustomizationStore()
   const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
+  const { account } = useAuthStore()
+  const { organization } = useOrganizationStore()
+  const { activeChannel } = useChannelsStore()
 
-  const defaultOptions = getDefaultConfigs(src, muxConfig, title, subtitle)
+  const defaultOptions = getDefaultConfigs(
+    src,
+    muxConfig,
+    account?.id,
+    videoId,
+    categoryId,
+    title,
+    subtitle,
+    isLiveStream ? 'livestream': 'onDemand',
+    video_duration,
+    post_type,
+    organization?.id,
+    activeChannel?.id,
+    organization?.web_url?.[0],
+  )
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player
@@ -84,7 +106,7 @@ const VideoPlayerComponent = ({
         ...options,
       }}
       islivestream
-      skin={skin}
+      skin={activeChannelConfig?.PLAYER?.SKIN}
       onReady={handlePlayerReady}
     />
   )

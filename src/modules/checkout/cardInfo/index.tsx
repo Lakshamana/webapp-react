@@ -18,7 +18,7 @@ import { FormikHelpers, useFormik } from 'formik'
 import * as Yup from 'yup'
 import { cardForm, SpreedlyError } from './types'
 
-const { REACT_APP_SPREENDLY_KEY } = process.env
+const { REACT_APP_SPREEDLY_KEY } = process.env
 
 export const CardInfo = () => {
   const [modalType] = useState(ModalType.success)
@@ -72,7 +72,7 @@ export const CardInfo = () => {
   }, [])
 
   const setupSpreedly = () => {
-    Spreedly.init(REACT_APP_SPREENDLY_KEY, {
+    Spreedly.init(REACT_APP_SPREEDLY_KEY, {
       numberEl: 'spreedly-number',
       cvvEl: 'spreedly-cvv',
     })

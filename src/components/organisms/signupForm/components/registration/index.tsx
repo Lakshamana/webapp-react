@@ -1,21 +1,14 @@
 import { Flex } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { useThemeStore } from 'services/stores/theme'
 import {
-  Input,
-  Checkbox,
-  Button,
-  Container,
-  Text,
-  SocialSigninButton,
-  AlertComponent,
-  Link,
+  AlertComponent, Button, Checkbox, Container, Input, Link, SocialSigninButton, Text
 } from 'components'
 import { useFormik } from 'formik'
+import { useTranslation } from 'react-i18next'
+import { useCustomizationStore } from 'services/stores'
+import { useThemeStore } from 'services/stores/theme'
+import { colors, fonts, sizes } from 'styles'
 import { initialValues, validationSchema } from './settings'
 import { RegistrationProps } from './types'
-import { colors, fonts, sizes } from 'styles'
-import { useCustomizationStore } from 'services/stores'
 
 const RegistrationForm = ({
   handleFormSubmit,
@@ -166,7 +159,7 @@ const RegistrationForm = ({
         width={[sizes.loginButtonWidth]}
         marginTop={10}
         isDisabled={!(dirty && isValid)}
-        label={'Sign Up'}
+        label={t('signup.actions.signup')}
         onClick={() => handleSubmit()}
         isLoading={isLoading}
       ></Button>

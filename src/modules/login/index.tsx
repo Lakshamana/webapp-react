@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { useMutation } from '@apollo/client'
-import {
-  MUTATION_SIGNIN,
-  MUTATION_SOCIAL_SIGNIN,
-  MUTATION_CREATE_ACCOUNT_GDPR,
-} from 'services/graphql'
-import { useCommonStore } from 'services/stores'
-import { authWithCustomToken, SocialSignIn } from 'services/firebase'
-import { SocialType } from 'types/common'
-import { saveData } from 'services/storage'
-import {
-  GDPRForm,
-  ConfirmEmailForm,
-} from 'components/organisms/signupForm/components'
 import { Card, SigninForm } from 'components'
-import { Container } from './styles'
-import { sizes } from 'styles'
-import { useAuth } from 'contexts/auth'
+import {
+  ConfirmEmailForm,
+  GDPRForm
+} from 'components/organisms/signupForm/components'
 import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { useAuth } from 'contexts/auth'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { authWithCustomToken, SocialSignIn } from 'services/firebase'
+import {
+  MUTATION_CREATE_ACCOUNT_GDPR,
+  MUTATION_SIGNIN,
+  MUTATION_SOCIAL_SIGNIN
+} from 'services/graphql'
+import { saveData } from 'services/storage'
+import { useAuthStore, useCommonStore } from 'services/stores'
+import { sizes } from 'styles'
+import { SocialType } from 'types/common'
+import { Container } from './styles'
 import { SignInSteps } from './types'
 
 const LoginPage = () => {
@@ -31,6 +31,8 @@ const LoginPage = () => {
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
   const { setPageTitle } = useCommonStore()
   const [account, setAccount] = useState('')
+  const { setAnonymous } = useAuthStore()
+  const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   //eslint-disable-next-line
   useEffect(() => setPageTitle(t('signin.actions.login')), [])
@@ -42,12 +44,14 @@ const LoginPage = () => {
       'exception:TOO_MANY_ATTEMPTS_TRY_LATER': t(
         'signin.error.too_many_attempts'
       ),
+      'exception:DEACTIVED_ACCOUNT': t('common.error.deactivated_account'),
       default: t('common.error.generic_api_error'),
     }
     return Error[type] || Error.default
   }
 
   const signInProcess = async ({ accessToken, firebaseToken, account }) => {
+    setAnonymous(false)
     await saveData(AUTH_TOKEN, accessToken)
     await saveData(FIREBASE_TOKEN, firebaseToken)
     await authWithCustomToken()
@@ -59,11 +63,11 @@ const LoginPage = () => {
       await signInProcess({
         accessToken: signIn.token.accessToken,
         firebaseToken: signIn.token.firebaseToken,
-        account: signIn.account
+        account: signIn.account,
       })
       history.push('/channels')
     },
-    onError: ({ message }) => setError(errorMessage(message))
+    onError: ({ message }) => setError(errorMessage(message)),
   })
 
   const [socialSignIn, { loading: SocialLoading }] = useMutation(
@@ -73,11 +77,12 @@ const LoginPage = () => {
         await signInProcess({
           accessToken: result.socialSignIn.token.accessToken,
           firebaseToken: result.socialSignIn.token.firebaseToken,
-          account: result.socialSignIn.account
+          account: result.socialSignIn.account,
         })
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('LGPD')
           setAccount(result.socialSignIn.account.id)
+          setIsSocialSignin(true)
         } else {
           history.push('/channels')
         }
@@ -89,9 +94,10 @@ const LoginPage = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin) setActiveStep('ConfirmEmail')
+        isSocialSignin && history.push('/channels')
       },
-      onError: ({ message }) => setError(errorMessage(message))
+      onError: ({ message }) => setError(errorMessage(message)),
     })
 
   const handleGDPRSubmit = () => {
@@ -109,11 +115,13 @@ const LoginPage = () => {
 
   const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)
-      .then((input) => socialSignIn({
-        variables: {
-          input,
-        }
-      }))
+      .then((input) =>
+        socialSignIn({
+          variables: {
+            input,
+          },
+        })
+      )
       .catch((error) => setError(`${error}`))
   }
 
@@ -138,11 +146,7 @@ const LoginPage = () => {
           />
         )
       case 'ConfirmEmail':
-        return (
-          <ConfirmEmailForm
-            onClose={() => setActiveStep('Login')}
-          />
-        )
+        return <ConfirmEmailForm onClose={() => setActiveStep('Login')} />
     }
   }
 

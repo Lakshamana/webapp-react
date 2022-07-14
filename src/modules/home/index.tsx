@@ -1,46 +1,48 @@
-import { useEffect, useState } from 'react'
-import { Flex, Box } from '@chakra-ui/layout'
-import { useTranslation } from 'react-i18next'
 import { useLazyQuery } from '@apollo/client'
+import { Box, Flex } from '@chakra-ui/layout'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
-  PostType,
-  Category,
   Billboard,
-  Status,
-  Post,
+  Category,
   LiveEvent,
+  Post,
+  PostType,
+  Status
 } from 'generated/graphql'
 
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import {
-  useChannelsStore,
-  useCommonStore,
-  useCustomizationStore,
-} from 'services/stores'
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
-  QUERY_POSTS_CARDS,
+  QUERY_LOOP_TAGS,
+  QUERY_POSTS_CARDS
 } from 'services/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import {
+  useChannelsStore,
+  useCommonStore,
+  useCustomizationStore
+} from 'services/stores'
 
-import { HomeCarouselsTypes } from 'types/common'
+import { Client } from 'services/api'
+
+import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
-import { BillboardTarget } from 'types/common'
 
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 
 import {
   BillboardScroller,
   CategoriesScroller,
-  VideosScroller,
-  TagsScroller,
   LivestreamScroller,
+  TagsScroller,
+  VideosScroller
 } from 'components/molecules'
 
-import { convertToValidColor } from 'utils/helperFunctions'
 import { sizes } from 'styles'
+import { convertToValidColor } from 'utils/helperFunctions'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
@@ -62,7 +64,9 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  const [hasTagsContent, setHasTagsContent] = useState<boolean>(false)
+  const [tagsIds, setTagsIds] = useState<string[]>([])
+  const [tagsData, setTagsData] = useState({})
+  const [loadingTags, setLoadingTags] = useState(false)
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -71,7 +75,7 @@ const HomePage = () => {
           target: BillboardTarget.Home,
         },
       },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'no-cache',
     })
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
@@ -143,7 +147,8 @@ const HomePage = () => {
     loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
-    loadingCategoriesWithChildren
+    loadingCategoriesWithChildren ||
+    loadingTags
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -151,7 +156,7 @@ const HomePage = () => {
     featuredPostsData?.length ||
     featuredCategoriesData?.length ||
     (isHomeDisplayingCategories && categoriesWithChildrenData?.length) ||
-    hasTagsContent
+    Object.keys(tagsData).length !== 0
 
   const isEmpty = !isLoading && !hasResults
 
@@ -164,8 +169,11 @@ const HomePage = () => {
     setLiveEventsData([])
     setFeaturedCategoriesData([])
     setFeaturedPostsData([])
-    setHasTagsContent(false)
+    setCategoriesWithChildrenData([])
+    setBillboardItems([])
+    setTagsData({})
   }
+
   const deactivateAllItems = () => {
     setIsFeaturedPostsActive(false)
     setIsFeaturedCategoriesActive(false)
@@ -174,16 +182,28 @@ const HomePage = () => {
 
   useEffect(() => {
     getBillboard()
-    deactivateAllItems()
-    clearAllItems()
+    return () => {
+      deactivateAllItems()
+      clearAllItems()
+    }
     //eslint-disable-next-line
   }, [activeChannel])
 
   useEffect(() => {
     const defaultCarouselsItems =
       activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
-        (item) => item.DEFAULT && item.IS_ACTIVE
+        (item) => !item?.TAGS?.length && item.IS_ACTIVE
       )
+
+    const tagsCarouselItems = activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
+      (item) => item?.TAGS && item.IS_ACTIVE
+    )
+
+    const ids = tagsCarouselItems
+      ?.filter((item) => item.TAGS && item.TAGS.length)
+      .map((item) => item.TAGS)
+
+    ids?.length && setTagsIds(ids)
 
     defaultCarouselsItems?.forEach((item) => {
       if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Posts)
@@ -199,6 +219,10 @@ const HomePage = () => {
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
+
+    return () => {
+      setTagsIds([])
+    }
     //eslint-disable-next-line
   }, [activeChannelConfig])
 
@@ -208,6 +232,29 @@ const HomePage = () => {
     if (isLiveEventsActive) getLiveEvents()
     // eslint-disable-next-line
   }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
+
+  const loadTags = async () => {
+    setLoadingTags(true)
+
+    const { data } = await Client.query({
+      query: QUERY_LOOP_TAGS(tagsIds),
+      notifyOnNetworkStatusChange: true,
+    })
+
+    if (data) setTagsData(data)
+
+    setLoadingTags(false)
+  }
+
+  useEffect(() => {
+    if (!tagsIds?.length) {
+      setTagsData({})
+      return
+    }
+
+    loadTags()
+    //eslint-disable-next-line
+  }, [tagsIds])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path)
@@ -222,7 +269,7 @@ const HomePage = () => {
           ...curr,
           actions: curr.actions?.map((action) => ({
             ...action,
-            route: action.route && action?.route['content'],
+            route: action.route && action?.route['contentWeb'],
             bgColor: convertToValidColor(action.bgColor),
             borderColor: convertToValidColor(action.borderColor),
             textColor: convertToValidColor(action.textColor),
@@ -238,10 +285,9 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [billboardData])
 
-  const renderBillboard = () =>
-    !!billboardItems?.length && (
-      <BillboardScroller items={billboardItems} customButtons={true} />
-    )
+  const renderBillboard = () => (
+    <BillboardScroller items={billboardItems} customButtons={true} />
+  )
 
   const renderLiveEventsScroller = (item: CarouselFlags) =>
     !!liveEventsData?.length && (
@@ -286,23 +332,27 @@ const HomePage = () => {
       />
     ))
 
-  const renderTagsScroller = (item: CarouselFlags) => (
-    <TagsScroller
-      key={`${item.LABEL[0].VALUE}`}
-      tagID={item.TAGS}
-      hasResults={() => setHasTagsContent(true)}
-      hasMoreLink={true}
-      content={item.CONTENT_TYPE}
-      sectionTitle={getCarouselLabel(item)}
-      sectionUrl={`/c/${activeChannel?.slug}/tag/`}
-    />
-  )
+  const renderTagsScroller = (item: CarouselFlags) => {
+    const currentTag = tagsData[`tag${item.TAGS}`]
+    if (currentTag)
+      return (
+        <TagsScroller
+          key={`${item.TAGS}`}
+          tagData={currentTag}
+          hasMoreLink={true}
+          content={item.CONTENT_TYPE}
+          sectionTitle={getCarouselLabel(item)}
+          sectionUrl={`/c/${activeChannel?.slug}/tag/`}
+        />
+      )
+    return <></>
+  }
 
   const getCarouselLabel = (item: CarouselFlags) => {
-    const label = item.LABEL.filter((item) =>
-      i18n.language.includes(item.LOCALE)
+    const label = item.LABEL.find((item) =>
+      i18n.language.includes(item.LOCALE || 'en-US')
     )
-    return label[0].VALUE
+    return label?.VALUE || ''
   }
 
   const homeCarouselsFiltered = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
@@ -329,14 +379,15 @@ const HomePage = () => {
 
   return (
     <Container flexDirection={'column'} display={'flex'}>
-      {renderBillboard()}
+      {!!billboardItems?.length && renderBillboard()}
       <Flex
         gridGap={5}
         flexDirection={'column'}
         mt={billboardItems ? 0 : 7}
         w={'100vw'}
       >
-        {!!homeCarouselsFiltered?.length &&
+        {!isLoading &&
+          !!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags) =>
             renderCarouselsOrderedByRemoteConfig(item)
           )}
@@ -345,7 +396,7 @@ const HomePage = () => {
       </Flex>
       {isLoading && (
         <Box p={sizes.paddingSm} width="100%">
-          <Skeleton kind="cards" numberOfCards={3} />
+          <Skeleton kind="cards" numberOfCards={4} />
         </Box>
       )}
     </Container>

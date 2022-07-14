@@ -1,12 +1,21 @@
 import { FlexProps } from "@chakra-ui/react";
 
 export type cardForm = {
-  full_name: string,
   year: string,
   month: string,
+  full_name: string,
   email: string,
   cpf: string,
+  country: string,
+  address1: string,
+  address2: string,
+  number: string,
+  zip: string,
+  district: string,
+  city: string,
+  state: string,
   terms: boolean,
+  phone_number: string,
 }
 
 export type pmDataType = {
@@ -70,4 +79,11 @@ export type SpreedlyError = {
 export interface Props {
   productPrice: string
   product: string
+}
+
+
+export enum OrderType {
+  pending = 'PENDING',
+  active = 'ACTIVE',
+  failed = 'FAILED',
 }

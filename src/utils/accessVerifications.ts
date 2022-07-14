@@ -1,22 +1,31 @@
 import {
-  Post,
-  Kinds,
   Category,
-  LiveEvent,
   Channel,
+  Kinds,
+  LiveEvent,
+  Post,
+  SearchCategory,
+  SearchLiveEvent,
+  SearchPost,
 } from 'generated/graphql'
 import { AccessEnum } from 'types/access'
 
-export const isEntityOnPaywall = (entity: Post | Category | LiveEvent) => {
+type EntityType =
+  | Post
+  | Category
+  | LiveEvent
+  | SearchCategory
+  | SearchPost
+  | SearchLiveEvent
+
+export const isEntityOnPaywall = (entity: EntityType) => {
   return entity.access !== AccessEnum.AVAILABLE && entity.kind === Kinds.Paywall
 }
 
-export const isEntityPrivate = (
-  entity: Post | Category | LiveEvent | Channel
-) => {
+export const isEntityPrivate = (entity: EntityType | Channel) => {
   return entity.kind === Kinds.Private
 }
 
-export const isEntityBlocked = (entity: Post | Category | LiveEvent) => {
+export const isEntityBlocked = (entity: EntityType) => {
   return isEntityOnPaywall(entity) || isEntityPrivate(entity)
 }

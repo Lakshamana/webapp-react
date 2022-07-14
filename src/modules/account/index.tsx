@@ -151,12 +151,11 @@ const AccountPage = () => {
     }
   )
 
-  const callForgetAccount = (payload: ForgetAccountInput) => {
+  const callForgetAccount = (input: ForgetAccountInput) => {
     forgetAccount({
       variables: {
-        payload: {
-          ...payload,
-        },
+        forgetAccountId: account?.id,
+        input,
       },
     })
   }
