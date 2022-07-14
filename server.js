@@ -14,12 +14,18 @@ const defaultValues = {
   domain: 'fanhero.tv'
 }
 
-app.use("/static", express.static(path.join(__dirname, "build/static")))
-app.get("*", (req, res) => {
-  let pathname = req.pathname || req.originalUrl
-  let page = seo.find((item) => item.path === pathname)
 
-  console.log('SEO', page, 'req', 'HOST >>:', req.host)
+const getTenantData = (req, res) => {
+  let pathname = req.pathname || req.originalUrl
+  let subDomain = req.hostname.split('.')[0]
+  let tenant = subDomain.includes('localhost') ? 'marvel-dev' : subDomain
+
+  // let page = seo.find((item) => item.path === pathname)
+  let page = seo.find((item) => item.tenant === tenant)
+
+  console.log('SEO', page)
+  console.log('HOST >>:', req.host)
+  console.log('PATH: ', pathname)
 
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let defineValues = { ...defaultValues }
@@ -34,6 +40,10 @@ app.get("*", (req, res) => {
     .replaceAll("__SEO_IMAGE__", defineValues.image)
     .replaceAll("__SEO_DOMAIN__", defineValues.domain)
   return res.send(htmlWithSeo)
-})
+}
+
+app.use("/static", express.static(path.join(__dirname, "build/static")))
+app.get("*", getTenantData)
+// app.get("*", (_, res) => res.sendFile(path.join(__dirname, "build", "index.html")))
 
 app.listen(PORT, () => console.log("listen on port: " + PORT))
