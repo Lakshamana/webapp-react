@@ -30,3 +30,8 @@ export type LivestreamSnapshot = {
   isReactionsEnabled?: boolean
   hlsPlaybackUrl?: string
 }
+
+export type LivestreamGridProps = {
+  sectionTitle?: string
+  items?: LiveEvent[]
+}
