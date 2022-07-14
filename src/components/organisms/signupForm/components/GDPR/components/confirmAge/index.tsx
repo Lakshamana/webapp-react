@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Confirm } from './confirm'
-import { Reconfirm } from './reconfirm'
 import { ConfirmEmail } from './confirm_email'
-import { ConfirmAgeProps } from './types'
-import { ConfirmAgeSteps } from './types'
+import { Reconfirm } from './reconfirm'
+import { ConfirmAgeProps, ConfirmAgeSteps } from './types'
 
 const ConfirmAgeForm = ({
   handleFormSubmit,
@@ -21,7 +20,7 @@ const ConfirmAgeForm = ({
             handleFormSubmit={handleFormSubmit}
             handleAgeDecline={() => setActiveStep('Reconfirm')}
             gdprAge={gdprAge}
-          ></Confirm>
+          />
         )
       case 'Reconfirm':
         return (
@@ -29,7 +28,7 @@ const ConfirmAgeForm = ({
             handleFormSubmit={() => setActiveStep('ConfirmEmail')}
             onCancel={onCancel}
             gdprAge={gdprAge}
-          ></Reconfirm>
+          />
         )
       case 'ConfirmEmail':
         return (
@@ -38,7 +37,7 @@ const ConfirmAgeForm = ({
             handleFormSubmit={handleFormSubmit}
             onCancel={onCancel}
             gdprAge={gdprAge}
-          ></ConfirmEmail>
+          />
         )
     }
   }
