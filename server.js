@@ -18,17 +18,17 @@ app.use("/static", express.static(path.join(__dirname, "build/static")))
 app.get("*", (req, res) => {
   let pathname = req.pathname || req.originalUrl
   let page = seo.find((item) => item.path === pathname)
-  console.log('SEO', page, req)
+  console.log('SEO', page, 'req', 'HOST >>:', req.host)
   let defineValues = { ...defaultValues, ...page }
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let htmlWithSeo = html
     .toString()
-    .replace("__SEO_FAVICON__", defineValues.favicon)
-    .replace("__SEO_TITLE__", defineValues.title)
-    .replace("__SEO_DESCRIPTION__", defineValues.description)
-    .replace("__SEO_URL__", defineValues.url)
-    .replace("__SEO_IMAGE__", defineValues.image)
-    .replace("__SEO_DOMAIN__", defineValues.domain)
+    .replace(/"__SEO_FAVICON__"/g, defineValues.favicon)
+    .replace(/"__SEO_TITLE__"/g, defineValues.title)
+    .replace(/"__SEO_DESCRIPTION__"/g, defineValues.description)
+    .replace(/"__SEO_URL__"/g, defineValues.url)
+    .replace(/"__SEO_IMAGE__"/g, defineValues.image)
+    .replace(/"__SEO_DOMAIN__"/g, defineValues.domain)
   return res.send(htmlWithSeo)
 })
 
