@@ -23,6 +23,7 @@ const getTenantData = (req, res) => {
   // let page = seo.find((item) => item.path === pathname)
   let page = seo.find((item) => item.tenant === tenant)
 
+  console.log('----------------')
   console.log('SEO', page)
   console.log('HOST:', req.hostname)
   console.log('TENANT:', tenant)
