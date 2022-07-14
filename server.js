@@ -22,7 +22,8 @@ app.get("*", (req, res) => {
   console.log('SEO', page, 'req', 'HOST >>:', req.host)
 
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
-  let defineValues = page ? { ...defaultValues, ...page } : { ...defaultValues }
+  let defineValues = { ...defaultValues }
+  if (page) { defineValues = { ...defaultValues, ...page } }
   let htmlWithSeo = html
     .toString()
     .replace("__SEO_FAVICON_ICON__", `${defineValues.favicon}/favicon.ico`)
