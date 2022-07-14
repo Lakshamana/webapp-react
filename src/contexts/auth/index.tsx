@@ -43,8 +43,11 @@ export const AuthProvider = ({ children }) => {
   const { setOrganization } = useOrganizationStore()
   const { setActiveChannelConfig, setOrganizationConfig } =
     useCustomizationStore()
-  const [loading, setLoading] = useState(true)
-  const [loadingAccount, setLoadingAcount] = useState(false)
+
+  const [loadingOrg, setLoadingOrg] = useState<boolean>(true)
+  const [loadingAnonymous, setLoadingAnonymous] = useState<boolean>(true)
+  const [loadingAccount, setLoadingAcount] = useState(true)
+
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { CHANNELS, ORGANIZATION } = useFlags()
   const { setColorMode } = useThemeStore()
@@ -59,6 +62,7 @@ export const AuthProvider = ({ children }) => {
 
   const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
     process.env
+
   const origin =
     NODE_ENV === 'development'
       ? REACT_APP_ORGANIZATION_URL
@@ -73,7 +77,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const loadAccount = async () => {
-    setLoadingAcount(true)
     if (account && user) {
       setLoadingAcount(false)
       return
@@ -83,7 +86,6 @@ export const AuthProvider = ({ children }) => {
 
   const updateActiveChannel = async (channelSlug?: string) => {
     if (!channelSlug) return
-    setLoading(true)
     const { data } = await client.query({
       query: isAnonymous ? QUERY_PUBLIC_CHANNEL : QUERY_CHANNEL,
       variables: {
@@ -94,14 +96,13 @@ export const AuthProvider = ({ children }) => {
     const channel = data?.channel || data?.getPublicChannel
 
     if (channel) {
-      setActiveChannel({
+      await setActiveChannel({
         id: channel.id,
         name: channel.name,
         slug: channel.slug || '',
         kind: channel.kind || '',
       })
     }
-    setLoading(false)
   }
 
   const getAccount = () => {
@@ -117,7 +118,6 @@ export const AuthProvider = ({ children }) => {
           if (data.me.profile?.locale)
             i18n.changeLanguage(data.me.profile.locale)
           updateAccount(accountData)
-          setLoadingAcount(false)
         }
         resolve(data.me)
       } catch {
@@ -143,13 +143,12 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data?.body?.data
           setOrganizationData(dataOrganization)
           setOrganization(dataOrganization)
-          setLoading(false)
         }
         resolve(true)
       } catch (error) {
         reject(error)
       } finally {
-        setLoading(false)
+        setLoadingOrg(false)
       }
     })
   }
@@ -172,18 +171,19 @@ export const AuthProvider = ({ children }) => {
   }
 
   const doAnonymousAuth = async () => {
-    setLoading(true)
     await anonymousAuth()
       .then(() => setAnonymous(true))
-      .finally(() => setLoading(false))
+      .then(() => setLoadingAnonymous(false))
   }
 
   useEffect(() => {
     setAnonymous(isAnonymous)
 
     if (!accessToken && window.location.pathname !== '/login') doAnonymousAuth()
+    else setLoadingAnonymous(false)
 
     if (!isAnonymous) loadAccount()
+    else setLoadingAcount(false)
     // eslint-disable-next-line
   }, [accessToken, firebaseToken])
 
@@ -203,6 +203,9 @@ export const AuthProvider = ({ children }) => {
     setOrganizationConfig(ORGANIZATION)
     // eslint-disable-next-line
   }, [])
+
+  const loading =
+    loadingAnonymous || loadingOrg
 
   if (loading) return <LoadingScreen />
 
