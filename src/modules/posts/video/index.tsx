@@ -190,7 +190,7 @@ const VideoPostPage = () => {
       flexDirection={'column'}
       justifyContent="center"
       alignItems="center"
-      mb={'-30px'}
+      mb={isAnonymousAccess ? '-60px' : '-30px'}
     >
       <Video>
         <VideoPlayer
@@ -238,37 +238,39 @@ const VideoPostPage = () => {
         backgroundColor={colors.cardBg[colorMode]}
         justifyContent="center"
       >
-        <VideoComments>
-          {postHasCommentsAllowed && (
-            <Box
-              w={
-                !!relatedVideosData?.length || !!playlistData?.posts?.length
-                  ? { sm: '100%', md: '53%', lg: '55%', xl: '70%' }
-                  : '100%'
-              }
-            >
-              {postData && !isAnonymousAccess && <Comments {...postData} />}
+        {!isAnonymousAccess && (
+          <VideoComments>
+            {postHasCommentsAllowed && (
+              <Box
+                w={
+                  !!relatedVideosData?.length || !!playlistData?.posts?.length
+                    ? { sm: '100%', md: '53%', lg: '55%', xl: '70%' }
+                    : '100%'
+                }
+              >
+                {postData && <Comments {...postData} />}
+              </Box>
+            )}
+            <Spacer mx={3} />
+            <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
+              {playlistData && (
+                <VideoPlaylist
+                  activeVideo={postData?.id}
+                  title={playlistData?.title}
+                  videos={playlistData?.posts}
+                  showAutoplay={true}
+                />
+              )}
+              {!!relatedVideosData?.length && (
+                <VideoPlaylist
+                  title={t('page.post.related_videos')}
+                  videos={[...relatedVideosData]}
+                  showAutoplay={false}
+                />
+              )}
             </Box>
-          )}
-          <Spacer mx={3} />
-          <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
-            {playlistData && (
-              <VideoPlaylist
-                activeVideo={postData?.id}
-                title={playlistData?.title}
-                videos={playlistData?.posts}
-                showAutoplay={true}
-              />
-            )}
-            {!!relatedVideosData?.length && (
-              <VideoPlaylist
-                title={t('page.post.related_videos')}
-                videos={[...relatedVideosData]}
-                showAutoplay={false}
-              />
-            )}
-          </Box>
-        </VideoComments>
+          </VideoComments>
+        )}
       </Container>
     </Container>
   )
