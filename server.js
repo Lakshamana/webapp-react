@@ -6,7 +6,7 @@ const app = new express()
 const PORT = process.env.PORT || 3004
 
 const defaultValues = {
-  favicon: '%PUBLIC_URL%',
+  favicon: '',
   title: 'Fanhero Video Platform',
   description: 'An end-to-end video platform powered by the Fanhero Video Technology Cloud',
   url: '<url-here>',
@@ -24,7 +24,8 @@ const getTenantData = (req, res) => {
   let page = seo.find((item) => item.tenant === tenant)
 
   console.log('SEO', page)
-  console.log('HOST >>:', req.host)
+  console.log('HOST:', req.hostname)
+  console.log('TENANT:', tenant)
   console.log('PATH: ', pathname)
 
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
