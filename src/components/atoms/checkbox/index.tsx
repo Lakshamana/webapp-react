@@ -1,6 +1,6 @@
-import { CheckboxStyled } from './styles';
-import { colors } from 'styles';
 import { useThemeStore } from 'services/stores/theme';
+import { colors } from 'styles';
+import { CheckboxStyled } from './styles';
 import { CheckboxProps } from "./types";
 
 const Checkbox = ({ label, ...props }: CheckboxProps) => {
