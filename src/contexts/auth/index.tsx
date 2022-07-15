@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const accessToken = getData(AUTH_TOKEN)
   const firebaseToken = getData(FIREBASE_TOKEN)
-  const isAnonymous = !!getData(ANONYMOUS_AUTH)
+  const isAnonymous = getData(ANONYMOUS_AUTH) === '1'
 
   const signed = !!accessToken
 
