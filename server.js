@@ -19,7 +19,6 @@ const getTenantData = (req, res) => {
   let pathname = req.pathname || req.originalUrl
   let subDomain = req.hostname.split('.')[0]
   let tenant = subDomain.includes('localhost') ? 'marvel-dev' : subDomain
-
   // let page = seo.find((item) => item.path === pathname)
   let page = seo.find((item) => item.tenant === tenant)
 
@@ -32,6 +31,19 @@ const getTenantData = (req, res) => {
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let defineValues = { ...defaultValues }
   if (page) { defineValues = { ...defaultValues, ...page } }
+
+  let isPost = pathname === '/c/avengers/post/doctor-strange-in-the-multiverse-of-madness'
+  if (isPost) {
+    defineValues = {
+      ...defaultValues,
+      favicon: 'https://express-favicon.herokuapp.com/coca-cola',
+      title: "Doctor Strange in the Multiverse of Madness",
+      description: "Dr Stephen Strange casts a forbidden spell that opens a portal to the multiverse. However, a threat emerges that may be too big for his team to handle.",
+      url: 'https://webapp-react-feat-dynam-fhfk1f.herokuapp.com/c/avengers/post/doctor-strange-in-the-multiverse-of-madness',
+      image: 'https://legadodamarvel.com.br/wp-content/uploads/2022/07/Grande-ator-da-Marvel-e-preso-alcoolizado-e-fas-teorizam-sua-demissao-legadodamarvel-750x394.webp',
+    }
+  }
+
   let htmlWithSeo = html
     .toString()
     .replace("__SEO_FAVICON_ICON__", `${defineValues.favicon}/favicon.ico`)
