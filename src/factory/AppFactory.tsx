@@ -1,10 +1,10 @@
-import React, { Suspense, useState, useLayoutEffect } from 'react'
 import { Center, Flex, Text } from '@chakra-ui/react'
-import * as crypto from 'crypto-js'
 import axios from 'axios'
+import * as crypto from 'crypto-js'
+import React, { Suspense, useLayoutEffect, useState } from 'react'
 
-import { setConfigEnvs } from 'config/envs'
 import { Icon } from '@iconify/react'
+import { setConfigEnvs } from 'config/envs'
 
 const AppFactory = () => {
     const [error, setError] = useState(false)
@@ -21,10 +21,11 @@ const AppFactory = () => {
         REACT_APP_API_ENDPOINT,
     } = process.env
 
-    const origin =
-        NODE_ENV === 'development'
-            ? REACT_APP_ORGANIZATION_URL
-            : window.location.origin
+    const origin = REACT_APP_ORGANIZATION_URL
+    //TODO: dynamic metadata tests
+    // NODE_ENV === 'development'
+    //     ? REACT_APP_ORGANIZATION_URL
+    //     : window.location.origin
 
     useLayoutEffect(() => {
         getEnvs()

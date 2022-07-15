@@ -27,10 +27,11 @@ const isAnonymousUser = getData(ANONYMOUS_AUTH)
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
   process.env
 
-const ORGANIZATION_URL =
-  NODE_ENV === 'development'
-    ? REACT_APP_ORGANIZATION_URL
-    : window.location.origin
+const ORGANIZATION_URL = REACT_APP_ORGANIZATION_URL
+//TODO: dynamic metadata tests
+// NODE_ENV === 'development'
+//   ? REACT_APP_ORGANIZATION_URL
+//   : window.location.origin
 
 const httpLink = createHttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,

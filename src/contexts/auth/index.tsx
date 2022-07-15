@@ -63,10 +63,11 @@ export const AuthProvider = ({ children }) => {
   const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
     process.env
 
-  const origin =
-    NODE_ENV === 'development'
-      ? REACT_APP_ORGANIZATION_URL
-      : window.location.origin
+  const origin = REACT_APP_ORGANIZATION_URL
+  //TODO: dynamic metadata tests
+  // NODE_ENV === 'development'
+  // ? REACT_APP_ORGANIZATION_URL
+  //  window.location.origin
 
   const updateAccount = async (account) => {
     await setAccount(account)
