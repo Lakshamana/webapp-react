@@ -121,7 +121,7 @@ const errorLink = onError(
         }
 
         if (err.message === 'INVALID_TOKEN' && isAnonymousUser) {
-          window.location.href = '/create-your-account'
+          window.location.replace('/create-your-account')
           return
         }
 
