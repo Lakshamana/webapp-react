@@ -8,6 +8,7 @@ const PT_BR = {
       },
       back_to_home: 'Voltar para o início',
       or: 'ou',
+      next: 'próximo',
       error: {
         generic_api_error:
           'Algo deu errado. Nós vamos consertar isso. Tente mais tarde.',
@@ -77,7 +78,8 @@ const PT_BR = {
       content_not_exists_description:
         'Você pode ter digitado o endereço incorretamente ou está usando um link desatualizado.',
       action_not_allowed: 'Você precisa ter uma conta para executar essa ação',
-      create_a_new_account: 'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!'
+      create_a_new_account:
+        'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!',
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -221,6 +223,12 @@ const PT_BR = {
       },
     },
     page: {
+      search: {
+        results_for: '{{count}} resultados encontrados para {{string}}:',
+        videos_section: 'Vídeos',
+        categories_section: 'Categorias',
+        live_events_section: 'Ao vivo',
+      },
       home: {
         live: 'Ao vivo',
         featured_posts: 'Destaques',

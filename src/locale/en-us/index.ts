@@ -8,6 +8,7 @@ const EN_US = {
       },
       back_to_home: 'Back to home',
       or: 'or',
+      next: 'Next',
       error: {
         generic_api_error:
           'Something went wrong. We are going to fix it. Try again later.',
@@ -81,7 +82,8 @@ const EN_US = {
       content_not_exists_description:
         'You may have typed the address incorrectly or you are using an outdated link.',
       action_not_allowed: 'You need to have an account to perform this action',
-      create_a_new_account: "Creating an account is easy and free, create your own to have access to the platform's content!"
+      create_a_new_account:
+        "Creating an account is easy and free, create your own to have access to the platform's content!",
     },
     signin: {
       title: 'Access {{org}} now',
@@ -115,7 +117,7 @@ const EN_US = {
         subtitle:
           'Provide your email address and choose a password to create your account and enjoy access to exclusive content.',
         already_have_account: 'You already have an account?',
-        free_registration: 'Signup now!'
+        free_registration: 'Sign Up now!',
       },
       GDPR: {
         citizen: 'Are you a citizen or resident of the European Union?',
@@ -157,7 +159,7 @@ const EN_US = {
         subtitle: 'We need a little more information about you',
       },
       actions: {
-        signup: 'Signup',
+        signup: 'Sign Up',
         signin_here: 'Sign In here',
         accept_terms: 'I accept all Terms and Conditions.',
         confirm: 'Confirm',
@@ -223,6 +225,12 @@ const EN_US = {
       },
     },
     page: {
+      search: {
+        results_for: '{{count}} results found for {{string}}:',
+        videos_section: 'Video',
+        categories_section: 'Categories',
+        live_events_section: 'Live Events',
+      },
       home: {
         live: 'Live',
         featured_posts: 'Featured',
@@ -245,7 +253,7 @@ const EN_US = {
         reaction: 'Reaction',
         search_options: {
           recent: 'Most Recent',
-          old: 'Most Old',
+          old: 'Oldest',
         },
       },
       categories: {
@@ -338,7 +346,7 @@ const EN_US = {
           input_label_email: 'Email',
           term_service:
             'By signing up, I agree to the {{org}} Privacy and Policy of Term of Service.',
-          signup_btn: 'Sign up',
+          signup_btn: 'Sign Up',
           already_have_account: 'Already have an account? Log in here',
         },
         more_info: {
@@ -426,7 +434,7 @@ const EN_US = {
         },
         search_options: {
           recent: 'Most Recent',
-          old: 'Most Old',
+          old: 'Oldest',
         },
         autoplay: 'Autoplay next video',
         redirect_next_video: 'Redirecting to next video...',
@@ -461,7 +469,7 @@ const EN_US = {
         selectPlan: {
           title: 'Select Your Plan',
           select: 'Select',
-          loading: 'Loading'
+          loading: 'Loading',
         },
         selectOption: {
           title: 'Select option:',
@@ -469,7 +477,7 @@ const EN_US = {
           bankCard: 'Bank Card',
           bankCardDesc: 'Pay with Visa, Mastercard, Maestro and Amex',
           pix: 'PIX',
-          pixDesc: 'Fast, your payment approved on time'
+          pixDesc: 'Fast, your payment approved on time',
         },
       },
     },

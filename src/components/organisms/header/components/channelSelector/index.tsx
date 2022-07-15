@@ -9,13 +9,12 @@ import { PropsChannelSelector } from './types'
 import { Channel } from 'generated/graphql'
 
 import { QUERY_CHANNELS } from 'services/graphql'
-import { useChannelsStore, useTabsStore, useThemeStore } from 'services/stores'
+import { useAuthStore, useChannelsStore, useTabsStore, useThemeStore } from 'services/stores'
 
 import { Container, Popover, Text } from 'components'
 import { Channels, ChannelSelected } from './components'
 
 import { APP_SINGLE_CHANNEL } from 'config/constants'
-import { useAuth } from 'contexts/auth'
 import { getData } from 'services/storage'
 import { breakpoints, colors } from 'styles'
 import { CustomContainer } from './styles'
@@ -35,7 +34,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   } = useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const history = useHistory()
-  const { isAnonymousAccess } = useAuth()
+  const { isAnonymousAccess } = useAuthStore()
 
   const storedSingleChannel = getData(APP_SINGLE_CHANNEL)
 
@@ -47,7 +46,12 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   })
 
   useEffect(() => {
-    if (isSingleChannel === null && storedSingleChannel === null && !isAnonymousAccess) getChannels()
+    if (
+      isSingleChannel === null &&
+      storedSingleChannel === null &&
+      !isAnonymousAccess
+    )
+      getChannels()
     //eslint-disable-next-line
   }, [])
 
@@ -83,7 +87,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
       </Center>
       <CustomContainer ml={'12px'}>
         <Flex alignItems="center">
-          {isDesktop && (
+          {isDesktop && !isAnonymousAccess && (
             <Box mr={1} maxWidth={'70px'} wordBreak="normal">
               <Text
                 lineHeight={1.2}

@@ -9,7 +9,6 @@ import {
   Modal
 } from 'components'
 import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
-import { useAuth } from 'contexts/auth'
 import { useFormik } from 'formik'
 import {
   Comment as CommentType,
@@ -27,7 +26,7 @@ import {
   MUTATION_UPDATE_COMMENT,
   QUERY_COMMENTS
 } from 'services/graphql'
-import { useCommentsStore, useThemeStore } from 'services/stores'
+import { useAuthStore, useCommentsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { initialValues, validationSchema } from './settings'
 import { ISelectPopup, typeOfCard } from './types'
@@ -54,7 +53,7 @@ const Comments = ({ ...props }: Post) => {
     }
   )
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isAnonymousAccess } = useAuth()
+  const { isAnonymousAccess } = useAuthStore()
   const [addComment, { data: newComment, loading: newCommentLoading }] =
     useMutation(MUTATION_ADD_COMMENT)
   const [editComment, { data: editedComment, loading: editedCommentLoading }] =

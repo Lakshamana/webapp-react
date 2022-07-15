@@ -19,7 +19,7 @@ const ActionNotAllowed = ({ isOpen, onClose }) => {
   const { colorMode } = useThemeStore()
   const history = useHistory()
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
         marginX={3}
@@ -51,13 +51,13 @@ const ActionNotAllowed = ({ isOpen, onClose }) => {
           {t('common.create_a_new_account')}
         </ModalBody>
 
-        <ModalFooter display={'flex'} flexDirection={'column'} paddingY={4}>
+        <ModalFooter display={'flex'} flexDirection={'column'} pt={3} mb={4}>
           <Button
             width={[sizes.loginButtonWidth]}
             label={t('signup.registration.free_registration')}
             onClick={() => history.push('/signup')}
           />
-          <Flex mb={2} mt={5} justifyContent={'center'}>
+          <Flex mb={2} mt={5} justifyContent={'center'} pt={3}>
             <Text color={colors.generalText[colorMode]} paddingRight={1}>
               {t('signup.registration.already_have_account')}
             </Text>

@@ -1,20 +1,22 @@
 import { useMutation } from '@apollo/client'
 import { Card, SigninForm } from 'components'
 import {
-  ConfirmEmailForm, GDPRForm
+  ConfirmEmailForm,
+  GDPRForm
 } from 'components/organisms/signupForm/components'
-import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useAuth } from 'contexts/auth'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { authWithCustomToken, SocialSignIn } from 'services/firebase'
 import {
-  MUTATION_CREATE_ACCOUNT_GDPR, MUTATION_SIGNIN,
+  MUTATION_CREATE_ACCOUNT_GDPR,
+  MUTATION_SIGNIN,
   MUTATION_SOCIAL_SIGNIN
 } from 'services/graphql'
 import { saveData } from 'services/storage'
-import { useCommonStore } from 'services/stores'
+import { useAuthStore, useCommonStore } from 'services/stores'
 import { sizes } from 'styles'
 import { SocialType } from 'types/common'
 import { Container } from './styles'
@@ -29,6 +31,8 @@ const LoginPage = () => {
   const [activeStep, setActiveStep] = useState<SignInSteps>('Login')
   const { setPageTitle } = useCommonStore()
   const [account, setAccount] = useState('')
+  const { setAnonymous } = useAuthStore()
+  const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   //eslint-disable-next-line
   useEffect(() => setPageTitle(t('signin.actions.login')), [])
@@ -47,8 +51,8 @@ const LoginPage = () => {
   }
 
   const signInProcess = async ({ accessToken, firebaseToken, account }) => {
+    setAnonymous(false)
     await saveData(AUTH_TOKEN, accessToken)
-    await saveData(ANONYMOUS_AUTH, false)
     await saveData(FIREBASE_TOKEN, firebaseToken)
     await authWithCustomToken()
     await updateAccount(account)
@@ -78,6 +82,7 @@ const LoginPage = () => {
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('LGPD')
           setAccount(result.socialSignIn.account.id)
+          setIsSocialSignin(true)
         } else {
           history.push('/channels')
         }
@@ -89,7 +94,8 @@ const LoginPage = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin) setActiveStep('ConfirmEmail')
+        isSocialSignin && history.push('/channels')
       },
       onError: ({ message }) => setError(errorMessage(message)),
     })

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { Box, Flex } from '@chakra-ui/react'
 import { Button, Input, Modal, Text } from 'components'
-import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useAuth } from 'contexts/auth'
 import { useFormik } from 'formik'
 import { useState } from 'react'
@@ -28,6 +28,7 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const [loading, setloading] = useState(false)
+  const { setAnonymous } = useAuthStore()
 
   const [verifyPassword] = useMutation(MUTATION_SIGNIN, {
     onError: (error) =>
@@ -35,8 +36,8 @@ export const PasswordConfirmation = ({ isOpen, onClose, updatedValues }) => {
   })
   const [signin] = useMutation(MUTATION_SIGNIN, {
     onCompleted: async (result) => {
+      setAnonymous(false)
       await saveData(AUTH_TOKEN, result.signIn.token.accessToken)
-      await saveData(ANONYMOUS_AUTH, false)
       await saveData(FIREBASE_TOKEN, result.signIn.token.firebaseToken)
     },
   })
