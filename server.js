@@ -32,7 +32,13 @@ const getTenantData = (req, res) => {
   let defineValues = { ...defaultValues }
   if (page) { defineValues = { ...defaultValues, ...page } }
 
-  let isPost = pathname === '/c/avengers/post/doctor-strange-in-the-multiverse-of-madness'
+  const MOCK_PATH = [
+    '/c/avengers/post/doctor-strange-in-the-multiverse-of-madness',
+    '/c/avengers/post/doctor-strange-in-the-multiverse-of-madness/',
+  ]
+
+  let isPost = MOCK_PATH.includes(pathname)
+  console.log(isPost)
   if (isPost) {
     defineValues = {
       ...defaultValues,
