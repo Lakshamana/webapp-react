@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     return set({ account })
   },
   setAnonymous: (isAnonymousAccess: boolean) => {
-    saveData(ANONYMOUS_AUTH, isAnonymousAccess)
+    saveData(ANONYMOUS_AUTH, isAnonymousAccess ? '1' : '0')
     return set({ isAnonymousAccess })
   },
 }))
