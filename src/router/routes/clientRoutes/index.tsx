@@ -115,7 +115,7 @@ const ClientRoutes = () => {
         template={MainLayout}
       />
       <ClientRoute
-        isAccesible={signed}
+        isAccesible={true}
         path="/c/:channel/post/:slug"
         component={VideoPostPage}
         template={MainLayout}
@@ -158,7 +158,7 @@ const ClientRoutes = () => {
       />
       <ClientRoute
         isAccesible={true}
-        path="/notAuthorized"
+        path="/create-your-account"
         template={EmptyLayout}
         component={NotAuthorized}
       />
