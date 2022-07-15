@@ -88,7 +88,6 @@ const generatePendingCredential = (kind: SocialType, err: any) => {
 export const SocialSignIn = (
   kind: SocialType
 ): Promise<CreateAccountSocialSignInDto> => {
-  AUTH.tenantId = organizationData?.tenant_id || ''
   const PROVIDER = getProvider(kind)
   return new Promise(function (resolve, reject) {
     signInWithPopup(AUTH, PROVIDER)
