@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const [loadingOrg, setLoadingOrg] = useState<boolean>(true)
   const [loadingAnonymous, setLoadingAnonymous] = useState<boolean>(true)
-  const [loadingAccount, setLoadingAcount] = useState(true)
+  const [loadingAccount, setLoadingAcount] = useState(false)
 
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { CHANNELS, ORGANIZATION } = useFlags()
@@ -177,13 +177,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    setAnonymous(isAnonymous)
-
-    if (!accessToken && window.location.pathname !== '/login') doAnonymousAuth()
-    else setLoadingAnonymous(false)
-
     if (!isAnonymous) loadAccount()
-    else setLoadingAcount(false)
     // eslint-disable-next-line
   }, [accessToken, firebaseToken])
 
@@ -199,13 +193,20 @@ export const AuthProvider = ({ children }) => {
   }, [activeChannel])
 
   useEffect(() => {
+    setAnonymous(isAnonymous)
     getOrganization()
     setOrganizationConfig(ORGANIZATION)
+
+    //TODO: We need to verify KIND of post and then run AnonymousAuth (but we don't have a Endpoint to do that)
+    if (!accessToken && window.location.href.indexOf('/post/') >= 1) {
+      doAnonymousAuth()
+      return
+    }
+    setLoadingAnonymous(false)
     // eslint-disable-next-line
   }, [])
 
-  const loading =
-    loadingAnonymous || loadingOrg
+  const loading = loadingAnonymous || loadingOrg
 
   if (loading) return <LoadingScreen />
 
