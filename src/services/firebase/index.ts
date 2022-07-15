@@ -1,7 +1,6 @@
 import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { configEnvs } from 'config/envs'
 import { firebaseApp } from 'config/firebase'
-import { organizationData } from 'config/organization'
 import { initializeApp } from 'firebase/app'
 import {
   AuthError,
@@ -19,7 +18,7 @@ import {
   UserCredential
 } from 'firebase/auth'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
-import { getData, saveData } from 'services/storage'
+import { getData } from 'services/storage'
 import { SocialType } from 'types/common'
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
@@ -35,7 +34,7 @@ export const anonymousAuth = (): Promise<boolean> => {
       result.user
         .getIdToken()
         .then((result) => {
-          saveData(AUTH_TOKEN, result)
+          localStorage.setItem(AUTH_TOKEN, JSON.stringify(result))
         })
         .then(() => resolve(true))
         .catch((error) => reject(error))
