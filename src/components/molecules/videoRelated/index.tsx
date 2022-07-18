@@ -1,15 +1,10 @@
-import React from "react";
 import { Container, Text } from "components/atoms";
 
+import { Switch } from "@chakra-ui/react";
 import {
-  VideoRelatedMain,
-  ImageContainer,
-  Image,
-  InfoContainer,
-  Icon,
+  Icon, Image, ImageContainer, InfoContainer, VideoRelatedMain
 } from "./style";
 import { Props } from "./types";
-import { Switch } from "@chakra-ui/react";
 
 const VideoRelated = ({
   options = [],
@@ -23,7 +18,6 @@ const VideoRelated = ({
         <Text
           fontSize={22}
           fontWeight="bold"
-          fontFamily="Helvetica Neue"
           mb="8px"
         >
           Videos related

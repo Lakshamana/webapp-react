@@ -1,18 +1,20 @@
 import { Center, Flex, Text } from '@chakra-ui/layout'
+import { useMediaQuery } from '@chakra-ui/media-query'
 import { Button, Link } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { useThemeStore } from 'services/stores'
-import { colors } from 'styles'
+import { breakpoints, colors } from 'styles'
 
 const NotAuthorized = () => {
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   return (
     <Flex
-      p={10}
+      py={10}
       mt={10}
       w={'80%'}
       direction="column"
@@ -20,7 +22,7 @@ const NotAuthorized = () => {
       justifyContent="center"
       color={colors.generalText[colorMode]}
     >
-      <Text fontSize={{ base: '2rem', md: '2rem' }} fontWeight="bold">
+      <Text fontSize={{ base: '2rem', md: '2rem' }} fontWeight="bold" textAlign={'center'}>
         {t('signup.registration.free_registration')}
       </Text>
       <Text
@@ -38,7 +40,14 @@ const NotAuthorized = () => {
         />
       </Center>
       <Center>
-      <Flex mb={2} mt={5} justifyContent={'center'}>
+        <Flex
+          mb={2}
+          mt={10}
+          justifyContent={'center'}
+          flexDirection={isDesktop ? 'row' : 'column'}
+          textAlign='center'
+          gridGap={isDesktop ? 0 : 2}
+        >
           <Text color={colors.generalText[colorMode]} paddingRight={1}>
             {t('signup.registration.already_have_account')}
           </Text>

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { AlertComponent } from 'components'
-import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { useAuth } from 'contexts/auth'
 import { CreateAccountInput } from 'generated/graphql'
 import { useState } from 'react'
@@ -15,6 +15,7 @@ import {
   QUERY_CUSTOM_FIELDS
 } from 'services/graphql'
 import { saveData } from 'services/storage'
+import { useAuthStore } from 'services/stores'
 import {
   ConfirmEmailForm,
   CustomFieldsForm,
@@ -33,6 +34,7 @@ const SignupForm = () => {
   const [socialSignUpError, setSocialSignUpError] = useState('')
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
+  const { setAnonymous } = useAuthStore()
   const [isSocialSignin, setIsSocialSignin] = useState<boolean>(false)
 
   const [createAccountData, setCreateAccountData] =
@@ -75,9 +77,8 @@ const SignupForm = () => {
           setSocialSignUpError(t('common.error.generic_api_error'))
           return
         }
-
+        setAnonymous(false)
         await saveData(AUTH_TOKEN, result.socialSignIn.token.accessToken)
-        await saveData(ANONYMOUS_AUTH, false)
         await saveData(FIREBASE_TOKEN, result.socialSignIn.token.firebaseToken)
         await updateAccount(result.socialSignIn.account)
         setAccountID(result.socialSignIn.account.id)

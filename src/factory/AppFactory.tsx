@@ -1,10 +1,10 @@
-import React, { Suspense, useState, useLayoutEffect } from 'react'
 import { Center, Flex, Text } from '@chakra-ui/react'
-import * as crypto from 'crypto-js'
 import axios from 'axios'
+import * as crypto from 'crypto-js'
+import React, { Suspense, useLayoutEffect, useState } from 'react'
 
-import { setConfigEnvs } from 'config/envs'
 import { Icon } from '@iconify/react'
+import { setConfigEnvs } from 'config/envs'
 
 const AppFactory = () => {
     const [error, setError] = useState(false)
@@ -68,7 +68,6 @@ const AppFactory = () => {
                     bg='#F6F6F6'
                     flexDirection="column"
                     boxShadow='0px 4px 4px rgba(0, 0, 0, 0.25)'
-                    fontFamily='Arial, Helvetica, sans-serif'
                 >
                     <Flex
                         bg='red'

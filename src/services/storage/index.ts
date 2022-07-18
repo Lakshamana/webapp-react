@@ -1,8 +1,9 @@
 import {
-  CHANNEL_INFO,
+  ANONYMOUS_AUTH,
   APP_SINGLE_CHANNEL,
   AUTH_TOKEN,
-  FIREBASE_TOKEN,
+  CHANNEL_INFO,
+  FIREBASE_TOKEN
 } from 'config/constants'
 
 export const saveData = (key: string, data: any) => {
@@ -39,6 +40,7 @@ export const clearData = () => {
     localStorage.removeItem(APP_SINGLE_CHANNEL)
     localStorage.removeItem(AUTH_TOKEN)
     localStorage.removeItem(FIREBASE_TOKEN)
+    localStorage.removeItem(ANONYMOUS_AUTH)
   } catch (error) {
     console.error(`ERROR ON CLEAR DATA`, error)
   }

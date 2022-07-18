@@ -1,7 +1,6 @@
-import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
+import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
 import { configEnvs } from 'config/envs'
 import { firebaseApp } from 'config/firebase'
-import { organizationData } from 'config/organization'
 import { initializeApp } from 'firebase/app'
 import {
   AuthError,
@@ -19,7 +18,7 @@ import {
   UserCredential
 } from 'firebase/auth'
 import { CreateAccountSocialSignInDto } from 'generated/graphql'
-import { getData, saveData } from 'services/storage'
+import { getData } from 'services/storage'
 import { SocialType } from 'types/common'
 
 const CUSTOM_TOKEN_AUTH = getAuth(firebaseApp)
@@ -29,14 +28,18 @@ export const authWithCustomToken = () => {
   if (firebaseToken) signInWithCustomToken(CUSTOM_TOKEN_AUTH, firebaseToken)
 }
 
-export const anonymousAuth = async () => {
-  await signInAnonymously(CUSTOM_TOKEN_AUTH)
-    .then((result) => {
-      result.user.getIdToken().then((result) => {
-        saveData(AUTH_TOKEN, result)
-        saveData(ANONYMOUS_AUTH, true)
-      })
+export const anonymousAuth = (): Promise<boolean> => {
+  return new Promise(function (resolve, reject) {
+    signInAnonymously(CUSTOM_TOKEN_AUTH).then((result) => {
+      result.user
+        .getIdToken()
+        .then((result) => {
+          localStorage.setItem(AUTH_TOKEN, JSON.stringify(result))
+        })
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
     })
+  })
 }
 
 const AUTH_CONFIG = {
@@ -88,7 +91,6 @@ const generatePendingCredential = (kind: SocialType, err: any) => {
 export const SocialSignIn = (
   kind: SocialType
 ): Promise<CreateAccountSocialSignInDto> => {
-  AUTH.tenantId = organizationData?.tenant_id || ''
   const PROVIDER = getProvider(kind)
   return new Promise(function (resolve, reject) {
     signInWithPopup(AUTH, PROVIDER)
