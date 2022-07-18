@@ -22,7 +22,7 @@ import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
 import { clearData, getData, saveData } from 'services/storage'
 import { requestGraphql } from './request'
 
-const isAnonymousUser = getData(ANONYMOUS_AUTH)
+const isAnonymousUser = getData(ANONYMOUS_AUTH) === '1'
 
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
   process.env
