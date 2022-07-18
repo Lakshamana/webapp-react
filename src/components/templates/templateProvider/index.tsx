@@ -1,30 +1,22 @@
-import PropTypes from 'prop-types'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { createBreakpoints } from '@chakra-ui/theme-tools'
-import { Helmet, HelmetProvider } from 'react-helmet-async'
-import { Global, css } from '@emotion/react'
-import {
-  colors,
-  metrics,
-  fonts,
-  globalStyles,
-  theme,
-  breakpoints as themeBreakpoints,
-} from 'styles'
-import { AuthProvider } from 'contexts/auth'
-import { FlagsProvider } from 'contexts/flags'
-import { ThemeProvider } from 'styled-components'
+import { css, Global } from '@emotion/react'
 import App from 'App'
-
+import { AuthProvider } from 'contexts/auth'
+import PropTypes from 'prop-types'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
+import { ThemeProvider } from 'styled-components'
 import {
-  useThemeStore,
-  useChannelsStore,
-  useOrganizationStore,
-} from 'services/stores'
-import { useCommonStore } from 'services/stores'
-import AccessVerificationsProvider from 'contexts/accessVerifications'
+  breakpoints as themeBreakpoints, colors, fonts,
+  globalStyles, metrics, theme
+} from 'styles'
+
 import { ApolloProvider } from '@apollo/client'
+import AccessVerificationsProvider from 'contexts/accessVerifications'
 import { Client } from 'services/api'
+import {
+  useChannelsStore, useCommonStore, useOrganizationStore, useThemeStore
+} from 'services/stores'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
 
@@ -59,18 +51,17 @@ const TemplateProvider = ({ children }: any) => {
         <ChakraProvider theme={customTheme}>
           <HelmetProvider>
             <Helmet title={pageTitleConfigured} />
-            <FlagsProvider>
-              <Global
-                styles={css`
-              ${globalStyles}
-            `}
-              />
-              <AuthProvider>
+            <AuthProvider>
+                <Global
+                  styles={css`
+                    ${globalStyles}
+                  `}
+                />
+
                 <AccessVerificationsProvider>
                   <App />
                 </AccessVerificationsProvider>
-              </AuthProvider>
-            </FlagsProvider>
+            </AuthProvider>
           </HelmetProvider>
         </ChakraProvider>
       </ThemeProvider>
