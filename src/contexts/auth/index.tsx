@@ -1,6 +1,12 @@
 import { useApolloClient } from '@apollo/client'
-import { ANONYMOUS_AUTH, AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
-import { useFlags } from 'contexts/flags'
+import {
+  ANONYMOUS_AUTH,
+  APP_LOCALE,
+  APP_THEME,
+  AUTH_TOKEN,
+  FIREBASE_TOKEN
+} from 'config/constants'
+import * as crypto from 'crypto-js'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { anonymousAuth, signOutFB } from 'services/firebase'
 import {
@@ -18,7 +24,7 @@ import {
 } from 'services/stores'
 
 import { LoadingScreen } from 'components'
-import { clearData, getData } from 'services/storage'
+import { clearData, getData, saveData } from 'services/storage'
 
 import { useTranslation } from 'react-i18next'
 import { AuthTypes } from './types'
@@ -41,15 +47,18 @@ export const AuthProvider = ({ children }) => {
   const { i18n } = useTranslation()
   const { user, setUser, setAccount, account, setAnonymous } = useAuthStore()
   const { setOrganization } = useOrganizationStore()
-  const { setActiveChannelConfig, setOrganizationConfig } =
-    useCustomizationStore()
+  const {
+    setActiveChannelConfig,
+    setOrganizationConfig,
+    setCustomizationData,
+    customizationData,
+  } = useCustomizationStore()
 
   const [loadingOrg, setLoadingOrg] = useState<boolean>(true)
   const [loadingAnonymous, setLoadingAnonymous] = useState<boolean>(true)
   const [loadingAccount, setLoadingAcount] = useState(false)
 
   const { setActiveChannel, activeChannel } = useChannelsStore()
-  const { CHANNELS, ORGANIZATION } = useFlags()
   const { setColorMode } = useThemeStore()
 
   const client = useApolloClient()
@@ -143,6 +152,29 @@ export const AuthProvider = ({ children }) => {
           const dataOrganization = data?.body?.data
           setOrganizationData(dataOrganization)
           setOrganization(dataOrganization)
+
+          const decryptedEnv = crypto.AES.decrypt(
+            data?.body?.data.customization,
+            configEnvs.remoteConfigSecret
+          )
+          const decryptedCustomization = JSON.parse(
+            decryptedEnv.toString(crypto.enc.Utf8)
+          )
+
+          await setCustomizationData(decryptedCustomization)
+          await setOrganizationConfig(decryptedCustomization?.ORGANIZATION)
+
+          saveData(
+            APP_LOCALE,
+            customizationData?.ORGANIZATION.LOCALE || 'en-US'
+          )
+
+          const storedTheme = getData(APP_THEME)
+          setColorMode(
+            storedTheme ||
+              customizationData?.ORGANIZATION?.THEME?.toLowerCase() ||
+              'dark'
+          )
         }
         resolve(true)
       } catch (error) {
@@ -183,11 +215,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (activeChannel?.id) {
-      setActiveChannelConfig(CHANNELS[activeChannel.id])
-      if (CHANNELS[activeChannel.id]?.THEME)
-        setColorMode(
-          CHANNELS[activeChannel.id]?.THEME.toLowerCase() as ColorMode
-        )
+      if (customizationData?.CHANNELS)
+        setActiveChannelConfig(customizationData?.CHANNELS[activeChannel.id])
+      setColorMode(
+        (customizationData?.CHANNELS[
+          activeChannel.id
+        ]?.THEME.toLowerCase() as ColorMode) ||
+          (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
+      )
     }
     // eslint-disable-next-line
   }, [activeChannel])
@@ -195,7 +230,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setAnonymous(isAnonymous)
     getOrganization()
-    setOrganizationConfig(ORGANIZATION)
 
     //TODO: We need to verify KIND of post and then run AnonymousAuth (but we don't have a Endpoint to do that)
     if (!accessToken && window.location.href.indexOf('/post/') >= 1) {
