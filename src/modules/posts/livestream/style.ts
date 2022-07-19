@@ -1,9 +1,9 @@
-import styled from 'styled-components'
 import { Text } from '@chakra-ui/react'
-import { space, SpaceProps, LayoutProps } from 'styled-system'
-import { pxToRem } from 'styles/metrics'
 import { Icon } from '@iconify/react'
+import styled from 'styled-components'
+import { LayoutProps, space, SpaceProps } from 'styled-system'
 import { breakpoints, sizes } from 'styles'
+import { pxToRem } from 'styles/metrics'
 
 interface SpaceLayoutProps extends SpaceProps, LayoutProps {}
 
@@ -79,16 +79,26 @@ export const Title = styled(Text)`
 export const Subtitle = styled(Text)`
   color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
   width: 100%;
-  font-size: ${pxToRem(20)};
   font-weight: 300;
   margin-top: ${pxToRem(10)};
 
-  @media screen and (max-width: ${breakpoints.md}) {
-    font-size: ${pxToRem(18)};
+  h1 {
+    font-size: 32pt;
+  }
+
+  h2 {
+    font-size: 26pt;
+  }
+
+  h3 {
+    font-size: 22pt;
+  }
+
+  h4 {
+    font-size: 20pt;
   }
 
   @media screen and (max-width: ${breakpoints.sm}) {
-    font-size: ${pxToRem(16)};
     margin-top: ${pxToRem(10)};
   }
 `

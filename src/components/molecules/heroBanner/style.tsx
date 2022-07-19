@@ -17,7 +17,6 @@ export const Banner: any = styled.div`
   width: 100%;
 `
 
-
 export const BannerItems = styled.div`
   position: relative;
   overflow: hidden;
@@ -126,13 +125,29 @@ export const Title = styled.div`
 
 export const Description = styled.div`
   font-size: 1.3rem;
-  line-height: 1.5rem;
+  line-height: 1.8rem;
   margin-bottom: 40px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: ${({ theme }) => theme.colors.billboardText[theme.colorMode]};
+
+  h1 {
+    font-size: 32pt;
+  }
+
+  h2 {
+    font-size: 26pt;
+  }
+
+  h3 {
+    font-size: 22pt;
+  }
+
+  h4 {
+    font-size: 20pt;
+  }
 
   @media screen and (max-width: ${breakpoints.md}) {
     font-size: 1.3rem;
