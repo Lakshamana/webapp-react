@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useFormik } from 'formik'
 import { format } from 'date-fns'
-import { ptBR, enUS } from 'date-fns/locale'
+import { enUS, ptBR } from 'date-fns/locale'
+import { useFormik } from 'formik'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { Flex, Box, Text } from '@chakra-ui/layout'
 import { Input } from '@chakra-ui/input'
+import { Box, Flex, Text } from '@chakra-ui/layout'
 import { Avatar, DateInput } from 'components'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/bootstrap.css'
@@ -17,16 +17,22 @@ import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 import { Label } from '../../styles'
 
+import { useQuery } from '@apollo/client'
+import { AvatarBadge } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
+import { CustomFieldTypesEnum } from 'generated/graphql'
+import { ImageUpload } from 'modules/account/components/imageUpload'
+import InputMask from 'react-input-mask'
+import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import * as Yup from 'yup'
 import { UpdateButtons } from '../updateButtons'
 import { ProfileData } from './types'
-import * as Yup from 'yup'
-import { useQuery } from '@apollo/client'
-import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
-import InputMask from 'react-input-mask'
-import { CustomFieldTypesEnum } from 'generated/graphql'
 
 const ProfileInfo = ({
   updateProfile,
+  updateAvatar,
+  useDisclosureProps,
   isLoading,
   user,
   locale,
@@ -35,6 +41,17 @@ const ProfileInfo = ({
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
   const minimumAge = 13
+  const { generateImage } = useThumbor()
+
+  const getImageUrl = (imagePath: string) => {
+
+    const image = generateImage(
+      ThumborInstanceTypes.IMAGE,
+      imagePath,
+    )
+
+    return image
+  }
 
   const { data: customFieldsData, loading: customFieldsLoading } =
     useQuery(QUERY_CUSTOM_FIELDS)
@@ -330,7 +347,16 @@ const ProfileInfo = ({
     <>
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
-          <Avatar size="xl" src={user?.avatar?.imgPath || ''}></Avatar>
+          <Avatar size="xl" src={getImageUrl(user?.avatar?.imgPath || '')}>
+            <AvatarBadge boxSize='44px' bg={colors.brand.primary[colorMode]} border='4px solid'>
+              <Icon icon='eva:edit-outline'/>
+              <ImageUpload
+                image={getImageUrl(user?.avatar?.imgPath || '') || ''}
+                uploadImage={updateAvatar}
+                useDisclosureProps={useDisclosureProps}
+              />
+            </AvatarBadge>
+          </Avatar>
         </Flex>
         {Object.keys(values).map((key) => {
           return (
@@ -365,3 +391,4 @@ const ProfileInfo = ({
 }
 
 export { ProfileInfo }
+

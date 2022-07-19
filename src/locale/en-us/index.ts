@@ -330,6 +330,12 @@ const EN_US = {
         verify_password:
           'To update your email, you must enter your password to confirm this action.',
         minimum_age: 'You must be at least 13 years old to have an account',
+        edit_avatar: 'Edit Avatar',
+        close: 'close',
+        crop_image: 'Crop Image',
+        zoom: 'zoom',
+        rotation: 'rotation',
+        choose_new_photo: 'Choose new photo',
       },
       live: {
         live: 'Live',
