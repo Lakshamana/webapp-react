@@ -248,6 +248,7 @@ const PT_BR = {
         comment: 'Comentário',
         reactions: 'Reações',
         no_reactions: 'Sem reações',
+        no_more: 'Yay! Você já viu tudo',
         reaction: 'Reação',
         search_options: {
           recent: 'Mais Recente',
