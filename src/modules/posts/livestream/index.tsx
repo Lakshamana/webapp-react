@@ -1,30 +1,29 @@
-import { useState, useEffect } from 'react'
-import { Icon } from '@iconify/react'
 import { useQuery } from '@apollo/client'
-import { useParams } from 'react-router-dom'
+import { Box, Flex, useMediaQuery } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Flex } from '@chakra-ui/react'
-import { useMediaQuery } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
 
-import { useThemeStore, useCommonStore } from 'services/stores'
+import { useCommonStore, useThemeStore } from 'services/stores'
 
-import { collection, query, onSnapshot } from 'firebase/firestore'
 import { firebaseDB } from 'config/firebase'
+import { collection, onSnapshot, query } from 'firebase/firestore'
 
-import { Container, Text, Badge, Countdown, Skeleton } from 'components/atoms'
+import { Badge, Container, Countdown, Skeleton, Text } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
 import { Livechat } from 'components/organisms'
 import { VerifyContentKind } from '../components'
 
-import { LiveDetails, Title, Subtitle, Live } from './style'
-import { colors, sizes, breakpoints } from 'styles'
+import { breakpoints, colors, sizes } from 'styles'
+import { Live, LiveDetails, Subtitle, Title } from './style'
 
-import { LivestreamBadge } from 'types/livestreams'
-import { QUERY_LIVE_EVENT } from 'services/graphql'
-import { stripHTML } from 'utils/helperFunctions'
 import { LiveEvent, PostType, Status } from 'generated/graphql'
-import { StatusBadge } from './utils'
+import { QUERY_LIVE_EVENT } from 'services/graphql'
+import { LivestreamBadge } from 'types/livestreams'
 import { FirebaseSession } from 'utils/firebaseSession'
+import { stripHTML } from 'utils/helperFunctions'
+import { StatusBadge } from './utils'
 
 const LivePostPage = () => {
   const { t } = useTranslation()
@@ -36,9 +35,12 @@ const LivePostPage = () => {
 
   // snapshots
   const [hlsPlaybackUrl, setHlsPlaybackUrl] = useState<string>('')
-  const [isCommentsEnabled, setIsCommentsEnabled] = useState<Maybe<boolean>>(null)
-  const [isReactionsEnabled, setIsReactionsEnabled] = useState<Maybe<boolean>>(null)
-  const [isPresenceEnabled, setIsPresenceEnabled] = useState<Maybe<boolean>>(null)
+  const [isCommentsEnabled, setIsCommentsEnabled] =
+    useState<Maybe<boolean>>(null)
+  const [isReactionsEnabled, setIsReactionsEnabled] =
+    useState<Maybe<boolean>>(null)
+  const [isPresenceEnabled, setIsPresenceEnabled] =
+    useState<Maybe<boolean>>(null)
   const [userCount, setUserCount] = useState<number>(1)
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
 
@@ -183,8 +185,12 @@ const LivePostPage = () => {
           >
             {livestream && (
               <Livechat
-                isCommentsEnabled={isCommentsEnabled || livestream.commentsEnabled || false}
-                isReactionsEnabled={isReactionsEnabled || livestream.reactionsEnabled || false}
+                isCommentsEnabled={
+                  isCommentsEnabled || livestream.commentsEnabled || false
+                }
+                isReactionsEnabled={
+                  isReactionsEnabled || livestream.reactionsEnabled || false
+                }
                 entityId={livestream?.id}
               />
             )}
@@ -192,7 +198,9 @@ const LivePostPage = () => {
         </Live>
         <LiveDetails>
           <Title>{stripHTML(livestream?.title!)}</Title>
-          <Subtitle>{stripHTML(livestream?.description!)}</Subtitle>
+          <Subtitle>
+            <div dangerouslySetInnerHTML={{ __html: livestream?.description || '' }} />
+          </Subtitle>
         </LiveDetails>
       </Container>
     </FirebaseSession>

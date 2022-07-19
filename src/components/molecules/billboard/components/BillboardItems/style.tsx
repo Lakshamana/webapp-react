@@ -111,7 +111,7 @@ export const Title = styled.div`
 
 export const Description = styled.div`
   font-size: 1.3rem;
-  line-height: 1.5rem;
+  line-height: 1.8rem;
   margin-bottom: 40px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
