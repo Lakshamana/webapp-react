@@ -211,7 +211,8 @@ const AccountPage = () => {
     try {
       const { data: { createUpload: { upload, media } } } = await createUpload()
       await axios.put(upload.url, image, { headers: { 'Content-Type': 'image/jpg' } })
-      await callUpdateMyProfile({ avatar: media.id })
+      // TO-DO: mudar forma de chamar call update my profile
+      setTimeout(async () => await callUpdateMyProfile({ avatar: media.id }), 3000)
       useDisclosureProps.onClose()
     } catch(e) {
       console.error(e)
