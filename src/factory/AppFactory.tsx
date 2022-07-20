@@ -69,7 +69,6 @@ const AppFactory = () => {
                     bg='#F6F6F6'
                     flexDirection="column"
                     boxShadow='0px 4px 4px rgba(0, 0, 0, 0.25)'
-                    fontFamily='Arial, Helvetica, sans-serif'
                 >
                     <Flex
                         bg='red'

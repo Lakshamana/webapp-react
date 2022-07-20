@@ -15,34 +15,14 @@ export const breakpointKeys = {
 }
 
 export const fonts = {
-  body: 'HelveticaNeue, sans-serif',
-  regular: 'HelveticaNeue, sans-serif',
-  medium: 'HelveticaNeue-Medium, sans-serif',
-  bold: 'HelveticaNeue, sans-serif',
+  body: 'Roboto Regular, sans-serif',
+  regular: 'Roboto Regular, sans-serif',
+  medium: 'Roboto Medium, sans-serif',
+  bold: 'Roboto Bold, sans-serif',
+  black: 'Roboto Black, sans-serif',
 }
 
 export const globalStyles = `
-@font-face {
-  font-family: 'HelveticaNeue';
-  src: url('/fonts/HelveticaNeue.ttf') format('truetype');
-       url('/fonts/HelveticaNeue.woff') format('woff');
-       url('/fonts/HelveticaNeue.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'HelveticaNeue Medium';
-  src: url('/fonts/HelveticaNeue-Medium.ttf') format('truetype');
-       url('/fonts/HelveticaNeue-Medium.woff') format('woff');
-       url('/fonts/HelveticaNeue-Medium.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'HelveticaNeue Bold';
-  src: url('/fonts/HelveticaNeue-Bold.ttf') format('truetype');
-       url('/fonts/HelveticaNeue-Bold.woff') format('woff');
-       url('/fonts/HelveticaNeue-Bold.woff2') format('woff2');
-}
-
 html {
   height: 100%;
 }

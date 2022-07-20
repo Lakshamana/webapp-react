@@ -1,27 +1,22 @@
-import { memo } from 'react'
 import { useMediaQuery } from '@chakra-ui/media-query'
+import { Badge } from 'components/atoms'
+import { memo } from 'react'
+import { breakpoints } from 'styles'
+import SwiperCore, { Autoplay, EffectFade, Pagination } from 'swiper'
 import { SwiperSlide } from 'swiper/react'
-import SwiperCore, { Autoplay, Pagination, EffectFade } from 'swiper'
-import { ActionsList } from '../BillboardActions'
+import 'swiper/swiper-bundle.min.css'
 import { getActions, getItems } from 'utils/helperFunctions'
-import { Props, BillboardItem } from '../../types'
 import { Params } from '../../settings'
+import { BillboardItem, Props } from '../../types'
+import { ActionsList } from '../BillboardActions'
+import { CategoryButtons } from '../CategoryButtons'
 import {
-  BillboardItems,
-  HeroImageWrapper,
+  BillboardItems, BoxButtons, Description, HeroImageWrapper,
   HeroImg,
   Info,
-  InfoContent,
-  Title,
-  Description,
-  BoxButtons,
-  SwiperStyled
+  InfoContent, SwiperStyled, Title
 } from './style'
-import { breakpoints } from 'styles'
 import './style.css'
-import 'swiper/swiper-bundle.min.css'
-import { Badge } from 'components/atoms'
-import { CategoryButtons } from '../CategoryButtons'
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
@@ -38,20 +33,31 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
             <HeroImageWrapper>
               <HeroImg
                 className="swiper-lazy"
-                src={isDesktop ? item.banner || item.image : item.cover || item.image}
+                src={
+                  isDesktop
+                    ? item.banner || item.image
+                    : item.cover || item.image
+                }
               />
             </HeroImageWrapper>
             <Info style={{ color: item.infoColor }}>
               <InfoContent>
                 {item.live && <Badge bg={'#FF0000'}>LIVE</Badge>}
                 <Title>{item.title}</Title>
-                <Description>{item.description}</Description>
+                <Description>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+                </Description>
                 {customButtons ? (
                   <BoxButtons>
                     <ActionsList actions={getActions(item?.actions)} />
                   </BoxButtons>
                 ) : (
-                 <CategoryButtons isPinned={item.isPinned || false} categoryId={item.id}></CategoryButtons>
+                  <CategoryButtons
+                    isPinned={item.isPinned || false}
+                    categoryId={item.id}
+                  ></CategoryButtons>
                 )}
               </InfoContent>
             </Info>

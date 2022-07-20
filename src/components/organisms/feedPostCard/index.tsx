@@ -4,10 +4,17 @@ import { Link } from 'react-router-dom'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
-import { convertCountMessage, stripHTML } from 'utils/helperFunctions'
+import { convertCountMessage } from 'utils/helperFunctions'
 import { SetMediaType } from './components'
 import {
-  CardContent, CardDescription, CardFooter, CardHeader, CardReactions, CountComment, Date, FeedContent
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardReactions,
+  CountComment,
+  Date,
+  FeedContent
 } from './style'
 import { defaultProps, FeedPostCardProps } from './types'
 
@@ -43,12 +50,12 @@ const FeedPostCard = ({ ...props }: FeedPostCardProps) => {
             >
               {props.postTitle}
             </Text>
-            <Date fontSize={14}>
-              {props.date}
-            </Date>
+            <Date fontSize={14}>{props.date}</Date>
           </CardHeader>
         </Link>
-        <CardDescription fontSize={16}>{stripHTML(props.postDescription)}</CardDescription>
+        <CardDescription fontSize={16}>
+          <div dangerouslySetInnerHTML={{ __html: props.postDescription }} />
+        </CardDescription>
         {props.type === 'POLL' && <SetMediaType {...props} />}
         {activeChannelConfig?.SETTINGS.DISPLAY_REACTIONS && (
           <CardReactions>
