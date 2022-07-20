@@ -24,16 +24,15 @@ const SearchBar = ({ open, onClose, onOpen, colorMode }: PropsSearchBar) => {
         onClose()
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    return () => {
+      setSearch('')
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
     // eslint-disable-next-line
   }, [open])
 
-  const handleSearch = (evt) => {
-    setSearch(evt.target.value)
-  }
+  const handleSearch = (evt) => setSearch(evt.target.value)
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
