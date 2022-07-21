@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { useHistory } from 'react-router'
-import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
+import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 
+import { Icon } from '@iconify/react'
 import {
   MUTATION_PIN_CATEGORY,
-  MUTATION_UNPIN_CATEGORY,
+  MUTATION_UNPIN_CATEGORY
 } from 'services/graphql'
-import { Icon } from '@iconify/react'
 
 import { useThemeStore } from 'services/stores'
+import { breakpoints, colors } from 'styles'
 import { CategoryPostCardProps } from 'types/categories'
-import { colors, breakpoints } from 'styles'
-import { CardWrapper, PostContent, BlockedContent } from './style'
+import { BlockedContent, CardWrapper, PostContent } from './style'
 
-import { stripHTML } from 'utils/helperFunctions'
+import { stripHTML, stripHTMLExceptLineBreaks } from 'utils/helperFunctions'
 
 const CategoryPostCard = ({
   categoryUnpinned,
@@ -135,7 +135,11 @@ const CategoryPostCard = ({
                 noOfLines={2}
                 color={colors.secondaryText[colorMode]}
               >
-                {stripHTML(props.description || '')}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: stripHTMLExceptLineBreaks(props.description || ''),
+                  }}
+                />
               </Text>
             </Box>
             <Spacer px={1}></Spacer>
