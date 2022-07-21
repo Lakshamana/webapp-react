@@ -37,7 +37,7 @@ const HeaderComponent = () => {
   const history = useHistory()
 
   const generateOrgLogo = () => {
-    const theme = colorMode.toUpperCase()
+    const theme = colorMode?.toUpperCase()
     if (!organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
     return generateImage(
       ThumborInstanceTypes.IMAGE,
