@@ -251,6 +251,7 @@ const EN_US = {
         reactions: 'Reactions',
         no_reactions: 'No reactions',
         reaction: 'Reaction',
+        no_more: 'Yay! You have seen it all',
         search_options: {
           recent: 'Most Recent',
           old: 'Oldest',
@@ -330,6 +331,12 @@ const EN_US = {
         verify_password:
           'To update your email, you must enter your password to confirm this action.',
         minimum_age: 'You must be at least 13 years old to have an account',
+        edit_avatar: 'Edit Avatar',
+        close: 'close',
+        crop_image: 'Crop Image',
+        zoom: 'zoom',
+        rotation: 'rotation',
+        choose_new_photo: 'Choose new photo',
       },
       live: {
         live: 'Live',
@@ -453,9 +460,9 @@ const EN_US = {
             title: 'Live Chat',
             say_something: 'Say something...',
           },
-          will_start_in: 'Transmission will start in',
-          will_start_soon: 'Transmission will start soon',
-          ended: 'Transmission ended',
+          will_start_in: 'Live Event will start in',
+          will_start_soon: 'Live Event will start soon',
+          ended: 'Live Event ended',
           live: 'LIVE',
           upcoming: 'UPCOMING',
           finished: 'FINISHED',

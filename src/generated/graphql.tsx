@@ -174,6 +174,10 @@ export type AddOrderCustomFields = {
   fullName: Scalars['String'];
 };
 
+export type AddPendingOrder = {
+  product: Scalars['String'];
+};
+
 export type AddReaction = {
   post: Scalars['String'];
   reaction: Reaction;
@@ -275,14 +279,14 @@ export enum BillboardTarget {
 }
 
 export type BillingAddressInput = {
-  billingAddress1: Scalars['String'];
-  billingAddress2: Scalars['String'];
-  billingCity: Scalars['String'];
-  billingCountryId: Scalars['String'];
-  billingNeighborhood: Scalars['String'];
-  billingPostalCode: Scalars['String'];
-  billingStateId: Scalars['String'];
-  billingStreetNumber: Scalars['String'];
+  address1: Scalars['String'];
+  address2: Scalars['String'];
+  city: Scalars['String'];
+  countryId: Scalars['String'];
+  neighborhood: Scalars['String'];
+  stateId: Scalars['String'];
+  streetNumber: Scalars['String'];
+  zipCode: Scalars['String'];
 };
 
 export type BillingPeriodsOutput = {
@@ -501,19 +505,22 @@ export type CommentVoteStats = {
 export type ConfirmOrder = {
   billingAddress: BillingAddressInput;
   /** the user card brand */
-  cardBrand: Scalars['String'];
+  cardBrand?: Maybe<Scalars['String']>;
   /** the user name */
-  cardHolderName: Scalars['String'];
+  cardHolderName?: Maybe<Scalars['String']>;
   /** the country id from country code from inspire api */
   country?: Maybe<Scalars['String']>;
   /** Customer CPF */
   cpf: Scalars['String'];
   /** the user card expiration date */
-  expirationDate: Scalars['String'];
+  expirationDate?: Maybe<Scalars['String']>;
   /** the last 4 values of user card */
-  lastDigits: Scalars['String'];
+  lastDigits?: Maybe<Scalars['String']>;
   /** the token used on payment gateway */
-  paymentGatewayToken: Scalars['String'];
+  paymentGatewayToken?: Maybe<Scalars['String']>;
+  paymentMethodType?: Maybe<PaymentMethods>;
+  /** Customer Phone */
+  phone: Scalars['String'];
   /** the product id of inspire product */
   product: Scalars['String'];
   /** the product price id of inspire product */
@@ -1681,6 +1688,7 @@ export type Mutation = {
   activeAccount: Account;
   addComment: Comment;
   addOrder: Order;
+  addPendingOrder: Order;
   addReaction: Array<ReactionsAggregate>;
   addReport: Report;
   addVote: AddedCommentVote;
@@ -1759,6 +1767,7 @@ export type Mutation = {
   pinPost: AccountPinnedPost;
   postPasswordCheck: PostPasswordCheck;
   publishRemoteConfig: PublishRemoteConfig;
+  pushNotification: PushNotificationResult;
   refreshToken: RefreshSignIn;
   removeAccount: Account;
   removeAccountGdprLgpd: AccountGdprLgpd;
@@ -1853,6 +1862,11 @@ export type MutationAddCommentArgs = {
 
 export type MutationAddOrderArgs = {
   payload: AddOrder;
+};
+
+
+export type MutationAddPendingOrderArgs = {
+  payload: AddPendingOrder;
 };
 
 
@@ -2249,6 +2263,11 @@ export type MutationPostPasswordCheckArgs = {
 
 export type MutationPublishRemoteConfigArgs = {
   payload: RemoteConfig;
+};
+
+
+export type MutationPushNotificationArgs = {
+  payload: PushNotificationInput;
 };
 
 
@@ -2671,14 +2690,14 @@ export type Order = {
   payment?: Maybe<Scalars['String']>;
   product?: Maybe<Scalars['String']>;
   status?: Maybe<OrderStatus>;
-  subscription?: Maybe<Scalars['String']>;
+  subscription?: Maybe<Scalars['JSONObject']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export enum OrderStatus {
-  Active = 'Active',
-  Failed = 'Failed',
-  Pending = 'Pending'
+  Active = 'ACTIVE',
+  Failed = 'FAILED',
+  Pending = 'PENDING'
 }
 
 export type Organization = {
@@ -2979,6 +2998,12 @@ export type PasswordOnlyChanged = {
   __typename?: 'PasswordOnlyChanged';
   success: Scalars['Boolean'];
 };
+
+export enum PaymentMethods {
+  Boleto = 'BOLETO',
+  CreditCard = 'CREDIT_CARD',
+  Pix = 'PIX'
+}
 
 export type PermissionDto = {
   __typename?: 'PermissionDto';
@@ -3292,11 +3317,22 @@ export type PushNotification = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type PushNotificationInput = {
+  content: Scalars['String'];
+};
+
 export type PushNotificationOutput = {
   __typename?: 'PushNotificationOutput';
   content?: Maybe<Scalars['String']>;
   ignore?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
+};
+
+export type PushNotificationResult = {
+  __typename?: 'PushNotificationResult';
+  external_id?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  recipients: Scalars['String'];
 };
 
 export type Query = {

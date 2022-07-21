@@ -248,6 +248,7 @@ const PT_BR = {
         comment: 'Comentário',
         reactions: 'Reações',
         no_reactions: 'Sem reações',
+        no_more: 'Yay! Você já viu tudo',
         reaction: 'Reação',
         search_options: {
           recent: 'Mais Recente',
@@ -329,6 +330,12 @@ const PT_BR = {
           'Para atualizar o seu email, você deve colocar sua senha para confirmar essa ação.',
         minimum_age:
           'Você precisa ter pelo menos 13 anos de idade para ter uma conta',
+        edit_avatar: 'Editar Avatar',
+        close: 'fechar',
+        crop_image: 'Cortar Imagem',
+        zoom: 'Zoom',
+        rotation: 'Rotação',
+        choose_new_photo: 'Escolher nova foto',
       },
       live: {
         live: 'Ao Vivo',

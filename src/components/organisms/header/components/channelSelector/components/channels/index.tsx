@@ -1,13 +1,13 @@
+import { Badge, Flex, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
-import { Spinner, Flex, Badge } from '@chakra-ui/react'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { Avatar, Container, Text } from 'components'
 import { Channel } from 'generated/graphql'
-import { Container, Text, Avatar } from 'components'
-import { ChannelItem, ChannelList } from './styles'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { useCustomizationStore } from 'services/stores'
 import { colors } from 'styles'
-import { PropsChannels } from './types'
-import { useFlags } from 'contexts/flags'
 import { isEntityPrivate } from 'utils/accessVerifications'
+import { ChannelItem, ChannelList } from './styles'
+import { PropsChannels } from './types'
 
 const Channels = ({
   selected,
@@ -17,7 +17,7 @@ const Channels = ({
   isLoading,
 }: PropsChannels) => {
   const { generateImage } = useThumbor()
-  const { CHANNELS } = useFlags()
+  const { customizationData } = useCustomizationStore()
 
   const generateChannelImage = (icon: any) => {
     const theme = colorMode.toUpperCase()
@@ -37,7 +37,7 @@ const Channels = ({
         )}
         {channels &&
           channels.map((channel: Channel) => {
-            const channelConfig = CHANNELS[channel.id]
+            const channelConfig = customizationData.CHANNELS[channel.id]
             const channelThumbnail = generateChannelImage(
               channelConfig?.IMAGES?.CHANNEL_ICON
             )
