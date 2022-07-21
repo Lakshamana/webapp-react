@@ -1,18 +1,22 @@
-import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { useHistory } from 'react-router'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Flex, Text, Box, Spacer, Spinner } from '@chakra-ui/react'
+import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
 import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
 
-import { CardWrapper, PostContent, BlockedContent, PlayContent } from './style'
-import { colors, breakpoints } from 'styles'
+import { breakpoints, colors } from 'styles'
+import { BlockedContent, CardWrapper, PlayContent, PostContent } from './style'
 
-import { formattedSeconds, stripHTML } from 'utils/helperFunctions'
 import { VideoPostCardProps } from 'types/posts'
+import {
+  formattedSeconds,
+  stripHTML,
+  stripHTMLExceptLineBreaks
+} from 'utils/helperFunctions'
 
 const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
   const history = useHistory()
@@ -119,7 +123,11 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
               lineHeight={'0.9rem'}
               color={colors.secondaryText[colorMode]}
             >
-              {stripHTML(props.description)}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: stripHTMLExceptLineBreaks(props.description),
+                }}
+              />
             </Text>
           )}
         </Flex>

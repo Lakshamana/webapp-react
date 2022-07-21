@@ -1,16 +1,16 @@
+import { useMediaQuery } from '@chakra-ui/media-query'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import { useThemeStore } from 'services/stores'
-import { Icon } from '@iconify/react'
-import { Flex, Box, Text } from '@chakra-ui/react'
-import { useMediaQuery } from '@chakra-ui/media-query'
 
-import { LivestreamPostCardProps } from 'types/livestreams'
-import { PostContent, BlockedContent, CardWrapper } from './style'
-import { colors, breakpoints } from 'styles'
-import { Status } from 'generated/graphql'
 import { Badge } from '@chakra-ui/react'
-import { stripHTML } from 'utils/helperFunctions'
+import { Status } from 'generated/graphql'
+import { breakpoints, colors } from 'styles'
+import { LivestreamPostCardProps } from 'types/livestreams'
+import { stripHTML, stripHTMLExceptLineBreaks } from 'utils/helperFunctions'
+import { BlockedContent, CardWrapper, PostContent } from './style'
 
 const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
   const history = useHistory()
@@ -68,7 +68,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
               fontWeight="bolder"
               color={colors.generalText[colorMode]}
             >
-              {props.title}
+              {stripHTML(props.title || '')}
             </Text>
             {props.description && (
               <Text
@@ -78,7 +78,11 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
                 lineHeight={'0.9rem'}
                 color={colors.secondaryText[colorMode]}
               >
-                {stripHTML(props.description)}
+                <span
+                dangerouslySetInnerHTML={{
+                  __html: stripHTMLExceptLineBreaks(props.description),
+                }}
+              />
               </Text>
             )}
           </Flex>
