@@ -23,5 +23,6 @@ export type CategoryPostCardProps = {
   isNew?: string
   isPinned?: boolean
   isExclusive?: boolean
+  isGeolocked?: boolean
   categoryUnpinned?: (categoryId: string) => void
 }
