@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
-import { SwiperSlide } from 'swiper/react'
-import { VideosScrollerProps, VideoPostCardProps } from 'types/posts'
-import { Post } from 'generated/graphql'
-import { useChannelsStore } from 'services/stores'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 import { CardsScroller, VideoPostCard } from 'components'
+import { Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { SwiperSlide } from 'swiper/react'
+import { VideoPostCardProps, VideosScrollerProps } from 'types/posts'
 import { ContentScroller } from './styles'
 
-import { isEntityBlocked } from 'utils/accessVerifications'
+import { isEntityBlocked, isEntityExclusive, isEntityGeolocked } from 'utils/accessVerifications'
 
 const VideosScroller = ({
   items,
@@ -61,14 +61,12 @@ const VideosScroller = ({
           item.media?.__typename === 'MediaVideo'
             ? item.media?.duration
             : undefined,
-        isExclusive: isEntityBlocked(item),
-        //TODO: Implement isGeolocked
-        isGeolocked: false,
+        isExclusive: isEntityExclusive(item),
+        isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
       }
     })
     setScrollerItems(mappedArr)
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
