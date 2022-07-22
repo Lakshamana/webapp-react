@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react'
-import { SwiperSlide } from 'swiper/react'
-import { compareAsc } from 'date-fns'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { useChannelsStore } from 'services/stores'
 import { CardsScroller, LivestreamPostCard } from 'components'
+import { compareAsc, parseISO } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { SwiperSlide } from 'swiper/react'
+import {
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
+} from 'utils/accessVerifications'
 import { ContentScroller } from './style'
-import { isEntityBlocked } from 'utils/accessVerifications'
-import { parseISO } from 'date-fns'
 
+import { LiveEvent, Status } from 'generated/graphql'
 import {
   LivestreamPostCardProps,
-  LivestreamsScrollerProps,
+  LivestreamsScrollerProps
 } from 'types/livestreams'
-import { LiveEvent, Status } from 'generated/graphql'
 
 const LivestreamScroller = ({
   items,
@@ -69,9 +72,8 @@ const LivestreamScroller = ({
         url: url,
         status: item.status,
         thumbnail: thumbnail,
-        isExclusive: isEntityBlocked(item),
-        //TODO: Waiting for API
-        isGeolocked: false,
+        isExclusive: isEntityExclusive(item),
+        isGeolocked: isEntityGeolocked(item),
       }
     })
     setScrollerItems(mappedArr)

@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react'
-import { SwiperSlide } from 'swiper/react'
 import { CardsScroller } from 'components'
-import { CategoriesScrollerProps } from 'types/categories'
-import { ContentScroller } from './style'
-import { useChannelsStore } from 'services/stores'
-import { CategoryPostCardProps } from 'types/categories'
 import { CategoryPostCard } from 'components/atoms'
 import { Category } from 'generated/graphql'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { isEntityBlocked } from 'utils/accessVerifications'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { SwiperSlide } from 'swiper/react'
+import { CategoriesScrollerProps, CategoryPostCardProps } from 'types/categories'
+import {
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
+} from 'utils/accessVerifications'
+import { ContentScroller } from './style'
 
 const CategoriesScroller = ({
   items,
@@ -54,7 +57,8 @@ const CategoriesScroller = ({
         description: item.description || '',
         url: url,
         thumbnail: thumbnail,
-        isExclusive: isEntityBlocked(item),
+        isExclusive: isEntityExclusive(item),
+        isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
       }
     })

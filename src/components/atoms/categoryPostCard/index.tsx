@@ -101,7 +101,7 @@ const CategoryPostCard = ({
       onMouseEnter={() => setHover(true)}
     >
       <PostContent onClick={selectCategory} {...props}>
-        {props.isExclusive && (
+        {(props.isExclusive || props.isGeolocked) && (
           <BlockedContent>
             <Icon
               width={20}

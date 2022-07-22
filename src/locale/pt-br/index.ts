@@ -454,6 +454,10 @@ const PT_BR = {
           access: 'Acessar',
           incorrect_password: 'Senha inválida. Tente novamente.',
         },
+        geolocked_content: {
+          title: 'Conteúdo bloqueado',
+          subtitle: 'Este conteúdo não está disponível para seu país.'
+        },
         live: {
           live_chat: {
             title: 'Chat ao Vivo',
