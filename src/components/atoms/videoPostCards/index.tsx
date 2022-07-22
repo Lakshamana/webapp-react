@@ -61,6 +61,8 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
 
   const isLoading = loadingPinPost || loadingUnpinPost
 
+  const isPostBlocked = props.isExclusive || props.isGeolocked
+
   const selectPost = () => history.push(`${props.url}`)
 
   const renderAddToMyListIcon = () => (
@@ -169,13 +171,13 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
         {(props.isExclusive || props.isGeolocked) && (
           <BlockedContent>
             <Icon
-              width={20}
+              width={25}
               color={colors.white}
               icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
-            ></Icon>
+            />
           </BlockedContent>
         )}
-        {!props.isExclusive && hover && (
+        {!isPostBlocked && hover && (
           <PlayContent>
             <Icon
               width={50}
