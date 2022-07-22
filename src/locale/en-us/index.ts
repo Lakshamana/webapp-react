@@ -455,6 +455,10 @@ const EN_US = {
           access: 'Access',
           incorrect_password: 'Incorrect password. Try again.',
         },
+        geolocked_content: {
+          title: 'Geolocked content',
+          subtitle: 'This content is not available for your country.'
+        },
         live: {
           live_chat: {
             title: 'Live Chat',
