@@ -1,22 +1,18 @@
-import { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
-import { Center, Box } from '@chakra-ui/layout'
-import {
-  MUTATION_POST_PASSWORD_CHECK,
-  MUTATION_LIVE_EVENT_PASSWORD_CHECK,
-  QUERY_VERIFY_LIVE_EVENT_KIND,
-  QUERY_VERIFY_POST_KIND,
-} from 'services/graphql'
-import { PrivateContent, PlanSelectFlow, Skeleton } from 'components'
-import { Props } from './types'
-import { useEffect } from 'react'
-import {
-  isEntityBlocked,
-  isEntityOnPaywall,
-  isEntityPrivate,
-} from 'utils/accessVerifications'
-import { useTranslation } from 'react-i18next'
+import { Box, Center } from '@chakra-ui/layout'
+import { GeolockedContent, PlanSelectFlow, PrivateContent, Skeleton } from 'components'
 import { LiveEvent, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  MUTATION_LIVE_EVENT_PASSWORD_CHECK, MUTATION_POST_PASSWORD_CHECK, QUERY_VERIFY_LIVE_EVENT_KIND,
+  QUERY_VERIFY_POST_KIND
+} from 'services/graphql'
+import {
+  isEntityBlocked, isEntityGeolocked, isEntityOnPaywall,
+  isEntityPrivate
+} from 'utils/accessVerifications'
+import { Props } from './types'
 
 const VerifyContentKind = ({
   contentSlug,
@@ -26,6 +22,7 @@ const VerifyContentKind = ({
   const { t } = useTranslation()
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
+  const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<Post | LiveEvent>()
@@ -88,6 +85,7 @@ const VerifyContentKind = ({
       if (isEntityBlocked(contentKind)) {
         setIsPrivate(isEntityPrivate(contentKind))
         setIsOnPaywall(isEntityOnPaywall(contentKind))
+        setIsGeolocked(isEntityGeolocked(contentKind))
         return
       }
       accessGranted()
@@ -115,7 +113,11 @@ const VerifyContentKind = ({
         requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
       />
     )
-  if (isOnPaywall) return <PlanSelectFlow entitlement={contentKind?.entitlements} />
+  if (isOnPaywall)
+    return <PlanSelectFlow entitlement={contentKind?.entitlements} />
+
+  if (isGeolocked) return <GeolockedContent />
+
   return <div></div>
 }
 
