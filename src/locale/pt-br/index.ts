@@ -9,6 +9,7 @@ const PT_BR = {
       back_to_home: 'Voltar para o início',
       or: 'ou',
       next: 'próximo',
+      search: 'Pesquisar',
       error: {
         generic_api_error:
           'Algo deu errado. Nós vamos consertar isso. Tente mais tarde.',
