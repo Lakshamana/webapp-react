@@ -315,6 +315,7 @@ const EN_US = {
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
         delete_my_account: 'I want to delete my account',
+        delete_account_error: 'Sorry, your account cannot be deleted at this time',
         delete_account_info:
           'Please enter your password to confirm you would like to delete your account and have your personal information deleted. If you have a subscription on any app, you must go to the App Store to cancel your subscription. Deleting your account will not cancel any existing subscription. {{organization}} will send an email confirmation to the email used during registration.',
         billing_information: 'Your Billing Information',
