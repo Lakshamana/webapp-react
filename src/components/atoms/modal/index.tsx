@@ -1,19 +1,19 @@
 import {
+  Box,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
-  ModalBody,
   ModalFooter,
-  Box,
+  ModalHeader,
+  ModalOverlay
 } from '@chakra-ui/react'
 import { Button } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
-import { sizes, colors } from 'styles'
-import { Props, defaultProps } from './types'
+import { colors, sizes } from 'styles'
 import { MainContent } from './style'
+import { defaultProps, Props } from './types'
 
 const ModalComponent = ({
   children,
@@ -38,7 +38,11 @@ const ModalComponent = ({
     <MainContent>
       <Modal isOpen={isOpen} onClose={onClose} {...props}>
         <ModalOverlay />
-        <ModalContent marginX={3} paddingTop={3} backgroundColor={colors.cardBg[colorMode]}>
+        <ModalContent
+          marginX={3}
+          paddingTop={3}
+          backgroundColor={colors.cardBg[colorMode]}
+        >
           {children ? (
             <Box px={6} py={4}>
               {children}
@@ -74,7 +78,12 @@ const ModalComponent = ({
             </>
           )}
           {defaultActions && (
-            <ModalFooter display={'flex'} flexDirection={'column'} paddingY={4}>
+            <ModalFooter
+              display={'flex'}
+              flexDirection={'column'}
+              paddingY={4}
+              marginBottom={!cancelButton ? 7 : ''}
+            >
               {actionButton && (
                 <Button
                   width={[sizes.loginButtonWidth]}
