@@ -432,6 +432,7 @@ const PT_BR = {
           reply: 'resposta',
           replies: 'respostas',
           report: 'Denunciar',
+          deleted_account: '[Usuário deletado]',
           edit: 'Editar',
           delete: 'Apagar',
           comments: 'Comentários',

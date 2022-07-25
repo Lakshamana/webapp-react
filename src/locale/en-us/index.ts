@@ -432,6 +432,7 @@ const EN_US = {
           reply: 'reply',
           replies: 'replies',
           report: 'Report',
+          deleted_account: '[Deleted user]',
           edit: 'Edit',
           delete: 'Delete',
           comments: 'Comments',

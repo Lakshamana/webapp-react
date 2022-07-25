@@ -1,9 +1,9 @@
-import { useTranslation } from 'react-i18next'
-import { Flex, GridItem, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
+import { Flex, GridItem, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
-import { Text, Avatar } from 'components'
+import { Avatar, Text } from 'components'
+import { useTranslation } from 'react-i18next'
+import { useAuthStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
-import { useThemeStore, useAuthStore } from 'services/stores'
 import { translateFormatDistance } from 'utils/helperFunctions'
 import { IOption, IProps } from './types'
 
@@ -54,7 +54,7 @@ const CardHeader = ({ id, authorId, author, createdAt, action }: IProps) => {
             fontSize={'18px'}
             fontWeight={700}
           >
-            {author?.username}
+            {author?.username || t('page.post.comment.deleted_account')}
           </Text>
           <Text
             color={colors.secondaryText[colorMode]}
@@ -98,3 +98,4 @@ const CardHeader = ({ id, authorId, author, createdAt, action }: IProps) => {
 }
 
 export { CardHeader }
+
