@@ -27,16 +27,24 @@ const UserInfo = ({
     return <NotLogged {...{ display, colorMode }} />
   }
 
-  if (display === 'sidebar') {
-    return <UserSidebar {...{ account, toggleColorMode }} />
-  }
-
   const getImageUrl = (imagePath: string) => {
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
       imagePath,
     )
     return image
+  }
+
+  if (display === 'sidebar') {
+    return (
+      <UserSidebar
+        {...{
+          account,
+          avatarUrl: getImageUrl(user?.avatar?.imgPath ?? '') || '',
+          toggleColorMode
+        }}
+      />
+    )
   }
 
   return (
