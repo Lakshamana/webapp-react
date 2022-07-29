@@ -19,4 +19,6 @@ export type EnvProps = {
   organization?: string
   remoteConfigSecret?: string
   updatedAt?: string
+  googleTag?: string
+  facebookTag?: string
 }
