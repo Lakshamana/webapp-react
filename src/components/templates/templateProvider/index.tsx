@@ -28,6 +28,7 @@ import {
 } from 'services/stores'
 
 import { configEnvs } from 'config/envs'
+import { initializeFacebookPixel } from 'config/facebookPixel'
 import { initializeGTM } from 'config/gtm'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
@@ -59,6 +60,7 @@ const TemplateProvider = ({ children }: any) => {
 
   useEffect(() => {
     configEnvs.googleTag && initializeGTM()
+    configEnvs.facebookTag && initializeFacebookPixel()
   }, [])
 
   return (
