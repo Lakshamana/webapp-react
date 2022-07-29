@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const [loadingOrg, setLoadingOrg] = useState<boolean>(true)
   const [loadingAnonymous, setLoadingAnonymous] = useState<boolean>(true)
-  const [loadingAccount, setLoadingAcount] = useState(false)
+  const [loadingAccount, setLoadingAcount] = useState<boolean>(false)
 
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { setColorMode } = useThemeStore()
@@ -164,9 +164,11 @@ export const AuthProvider = ({ children }) => {
           await setCustomizationData(decryptedCustomization)
           await setOrganizationConfig(decryptedCustomization?.ORGANIZATION)
 
+          const storedLocale = getData(APP_LOCALE)
+
           saveData(
             APP_LOCALE,
-            customizationData?.ORGANIZATION.LOCALE || 'en-US'
+            storedLocale || customizationData?.ORGANIZATION.LOCALE || 'en-US'
           )
 
           const storedTheme = getData(APP_THEME)
@@ -232,7 +234,11 @@ export const AuthProvider = ({ children }) => {
     getOrganization()
 
     //TODO: We need to verify KIND of post and then run AnonymousAuth (but we don't have a Endpoint to do that)
-    if (!accessToken && window.location.href.indexOf('/post/') >= 1) {
+    if (
+      !accessToken &&
+      (window.location.href.indexOf('/post/') >= 1 ||
+        window.location.href.indexOf('/category/') >= 1)
+    ) {
       doAnonymousAuth()
       return
     }
