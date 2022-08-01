@@ -1,15 +1,25 @@
-import { useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { Box, Center } from '@chakra-ui/layout'
-import { GeolockedContent, PlanSelectFlow, PrivateContent, Skeleton } from 'components'
+import {
+  GeolockedContent,
+  PlanSelectFlow,
+  PrivateContent,
+  Skeleton
+} from 'components'
 import { LiveEvent, Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  MUTATION_LIVE_EVENT_PASSWORD_CHECK, MUTATION_POST_PASSWORD_CHECK, QUERY_VERIFY_LIVE_EVENT_KIND,
+  MUTATION_LIVE_EVENT_PASSWORD_CHECK,
+  MUTATION_POST_PASSWORD_CHECK,
+  QUERY_VERIFY_LIVE_EVENT_KIND,
   QUERY_VERIFY_POST_KIND
 } from 'services/graphql'
+import { useChannelsStore } from 'services/stores'
 import {
-  isEntityBlocked, isEntityGeolocked, isEntityOnPaywall,
+  isEntityBlocked,
+  isEntityGeolocked,
+  isEntityOnPaywall,
   isEntityPrivate
 } from 'utils/accessVerifications'
 import { Props } from './types'
@@ -26,23 +36,25 @@ const VerifyContentKind = ({
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<Post | LiveEvent>()
+  const { activeChannel } = useChannelsStore()
 
-  const { loading: isLoadingVerifyContentKind } = useQuery(
-    contentType === 'live'
-      ? QUERY_VERIFY_LIVE_EVENT_KIND
-      : QUERY_VERIFY_POST_KIND,
-    {
-      variables: {
-        slug: contentSlug,
-      },
-      onCompleted: (result) => {
-        setContentKind(
-          contentType === 'live' ? result?.liveEvent : result?.post
-        )
-      },
-      fetchPolicy: 'no-cache',
-    }
-  )
+  const [getContentKind, { loading: isLoadingVerifyContentKind }] =
+    useLazyQuery(
+      contentType === 'live'
+        ? QUERY_VERIFY_LIVE_EVENT_KIND
+        : QUERY_VERIFY_POST_KIND,
+      {
+        variables: {
+          slug: contentSlug,
+        },
+        onCompleted: (result) => {
+          setContentKind(
+            contentType === 'live' ? result?.liveEvent : result?.post
+          )
+        },
+        fetchPolicy: 'no-cache',
+      }
+    )
 
   const setError = () => {
     setErrorOnRequestAccess(t('page.post.private_content.incorrect_password'))
@@ -92,6 +104,11 @@ const VerifyContentKind = ({
     }
     //eslint-disable-next-line
   }, [contentKind])
+
+  useEffect(() => {
+    if (activeChannel) getContentKind()
+    //eslint-disable-next-line
+  }, [activeChannel])
 
   const isLoadingPasswordCheck =
     isLoadingLivePasswordCheck || isLoadingPostPasswordCheck
