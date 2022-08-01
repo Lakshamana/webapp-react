@@ -237,7 +237,8 @@ export const AuthProvider = ({ children }) => {
     if (
       !accessToken &&
       (window.location.href.indexOf('/post/') >= 1 ||
-        window.location.href.indexOf('/category/') >= 1)
+        window.location.href.indexOf('/category/') >= 1 ||
+        window.location.href.indexOf('/live/') >= 1)
     ) {
       doAnonymousAuth()
       return
