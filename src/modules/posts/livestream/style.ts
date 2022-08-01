@@ -1,11 +1,11 @@
-import { Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import styled from 'styled-components'
 import { LayoutProps, space, SpaceProps } from 'styled-system'
 import { breakpoints, sizes } from 'styles'
 import { pxToRem } from 'styles/metrics'
 
-interface SpaceLayoutProps extends SpaceProps, LayoutProps {}
+interface SpaceLayoutProps extends SpaceProps, LayoutProps { }
 
 export const Bar = styled.div<SpaceLayoutProps>`
   ${space}
@@ -76,7 +76,7 @@ export const Title = styled(Text)`
   }
 `
 
-export const Subtitle = styled(Text)`
+export const Subtitle = styled(Box)`
   color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
   width: 100%;
   font-weight: 300;
