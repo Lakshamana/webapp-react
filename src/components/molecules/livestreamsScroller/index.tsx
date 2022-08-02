@@ -28,16 +28,8 @@ const LivestreamScroller = ({
     useState<LivestreamPostCardProps[]>()
 
   const getImageUrl = (live: LiveEvent) => {
-    const imageOptions: ThumborParams = {
-      size: {
-        height: 400,
-      },
-    }
-
-    if (isEntityBlocked(live)) {
-      imageOptions.blur = 20
-    }
-
+    const imageOptions: ThumborParams = { size: { height: 400 }, }
+    if (isEntityBlocked(live)) imageOptions.blur = 20
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
       live.thumbnail?.imgPath || '',
@@ -45,9 +37,6 @@ const LivestreamScroller = ({
     )
     return image
   }
-
-  const getLivestreamUrl = (slug: string) =>
-    `/c/${activeChannel?.slug}/live/${slug}`
 
   const isLive = (live: LiveEvent) => live.status === Status.Live
 
@@ -59,19 +48,19 @@ const LivestreamScroller = ({
       return !liveA && liveB
         ? 1
         : liveA && !liveB
-        ? -1
-        : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
+          ? -1
+          : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
     })
     const mappedArr = arrForSort?.map((item: LiveEvent) => {
       const thumbnail = getImageUrl(item)
-      const url = getLivestreamUrl(item.slug || '')
+      const url = `/c/${activeChannel?.slug}/live/${item.slug || ''}`
       return {
         id: item.id,
         title: item.title,
         description: item.description || '',
-        url: url,
+        url,
         status: item.status,
-        thumbnail: thumbnail,
+        thumbnail,
         isExclusive: isEntityExclusive(item),
         isGeolocked: isEntityGeolocked(item),
       }
@@ -80,21 +69,17 @@ const LivestreamScroller = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  const renderScroller = () => (
-    <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
-      {scrollerItems?.map((item: LivestreamPostCardProps) => {
-        return (
-          <SwiperSlide key={`slide-${item.id}-livestream`}>
-            <LivestreamPostCard {...item} />
-          </SwiperSlide>
-        )
-      })}
-    </CardsScroller>
-  )
-
   return (
     <ContentScroller>
-      {!!scrollerItems?.length && renderScroller()}
+      {!!scrollerItems?.length &&
+        <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
+          {scrollerItems?.map((item: LivestreamPostCardProps) => (
+            <SwiperSlide key={`slide-${item.id}-livestream`}>
+              <LivestreamPostCard {...item} />
+            </SwiperSlide>
+          ))}
+        </CardsScroller>
+      }
     </ContentScroller>
   )
 }

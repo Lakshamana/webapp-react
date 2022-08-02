@@ -1,23 +1,21 @@
-import { useEffect, useState } from 'react'
-import { Flex, Box } from '@chakra-ui/layout'
 import { useLazyQuery } from '@apollo/client'
-import { useTranslation } from 'react-i18next'
-import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
-import {
-  QUERY_POSTS_CARDS,
-  QUERY_BILLBOARDS,
-  QUERY_LIVE_EVENTS,
-} from 'services/graphql'
-import { PostType, LiveEvent, Status } from 'generated/graphql'
+import { Box, Flex } from '@chakra-ui/layout'
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
-  LivestreamScroller,
-  VideosScroller,
-  BillboardScroller,
+  BillboardScroller, LivestreamScroller,
+  VideosScroller
 } from 'components/molecules'
-import { BillboardTarget } from 'types/common'
-import { sizes } from 'styles'
+import { LiveEvent, PostType, Status } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  QUERY_BILLBOARDS,
+  QUERY_LIVE_EVENTS, QUERY_POSTS_CARDS
+} from 'services/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useCommonStore, useCustomizationStore } from 'services/stores'
+import { sizes } from 'styles'
+import { BillboardTarget } from 'types/common'
 import { convertToValidColor } from 'utils/helperFunctions'
 
 import { LiveCarouselTypes } from 'types/common'

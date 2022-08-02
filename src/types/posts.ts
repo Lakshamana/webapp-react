@@ -27,3 +27,16 @@ export type VideoPostCardProps = {
   isActive?: boolean
   postUnpinned?: (postId: string) => void
 }
+
+type PostCardProps = {
+  hover: boolean
+  mobileBehavior?: boolean
+  isLoading: boolean
+  isPostPinned: boolean
+  pinPost: () => void
+  unpinPost: () => void
+  actionHover: (status: boolean) => () => void
+  defineAction: () => void
+}
+
+export type ComponentPostCardProps = VideoPostCardProps & PostCardProps

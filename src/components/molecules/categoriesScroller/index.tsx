@@ -24,39 +24,26 @@ const CategoriesScroller = ({
 
   //TODO: Transform this function in a util
   const getImageUrl = (item: Category) => {
-    const imageOptions: ThumborParams = {
-      size: {
-        height: 400,
-      },
-    }
-
-    if (isEntityBlocked(item)) {
-      imageOptions.blur = 20
-    }
-
+    const imageOptions: ThumborParams = { size: { height: 400 } }
+    if (isEntityBlocked(item)) imageOptions.blur = 20
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
       item.customization?.thumbnail?.imgPath || '',
       imageOptions
     )
-
     return image
-  }
-
-  const getPostUrl = (slug: string) => {
-    return `/c/${activeChannel?.slug}/category/${slug}`
   }
 
   useEffect(() => {
     const categoriesItems = items?.map((item: Category) => {
       const thumbnail = getImageUrl(item)
-      const url = getPostUrl(`${item.slug}`)
+      const url = `/c/${activeChannel?.slug}/category/${item.slug}`
       return {
         id: item.id || '',
         title: item.name || '',
         description: item.description || '',
-        url: url,
-        thumbnail: thumbnail,
+        url,
+        thumbnail,
         isExclusive: isEntityExclusive(item),
         isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
@@ -66,21 +53,17 @@ const CategoriesScroller = ({
     // eslint-disable-next-line
   }, [items])
 
-  const renderScroller = () => (
-    <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
-      {scrollerItems?.map((category: CategoryPostCardProps) => {
-        return (
-          <SwiperSlide key={`slide-${category.id}`}>
-            <CategoryPostCard {...category} />
-          </SwiperSlide>
-        )
-      })}
-    </CardsScroller>
-  )
-
   return (
     <ContentScroller>
-      {scrollerItems?.length && renderScroller()}
+      {scrollerItems?.length &&
+        <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
+          {scrollerItems?.map((category: CategoryPostCardProps) => (
+            <SwiperSlide key={`slide-${category.id}`}>
+              <CategoryPostCard {...category} />
+            </SwiperSlide>
+          ))}
+        </CardsScroller>
+      }
     </ContentScroller>
   )
 }
