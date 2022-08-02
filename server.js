@@ -1,14 +1,12 @@
 require('dotenv').config()
 const express = require("express")
 const axios = require('axios')
-const crypto = require('crypto-js')
 const path = require("path")
 const fs = require("fs")
 const seo = require("./seo")
 const app = new express()
 const PORT = process.env.PORT || 3004
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
-const REMOVE_ENV_SECRET = process.env.REACT_APP_REMOTE_ENV_SECRET
 
 const defaultValues = {
   favicon: '',
