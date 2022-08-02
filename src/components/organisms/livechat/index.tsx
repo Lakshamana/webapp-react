@@ -2,9 +2,14 @@ import { Flex, useDisclosure } from '@chakra-ui/react'
 import { ActionNotAllowed } from 'components/molecules'
 import { firebaseDB } from 'config/firebase'
 import {
-  addDoc, collection, DocumentData,
+  addDoc,
+  collection,
+  DocumentData,
   limit,
-  onSnapshot, orderBy, query, startAfter
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter
 } from 'firebase/firestore'
 import throttle from 'lodash.debounce'
 import { useEffect, useMemo, useState } from 'react'
@@ -50,6 +55,11 @@ const Livechat = ({
   )
 
   const sendNewMessage = (message: string) => {
+    if (isAnonymousAccess) {
+      onOpenActionNotAllowed()
+      return
+    }
+
     if (!message) return
 
     const filteredMessage = message.trim()
@@ -116,12 +126,8 @@ const Livechat = ({
       <LivechatHeader />
       <LivechatBody enabled={isCommentsEnabled} messages={messages} />
       <LivechatFooter
-        sendMessage={
-          isAnonymousAccess ? onOpenActionNotAllowed : sendNewMessage
-        }
-        sendReaction={
-          isAnonymousAccess ? onOpenActionNotAllowed : debouncedSendReaction
-        }
+        sendMessage={sendNewMessage}
+        sendReaction={isAnonymousAccess ? onOpenActionNotAllowed : debouncedSendReaction}
         reactions={reactions}
         reactionsEnabled={isReactionsEnabled}
         commentsEnabled={isCommentsEnabled}

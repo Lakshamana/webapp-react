@@ -1,29 +1,25 @@
-import { useState } from 'react'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { useThemeStore } from 'services/stores/theme'
-import { Popover } from 'components'
 import {
-  Input,
+  Box, Input,
   InputGroup,
-  InputRightElement,
-  Box,
-  Text,
-  keyframes,
+  InputRightElement, keyframes, Text
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
-import {
-  LivechatFooterMain,
-  AnimatedIcon,
-  PopoverIcon,
-  Reaction,
-} from './style'
-import { colors } from 'styles'
-import { Props } from './types'
-import { availableReactions } from 'utils/availableReactions'
+import { Popover } from 'components'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useThemeStore } from 'services/stores/theme'
+import { colors } from 'styles'
 import { Reaction as ReactionType } from 'types/common'
+import { availableReactions } from 'utils/availableReactions'
+import {
+  AnimatedIcon, LivechatFooterMain, PopoverIcon,
+  Reaction
+} from './style'
+import { Props } from './types'
 
 import { motion } from 'framer-motion'
+import { useAuthStore } from 'services/stores'
 
 const LivechatFooter = ({
   sendMessage,
@@ -37,6 +33,7 @@ const LivechatFooter = ({
   const [newMessage, setNewMessage] = useState<string>('')
   const [activeReaction, setActiveReaction] = useState<ReactionType>()
   const { t } = useTranslation()
+  const { isAnonymousAccess } = useAuthStore()
 
   const animationKeyframes = keyframes`
   0% { transform: translateY(0px); rotate(0); opacity: 1 }
@@ -55,6 +52,13 @@ const LivechatFooter = ({
     setTimeout(() => {
       setNewMessage('')
     }, 500)
+
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      sendMessage(newMessage)
+      clearInput()
+    }
+  }
 
   return (
     <LivechatFooterMain {...{ colorMode }}>
@@ -128,6 +132,7 @@ const LivechatFooter = ({
         borderRadius="6px"
         _groupHover={{ background: 'none' }}
         background={colors.inputBg[colorMode]}
+        onKeyDown={handleKeyDown}
       >
         <Input
           focusBorderColor="none"
@@ -135,13 +140,7 @@ const LivechatFooter = ({
           color={colors.secondaryText[colorMode]}
           placeholder={t('page.post.live.live_chat.say_something')}
           onChange={handleChange}
-          disabled={!commentsEnabled}
-          onKeyDown={(e: any) => {
-            if (e.keyCode === 13) {
-              sendMessage(newMessage)
-              clearInput()
-            }
-          }}
+          disabled={!commentsEnabled || isAnonymousAccess}
           value={newMessage}
           background={colors.inputBg[colorMode]}
           variant="filled"
