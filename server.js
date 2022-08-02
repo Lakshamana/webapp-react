@@ -1,53 +1,75 @@
+require('dotenv').config()
 const express = require("express")
+const axios = require('axios')
+const crypto = require('crypto-js')
 const path = require("path")
 const fs = require("fs")
 const seo = require("./seo")
 const app = new express()
 const PORT = process.env.PORT || 3004
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
+const REMOVE_ENV_SECRET = process.env.REACT_APP_REMOTE_ENV_SECRET
 
 const defaultValues = {
   favicon: '',
   title: 'Fanhero Video Platform',
   description: 'An end-to-end video platform powered by the Fanhero Video Technology Cloud',
-  url: '<url-here>',
+  url: 'https://fanhero.tv/',
   image: 'https://fanhero.com/wp-content/uploads/img-home-2.jpg.webp',
   domain: 'fanhero.tv'
 }
 
-
-const getTenantData = (req, res) => {
+const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
   let subDomain = req.hostname.split('.')[0]
   let tenant = subDomain.includes('localhost') ? 'marvel-dev' : subDomain
-  // let page = seo.find((item) => item.path === pathname)
-  let page = seo.find((item) => item.tenant === tenant)
 
-  console.log('----------------')
-  console.log('SEO', page)
+  const endpoint = `https://${API_ENDPOINT}`
+
+  // const metadata = await axios.get()
+  // await axios.get(
+  //   endpoint + '/env-config',
+  //   { headers: { organization: `https://${tenant}.fanhero.tv` } }
+  // ).then((result) => {
+  //   const decryptedEnv = crypto.AES.decrypt(
+  //     result.data.body.data.result,
+  //     REMOVE_ENV_SECRET
+  //   )
+  //   const data = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
+  //   console.log(data)
+  // })
+
+  // let page = seo.find((item) => item.path === pathname)
+  // let page = seo.find((item) => item.tenant === tenant)
+
+  // console.log('----------------')
+  // console.log('SEO', page)
   console.log('HOST:', req.hostname)
   console.log('TENANT:', tenant)
   console.log('PATH: ', pathname)
 
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let defineValues = { ...defaultValues }
-  if (page) { defineValues = { ...defaultValues, ...page } }
+  // if (page) { defineValues = { ...defaultValues, ...page } }
 
-  const MOCK_PATH = [
-    '/c/avengers/post/doctor-strange-in-the-multiverse-of-madness',
-    '/c/avengers/post/doctor-strange-in-the-multiverse-of-madness/',
-  ]
-
-  let isPost = MOCK_PATH.includes(pathname)
-  console.log(isPost)
+  let isPost = pathname.includes('/post/')
   if (isPost) {
-    defineValues = {
-      ...defaultValues,
-      favicon: 'https://express-favicon.herokuapp.com/coca-cola',
-      title: "Doctor Strange in the Multiverse of Madness",
-      description: "Dr Stephen Strange casts a forbidden spell that opens a portal to the multiverse. However, a threat emerges that may be too big for his team to handle.",
-      url: 'https://webapp-react-feat-dynam-fhfk1f.herokuapp.com/c/avengers/post/doctor-strange-in-the-multiverse-of-madness',
-      image: 'https://legadodamarvel.com.br/wp-content/uploads/2022/07/Grande-ator-da-Marvel-e-preso-alcoolizado-e-fas-teorizam-sua-demissao-legadodamarvel-750x394.webp',
-    }
+    const startPosition = pathname.indexOf('/post/') + 6
+    const postSlug = pathname.slice(startPosition, pathname.length)
+    await axios
+      .get(`${endpoint}/posts/metadata?slug=${postSlug}`)
+      .then(({ data }) => {
+        const image = data.body.data.image.baseUrl + '/' + data.body.data.image.imgPath
+        defineValues = {
+          ...defaultValues,
+          // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
+          title: data.body.data.title,
+          description: data.body.data.description,
+          url: pathname,
+          image
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   let htmlWithSeo = html
