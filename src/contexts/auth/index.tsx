@@ -24,7 +24,7 @@ import {
 } from 'services/stores'
 
 import { LoadingScreen } from 'components'
-import { clearData, getData, saveData } from 'services/storage'
+import { clearData, getData } from 'services/storage'
 
 import { useTranslation } from 'react-i18next'
 import { AuthTypes } from './types'
@@ -136,7 +136,7 @@ export const AuthProvider = ({ children }) => {
     })
   }
 
-  const getOrganization = () => {
+  const getOrganization = async () => {
     new Promise(async (resolve, reject) => {
       try {
         const { data } = await axios.get(
@@ -157,6 +157,7 @@ export const AuthProvider = ({ children }) => {
             data?.body?.data.customization,
             configEnvs.remoteConfigSecret
           )
+
           const decryptedCustomization = JSON.parse(
             decryptedEnv.toString(crypto.enc.Utf8)
           )
@@ -164,19 +165,22 @@ export const AuthProvider = ({ children }) => {
           await setCustomizationData(decryptedCustomization)
           await setOrganizationConfig(decryptedCustomization?.ORGANIZATION)
 
-          const storedLocale = getData(APP_LOCALE)
+          const language =
+            getData(APP_LOCALE) ||
+            decryptedCustomization?.ORGANIZATION?.LOCALE ||
+            'en-US'
 
-          saveData(
-            APP_LOCALE,
-            storedLocale || customizationData?.ORGANIZATION.LOCALE || 'en-US'
-          )
+          i18n.changeLanguage(language)
 
           const storedTheme = getData(APP_THEME)
-          setColorMode(
-            storedTheme ||
-              customizationData?.ORGANIZATION?.THEME?.toLowerCase() ||
-              'dark'
-          )
+
+          const customizationTheme = activeChannel
+            ? decryptedCustomization?.CHANNELS[
+                activeChannel.id
+              ]?.THEME?.toLowerCase()
+            : decryptedCustomization?.ORGANIZATION?.THEME?.toLowerCase()
+
+          setColorMode(storedTheme || customizationTheme || 'dark')
         }
         resolve(true)
       } catch (error) {
