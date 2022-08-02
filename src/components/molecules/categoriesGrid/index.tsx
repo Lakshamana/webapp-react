@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react'
-import { SimpleGrid, Flex } from '@chakra-ui/react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { useThemeStore } from 'services/stores/theme'
-import { CategoriesGridProps, CategoryPostCardProps } from 'types/categories'
+import { Flex, SimpleGrid } from '@chakra-ui/react'
 import { CategoryPostCard, Text } from 'components'
-import { colors, breakpoints, sizes } from 'styles'
-import { useChannelsStore } from 'services/stores'
-import { Wrapper } from './style'
 import { Category } from 'generated/graphql'
-import { isEntityBlocked } from 'utils/accessVerifications'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { useThemeStore } from 'services/stores/theme'
+import { breakpoints, colors, sizes } from 'styles'
+import { CategoriesGridProps, CategoryPostCardProps } from 'types/categories'
+import {
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
+} from 'utils/accessVerifications'
+import { Wrapper } from './style'
 
 const CategoriesGrid = ({
   sendUnpinEvent,
@@ -62,7 +66,8 @@ const CategoriesGrid = ({
           description: item.description,
           url,
           thumbnail,
-          isExclusive: isEntityBlocked(item),
+          isExclusive: isEntityExclusive(item),
+          isGeolocked: isEntityGeolocked(item),
           isPinned: item.pinnedStatus?.pinned,
         }
       })

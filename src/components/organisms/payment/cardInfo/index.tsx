@@ -78,7 +78,6 @@ export const CardInfoSpreedly = ({
     MUTATION_CONFIRM_ORDER,
     {
       onCompleted: async (result) => {
-        console.log('QUERY', result)
         const { confirmOrder: { id } } = result
         getOrderResult({ variables: { id } })
       },

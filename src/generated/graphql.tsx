@@ -321,6 +321,7 @@ export type Category = {
   parentId?: Maybe<Scalars['ID']>;
   password?: Maybe<Scalars['String']>;
   pinnedStatus?: Maybe<AccountPinnedCategory>;
+  posts: PaginatedPostsOutput;
   slug?: Maybe<Scalars['String']>;
   sort: Scalars['Int'];
   status?: Maybe<Status>;
@@ -330,6 +331,11 @@ export type Category = {
 
 export type CategoryChildrenArgs = {
   filter?: Maybe<ChildrenCategoryFilter>;
+};
+
+
+export type CategoryPostsArgs = {
+  filters?: Maybe<PostFilter>;
 };
 
 export type CategoryCustomization = {
@@ -713,7 +719,8 @@ export type CreateCustomFieldInput = {
 
 export type CreateEmailTemplateDto = {
   name: Scalars['String'];
-  template: Scalars['String'];
+  template?: Maybe<Scalars['String']>;
+  templates: Scalars['JSON'];
   type: Scalars['String'];
 };
 
@@ -896,6 +903,7 @@ export type CreateVideoPost = {
   entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
   media: Scalars['ID'];
@@ -951,7 +959,8 @@ export type EmailTemplate = {
   deleted_at?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   organization: Scalars['ID'];
-  template: Scalars['String'];
+  template?: Maybe<Scalars['String']>;
+  templates?: Maybe<Scalars['JSON']>;
   type: Scalars['String'];
 };
 
@@ -990,6 +999,16 @@ export type EngagedUser = {
   organization: Scalars['String'];
   tenant: Scalars['String'];
   username?: Maybe<Scalars['String']>;
+};
+
+export type EntitlementGeofenceInput = {
+  countryCodes: Array<Scalars['String']>;
+  products?: Maybe<Array<Scalars['String']>>;
+};
+
+export type EntitlementsGeofenceInput = {
+  blacklist?: Maybe<EntitlementGeofenceInput>;
+  whitelist?: Maybe<EntitlementGeofenceInput>;
 };
 
 export type EnvConfig = {
@@ -1147,6 +1166,7 @@ export enum GeoFenceType {
 
 export type GeofenceInput = {
   countryCodes: Array<Scalars['String']>;
+  products?: Maybe<Array<Scalars['String']>>;
   type: GeoFenceType;
 };
 
@@ -1378,6 +1398,7 @@ export type InspireRecurringUsageTypes = {
 
 export enum Kinds {
   Exclusive = 'EXCLUSIVE',
+  Geolocked = 'GEOLOCKED',
   Paywall = 'PAYWALL',
   Private = 'PRIVATE',
   Public = 'PUBLIC'
@@ -1576,8 +1597,8 @@ export type MediaFromLiveResult = {
 };
 
 export enum MediaOrientation {
-  Landscape = 'Landscape',
-  Portrait = 'Portrait'
+  Landscape = 'landscape',
+  Portrait = 'portrait'
 }
 
 export type MediaPhoto = {
@@ -1710,6 +1731,7 @@ export type Mutation = {
   createBillboard: Billboard;
   createCategory: Category;
   createChannel: AvailableChannel;
+  createChannelRoles: Scalars['String'];
   createCoupon: CouponOutput;
   createCouponCode: CouponCode;
   createCustomField: ResponseCustomFieldsOutput;
@@ -2715,7 +2737,6 @@ export type Organization = {
   kind?: Maybe<Kinds>;
   min_compat_version?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  onesignal: OrganizationOneSignalOutput;
   onesignal_id?: Maybe<Scalars['String']>;
   portal_url?: Maybe<Scalars['String']>;
   settings?: Maybe<OrganizationSettings>;
@@ -2807,6 +2828,7 @@ export type OrganizationSettings = {
   facebook?: Maybe<Scalars['JSON']>;
   firebase?: Maybe<Scalars['JSON']>;
   language?: Maybe<Scalars['String']>;
+  onesignal: OrganizationOneSignalOutput;
   sessionsLimit?: Maybe<Scalars['JSON']>;
   spreedly?: Maybe<Scalars['JSON']>;
   stripe?: Maybe<Scalars['JSON']>;
@@ -3098,6 +3120,7 @@ export type Post = {
   featured: Scalars['Boolean'];
   folder: Scalars['ID'];
   geofence: Scalars['JSONObject'];
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
   id: Scalars['ID'];
   inFeed: Scalars['Boolean'];
   kind: Scalars['String'];
@@ -3117,6 +3140,7 @@ export type Post = {
   thumbnail?: Maybe<MediaPhoto>;
   title: Scalars['String'];
   type: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export enum PostAccess {
@@ -3305,6 +3329,13 @@ export type ProfileAvatar = {
   width?: Maybe<Scalars['Int']>;
 };
 
+export type PublicChannelOutput = {
+  __typename?: 'PublicChannelOutput';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
+};
+
 export type PublishRemoteConfig = {
   __typename?: 'PublishRemoteConfig';
   configuration?: Maybe<Scalars['String']>;
@@ -3379,6 +3410,7 @@ export type Query = {
   embeds: Array<Embed>;
   embedsCount: Scalars['Float'];
   envConfig: EncryptedEnvConfig;
+  getPublicChannel: PublicChannelOutput;
   group: GroupDto;
   groups: Array<GroupDto>;
   liveEvent: LiveEvent;
@@ -3586,6 +3618,12 @@ export type QueryEnvConfigArgs = {
 };
 
 
+export type QueryGetPublicChannelArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryGroupArgs = {
   id: Scalars['ID'];
 };
@@ -3705,6 +3743,13 @@ export type QueryProductPricesArgs = {
 
 export type QueryProfileArgs = {
   account: Scalars['ID'];
+};
+
+
+export type QueryProfilesArgs = {
+  page?: Maybe<Scalars['Float']>;
+  pageSize?: Maybe<Scalars['Float']>;
+  sortBy?: Maybe<Scalars['String']>;
 };
 
 
@@ -4267,7 +4312,8 @@ export type UpdateCustomFieldInput = {
 
 export type UpdateEmailTemplateDto = {
   name: Scalars['String'];
-  template: Scalars['String'];
+  template?: Maybe<Scalars['String']>;
+  templates: Scalars['JSON'];
 };
 
 export type UpdateEmbed = {
@@ -4536,6 +4582,7 @@ export type UpdateVideoPost = {
   entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
   media?: Maybe<Scalars['ID']>;
@@ -4627,7 +4674,7 @@ export type UpdateMyProfileMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMyProfileMutation = { __typename?: 'Mutation', updateMyProfile: { __typename?: 'Profile', address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, gender?: Maybe<string>, phone?: Maybe<string>, locale?: Maybe<string> } };
+export type UpdateMyProfileMutation = { __typename?: 'Mutation', updateMyProfile: { __typename?: 'Profile', address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, gender?: Maybe<string>, phone?: Maybe<string>, locale?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } };
 
 export type ActivateAccountMutationVariables = Exact<{
   payload: ActivateAccount;
@@ -4714,12 +4761,19 @@ export type LiveEventPasswordCheckMutationVariables = Exact<{
 
 export type LiveEventPasswordCheckMutation = { __typename?: 'Mutation', liveEventPasswordCheck: { __typename?: 'LiveEventPasswordCheck', correct: boolean } };
 
+export type AddPendingOrderMutationVariables = Exact<{
+  product: Scalars['String'];
+}>;
+
+
+export type AddPendingOrderMutation = { __typename?: 'Mutation', addPendingOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, account?: Maybe<string>, product?: Maybe<string> } };
+
 export type ConfirmOrderMutationVariables = Exact<{
   payload: ConfirmOrder;
 }>;
 
 
-export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', status?: Maybe<OrderStatus> } };
+export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any> } };
 
 export type AddCommentMutationVariables = Exact<{
   payload: AddComment;
@@ -4793,6 +4847,13 @@ export type AddVoteMutationVariables = Exact<{
 
 export type AddVoteMutation = { __typename?: 'Mutation', addVote: { __typename?: 'AddedCommentVote', comment: { __typename?: 'Comment', commentVoteStats: { __typename?: 'CommentVoteStats', countDownvotes: number, countUpvotes: number } }, commentVote: { __typename?: 'CommentVote', direction: CommentVoteDirectionEnum, countUpvotes: number, countDownvotes: number } } };
 
+export type CreateUploadMutationVariables = Exact<{
+  payload: CreateUploadInput;
+}>;
+
+
+export type CreateUploadMutation = { __typename?: 'Mutation', createUpload: { __typename?: 'ResponseUploadCreation', upload: { __typename?: 'ResponseUploadOutput', bucket: string, createdAt: any, expireIn: number, expired: boolean, filename: string, id: string, isExpiredCalc: boolean, status: UploadStatusEnum, url: string }, media: { __typename?: 'Media', account: string, id: string } } };
+
 export type AccountQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -4838,20 +4899,6 @@ export type GetCategoriesCardsQueryVariables = Exact<{
 
 export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
-export type GetCategoryQueryVariables = Exact<{
-  slug?: Maybe<Scalars['String']>;
-}>;
-
-
-export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
-
-export type GetCategoryKindQueryVariables = Exact<{
-  slug?: Maybe<Scalars['String']>;
-}>;
-
-
-export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, kind: Kinds, name: string } };
-
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
 }>;
@@ -4865,6 +4912,13 @@ export type ChannelQueryVariables = Exact<{
 
 
 export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
+
+export type PublicChannelQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, slug: string } };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -4907,6 +4961,13 @@ export type MenusQueryVariables = Exact<{
 
 
 export type MenusQuery = { __typename?: 'Query', menus: { __typename?: 'PaginatedMenusOutput', rows: Array<{ __typename?: 'Menu', id: string, channel?: Maybe<string>, icon?: Maybe<string>, name?: Maybe<string>, platformExclusive?: Maybe<PlatformExclusive>, route?: Maybe<string>, sort?: Maybe<number>, status?: Maybe<string>, parameters?: Maybe<{ __typename?: 'Parameters', id: string, missing?: Maybe<string> }>, children: Array<{ __typename?: 'Menu', id: string, channel?: Maybe<string>, icon?: Maybe<string>, name?: Maybe<string>, platformExclusive?: Maybe<PlatformExclusive>, route?: Maybe<string>, sort?: Maybe<number>, status?: Maybe<string>, parameters?: Maybe<{ __typename?: 'Parameters', id: string, missing?: Maybe<string> }> }> }> } };
+
+export type GetOrderResultQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetOrderResultQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: string, account?: Maybe<string>, status?: Maybe<OrderStatus> } };
 
 export type OrganizationQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -5227,6 +5288,9 @@ export const UpdateMyProfileDocument = gql`
     mutation UpdateMyProfile($payload: UpdateProfileInput!) {
   updateMyProfile(payload: $payload) {
     address
+    avatar {
+      imgPath
+    }
     birthday
     custom_fields
     gender
@@ -5757,10 +5821,54 @@ export function useLiveEventPasswordCheckMutation(baseOptions?: Apollo.MutationH
 export type LiveEventPasswordCheckMutationHookResult = ReturnType<typeof useLiveEventPasswordCheckMutation>;
 export type LiveEventPasswordCheckMutationResult = Apollo.MutationResult<LiveEventPasswordCheckMutation>;
 export type LiveEventPasswordCheckMutationOptions = Apollo.BaseMutationOptions<LiveEventPasswordCheckMutation, LiveEventPasswordCheckMutationVariables>;
+export const AddPendingOrderDocument = gql`
+    mutation addPendingOrder($product: String!) {
+  addPendingOrder(payload: {product: $product}) {
+    id
+    status
+    account
+    product
+  }
+}
+    `;
+export type AddPendingOrderMutationFn = Apollo.MutationFunction<AddPendingOrderMutation, AddPendingOrderMutationVariables>;
+export type AddPendingOrderComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddPendingOrderMutation, AddPendingOrderMutationVariables>, 'mutation'>;
+
+    export const AddPendingOrderComponent = (props: AddPendingOrderComponentProps) => (
+      <ApolloReactComponents.Mutation<AddPendingOrderMutation, AddPendingOrderMutationVariables> mutation={AddPendingOrderDocument} {...props} />
+    );
+    
+
+/**
+ * __useAddPendingOrderMutation__
+ *
+ * To run a mutation, you first call `useAddPendingOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPendingOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPendingOrderMutation, { data, loading, error }] = useAddPendingOrderMutation({
+ *   variables: {
+ *      product: // value for 'product'
+ *   },
+ * });
+ */
+export function useAddPendingOrderMutation(baseOptions?: Apollo.MutationHookOptions<AddPendingOrderMutation, AddPendingOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddPendingOrderMutation, AddPendingOrderMutationVariables>(AddPendingOrderDocument, options);
+      }
+export type AddPendingOrderMutationHookResult = ReturnType<typeof useAddPendingOrderMutation>;
+export type AddPendingOrderMutationResult = Apollo.MutationResult<AddPendingOrderMutation>;
+export type AddPendingOrderMutationOptions = Apollo.BaseMutationOptions<AddPendingOrderMutation, AddPendingOrderMutationVariables>;
 export const ConfirmOrderDocument = gql`
     mutation ConfirmOrder($payload: ConfirmOrder!) {
   confirmOrder(payload: $payload) {
+    id
     status
+    subscription
   }
 }
     `;
@@ -6217,6 +6325,59 @@ export function useAddVoteMutation(baseOptions?: Apollo.MutationHookOptions<AddV
 export type AddVoteMutationHookResult = ReturnType<typeof useAddVoteMutation>;
 export type AddVoteMutationResult = Apollo.MutationResult<AddVoteMutation>;
 export type AddVoteMutationOptions = Apollo.BaseMutationOptions<AddVoteMutation, AddVoteMutationVariables>;
+export const CreateUploadDocument = gql`
+    mutation CreateUpload($payload: CreateUploadInput!) {
+  createUpload(payload: $payload) {
+    upload {
+      bucket
+      createdAt
+      expireIn
+      expired
+      filename
+      id
+      isExpiredCalc
+      status
+      url
+    }
+    media {
+      account
+      id
+    }
+  }
+}
+    `;
+export type CreateUploadMutationFn = Apollo.MutationFunction<CreateUploadMutation, CreateUploadMutationVariables>;
+export type CreateUploadComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateUploadMutation, CreateUploadMutationVariables>, 'mutation'>;
+
+    export const CreateUploadComponent = (props: CreateUploadComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateUploadMutation, CreateUploadMutationVariables> mutation={CreateUploadDocument} {...props} />
+    );
+    
+
+/**
+ * __useCreateUploadMutation__
+ *
+ * To run a mutation, you first call `useCreateUploadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUploadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUploadMutation, { data, loading, error }] = useCreateUploadMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useCreateUploadMutation(baseOptions?: Apollo.MutationHookOptions<CreateUploadMutation, CreateUploadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUploadMutation, CreateUploadMutationVariables>(CreateUploadDocument, options);
+      }
+export type CreateUploadMutationHookResult = ReturnType<typeof useCreateUploadMutation>;
+export type CreateUploadMutationResult = Apollo.MutationResult<CreateUploadMutation>;
+export type CreateUploadMutationOptions = Apollo.BaseMutationOptions<CreateUploadMutation, CreateUploadMutationVariables>;
 export const AccountDocument = gql`
     query Account($id: ID!) {
   account(id: $id) {
@@ -6668,131 +6829,6 @@ export function useGetCategoriesCardsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetCategoriesCardsQueryHookResult = ReturnType<typeof useGetCategoriesCardsQuery>;
 export type GetCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetCategoriesCardsLazyQuery>;
 export type GetCategoriesCardsQueryResult = Apollo.QueryResult<GetCategoriesCardsQuery, GetCategoriesCardsQueryVariables>;
-export const GetCategoryDocument = gql`
-    query GetCategory($slug: String) {
-  category(slug: $slug) {
-    id
-    access
-    slug
-    createdAt
-    pinnedStatus {
-      pinned
-    }
-    customization {
-      desktop {
-        imgPath
-      }
-      mobile {
-        imgPath
-      }
-      thumbnail {
-        imgPath
-      }
-    }
-    children(filter: {sortBy: "sort.asc"}) {
-      sort
-      description
-      featuredAt
-      geoFence
-      pinnedStatus {
-        pinned
-      }
-      name
-      slug
-      id
-      description
-      customization {
-        thumbnail {
-          imgPath
-        }
-      }
-    }
-    description
-    featuredAt
-    geoFence
-    id
-    name
-  }
-}
-    `;
-export type GetCategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryQuery, GetCategoryQueryVariables>, 'query'>;
-
-    export const GetCategoryComponent = (props: GetCategoryComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryQuery, GetCategoryQueryVariables> query={GetCategoryDocument} {...props} />
-    );
-    
-
-/**
- * __useGetCategoryQuery__
- *
- * To run a query within a React component, call `useGetCategoryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCategoryQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useGetCategoryQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
-      }
-export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
-        }
-export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
-export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
-export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
-export const GetCategoryKindDocument = gql`
-    query GetCategoryKind($slug: String) {
-  category(slug: $slug) {
-    id
-    access
-    kind
-    name
-  }
-}
-    `;
-export type GetCategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>, 'query'>;
-
-    export const GetCategoryKindComponent = (props: GetCategoryKindComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryKindQuery, GetCategoryKindQueryVariables> query={GetCategoryKindDocument} {...props} />
-    );
-    
-
-/**
- * __useGetCategoryKindQuery__
- *
- * To run a query within a React component, call `useGetCategoryKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCategoryKindQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useGetCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
-      }
-export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
-        }
-export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
-export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
-export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFindAllFilter!) {
   channels(filter: $filter) {
@@ -6906,6 +6942,48 @@ export function useChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ch
 export type ChannelQueryHookResult = ReturnType<typeof useChannelQuery>;
 export type ChannelLazyQueryHookResult = ReturnType<typeof useChannelLazyQuery>;
 export type ChannelQueryResult = Apollo.QueryResult<ChannelQuery, ChannelQueryVariables>;
+export const PublicChannelDocument = gql`
+    query PublicChannel($slug: String) {
+  getPublicChannel(slug: $slug) {
+    id
+    slug
+  }
+}
+    `;
+export type PublicChannelComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicChannelQuery, PublicChannelQueryVariables>, 'query'>;
+
+    export const PublicChannelComponent = (props: PublicChannelComponentProps) => (
+      <ApolloReactComponents.Query<PublicChannelQuery, PublicChannelQueryVariables> query={PublicChannelDocument} {...props} />
+    );
+    
+
+/**
+ * __usePublicChannelQuery__
+ *
+ * To run a query within a React component, call `usePublicChannelQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicChannelQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicChannelQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function usePublicChannelQuery(baseOptions?: Apollo.QueryHookOptions<PublicChannelQuery, PublicChannelQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PublicChannelQuery, PublicChannelQueryVariables>(PublicChannelDocument, options);
+      }
+export function usePublicChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicChannelQuery, PublicChannelQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PublicChannelQuery, PublicChannelQueryVariables>(PublicChannelDocument, options);
+        }
+export type PublicChannelQueryHookResult = ReturnType<typeof usePublicChannelQuery>;
+export type PublicChannelLazyQueryHookResult = ReturnType<typeof usePublicChannelLazyQuery>;
+export type PublicChannelQueryResult = Apollo.QueryResult<PublicChannelQuery, PublicChannelQueryVariables>;
 export const CommentsDocument = gql`
     query Comments($filter: CommentFilter) {
   comments(filter: $filter) {
@@ -7244,6 +7322,49 @@ export function useMenusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Menu
 export type MenusQueryHookResult = ReturnType<typeof useMenusQuery>;
 export type MenusLazyQueryHookResult = ReturnType<typeof useMenusLazyQuery>;
 export type MenusQueryResult = Apollo.QueryResult<MenusQuery, MenusQueryVariables>;
+export const GetOrderResultDocument = gql`
+    query getOrderResult($id: String!) {
+  order(id: $id) {
+    id
+    account
+    status
+  }
+}
+    `;
+export type GetOrderResultComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrderResultQuery, GetOrderResultQueryVariables>, 'query'> & ({ variables: GetOrderResultQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetOrderResultComponent = (props: GetOrderResultComponentProps) => (
+      <ApolloReactComponents.Query<GetOrderResultQuery, GetOrderResultQueryVariables> query={GetOrderResultDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetOrderResultQuery__
+ *
+ * To run a query within a React component, call `useGetOrderResultQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderResultQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderResultQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderResultQuery(baseOptions: Apollo.QueryHookOptions<GetOrderResultQuery, GetOrderResultQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderResultQuery, GetOrderResultQueryVariables>(GetOrderResultDocument, options);
+      }
+export function useGetOrderResultLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderResultQuery, GetOrderResultQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderResultQuery, GetOrderResultQueryVariables>(GetOrderResultDocument, options);
+        }
+export type GetOrderResultQueryHookResult = ReturnType<typeof useGetOrderResultQuery>;
+export type GetOrderResultLazyQueryHookResult = ReturnType<typeof useGetOrderResultLazyQuery>;
+export type GetOrderResultQueryResult = Apollo.QueryResult<GetOrderResultQuery, GetOrderResultQueryVariables>;
 export const OrganizationDocument = gql`
     query Organization($id: ID!) {
   organization(id: $id) {

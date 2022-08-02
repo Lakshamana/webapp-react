@@ -1,28 +1,27 @@
-import { useEffect, useState } from 'react'
-import { useMutation, useLazyQuery } from '@apollo/client'
-import { useParams } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { Flex, Box, Spinner } from '@chakra-ui/react'
-import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
+import { useLazyQuery, useMutation } from '@apollo/client'
+import { Box, Flex, Spinner } from '@chakra-ui/react'
 import {
-  QUERY_CATEGORY,
+  Button,
+  CategoriesGrid,
+  Container,
+  EmptyState,
+  HeroBanner,
+  PostsGrid,
+  Skeleton,
+  Text
+} from 'components'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import {
   MUTATION_PIN_CATEGORY,
   MUTATION_UNPIN_CATEGORY,
-  QUERY_POSTS_CARDS,
+  QUERY_CATEGORY
 } from 'services/graphql'
-import {
-  Container,
-  HeroBanner,
-  Skeleton,
-  CategoriesGrid,
-  Button,
-  PostsGrid,
-  EmptyState,
-  Text,
-} from 'components'
-import { HeroBannerProps } from 'types/common'
-import { sizes, colors } from 'styles'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useThemeStore } from 'services/stores'
+import { colors, sizes } from 'styles'
+import { HeroBannerProps } from 'types/common'
 import { VerifyCategoryKind } from './components'
 
 const CategoryPage = () => {
@@ -43,14 +42,6 @@ const CategoryPage = () => {
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',
     })
-
-  const [
-    getCategoryPosts,
-    { data: categoryPostsData, loading: loadingCategoryPosts },
-  ] = useLazyQuery(QUERY_POSTS_CARDS, {
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
-  })
 
   const [pinCategory, { loading: loadingPinCategory }] = useMutation(
     MUTATION_PIN_CATEGORY,
@@ -101,23 +92,15 @@ const CategoryPage = () => {
         title: categoryData?.category?.name,
         description: categoryData?.category?.description,
       })
-
-      getCategoryPosts({
-        variables: {
-          filter: {
-            categories: [categoryData?.category?.id],
-          },
-        },
-      })
     }
     // eslint-disable-next-line
   }, [categoryData])
 
-  const isLoading = loadingCategory || loadingCategoryPosts
+  const isLoading = loadingCategory
 
   const hasResults =
     !!categoryData?.category?.children?.length ||
-    !!categoryPostsData?.posts?.rows?.length
+    !!categoryData?.category?.posts?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
@@ -184,10 +167,10 @@ const CategoryPage = () => {
             items={categoryData?.category?.children}
           />
         )}
-        {!!categoryPostsData?.posts?.rows?.length && (
+        {!!categoryData?.category?.posts?.rows?.length && (
           <PostsGrid
             sectionTitle={t('page.category.videos')}
-            items={categoryPostsData?.posts?.rows}
+            items={categoryData?.category?.posts?.rows}
           />
         )}
         {isEmpty && <EmptyState />}

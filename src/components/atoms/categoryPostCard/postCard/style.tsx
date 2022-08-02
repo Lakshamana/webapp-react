@@ -1,29 +1,27 @@
 import styled from 'styled-components'
-import { LivestreamPostCardProps } from 'types/livestreams'
-import { breakpoints, colors } from 'styles'
+import { breakpoints } from 'styles'
+import { CategoryPostCardProps } from 'types/categories'
 
 export const CardWrapper = styled.div`
   cursor: pointer;
   position: relative;
   transition: transform 1s;
   transition-delay: 2s;
-  background-color: black;
 `
 
-export const PostContent = styled.div<LivestreamPostCardProps>`
+export const PostContent = styled.div<CategoryPostCardProps>`
   display: flex;
   width: auto;
   padding-top: 56.25%;
   height: auto;
   position: relative;
-  border-radius: 4px;
+  border-radius: ${({ hover }) => hover ? '4px 4px 0 0' : '4px'};
+  ${(props: CategoryPostCardProps) => `background: url('${props.thumbnail}');`}
   cursor: pointer;
-  ${(props: LivestreamPostCardProps) =>
-    `background: url('${props.thumbnail}');`}
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-
+  
   &:hover {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -48,19 +46,4 @@ export const BlockedContent: any = styled.div`
     width: 41px;
     height: 40px;
   }
-`
-
-export const Live: any = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 44px;
-  height: 20px;
-  background-color: ${colors.red['700']};
-  border-radius: 2px;
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  text-transform: uppercase;
-  font-weight: bolder;
 `

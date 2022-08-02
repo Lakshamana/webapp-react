@@ -7,5 +7,6 @@ export type User = {
 
 export interface PropsUserSidebar {
   account?: User | undefined | null;
+  avatarUrl: string;
   toggleColorMode: any;
 }

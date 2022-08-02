@@ -1,22 +1,28 @@
-import { useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import { Center, Box } from '@chakra-ui/layout'
+import { useLazyQuery, useMutation } from '@apollo/client'
+import { Box, Center } from '@chakra-ui/layout'
 import {
-  MUTATION_POST_PASSWORD_CHECK,
+  GeolockedContent,
+  PlanSelectFlow,
+  PrivateContent,
+  Skeleton
+} from 'components'
+import { LiveEvent, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
   MUTATION_LIVE_EVENT_PASSWORD_CHECK,
+  MUTATION_POST_PASSWORD_CHECK,
   QUERY_VERIFY_LIVE_EVENT_KIND,
-  QUERY_VERIFY_POST_KIND,
+  QUERY_VERIFY_POST_KIND
 } from 'services/graphql'
-import { PrivateContent, PlanSelectFlow, Skeleton } from 'components'
-import { Props } from './types'
-import { useEffect } from 'react'
+import { useChannelsStore } from 'services/stores'
 import {
   isEntityBlocked,
+  isEntityGeolocked,
   isEntityOnPaywall,
-  isEntityPrivate,
+  isEntityPrivate
 } from 'utils/accessVerifications'
-import { useTranslation } from 'react-i18next'
-import { LiveEvent, Post } from 'generated/graphql'
+import { Props } from './types'
 
 const VerifyContentKind = ({
   contentSlug,
@@ -26,26 +32,29 @@ const VerifyContentKind = ({
   const { t } = useTranslation()
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
+  const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<Post | LiveEvent>()
+  const { activeChannel } = useChannelsStore()
 
-  const { loading: isLoadingVerifyContentKind } = useQuery(
-    contentType === 'live'
-      ? QUERY_VERIFY_LIVE_EVENT_KIND
-      : QUERY_VERIFY_POST_KIND,
-    {
-      variables: {
-        slug: contentSlug,
-      },
-      onCompleted: (result) => {
-        setContentKind(
-          contentType === 'live' ? result?.liveEvent : result?.post
-        )
-      },
-      fetchPolicy: 'no-cache',
-    }
-  )
+  const [getContentKind, { loading: isLoadingVerifyContentKind }] =
+    useLazyQuery(
+      contentType === 'live'
+        ? QUERY_VERIFY_LIVE_EVENT_KIND
+        : QUERY_VERIFY_POST_KIND,
+      {
+        variables: {
+          slug: contentSlug,
+        },
+        onCompleted: (result) => {
+          setContentKind(
+            contentType === 'live' ? result?.liveEvent : result?.post
+          )
+        },
+        fetchPolicy: 'no-cache',
+      }
+    )
 
   const setError = () => {
     setErrorOnRequestAccess(t('page.post.private_content.incorrect_password'))
@@ -88,12 +97,18 @@ const VerifyContentKind = ({
       if (isEntityBlocked(contentKind)) {
         setIsPrivate(isEntityPrivate(contentKind))
         setIsOnPaywall(isEntityOnPaywall(contentKind))
+        setIsGeolocked(isEntityGeolocked(contentKind))
         return
       }
       accessGranted()
     }
     //eslint-disable-next-line
   }, [contentKind])
+
+  useEffect(() => {
+    if (activeChannel) getContentKind()
+    //eslint-disable-next-line
+  }, [activeChannel])
 
   const isLoadingPasswordCheck =
     isLoadingLivePasswordCheck || isLoadingPostPasswordCheck
@@ -115,7 +130,11 @@ const VerifyContentKind = ({
         requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
       />
     )
-  if (isOnPaywall) return <PlanSelectFlow entitlement={contentKind?.entitlements} />
+  if (isOnPaywall)
+    return <PlanSelectFlow entitlement={contentKind?.entitlements} />
+
+  if (isGeolocked) return <GeolockedContent />
+
   return <div></div>
 }
 

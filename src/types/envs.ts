@@ -13,7 +13,12 @@ export type EnvProps = {
   firebaseMeasurementId?: string
   firebaseProject?: string
   firebaseSender?: string
+  muxKey?: string
+  onesignalAppId?: string
+  onesignalSafariWebId?:  string
   organization?: string
   remoteConfigSecret?: string
   updatedAt?: string
+  googleTag?: string
+  facebookTag?: string
 }
