@@ -3,7 +3,6 @@ const express = require("express")
 const axios = require('axios')
 const path = require("path")
 const fs = require("fs")
-const seo = require("./seo")
 const app = new express()
 const PORT = process.env.PORT || 3004
 const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
