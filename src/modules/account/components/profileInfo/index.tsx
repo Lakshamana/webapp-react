@@ -117,12 +117,15 @@ const ProfileInfo = ({
       custom_fields: Yup.object().shape(shape),
     }),
     onSubmit: async () => {
+      if(values.birthday === '') {
+        delete values.birthday
+      }
       updateProfile({ ...values, locale: locale })
     },
   })
 
   const validateDate = (value) =>
-    Date.parse(value) ? new Date(value) : new Date()
+    Date.parse(value) ? new Date(value) : new Date(dateYearsInThePast(minimumAge))
 
   const formatDate = (value) =>
     Date.parse(value)

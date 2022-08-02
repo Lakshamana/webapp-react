@@ -138,12 +138,9 @@ const AccountPage = () => {
   const [forgetAccount, { loading: loadingForgetAccount }] = useMutation(
     MUTATION_FORGET_ACCOUNT,
     {
-      onCompleted: async () => {
-        signOut()
-      },
-      onError: async (error) => {
-        setForgetAccountError(error.message)
-      },
+      onCompleted: async () => signOut(),
+      onError: async () =>
+        setForgetAccountError(t('page.account.delete_account_error'))
     }
   )
 
@@ -175,7 +172,6 @@ const AccountPage = () => {
     OneSignal.isPushNotificationsEnabled().then((result) =>
       setIsPushEnabled(result)
     )
-
     // eslint-disable-next-line
   }, [])
 
@@ -211,9 +207,10 @@ const AccountPage = () => {
     try {
       const { data: { createUpload: { upload, media } } } = await createUpload()
       await axios.put(upload.url, image, { headers: { 'Content-Type': 'image/jpg' } })
-      await callUpdateMyProfile({ avatar: media.id })
+      // TO-DO: mudar forma de chamar call update my profile
+      setTimeout(async () => await callUpdateMyProfile({ avatar: media.id }), 3000)
       useDisclosureProps.onClose()
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }

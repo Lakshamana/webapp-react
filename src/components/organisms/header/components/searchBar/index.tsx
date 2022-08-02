@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react'
 import { Container, InputInline, Popover } from 'components'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { useChannelsStore } from 'services/stores'
 
@@ -11,6 +12,7 @@ import { CustomContainer, SearchContainer, Section } from './styles'
 const SearchBar = ({ open, onClose, onOpen, colorMode }: PropsSearchBar) => {
   const triggerRef = useRef<any>()
   const history = useHistory()
+  const { t } = useTranslation()
   const [search, setSearch] = useState<string>('')
   const { activeChannel } = useChannelsStore()
 
@@ -24,16 +26,15 @@ const SearchBar = ({ open, onClose, onOpen, colorMode }: PropsSearchBar) => {
         onClose()
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    return () => {
+      setSearch('')
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
     // eslint-disable-next-line
   }, [open])
 
-  const handleSearch = (evt) => {
-    setSearch(evt.target.value)
-  }
+  const handleSearch = (evt) => setSearch(evt.target.value)
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -78,15 +79,18 @@ const SearchBar = ({ open, onClose, onOpen, colorMode }: PropsSearchBar) => {
                 color={colors.generalText[colorMode]}
               />
             </Container>
-
-            <InputInline
-              height="inherit"
-              placeholder="Search"
-              background={colors.search.result[colorMode]}
-              value={search}
-              onChange={handleSearch}
-              color={colors.generalText[colorMode]}
-            />
+            {
+              open &&
+              <InputInline
+                height="inherit"
+                placeholder={t('common.search')}
+                background={colors.search.result[colorMode]}
+                value={search}
+                onChange={handleSearch}
+                color={colors.generalText[colorMode]}
+                autoComplete="off"
+              />
+            }
             <Container ml={2} onClick={onClose}>
               <Icon
                 width={20}

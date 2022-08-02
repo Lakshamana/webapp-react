@@ -1,13 +1,14 @@
-import { useHistory } from 'react-router-dom'
-import { Icon } from '@iconify/react'
-import { useTranslation } from 'react-i18next'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { useAuthStore } from 'services/stores'
+import { Icon } from '@iconify/react'
 import { Container, Popover } from 'components'
-import { PopoverOption, UserMenu, NotLogged, UserSidebar, ModalLogout } from './components'
-import { PropsUserInfo } from './types'
-import { UserContainer, OptionsList } from './styles'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { useAuthStore } from 'services/stores'
 import { colors } from 'styles'
+import { ModalLogout, NotLogged, PopoverOption, UserMenu, UserSidebar } from './components'
+import { OptionsList, UserContainer } from './styles'
+import { PropsUserInfo } from './types'
 
 const UserInfo = ({
   display,
@@ -18,6 +19,7 @@ const UserInfo = ({
 }: PropsUserInfo) => {
   const history = useHistory()
   const { t } = useTranslation()
+  const { generateImage } = useThumbor()
   const { account, user } = useAuthStore()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -25,8 +27,24 @@ const UserInfo = ({
     return <NotLogged {...{ display, colorMode }} />
   }
 
+  const getImageUrl = (imagePath: string) => {
+    const image = generateImage(
+      ThumborInstanceTypes.IMAGE,
+      imagePath,
+    )
+    return image
+  }
+
   if (display === 'sidebar') {
-    return <UserSidebar {...{ account, toggleColorMode }} />
+    return (
+      <UserSidebar
+        {...{
+          account,
+          avatarUrl: getImageUrl(user?.avatar?.imgPath ?? '') || '',
+          toggleColorMode
+        }}
+      />
+    )
   }
 
   return (
@@ -54,7 +72,7 @@ const UserInfo = ({
               <UserContainer
                 onClick={closeSideMenu}
                 {...{ delimited }}>
-                <UserMenu {...{ colorMode, account, avatar_url: user?.avatar?.imgPath }} />
+                <UserMenu {...{ colorMode, account, avatar_url: getImageUrl(user?.avatar?.imgPath ?? '') }} />
               </UserContainer>
             </button>
           }

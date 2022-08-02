@@ -1,17 +1,17 @@
-import { Icon } from '@iconify/react'
-import { useHistory } from 'react-router-dom'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { Container, Text, Avatar, Button } from 'components'
+import { Icon } from '@iconify/react'
+import { Avatar, Button, Container, Text } from 'components'
+import { useHistory } from 'react-router-dom'
 import { useThemeStore } from 'services/stores'
 
-import { ModalLogout } from '../modalLogout'
-import { PropsUserSidebar } from './types'
-import { UserContainer } from './styles'
 import { Flex } from '@chakra-ui/react'
+import { ModalLogout } from '../modalLogout'
+import { UserContainer } from './styles'
+import { PropsUserSidebar } from './types'
 
 import { colors } from 'styles'
 
-const UserSidebar = ({ account, toggleColorMode }: PropsUserSidebar) => {
+const UserSidebar = ({ account, avatarUrl, toggleColorMode }: PropsUserSidebar) => {
   const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { colorMode } = useThemeStore()
@@ -28,7 +28,12 @@ const UserSidebar = ({ account, toggleColorMode }: PropsUserSidebar) => {
         alignItems="center"
       >
         <Container ml={2}>
-          <Avatar width={'55px'} height={'55px'} name={account?.username || ''} src={account?.avatar} />
+          <Avatar
+            width={'55px'}
+            height={'55px'}
+            name={account?.username || ''}
+            src={avatarUrl || ''}
+          />
         </Container>
         <Container px={2} mt={2} fontSize={'1.1rem'} fontWeight={'bolder'}>
           <Text ellipsis>{account?.username || account?.display_name}</Text>

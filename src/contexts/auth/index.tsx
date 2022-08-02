@@ -24,7 +24,7 @@ import {
 } from 'services/stores'
 
 import { LoadingScreen } from 'components'
-import { clearData, getData, saveData } from 'services/storage'
+import { clearData, getData } from 'services/storage'
 
 import { useTranslation } from 'react-i18next'
 import { AuthTypes } from './types'
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const [loadingOrg, setLoadingOrg] = useState<boolean>(true)
   const [loadingAnonymous, setLoadingAnonymous] = useState<boolean>(true)
-  const [loadingAccount, setLoadingAcount] = useState(false)
+  const [loadingAccount, setLoadingAcount] = useState<boolean>(false)
 
   const { setActiveChannel, activeChannel } = useChannelsStore()
   const { setColorMode } = useThemeStore()
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }) => {
     })
   }
 
-  const getOrganization = () => {
+  const getOrganization = async () => {
     new Promise(async (resolve, reject) => {
       try {
         const { data } = await axios.get(
@@ -158,6 +158,7 @@ export const AuthProvider = ({ children }) => {
             data?.body?.data.customization,
             configEnvs.remoteConfigSecret
           )
+
           const decryptedCustomization = JSON.parse(
             decryptedEnv.toString(crypto.enc.Utf8)
           )
@@ -165,17 +166,22 @@ export const AuthProvider = ({ children }) => {
           await setCustomizationData(decryptedCustomization)
           await setOrganizationConfig(decryptedCustomization?.ORGANIZATION)
 
-          saveData(
-            APP_LOCALE,
-            customizationData?.ORGANIZATION.LOCALE || 'en-US'
-          )
+          const language =
+            getData(APP_LOCALE) ||
+            decryptedCustomization?.ORGANIZATION?.LOCALE ||
+            'en-US'
+
+          i18n.changeLanguage(language)
 
           const storedTheme = getData(APP_THEME)
-          setColorMode(
-            storedTheme ||
-              customizationData?.ORGANIZATION?.THEME?.toLowerCase() ||
-              'dark'
-          )
+
+          const customizationTheme = activeChannel
+            ? decryptedCustomization?.CHANNELS[
+                activeChannel.id
+              ]?.THEME?.toLowerCase()
+            : decryptedCustomization?.ORGANIZATION?.THEME?.toLowerCase()
+
+          setColorMode(storedTheme || customizationTheme || 'dark')
         }
         resolve(true)
       } catch (error) {
@@ -233,7 +239,12 @@ export const AuthProvider = ({ children }) => {
     getOrganization()
 
     //TODO: We need to verify KIND of post and then run AnonymousAuth (but we don't have a Endpoint to do that)
-    if (!accessToken && window.location.href.indexOf('/post/') >= 1) {
+    if (
+      !accessToken &&
+      (window.location.href.indexOf('/post/') >= 1 ||
+        window.location.href.indexOf('/category/') >= 1 ||
+        window.location.href.indexOf('/live/') >= 1)
+    ) {
       doAnonymousAuth()
       return
     }

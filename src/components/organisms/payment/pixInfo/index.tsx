@@ -63,7 +63,6 @@ export const PixInfoSpreedly = ({
     MUTATION_CONFIRM_ORDER,
     {
       onCompleted: async (result) => {
-        console.log('QUERY', result)
         const { confirmOrder: { subscription: { id, pixQrCodeText } } } = result
         setQrCode(pixQrCodeText)
         getOrderResult({ variables: { id } })

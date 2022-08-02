@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { Box, Flex, useMediaQuery } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
@@ -35,12 +35,9 @@ const LivePostPage = () => {
 
   // snapshots
   const [hlsPlaybackUrl, setHlsPlaybackUrl] = useState<string>('')
-  const [isCommentsEnabled, setIsCommentsEnabled] =
-    useState<Maybe<boolean>>(null)
-  const [isReactionsEnabled, setIsReactionsEnabled] =
-    useState<Maybe<boolean>>(null)
-  const [isPresenceEnabled, setIsPresenceEnabled] =
-    useState<Maybe<boolean>>(null)
+  const [isCommentsEnabled, setIsCommentsEnabled] = useState<boolean>(false)
+  const [isReactionsEnabled, setIsReactionsEnabled] = useState<boolean>(false)
+  const [isPresenceEnabled, setIsPresenceEnabled] = useState<boolean>(false)
   const [userCount, setUserCount] = useState<number>(1)
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
 
@@ -48,9 +45,14 @@ const LivePostPage = () => {
   const [livestream, setLivestream] = useState<LiveEvent>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const { loading } = useQuery(QUERY_LIVE_EVENT, {
+  const [getLiveEvent, { loading }] = useLazyQuery(QUERY_LIVE_EVENT, {
     variables: { slug },
-    onCompleted: (result) => setLivestream(result.liveEvent),
+    onCompleted: (result) => {
+      setLivestream(result.liveEvent)
+      setIsCommentsEnabled(result.liveEvent?.commentsEnabled)
+      setIsReactionsEnabled(result.liveEvent?.reactionsEnabled)
+      setIsPresenceEnabled(result.liveEvent?.presenceEnabled)
+    },
   })
 
   const isLive = liveStatus === Status.Live
@@ -74,17 +76,17 @@ const LivePostPage = () => {
             case 'hlsPlaybackUrl':
               hlsPlaybackUrl !== value && setHlsPlaybackUrl(value)
               break
-            case 'isCommentsEnabled':
-              isCommentsEnabled !== value && setIsCommentsEnabled(value)
+            case 'commentsEnabled':
+              setIsCommentsEnabled(value)
               break
-            case 'isReactionsEnabled':
-              isReactionsEnabled !== value && setIsReactionsEnabled(value)
+            case 'reactionsEnabled':
+              setIsReactionsEnabled(value)
               break
-            case 'isPresenceEnabled':
-              isPresenceEnabled !== value && setIsPresenceEnabled(value)
+            case 'presenceEnabled':
+              setIsPresenceEnabled(value)
               break
             case 'count':
-              userCount !== value && setUserCount(value)
+              setUserCount(value)
               break
             case 'status':
               liveStatus !== value && setLiveStatus(value)
@@ -109,6 +111,11 @@ const LivePostPage = () => {
     if (liveStatus) setLiveBadge(StatusBadge(liveStatus, colorMode))
     // eslint-disable-next-line
   }, [liveStatus])
+
+  useEffect(() => {
+    if (!isVerifyingAccessPermission) getLiveEvent()
+    //eslint-disable-next-line
+  }, [isVerifyingAccessPermission])
 
   if (isVerifyingAccessPermission)
     return (
@@ -185,12 +192,8 @@ const LivePostPage = () => {
           >
             {livestream && (
               <Livechat
-                isCommentsEnabled={
-                  isCommentsEnabled || livestream.commentsEnabled || false
-                }
-                isReactionsEnabled={
-                  isReactionsEnabled || livestream.reactionsEnabled || false
-                }
+                isCommentsEnabled={isCommentsEnabled}
+                isReactionsEnabled={isReactionsEnabled}
                 entityId={livestream?.id}
               />
             )}
@@ -199,7 +202,11 @@ const LivePostPage = () => {
         <LiveDetails>
           <Title>{stripHTML(livestream?.title!)}</Title>
           <Subtitle>
-            <div dangerouslySetInnerHTML={{ __html: livestream?.description || '' }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: livestream?.description || '',
+              }}
+            />
           </Subtitle>
         </LiveDetails>
       </Container>

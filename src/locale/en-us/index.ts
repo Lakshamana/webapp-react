@@ -9,6 +9,7 @@ const EN_US = {
       back_to_home: 'Back to home',
       or: 'or',
       next: 'Next',
+      search: 'Search',
       error: {
         generic_api_error:
           'Something went wrong. We are going to fix it. Try again later.',
@@ -314,6 +315,7 @@ const EN_US = {
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
         delete_my_account: 'I want to delete my account',
+        delete_account_error: 'Sorry, your account cannot be deleted at this time',
         delete_account_info:
           'Please enter your password to confirm you would like to delete your account and have your personal information deleted. If you have a subscription on any app, you must go to the App Store to cancel your subscription. Deleting your account will not cancel any existing subscription. {{organization}} will send an email confirmation to the email used during registration.',
         billing_information: 'Your Billing Information',
@@ -430,6 +432,7 @@ const EN_US = {
           reply: 'reply',
           replies: 'replies',
           report: 'Report',
+          deleted_account: '[Deleted user]',
           edit: 'Edit',
           delete: 'Delete',
           comments: 'Comments',
@@ -455,14 +458,18 @@ const EN_US = {
           access: 'Access',
           incorrect_password: 'Incorrect password. Try again.',
         },
+        geolocked_content: {
+          title: 'Geolocked content',
+          subtitle: 'This content is not available for your country.'
+        },
         live: {
           live_chat: {
             title: 'Live Chat',
             say_something: 'Say something...',
           },
-          will_start_in: 'Transmission will start in',
-          will_start_soon: 'Transmission will start soon',
-          ended: 'Transmission ended',
+          will_start_in: 'Live Event will start in',
+          will_start_soon: 'Live Event will start soon',
+          ended: 'Live Event ended',
           live: 'LIVE',
           upcoming: 'UPCOMING',
           finished: 'FINISHED',

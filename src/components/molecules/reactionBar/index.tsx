@@ -50,7 +50,7 @@ const ReactionBar = ({
     if (!!allReactions?.length) {
       const listReactions = [...allReactions]
       listReactions?.sort((a, b) => b.count - a.count)
-      const threeBiggests = allReactions?.slice(0, 3)
+      const threeBiggests = listReactions?.slice(0, 3)
       setOnlyThreeBiggests(threeBiggests)
     }
   }, [allReactions])

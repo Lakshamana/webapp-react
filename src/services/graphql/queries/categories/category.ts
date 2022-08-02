@@ -21,6 +21,38 @@ export const QUERY_CATEGORY = gql`
           imgPath
         }
       }
+      posts {
+        hasNextPage
+        hasPreviousPage
+        isFirstPage
+        isLastPage
+        page
+        pageCount
+        total
+        rows {
+          id
+          access
+          title
+          description
+          kind
+          slug
+          pinnedStatus {
+            pinned
+          }
+          thumbnail {
+            imgPath
+          }
+          media {
+            ... on MediaVideo {
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
+          }
+          type
+        }
+      }
       children(filter: { sortBy: "sort.asc" }) {
         sort
         description

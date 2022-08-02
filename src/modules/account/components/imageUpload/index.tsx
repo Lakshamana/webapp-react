@@ -149,12 +149,17 @@ export const ImageUpload = ({
                     isOpen={showTooltipZoom}
                     label={zoomPercent(zoom)}
                   >
-                    <SliderThumb />
+                    <SliderThumb boxSize={6}>
+                      <Icon
+                        icon='charm:zoom-in'
+                        color={colors.brand.primary[colorMode]}
+                        width={16}
+                      />
+                    </SliderThumb>
                   </Tooltip>
                   <SliderTrack>
                     <SliderFilledTrack />
                   </SliderTrack>
-                  <SliderThumb />
                 </Slider>
               </Flex>
 
@@ -176,12 +181,17 @@ export const ImageUpload = ({
                     isOpen={showTooltipRotation}
                     label={rotation + '°'}
                   >
-                    <SliderThumb />
+                    <SliderThumb boxSize={6}>
+                      <Icon
+                        icon='ic:twotone-screen-rotation-alt'
+                        color={colors.brand.primary[colorMode]}
+                        width={16}
+                      />
+                    </SliderThumb>
                   </Tooltip>
                   <SliderTrack>
                     <SliderFilledTrack />
                   </SliderTrack>
-                  <SliderThumb />
                 </Slider>
               </Flex>
               <Flex>

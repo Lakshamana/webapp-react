@@ -33,8 +33,8 @@ export const Date: any = styled.span`
     ${space}
 `;
 
-export const CardDescription: any = styled.p`
-    color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};           
+export const CardDescription: any = styled.div`
+    color: ${({ theme }) => theme.colors.secondaryText[theme.colorMode]};
     width: 100%;
     padding: 6px 16px;
     display: -webkit-box;
