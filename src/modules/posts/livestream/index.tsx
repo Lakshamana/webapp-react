@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { Box, Flex, useMediaQuery } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
@@ -45,7 +45,7 @@ const LivePostPage = () => {
   const [livestream, setLivestream] = useState<LiveEvent>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const { loading } = useQuery(QUERY_LIVE_EVENT, {
+  const [getLiveEvent, { loading }] = useLazyQuery(QUERY_LIVE_EVENT, {
     variables: { slug },
     onCompleted: (result) => {
       setLivestream(result.liveEvent)
@@ -111,6 +111,11 @@ const LivePostPage = () => {
     if (liveStatus) setLiveBadge(StatusBadge(liveStatus, colorMode))
     // eslint-disable-next-line
   }, [liveStatus])
+
+  useEffect(() => {
+    if (!isVerifyingAccessPermission) getLiveEvent()
+    //eslint-disable-next-line
+  }, [isVerifyingAccessPermission])
 
   if (isVerifyingAccessPermission)
     return (
