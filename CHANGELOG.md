@@ -1,5 +1,14 @@
-# 1.0.0
-- This is the first production release.
+# 1.2.0
+- Public Posts
+- Public Category
+- Public Live
+- Get config from envs
+- Google TAG
+- Facebook Pixel
+- One Signal Push Notifications
+- Forget Account
+- Social Signin
+- Checkout
 
 # 1.1.0
 - Livestream firebase integration
@@ -14,3 +23,6 @@
     - Control home carousels
     - Controle live carousels
 - Profile Custom fields
+
+# 1.0.0
+- This is the first production release.
