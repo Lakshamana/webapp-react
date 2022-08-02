@@ -23,5 +23,15 @@ export type CategoryPostCardProps = {
   isNew?: string
   isPinned?: boolean
   isExclusive?: boolean
+  isGeolocked?: boolean
+  hover?: boolean
   categoryUnpinned?: (categoryId: string) => void
 }
+
+type PostCardProps = {
+  mobileBehavior?: boolean
+  actionHover: (status: boolean) => () => void
+  defineAction: () => void
+}
+
+export type ComponentPostCardProps = CategoryPostCardProps & PostCardProps

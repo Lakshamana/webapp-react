@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { space, layout, flexbox, grid } from 'styled-system'
+import { flexbox, grid, layout, space } from 'styled-system'
 import { StyledProps } from './types'
 
 import { Icon } from '@iconify/react'
@@ -30,7 +30,7 @@ export const InputContainer = styled.div<StyledProps>`
 `
 
 export const AnimatedIcon = styled(Icon)`
-  z-index: 999999;
+  z-index: 1;
 `
 
 export const PopoverIcon = styled.div<StyledProps>`

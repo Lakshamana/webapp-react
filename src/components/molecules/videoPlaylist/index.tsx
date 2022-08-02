@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react'
+import { Box, Flex } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Box } from '@chakra-ui/react'
 
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { getData, saveData } from 'services/storage'
 import {
-  useThemeStore,
-  useChannelsStore,
-  useVideoPlayerStore,
+  useChannelsStore, useThemeStore, useVideoPlayerStore
 } from 'services/stores'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
 
-import { Text, ToggleButton, PlaylistPostCard } from 'components'
-import { VideoPostCardProps } from 'types/posts'
-import { Post } from 'generated/graphql'
-import { VideoPlaylistProps } from './types'
-import { theme } from 'styles/theme'
-import { colors } from 'styles'
-import { isEntityBlocked } from 'utils/accessVerifications'
+import { PlaylistPostCard, Text, ToggleButton } from 'components'
 import { VIDEO_AUTOPLAY } from 'config/constants'
+import { Post } from 'generated/graphql'
+import { colors } from 'styles'
+import { theme } from 'styles/theme'
+import { VideoPostCardProps } from 'types/posts'
+import { isEntityBlocked } from 'utils/accessVerifications'
+import { VideoPlaylistProps } from './types'
 
 const VideoPlaylist = ({
   title,

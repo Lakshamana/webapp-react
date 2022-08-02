@@ -1,4 +1,5 @@
 export enum AccessEnum {
   REDACTED = 'REDACTED',
-  AVAILABLE = 'AVAILABLE'
+  AVAILABLE = 'AVAILABLE',
+  GEOLOCKED = 'GEOLOCKED'
 }

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { CategoryPostCardProps } from 'types/categories'
-import { breakpoints } from 'styles'
+import { breakpoints, colors } from 'styles'
+import { LivestreamPostCardProps } from 'types/livestreams'
 
 export const CardWrapper = styled.div`
   cursor: pointer;
@@ -10,15 +10,16 @@ export const CardWrapper = styled.div`
   background-color: black;
 `
 
-export const PostContent = styled.div<CategoryPostCardProps>`
+export const PostContent = styled.div<LivestreamPostCardProps>`
   display: flex;
   width: auto;
   padding-top: 56.25%;
   height: auto;
   position: relative;
   border-radius: 4px;
-  ${(props: CategoryPostCardProps) => `background: url('${props.thumbnail}');`}
   cursor: pointer;
+  ${(props: LivestreamPostCardProps) =>
+    `background: url('${props.thumbnail}');`}
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -47,4 +48,19 @@ export const BlockedContent: any = styled.div`
     width: 41px;
     height: 40px;
   }
+`
+
+export const Live: any = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 20px;
+  background-color: ${colors.red['700']};
+  border-radius: 2px;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  text-transform: uppercase;
+  font-weight: bolder;
 `

@@ -34,6 +34,9 @@ const TagsScroller = ({
     //eslint-disable-next-line
   }, [])
 
+  const getPostUrl = (item) =>
+    `/c/${activeChannel?.slug}/${item.__typename.toLowerCase()}/${item.slug}`
+
   useEffect(() => {
     if (scrollerItems.length) {
       const mappedArr = scrollerItems?.map((item: Post | Category) => {
@@ -49,7 +52,7 @@ const TagsScroller = ({
           description: item.description,
           duration:
             item.__typename === 'Post' &&
-            item.media?.__typename === 'MediaVideo'
+              item.media?.__typename === 'MediaVideo'
               ? item.media?.duration
               : '',
           isExclusive: isEntityBlocked(item),
@@ -65,55 +68,37 @@ const TagsScroller = ({
   }, [scrollerItems])
 
   const getImageUrl = (item: Post | Category) => {
-    const imageOptions: ThumborParams = {
-      size: {
-        height: 400,
-      },
-    }
-
-    if (isEntityBlocked(item)) {
-      imageOptions.blur = 20
-    }
-
+    const imageOptions: ThumborParams = { size: { height: 400 } }
+    if (isEntityBlocked(item)) imageOptions.blur = 20
     let path = ''
-
     if (item.__typename === 'Post') path = item.thumbnail?.imgPath || ''
     if (item.__typename === 'Category')
       path = item.customization?.thumbnail?.imgPath || ''
-
     const image = generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
-
     return image
   }
 
-  const getPostUrl = (item) =>
-    `/c/${activeChannel?.slug}/${item.__typename.toLowerCase()}/${item.slug}`
-
-  const renderScroller = () => {
-    return (
-      <CardsScroller
-        title={sectionTitle}
-        moreUrl={`${sectionUrl}${tagData?.slug}`}
-      >
-        {filteredItems?.map((item: TagScrollerItem) => {
-          return (
-            <SwiperSlide key={`slide-${item.id}`}>
-              {item.__typename === 'Post' && (
-                <VideoPostCard key={`post-${item.id}`} {...item} />
-              )}
-              {item.__typename === 'Category' && (
-                <CategoryPostCard key={`category-${item.id}`} {...item} />
-              )}
-            </SwiperSlide>
-          )
-        })}
-      </CardsScroller>
-    )
-  }
+  const RenderScroller = () => (
+    <CardsScroller
+      title={sectionTitle}
+      moreUrl={`${sectionUrl}${tagData?.slug}`}
+    >
+      {filteredItems?.map((item: TagScrollerItem) => (
+        <SwiperSlide key={`slide-${item.id}`}>
+          {item.__typename === 'Post' && (
+            <VideoPostCard key={`post-${item.id}`} {...item} />
+          )}
+          {item.__typename === 'Category' && (
+            <CategoryPostCard key={`category-${item.id}`} {...item} />
+          )}
+        </SwiperSlide>
+      ))}
+    </CardsScroller>
+  )
 
   return (
     <ContentScroller>
-      {!!filteredItems?.length && renderScroller()}
+      {!!filteredItems?.length && <RenderScroller />}
     </ContentScroller>
   )
 }

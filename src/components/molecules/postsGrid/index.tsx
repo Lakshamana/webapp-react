@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { SimpleGrid, Flex } from '@chakra-ui/react'
-import { useThemeStore, useChannelsStore } from 'services/stores'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { VideoPostCard, Text } from 'components'
+import { Flex, SimpleGrid } from '@chakra-ui/react'
+import { Text, VideoPostCard } from 'components'
 import { Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore, useThemeStore } from 'services/stores'
+import { breakpoints, colors, sizes } from 'styles'
 import { VideoPostCardProps, VideosGridProps } from 'types/posts'
-import { colors, breakpoints, sizes } from 'styles'
+import {
+  isEntityBlocked, isEntityGeolocked
+} from 'utils/accessVerifications'
 import { Wrapper } from './style'
-import { isEntityBlocked } from 'utils/accessVerifications'
 
 const PostsGrid = ({
   sendUnpinEvent,
@@ -32,7 +34,8 @@ const PostsGrid = ({
       imageOptions.blur = 20
     }
 
-    const thumbnailPath = post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
+    const thumbnailPath =
+      post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
 
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
@@ -69,8 +72,7 @@ const PostsGrid = ({
               : undefined,
           countViews: undefined,
           isExclusive: isEntityBlocked(item),
-          //TODO: Implement isGeolocked
-          isGeolocked: false,
+          isGeolocked: isEntityGeolocked(item),
           isPinned: item.pinnedStatus?.pinned,
         }
       })
@@ -102,7 +104,7 @@ const PostsGrid = ({
                 callUnpinEvent(id)
               }}
               {...item}
-            ></VideoPostCard>
+            />
           </Wrapper>
         ))}
       </SimpleGrid>

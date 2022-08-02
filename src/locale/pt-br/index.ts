@@ -9,6 +9,7 @@ const PT_BR = {
       back_to_home: 'Voltar para o início',
       or: 'ou',
       next: 'próximo',
+      search: 'Pesquisar',
       error: {
         generic_api_error:
           'Algo deu errado. Nós vamos consertar isso. Tente mais tarde.',
@@ -312,6 +313,7 @@ const PT_BR = {
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',
         delete_my_account: 'Deletar a minha conta',
+        delete_account_error: 'Infelizmente sua conta nao pode ser excluida neste momento',
         delete_account_info:
           'Por favor digite sua senha para confirmar que você gostaria de deletar sua conta e ter sua informação pessoal removida. Se você é assinante em qualquer app, você precisa ir até a App Store para cancelar sua assinatura. Deletar sua conta não vai cancelar qualquer assinatura existente. {{organization}} irá enviar uma confirmação para o email usado durante o registro.',
         billing_information: 'Informações de Compra',
@@ -430,6 +432,7 @@ const PT_BR = {
           reply: 'resposta',
           replies: 'respostas',
           report: 'Denunciar',
+          deleted_account: '[Usuário deletado]',
           edit: 'Editar',
           delete: 'Apagar',
           comments: 'Comentários',
@@ -453,6 +456,10 @@ const PT_BR = {
           subtitle: 'Por favor, digite a senha para ter acesso ao conteúdo.',
           access: 'Acessar',
           incorrect_password: 'Senha inválida. Tente novamente.',
+        },
+        geolocked_content: {
+          title: 'Conteúdo bloqueado',
+          subtitle: 'Este conteúdo não está disponível para seu país.'
         },
         live: {
           live_chat: {

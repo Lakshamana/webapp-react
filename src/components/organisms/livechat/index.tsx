@@ -1,23 +1,23 @@
-import { useState, useMemo } from 'react'
-import { Flex } from '@chakra-ui/react'
-import { Props } from './types'
-import { LivechatFooter, LivechatHeader, LivechatBody } from './components'
+import { Flex, useDisclosure } from '@chakra-ui/react'
+import { ActionNotAllowed } from 'components/molecules'
 import { firebaseDB } from 'config/firebase'
-import { useAuthStore } from 'services/stores'
 import {
+  addDoc,
   collection,
-  query,
   DocumentData,
   limit,
   onSnapshot,
-  addDoc,
   orderBy,
-  startAfter,
+  query,
+  startAfter
 } from 'firebase/firestore'
-import { useEffect } from 'react'
-import { timestampNow, parseResultSnapshot } from 'utils/firebase'
-import { MessageDocumentData, ReactionDocumentData } from 'types/firebase'
 import throttle from 'lodash.debounce'
+import { useEffect, useMemo, useState } from 'react'
+import { useAuthStore } from 'services/stores'
+import { MessageDocumentData, ReactionDocumentData } from 'types/firebase'
+import { parseResultSnapshot, timestampNow } from 'utils/firebase'
+import { LivechatBody, LivechatFooter, LivechatHeader } from './components'
+import { Props } from './types'
 
 const Livechat = ({
   entityId,
@@ -26,7 +26,12 @@ const Livechat = ({
 }: Props) => {
   const [messages, setMessagesData] = useState<DocumentData[]>([])
   const [reactions, setReactionsData] = useState<DocumentData[]>([])
-  const { account } = useAuthStore()
+  const { account, isAnonymousAccess } = useAuthStore()
+  const {
+    isOpen: isActionNotAllowedOpen,
+    onOpen: onOpenActionNotAllowed,
+    onClose: onCloseActionNotAllowed,
+  } = useDisclosure()
 
   const messagesCollection = collection(
     firebaseDB,
@@ -50,6 +55,11 @@ const Livechat = ({
   )
 
   const sendNewMessage = (message: string) => {
+    if (isAnonymousAccess) {
+      onOpenActionNotAllowed()
+      return
+    }
+
     if (!message) return
 
     const filteredMessage = message.trim()
@@ -117,10 +127,14 @@ const Livechat = ({
       <LivechatBody enabled={isCommentsEnabled} messages={messages} />
       <LivechatFooter
         sendMessage={sendNewMessage}
-        sendReaction={debouncedSendReaction}
+        sendReaction={isAnonymousAccess ? onOpenActionNotAllowed : debouncedSendReaction}
         reactions={reactions}
         reactionsEnabled={isReactionsEnabled}
         commentsEnabled={isCommentsEnabled}
+      />
+      <ActionNotAllowed
+        isOpen={isActionNotAllowedOpen}
+        onClose={onCloseActionNotAllowed}
       />
     </Flex>
   )

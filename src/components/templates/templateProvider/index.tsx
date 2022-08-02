@@ -7,16 +7,29 @@ import PropTypes from 'prop-types'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from 'styled-components'
 import {
-  breakpoints as themeBreakpoints, colors, fonts,
-  globalStyles, metrics, theme
+  breakpoints as themeBreakpoints,
+  colors,
+  fonts,
+  globalStyles,
+  metrics,
+  theme
 } from 'styles'
+
+import { useEffect } from 'react'
 
 import { ApolloProvider } from '@apollo/client'
 import AccessVerificationsProvider from 'contexts/accessVerifications'
 import { Client } from 'services/api'
 import {
-  useChannelsStore, useCommonStore, useOrganizationStore, useThemeStore
+  useChannelsStore,
+  useCommonStore,
+  useOrganizationStore,
+  useThemeStore
 } from 'services/stores'
+
+import { configEnvs } from 'config/envs'
+import { initializeFacebookPixel } from 'config/facebookPixel'
+import { initializeGTM } from 'config/gtm'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
 
@@ -45,6 +58,11 @@ const TemplateProvider = ({ children }: any) => {
     .filter((x) => x)
     .join(' - ')}`
 
+  useEffect(() => {
+    configEnvs.googleTag && initializeGTM()
+    configEnvs.facebookTag && initializeFacebookPixel()
+  }, [])
+
   return (
     <ApolloProvider client={Client}>
       <ThemeProvider theme={{ ...theme, colorMode }}>
@@ -52,15 +70,15 @@ const TemplateProvider = ({ children }: any) => {
           <HelmetProvider>
             <Helmet title={pageTitleConfigured} />
             <AuthProvider>
-                <Global
-                  styles={css`
-                    ${globalStyles}
-                  `}
-                />
+              <Global
+                styles={css`
+                  ${globalStyles}
+                `}
+              />
 
-                <AccessVerificationsProvider>
-                  <App />
-                </AccessVerificationsProvider>
+              <AccessVerificationsProvider>
+                <App />
+              </AccessVerificationsProvider>
             </AuthProvider>
           </HelmetProvider>
         </ChakraProvider>

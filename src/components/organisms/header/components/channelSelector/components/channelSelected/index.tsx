@@ -15,7 +15,7 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
   const { isAnonymousAccess } = useAuthStore()
 
   const generateChannelImage = () => {
-    const theme = colorMode.toUpperCase()
+    const theme = colorMode?.toUpperCase()
     if (!activeChannelConfig?.IMAGES?.CHANNEL_ICON[theme]) return ''
     return generateImage(
       ThumborInstanceTypes.IMAGE,

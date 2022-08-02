@@ -1,15 +1,13 @@
-import OneSignal from 'react-onesignal'
+import { configEnvs } from 'config/envs'
 import i18n from 'config/i18n'
 import { organizationData } from 'config/organization'
-
-const { REACT_APP_ONE_SIGNAL_APP_ID, REACT_APP_ONE_SIGNAL_SAFARI_WEB_ID } =
-  process.env
+import OneSignal from 'react-onesignal'
 
 export const initializeOneSignal = () => {
-  if (REACT_APP_ONE_SIGNAL_APP_ID && REACT_APP_ONE_SIGNAL_SAFARI_WEB_ID) {
+  if (configEnvs.onesignalAppId && configEnvs.onesignalSafariWebId) {
     OneSignal.init({
-      appId: REACT_APP_ONE_SIGNAL_APP_ID,
-      safari_web_id: REACT_APP_ONE_SIGNAL_SAFARI_WEB_ID,
+      appId: configEnvs.onesignalAppId,
+      safari_web_id: configEnvs.onesignalSafariWebId,
       autoResubscribe: true,
       promptOptions: {
         slidedown: {

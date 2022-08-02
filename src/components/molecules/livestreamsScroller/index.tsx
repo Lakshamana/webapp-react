@@ -1,18 +1,21 @@
-import { useState, useEffect } from 'react'
-import { SwiperSlide } from 'swiper/react'
-import { compareAsc } from 'date-fns'
-import { ThumborInstanceTypes, useThumbor, ThumborParams } from 'services/hooks'
-import { useChannelsStore } from 'services/stores'
 import { CardsScroller, LivestreamPostCard } from 'components'
+import { compareAsc, parseISO } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useChannelsStore } from 'services/stores'
+import { SwiperSlide } from 'swiper/react'
+import {
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
+} from 'utils/accessVerifications'
 import { ContentScroller } from './style'
-import { isEntityBlocked } from 'utils/accessVerifications'
-import { parseISO } from 'date-fns'
 
+import { LiveEvent, Status } from 'generated/graphql'
 import {
   LivestreamPostCardProps,
-  LivestreamsScrollerProps,
+  LivestreamsScrollerProps
 } from 'types/livestreams'
-import { LiveEvent, Status } from 'generated/graphql'
 
 const LivestreamScroller = ({
   items,
@@ -25,16 +28,8 @@ const LivestreamScroller = ({
     useState<LivestreamPostCardProps[]>()
 
   const getImageUrl = (live: LiveEvent) => {
-    const imageOptions: ThumborParams = {
-      size: {
-        height: 400,
-      },
-    }
-
-    if (isEntityBlocked(live)) {
-      imageOptions.blur = 20
-    }
-
+    const imageOptions: ThumborParams = { size: { height: 400 }, }
+    if (isEntityBlocked(live)) imageOptions.blur = 20
     const image = generateImage(
       ThumborInstanceTypes.IMAGE,
       live.thumbnail?.imgPath || '',
@@ -42,9 +37,6 @@ const LivestreamScroller = ({
     )
     return image
   }
-
-  const getLivestreamUrl = (slug: string) =>
-    `/c/${activeChannel?.slug}/live/${slug}`
 
   const isLive = (live: LiveEvent) => live.status === Status.Live
 
@@ -56,43 +48,38 @@ const LivestreamScroller = ({
       return !liveA && liveB
         ? 1
         : liveA && !liveB
-        ? -1
-        : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
+          ? -1
+          : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
     })
     const mappedArr = arrForSort?.map((item: LiveEvent) => {
       const thumbnail = getImageUrl(item)
-      const url = getLivestreamUrl(item.slug || '')
+      const url = `/c/${activeChannel?.slug}/live/${item.slug || ''}`
       return {
         id: item.id,
         title: item.title,
         description: item.description || '',
-        url: url,
+        url,
         status: item.status,
-        thumbnail: thumbnail,
-        isExclusive: isEntityBlocked(item),
-        //TODO: Waiting for API
-        isGeolocked: false,
+        thumbnail,
+        isExclusive: isEntityExclusive(item),
+        isGeolocked: isEntityGeolocked(item),
       }
     })
     setScrollerItems(mappedArr)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items])
 
-  const renderScroller = () => (
-    <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
-      {scrollerItems?.map((item: LivestreamPostCardProps) => {
-        return (
-          <SwiperSlide key={`slide-${item.id}-livestream`}>
-            <LivestreamPostCard {...item} />
-          </SwiperSlide>
-        )
-      })}
-    </CardsScroller>
-  )
-
   return (
     <ContentScroller>
-      {!!scrollerItems?.length && renderScroller()}
+      {!!scrollerItems?.length &&
+        <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
+          {scrollerItems?.map((item: LivestreamPostCardProps) => (
+            <SwiperSlide key={`slide-${item.id}-livestream`}>
+              <LivestreamPostCard {...item} />
+            </SwiperSlide>
+          ))}
+        </CardsScroller>
+      }
     </ContentScroller>
   )
 }

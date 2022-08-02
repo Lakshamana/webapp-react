@@ -1,7 +1,7 @@
-import { addSeconds, format, formatDistance } from 'date-fns'
-import { getData } from 'services/storage'
 import { APP_LOCALE } from 'config/constants'
+import { addSeconds, format, formatDistance } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { getData } from 'services/storage'
 
 export const RANDOM_ID = () => `${Math.random().toString(36).slice(2, 12)}`
 export const getItems = (items: any) => items || []
@@ -12,7 +12,11 @@ export const kFormatter = (num: number | bigint) => {
   return formatter.format(num)
 }
 
-export const kFormatterTranslate = (t: any, num: number, translateMapper: Array<String>) => {
+export const kFormatterTranslate = (
+  t: any,
+  num: number,
+  translateMapper: Array<String>
+) => {
   if (Number(num) === 0) return t(translateMapper[0])
   return Number(num) === 1
     ? `${num} ${t(translateMapper[1])}`
@@ -91,6 +95,14 @@ export const formattedSeconds = (seconds: number) => {
 export function stripHTML(text: string) {
   if (!text) return ''
   return text.replace(/(<([^>]+)>)/gi, '')
+}
+
+// TODO: This is a gambiarra, Poratal needs to save <br> but only send <p></p>
+export function stripHTMLExceptLineBreaks(text: string) {
+  if (!text) return ''
+  const saveLineBreaks = text.replace('<p>', '||p||').replace('</p>', '//p//')
+  const temp = stripHTML(saveLineBreaks)
+  return temp.replace('||p||', '<p>').replace('//p//', '</p>')
 }
 
 export function toLowerKeys(obj: Object) {

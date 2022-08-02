@@ -388,8 +388,10 @@ const HomePage = () => {
       >
         {!isLoading &&
           !!homeCarouselsFiltered?.length &&
-          homeCarouselsFiltered.map((item: CarouselFlags) =>
-            renderCarouselsOrderedByRemoteConfig(item)
+          homeCarouselsFiltered.map((item: CarouselFlags, key: number) =>
+            <div key={key}>
+              {renderCarouselsOrderedByRemoteConfig(item)}
+            </div>
           )}
         {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
         {isEmpty && <EmptyState />}
