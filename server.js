@@ -27,24 +27,20 @@ const getTenantData = async (req, res) => {
   let defineValues = { ...defaultValues }
 
   let TENANT_URL = `https://${tenant}.fanhero.tv`
-  await axios.get(
-    endpoint + '/env-config',
-    { headers: { organization: TENANT_URL } }
-  ).then((result) => {
-    const decryptedEnv = crypto.AES.decrypt(
-      result.data.body.data.result,
-      REMOVE_ENV_SECRET
-    )
-    const data = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
-    defineValues = {
-      ...defaultValues,
-      title: data.inspireTenantId,
-      description: data.firebaseProject,
-      url: TENANT_URL,
-      image: 'https://fanhero.com/wp-content/uploads/img-home-2.jpg.webp',
-      domain: tenant
-    }
-  })
+  await axios.get(endpoint + '/env-config', { headers: { organization: TENANT_URL } })
+    .then(({ data }) => {
+      const decryptedEnv = crypto.AES.decrypt(data.body.data.result, REMOVE_ENV_SECRET)
+      const dataParsed = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
+      defineValues = {
+        ...defaultValues,
+        title: dataParsed.inspireTenantId,
+        description: dataParsed.firebaseProject,
+        url: TENANT_URL,
+        image: 'https://fanhero.com/wp-content/uploads/img-home-2.jpg.webp',
+        domain: tenant
+      }
+    })
+    .catch(err => console.log(err))
 
   const getData = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
