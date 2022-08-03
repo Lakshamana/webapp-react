@@ -20,7 +20,11 @@ const defaultValues = {
 const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
   let subDomain = req.hostname.split('.')[0]
-  let tenant = subDomain.includes('localhost') ? 'marvel-dev' : subDomain
+  let tenant = subDomain.includes('localhost')
+    ? 'marvel-dev'
+    : subDomain === 'webapp-react-feat-dynam-r9nqjj'
+      ? 'marvel-dev'
+      : subDomain
 
   const endpoint = `https://${API_ENDPOINT}`
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
