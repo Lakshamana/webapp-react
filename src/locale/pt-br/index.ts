@@ -459,7 +459,7 @@ const PT_BR = {
         },
         geolocked_content: {
           title: 'Conteúdo bloqueado',
-          subtitle: 'Este conteúdo não está disponível para seu país.'
+          subtitle: 'Este conteúdo não está disponível no seu país.'
         },
         live: {
           live_chat: {
