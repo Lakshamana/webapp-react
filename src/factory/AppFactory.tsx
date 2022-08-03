@@ -42,10 +42,11 @@ const AppFactory = () => {
     }
 
     const getEnvs = async () => {
+        //TODO: dynamic metadata tests
         await axios
             .get(`https://${REACT_APP_API_ENDPOINT}/env-config`, {
                 headers: {
-                    organization: origin || '',
+                    organization: process.env.REACT_APP_ORGANIZATION_URL || '', //origin || '',
                 },
             })
             .then((result) => {
