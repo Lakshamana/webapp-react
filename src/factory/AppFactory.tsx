@@ -21,10 +21,11 @@ const AppFactory = () => {
         REACT_APP_API_ENDPOINT,
     } = process.env
 
-    const origin =
-        NODE_ENV === 'development'
-            ? REACT_APP_ORGANIZATION_URL
-            : `https://${window.location.host}`
+    //TODO: dynamic metadata tests
+    const origin = REACT_APP_ORGANIZATION_URL
+    // NODE_ENV === 'development'
+    //     ? REACT_APP_ORGANIZATION_URL
+    //     : `https://${window.location.host}`
 
     useLayoutEffect(() => {
         getEnvs()
@@ -42,11 +43,10 @@ const AppFactory = () => {
     }
 
     const getEnvs = async () => {
-        //TODO: dynamic metadata tests
         await axios
             .get(`https://${REACT_APP_API_ENDPOINT}/env-config`, {
                 headers: {
-                    organization: process.env.REACT_APP_ORGANIZATION_URL || '', //origin || '',
+                    organization: origin || '',
                 },
             })
             .then((result) => {
