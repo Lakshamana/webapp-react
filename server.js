@@ -1,11 +1,10 @@
-require('dotenv').config()
 const express = require("express")
 const axios = require('axios')
 const path = require("path")
 const fs = require("fs")
 const app = new express()
 const PORT = process.env.PORT || 3004
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
+const API_ENDPOINT = 'fourdotzero-dev.fanheroapi.com' //process.env.REACT_APP_API_ENDPOINT
 
 const defaultValues = {
   favicon: '',
