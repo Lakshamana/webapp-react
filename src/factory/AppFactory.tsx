@@ -23,6 +23,7 @@ const AppFactory = () => {
 
     //TODO: dynamic metadata tests
     const origin = REACT_APP_ORGANIZATION_URL
+    console.log(origin, 'ORIGIN ---------')
     // NODE_ENV === 'development'
     //     ? REACT_APP_ORGANIZATION_URL
     //     : `https://${window.location.host}`
