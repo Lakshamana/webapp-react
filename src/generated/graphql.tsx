@@ -442,6 +442,11 @@ export type ChannelPasswordCheck = {
   correct: Scalars['Boolean'];
 };
 
+export enum ChannelStatus {
+  Published = 'PUBLISHED',
+  Unpublished = 'UNPUBLISHED'
+}
+
 export type ChildrenCategoryFilter = {
   featured?: Maybe<Scalars['Boolean']>;
   isParent?: Maybe<Scalars['Boolean']>;
@@ -679,7 +684,7 @@ export type CreateChannelInput = {
   menu?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   password?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
+  status?: Maybe<ChannelStatus>;
 };
 
 export type CreateCouponCodeInput = {
@@ -1396,6 +1401,12 @@ export type InspireRecurringUsageTypes = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type InviteTeamMemberInput = {
+  accountId?: Maybe<Scalars['ID']>;
+  email?: Maybe<Scalars['String']>;
+  roles: Array<Scalars['ID']>;
+};
+
 export enum Kinds {
   Exclusive = 'EXCLUSIVE',
   Geolocked = 'GEOLOCKED',
@@ -1781,12 +1792,14 @@ export type Mutation = {
   forgetAccount: Account;
   goLive: LiveEventGoLiveOutput;
   hasProductAccess: HasAccessOutput;
+  inviteTeamMember: Account;
   liveEventPasswordCheck: LiveEventPasswordCheck;
   oneTimePayment: Order;
   organizationPasswordCheck: OrganizationPasswordCheck;
   pinCategory: AccountPinnedCategory;
   pinChannel: AccountPinnedChannel;
   pinPost: AccountPinnedPost;
+  populateTemplatesForOrganization: Scalars['String'];
   postPasswordCheck: PostPasswordCheck;
   publishRemoteConfig: PublishRemoteConfig;
   pushNotification: PushNotificationResult;
@@ -2250,6 +2263,11 @@ export type MutationHasProductAccessArgs = {
 };
 
 
+export type MutationInviteTeamMemberArgs = {
+  payload: InviteTeamMemberInput;
+};
+
+
 export type MutationLiveEventPasswordCheckArgs = {
   id: Scalars['String'];
   payload: LiveEventPasswordCheckInput;
@@ -2274,6 +2292,11 @@ export type MutationPinCategoryArgs = {
 
 export type MutationPinPostArgs = {
   payload: CreateAccountPinnedPost;
+};
+
+
+export type MutationPopulateTemplatesForOrganizationArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2573,7 +2596,7 @@ export type MutationUpdateMenuArgs = {
 
 
 export type MutationUpdateMyAccountArgs = {
-  payload: UpdateAccountInput;
+  payload: UpdateMyAccountInput;
 };
 
 
@@ -3067,7 +3090,7 @@ export type PinnedChannelOutput = {
   logo?: Maybe<Scalars['JSON']>;
   name: Scalars['String'];
   organization: Scalars['ID'];
-  status: Scalars['String'];
+  status: ChannelStatus;
   thumbnail?: Maybe<Scalars['JSON']>;
 };
 
@@ -4290,7 +4313,7 @@ export type UpdateChannelInput = {
   menu?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
+  status?: Maybe<ChannelStatus>;
 };
 
 export type UpdateComment = {
@@ -4425,6 +4448,14 @@ export type UpdateMenuSortingItem = {
 
 export type UpdateMenusSorting = {
   changes: Array<UpdateMenuSortingItem>;
+};
+
+export type UpdateMyAccountInput = {
+  display_name?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  first_name?: Maybe<Scalars['String']>;
+  last_name?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 };
 
 export type UpdateOrder = {
@@ -4649,7 +4680,7 @@ export type ForgetAccountMutationVariables = Exact<{
 export type ForgetAccountMutation = { __typename?: 'Mutation', forgetAccount: { __typename?: 'Account', email?: Maybe<string> } };
 
 export type UpdateMyAccountMutationVariables = Exact<{
-  payload: UpdateAccountInput;
+  payload: UpdateMyAccountInput;
 }>;
 
 
@@ -4898,6 +4929,20 @@ export type GetCategoriesCardsQueryVariables = Exact<{
 
 
 export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+
+export type GetCategoryQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+
+export type GetCategoryKindQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, kind: Kinds, name: string } };
 
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
@@ -5164,7 +5209,7 @@ export type ForgetAccountMutationHookResult = ReturnType<typeof useForgetAccount
 export type ForgetAccountMutationResult = Apollo.MutationResult<ForgetAccountMutation>;
 export type ForgetAccountMutationOptions = Apollo.BaseMutationOptions<ForgetAccountMutation, ForgetAccountMutationVariables>;
 export const UpdateMyAccountDocument = gql`
-    mutation UpdateMyAccount($payload: UpdateAccountInput!) {
+    mutation UpdateMyAccount($payload: UpdateMyAccountInput!) {
   updateMyAccount(payload: $payload) {
     display_name
     email
@@ -6829,6 +6874,163 @@ export function useGetCategoriesCardsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetCategoriesCardsQueryHookResult = ReturnType<typeof useGetCategoriesCardsQuery>;
 export type GetCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetCategoriesCardsLazyQuery>;
 export type GetCategoriesCardsQueryResult = Apollo.QueryResult<GetCategoriesCardsQuery, GetCategoriesCardsQueryVariables>;
+export const GetCategoryDocument = gql`
+    query GetCategory($slug: String) {
+  category(slug: $slug) {
+    id
+    access
+    slug
+    createdAt
+    pinnedStatus {
+      pinned
+    }
+    customization {
+      desktop {
+        imgPath
+      }
+      mobile {
+        imgPath
+      }
+      thumbnail {
+        imgPath
+      }
+    }
+    posts {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageCount
+      total
+      rows {
+        id
+        access
+        title
+        description
+        kind
+        slug
+        pinnedStatus {
+          pinned
+        }
+        thumbnail {
+          imgPath
+        }
+        media {
+          ... on MediaVideo {
+            id
+            duration
+            thumbnailPath
+            baseUrl
+          }
+        }
+        type
+      }
+    }
+    children(filter: {sortBy: "sort.asc"}) {
+      sort
+      description
+      featuredAt
+      geoFence
+      pinnedStatus {
+        pinned
+      }
+      name
+      slug
+      id
+      description
+      customization {
+        thumbnail {
+          imgPath
+        }
+      }
+    }
+    description
+    featuredAt
+    geoFence
+    id
+    name
+  }
+}
+    `;
+export type GetCategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryQuery, GetCategoryQueryVariables>, 'query'>;
+
+    export const GetCategoryComponent = (props: GetCategoryComponentProps) => (
+      <ApolloReactComponents.Query<GetCategoryQuery, GetCategoryQueryVariables> query={GetCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetCategoryQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+      }
+export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+        }
+export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
+export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
+export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
+export const GetCategoryKindDocument = gql`
+    query GetCategoryKind($slug: String) {
+  category(slug: $slug) {
+    id
+    access
+    kind
+    name
+  }
+}
+    `;
+export type GetCategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>, 'query'>;
+
+    export const GetCategoryKindComponent = (props: GetCategoryKindComponentProps) => (
+      <ApolloReactComponents.Query<GetCategoryKindQuery, GetCategoryKindQueryVariables> query={GetCategoryKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetCategoryKindQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+      }
+export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+        }
+export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
+export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
+export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFindAllFilter!) {
   channels(filter: $filter) {
