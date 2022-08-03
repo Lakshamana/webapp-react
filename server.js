@@ -58,6 +58,26 @@ const getTenantData = async (req, res) => {
         const image = data.body.data.image.baseUrl + '/' + data.body.data.image.imgPath
         defineValues = {
           ...defaultValues,
+          favicon: 'https://express-favicon.herokuapp.com/coca-cola',
+          title: data.body.data.title,
+          description: data.body.data.description,
+          url: pathname,
+          image
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  let isCategory = pathname.includes('/category/')
+  if (isCategory) {
+    const startPosition = pathname.indexOf('/category/') + 10
+    const postSlug = pathname.slice(startPosition, pathname.length)
+    await axios
+      .get(`${endpoint}/categories/metadata?slug=${postSlug}`)
+      .then(({ data }) => {
+        const image = data.body.data.image.baseUrl + '/' + data.body.data.image.imgPath
+        defineValues = {
+          ...defaultValues,
           // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
           title: data.body.data.title,
           description: data.body.data.description,
