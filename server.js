@@ -15,6 +15,12 @@ const defaultValues = {
   domain: 'fanhero.tv'
 }
 
+
+const stripHTML = (text) => {
+  if (!text) return ''
+  return text.replace(/(<([^>]+)>)/gi, '')
+}
+
 const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
 
@@ -33,8 +39,8 @@ const getTenantData = async (req, res) => {
           defineValues = {
             ...defaultValues,
             // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
-            title: data.body.data.title,
-            description: data.body.data.description,
+            title: data.body.data?.title,
+            description: stripHTML(data.body.data?.description),
             url: pathname,
             image: defineImage
           }
