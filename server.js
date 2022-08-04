@@ -29,16 +29,18 @@ const getTenantData = async (req, res) => {
         console.log('----', data)
         try {
           const { baseUrl, imgPath } = data.body.data.image
+          let defineImage = (baseUrl || imgPath) ? `${baseUrl}/${imgPath}` : null
           defineValues = {
             ...defaultValues,
             // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
             title: data.body.data.title,
             description: data.body.data.description,
             url: pathname,
-            image: `${baseUrl}/${imgPath}`
+            image: defineImage
           }
           return true
         } catch (error) {
+          console.log(error, 'ERROR')
           return false
         }
       })
