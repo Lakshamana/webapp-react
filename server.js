@@ -30,7 +30,7 @@ const getTenantData = async (req, res) => {
 
   const getData = async (postSlug, endpointName) => {
     console.log('getDATA', postSlug, endpointName)
-    await axios
+    return await axios
       .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
       .then(({ data }) => {
         try {
@@ -58,8 +58,10 @@ const getTenantData = async (req, res) => {
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
     let postSlug = pathname.slice(startPosition, pathname.length)
-    if (postSlug.indexOf('/')) {
+    console.log(postSlug, 'POSTSLUG')
+    if (postSlug.indexOf('/') >= 0) {
       postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1)
+      console.log('Here', postSlug)
     }
     return await getData(postSlug, endpointName)
   }
@@ -70,6 +72,7 @@ const getTenantData = async (req, res) => {
 
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ legends
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ secret-invasion
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ iron-man
 
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /live/ myfirstlivee111
 
@@ -84,20 +87,19 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
-    console.log('BYPASSED ----')
     hasData = true
   }
 
   if (pathname.includes(postPath)) {
     hasData = await getDataByPath(postPath, 'posts')
   }
-  if (pathname.includes(categoryPath)) {
+  if (pathname.includes(categoryPath) && !hasData) {
     hasData = await getDataByPath(categoryPath, 'categories')
   }
-  if (pathname.includes(livePath)) {
+  if (pathname.includes(livePath) && !hasData) {
     hasData = await getDataByPath(livePath, 'live-events')
   }
-  if (pathname.includes(channelPath)) {
+  if (pathname.includes(channelPath) && !hasData) {
     hasData = await getDataByPath(channelPath, 'channels')
   }
 
