@@ -26,7 +26,6 @@ const getTenantData = async (req, res) => {
     await axios
       .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
       .then(({ data }) => {
-        console.log('----', data)
         try {
           let defineImage = data.body.data.image
             ? `${data.body.data.image.baseUrl}/${data.body.data.image.imgPath}`
@@ -45,10 +44,7 @@ const getTenantData = async (req, res) => {
           return false
         }
       })
-      .catch(err => {
-        console.log(err)
-        return false
-      })
+      .catch(() => false)
   }
 
   const getDataByPath = async (path, endpointName) => {
@@ -65,30 +61,25 @@ const getTenantData = async (req, res) => {
 
   if (pathname.includes(postPath)) {
     hasData = await getDataByPath(postPath, 'posts')
-    console.log(hasData, '1')
   }
   if (pathname.includes(categoryPath)) {
     hasData = await getDataByPath(categoryPath, 'categories')
-    console.log(hasData, '2')
   }
   if (pathname.includes(livePath)) {
     hasData = await getDataByPath(livePath, 'live-events')
-    console.log(hasData, '3')
   }
   if (pathname.includes(channelPath)) {
     hasData = await getDataByPath(channelPath, 'channels')
-    console.log(hasData, '4')
   }
 
   if (!hasData) {
     let subDomain = req.hostname.split('.')[0]
     let tenant = subDomain.includes('localhost')
-      ? 'marvel-dev'
+      ? 'valetudo-dev'
       : subDomain === 'webapp-react-feat-dynam-r9nqjj'
-        ? 'marvel-dev'
+        ? 'valetudo-dev'
         : subDomain
-    let cat = await getData(tenant, 'organizations')
-    console.log(cat, '5')
+    getData(tenant, 'organizations')
   }
 
   let htmlWithSeo = html
