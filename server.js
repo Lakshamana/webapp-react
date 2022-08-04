@@ -1,12 +1,10 @@
 const express = require("express")
 const axios = require('axios')
-const crypto = require('crypto-js')
 const path = require("path")
 const fs = require("fs")
 const app = new express()
 const PORT = process.env.PORT || 3004
 const API_ENDPOINT = 'fourdotzero-dev.fanheroapi.com' //process.env.REACT_APP_API_ENDPOINT
-const REMOVE_ENV_SECRET = '04e131888657a08d7c48ea2e2c22c5a9' //process.env.REACT_APP_REMOTE_ENV_SECRET
 
 const defaultValues = {
   favicon: '',
@@ -19,36 +17,12 @@ const defaultValues = {
 
 const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
-  let subDomain = req.hostname.split('.')[0]
-  let tenant = subDomain.includes('localhost')
-    ? 'marvel-dev'
-    : subDomain === 'webapp-react-feat-dynam-r9nqjj'
-      ? 'marvel-dev'
-      : subDomain
 
   const endpoint = `https://${API_ENDPOINT}`
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let defineValues = { ...defaultValues }
 
-  let TENANT_URL = `https://${tenant}.fanhero.tv`
-  await axios.get(endpoint + '/env-config', { headers: { organization: TENANT_URL } })
-    .then(({ data }) => {
-      const decryptedEnv = crypto.AES.decrypt(data.body.data.result, REMOVE_ENV_SECRET)
-      const dataParsed = JSON.parse(decryptedEnv.toString(crypto.enc.Utf8))
-      defineValues = {
-        ...defaultValues,
-        title: dataParsed.inspireTenantId,
-        description: dataParsed.firebaseProject,
-        url: TENANT_URL,
-        image: 'https://fanhero.com/wp-content/uploads/img-home-2.jpg.webp',
-        domain: tenant
-      }
-    })
-    .catch(err => console.log(err))
-
-  const getData = async (path, endpointName) => {
-    const startPosition = pathname.indexOf(path) + path.length
-    const postSlug = pathname.slice(startPosition, pathname.length)
+  const getData = async (postSlug, endpointName) => {
     await axios
       .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
       .then(({ data }) => {
@@ -61,35 +35,53 @@ const getTenantData = async (req, res) => {
           url: pathname,
           image: `${baseUrl}/${imgPath}`
         }
+        return true
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        return false
+      })
   }
 
-  let isPost = pathname.includes('/post/')
-  if (isPost) {
-    const startPosition = pathname.indexOf('/post/') + 6
+  const getDataByPath = async (path, endpointName) => {
+    const startPosition = pathname.indexOf(path) + path.length
     const postSlug = pathname.slice(startPosition, pathname.length)
-    await axios
-      .get(`${endpoint}/posts/metadata?slug=${postSlug}`)
-      .then(({ data }) => {
-        const image = data.body.data.image.baseUrl + '/' + data.body.data.image.imgPath
-        defineValues = {
-          ...defaultValues,
-          favicon: 'https://express-favicon.herokuapp.com/coca-cola',
-          title: data.body.data.title,
-          description: data.body.data.description,
-          url: pathname,
-          image
-        }
-      })
-      .catch(err => console.log(err))
+    return await getData(postSlug, endpointName)
   }
 
-  let isCategory = pathname.includes('/category/')
-  if (isCategory) getData('/category/', 'categories')
+  const postPath = '/post/'
+  const categoryPath = '/category/'
+  const livePath = '/live/'
+  const channelPath = '/c/'
+  let hasData
 
-  let isLive = pathname.includes('/live/')
-  if (isLive) getData('/live/', 'live-events')
+  if (pathname.includes(postPath)) {
+    hasData = await getDataByPath(postPath, 'posts')
+    console.log(hasData, '1')
+  }
+  if (pathname.includes(categoryPath)) {
+    hasData = await getDataByPath(categoryPath, 'categories')
+    console.log(hasData, '2')
+  }
+  if (pathname.includes(livePath)) {
+    hasData = await getDataByPath(livePath, 'live-events')
+    console.log(hasData, '3')
+  }
+  if (pathname.includes(channelPath)) {
+    hasData = await getDataByPath(channelPath, 'channels')
+    console.log(hasData, '4')
+  }
+
+  if (!hasData) {
+    let subDomain = req.hostname.split('.')[0]
+    let tenant = subDomain.includes('localhost')
+      ? 'marvel-dev'
+      : subDomain === 'webapp-react-feat-dynam-r9nqjj'
+        ? 'marvel-dev'
+        : subDomain
+    let cat = await getData(tenant, 'organizations')
+    console.log(cat, '5')
+  }
 
   let htmlWithSeo = html
     .toString()
