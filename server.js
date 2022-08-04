@@ -29,6 +29,7 @@ const getTenantData = async (req, res) => {
   let defineValues = { ...defaultValues }
 
   const getData = async (postSlug, endpointName) => {
+    console.log('getDATA', postSlug, endpointName)
     await axios
       .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
       .then(({ data }) => {
@@ -55,15 +56,30 @@ const getTenantData = async (req, res) => {
 
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
-    const postSlug = pathname.slice(startPosition, pathname.length)
+    let postSlug = pathname.slice(startPosition, pathname.length)
+    if (postSlug.indexOf('/')) {
+      postSlug = postSlug.slice(0, postSlug.indexOf('/'))
+    }
     return await getData(postSlug, endpointName)
   }
 
+  // http://localhost:3004/c/avengers /post/ testeleandrodonotdelete3geo1
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ legends-marvel-heroes
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ ondemand-type-mp4-v4
+
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ legends
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ secret-invasion
+
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /live/ myfirstlivee111
+
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com /c/ avengers/categories
+  // http://localhost:3004 /c/ avengers/feed
+
+  let hasData
   const postPath = '/post/'
   const categoryPath = '/category/'
   const livePath = '/live/'
   const channelPath = '/c/'
-  let hasData
 
   if (pathname.includes(postPath)) {
     hasData = await getDataByPath(postPath, 'posts')
@@ -85,6 +101,8 @@ const getTenantData = async (req, res) => {
       : subDomain === 'webapp-react-feat-dynam-r9nqjj'
         ? 'valetudo-dev'
         : subDomain
+
+    console.log(tenant, 'TENANT ----')
     getData(tenant, 'organizations')
   }
 
