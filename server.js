@@ -52,14 +52,14 @@ const getTenantData = async (req, res) => {
           return false
         }
       })
-      .catch(() => false)
+      .catch(() => { return false })
   }
 
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
     let postSlug = pathname.slice(startPosition, pathname.length)
     if (postSlug.indexOf('/')) {
-      postSlug = postSlug.slice(0, postSlug.indexOf('/'))
+      postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1)
     }
     return await getData(postSlug, endpointName)
   }
@@ -84,6 +84,7 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
+    console.log('BYPASSED ----')
     hasData = true
   }
 
@@ -101,6 +102,7 @@ const getTenantData = async (req, res) => {
   }
 
   if (!hasData) {
+    console.log('HASDATA', hasData)
     let subDomain = req.hostname.split('.')[0]
     let tenant = subDomain.includes('localhost')
       ? 'valetudo-dev'
@@ -108,7 +110,7 @@ const getTenantData = async (req, res) => {
         ? 'valetudo-dev'
         : subDomain
 
-    console.log(tenant, 'TENANT ----')
+    console.log('TENANT ----', tenant)
     getData(tenant, 'organizations')
   }
 
