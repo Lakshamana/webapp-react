@@ -28,8 +28,9 @@ const getTenantData = async (req, res) => {
       .then(({ data }) => {
         console.log('----', data)
         try {
-          const { baseUrl, imgPath } = data.body.data.image
-          let defineImage = (baseUrl || imgPath) ? `${baseUrl}/${imgPath}` : null
+          let defineImage = data.body.data.image
+            ? `${data.body.data.image.baseUrl}/${data.body.data.image.imgPath}`
+            : null
           defineValues = {
             ...defaultValues,
             // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
