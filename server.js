@@ -4,7 +4,7 @@ const path = require("path")
 const fs = require("fs")
 const app = new express()
 const PORT = process.env.PORT || 3004
-const API_ENDPOINT = 'fourdotzero-dev.fanheroapi.com' //process.env.REACT_APP_API_ENDPOINT
+const API_ENDPOINT = 'fourdotzero-dev.fanheroapi.com'
 
 const defaultValues = {
   favicon: '',
@@ -14,7 +14,6 @@ const defaultValues = {
   image: 'https://fanhero.com/wp-content/uploads/img-home-2.jpg.webp',
   domain: 'fanhero.tv'
 }
-
 
 const stripHTML = (text) => {
   if (!text) return ''
@@ -29,7 +28,6 @@ const getTenantData = async (req, res) => {
   let defineValues = { ...defaultValues }
 
   const getData = async (postSlug, endpointName) => {
-    console.log('getDATA', postSlug, endpointName)
     return await axios
       .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
       .then(({ data }) => {
@@ -45,10 +43,8 @@ const getTenantData = async (req, res) => {
             url: pathname,
             image: defineImage
           }
-          console.log('DEFINED', defineValues)
           return true
         } catch (error) {
-          console.log(error, 'ERROR')
           return false
         }
       })
@@ -58,15 +54,13 @@ const getTenantData = async (req, res) => {
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
     let postSlug = pathname.slice(startPosition, pathname.length)
-    console.log(postSlug, 'POSTSLUG')
     if (postSlug.indexOf('/') >= 0) {
       postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1).replace(/\//gm, '')
-      console.log('Here', postSlug)
     }
     return await getData(postSlug, endpointName)
   }
 
-  // Cases:
+  // TODO: Remove Cases
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ legends-marvel-heroes
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ ondemand-type-mp4-v4
 
@@ -104,15 +98,13 @@ const getTenantData = async (req, res) => {
   }
 
   if (!hasData) {
-    console.log('HASDATA', hasData)
     let subDomain = req.hostname.split('.')[0]
     let tenant = subDomain.includes('localhost')
-      ? 'valetudo-dev'
+      ? 'marvel-dev'
       : subDomain === 'webapp-react-feat-dynam-r9nqjj'
-        ? 'valetudo-dev'
+        ? 'marvel-dev'
         : subDomain
 
-    console.log('TENANT ----', tenant)
     getData(tenant, 'organizations')
   }
 
@@ -130,6 +122,4 @@ const getTenantData = async (req, res) => {
 
 app.use("/static", express.static(path.join(__dirname, "build/static")))
 app.get("*", getTenantData)
-// app.get("*", (_, res) => res.sendFile(path.join(__dirname, "build", "index.html")))
-
 app.listen(PORT, () => console.log("listen on port: " + PORT))
