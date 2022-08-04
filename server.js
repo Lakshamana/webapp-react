@@ -60,7 +60,7 @@ const getTenantData = async (req, res) => {
     let postSlug = pathname.slice(startPosition, pathname.length)
     console.log(postSlug, 'POSTSLUG')
     if (postSlug.indexOf('/') >= 0) {
-      postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1)
+      postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1).replace(/\//gm, '')
       console.log('Here', postSlug)
     }
     return await getData(postSlug, endpointName)
