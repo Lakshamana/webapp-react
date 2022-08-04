@@ -26,16 +26,21 @@ const getTenantData = async (req, res) => {
     await axios
       .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
       .then(({ data }) => {
-        const { baseUrl, imgPath } = data.body.data.image
-        defineValues = {
-          ...defaultValues,
-          // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
-          title: data.body.data.title,
-          description: data.body.data.description,
-          url: pathname,
-          image: `${baseUrl}/${imgPath}`
+        console.log('----', data)
+        try {
+          const { baseUrl, imgPath } = data.body.data.image
+          defineValues = {
+            ...defaultValues,
+            // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
+            title: data.body.data.title,
+            description: data.body.data.description,
+            url: pathname,
+            image: `${baseUrl}/${imgPath}`
+          }
+          return true
+        } catch (error) {
+          return false
         }
-        return true
       })
       .catch(err => {
         console.log(err)
