@@ -45,6 +45,7 @@ const getTenantData = async (req, res) => {
             url: pathname,
             image: defineImage
           }
+          console.log('DEFINED', defineValues)
           return true
         } catch (error) {
           console.log(error, 'ERROR')
@@ -63,7 +64,7 @@ const getTenantData = async (req, res) => {
     return await getData(postSlug, endpointName)
   }
 
-  // http://localhost:3004/c/avengers /post/ testeleandrodonotdelete3geo1
+  // Cases:
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ legends-marvel-heroes
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ ondemand-type-mp4-v4
 
@@ -73,13 +74,18 @@ const getTenantData = async (req, res) => {
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /live/ myfirstlivee111
 
   // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com /c/ avengers/categories
-  // http://localhost:3004 /c/ avengers/feed
+  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com /c/ avengers/feed
 
   let hasData
+  const byPass = ['/favicon.ico', '/manifest.json']
   const postPath = '/post/'
   const categoryPath = '/category/'
   const livePath = '/live/'
   const channelPath = '/c/'
+
+  if (byPass.includes(pathname)) {
+    hasData = true
+  }
 
   if (pathname.includes(postPath)) {
     hasData = await getDataByPath(postPath, 'posts')
