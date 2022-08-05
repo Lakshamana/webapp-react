@@ -120,6 +120,9 @@ const ProfileInfo = ({
       if(values.birthday === '') {
         delete values.birthday
       }
+
+      if(!values.custom_fields) delete values.custom_fields
+
       updateProfile({ ...values, locale: locale })
     },
   })
