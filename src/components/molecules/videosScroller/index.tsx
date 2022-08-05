@@ -37,7 +37,7 @@ const VideosScroller = ({
   useEffect(() => {
     const mappedArr = items?.map((item: Post) => {
       const thumbnail = getImageUrl(item)
-      const url = `/c/${activeChannel?.slug}/post/${item.slug}/aaaaa`
+      const url = `/c/${activeChannel?.slug}/post/${item.slug}`
       return {
         id: item.id,
         title: item.title,
