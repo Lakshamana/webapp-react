@@ -15,10 +15,7 @@ const defaultValues = {
   domain: 'fanhero.tv'
 }
 
-const stripHTML = (text) => {
-  if (!text) return ''
-  return text.replace(/(<([^>]+)>)/gi, '')
-}
+const stripHTML = (text) => text ? text.replace(/(<([^>]+)>)/gi, '') : ''
 
 const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
@@ -37,7 +34,7 @@ const getTenantData = async (req, res) => {
             : null
           defineValues = {
             ...defaultValues,
-            // favicon: 'https://express-favicon.herokuapp.com/coca-cola',
+            favicon: data.body.data?.favicon || defaultValues.favicon,
             title: data.body.data?.title,
             description: stripHTML(data.body.data?.description),
             url: pathname,
@@ -59,19 +56,6 @@ const getTenantData = async (req, res) => {
     }
     return await getData(postSlug, endpointName)
   }
-
-  // TODO: Remove Cases
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ legends-marvel-heroes
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /post/ ondemand-type-mp4-v4
-
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ legends
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ secret-invasion
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /category/ iron-man
-
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com/c/avengers /live/ myfirstlivee111
-
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com /c/ avengers/categories
-  // https://webapp-react-feat-dynam-r9nqjj.herokuapp.com /c/ avengers/feed
 
   let hasData
   const byPass = ['/favicon.ico', '/manifest.json']
@@ -101,10 +85,7 @@ const getTenantData = async (req, res) => {
     let subDomain = req.hostname.split('.')[0]
     let tenant = subDomain.includes('localhost')
       ? 'marvel-dev'
-      : subDomain === 'webapp-react-feat-dynam-r9nqjj'
-        ? 'marvel-dev'
-        : subDomain
-
+      : subDomain
     getData(tenant, 'organizations')
   }
 
