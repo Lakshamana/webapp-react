@@ -21,12 +21,9 @@ const AppFactory = () => {
         REACT_APP_API_ENDPOINT,
     } = process.env
 
-    //TODO: dynamic metadata tests
-    const origin = REACT_APP_ORGANIZATION_URL
-    console.log(origin, 'ORIGIN ---------')
-    // NODE_ENV === 'development'
-    //     ? REACT_APP_ORGANIZATION_URL
-    //     : `https://${window.location.host}`
+    const origin = NODE_ENV === 'development'
+        ? REACT_APP_ORGANIZATION_URL
+        : `https://${window.location.host}`
 
     useLayoutEffect(() => {
         getEnvs()

@@ -72,11 +72,9 @@ export const AuthProvider = ({ children }) => {
   const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
     process.env
 
-  const origin = REACT_APP_ORGANIZATION_URL
-  //TODO: dynamic metadata tests
-  // NODE_ENV === 'development'
-  // ? REACT_APP_ORGANIZATION_URL
-  //  window.location.origin
+  const origin = NODE_ENV === 'development'
+    ? REACT_APP_ORGANIZATION_URL
+    : window.location.origin
 
   const updateAccount = async (account) => {
     await setAccount(account)
@@ -177,8 +175,8 @@ export const AuthProvider = ({ children }) => {
 
           const customizationTheme = activeChannel
             ? decryptedCustomization?.CHANNELS[
-                activeChannel.id
-              ]?.THEME?.toLowerCase()
+              activeChannel.id
+            ]?.THEME?.toLowerCase()
             : decryptedCustomization?.ORGANIZATION?.THEME?.toLowerCase()
 
           setColorMode(storedTheme || customizationTheme || 'dark')
@@ -228,7 +226,7 @@ export const AuthProvider = ({ children }) => {
         (customizationData?.CHANNELS[
           activeChannel.id
         ]?.THEME.toLowerCase() as ColorMode) ||
-          (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
+        (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
       )
     }
     // eslint-disable-next-line
