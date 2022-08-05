@@ -40,6 +40,7 @@ const getTenantData = async (req, res) => {
             url: pathname,
             image: defineImage
           }
+          console.log('DEFINED VALUES: ', defineValues)
           return true
         } catch (error) {
           return false
@@ -70,15 +71,23 @@ const getTenantData = async (req, res) => {
 
   if (pathname.includes(postPath)) {
     hasData = await getDataByPath(postPath, 'posts')
+    console.log('---- POSTS: ', postPath)
+    console.log('---- HASDATA: ', hasData)
   }
   if (pathname.includes(categoryPath) && !hasData) {
     hasData = await getDataByPath(categoryPath, 'categories')
+    console.log('---- CATEGORIES: ', categoryPath)
+    console.log('---- HASDATA: ', hasData)
   }
   if (pathname.includes(livePath) && !hasData) {
     hasData = await getDataByPath(livePath, 'live-events')
+    console.log('---- LIVE EVENTS: ', livePath)
+    console.log('---- HASDATA: ', hasData)
   }
   if (pathname.includes(channelPath) && !hasData) {
     hasData = await getDataByPath(channelPath, 'channels')
+    console.log('---- CHANNELS: ', channelPath)
+    console.log('---- HASDATA: ', hasData)
   }
 
   if (!hasData) {
@@ -86,7 +95,10 @@ const getTenantData = async (req, res) => {
     let tenant = subDomain.includes('localhost')
       ? 'marvel-dev'
       : subDomain
-    getData(tenant, 'organizations')
+
+    hasData = await getData(tenant, 'organizations')
+    console.log('---- ORGANIZATION: ', tenant)
+    console.log('---- HASDATA: ', hasData)
   }
 
   let htmlWithSeo = html
