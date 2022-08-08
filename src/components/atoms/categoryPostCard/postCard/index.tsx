@@ -8,6 +8,7 @@ const PostCard = ({ categoryUnpinned, ...props }: ComponentPostCardProps) => (
   <CardWrapper
     onMouseLeave={props.actionHover(false)}
     onMouseEnter={props.actionHover(true)}
+    {...props}
   >
     <PostContent onClick={props.defineAction} {...props}>
       {(props.isExclusive || props.isGeolocked) && (
