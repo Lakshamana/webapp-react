@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Modal, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { Container, Modal, ModalCloseButton, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import { useThemeStore } from 'services/stores'
@@ -32,19 +32,31 @@ const CategoryPostCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps)
     onOpen()
   }
 
-  const DefineWrapper = ({ children }) => {
+  const ModalWrapper = ({ children }) => {
     const closeModal = () => {
       setHover(false)
       setMobileBehavior(false)
       onClose()
     }
     return (
-      <Modal isOpen={isOpen} onClose={closeModal} isCentered>
+      <Modal
+        size={'xs'}
+        isOpen={isOpen}
+        onClose={closeModal}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent
           color={colors.generalText[colorMode]}
           background={colors.cardBg[colorMode]}
         >
+          <Container
+            zIndex={999}
+            className='absolute'
+            color={colors.generalText[colorMode]}
+          >
+            <ModalCloseButton backgroundColor={colors.cardBg[colorMode]} rounded={'full'} />
+          </Container>
           {children}
         </ModalContent>
       </Modal>
@@ -63,15 +75,16 @@ const CategoryPostCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps)
       />
       {
         !isDesktop &&
-        <DefineWrapper>
+        <ModalWrapper>
           <PostCard
+            modalType
             hover={hover}
             defineAction={defineAction}
             actionHover={actionHover}
             categoryUnpinned={categoryUnpinned}
             {...props}
           />
-        </DefineWrapper>
+        </ModalWrapper>
       }
     </>
   )

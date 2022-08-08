@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Modal, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { Container, Modal, ModalCloseButton, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
@@ -61,19 +61,31 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
   }
 
 
-  const DefineWrapper = ({ children }) => {
+  const ModalWrapper = ({ children }) => {
     const closeModal = () => {
       setHover(false)
       setMobileBehavior(false)
       onClose()
     }
     return (
-      <Modal isOpen={isOpen} onClose={closeModal} isCentered>
+      <Modal
+        size={'xs'}
+        isOpen={isOpen}
+        onClose={closeModal}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent
           color={colors.generalText[colorMode]}
           background={colors.cardBg[colorMode]}
         >
+          <Container
+            zIndex={999}
+            className='absolute'
+            color={colors.generalText[colorMode]}
+          >
+            <ModalCloseButton backgroundColor={colors.cardBg[colorMode]} rounded={'full'} />
+          </Container>
           {children}
         </ModalContent>
       </Modal>
@@ -95,7 +107,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
       />
       {
         !isDesktop &&
-        <DefineWrapper>
+        <ModalWrapper>
           <PostCard
             hover={hover}
             defineAction={defineAction}
@@ -106,7 +118,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
             isPostPinned={isPostPinned}
             {...props}
           />
-        </DefineWrapper>
+        </ModalWrapper>
       }
     </>
   )
