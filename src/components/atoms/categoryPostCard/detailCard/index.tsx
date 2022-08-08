@@ -71,6 +71,7 @@ const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
       ) : (
         <Icon
           icon={isCategoryPinned ? 'mdi:check' : 'mdi:plus'}
+          width={props.modalType ? 22 : 16}
           color={
             isCategoryPinned
               ? colors.brand.primary[colorMode]
@@ -93,7 +94,7 @@ const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
       <Flex>
         <Box display="flex" flexDirection="column">
           <Text
-            fontSize="0.85rem"
+            fontSize={props.modalType ? "1.2rem" : "0.85rem"}
             noOfLines={1}
             fontWeight="bolder"
             color={colors.generalText[colorMode]}
@@ -101,7 +102,7 @@ const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
             {stripHTML(props.title || '')}
           </Text>
           <Text
-            fontSize="0.7rem"
+            fontSize={props.modalType ? "0.9rem" : "0.7rem"}
             noOfLines={2}
             color={colors.secondaryText[colorMode]}
           >
