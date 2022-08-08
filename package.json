@@ -78,6 +78,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "prepare": "husky install",
     "graphql:generate": "npx graphql-codegen --config codegen.yml -r dotenv/config",
     "graphql:generate:watch": "yarn graphql:generate --watch",
     "storybook": "start-storybook -p 6006 -s public",
@@ -117,6 +118,8 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
     "@firebase/app-types": "^0.7.0",
     "@firebase/auth-types": "^0.11.0",
     "@firebase/remote-config-types": "^0.2.0",
@@ -143,6 +146,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "enzyme-to-json": "^3.6.2",
+    "husky": "^8.0.1",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5",
