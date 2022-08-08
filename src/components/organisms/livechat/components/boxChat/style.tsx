@@ -1,7 +1,7 @@
+import { Container } from '@chakra-ui/react'
 import styled from 'styled-components'
 import { color, flexbox, layout } from 'styled-system'
 import { colors } from 'styles'
-import { Container } from '@chakra-ui/react'
 import { Theme } from './types'
 
 export const BoxChatMain: any = styled.div`
@@ -64,4 +64,5 @@ export const ContainerCustom = styled(Container)`
   max-width: 100%;
   padding: 0;
   gap: 12px;
+  -webkit-align-items: flex-end;
 `
