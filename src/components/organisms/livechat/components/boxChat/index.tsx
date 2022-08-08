@@ -1,15 +1,13 @@
-import { ReactElement } from 'react'
-import {
-  BoxChatMain,
-  MainContainer,
-  BoxContainer,
-  ContainerCustom,
-} from './style'
 import { Avatar, Text } from 'components'
-import { colors } from 'styles'
+import { ReactElement } from 'react'
 import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
+import {
+  BoxChatMain, BoxContainer,
+  ContainerCustom, MainContainer
+} from './style'
 
-import { Props, defaultProps } from './types'
+import { defaultProps, Props } from './types'
 
 const BoxChat = ({
   isOwnUser,
