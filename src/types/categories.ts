@@ -25,6 +25,7 @@ export type CategoryPostCardProps = {
   isExclusive?: boolean
   isGeolocked?: boolean
   hover?: boolean
+  modalType?: boolean
   categoryUnpinned?: (categoryId: string) => void
 }
 
