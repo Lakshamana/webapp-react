@@ -78,7 +78,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "husky install",
+    "postinstall": "husky install",
     "graphql:generate": "npx graphql-codegen --config codegen.yml -r dotenv/config",
     "graphql:generate:watch": "yarn graphql:generate --watch",
     "storybook": "start-storybook -p 6006 -s public",
