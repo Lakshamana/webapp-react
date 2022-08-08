@@ -66,6 +66,8 @@ const LivePostPage = () => {
 
   const liveQuery = query(liveCollection)
 
+  const isChatVisible = isCommentsEnabled || isReactionsEnabled
+
   useEffect(() => {
     const liveUnsubscriber = onSnapshot(liveQuery, (snapshot) => {
       snapshot.forEach((doc) => {
@@ -143,7 +145,7 @@ const LivePostPage = () => {
             position="relative"
             backgroundColor={'black'}
             height={{ base: '30vh', md: '100%' }}
-            w={{ sm: '100%', md: '55%', lg: '65%', xl: '70%' }}
+            w={isChatVisible ? { sm: '100%', md: '55%', lg: '65%', xl: '70%' } : '100%'}
           >
             <Flex
               gridGap={1}
@@ -185,19 +187,21 @@ const LivePostPage = () => {
               />
             )}
           </Box>
-          <Box
-            height={{ base: '62vh', md: '100%' }}
-            w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
-            borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
-          >
-            {livestream && (
-              <Livechat
-                isCommentsEnabled={isCommentsEnabled}
-                isReactionsEnabled={isReactionsEnabled}
-                entityId={livestream?.id}
-              />
-            )}
-          </Box>
+          {isChatVisible && (
+            <Box
+              height={{ base: '62vh', md: '100%' }}
+              w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
+              borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
+            >
+              {livestream && (
+                <Livechat
+                  isCommentsEnabled={isCommentsEnabled}
+                  isReactionsEnabled={isReactionsEnabled}
+                  entityId={livestream?.id}
+                />
+              )}
+            </Box>
+          )}
         </Live>
         <LiveDetails>
           <Title>{stripHTML(livestream?.title!)}</Title>
