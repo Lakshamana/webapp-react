@@ -4,14 +4,20 @@ const path = require("path")
 const fs = require("fs")
 const app = new express()
 const PORT = process.env.PORT || 3004
-const API_ENDPOINT = 'fourdotzero-dev.fanheroapi.com'
+const API_ENDPOINT = 'https://fourdotzero-dev.fanheroapi.com'
 
 const defaultValues = {
-  favicon: '',
+  favicon: {
+    baseUrl: '',
+    imgPath: ''
+  },
   title: 'Fanhero Video Platform',
   description: 'An end-to-end video platform powered by the Fanhero Video Technology Cloud',
   url: 'https://fanhero.tv/',
-  image: 'https://fanhero.com/wp-content/uploads/img-home-2.jpg.webp',
+  image: {
+    baseUrl: 'https://fanhero.com',
+    imgPath: 'wp-content/uploads/img-home-2.jpg.webp'
+  },
   domain: 'fanhero.tv'
 }
 
@@ -20,34 +26,14 @@ const stripHTML = (text) => text ? text.replace(/(<([^>]+)>)/gi, '') : ''
 const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
 
-  const endpoint = `https://${API_ENDPOINT}`
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let defineValues = { ...defaultValues }
 
-  const getData = async (postSlug, endpointName) => {
-    return await axios
-      .get(`${endpoint}/${endpointName}/metadata?slug=${postSlug}`)
-      .then(({ data }) => {
-        try {
-          let defineImage = data.body.data.image
-            ? `${data.body.data.image.baseUrl}/${data.body.data.image.imgPath}`
-            : null
-          defineValues = {
-            ...defaultValues,
-            favicon: data.body.data?.favicon || defaultValues.favicon,
-            title: data.body.data?.title,
-            description: stripHTML(data.body.data?.description),
-            url: pathname,
-            image: defineImage
-          }
-          console.log('DEFINED VALUES: ', defineValues)
-          return true
-        } catch (error) {
-          return false
-        }
-      })
-      .catch(() => { return false })
-  }
+  let tenant = req.hostname.includes('localhost')
+    ? 'https://marvel-dev.fanhero.tv'
+    : req.hostname
+
+  const promises = [axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })]
 
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
@@ -55,10 +41,11 @@ const getTenantData = async (req, res) => {
     if (postSlug.indexOf('/') >= 0) {
       postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1).replace(/\//gm, '')
     }
-    return await getData(postSlug, endpointName)
+    promises.push(axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`))
+    return true
   }
 
-  let hasData
+  let definedRequest
   const byPass = ['/favicon.ico', '/manifest.json']
   const postPath = '/post/'
   const categoryPath = '/category/'
@@ -66,49 +53,70 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
-    hasData = true
+    definedRequest = true
   }
 
-  if (pathname.includes(postPath)) {
-    hasData = await getDataByPath(postPath, 'posts')
+  if (pathname.includes(postPath) && !definedRequest) {
+    definedRequest = await getDataByPath(postPath, 'posts')
     console.log('---- POSTS: ', postPath)
-    console.log('---- HASDATA: ', hasData)
+    console.log('---- HASDATA: ', definedRequest)
   }
-  if (pathname.includes(categoryPath) && !hasData) {
-    hasData = await getDataByPath(categoryPath, 'categories')
+  if (pathname.includes(categoryPath) && !definedRequest) {
+    definedRequest = await getDataByPath(categoryPath, 'categories')
     console.log('---- CATEGORIES: ', categoryPath)
-    console.log('---- HASDATA: ', hasData)
+    console.log('---- HASDATA: ', definedRequest)
   }
-  if (pathname.includes(livePath) && !hasData) {
-    hasData = await getDataByPath(livePath, 'live-events')
+  if (pathname.includes(livePath) && !definedRequest) {
+    definedRequest = await getDataByPath(livePath, 'live-events')
     console.log('---- LIVE EVENTS: ', livePath)
-    console.log('---- HASDATA: ', hasData)
+    console.log('---- HASDATA: ', definedRequest)
   }
-  if (pathname.includes(channelPath) && !hasData) {
-    hasData = await getDataByPath(channelPath, 'channels')
+  if (pathname.includes(channelPath) && !definedRequest) {
+    definedRequest = await getDataByPath(channelPath, 'channels')
     console.log('---- CHANNELS: ', channelPath)
-    console.log('---- HASDATA: ', hasData)
+    console.log('---- HASDATA: ', definedRequest)
   }
 
-  if (!hasData) {
-    let subDomain = req.hostname.split('.')[0]
-    let tenant = subDomain.includes('localhost')
-      ? 'marvel-dev'
-      : subDomain
+  if (!byPass.includes(pathname)) {
+    try {
+      await axios.all(promises).then(axios.spread((orgResponse, anotherResponse) => {
+        const ORG_VALUES = orgResponse?.data?.body?.data
+        const ANOTHER_DATA = anotherResponse?.data?.body?.data
+        defineValues = {
+          ...ORG_VALUES,
+          ...ANOTHER_DATA
+        }
+        defineValues['description'] = stripHTML(defineValues.description)
+        defineValues['domain'] = tenant
+        defineValues['url'] = tenant
+        console.log('DEFINED VALUES: ', defineValues)
+      }))
+    } catch (error) { }
+  }
 
-    hasData = await getData(tenant, 'organizations')
-    console.log('---- ORGANIZATION: ', tenant)
-    console.log('---- HASDATA: ', hasData)
+  let validateParams = ({ baseUrl, imgPath }, size) => {
+    if (!baseUrl || !imgPath) return '/favicon.ico'
+    return `${baseUrl}/${size}/filters:quality(75)/${imgPath}`
   }
 
   let htmlWithSeo = html
     .toString()
-    .replace("__SEO_FAVICON_ICON__", `${defineValues.favicon}/favicon.ico`)
-    .replace("__SEO_FAVICON_APPLE__", `${defineValues.favicon}/logo192.png`)
+    .replace("__SEO_FAVICON32x32_ICON__", validateParams(defineValues.favicon, '32x32'))
+    .replace("__SEO_FAVICON57x57_ICON__", validateParams(defineValues.favicon, '57x57'))
+    .replace("__SEO_FAVICON76x76_ICON__", validateParams(defineValues.favicon, '76x76'))
+    .replace("__SEO_FAVICON96x96_ICON__", validateParams(defineValues.favicon, '96x96'))
+    .replace("__SEO_FAVICON128x128_ICON__", validateParams(defineValues.favicon, '128x128'))
+    .replace("__SEO_FAVICON192x192_ICON__", validateParams(defineValues.favicon, '192x192'))
+    .replace("__SEO_FAVICON228x228_ICON__", validateParams(defineValues.favicon, '228x228'))
+    .replace("__SEO_FAVICON196x196_ICON__", validateParams(defineValues.favicon, '196x196'))
+    .replace("__SEO_FAVICON120x120_ICON__", validateParams(defineValues.favicon, '120x120'))
+    .replace("__SEO_FAVICON152x152_ICON__", validateParams(defineValues.favicon, '152x152'))
+    .replace("__SEO_FAVICON180x180_ICON__", validateParams(defineValues.favicon, '180x180'))
+    .replaceAll("__MANIFEST__", `${defineValues.url}/manifest.json`)
     .replaceAll("__SEO_TITLE__", defineValues.title)
     .replaceAll("__SEO_DESCRIPTION__", defineValues.description)
     .replaceAll("__SEO_URL__", defineValues.url)
-    .replaceAll("__SEO_IMAGE__", defineValues.image)
+    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '0x200'))
     .replaceAll("__SEO_DOMAIN__", defineValues.domain)
   return res.send(htmlWithSeo)
 }
