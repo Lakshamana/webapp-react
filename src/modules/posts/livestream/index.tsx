@@ -52,12 +52,13 @@ const LivePostPage = () => {
       setIsCommentsEnabled(result.liveEvent?.commentsEnabled)
       setIsReactionsEnabled(result.liveEvent?.reactionsEnabled)
       setIsPresenceEnabled(result.liveEvent?.presenceEnabled)
+      setLiveStatus(result.liveEvent?.status)
     },
   })
 
-  const isLive = liveStatus === Status.Live
-  const isScheduled = liveStatus === Status.Scheduled
-  const isFinished = liveStatus === Status.Finished
+  const isLive = liveStatus === Status.Live || livestream?.status === Status.Live
+  const isScheduled = liveStatus === Status.Scheduled || livestream?.status === Status.Scheduled
+  const isFinished = liveStatus === Status.Finished || livestream?.status === Status.Finished
 
   const liveCollection = collection(
     firebaseDB,
