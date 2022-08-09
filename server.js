@@ -28,12 +28,11 @@ const getTenantData = async (req, res) => {
 
   let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
   let defineValues = { ...defaultValues }
-
-  let tenant = req.hostname.includes('localhost')
+  const tenant = req.hostname.includes('localhost')
     ? 'https://marvel-dev.fanhero.tv'
     : req.hostname
-
-  const promises = [axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })]
+  defineValues['domain'] = tenant
+  defineValues['url'] = tenant
 
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
@@ -41,8 +40,17 @@ const getTenantData = async (req, res) => {
     if (postSlug.indexOf('/') >= 0) {
       postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1).replace(/\//gm, '')
     }
-    promises.push(axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`))
-    return true
+    try {
+      const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
+      const ANOTHER_DATA = anotherResponse?.data?.body?.data
+      defineValues = { ...defineValues, ...ANOTHER_DATA }
+      defineValues['description'] = stripHTML(defineValues.description)
+      console.log(defineValues, 'ANOTHER')
+      return true
+    } catch (error) {
+      console.log(defineValues, 'ANOTHER ERROR')
+      return false
+    }
   }
 
   let definedRequest
@@ -54,6 +62,13 @@ const getTenantData = async (req, res) => {
 
   if (byPass.includes(pathname)) {
     definedRequest = true
+  } else {
+    try {
+      const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
+      const ORG_VALUES = orgResponse?.data?.body?.data
+      defineValues = { ...defineValues, ...ORG_VALUES }
+      console.log(defineValues, 'ORG')
+    } catch (error) { }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
@@ -75,23 +90,6 @@ const getTenantData = async (req, res) => {
     definedRequest = await getDataByPath(channelPath, 'channels')
     console.log('---- CHANNELS: ', channelPath)
     console.log('---- HASDATA: ', definedRequest)
-  }
-
-  if (!byPass.includes(pathname)) {
-    try {
-      await axios.all(promises).then(axios.spread((orgResponse, anotherResponse) => {
-        const ORG_VALUES = orgResponse?.data?.body?.data
-        const ANOTHER_DATA = anotherResponse?.data?.body?.data
-        defineValues = {
-          ...ORG_VALUES,
-          ...ANOTHER_DATA
-        }
-        defineValues['description'] = stripHTML(defineValues.description)
-        defineValues['domain'] = tenant
-        defineValues['url'] = tenant
-        console.log('DEFINED VALUES: ', defineValues)
-      }))
-    } catch (error) { }
   }
 
   let validateParams = ({ baseUrl, imgPath }, size) => {
