@@ -48,7 +48,8 @@ const getTenantData = async (req, res) => {
       console.log(defineValues, 'ANOTHER')
       return true
     } catch (error) {
-      console.log(defineValues, 'ANOTHER ERROR')
+      console.log(defineValues, 'ANOTHER ERROR VALUES')
+      console.log(error, 'ANOTHER ERROR')
       return false
     }
   }
@@ -61,14 +62,18 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
+    console.log('BYPASS TRUE', pathname, byPass.includes(pathname))
     definedRequest = true
   } else {
+    console.log('BYPASS FALSE', pathname, byPass.includes(pathname))
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
       console.log(defineValues, 'ORG')
-    } catch (error) { }
+    } catch (error) {
+      console.log('ERROR ORG', error)
+    }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
@@ -110,7 +115,6 @@ const getTenantData = async (req, res) => {
     .replace("__SEO_FAVICON120x120_ICON__", validateParams(defineValues.favicon, '120x120'))
     .replace("__SEO_FAVICON152x152_ICON__", validateParams(defineValues.favicon, '152x152'))
     .replace("__SEO_FAVICON180x180_ICON__", validateParams(defineValues.favicon, '180x180'))
-    .replaceAll("__MANIFEST__", `${defineValues.url}/manifest.json`)
     .replaceAll("__SEO_TITLE__", defineValues.title)
     .replaceAll("__SEO_DESCRIPTION__", defineValues.description)
     .replaceAll("__SEO_URL__", defineValues.url)
