@@ -30,7 +30,7 @@ const getTenantData = async (req, res) => {
   let defineValues = { ...defaultValues }
   const tenant = req.hostname.includes('localhost')
     ? 'https://marvel-dev.fanhero.tv'
-    : req.hostname
+    : `${req.protocol}://${req.hostname}`
   defineValues['domain'] = tenant
   defineValues['url'] = tenant
 
@@ -45,13 +45,8 @@ const getTenantData = async (req, res) => {
       const ANOTHER_DATA = anotherResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
-      console.log(defineValues, 'ANOTHER')
       return true
-    } catch (error) {
-      console.log(defineValues, 'ANOTHER ERROR VALUES')
-      console.log(error, 'ANOTHER ERROR')
-      return false
-    }
+    } catch (error) { return false }
   }
 
   let definedRequest
@@ -62,39 +57,26 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
-    console.log('BYPASS TRUE', pathname, byPass.includes(pathname))
     definedRequest = true
   } else {
-    console.log('BYPASS FALSE', pathname, byPass.includes(pathname))
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
-      console.log(defineValues, 'ORG')
-    } catch (error) {
-      console.log('ERROR ORG', error)
-    }
+    } catch (error) { }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
     definedRequest = await getDataByPath(postPath, 'posts')
-    console.log('---- POSTS: ', postPath)
-    console.log('---- HASDATA: ', definedRequest)
   }
   if (pathname.includes(categoryPath) && !definedRequest) {
     definedRequest = await getDataByPath(categoryPath, 'categories')
-    console.log('---- CATEGORIES: ', categoryPath)
-    console.log('---- HASDATA: ', definedRequest)
   }
   if (pathname.includes(livePath) && !definedRequest) {
     definedRequest = await getDataByPath(livePath, 'live-events')
-    console.log('---- LIVE EVENTS: ', livePath)
-    console.log('---- HASDATA: ', definedRequest)
   }
   if (pathname.includes(channelPath) && !definedRequest) {
     definedRequest = await getDataByPath(channelPath, 'channels')
-    console.log('---- CHANNELS: ', channelPath)
-    console.log('---- HASDATA: ', definedRequest)
   }
 
   let validateParams = ({ baseUrl, imgPath }, size) => {
