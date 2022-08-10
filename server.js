@@ -57,13 +57,18 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
+    console.log('BYPASS TRUE', pathname, byPass.includes(pathname))
     definedRequest = true
   } else {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
-    } catch (error) { }
+      console.log('DEFINE VALUES', defineValues)
+    } catch (error) {
+      console.log('ORG ERROR:', error)
+      console.log('ORG TENANT:', tenant)
+    }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
