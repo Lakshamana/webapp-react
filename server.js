@@ -57,18 +57,13 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
-    console.log('BYPASS TRUE', pathname, byPass.includes(pathname))
     definedRequest = true
   } else {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
-      console.log('DEFINE VALUES', defineValues)
-    } catch (error) {
-      console.log('ORG ERROR:', error)
-      console.log('ORG TENANT:', tenant)
-    }
+    } catch (error) { }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
@@ -110,6 +105,7 @@ const getTenantData = async (req, res) => {
   return res.send(htmlWithSeo)
 }
 
+app.enable('trust proxy')
 app.use("/static", express.static(path.join(__dirname, "build/static")))
 app.get("*", getTenantData)
 app.listen(PORT, () => console.log("listen on port: " + PORT))
