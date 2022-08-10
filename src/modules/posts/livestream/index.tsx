@@ -1,5 +1,5 @@
 import { useLazyQuery } from '@apollo/client'
-import { Box, Flex, useMediaQuery } from '@chakra-ui/react'
+import { Box, Flex, Text, useMediaQuery } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,7 @@ import { useCommonStore, useThemeStore } from 'services/stores'
 import { firebaseDB } from 'config/firebase'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 
-import { Badge, Container, Countdown, Skeleton, Text } from 'components/atoms'
+import { Badge, Container, Countdown, Skeleton } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
 import { Livechat } from 'components/organisms'
 import { VerifyContentKind } from '../components'
@@ -56,10 +56,6 @@ const LivePostPage = () => {
     },
   })
 
-  const isLive = liveStatus === Status.Live || livestream?.status === Status.Live
-  const isScheduled = liveStatus === Status.Scheduled || livestream?.status === Status.Scheduled
-  const isFinished = liveStatus === Status.Finished || livestream?.status === Status.Finished
-
   const liveCollection = collection(
     firebaseDB,
     `livestream/${livestream?.id}/control`
@@ -68,6 +64,28 @@ const LivePostPage = () => {
   const liveQuery = query(liveCollection)
 
   const isChatVisible = isCommentsEnabled || isReactionsEnabled
+
+  const renderEndedLiveText = () => (
+    <Flex
+      direction="column"
+      width="100%"
+      height="100%"
+      alignItems="center"
+      justifyContent="center"
+      position="absolute"
+      margin="auto"
+      padding={5}
+    >
+      <Text
+        fontSize={{ base: '1.6rem', lg: '2.5rem', xl: '3rem' }}
+        fontWeight="bold"
+        color={'white'}
+        textAlign="center"
+      >
+        {t('page.post.live.ended')}
+      </Text>
+    </Flex>
+  )
 
   useEffect(() => {
     const liveUnsubscriber = onSnapshot(liveQuery, (snapshot) => {
@@ -146,7 +164,11 @@ const LivePostPage = () => {
             position="relative"
             backgroundColor={'black'}
             height={{ base: '30vh', md: '100%' }}
-            w={isChatVisible ? { sm: '100%', md: '55%', lg: '65%', xl: '70%' } : '100%'}
+            w={
+              isChatVisible
+                ? { sm: '100%', md: '55%', lg: '65%', xl: '70%' }
+                : '100%'
+            }
           >
             <Flex
               gridGap={1}
@@ -167,7 +189,7 @@ const LivePostPage = () => {
                 </Badge>
               )}
             </Flex>
-            {isLive && hlsPlaybackUrl && (
+            {liveStatus === Status.Live && hlsPlaybackUrl && (
               <VideoPlayer
                 isLiveStream={true}
                 src={hlsPlaybackUrl}
@@ -177,16 +199,14 @@ const LivePostPage = () => {
                 post_type={PostType.OnDemand}
               />
             )}
-            {(isScheduled || isFinished) && (
+            {(liveStatus === Status.Scheduled ||
+              liveStatus === Status.Ready) && (
               <Countdown
                 eventStartDate={livestream?.scheduledStartAt}
-                fallbackMessage={
-                  isScheduled
-                    ? t('page.post.live.will_start_soon')
-                    : t('page.post.live.ended')
-                }
+                fallbackMessage={t('page.post.live.will_start_soon')}
               />
             )}
+            {liveStatus === Status.Finished && renderEndedLiveText()}
           </Box>
           {isChatVisible && (
             <Box
