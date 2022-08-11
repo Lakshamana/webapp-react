@@ -63,7 +63,10 @@ const getTenantData = async (req, res) => {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
-    } catch (error) { }
+      console.log('DEFINED: ', defineValues)
+    } catch (error) {
+      console.log('ERROR ORG: ', error)
+    }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
