@@ -24,7 +24,7 @@ const CustomFieldsForm = ({
       const {
         country: { iso_code },
       } = await get()
-      if (iso_code === 'BR') {
+      if (iso_code !== 'BR') {
         setfields(fields.filter(itsNotBrazil))
       }
     } catch (e) {
