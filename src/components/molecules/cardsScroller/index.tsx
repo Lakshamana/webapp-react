@@ -3,14 +3,15 @@ import { Link, Text } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores'
 import { breakpoints, colors, sizes } from 'styles'
-import SwiperCore, { Navigation, Pagination } from 'swiper'
+import SwiperCore, { Lazy, Navigation, Pagination } from 'swiper'
 import 'swiper/swiper-bundle.min.css'
 import { SWIPPER_PARAMS } from './settings'
 import { Content, Header, SwiperStyled } from './style'
 import { Props } from './types'
-SwiperCore.use([Navigation, Pagination])
 
-const CardsScroller = ({ children, title, moreUrl }: Props) => {
+SwiperCore.use([Navigation, Pagination, Lazy])
+
+const CardsScroller = ({ children, title, moreUrl, reachEnd }: Props) => {
   SWIPPER_PARAMS['navigation'] = {
     prevEl: `.swiper-button-prev`,
     nextEl: `.swiper-button-next`,
@@ -46,7 +47,10 @@ const CardsScroller = ({ children, title, moreUrl }: Props) => {
   return (
     <Content>
       <RenderHeader />
-      <SwiperStyled {...SWIPPER_PARAMS}>
+      <SwiperStyled
+        onReachEnd={reachEnd}
+        {...SWIPPER_PARAMS}
+      >
         <div className="swiper-wrapper">{children}</div>
         <div className="swiper-pagination-cards cards-scroller-pagination" />
         <div className={`swiper-button-prev`} />

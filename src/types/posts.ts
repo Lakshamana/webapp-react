@@ -5,6 +5,7 @@ export type VideosScrollerProps = {
   sectionUrl?: string
   hasMoreLink?: boolean
   items?: Post[]
+  loadMoreItems?: () => void
 }
 
 export type VideosGridProps = {

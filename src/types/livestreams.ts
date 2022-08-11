@@ -5,6 +5,7 @@ export type LivestreamsScrollerProps = {
   sectionUrl?: string
   hasMoreLink?: boolean
   items?: LiveEvent[]
+  loadMoreItems?: () => void
 }
 
 export type LivestreamPostCardProps = {

@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
-import { CategoriesScrollerProps, CategoryPostCardProps } from 'types/categories'
+import {
+  CategoriesScrollerProps,
+  CategoryPostCardProps
+} from 'types/categories'
 import {
   isEntityBlocked,
   isEntityExclusive,
@@ -17,6 +20,7 @@ const CategoriesScroller = ({
   items,
   sectionTitle,
   sectionUrl,
+  loadMoreItems,
 }: CategoriesScrollerProps) => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
@@ -55,15 +59,19 @@ const CategoriesScroller = ({
 
   return (
     <ContentScroller>
-      {scrollerItems?.length &&
-        <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
+      {scrollerItems?.length && (
+        <CardsScroller
+          title={sectionTitle}
+          moreUrl={sectionUrl}
+          reachEnd={loadMoreItems}
+        >
           {scrollerItems?.map((category: CategoryPostCardProps) => (
             <SwiperSlide key={`slide-${category.id}`}>
               <CategoryPostCard {...category} />
             </SwiperSlide>
           ))}
         </CardsScroller>
-      }
+      )}
     </ContentScroller>
   )
 }
