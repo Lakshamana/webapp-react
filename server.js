@@ -79,9 +79,9 @@ const getTenantData = async (req, res) => {
     definedRequest = await getDataByPath(channelPath, 'channels')
   }
 
-  let validateParams = ({ baseUrl, imgPath }, size) => {
+  let validateParams = ({ baseUrl, imgPath }, size, quality = 75) => {
     if (!baseUrl || !imgPath) return '/favicon.ico'
-    return `${baseUrl}/${size}/filters:quality(75)/${imgPath}`
+    return `${baseUrl}/${size}/filters:quality(${quality})/${imgPath}`
   }
 
   let htmlWithSeo = html
@@ -100,7 +100,7 @@ const getTenantData = async (req, res) => {
     .replaceAll("__SEO_TITLE__", defineValues.title)
     .replaceAll("__SEO_DESCRIPTION__", defineValues.description)
     .replaceAll("__SEO_URL__", defineValues.url)
-    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '0x200'))
+    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '300x200', 20))
     .replaceAll("__SEO_DOMAIN__", defineValues.domain)
   return res.send(htmlWithSeo)
 }
