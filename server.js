@@ -63,10 +63,7 @@ const getTenantData = async (req, res) => {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
-      console.log('DEFINED: ', defineValues)
-    } catch (error) {
-      console.log('ERROR ORG: ', error)
-    }
+    } catch (error) { }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
@@ -103,7 +100,7 @@ const getTenantData = async (req, res) => {
     .replaceAll("__SEO_TITLE__", defineValues.title)
     .replaceAll("__SEO_DESCRIPTION__", defineValues.description)
     .replaceAll("__SEO_URL__", defineValues.url)
-    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '300x200', 20))
+    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '300x169', 20))
     .replaceAll("__SEO_DOMAIN__", defineValues.domain)
   return res.send(htmlWithSeo)
 }
