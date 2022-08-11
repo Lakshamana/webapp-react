@@ -5,6 +5,7 @@ export type CategoriesScrollerProps = {
   sectionUrl?: string
   hasMoreLink?: boolean
   items?: Maybe<Category[]>
+  loadMoreItems?: () => void
 }
 
 export type CategoriesGridProps = {

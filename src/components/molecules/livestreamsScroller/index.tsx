@@ -21,6 +21,7 @@ const LivestreamScroller = ({
   items,
   sectionTitle,
   sectionUrl,
+  loadMoreItems
 }: LivestreamsScrollerProps) => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
@@ -72,7 +73,7 @@ const LivestreamScroller = ({
   return (
     <ContentScroller>
       {!!scrollerItems?.length &&
-        <CardsScroller title={sectionTitle} moreUrl={sectionUrl}>
+        <CardsScroller title={sectionTitle} moreUrl={sectionUrl} reachEnd={loadMoreItems}>
           {scrollerItems?.map((item: LivestreamPostCardProps) => (
             <SwiperSlide key={`slide-${item.id}-livestream`}>
               <LivestreamPostCard {...item} />
