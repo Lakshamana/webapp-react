@@ -1,5 +1,4 @@
 import { CardsScroller, LivestreamPostCard } from 'components'
-import { compareAsc, parseISO } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
@@ -11,7 +10,7 @@ import {
 } from 'utils/accessVerifications'
 import { ContentScroller } from './style'
 
-import { LiveEvent, Status } from 'generated/graphql'
+import { LiveEvent } from 'generated/graphql'
 import {
   LivestreamPostCardProps,
   LivestreamsScrollerProps
@@ -39,20 +38,8 @@ const LivestreamScroller = ({
     return image
   }
 
-  const isLive = (live: LiveEvent) => live.status === Status.Live
-
   useEffect(() => {
-    const arrForSort = [...items!]
-    arrForSort.sort((a, b) => {
-      const liveA = isLive(a)
-      const liveB = isLive(b)
-      return !liveA && liveB
-        ? 1
-        : liveA && !liveB
-          ? -1
-          : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
-    })
-    const mappedArr = arrForSort?.map((item: LiveEvent) => {
+    const mappedArr = items?.map((item: LiveEvent) => {
       const thumbnail = getImageUrl(item)
       const url = `/c/${activeChannel?.slug}/live/${item.slug || ''}`
       return {
