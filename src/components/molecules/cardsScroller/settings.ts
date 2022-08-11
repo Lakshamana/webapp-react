@@ -18,7 +18,6 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   grabCursor: false,
   slidesOffsetAfter: 32,
   slidesOffsetBefore: 32,
-  watchSlidesVisibility: true,
   slideVisibleClass: 'visibleCard',
   keyboard: {
     enabled: true,
