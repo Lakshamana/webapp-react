@@ -63,7 +63,10 @@ const getTenantData = async (req, res) => {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
-    } catch (error) { }
+      console.log('DEFINED: ', defineValues)
+    } catch (error) {
+      console.log('ERROR ORG: ', error)
+    }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
@@ -79,9 +82,9 @@ const getTenantData = async (req, res) => {
     definedRequest = await getDataByPath(channelPath, 'channels')
   }
 
-  let validateParams = ({ baseUrl, imgPath }, size, quality = 75) => {
-    if (!baseUrl || !imgPath) return '/favicon.ico'
-    return `${baseUrl}/${size}/filters:quality(${quality})/${imgPath}`
+  let validateParams = (imageData, size, quality = 75) => {
+    if (!imageData?.baseUrl || !imageData?.imgPath) return '/favicon.ico'
+    return `${imageData?.baseUrl}/${size}/filters:quality(${quality})/${imageData?.imgPath}`
   }
 
   let htmlWithSeo = html
