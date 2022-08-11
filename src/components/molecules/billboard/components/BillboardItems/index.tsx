@@ -26,7 +26,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
   if (!items || !items.length) return <></>
 
   return (
-    <SwiperStyled {...Params} style={{ position: 'relative', height: '100%' }}>
+    <SwiperStyled effect='fade' {...Params} style={{ position: 'relative', height: '100%' }}>
       {getItems(items).map((item: BillboardItem) => (
         <SwiperSlide style={{ width: '100%' }} key={item.id} className="slider">
           <BillboardItems>
