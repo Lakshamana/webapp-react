@@ -100,7 +100,7 @@ const getTenantData = async (req, res) => {
     .replaceAll("__SEO_TITLE__", defineValues.title)
     .replaceAll("__SEO_DESCRIPTION__", defineValues.description)
     .replaceAll("__SEO_URL__", defineValues.url)
-    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '200x200', 20))
+    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '300x200', 20))
     .replaceAll("__SEO_DOMAIN__", defineValues.domain)
   return res.send(htmlWithSeo)
 }
