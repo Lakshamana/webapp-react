@@ -112,7 +112,9 @@ const Livestreams = () => {
   }
 
   const getImageUrl = (path: string) => {
-    return generateImage(ThumborInstanceTypes.IMAGE, path)
+    return generateImage(ThumborInstanceTypes.IMAGE, path, {
+      size: { width: 1080, height: 0 },
+    })
   }
 
   useEffect(() => {
