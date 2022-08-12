@@ -23,15 +23,21 @@ export const getDefaultConfigs = (
   responsive: true,
   fill: true,
   fluid: false,
+  loadingSpinner: true,
   preload: 'auto',
   preloadWebComponents: true,
   techOrder: ['chromecast', 'html5'],
   html5: {
-    hls: {
+    vhs: {
       enableLowInitialPlaylist: true,
-      smoothQualityChange: true,
+      fastQualityChange: true,
       overrideNative: true,
+      limitRenditionByPlayerDimensions: false,
+      useDevicePixelRatio: true
     },
+    nativeAudioTracks: false,
+    nativeVideoTracks: false,
+    useBandwidthFromLocalStorage: true
   },
   playbackRates: [0.5, 1, 1.5, 2],
   plugins: {
