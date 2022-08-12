@@ -48,6 +48,7 @@ const CardsScroller = ({ children, title, moreUrl, reachEnd }: Props) => {
     <Content>
       <RenderHeader />
       <SwiperStyled
+        style={{ overflow: 'visible' }}
         onReachEnd={reachEnd}
         {...SWIPPER_PARAMS}
       >

@@ -421,7 +421,7 @@ const HomePage = () => {
         {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
         {isLoading && (
           <Box p={sizes.paddingSm} width="100%">
-            <Skeleton kind="cards" />
+            <Skeleton kind="cards" numberOfCards={4} />
           </Box>
         )}
         {isEmpty && <EmptyState />}
