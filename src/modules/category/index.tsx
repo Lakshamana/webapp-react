@@ -72,9 +72,10 @@ const CategoryPage = () => {
 
   const isLoadingPin = loadingUnpinCategory || loadingPinCategory
 
-  //TODO: API has to return width and height
   const getImageUrl = (path: string) =>
-    generateImage(ThumborInstanceTypes.IMAGE, path)
+    generateImage(ThumborInstanceTypes.IMAGE, path, {
+      size: { width: 1080, height: 0 },
+    })
 
   useEffect(() => {
     if (categoryData?.category) {

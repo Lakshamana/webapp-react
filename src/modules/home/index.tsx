@@ -282,7 +282,9 @@ const HomePage = () => {
   }, [tagsIds])
 
   const getImageUrl = (path: string) =>
-    generateImage(ThumborInstanceTypes.IMAGE, path)
+    generateImage(ThumborInstanceTypes.IMAGE, path, {
+      size: { width: 1080, height: 0 },
+    })
 
   useEffect(() => {
     const billboardItems = billboardData?.billboards?.rows
