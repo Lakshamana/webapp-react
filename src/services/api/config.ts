@@ -22,15 +22,12 @@ import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
 import { clearData, getData, saveData } from 'services/storage'
 import { requestGraphql } from './request'
 
-const isAnonymousUser = getData(ANONYMOUS_AUTH) === '1'
-
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
   process.env
 
-const ORGANIZATION_URL =
-  NODE_ENV === 'development'
-    ? REACT_APP_ORGANIZATION_URL
-    : window.location.origin
+const ORGANIZATION_URL = NODE_ENV === 'development'
+  ? REACT_APP_ORGANIZATION_URL
+  : window.location.origin
 
 const httpLink = createHttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
@@ -80,6 +77,8 @@ const errorLink = onError(
     if (networkError) {
       console.log(`[Network error]: ${networkError}`)
     }
+
+    const isAnonymousUser = getData(ANONYMOUS_AUTH) === '1'
 
     if (!graphQLErrors) return
 

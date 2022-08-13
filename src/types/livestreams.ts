@@ -5,6 +5,7 @@ export type LivestreamsScrollerProps = {
   sectionUrl?: string
   hasMoreLink?: boolean
   items?: LiveEvent[]
+  loadMoreItems?: () => void
 }
 
 export type LivestreamPostCardProps = {
@@ -35,3 +36,12 @@ export type LivestreamGridProps = {
   sectionTitle?: string
   items?: LiveEvent[]
 }
+
+type PostCardProps = {
+  hover: boolean
+  mobileBehavior?: boolean
+  actionHover: (status: boolean) => () => void
+  defineAction: () => void
+}
+
+export type ComponentPostCardProps = LivestreamPostCardProps & PostCardProps

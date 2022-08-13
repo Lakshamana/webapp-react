@@ -24,7 +24,7 @@ import {
 } from 'services/stores'
 
 import { LoadingScreen } from 'components'
-import { clearData, getData, saveData } from 'services/storage'
+import { clearData, getData } from 'services/storage'
 
 import { useTranslation } from 'react-i18next'
 import { AuthTypes } from './types'
@@ -72,10 +72,9 @@ export const AuthProvider = ({ children }) => {
   const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
     process.env
 
-  const origin =
-    NODE_ENV === 'development'
-      ? REACT_APP_ORGANIZATION_URL
-      : window.location.origin
+  const origin = NODE_ENV === 'development'
+    ? REACT_APP_ORGANIZATION_URL
+    : window.location.origin
 
   const updateAccount = async (account) => {
     await setAccount(account)
@@ -136,7 +135,7 @@ export const AuthProvider = ({ children }) => {
     })
   }
 
-  const getOrganization = () => {
+  const getOrganization = async () => {
     new Promise(async (resolve, reject) => {
       try {
         const { data } = await axios.get(
@@ -157,6 +156,7 @@ export const AuthProvider = ({ children }) => {
             data?.body?.data.customization,
             configEnvs.remoteConfigSecret
           )
+
           const decryptedCustomization = JSON.parse(
             decryptedEnv.toString(crypto.enc.Utf8)
           )
@@ -164,19 +164,22 @@ export const AuthProvider = ({ children }) => {
           await setCustomizationData(decryptedCustomization)
           await setOrganizationConfig(decryptedCustomization?.ORGANIZATION)
 
-          const storedLocale = getData(APP_LOCALE)
+          const language =
+            getData(APP_LOCALE) ||
+            decryptedCustomization?.ORGANIZATION?.LOCALE ||
+            'en-US'
 
-          saveData(
-            APP_LOCALE,
-            storedLocale || customizationData?.ORGANIZATION.LOCALE || 'en-US'
-          )
+          i18n.changeLanguage(language)
 
           const storedTheme = getData(APP_THEME)
-          setColorMode(
-            storedTheme ||
-              customizationData?.ORGANIZATION?.THEME?.toLowerCase() ||
-              'dark'
-          )
+
+          const customizationTheme = activeChannel
+            ? decryptedCustomization?.CHANNELS[
+              activeChannel.id
+            ]?.THEME?.toLowerCase()
+            : decryptedCustomization?.ORGANIZATION?.THEME?.toLowerCase()
+
+          setColorMode(storedTheme || customizationTheme || 'dark')
         }
         resolve(true)
       } catch (error) {
@@ -223,7 +226,7 @@ export const AuthProvider = ({ children }) => {
         (customizationData?.CHANNELS[
           activeChannel.id
         ]?.THEME.toLowerCase() as ColorMode) ||
-          (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
+        (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
       )
     }
     // eslint-disable-next-line
@@ -237,7 +240,8 @@ export const AuthProvider = ({ children }) => {
     if (
       !accessToken &&
       (window.location.href.indexOf('/post/') >= 1 ||
-        window.location.href.indexOf('/category/') >= 1)
+        window.location.href.indexOf('/category/') >= 1 ||
+        window.location.href.indexOf('/live/') >= 1)
     ) {
       doAnonymousAuth()
       return

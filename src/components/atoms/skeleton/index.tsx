@@ -1,13 +1,13 @@
-import { Skeleton as SkeletonLoading } from '@chakra-ui/react'
-import { SimpleGrid } from '@chakra-ui/react'
+import { SimpleGrid, Skeleton as SkeletonLoading, useMediaQuery } from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
-import { colors } from 'styles'
+import { breakpoints, colors } from 'styles'
 import { RANDOM_ID } from 'utils/helperFunctions'
-import { Props, defaultProps } from './types'
-import { PostCard, FeedContent } from './styles'
+import { FeedContent, PostCard } from './styles'
+import { defaultProps, Props } from './types'
 
 const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
   const { colorMode } = useThemeStore()
+  const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const renderSkeleton = () => {
     switch (kind) {
       case 'cards':
@@ -18,7 +18,7 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
             spacingX={4}
             spacingY={3}
           >
-            {Array.from(Array(numberOfCards).keys()).map(() => {
+            {Array.from(Array(numberOfCards || isDesktop ? 4 : 2).keys()).map(() => {
               return (
                 <SkeletonLoading
                   key={`loading-${RANDOM_ID()}`}

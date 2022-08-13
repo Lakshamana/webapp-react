@@ -2,13 +2,12 @@ import { SwiperOptions } from 'swiper'
 
 export const SWIPPER_PARAMS: SwiperOptions = {
   autoHeight: true,
+
   spaceBetween: 10,
   observer: true,
   preloadImages: true,
   resizeObserver: true,
   speed: 800,
-  setWrapperSize: false,
-  roundLengths: false,
   watchOverflow: true,
   autoplay: false,
   lazy: true,
@@ -18,11 +17,7 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   grabCursor: false,
   slidesOffsetAfter: 32,
   slidesOffsetBefore: 32,
-  watchSlidesVisibility: true,
   slideVisibleClass: 'visibleCard',
-  keyboard: {
-    enabled: true,
-  },
   breakpoints: {
     1440: {
       slidesPerView: 5.3,

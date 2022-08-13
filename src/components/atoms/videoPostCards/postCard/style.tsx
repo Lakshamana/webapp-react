@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { VideoPostCardProps } from 'types/posts'
 import { breakpoints } from 'styles'
+import { VideoPostCardProps } from 'types/posts'
 
 export const CardWrapper = styled.div`
   cursor: pointer;

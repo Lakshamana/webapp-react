@@ -1,23 +1,27 @@
-import { useEffect, useState } from 'react'
-import { Flex, Box } from '@chakra-ui/layout'
 import { useLazyQuery } from '@apollo/client'
-import { useTranslation } from 'react-i18next'
-import { useThumbor, ThumborInstanceTypes } from 'services/hooks'
-import {
-  QUERY_POSTS_CARDS,
-  QUERY_BILLBOARDS,
-  QUERY_LIVE_EVENTS,
-} from 'services/graphql'
-import { PostType, LiveEvent, Status } from 'generated/graphql'
+import { Box, Flex } from '@chakra-ui/layout'
 import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
-  LivestreamScroller,
-  VideosScroller,
   BillboardScroller,
+  LivestreamScroller,
+  VideosScroller
 } from 'components/molecules'
-import { BillboardTarget } from 'types/common'
-import { sizes } from 'styles'
+import {
+  PaginatedLiveEventsOutput,
+  PaginatedPostsOutput,
+  Status
+} from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  QUERY_BILLBOARDS,
+  QUERY_LIVE_EVENTS,
+  QUERY_POSTS_CARDS
+} from 'services/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useCommonStore, useCustomizationStore } from 'services/stores'
+import { sizes } from 'styles'
+import { BillboardTarget } from 'types/common'
 import { convertToValidColor } from 'utils/helperFunctions'
 
 import { LiveCarouselTypes } from 'types/common'
@@ -25,61 +29,92 @@ import { LiveCarouselFlags } from 'types/flags'
 
 import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 
+import { onDemandFilter, upcomingFilter } from './utils'
+
 const Livestreams = () => {
   const { t, i18n } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const { generateImage } = useThumbor()
-  const [liveItems, setLiveItems] = useState<LiveEvent[]>()
-  const [upcomingItems, setUpcomingItems] = useState<LiveEvent[]>()
+  const [upcomingEventsData, setUpcomingEventsData] =
+    useState<PaginatedLiveEventsOutput>()
+  const [onDemandData, setOnDemandData] = useState<PaginatedPostsOutput>()
   const [billboardItems, setBillboardItems] = useState([])
+
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>(false)
   const [isUpcomingLiveEventsActive, setIsUpcomingLiveEventsActive] =
     useState<boolean>(false)
   const [isOnDemandActive, setIsOnDemandActive] = useState<boolean>(false)
   const [carousels, setCarousels] = useState<LiveCarouselFlags[]>()
 
-  const [
-    getLiveEvents,
-    { data: livestreamsData, loading: loadingLivestreams },
-  ] = useLazyQuery(QUERY_LIVE_EVENTS, {
-    variables: {
-      filter: {
-        status: [Status.Live, Status.Scheduled, Status.Ready],
+  const [getLiveEvents, { data: liveEventsData, loading: loadingLiveEvents }] =
+    useLazyQuery(QUERY_LIVE_EVENTS, {
+      variables: {
+        filter: {
+          status: [Status.Live],
+        },
       },
-    },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
-    pollInterval: DEFAULT_POLLING_INTERVAL,
-  })
+      fetchPolicy: 'cache-and-network',
+      pollInterval: DEFAULT_POLLING_INTERVAL,
+    })
 
-  //TODO: Implement infinite loading on Cards Scroller
-  const [
-    getOnDemandPostsData,
-    { data: onDemandPostsData, loading: loadingOnDemandPostsData },
-  ] = useLazyQuery(QUERY_POSTS_CARDS, {
-    variables: {
-      filter: {
-        typeIn: [PostType.OnDemand],
-        sortBy: 'publishedAt.asc',
+  const [getUpcomingEvents, { loading: loadingUpcomingEvents }] = useLazyQuery(
+    QUERY_LIVE_EVENTS,
+    {
+      onCompleted: (result) => {
+        setUpcomingEventsData((previous) => ({
+          ...result.liveEvents,
+          rows: [...(previous?.rows || []), ...result.liveEvents.rows],
+        }))
       },
-    },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
-  })
+      fetchPolicy: 'cache-and-network',
+    }
+  )
 
-  const [getBillboard, { data: billboardData }] = useLazyQuery(QUERY_BILLBOARDS, {
-    variables: {
-      filter: {
-        target: BillboardTarget.Live,
+  const [getOnDemandPosts, { loading: loadingOnDemandPostsData }] =
+    useLazyQuery(QUERY_POSTS_CARDS, {
+      onCompleted: (result) => {
+        setOnDemandData((previous) => ({
+          ...result.posts,
+          rows: [...(previous?.rows || []), ...result.posts.rows],
+        }))
       },
-    },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
-  })
+      fetchPolicy: 'cache-and-network',
+    })
+
+  const [getBillboard, { data: billboardData }] = useLazyQuery(
+    QUERY_BILLBOARDS,
+    {
+      variables: {
+        filter: {
+          target: BillboardTarget.Live,
+        },
+      },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'cache-and-network',
+    }
+  )
+
+  const loadMoreUpcomingEvents = () => {
+    if (upcomingEventsData?.hasNextPage) {
+      getUpcomingEvents({
+        variables: { ...upcomingFilter(upcomingEventsData.page + 1) },
+      })
+    }
+  }
+
+  const loadMoreOnDemand = () => {
+    if (onDemandData?.hasNextPage) {
+      getOnDemandPosts({
+        variables: { ...upcomingFilter(onDemandData.page + 1) },
+      })
+    }
+  }
 
   const getImageUrl = (path: string) => {
-    return generateImage(ThumborInstanceTypes.IMAGE, path)
+    return generateImage(ThumborInstanceTypes.IMAGE, path, {
+      size: { width: 1080, height: 0 },
+    })
   }
 
   useEffect(() => {
@@ -137,34 +172,20 @@ const Livestreams = () => {
   }, [])
 
   useEffect(() => {
-    const live = livestreamsData?.liveEvents?.rows?.filter(
-      (live: LiveEvent) => {
-        return live.status === Status.Live
-      }
-    )
-    setLiveItems(live)
-
-    const upcoming = livestreamsData?.liveEvents?.rows?.filter(
-      (live: LiveEvent) => {
-        return live.status === Status.Scheduled || live.status === Status.Ready
-      }
-    )
-    setUpcomingItems(upcoming)
-    // eslint-disable-next-line
-  }, [livestreamsData])
-
-  useEffect(() => {
-    if (isLiveEventsActive || isUpcomingLiveEventsActive) getLiveEvents()
-    if (isOnDemandActive) getOnDemandPostsData()
+    if (isLiveEventsActive) getLiveEvents()
+    if (isUpcomingLiveEventsActive)
+      getUpcomingEvents({ variables: upcomingFilter(1) })
+    if (isOnDemandActive) getOnDemandPosts({ variables: onDemandFilter(1) })
     // eslint-disable-next-line
   }, [isLiveEventsActive, isUpcomingLiveEventsActive, isOnDemandActive])
 
-  const isLoading = loadingOnDemandPostsData || loadingLivestreams
+  const isLoading =
+    loadingOnDemandPostsData || loadingLiveEvents || loadingUpcomingEvents
 
   const hasResults =
-    onDemandPostsData?.posts?.rows?.length ||
-    liveItems?.length ||
-    upcomingItems?.length
+    onDemandData?.rows?.length ||
+    liveEventsData?.liveEvents?.rows?.length ||
+    upcomingEventsData?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
@@ -180,29 +201,31 @@ const Livestreams = () => {
   }
 
   const renderLiveEventsScroller = (item: LiveCarouselFlags) =>
-    !!liveItems?.length && (
+    !!liveEventsData?.liveEvents?.rows?.length && (
       <LivestreamScroller
-        items={liveItems}
+        items={liveEventsData.liveEvents.rows}
         key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
       />
     )
 
   const renderUpcomingLiveEventsScroller = (item: LiveCarouselFlags) =>
-    !!upcomingItems?.length && (
+    !!upcomingEventsData?.rows.length && (
       <LivestreamScroller
-        items={upcomingItems}
+        items={upcomingEventsData.rows}
         key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
+        loadMoreItems={loadMoreUpcomingEvents}
       />
     )
 
   const renderOnDemandPosts = (item: LiveCarouselFlags) =>
-    !!onDemandPostsData?.posts?.rows?.length && (
+    !!onDemandData?.rows?.length && (
       <VideosScroller
         key={`${item.LABEL[0].VALUE}`}
-        items={onDemandPostsData.posts.rows}
+        items={onDemandData.rows}
         sectionTitle={getCarouselLabel(item)}
+        loadMoreItems={loadMoreOnDemand}
       />
     )
 
@@ -217,19 +240,23 @@ const Livestreams = () => {
     }
   }
 
-  if (isLoading)
-    <Box p={sizes.paddingSm} width="100%">
-      <Skeleton my={4} kind="cards" numberOfCards={4} />
-    </Box>
-
   return (
-    <Container flexDirection={'column'} display={'flex'}>
+    <Container
+      flexDirection={'column'}
+      display={'flex'}
+      mt={billboardItems ? 0 : 4}
+    >
       {!!billboardItems?.length && renderBillboard()}
       <Flex gridGap={5} flexDirection={'column'} w={'100vw'}>
         {!!carousels?.length &&
           carousels.map((item: LiveCarouselFlags) =>
             renderCarouselsOrderedByRemoteConfig(item)
           )}
+        {isLoading && (
+          <Box p={sizes.paddingSm} width="100%">
+            <Skeleton my={4} kind="cards" />
+          </Box>
+        )}
         {isEmpty && <EmptyState />}
       </Flex>
     </Container>

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
+import { breakpoints, sizes } from 'styles'
 import { Swiper } from 'swiper/react'
-import { sizes, breakpoints } from 'styles'
 
 export const Content: any = styled.div`
   width: 100vw;
@@ -8,11 +8,6 @@ export const Content: any = styled.div`
   position: relative;
 `
 export const SwiperStyled = styled(Swiper)`
-  .swiper-container {
-    overflow: inherit !important;
-    padding: 0 1.3rem !important;
-  }
-
   .swiper-slide {
     &:hover {
       transition: all 250ms ease-out;

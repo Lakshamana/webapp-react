@@ -1,9 +1,9 @@
-import { Props, defaultProps } from "./types";
-import { Container } from './style'
+import { Container } from './style';
+import { defaultProps, Props } from "./types";
 
 
 const Card = ({ children, ...props }: Props) => (
-    <Container {...props}>
+    <Container data-testid="card-atom" {...props}>
         {children}
     </Container>
 

@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client'
-import { Box, Flex, useMediaQuery } from '@chakra-ui/react'
+import { useLazyQuery } from '@apollo/client'
+import { Box, Flex, Text, useMediaQuery } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,7 @@ import { useCommonStore, useThemeStore } from 'services/stores'
 import { firebaseDB } from 'config/firebase'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 
-import { Badge, Container, Countdown, Skeleton, Text } from 'components/atoms'
+import { Badge, Container, Countdown, Skeleton } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
 import { Livechat } from 'components/organisms'
 import { VerifyContentKind } from '../components'
@@ -35,12 +35,9 @@ const LivePostPage = () => {
 
   // snapshots
   const [hlsPlaybackUrl, setHlsPlaybackUrl] = useState<string>('')
-  const [isCommentsEnabled, setIsCommentsEnabled] =
-    useState<Maybe<boolean>>(null)
-  const [isReactionsEnabled, setIsReactionsEnabled] =
-    useState<Maybe<boolean>>(null)
-  const [isPresenceEnabled, setIsPresenceEnabled] =
-    useState<Maybe<boolean>>(null)
+  const [isCommentsEnabled, setIsCommentsEnabled] = useState<boolean>(false)
+  const [isReactionsEnabled, setIsReactionsEnabled] = useState<boolean>(false)
+  const [isPresenceEnabled, setIsPresenceEnabled] = useState<boolean>(false)
   const [userCount, setUserCount] = useState<number>(1)
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
 
@@ -48,14 +45,16 @@ const LivePostPage = () => {
   const [livestream, setLivestream] = useState<LiveEvent>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
-  const { loading } = useQuery(QUERY_LIVE_EVENT, {
+  const [getLiveEvent, { loading }] = useLazyQuery(QUERY_LIVE_EVENT, {
     variables: { slug },
-    onCompleted: (result) => setLivestream(result.liveEvent),
+    onCompleted: (result) => {
+      setLivestream(result.liveEvent)
+      setIsCommentsEnabled(result.liveEvent?.commentsEnabled)
+      setIsReactionsEnabled(result.liveEvent?.reactionsEnabled)
+      setIsPresenceEnabled(result.liveEvent?.presenceEnabled)
+      setLiveStatus(result.liveEvent?.status)
+    },
   })
-
-  const isLive = liveStatus === Status.Live
-  const isScheduled = liveStatus === Status.Scheduled
-  const isFinished = liveStatus === Status.Finished
 
   const liveCollection = collection(
     firebaseDB,
@@ -63,6 +62,30 @@ const LivePostPage = () => {
   )
 
   const liveQuery = query(liveCollection)
+
+  const isChatVisible = isCommentsEnabled || isReactionsEnabled
+
+  const renderEndedLiveText = () => (
+    <Flex
+      direction="column"
+      width="100%"
+      height="100%"
+      alignItems="center"
+      justifyContent="center"
+      position="absolute"
+      margin="auto"
+      padding={5}
+    >
+      <Text
+        fontSize={{ base: '1.6rem', lg: '2.5rem', xl: '3rem' }}
+        fontWeight="bold"
+        color={'white'}
+        textAlign="center"
+      >
+        {t('page.post.live.ended')}
+      </Text>
+    </Flex>
+  )
 
   useEffect(() => {
     const liveUnsubscriber = onSnapshot(liveQuery, (snapshot) => {
@@ -74,17 +97,17 @@ const LivePostPage = () => {
             case 'hlsPlaybackUrl':
               hlsPlaybackUrl !== value && setHlsPlaybackUrl(value)
               break
-            case 'isCommentsEnabled':
-              isCommentsEnabled !== value && setIsCommentsEnabled(value)
+            case 'commentsEnabled':
+              setIsCommentsEnabled(value)
               break
-            case 'isReactionsEnabled':
-              isReactionsEnabled !== value && setIsReactionsEnabled(value)
+            case 'reactionsEnabled':
+              setIsReactionsEnabled(value)
               break
-            case 'isPresenceEnabled':
-              isPresenceEnabled !== value && setIsPresenceEnabled(value)
+            case 'presenceEnabled':
+              setIsPresenceEnabled(value)
               break
             case 'count':
-              userCount !== value && setUserCount(value)
+              setUserCount(value)
               break
             case 'status':
               liveStatus !== value && setLiveStatus(value)
@@ -109,6 +132,11 @@ const LivePostPage = () => {
     if (liveStatus) setLiveBadge(StatusBadge(liveStatus, colorMode))
     // eslint-disable-next-line
   }, [liveStatus])
+
+  useEffect(() => {
+    if (!isVerifyingAccessPermission) getLiveEvent()
+    //eslint-disable-next-line
+  }, [isVerifyingAccessPermission])
 
   if (isVerifyingAccessPermission)
     return (
@@ -136,7 +164,11 @@ const LivePostPage = () => {
             position="relative"
             backgroundColor={'black'}
             height={{ base: '30vh', md: '100%' }}
-            w={{ sm: '100%', md: '55%', lg: '65%', xl: '70%' }}
+            w={
+              isChatVisible
+                ? { sm: '100%', md: '55%', lg: '65%', xl: '70%' }
+                : '100%'
+            }
           >
             <Flex
               gridGap={1}
@@ -157,7 +189,7 @@ const LivePostPage = () => {
                 </Badge>
               )}
             </Flex>
-            {isLive && hlsPlaybackUrl && (
+            {liveStatus === Status.Live && hlsPlaybackUrl && (
               <VideoPlayer
                 isLiveStream={true}
                 src={hlsPlaybackUrl}
@@ -167,39 +199,39 @@ const LivePostPage = () => {
                 post_type={PostType.OnDemand}
               />
             )}
-            {(isScheduled || isFinished) && (
+            {(liveStatus === Status.Scheduled ||
+              liveStatus === Status.Ready) && (
               <Countdown
                 eventStartDate={livestream?.scheduledStartAt}
-                fallbackMessage={
-                  isScheduled
-                    ? t('page.post.live.will_start_soon')
-                    : t('page.post.live.ended')
-                }
+                fallbackMessage={t('page.post.live.will_start_soon')}
               />
             )}
+            {liveStatus === Status.Finished && renderEndedLiveText()}
           </Box>
-          <Box
-            height={{ base: '62vh', md: '100%' }}
-            w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
-            borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
-          >
-            {livestream && (
-              <Livechat
-                isCommentsEnabled={
-                  isCommentsEnabled || livestream.commentsEnabled || false
-                }
-                isReactionsEnabled={
-                  isReactionsEnabled || livestream.reactionsEnabled || false
-                }
-                entityId={livestream?.id}
-              />
-            )}
-          </Box>
+          {isChatVisible && (
+            <Box
+              height={{ base: '62vh', md: '100%' }}
+              w={{ sm: '100%', md: '45%', lg: '35%', xl: '30%' }}
+              borderLeft={`2px solid ${colors.bodyBg[colorMode]}`}
+            >
+              {livestream && (
+                <Livechat
+                  isCommentsEnabled={isCommentsEnabled}
+                  isReactionsEnabled={isReactionsEnabled}
+                  entityId={livestream?.id}
+                />
+              )}
+            </Box>
+          )}
         </Live>
         <LiveDetails>
           <Title>{stripHTML(livestream?.title!)}</Title>
           <Subtitle>
-            <div dangerouslySetInnerHTML={{ __html: livestream?.description || '' }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: livestream?.description || '',
+              }}
+            />
           </Subtitle>
         </LiveDetails>
       </Container>

@@ -5,6 +5,7 @@ export type CategoriesScrollerProps = {
   sectionUrl?: string
   hasMoreLink?: boolean
   items?: Maybe<Category[]>
+  loadMoreItems?: () => void
 }
 
 export type CategoriesGridProps = {
@@ -24,5 +25,15 @@ export type CategoryPostCardProps = {
   isPinned?: boolean
   isExclusive?: boolean
   isGeolocked?: boolean
+  hover?: boolean
+  modalType?: boolean
   categoryUnpinned?: (categoryId: string) => void
 }
+
+type PostCardProps = {
+  mobileBehavior?: boolean
+  actionHover: (status: boolean) => () => void
+  defineAction: () => void
+}
+
+export type ComponentPostCardProps = CategoryPostCardProps & PostCardProps

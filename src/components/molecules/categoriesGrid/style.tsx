@@ -6,6 +6,6 @@ export const Wrapper: any = styled.div`
     -webkit-transition: all 250ms ease-out;
     margin-top: -30px;
     transform: scale(1.2);
-    z-index: 9999;
+    z-index: 998;
   }
 `
