@@ -80,6 +80,11 @@ const VideoPlayerComponent = ({
       }
     })
 
+    player?.qualityLevels().on('addqualitylevel', function(event) {
+      const qualityLevel = event.qualityLevel;
+      qualityLevel.enabled = qualityLevel.bitrate >= 1579131;
+    });
+
     player?.on('ended', () => setEndedVideo(true))
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
