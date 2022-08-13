@@ -4,7 +4,7 @@ const path = require("path")
 const fs = require("fs")
 const app = new express()
 const PORT = process.env.PORT || 3004
-const API_ENDPOINT = 'https://fourdotzero-dev.fanheroapi.com'
+const API_ENDPOINT = 'https://' + process.env.REACT_APP_API_ENDPOINT
 
 const defaultValues = {
   favicon: {
