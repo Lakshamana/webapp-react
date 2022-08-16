@@ -144,7 +144,7 @@ const ProfileInfo = ({
         delete values.birthday
       }
 
-      if(!values.custom_fields) delete values.custom_fields
+      if(!values.custom_fields || Object.keys(values.custom_fields).length === 0) delete values.custom_fields
 
       updateProfile({ ...values, locale: locale })
     },
