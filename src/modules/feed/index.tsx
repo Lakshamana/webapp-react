@@ -8,7 +8,7 @@ import {
   Skeleton,
   Text
 } from 'components'
-import { PaginatedPostsOutput, Post, SortDirection } from 'generated/graphql'
+import { Post, SortDirection } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -28,10 +28,12 @@ const FeedPage = () => {
   const { setPageTitle } = useCommonStore()
   const lastPositionCard = useFeedStore((state) => state.lastPositionCard)
   const setLastPositionCard = useFeedStore((state) => state.setLastPositionCard)
-  const [filterBy, setFilterBy] = useState<SortDirection>(SortDirection.Desc)
+  const { feedPosts, setFeedPosts, resetFeed } = useFeedStore()
+
+  const [filterBy, setFilterBy] = useState<SortDirection>()
   const [isPositioned, setIsPositioned] = useState<boolean>(false)
 
-  const [posts, setPosts] = useState<PaginatedPostsOutput>()
+  // const [posts, setPosts] = useState<PaginatedPostsOutput>()
   const { isAnonymousAccess } = useAuthStore()
 
   const getSortByFilter = () =>
@@ -43,17 +45,12 @@ const FeedPage = () => {
       onCompleted: (result) => {
         const posts = isAnonymousAccess ? result.publicPosts : result.posts
         //TODO: Include new INFEED filter to correctly show posts in feed
+        const previousRows = feedPosts?.rows
 
-        // const filteredRows = posts.rows.filter(({ inFeed }) => inFeed)
-        // if (filteredRows.length < 1) {
-        //   getFeedPosts({ ...postsFilter(posts.page + 1, getSortByFilter()) })
-        //   return
-        // }
-
-        setPosts((previous) => ({
+        setFeedPosts({
           ...posts,
-          rows: [...(previous?.rows || []), ...posts.rows],
-        }))
+          rows: [...(previousRows || []), ...posts.rows],
+        })
       },
     }
   )
@@ -65,7 +62,7 @@ const FeedPage = () => {
 
   const handleFilterChange = (evt: any) => {
     const { value } = evt?.target
-    setPosts(undefined)
+    resetFeed()
     setFilterBy(value)
   }
 
@@ -78,26 +75,27 @@ const FeedPage = () => {
   useEffect(() => setPageTitle(t('header.tabs.feed')), [])
 
   useEffect(() => {
-    if (!!posts?.rows.length && !isPositioned) {
+    if (!!feedPosts?.rows.length && !isPositioned) {
       setIsPositioned(true)
       window.scrollTo(0, lastPositionCard)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [posts])
+  }, [feedPosts])
 
   useEffect(() => {
-    getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
-    // eslint-disable-next-line
+    if (!feedPosts?.rows.length)
+      getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+    if (filterBy) getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterBy])
 
   const loadMoreFeedPosts = () => {
-    if (posts?.hasNextPage)
-      getFeedPosts({ ...postsFilter(posts.page + 1, getSortByFilter()) })
+    if (feedPosts?.hasNextPage)
+      getFeedPosts({ ...postsFilter(feedPosts.page + 1, getSortByFilter()) })
   }
 
   const loadingItems = (number) => (
@@ -108,11 +106,11 @@ const FeedPage = () => {
     </Center>
   )
 
-  const hasResults = posts?.rows?.length
+  const hasResults = feedPosts?.rows?.length
 
   const isEmpty = !loadingPosts && !hasResults
 
-  if (loadingPosts && !posts?.rows.length)
+  if (loadingPosts && !feedPosts?.rows.length)
     return (
       <Center width="100%" height="100%" flexDirection="column">
         {loadingItems(4)}
@@ -134,11 +132,11 @@ const FeedPage = () => {
           onChange={handleFilterChange}
         />
       </Container>
-      {posts?.rows.length && (
+      {feedPosts?.rows.length && (
         <InfiniteScroll
-          dataLength={posts?.rows.length}
+          dataLength={feedPosts?.rows.length}
           next={loadMoreFeedPosts}
-          hasMore={posts.hasNextPage}
+          hasMore={feedPosts.hasNextPage}
           loader={
             <Center width="100%" height="100%" flexDirection="column">
               {loadingItems(1)}
@@ -152,7 +150,7 @@ const FeedPage = () => {
             </Container>
           }
         >
-          {posts?.rows?.map((post: Post) => (
+          {feedPosts?.rows?.map((post: Post) => (
             <FeedPostCard
               key={post.id}
               updateState={handleScroll}

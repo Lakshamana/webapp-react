@@ -1,11 +1,18 @@
+import { PaginatedPostsOutput } from 'generated/graphql'
 import create from 'zustand'
 
-type LastPostionState = {
+type FeedState = {
   lastPositionCard: number
+  feedPosts: PaginatedPostsOutput | null
+  setFeedPosts: (postsObj: PaginatedPostsOutput) => void
   setLastPositionCard: (value: number) => void
+  resetFeed: () => void
 }
 
-export const useFeedStore = create<LastPostionState>((set) => ({
+export const useFeedStore = create<FeedState>((set) => ({
   lastPositionCard: 0,
-  setLastPositionCard: (lastPositionCard: number) => set({ lastPositionCard })
+  feedPosts: null,
+  setFeedPosts: (feedPosts: PaginatedPostsOutput | null) => set({ feedPosts }),
+  setLastPositionCard: (lastPositionCard: number) => set({ lastPositionCard }),
+  resetFeed: () => set({ feedPosts: null }),
 }))
