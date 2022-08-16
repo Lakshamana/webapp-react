@@ -3142,7 +3142,7 @@ export type Post = {
   excerpt: Scalars['JSONObject'];
   featured: Scalars['Boolean'];
   folder: Scalars['ID'];
-  geofence: Scalars['JSONObject'];
+  geofence?: Maybe<Scalars['JSONObject']>;
   geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
   id: Scalars['ID'];
   inFeed: Scalars['Boolean'];
@@ -3355,6 +3355,7 @@ export type ProfileAvatar = {
 export type PublicChannelOutput = {
   __typename?: 'PublicChannelOutput';
   id: Scalars['ID'];
+  kind: Kinds;
   name: Scalars['String'];
   slug: Scalars['String'];
 };
@@ -3461,6 +3462,12 @@ export type Query = {
   products: Array<InspireProductFiltered>;
   profile: Profile;
   profiles: Array<Profile>;
+  publicCategories: PaginatedCategoriesOutput;
+  publicChannels: Array<Channel>;
+  publicLiveEvents: PaginatedLiveEventsOutput;
+  publicMenus: PaginatedMenusOutput;
+  publicPosts: PaginatedPostsOutput;
+  publicTags: TagsOutput;
   report: Report;
   reports: PaginatedReportsOutput;
   role: RolesDto;
@@ -3773,6 +3780,36 @@ export type QueryProfilesArgs = {
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
   sortBy?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryPublicCategoriesArgs = {
+  filter?: Maybe<CategoryFilter>;
+};
+
+
+export type QueryPublicChannelsArgs = {
+  filter?: Maybe<ChannelFindAllFilter>;
+};
+
+
+export type QueryPublicLiveEventsArgs = {
+  filter?: Maybe<LiveEventFilter>;
+};
+
+
+export type QueryPublicMenusArgs = {
+  filter?: Maybe<MenuFilter>;
+};
+
+
+export type QueryPublicPostsArgs = {
+  filters?: Maybe<PostFilter>;
+};
+
+
+export type QueryPublicTagsArgs = {
+  filter?: Maybe<FindManyTagsInput>;
 };
 
 
@@ -4252,6 +4289,7 @@ export type UpdateAudioPost = {
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
@@ -4500,6 +4538,7 @@ export type UpdatePhotoPost = {
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
@@ -4584,6 +4623,7 @@ export type UpdateTextPost = {
   access?: Maybe<PostAccess>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   inFeed?: Maybe<Scalars['Boolean']>;
@@ -4611,6 +4651,7 @@ export type UpdateVideoPost = {
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
@@ -4923,12 +4964,26 @@ export type GetCategoriesQueryVariables = Exact<{
 
 export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
+export type GetPublicCategoriesQueryVariables = Exact<{
+  filter?: Maybe<CategoryFilter>;
+}>;
+
+
+export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+
 export type GetCategoriesCardsQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
 export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+
+export type GetPublicCategoriesCardsQueryVariables = Exact<{
+  filter?: Maybe<CategoryFilter>;
+}>;
+
+
+export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetCategoryQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -4963,7 +5018,7 @@ export type PublicChannelQueryVariables = Exact<{
 }>;
 
 
-export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, slug: string } };
+export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string } };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -5000,12 +5055,26 @@ export type GetLiveEventsQueryVariables = Exact<{
 
 export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
+export type GetPublicLiveEventsQueryVariables = Exact<{
+  filter?: Maybe<LiveEventFilter>;
+}>;
+
+
+export type GetPublicLiveEventsQuery = { __typename?: 'Query', publicLiveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+
 export type MenusQueryVariables = Exact<{
   filter?: Maybe<MenuFilter>;
 }>;
 
 
 export type MenusQuery = { __typename?: 'Query', menus: { __typename?: 'PaginatedMenusOutput', rows: Array<{ __typename?: 'Menu', id: string, channel?: Maybe<string>, icon?: Maybe<string>, name?: Maybe<string>, platformExclusive?: Maybe<PlatformExclusive>, route?: Maybe<string>, sort?: Maybe<number>, status?: Maybe<string>, parameters?: Maybe<{ __typename?: 'Parameters', id: string, missing?: Maybe<string> }>, children: Array<{ __typename?: 'Menu', id: string, channel?: Maybe<string>, icon?: Maybe<string>, name?: Maybe<string>, platformExclusive?: Maybe<PlatformExclusive>, route?: Maybe<string>, sort?: Maybe<number>, status?: Maybe<string>, parameters?: Maybe<{ __typename?: 'Parameters', id: string, missing?: Maybe<string> }> }> }> } };
+
+export type PublicMenusQueryVariables = Exact<{
+  filter?: Maybe<MenuFilter>;
+}>;
+
+
+export type PublicMenusQuery = { __typename?: 'Query', publicMenus: { __typename?: 'PaginatedMenusOutput', rows: Array<{ __typename?: 'Menu', id: string, channel?: Maybe<string>, icon?: Maybe<string>, name?: Maybe<string>, platformExclusive?: Maybe<PlatformExclusive>, route?: Maybe<string>, sort?: Maybe<number>, status?: Maybe<string>, parameters?: Maybe<{ __typename?: 'Parameters', id: string, missing?: Maybe<string> }>, children: Array<{ __typename?: 'Menu', id: string, channel?: Maybe<string>, icon?: Maybe<string>, name?: Maybe<string>, platformExclusive?: Maybe<PlatformExclusive>, route?: Maybe<string>, sort?: Maybe<number>, status?: Maybe<string>, parameters?: Maybe<{ __typename?: 'Parameters', id: string, missing?: Maybe<string> }> }> }> } };
 
 export type GetOrderResultQueryVariables = Exact<{
   id: Scalars['String'];
@@ -5040,7 +5109,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence: any, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5054,7 +5123,14 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence: any, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+
+export type GetPubicPostsQueryVariables = Exact<{
+  filter?: Maybe<PostFilter>;
+}>;
+
+
+export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 export type GetPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
@@ -5062,6 +5138,13 @@ export type GetPostsCardsQueryVariables = Exact<{
 
 
 export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+
+export type GetPublicPostsCardsQueryVariables = Exact<{
+  filter?: Maybe<PostFilter>;
+}>;
+
+
+export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type SearchQueryVariables = Exact<{
   filters?: Maybe<SearchFilter>;
@@ -6795,6 +6878,107 @@ export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
 export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
 export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
+export const GetPublicCategoriesDocument = gql`
+    query GetPublicCategories($filter: CategoryFilter) {
+  publicCategories(filter: $filter) {
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageNumberIsGood
+    pageSize
+    rows {
+      access
+      pinnedStatus {
+        pinned
+      }
+      parentId
+      slug
+      createdAt
+      sort
+      kind
+      customization {
+        desktop {
+          imgPath
+        }
+        mobile {
+          imgPath
+        }
+        thumbnail {
+          imgPath
+        }
+      }
+      children(filter: {sortBy: "sort.asc"}) {
+        parentId
+        slug
+        description
+        featuredAt
+        sort
+        pinnedStatus {
+          pinned
+        }
+        customization {
+          desktop {
+            imgPath
+          }
+          mobile {
+            imgPath
+          }
+          thumbnail {
+            imgPath
+          }
+          __typename
+        }
+        geoFence
+        id
+        kind
+        name
+        description
+      }
+      description
+      featuredAt
+      geoFence
+      id
+      name
+    }
+  }
+}
+    `;
+export type GetPublicCategoriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables>, 'query'>;
+
+    export const GetPublicCategoriesComponent = (props: GetPublicCategoriesComponentProps) => (
+      <ApolloReactComponents.Query<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables> query={GetPublicCategoriesDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPublicCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetPublicCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicCategoriesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetPublicCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables>(GetPublicCategoriesDocument, options);
+      }
+export function useGetPublicCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables>(GetPublicCategoriesDocument, options);
+        }
+export type GetPublicCategoriesQueryHookResult = ReturnType<typeof useGetPublicCategoriesQuery>;
+export type GetPublicCategoriesLazyQueryHookResult = ReturnType<typeof useGetPublicCategoriesLazyQuery>;
+export type GetPublicCategoriesQueryResult = Apollo.QueryResult<GetPublicCategoriesQuery, GetPublicCategoriesQueryVariables>;
 export const GetCategoriesCardsDocument = gql`
     query GetCategoriesCards($filter: CategoryFilter) {
   categories(filter: $filter) {
@@ -6874,6 +7058,85 @@ export function useGetCategoriesCardsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetCategoriesCardsQueryHookResult = ReturnType<typeof useGetCategoriesCardsQuery>;
 export type GetCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetCategoriesCardsLazyQuery>;
 export type GetCategoriesCardsQueryResult = Apollo.QueryResult<GetCategoriesCardsQuery, GetCategoriesCardsQueryVariables>;
+export const GetPublicCategoriesCardsDocument = gql`
+    query GetPublicCategoriesCards($filter: CategoryFilter) {
+  publicCategories(filter: $filter) {
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageNumberIsGood
+    pageSize
+    rows {
+      id
+      name
+      access
+      description
+      pinnedStatus {
+        pinned
+      }
+      slug
+      kind
+      customization {
+        thumbnail {
+          imgPath
+        }
+      }
+      children(filter: {sortBy: "sort.asc"}) {
+        id
+        name
+        access
+        description
+        pinnedStatus {
+          pinned
+        }
+        slug
+        kind
+        customization {
+          thumbnail {
+            imgPath
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export type GetPublicCategoriesCardsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>, 'query'>;
+
+    export const GetPublicCategoriesCardsComponent = (props: GetPublicCategoriesCardsComponentProps) => (
+      <ApolloReactComponents.Query<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables> query={GetPublicCategoriesCardsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPublicCategoriesCardsQuery__
+ *
+ * To run a query within a React component, call `useGetPublicCategoriesCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicCategoriesCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicCategoriesCardsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetPublicCategoriesCardsQuery(baseOptions?: Apollo.QueryHookOptions<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>(GetPublicCategoriesCardsDocument, options);
+      }
+export function useGetPublicCategoriesCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>(GetPublicCategoriesCardsDocument, options);
+        }
+export type GetPublicCategoriesCardsQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsQuery>;
+export type GetPublicCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsLazyQuery>;
+export type GetPublicCategoriesCardsQueryResult = Apollo.QueryResult<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>;
 export const GetCategoryDocument = gql`
     query GetCategory($slug: String) {
   category(slug: $slug) {
@@ -7148,6 +7411,8 @@ export const PublicChannelDocument = gql`
     query PublicChannel($slug: String) {
   getPublicChannel(slug: $slug) {
     id
+    name
+    kind
     slug
   }
 }
@@ -7456,6 +7721,69 @@ export function useGetLiveEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetLiveEventsQueryHookResult = ReturnType<typeof useGetLiveEventsQuery>;
 export type GetLiveEventsLazyQueryHookResult = ReturnType<typeof useGetLiveEventsLazyQuery>;
 export type GetLiveEventsQueryResult = Apollo.QueryResult<GetLiveEventsQuery, GetLiveEventsQueryVariables>;
+export const GetPublicLiveEventsDocument = gql`
+    query GetPublicLiveEvents($filter: LiveEventFilter) {
+  publicLiveEvents(filter: $filter) {
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageCount
+    pageNumberIsGood
+    pageSize
+    rows {
+      id
+      access
+      createdAt
+      description
+      kind
+      scheduledStartAt
+      slug
+      status
+      thumbnail {
+        imgPath
+      }
+      title
+      __typename
+    }
+  }
+}
+    `;
+export type GetPublicLiveEventsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables>, 'query'>;
+
+    export const GetPublicLiveEventsComponent = (props: GetPublicLiveEventsComponentProps) => (
+      <ApolloReactComponents.Query<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables> query={GetPublicLiveEventsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPublicLiveEventsQuery__
+ *
+ * To run a query within a React component, call `useGetPublicLiveEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicLiveEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicLiveEventsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetPublicLiveEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables>(GetPublicLiveEventsDocument, options);
+      }
+export function useGetPublicLiveEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables>(GetPublicLiveEventsDocument, options);
+        }
+export type GetPublicLiveEventsQueryHookResult = ReturnType<typeof useGetPublicLiveEventsQuery>;
+export type GetPublicLiveEventsLazyQueryHookResult = ReturnType<typeof useGetPublicLiveEventsLazyQuery>;
+export type GetPublicLiveEventsQueryResult = Apollo.QueryResult<GetPublicLiveEventsQuery, GetPublicLiveEventsQueryVariables>;
 export const MenusDocument = gql`
     query Menus($filter: MenuFilter) {
   menus(filter: $filter) {
@@ -7524,6 +7852,74 @@ export function useMenusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Menu
 export type MenusQueryHookResult = ReturnType<typeof useMenusQuery>;
 export type MenusLazyQueryHookResult = ReturnType<typeof useMenusLazyQuery>;
 export type MenusQueryResult = Apollo.QueryResult<MenusQuery, MenusQueryVariables>;
+export const PublicMenusDocument = gql`
+    query PublicMenus($filter: MenuFilter) {
+  publicMenus(filter: $filter) {
+    rows {
+      id
+      channel
+      icon
+      name
+      platformExclusive
+      route
+      sort
+      status
+      parameters {
+        id
+        missing
+      }
+      children {
+        id
+        channel
+        icon
+        name
+        platformExclusive
+        route
+        sort
+        status
+        parameters {
+          id
+          missing
+        }
+      }
+    }
+  }
+}
+    `;
+export type PublicMenusComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicMenusQuery, PublicMenusQueryVariables>, 'query'>;
+
+    export const PublicMenusComponent = (props: PublicMenusComponentProps) => (
+      <ApolloReactComponents.Query<PublicMenusQuery, PublicMenusQueryVariables> query={PublicMenusDocument} {...props} />
+    );
+    
+
+/**
+ * __usePublicMenusQuery__
+ *
+ * To run a query within a React component, call `usePublicMenusQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicMenusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicMenusQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function usePublicMenusQuery(baseOptions?: Apollo.QueryHookOptions<PublicMenusQuery, PublicMenusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PublicMenusQuery, PublicMenusQueryVariables>(PublicMenusDocument, options);
+      }
+export function usePublicMenusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicMenusQuery, PublicMenusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PublicMenusQuery, PublicMenusQueryVariables>(PublicMenusDocument, options);
+        }
+export type PublicMenusQueryHookResult = ReturnType<typeof usePublicMenusQuery>;
+export type PublicMenusLazyQueryHookResult = ReturnType<typeof usePublicMenusLazyQuery>;
+export type PublicMenusQueryResult = Apollo.QueryResult<PublicMenusQuery, PublicMenusQueryVariables>;
 export const GetOrderResultDocument = gql`
     query getOrderResult($id: String!) {
   order(id: $id) {
@@ -7895,6 +8291,16 @@ export const GetPostsDocument = gql`
         ... on MediaVideo {
           id
           duration
+          thumbnailPath
+          baseUrl
+        }
+        ... on MediaAudio {
+          id
+          duration
+        }
+        ... on MediaPhoto {
+          id
+          imgPath
         }
       }
       title
@@ -7945,6 +8351,96 @@ export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
 export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
 export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
+export const GetPubicPostsDocument = gql`
+    query GetPubicPosts($filter: PostFilter) {
+  publicPosts(filters: $filter) {
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageCount
+    total
+    rows {
+      id
+      myReactions {
+        name
+      }
+      access
+      description
+      geofence
+      kind
+      slug
+      status
+      pinnedStatus {
+        pinned
+      }
+      thumbnail {
+        imgPath
+      }
+      media {
+        ... on MediaVideo {
+          id
+          duration
+          thumbnailPath
+        }
+        ... on MediaAudio {
+          id
+          duration
+        }
+        ... on MediaPhoto {
+          id
+          imgPath
+        }
+      }
+      title
+      type
+      publishedAt
+      countComments
+      reactions {
+        count
+        name
+      }
+      countReactions
+      inFeed
+    }
+  }
+}
+    `;
+export type GetPubicPostsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPubicPostsQuery, GetPubicPostsQueryVariables>, 'query'>;
+
+    export const GetPubicPostsComponent = (props: GetPubicPostsComponentProps) => (
+      <ApolloReactComponents.Query<GetPubicPostsQuery, GetPubicPostsQueryVariables> query={GetPubicPostsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPubicPostsQuery__
+ *
+ * To run a query within a React component, call `useGetPubicPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPubicPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPubicPostsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetPubicPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPubicPostsQuery, GetPubicPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPubicPostsQuery, GetPubicPostsQueryVariables>(GetPubicPostsDocument, options);
+      }
+export function useGetPubicPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPubicPostsQuery, GetPubicPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPubicPostsQuery, GetPubicPostsQueryVariables>(GetPubicPostsDocument, options);
+        }
+export type GetPubicPostsQueryHookResult = ReturnType<typeof useGetPubicPostsQuery>;
+export type GetPubicPostsLazyQueryHookResult = ReturnType<typeof useGetPubicPostsLazyQuery>;
+export type GetPubicPostsQueryResult = Apollo.QueryResult<GetPubicPostsQuery, GetPubicPostsQueryVariables>;
 export const GetPostsCardsDocument = gql`
     query GetPostsCards($filter: PostFilter) {
   posts(filters: $filter) {
@@ -8015,6 +8511,76 @@ export function useGetPostsCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetPostsCardsQueryHookResult = ReturnType<typeof useGetPostsCardsQuery>;
 export type GetPostsCardsLazyQueryHookResult = ReturnType<typeof useGetPostsCardsLazyQuery>;
 export type GetPostsCardsQueryResult = Apollo.QueryResult<GetPostsCardsQuery, GetPostsCardsQueryVariables>;
+export const GetPublicPostsCardsDocument = gql`
+    query GetPublicPostsCards($filter: PostFilter) {
+  publicPosts(filters: $filter) {
+    hasNextPage
+    hasPreviousPage
+    isFirstPage
+    isLastPage
+    page
+    pageCount
+    total
+    rows {
+      id
+      access
+      title
+      description
+      kind
+      slug
+      pinnedStatus {
+        pinned
+      }
+      thumbnail {
+        imgPath
+      }
+      media {
+        ... on MediaVideo {
+          id
+          duration
+          thumbnailPath
+          baseUrl
+        }
+      }
+      type
+    }
+  }
+}
+    `;
+export type GetPublicPostsCardsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>, 'query'>;
+
+    export const GetPublicPostsCardsComponent = (props: GetPublicPostsCardsComponentProps) => (
+      <ApolloReactComponents.Query<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables> query={GetPublicPostsCardsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPublicPostsCardsQuery__
+ *
+ * To run a query within a React component, call `useGetPublicPostsCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPublicPostsCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPublicPostsCardsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetPublicPostsCardsQuery(baseOptions?: Apollo.QueryHookOptions<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>(GetPublicPostsCardsDocument, options);
+      }
+export function useGetPublicPostsCardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>(GetPublicPostsCardsDocument, options);
+        }
+export type GetPublicPostsCardsQueryHookResult = ReturnType<typeof useGetPublicPostsCardsQuery>;
+export type GetPublicPostsCardsLazyQueryHookResult = ReturnType<typeof useGetPublicPostsCardsLazyQuery>;
+export type GetPublicPostsCardsQueryResult = Apollo.QueryResult<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>;
 export const SearchDocument = gql`
     query Search($filters: SearchFilter) {
   search(filters: $filters) {
