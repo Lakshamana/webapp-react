@@ -16,10 +16,16 @@ import { useTranslation } from 'react-i18next'
 import {
   QUERY_BILLBOARDS,
   QUERY_LIVE_EVENTS,
-  QUERY_POSTS_CARDS
+  QUERY_POSTS_CARDS,
+  QUERY_PUBLIC_LIVE_EVENTS,
+  QUERY_PUBLIC_POSTS_CARDS
 } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { useCommonStore, useCustomizationStore } from 'services/stores'
+import {
+  useAuthStore,
+  useCommonStore,
+  useCustomizationStore
+} from 'services/stores'
 import { sizes } from 'styles'
 import { BillboardTarget } from 'types/common'
 import { convertToValidColor } from 'utils/helperFunctions'
@@ -39,6 +45,7 @@ const Livestreams = () => {
   const [upcomingEventsData, setUpcomingEventsData] =
     useState<PaginatedLiveEventsOutput>()
   const [onDemandData, setOnDemandData] = useState<PaginatedPostsOutput>()
+  const [liveEvents, setLiveEvents] = useState<PaginatedLiveEventsOutput>()
   const [billboardItems, setBillboardItems] = useState([])
 
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>(false)
@@ -47,24 +54,37 @@ const Livestreams = () => {
   const [isOnDemandActive, setIsOnDemandActive] = useState<boolean>(false)
   const [carousels, setCarousels] = useState<LiveCarouselFlags[]>()
 
-  const [getLiveEvents, { data: liveEventsData, loading: loadingLiveEvents }] =
-    useLazyQuery(QUERY_LIVE_EVENTS, {
+  const { isAnonymousAccess } = useAuthStore()
+
+  const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
+    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
+    {
       variables: {
         filter: {
           status: [Status.Live],
         },
       },
+      onCompleted: (result) => {
+        const liveEvents = isAnonymousAccess
+          ? result.publicLiveEvents
+          : result.liveEvents
+        setLiveEvents(liveEvents)
+      },
       fetchPolicy: 'cache-and-network',
       pollInterval: DEFAULT_POLLING_INTERVAL,
-    })
+    }
+  )
 
   const [getUpcomingEvents, { loading: loadingUpcomingEvents }] = useLazyQuery(
-    QUERY_LIVE_EVENTS,
+    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
+        const liveEvents = isAnonymousAccess
+          ? result.publicLiveEvents
+          : result.liveEvents
         setUpcomingEventsData((previous) => ({
-          ...result.liveEvents,
-          rows: [...(previous?.rows || []), ...result.liveEvents.rows],
+          ...liveEvents,
+          rows: [...(previous?.rows || []), ...liveEvents.rows],
         }))
       },
       fetchPolicy: 'cache-and-network',
@@ -72,15 +92,19 @@ const Livestreams = () => {
   )
 
   const [getOnDemandPosts, { loading: loadingOnDemandPostsData }] =
-    useLazyQuery(QUERY_POSTS_CARDS, {
-      onCompleted: (result) => {
-        setOnDemandData((previous) => ({
-          ...result.posts,
-          rows: [...(previous?.rows || []), ...result.posts.rows],
-        }))
-      },
-      fetchPolicy: 'cache-and-network',
-    })
+    useLazyQuery(
+      isAnonymousAccess ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
+      {
+        onCompleted: (result) => {
+          const posts = isAnonymousAccess ? result.publicPosts : result.posts
+          setOnDemandData((previous) => ({
+            ...posts,
+            rows: [...(previous?.rows || []), ...posts.rows],
+          }))
+        },
+        fetchPolicy: 'cache-and-network',
+      }
+    )
 
   const [getBillboard, { data: billboardData }] = useLazyQuery(
     QUERY_BILLBOARDS,
@@ -184,13 +208,17 @@ const Livestreams = () => {
 
   const hasResults =
     onDemandData?.rows?.length ||
-    liveEventsData?.liveEvents?.rows?.length ||
+    liveEvents?.rows?.length ||
     upcomingEventsData?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
   const renderBillboard = () => (
-    <BillboardScroller items={billboardItems} customButtons={true} />
+    <BillboardScroller
+      reachEnd={() => {}}
+      items={billboardItems}
+      customButtons={true}
+    />
   )
 
   const getCarouselLabel = (item: LiveCarouselFlags) => {
@@ -201,9 +229,9 @@ const Livestreams = () => {
   }
 
   const renderLiveEventsScroller = (item: LiveCarouselFlags) =>
-    !!liveEventsData?.liveEvents?.rows?.length && (
+    !!liveEvents?.rows?.length && (
       <LivestreamScroller
-        items={liveEventsData.liveEvents.rows}
+        items={liveEvents.rows}
         key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
       />
