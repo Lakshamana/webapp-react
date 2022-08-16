@@ -11,22 +11,32 @@ import { BillboardItem, Props } from '../../types'
 import { ActionsList } from '../BillboardActions'
 import { CategoryButtons } from '../CategoryButtons'
 import {
-  BillboardItems, BoxButtons, Description, HeroImageWrapper,
+  BillboardItems,
+  BoxButtons,
+  Description,
+  HeroImageWrapper,
   HeroImg,
   Info,
-  InfoContent, SwiperStyled, Title
+  InfoContent,
+  SwiperStyled,
+  Title
 } from './style'
 import './style.css'
 
 SwiperCore.use([Autoplay, Pagination, EffectFade])
 
-const SwiperSlideList = ({ items, customButtons }: Props) => {
+const SwiperSlideList = ({ items, customButtons, reachEnd }: Props) => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   if (!items || !items.length) return <></>
 
   return (
-    <SwiperStyled effect='fade' {...Params} style={{ position: 'relative', height: '100%' }}>
+    <SwiperStyled
+      effect="fade"
+      {...Params}
+      style={{ position: 'relative', height: '100%' }}
+      onReachEnd={reachEnd}
+    >
       {getItems(items).map((item: BillboardItem) => (
         <SwiperSlide style={{ width: '100%' }} key={item.id} className="slider">
           <BillboardItems>
@@ -45,9 +55,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                 {item.live && <Badge bg={'#FF0000'}>LIVE</Badge>}
                 <Title>{item.title}</Title>
                 <Description>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: item.description }}
-                  />
+                  <div dangerouslySetInnerHTML={{ __html: item.description }} />
                 </Description>
                 {customButtons ? (
                   <BoxButtons>
@@ -57,7 +65,7 @@ const SwiperSlideList = ({ items, customButtons }: Props) => {
                   <CategoryButtons
                     isPinned={item.isPinned || false}
                     categoryId={item.id}
-                  ></CategoryButtons>
+                  />
                 )}
               </InfoContent>
             </Info>
