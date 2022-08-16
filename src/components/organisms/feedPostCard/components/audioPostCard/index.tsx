@@ -1,19 +1,11 @@
-import { abbreviateNumber } from 'utils/helperFunctions'
-import { Text } from 'components'
 import { Icon } from '@chakra-ui/icon'
+import { Text } from 'components'
+import { colors } from "styles"
 import { FeedPostCardProps } from '../../types'
 import {
-	AudioContent,
-	VideoItemPlay,
-	PlayContent,
-	DetailsContent,
-	Details,
-	ExclusiveBlocked,
-	GeolockedBlocked,
-	CountView,
-	MediaLength
+	AudioContent, CountView, Details, DetailsContent, ExclusiveBlocked,
+	GeolockedBlocked, MediaLength, PlayContent, VideoItemPlay
 } from "./style"
-import { colors } from "styles"
 
 const AudioPost = ({ ...props }: FeedPostCardProps) => (
 	<AudioContent {...props}>
@@ -34,7 +26,7 @@ const AudioPost = ({ ...props }: FeedPostCardProps) => (
 					<MediaLength padding={2}>{props.mediaLength}</MediaLength>
 					<CountView padding={2}>
 						<Icon width={16} icon='mdi:play'></Icon>
-						{abbreviateNumber(props.views)}
+						{/* {abbreviateNumber(props.views)} */}
 					</CountView>
 				</>
 			) : (
