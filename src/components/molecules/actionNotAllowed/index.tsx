@@ -28,10 +28,10 @@ const ActionNotAllowed = ({ isOpen, onClose }) => {
       >
         <ModalHeader
           textColor={colors.generalText[colorMode]}
-          fontSize={'1.5rem'}
+          fontSize={'1.8rem'}
           mt={2}
           textAlign={'center'}
-          fontWeight={500}
+          fontWeight={'bolder'}
         >
           {t('signup.registration.free_registration')}
         </ModalHeader>
@@ -45,7 +45,7 @@ const ActionNotAllowed = ({ isOpen, onClose }) => {
         <ModalBody
           paddingBottom={4}
           textColor={colors.secondaryText[colorMode]}
-          fontSize={'1rem'}
+          fontSize={'1.1rem'}
           textAlign={'center'}
         >
           {t('common.create_a_new_account')}
