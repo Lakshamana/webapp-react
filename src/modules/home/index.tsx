@@ -16,10 +16,14 @@ import {
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
   QUERY_LOOP_TAGS,
-  QUERY_POSTS_CARDS
+  QUERY_POSTS_CARDS,
+  QUERY_PUBLIC_CATEGORIES_CARDS,
+  QUERY_PUBLIC_LIVE_EVENTS,
+  QUERY_PUBLIC_POSTS_CARDS
 } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
+  useAuthStore,
   useChannelsStore,
   useCommonStore,
   useCustomizationStore
@@ -53,6 +57,8 @@ const HomePage = () => {
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
 
+  const { isAnonymousAccess } = useAuthStore()
+
   const [featuredPostsData, setFeaturedPostsData] =
     useState<PaginatedPostsOutput>()
 
@@ -84,16 +90,20 @@ const HomePage = () => {
           target: BillboardTarget.Home,
         },
       },
+      notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
     })
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
-    QUERY_LIVE_EVENTS,
+    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
+        const liveEvents = isAnonymousAccess
+          ? result.publicLiveEvents
+          : result.liveEvents
         setLiveEventsData((previous) => ({
-          ...result.liveEvents,
-          rows: [...(previous?.rows || []), ...result.liveEvents.rows],
+          ...liveEvents,
+          rows: [...(previous?.rows || []), ...liveEvents?.rows],
         }))
       },
       fetchPolicy: 'cache-and-network',
@@ -101,12 +111,13 @@ const HomePage = () => {
   )
 
   const [getFeaturedPosts, { loading: loadingFeaturedPosts }] = useLazyQuery(
-    QUERY_POSTS_CARDS,
+    isAnonymousAccess ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
     {
       onCompleted: (result) => {
+        const posts = isAnonymousAccess ? result.publicPosts : result.posts
         setFeaturedPostsData((previous) => ({
-          ...result.posts,
-          rows: [...(previous?.rows || []), ...result.posts.rows],
+          ...posts,
+          rows: [...(previous?.rows || []), ...posts.rows],
         }))
       },
       fetchPolicy: 'cache-and-network',
@@ -114,36 +125,50 @@ const HomePage = () => {
   )
 
   const [getFeaturedCategories, { loading: loadingFeaturedCategories }] =
-    useLazyQuery(QUERY_CATEGORIES_CARDS, {
-      onCompleted: (result) => {
-        setFeaturedCategoriesData((previous) => ({
-          ...result.categories,
-          rows: [...(previous?.rows || []), ...result.categories.rows],
-        }))
-      },
-      fetchPolicy: 'cache-and-network',
-    })
+    useLazyQuery(
+      isAnonymousAccess
+        ? QUERY_PUBLIC_CATEGORIES_CARDS
+        : QUERY_CATEGORIES_CARDS,
+      {
+        onCompleted: (result) => {
+          const categories = isAnonymousAccess
+            ? result.publicCategories
+            : result.categories
+          setFeaturedCategoriesData((previous) => ({
+            ...categories,
+            rows: [...(previous?.rows || []), ...categories.rows],
+          }))
+        },
+        fetchPolicy: 'cache-and-network',
+      }
+    )
 
   const [getCategories, { loading: loadingCategoriesWithChildren }] =
-    useLazyQuery(QUERY_CATEGORIES_CARDS, {
-      onCompleted: (result) => {
-        setCategoriesWithChildrenData(result?.categories?.rows)
-      },
-      fetchPolicy: 'cache-and-network',
-    })
+    useLazyQuery(
+      isAnonymousAccess
+        ? QUERY_PUBLIC_CATEGORIES_CARDS
+        : QUERY_CATEGORIES_CARDS,
+      {
+        onCompleted: (result) => {
+          const categories = isAnonymousAccess
+            ? result.publicCategories
+            : result.categories
+          setCategoriesWithChildrenData(categories?.rows)
+        },
+        fetchPolicy: 'cache-and-network',
+      }
+    )
 
-  const loadTags = async () => {
+  const loadTags = () => {
     setLoadingTags(true)
-
-    const { data } = await Client.query({
+    Client.query({
       query: QUERY_LOOP_TAGS(tagsIds),
       fetchPolicy: 'no-cache',
-      notifyOnNetworkStatusChange: true,
     })
-
-    if (data) setTagsData(data)
-
-    setLoadingTags(false)
+      .then((result) => {
+        setTagsData(result.data)
+      })
+      .finally(() => setLoadingTags(false))
   }
 
   const loadMoreLiveEvents = () => {
@@ -155,9 +180,9 @@ const HomePage = () => {
   }
 
   const loadMoreFeaturedPosts = () => {
-    if (liveEventsData?.hasNextPage) {
+    if (featuredPostsData?.hasNextPage) {
       getFeaturedPosts({
-        variables: { ...postsFilter(liveEventsData.page + 1) },
+        variables: { ...postsFilter(featuredPostsData.page + 1) },
       })
     }
   }
@@ -174,11 +199,11 @@ const HomePage = () => {
 
   const isLoading =
     loadingLiveEvents ||
-    loadingBillboard ||
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
     loadingCategoriesWithChildren ||
-    loadingTags
+    loadingTags ||
+    loadingBillboard
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -211,7 +236,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    getBillboard()
+    if (activeChannel) getBillboard()
     return () => {
       deactivateAllItems()
       clearAllItems()
@@ -313,7 +338,11 @@ const HomePage = () => {
   }, [billboardData])
 
   const renderBillboard = () => (
-    <BillboardScroller items={billboardItems} customButtons={true} />
+    <BillboardScroller
+      reachEnd={() => {}}
+      items={billboardItems}
+      customButtons={true}
+    />
   )
 
   const renderLiveEventsScroller = (item: CarouselFlags) =>
