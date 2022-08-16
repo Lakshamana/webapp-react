@@ -1,58 +1,93 @@
+import { useLazyQuery } from '@apollo/client'
+import { Box, Flex } from '@chakra-ui/layout'
 import { useEffect, useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { Flex, Box } from '@chakra-ui/layout'
 import { useTranslation } from 'react-i18next'
 
-import { useChannelsStore, useCommonStore } from 'services/stores'
-import { QUERY_CATEGORIES } from 'services/graphql'
-import { Category } from 'generated/graphql'
+import { Category, PaginatedCategoriesOutput } from 'generated/graphql'
+import {
+  QUERY_CATEGORIES,
+  QUERY_CATEGORIES_CARDS,
+  QUERY_PUBLIC_CATEGORIES,
+  QUERY_PUBLIC_CATEGORIES_CARDS
+} from 'services/graphql'
+import { useAuthStore, useChannelsStore, useCommonStore } from 'services/stores'
 
-import { Container, Skeleton, EmptyState } from 'components'
+import { Container, EmptyState, Skeleton } from 'components'
 import { BillboardScroller, CategoriesScroller } from 'components/molecules'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { sizes } from 'styles'
+import {
+  categoriesWithChildrenFilter,
+  categoriesWithoutChildrenFilter,
+  featuredCategoriesFilter
+} from './utils'
 
 const CategoriesPage = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { activeChannel } = useChannelsStore()
-  const [categoriesBillboardItems, setCategoriesBillboardItems] = useState([])
+  const [categoriesBillboardItems, setCategoriesBillboardItems] =
+    useState<any>()
+  const [featuredCategories, setFeaturedCategories] =
+    useState<PaginatedCategoriesOutput>()
+  const [categoriesWithoutChildren, setCategoriesWithoutChildren] =
+    useState<PaginatedCategoriesOutput>()
+  const [categoriesWithChildren, setCategoriesWithChildren] =
+    useState<PaginatedCategoriesOutput>()
+  const { isAnonymousAccess } = useAuthStore()
 
   const { generateImage } = useThumbor()
 
-  const { data: featuredCategoriesData } =
-    useQuery(QUERY_CATEGORIES, {
-      variables: {
-        filter: {
-          featured: true,
-          sortBy: 'sort.asc',
-        },
+  const [getFeaturedCategories] = useLazyQuery(
+    isAnonymousAccess ? QUERY_PUBLIC_CATEGORIES : QUERY_CATEGORIES,
+    {
+      onCompleted: (result) => {
+        const categories = isAnonymousAccess
+          ? result.publicCategories
+          : result.categories
+        setFeaturedCategories((previous) => ({
+          ...categories,
+          rows: [...(previous?.rows || []), ...categories.rows],
+        }))
       },
       fetchPolicy: 'cache-and-network',
-    })
-
-  const { data: categoriesWithoutChildren, loading: loadingCategoriesWithoutChildren } = useQuery(
-    QUERY_CATEGORIES,
-    {
-      variables: {
-        filter: {
-          sortBy: 'sort.asc',
-          isParent: false,
-          isChild: false
-        },
-      },
-      fetchPolicy: 'cache-and-network'
     }
   )
 
-  const { data: categoriesWithChildren, loading: loadingCategoriesWithChildren } = useQuery(
-    QUERY_CATEGORIES,
+  const [
+    getCategoriesWithoutChildren,
+    { loading: loadingCategoriesWithoutChildren },
+  ] = useLazyQuery(
+    isAnonymousAccess ? QUERY_PUBLIC_CATEGORIES_CARDS : QUERY_CATEGORIES_CARDS,
     {
-      variables: {
-        filter: {
-          sortBy: 'sort.asc',
-          isParent: true
-        },
+      onCompleted: (result) => {
+        const categories = isAnonymousAccess
+          ? result.publicCategories
+          : result.categories
+        setCategoriesWithoutChildren((previous) => ({
+          ...categories,
+          rows: [...(previous?.rows || []), ...categories.rows],
+        }))
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  )
+
+  //TODO: Implement vertical infinite loading
+  const [
+    getCategoriesWithChildren,
+    { loading: loadingCategoriesWithChildren },
+  ] = useLazyQuery(
+    isAnonymousAccess ? QUERY_PUBLIC_CATEGORIES_CARDS : QUERY_CATEGORIES_CARDS,
+    {
+      onCompleted: (result) => {
+        const categories = isAnonymousAccess
+          ? result.publicCategories
+          : result.categories
+        setCategoriesWithChildren((previous) => ({
+          ...categories,
+          rows: [...(previous?.rows || []), ...categories.rows],
+        }))
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -64,49 +99,78 @@ const CategoriesPage = () => {
     })
 
   useEffect(() => {
-    setCategoriesBillboardItems([])
-    const billboardItems = featuredCategoriesData?.categories?.rows?.reduce(
-      (memo, curr) => {
-        const cover = getImageUrl(curr?.customization?.mobile?.imgPath)
-        const banner = getImageUrl(curr?.customization?.desktop?.imgPath)
-
-        memo.push({
-          ...curr,
-          title: curr.name,
-          cover,
-          banner,
-          isPinned: !!curr.pinnedStatus?.pinned,
-        })
-        return memo
-      },
-      []
-    )
+    const billboardItems = featuredCategories?.rows?.map((item) => {
+      const cover = getImageUrl(item?.customization?.mobile?.imgPath || '')
+      const banner = getImageUrl(item?.customization?.desktop?.imgPath || '')
+      return {
+        id: item.id,
+        title: item.name,
+        description: item.description,
+        cover,
+        banner,
+        isPinned: !!item.pinnedStatus?.pinned,
+      }
+    })
     setCategoriesBillboardItems(billboardItems)
     // eslint-disable-next-line
-  }, [featuredCategoriesData])
+  }, [featuredCategories])
+
+  const loadMoreCategoriesWithoutChildren = () => {
+    if (categoriesWithoutChildren?.hasNextPage) {
+      getCategoriesWithoutChildren({
+        variables: {
+          ...categoriesWithoutChildrenFilter(
+            categoriesWithoutChildren.page + 1
+          ),
+        },
+      })
+    }
+  }
+
+  const loadMoreFeaturedCategories = () => {
+    if (featuredCategories?.hasNextPage) {
+      getFeaturedCategories({
+        variables: {
+          ...featuredCategoriesFilter(featuredCategories.page + 1),
+        },
+      })
+    }
+  }
 
   useEffect(() => {
     setPageTitle(t('header.tabs.categories'))
+    getCategoriesWithoutChildren({
+      variables: categoriesWithoutChildrenFilter(1),
+    })
+    getCategoriesWithChildren({
+      variables: categoriesWithChildrenFilter(1),
+    })
+    getFeaturedCategories({
+      variables: featuredCategoriesFilter(1),
+    })
     //eslint-disable-next-line
   }, [])
 
-  const isLoading = loadingCategoriesWithChildren || loadingCategoriesWithoutChildren
+  const isLoading =
+    loadingCategoriesWithoutChildren || loadingCategoriesWithChildren
 
   const hasResults =
-    categoriesWithChildren?.categories?.rows?.length || categoriesWithoutChildren?.categories?.rows?.length
+    categoriesWithChildren?.rows?.length ||
+    categoriesWithoutChildren?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
   const renderCategoriesWithoutChildren = () => (
     <CategoriesScroller
-      items={categoriesWithoutChildren?.categories?.rows}
+      items={categoriesWithoutChildren?.rows}
       sectionTitle={t('page.categories.more_categories')}
       hasMoreLink={false}
+      loadMoreItems={loadMoreCategoriesWithoutChildren}
     />
   )
 
   const renderCategoriesWithChildren = () => {
-    return categoriesWithChildren?.categories.rows.map((category: Category) => (
+    return categoriesWithChildren?.rows.map((category: Category) => (
       <CategoriesScroller
         key={category.id}
         items={category.children as Category[]}
@@ -123,21 +187,22 @@ const CategoriesPage = () => {
         <BillboardScroller
           items={categoriesBillboardItems}
           customButtons={false}
+          reachEnd={loadMoreFeaturedCategories}
         />
       )}
-      {isLoading && (
-        <Box p={sizes.paddingSm} width="100%">
-          <Skeleton kind="cards" numberOfCards={4} />
-        </Box>
-      )}
-      {!isLoading && (
-        <Flex pb={10} gridGap={10} flexDirection={'column'}>
-          {!!categoriesWithoutChildren?.categories?.rows?.length &&
-            renderCategoriesWithoutChildren()}
-          {!!categoriesWithChildren?.categories?.rows?.length && renderCategoriesWithChildren()}
-        </Flex>
-      )}
-      ){isEmpty && <EmptyState />}
+
+      <Flex pb={10} gridGap={10} flexDirection={'column'}>
+        {!!categoriesWithoutChildren?.rows?.length &&
+          renderCategoriesWithoutChildren()}
+        {!!categoriesWithChildren?.rows?.length &&
+          renderCategoriesWithChildren()}
+        {isLoading && (
+          <Box p={sizes.paddingSm} width="100%">
+            <Skeleton kind="cards" />
+          </Box>
+        )}
+      </Flex>
+      {isEmpty && <EmptyState />}
     </Container>
   )
 }

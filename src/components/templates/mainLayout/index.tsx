@@ -1,10 +1,13 @@
+import { ActionNotAllowed, Header, InternalFooter } from 'components'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useEffect } from 'react'
-import { Header, InternalFooter } from 'components'
-import { ChildContainer, LayoutContainer } from './style'
-import { Props, defaultProps } from './types'
 import { initializeOneSignal } from 'utils/pushNotifications'
+import { ChildContainer, LayoutContainer } from './style'
+import { defaultProps, Props } from './types'
 
 const MainLayout = ({ children, ...props }: Props) => {
+  const { isActionNotAllowedOpen, closeActionNotAllowed } = useAccessVerifications()
+
   useEffect(() => {
     initializeOneSignal()
   }, [])
@@ -15,6 +18,7 @@ const MainLayout = ({ children, ...props }: Props) => {
         {children}
       </ChildContainer>
       <InternalFooter />
+      <ActionNotAllowed isOpen={isActionNotAllowedOpen} onClose={closeActionNotAllowed} />
     </LayoutContainer>
   )
 }

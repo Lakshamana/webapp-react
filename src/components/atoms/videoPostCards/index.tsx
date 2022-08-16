@@ -1,10 +1,11 @@
 import { useMutation } from '@apollo/client'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Container, Modal, ModalCloseButton, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { MUTATION_PIN_POST, MUTATION_UNPIN_POST } from 'services/graphql'
-import { useThemeStore } from 'services/stores'
+import { useAuthStore, useThemeStore } from 'services/stores'
 import { breakpoints, colors } from 'styles'
 import { VideoPostCardProps } from 'types/posts'
 import { PostCard } from './postCard'
@@ -17,11 +18,14 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
   const [mobileBehavior, setMobileBehavior] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
+  const { isAnonymousAccess} = useAuthStore()
+  const { showActionNotAllowedAlert } = useAccessVerifications()
 
   useEffect(() => {
     setIsPostPinned(props.isPinned || false)
   }, [props.isPinned])
 
+  //TODO: Remove logic from here!
   const [pinPost, { loading: loadingPinPost }] = useMutation(
     MUTATION_PIN_POST,
     {
@@ -29,7 +33,8 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
       onCompleted: (result) => setIsPostPinned(result?.pinPost?.pinned)
     }
   )
-
+  
+  //TODO: remove logic from here!!
   const [unpinPost, { loading: loadingUnpinPost }] = useMutation(
     MUTATION_UNPIN_POST,
     {
@@ -100,7 +105,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
         actionHover={actionHover}
         mobileBehavior={mobileBehavior}
         isLoading={isLoading}
-        pinPost={pinPost}
+        pinPost={isAnonymousAccess ? showActionNotAllowedAlert : pinPost}
         unpinPost={unpinPost}
         isPostPinned={isPostPinned}
         {...props}
@@ -113,7 +118,7 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
             defineAction={defineAction}
             actionHover={actionHover}
             isLoading={isLoading}
-            pinPost={pinPost}
+            pinPost={isAnonymousAccess ? showActionNotAllowedAlert : pinPost}
             unpinPost={unpinPost}
             isPostPinned={isPostPinned}
             {...props}

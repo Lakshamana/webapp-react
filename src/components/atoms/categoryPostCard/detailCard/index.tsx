@@ -1,12 +1,13 @@
 import { useMutation } from '@apollo/client'
 import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useEffect, useState } from 'react'
 import {
   MUTATION_PIN_CATEGORY,
   MUTATION_UNPIN_CATEGORY
 } from 'services/graphql'
-import { useThemeStore } from 'services/stores'
+import { useAuthStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { CategoryPostCardProps } from 'types/categories'
 import { stripHTML, stripHTMLExceptLineBreaks } from 'utils/helperFunctions'
@@ -14,11 +15,14 @@ import { stripHTML, stripHTMLExceptLineBreaks } from 'utils/helperFunctions'
 const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
   const { colorMode } = useThemeStore()
   const [isCategoryPinned, setIsCategoryPinned] = useState(false)
+  const { isAnonymousAccess } = useAuthStore()
+  const { showActionNotAllowedAlert } = useAccessVerifications()
 
   useEffect(() => {
     setIsCategoryPinned(props.isPinned || false)
   }, [props.isPinned])
 
+  //TODO: remove this logic from here! Use a store
   const [pinCategory, { loading: loadingPinCategory }] = useMutation(
     MUTATION_PIN_CATEGORY,
     {
@@ -33,7 +37,8 @@ const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
       },
     }
   )
-
+  
+  //TODO: remove this logic from here! Use a store
   const [unpinCategory, { loading: loadingUnpinCategory }] = useMutation(
     MUTATION_UNPIN_CATEGORY,
     {
@@ -49,6 +54,14 @@ const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
 
   const isLoading = loadingPinCategory || loadingUnpinCategory
 
+  const handlePinCategory = () => {
+    if (isAnonymousAccess) {
+      showActionNotAllowedAlert()
+      return
+    }
+    isCategoryPinned ? unpinCategory() : pinCategory()
+  }
+
   const RenderAddToMyListIcon = () => (
     <Box
       borderColor="red"
@@ -59,7 +72,7 @@ const DetailCard = ({ categoryUnpinned, ...props }: CategoryPostCardProps) => {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      onClick={() => (isCategoryPinned ? unpinCategory() : pinCategory())}
+      onClick={handlePinCategory}
     >
       {isLoading ? (
         <Spinner

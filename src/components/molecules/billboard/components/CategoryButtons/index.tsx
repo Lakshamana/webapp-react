@@ -1,15 +1,16 @@
+import { useMutation } from '@apollo/client'
+import { Spinner } from '@chakra-ui/spinner'
+import { Button, Text } from 'components'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Text } from 'components'
-import { Spinner } from '@chakra-ui/spinner'
-import { useMutation } from '@apollo/client'
 import {
   MUTATION_PIN_CATEGORY,
-  MUTATION_UNPIN_CATEGORY,
+  MUTATION_UNPIN_CATEGORY
 } from 'services/graphql'
-import { useThemeStore } from 'services/stores'
-import { BoxButtons, ContentButton } from '../BillboardItems/style'
+import { useAuthStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { BoxButtons, ContentButton } from '../BillboardItems/style'
 import { Props } from './types'
 
 const CategoryButtons = ({ ...props }: Props) => {
@@ -17,11 +18,14 @@ const CategoryButtons = ({ ...props }: Props) => {
   const { colorMode } = useThemeStore()
 
   const [isCategoryPinned, setIsCategoryPinned] = useState(false)
+  const { showActionNotAllowedAlert } = useAccessVerifications()
+  const { isAnonymousAccess } = useAuthStore()
 
   useEffect(() => {
     setIsCategoryPinned(props.isPinned || false)
   }, [props.isPinned])
 
+  //TODO: Remove this logic from here! Create a store to handle pin/unpin category
   const [pinCategory, { loading: loadingPinCategory }] = useMutation(
     MUTATION_PIN_CATEGORY,
     {
@@ -37,6 +41,7 @@ const CategoryButtons = ({ ...props }: Props) => {
     }
   )
 
+  //TODO: Remove this logic from here! Create a store to handle pin/unpin category
   const [unpinCategory, { loading: loadingUnpinCategory }] = useMutation(
     MUTATION_UNPIN_CATEGORY,
     {
@@ -48,6 +53,14 @@ const CategoryButtons = ({ ...props }: Props) => {
       },
     }
   )
+
+  const handlePinCategory = () => {
+    if (isAnonymousAccess) {
+      showActionNotAllowedAlert()
+      return
+    }
+    isCategoryPinned ? unpinCategory() : pinCategory()
+  }
 
   const isLoading = loadingPinCategory || loadingUnpinCategory
 
@@ -71,8 +84,7 @@ const CategoryButtons = ({ ...props }: Props) => {
             width={'100%'}
             height={'100%'}
             label={t('page.categories.my_list')}
-            onClick={() => isCategoryPinned ? unpinCategory() : pinCategory()}
-
+            onClick={handlePinCategory}
           />
         )}
 

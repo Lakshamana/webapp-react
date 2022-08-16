@@ -1,15 +1,19 @@
-import { MemoizedSwiperSlideList } from "./components/BillboardItems"
-import { Props } from "./types"
-import { BillboardWrapper, Billboard } from "./style"
+import { MemoizedSwiperSlideList } from './components/BillboardItems'
+import { Billboard, BillboardWrapper } from './style'
+import { Props } from './types'
 
-const BillboardScroller = ({ items, customButtons }: Props) => {
-	return (
-		<BillboardWrapper>
-			<Billboard>
-				<MemoizedSwiperSlideList items={items} customButtons={customButtons}/>
-			</Billboard>
-		</BillboardWrapper>
-	)
+const BillboardScroller = ({ items, customButtons, reachEnd }: Props) => {
+  return (
+    <BillboardWrapper>
+      <Billboard>
+        <MemoizedSwiperSlideList
+          reachEnd={reachEnd}
+          items={items}
+          customButtons={customButtons}
+        />
+      </Billboard>
+    </BillboardWrapper>
+  )
 }
 
 export { BillboardScroller }
