@@ -1,6 +1,6 @@
-import { Flex, useDisclosure } from '@chakra-ui/react'
-import { ActionNotAllowed } from 'components/molecules'
+import { Flex } from '@chakra-ui/react'
 import { firebaseDB } from 'config/firebase'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import {
   addDoc,
   collection,
@@ -27,11 +27,7 @@ const Livechat = ({
   const [messages, setMessagesData] = useState<DocumentData[]>([])
   const [reactions, setReactionsData] = useState<DocumentData[]>([])
   const { account, isAnonymousAccess } = useAuthStore()
-  const {
-    isOpen: isActionNotAllowedOpen,
-    onOpen: onOpenActionNotAllowed,
-    onClose: onCloseActionNotAllowed,
-  } = useDisclosure()
+  const { showActionNotAllowedAlert } = useAccessVerifications()
 
   const messagesCollection = collection(
     firebaseDB,
@@ -56,7 +52,7 @@ const Livechat = ({
 
   const sendNewMessage = (message: string) => {
     if (isAnonymousAccess) {
-      onOpenActionNotAllowed()
+      showActionNotAllowedAlert()
       return
     }
 
@@ -127,14 +123,10 @@ const Livechat = ({
       <LivechatBody enabled={isCommentsEnabled} messages={messages} />
       <LivechatFooter
         sendMessage={sendNewMessage}
-        sendReaction={isAnonymousAccess ? onOpenActionNotAllowed : debouncedSendReaction}
+        sendReaction={isAnonymousAccess ? showActionNotAllowedAlert : debouncedSendReaction}
         reactions={reactions}
         reactionsEnabled={isReactionsEnabled}
         commentsEnabled={isCommentsEnabled}
-      />
-      <ActionNotAllowed
-        isOpen={isActionNotAllowedOpen}
-        onClose={onCloseActionNotAllowed}
       />
     </Flex>
   )
