@@ -51,6 +51,8 @@ export const QUERY_PUBLIC_CHANNEL = gql`
   query PublicChannel($slug: String) {
     getPublicChannel(slug: $slug) {
       id
+      name
+      kind
       slug
     }
   }
