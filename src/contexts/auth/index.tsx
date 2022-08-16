@@ -72,9 +72,10 @@ export const AuthProvider = ({ children }) => {
   const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
     process.env
 
-  const origin = NODE_ENV === 'development'
-    ? REACT_APP_ORGANIZATION_URL
-    : window.location.origin
+  const origin =
+    NODE_ENV === 'development'
+      ? REACT_APP_ORGANIZATION_URL
+      : window.location.origin
 
   const updateAccount = async (account) => {
     await setAccount(account)
@@ -175,8 +176,8 @@ export const AuthProvider = ({ children }) => {
 
           const customizationTheme = activeChannel
             ? decryptedCustomization?.CHANNELS[
-              activeChannel.id
-            ]?.THEME?.toLowerCase()
+                activeChannel.id
+              ]?.THEME?.toLowerCase()
             : decryptedCustomization?.ORGANIZATION?.THEME?.toLowerCase()
 
           setColorMode(storedTheme || customizationTheme || 'dark')
@@ -226,23 +227,24 @@ export const AuthProvider = ({ children }) => {
         (customizationData?.CHANNELS[
           activeChannel.id
         ]?.THEME.toLowerCase() as ColorMode) ||
-        (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
+          (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
       )
     }
     // eslint-disable-next-line
   }, [activeChannel])
+
+  const isRouteElegibleToAnonymous =
+    window.location.pathname !== '/login' &&
+    window.location.pathname !== '/signup' &&
+    window.location.pathname !== '/recoverPassword' &&
+    window.location.pathname !== '/account'
 
   useEffect(() => {
     setAnonymous(isAnonymous)
     getOrganization()
 
     //TODO: We need to verify KIND of post and then run AnonymousAuth (but we don't have a Endpoint to do that)
-    if (
-      !accessToken &&
-      (window.location.href.indexOf('/post/') >= 1 ||
-        window.location.href.indexOf('/category/') >= 1 ||
-        window.location.href.indexOf('/live/') >= 1)
-    ) {
+    if (!accessToken && isRouteElegibleToAnonymous) {
       doAnonymousAuth()
       return
     }
