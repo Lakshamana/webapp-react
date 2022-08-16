@@ -1,5 +1,6 @@
-import { Spinner, useDisclosure } from '@chakra-ui/react'
-import { ActionNotAllowed, Container, Text } from 'components'
+import { Spinner } from '@chakra-ui/react'
+import { Container, Text } from 'components'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from 'services/stores'
@@ -27,6 +28,7 @@ const ReactionBar = ({
 }: ReactionsCount) => {
   const { colorMode } = useThemeStore()
   const { isAnonymousAccess } = useAuthStore()
+  const { showActionNotAllowedAlert } = useAccessVerifications()
   const { t } = useTranslation()
   const [onlyThreeBiggests, setOnlyThreeBiggests] = useState<ReactionType[]>()
   const [allReactions, setAllReactions] = useState<ReactionType[]>()
@@ -38,7 +40,6 @@ const ReactionBar = ({
     reaction: '',
     isLoading: false,
   })
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const translateMapper = [
     'page.feed.no_reactions',
@@ -78,7 +79,7 @@ const ReactionBar = ({
 
   const updateMyReaction = (reaction: string) => () => {
     if (isAnonymousAccess) {
-      onOpen()
+      showActionNotAllowedAlert()
       return
     }
     if (updatingReactions.isLoading) return
@@ -164,7 +165,6 @@ const ReactionBar = ({
           </Text>
         )}
       </Container>
-      <ActionNotAllowed isOpen={isOpen} onClose={onClose} />
     </Container>
   )
 }

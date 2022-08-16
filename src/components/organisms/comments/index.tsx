@@ -1,7 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { Box, Flex, Text, Textarea, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, Text, Textarea } from '@chakra-ui/react'
 import {
-  ActionNotAllowed,
   CommentCard,
   CommentHeader,
   CommentInput,
@@ -9,6 +8,7 @@ import {
   Modal
 } from 'components'
 import { DEFAULT_PAGESIZE_COMMENTS } from 'config/constants'
+import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useFormik } from 'formik'
 import {
   Comment as CommentType,
@@ -52,8 +52,8 @@ const Comments = ({ ...props }: Post) => {
       fetchPolicy: 'no-cache',
     }
   )
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const { isAnonymousAccess } = useAuthStore()
+  const { showActionNotAllowedAlert} = useAccessVerifications()
   const [addComment, { data: newComment, loading: newCommentLoading }] =
     useMutation(MUTATION_ADD_COMMENT)
   const [editComment, { data: editedComment, loading: editedCommentLoading }] =
@@ -227,7 +227,7 @@ const Comments = ({ ...props }: Post) => {
 
   const handleReportComment = ({ reportReason }) => {
     if (isAnonymousAccess) {
-      onOpen()
+      showActionNotAllowedAlert()
       return
     }
     reportComment({
@@ -368,7 +368,7 @@ const Comments = ({ ...props }: Post) => {
         />
         <CommentInput
           postId={props.id}
-          action={isAnonymousAccess ? onOpen : addComment}
+          action={isAnonymousAccess ? showActionNotAllowedAlert : addComment}
           actionLoading={newCommentLoading}
         />
         {newCommentLoading && commentsStore.totalComments === 0 && (
@@ -384,8 +384,8 @@ const Comments = ({ ...props }: Post) => {
             <CommentCard
               key={`comment-${comment.id}`}
               postId={props.id}
-              addComment={isAnonymousAccess ? onOpen : addComment}
-              editComment={isAnonymousAccess ? onOpen : editComment}
+              addComment={isAnonymousAccess ? showActionNotAllowedAlert : addComment}
+              editComment={isAnonymousAccess ? showActionNotAllowedAlert : editComment}
               selectPopupOption={handleSelectPopupOption}
               newCommentLoading={newCommentLoading}
               editedCommentLoading={editedCommentLoading}
@@ -394,7 +394,6 @@ const Comments = ({ ...props }: Post) => {
           ))}
         </InfiniteScroll>
       </Flex>
-      <ActionNotAllowed isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
