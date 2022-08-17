@@ -1,5 +1,5 @@
 import { useLazyQuery } from '@apollo/client'
-import { Box, Center } from '@chakra-ui/react'
+import { Box, Center, Spinner } from '@chakra-ui/react'
 import {
   Container,
   EmptyState,
@@ -135,13 +135,9 @@ const FeedPage = () => {
           dataLength={feedPosts?.rows.length}
           next={loadMoreFeedPosts}
           hasMore={feedPosts.hasNextPage}
-          loader={
-            <Center width="100%" height="100%" flexDirection="column">
-              {loadingItems(1)}
-            </Center>
-          }
+          loader={<Box pt={5} textAlign={'center'}><Spinner color={colors.brand.primary[colorMode]}/></Box>}
           endMessage={
-            <Container mt={3} justifyContent={'center'}>
+            <Container mt={2} justifyContent={'center'}>
               <Text color={colors.generalText[colorMode]}>
                 {t('page.feed.no_more')}
               </Text>
