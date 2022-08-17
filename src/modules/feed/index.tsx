@@ -44,9 +44,7 @@ const FeedPage = () => {
     {
       onCompleted: (result) => {
         const posts = isAnonymousAccess ? result.publicPosts : result.posts
-        //TODO: Include new INFEED filter to correctly show posts in feed
         const previousRows = feedPosts?.rows
-
         setFeedPosts({
           ...posts,
           rows: [...(previousRows || []), ...posts.rows],

@@ -9,6 +9,7 @@ export const postsFilter = (
     variables: {
       filter: {
         page,
+        inFeed: true,
         pageSize: MAX_FEED_POSTS_RESULTS,
         status: Status.Published,
         sortBy,
