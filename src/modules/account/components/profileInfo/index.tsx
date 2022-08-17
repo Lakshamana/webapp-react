@@ -25,7 +25,6 @@ import { ImageUpload } from 'modules/account/components/imageUpload'
 import InputMask from 'react-input-mask'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { get } from 'utils/location'
 import * as Yup from 'yup'
 import { UpdateButtons } from '../updateButtons'
 import { ProfileData } from './types'
@@ -53,33 +52,11 @@ const ProfileInfo = ({
 
     return image
   }
-  
-  const [customFieldsData, setcustomFieldsData] = useState<any>(null)
-  const itsNotBrazil = (value) => value.name !== 'rg' && value.name !== 'cpf'
-  const getLocation = async (data) => {
-    try {
-      const {
-        country: { iso_code },
-      } = await get()
-      if (iso_code !== 'BR') {
-        const filteredData = data.filter(itsNotBrazil)
-        setcustomFieldsData(filteredData)
-        return
-      }
-      setcustomFieldsData(data)
-    } catch (e) {
-      console.error(e)
-    }
-  }
 
-  const { loading: customFieldsLoading } = useQuery(
-    QUERY_CUSTOM_FIELDS, {
-      onCompleted: async (data) => {
-        getLocation(data?.customFields[0]?.fields)
-      },
-    })
+  const { data: customFieldsData, loading: customFieldsLoading } =
+    useQuery(QUERY_CUSTOM_FIELDS)
 
-  const shape = (customFieldsData || []).reduce(
+  const shape = (customFieldsData?.customFields[0]?.fields || []).reduce(
     (memo, curr) => {
       switch (curr.type) {
         case CustomFieldTypesEnum.Number:
@@ -222,7 +199,7 @@ const ProfileInfo = ({
         return (
           <Flex width="100%" alignItems="left" flexDirection="column">
             {!customFieldsLoading &&
-              (customFieldsData || []).map(
+              (customFieldsData?.customFields[0]?.fields || []).map(
                 ({ label, required, ...field }, index) => (
                   <Box
                     width="100%"
@@ -324,7 +301,7 @@ const ProfileInfo = ({
         return (
           <Flex width="100%" alignItems="left" flexDirection="column">
             {!customFieldsLoading &&
-              (customFieldsData || []).map(
+              (customFieldsData?.customFields[0]?.fields || []).map(
                 ({ label, required, ...field }, index) => (
                   <Box
                     width={'100%'}
@@ -345,12 +322,11 @@ const ProfileInfo = ({
                       :
                     </Label>
                     {renderInputCustomField(field, index)}
-                    {errors.custom_fields?.[field.name] &&
-                      touched.custom_fields?.[field.name] && (
-                        <Text fontSize="0.8em" color="#ff0000" mt="5px">
-                          {errors.custom_fields[field.name]}
-                        </Text>
-                      )}
+                    {
+                      errors.custom_fields?.[field.name] &&
+                      touched.custom_fields?.[field.name] &&
+                      (<Text fontSize="0.8em" color="#ff0000" mt="5px">{ errors.custom_fields[field.name] }</Text>)
+                    }
                   </Box>
                 )
               )}
@@ -378,12 +354,8 @@ const ProfileInfo = ({
       <Flex width={'100%'} alignItems="left" direction="column">
         <Flex justifyContent="center" py={5}>
           <Avatar size="xl" src={getImageUrl(user?.avatar?.imgPath || '')}>
-            <AvatarBadge
-              boxSize="44px"
-              bg={colors.brand.primary[colorMode]}
-              border="4px solid"
-            >
-              <Icon icon="eva:edit-outline" />
+            <AvatarBadge boxSize='44px' bg={colors.brand.primary[colorMode]} border='4px solid'>
+              <Icon icon='eva:edit-outline'/>
               <ImageUpload
                 image={getImageUrl(user?.avatar?.imgPath || '') || ''}
                 uploadImage={updateAvatar}
