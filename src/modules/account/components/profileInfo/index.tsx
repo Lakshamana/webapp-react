@@ -120,7 +120,8 @@ const ProfileInfo = ({
       const requestValues = { ...values }
 
       if(requestValues.birthday === '') {
-        delete requestValues.birthday
+        requestValues.birthday = validateDate(requestValues.birthday)
+        setFieldValue('birthday', requestValues.birthday)
       }
 
       if(!requestValues.custom_fields || Object.keys(requestValues.custom_fields).length === 0) delete requestValues.custom_fields
