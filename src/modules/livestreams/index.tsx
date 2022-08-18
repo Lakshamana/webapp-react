@@ -7,6 +7,7 @@ import {
   VideosScroller
 } from 'components/molecules'
 import {
+  Kinds,
   PaginatedLiveEventsOutput,
   PaginatedPostsOutput,
   Status
@@ -23,6 +24,7 @@ import {
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
   useAuthStore,
+  useChannelsStore,
   useCommonStore,
   useCustomizationStore
 } from 'services/stores'
@@ -41,6 +43,7 @@ const Livestreams = () => {
   const { t, i18n } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const { activeChannel } = useChannelsStore()
   const { generateImage } = useThumbor()
   const [upcomingEventsData, setUpcomingEventsData] =
     useState<PaginatedLiveEventsOutput>()
@@ -56,8 +59,11 @@ const Livestreams = () => {
 
   const { isAnonymousAccess } = useAuthStore()
 
+  const isAnonymousAllowed =
+    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
+    isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       variables: {
         filter: {
@@ -65,7 +71,7 @@ const Livestreams = () => {
         },
       },
       onCompleted: (result) => {
-        const liveEvents = isAnonymousAccess
+        const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
         setLiveEvents(liveEvents)
@@ -76,10 +82,10 @@ const Livestreams = () => {
   )
 
   const [getUpcomingEvents, { loading: loadingUpcomingEvents }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
+    isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
-        const liveEvents = isAnonymousAccess
+        const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
         setUpcomingEventsData((previous) => ({
@@ -93,10 +99,10 @@ const Livestreams = () => {
 
   const [getOnDemandPosts, { loading: loadingOnDemandPostsData }] =
     useLazyQuery(
-      isAnonymousAccess ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
+      isAnonymousAllowed ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
       {
         onCompleted: (result) => {
-          const posts = isAnonymousAccess ? result.publicPosts : result.posts
+          const posts = isAnonymousAllowed ? result.publicPosts : result.posts
           setOnDemandData((previous) => ({
             ...posts,
             rows: [...(previous?.rows || []), ...posts.rows],
