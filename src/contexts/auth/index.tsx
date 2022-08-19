@@ -233,11 +233,18 @@ export const AuthProvider = ({ children }) => {
     // eslint-disable-next-line
   }, [activeChannel])
 
+  const isRouteElegibleToAnonymous =
+    window.location.pathname !== '/login' &&
+    window.location.pathname !== '/signup' &&
+    window.location.pathname !== '/recoverPassword' &&
+    window.location.pathname !== '/account'
+
   useEffect(() => {
     setAnonymous(isAnonymous)
     getOrganization()
 
-    if (!accessToken) {
+    //TODO: We need to verify KIND of post and then run AnonymousAuth (but we don't have a Endpoint to do that)
+    if (!accessToken && isRouteElegibleToAnonymous) {
       doAnonymousAuth()
       return
     }

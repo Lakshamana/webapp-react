@@ -1,28 +1,22 @@
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { Flex, Spinner } from '@chakra-ui/react'
-import { Container, Text } from 'components'
-import { Channel, Kinds } from 'generated/graphql'
-import { useEffect } from 'react'
+import { Spinner, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
-import { QUERY_CHANNELS, QUERY_PUBLIC_CHANNELS } from 'services/graphql'
-import {
-  useAuthStore,
-  useChannelsStore,
-  useCommonStore,
-  useOrganizationStore
-} from 'services/stores'
+import { QUERY_CHANNELS } from 'services/graphql'
 import { useThemeStore } from 'services/stores/theme'
-import { colors } from 'styles'
+import { useChannelsStore, useCommonStore } from 'services/stores'
+import { Channel } from 'generated/graphql'
+import { Container, Text } from 'components'
 import { ChannelsGrid } from './components'
+import { colors } from 'styles'
 import { IDefinedChannels } from './types'
 
 const ChannelsPage = () => {
   const { t } = useTranslation()
-  const { isAnonymousAccess } = useAuthStore()
-  const { organization } = useOrganizationStore()
   const history = useHistory()
   const { colorMode } = useThemeStore()
+  const [loading, setLoading] = useState(true)
   const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
 
@@ -36,33 +30,19 @@ const ChannelsPage = () => {
     history.push(`/c/${slug}`)
   }
 
-  useEffect(() => {
-    if (organization?.kind === Kinds.Exclusive) history.replace('/login')
-    //eslint-disable-next-line
-  }, [organization])
-
-  const { loading } = useQuery(
-    isAnonymousAccess && organization?.kind === Kinds.Public
-      ? QUERY_PUBLIC_CHANNELS
-      : QUERY_CHANNELS,
-    {
-      variables: {
-        filter: {},
-      },
-      onCompleted: async (result) => {
-        const channelsList = isAnonymousAccess
-          ? result.publicChannels
-          : result.channels
-
-        setChannelsList(channelsList)
-
-        if (channelsList.length === 1) {
-          await definedChannel({ ...channelsList[0] })
-          return
-        }
-      },
-    }
-  )
+  const { data } = useQuery(QUERY_CHANNELS, {
+    variables: {
+      filter: {},
+    },
+    onCompleted: async (result) => {
+      setChannelsList(result.channels)
+      if (result.channels.length === 1) {
+        await definedChannel({ ...result.channels[0] })
+        return
+      }
+      setLoading(false)
+    },
+  })
 
   const selectChannel = async (channelId: string | null) => {
     const selected = channelsList?.find(
@@ -114,7 +94,7 @@ const ChannelsPage = () => {
       </Text>
       <ChannelsGrid
         channelSelected={selectChannel}
-        channelsList={channelsList || []}
+        channelsList={data?.channels}
       />
     </Container>
   )

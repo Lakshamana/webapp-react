@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import {
   Billboard,
   Category,
-  Kinds,
   PaginatedCategoriesOutput,
   PaginatedLiveEventsOutput,
   PaginatedPostsOutput
@@ -84,8 +83,6 @@ const HomePage = () => {
   const [tagsData, setTagsData] = useState({})
   const [loadingTags, setLoadingTags] = useState(false)
 
-  const isAnonymousAllowed = isAnonymousAccess && activeChannel?.kind === Kinds.Public
-
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
       variables: {
@@ -98,10 +95,10 @@ const HomePage = () => {
     })
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
-    isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
+    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
-        const liveEvents = isAnonymousAllowed
+        const liveEvents = isAnonymousAccess
           ? result.publicLiveEvents
           : result.liveEvents
         setLiveEventsData((previous) => ({
@@ -114,10 +111,10 @@ const HomePage = () => {
   )
 
   const [getFeaturedPosts, { loading: loadingFeaturedPosts }] = useLazyQuery(
-    isAnonymousAllowed ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
+    isAnonymousAccess ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
     {
       onCompleted: (result) => {
-        const posts = isAnonymousAllowed ? result.publicPosts : result.posts
+        const posts = isAnonymousAccess ? result.publicPosts : result.posts
         setFeaturedPostsData((previous) => ({
           ...posts,
           rows: [...(previous?.rows || []), ...posts.rows],
@@ -129,12 +126,12 @@ const HomePage = () => {
 
   const [getFeaturedCategories, { loading: loadingFeaturedCategories }] =
     useLazyQuery(
-      isAnonymousAllowed
+      isAnonymousAccess
         ? QUERY_PUBLIC_CATEGORIES_CARDS
         : QUERY_CATEGORIES_CARDS,
       {
         onCompleted: (result) => {
-          const categories = isAnonymousAllowed
+          const categories = isAnonymousAccess
             ? result.publicCategories
             : result.categories
           setFeaturedCategoriesData((previous) => ({
@@ -148,12 +145,12 @@ const HomePage = () => {
 
   const [getCategories, { loading: loadingCategoriesWithChildren }] =
     useLazyQuery(
-      isAnonymousAllowed
+      isAnonymousAccess
         ? QUERY_PUBLIC_CATEGORIES_CARDS
         : QUERY_CATEGORIES_CARDS,
       {
         onCompleted: (result) => {
-          const categories = isAnonymousAllowed
+          const categories = isAnonymousAccess
             ? result.publicCategories
             : result.categories
           setCategoriesWithChildrenData(categories?.rows)
