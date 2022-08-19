@@ -3,7 +3,7 @@ import { Box, Flex } from '@chakra-ui/layout'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Category, Kinds, PaginatedCategoriesOutput } from 'generated/graphql'
+import { Category, PaginatedCategoriesOutput } from 'generated/graphql'
 import {
   QUERY_CATEGORIES,
   QUERY_CATEGORIES_CARDS,
@@ -36,15 +36,13 @@ const CategoriesPage = () => {
     useState<PaginatedCategoriesOutput>()
   const { isAnonymousAccess } = useAuthStore()
 
-  const isAnonymousAllowed = isAnonymousAccess && activeChannel?.kind === Kinds.Public
-
   const { generateImage } = useThumbor()
 
   const [getFeaturedCategories] = useLazyQuery(
-    isAnonymousAllowed ? QUERY_PUBLIC_CATEGORIES : QUERY_CATEGORIES,
+    isAnonymousAccess ? QUERY_PUBLIC_CATEGORIES : QUERY_CATEGORIES,
     {
       onCompleted: (result) => {
-        const categories = isAnonymousAllowed
+        const categories = isAnonymousAccess
           ? result.publicCategories
           : result.categories
         setFeaturedCategories((previous) => ({
@@ -60,10 +58,10 @@ const CategoriesPage = () => {
     getCategoriesWithoutChildren,
     { loading: loadingCategoriesWithoutChildren },
   ] = useLazyQuery(
-    isAnonymousAllowed ? QUERY_PUBLIC_CATEGORIES_CARDS : QUERY_CATEGORIES_CARDS,
+    isAnonymousAccess ? QUERY_PUBLIC_CATEGORIES_CARDS : QUERY_CATEGORIES_CARDS,
     {
       onCompleted: (result) => {
-        const categories = isAnonymousAllowed
+        const categories = isAnonymousAccess
           ? result.publicCategories
           : result.categories
         setCategoriesWithoutChildren((previous) => ({
@@ -80,10 +78,10 @@ const CategoriesPage = () => {
     getCategoriesWithChildren,
     { loading: loadingCategoriesWithChildren },
   ] = useLazyQuery(
-    isAnonymousAllowed ? QUERY_PUBLIC_CATEGORIES_CARDS : QUERY_CATEGORIES_CARDS,
+    isAnonymousAccess ? QUERY_PUBLIC_CATEGORIES_CARDS : QUERY_CATEGORIES_CARDS,
     {
       onCompleted: (result) => {
-        const categories = isAnonymousAllowed
+        const categories = isAnonymousAccess
           ? result.publicCategories
           : result.categories
         setCategoriesWithChildren((previous) => ({
