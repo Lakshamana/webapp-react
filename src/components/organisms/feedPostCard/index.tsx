@@ -56,8 +56,19 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
     'page.feed.comments',
   ]
 
+  const itemMedia = () => {
+    switch (item.media?.__typename) {
+      case 'MediaAudio':
+        return null
+      case 'MediaPhoto':
+        return item.media.imgPath
+      case 'MediaVideo':
+        return item.thumbnail?.imgPath
+    }
+  }
+
   const getImageUrl = () => {
-    if (item.media?.__typename === 'MediaAudio') return
+    const url = itemMedia()
 
     const imageOptions: ThumborParams = {
       size: {
@@ -70,9 +81,6 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
       imageOptions.blur = 20
     }
 
-    const url =
-      item.media?.__typename === 'MediaVideo' ? item.thumbnail?.imgPath : null
-
     const secondImgUrl =
       item.media?.__typename === 'MediaVideo'
         ? `${item.media.baseUrl}/${item.media.thumbnailPath}`
@@ -81,6 +89,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
     if (url) {
       return generateImage(ThumborInstanceTypes.IMAGE, url, imageOptions)
     }
+
     return secondImgUrl
   }
 
