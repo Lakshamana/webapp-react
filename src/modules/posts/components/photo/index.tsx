@@ -1,15 +1,19 @@
-import { Container, Image } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
 import { Post } from 'generated/graphql'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
 
 const PhotoPost = ({ ...postData }: Post) => {
   const { generateImage } = useThumbor()
+  const { colorMode } = useThemeStore()
 
   const getImageUrl = () => {
     const imageOptions: ThumborParams = {
       size: {
-        width: 800,
-        height: 0
+        width: 0,
+        height: 600,
       },
     }
     const imgPath =
@@ -24,11 +28,20 @@ const PhotoPost = ({ ...postData }: Post) => {
     return image
   }
 
-  return (
-    <Container>
-      <Image src={getImageUrl()}></Image>
-    </Container>
-  )
+  const postImage = getImageUrl()
+
+  if (!postImage)
+    return (
+      <Box pt={20} pb={10}>
+        <Icon
+          width={100}
+          color={colors.secondaryText[colorMode]}
+          icon={`mdi:image-off-outline`}
+        />
+      </Box>
+    )
+
+  return <img alt={postData.title} src={postImage} />
 }
 
 export { PhotoPost }
