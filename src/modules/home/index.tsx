@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Billboard,
   Category,
+  Kinds,
   PaginatedCategoriesOutput,
   PaginatedLiveEventsOutput,
   PaginatedPostsOutput
@@ -56,8 +57,12 @@ const HomePage = () => {
   const { generateImage } = useThumbor()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const { activeChannel } = useChannelsStore()
 
   const { isAnonymousAccess } = useAuthStore()
+
+  const isAnonymousAllowed =
+    isAnonymousAccess && activeChannel?.kind === Kinds.Public
 
   const [featuredPostsData, setFeaturedPostsData] =
     useState<PaginatedPostsOutput>()
@@ -71,7 +76,6 @@ const HomePage = () => {
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<Category[]>()
 
-  const { activeChannel } = useChannelsStore()
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
     useState(true)
@@ -95,10 +99,10 @@ const HomePage = () => {
     })
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
+    isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
-        const liveEvents = isAnonymousAccess
+        const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
         setLiveEventsData((previous) => ({
@@ -111,10 +115,10 @@ const HomePage = () => {
   )
 
   const [getFeaturedPosts, { loading: loadingFeaturedPosts }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
+    isAnonymousAllowed ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
     {
       onCompleted: (result) => {
-        const posts = isAnonymousAccess ? result.publicPosts : result.posts
+        const posts = isAnonymousAllowed ? result.publicPosts : result.posts
         setFeaturedPostsData((previous) => ({
           ...posts,
           rows: [...(previous?.rows || []), ...posts.rows],
@@ -126,12 +130,12 @@ const HomePage = () => {
 
   const [getFeaturedCategories, { loading: loadingFeaturedCategories }] =
     useLazyQuery(
-      isAnonymousAccess
+      isAnonymousAllowed
         ? QUERY_PUBLIC_CATEGORIES_CARDS
         : QUERY_CATEGORIES_CARDS,
       {
         onCompleted: (result) => {
-          const categories = isAnonymousAccess
+          const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
           setFeaturedCategoriesData((previous) => ({
@@ -145,12 +149,12 @@ const HomePage = () => {
 
   const [getCategories, { loading: loadingCategoriesWithChildren }] =
     useLazyQuery(
-      isAnonymousAccess
+      isAnonymousAllowed
         ? QUERY_PUBLIC_CATEGORIES_CARDS
         : QUERY_CATEGORIES_CARDS,
       {
         onCompleted: (result) => {
-          const categories = isAnonymousAccess
+          const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
           setCategoriesWithChildrenData(categories?.rows)
