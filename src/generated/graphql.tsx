@@ -1415,6 +1415,11 @@ export enum Kinds {
   Public = 'PUBLIC'
 }
 
+export type ListNotificationInput = {
+  page?: Maybe<Scalars['Float']>;
+  pageSize?: Maybe<Scalars['Float']>;
+};
+
 export type LiveEvent = {
   __typename?: 'LiveEvent';
   access?: Maybe<Scalars['String']>;
@@ -2709,6 +2714,38 @@ export type MutationVerifyMailArgs = {
   payload: VerifyEmailDto;
 };
 
+export type NotificationOutput = {
+  __typename?: 'NotificationOutput';
+  /** Date indicating when message delivery was completed. */
+  completedAt?: Maybe<Scalars['DateTime']>;
+  /** Contents of the notification */
+  contents: Scalars['JSONObject'];
+  /** Number of devices that have clicked/tapped the notification. */
+  converted: Scalars['Float'];
+  /** Message with the organization language */
+  defaultLangMessage: Scalars['String'];
+  /** Number of devices with an error. */
+  errored: Scalars['Float'];
+  /** Number of devices reported as unsubscribed. */
+  failed: Scalars['Float'];
+  /** Segments that this notification was sent to */
+  includedSegments: Array<Scalars['String']>;
+  /** One Signal ID */
+  oneSignalId: Scalars['String'];
+  /** Date indicating when the message was created. */
+  queuedAt?: Maybe<Scalars['DateTime']>;
+  /** Number of devices that confirmed receiving the notification */
+  received?: Maybe<Scalars['Float']>;
+  /** Number of messages that have not been sent out yet. */
+  remaining: Scalars['Float'];
+  /** Date when message delivery should begin. */
+  sendAfter?: Maybe<Scalars['DateTime']>;
+  /** Number of notifications delivered to the Google/Apple/Windows servers. */
+  successful: Scalars['Float'];
+  /** Optional URL for the notification */
+  url?: Maybe<Scalars['String']>;
+};
+
 export type OneTimePayment = {
   currencyId: Scalars['String'];
   customerCard: OneTimePaymentCustomerCard;
@@ -2966,6 +3003,20 @@ export type PaginatedMenusOutput = {
   total: Scalars['Float'];
 };
 
+export type PaginatedNotificationOutput = {
+  __typename?: 'PaginatedNotificationOutput';
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  isFirstPage: Scalars['Boolean'];
+  isLastPage: Scalars['Boolean'];
+  page: Scalars['Float'];
+  pageCount: Scalars['Float'];
+  pageNumberIsGood: Scalars['Boolean'];
+  pageSize: Scalars['Float'];
+  rows: Array<NotificationOutput>;
+  total: Scalars['Float'];
+};
+
 export type PaginatedPostsOutput = {
   __typename?: 'PaginatedPostsOutput';
   hasNextPage: Scalars['Boolean'];
@@ -3177,6 +3228,7 @@ export type PostFilter = {
   account?: Maybe<Scalars['ID']>;
   categories?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
+  inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Array<Kinds>>;
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
@@ -3437,6 +3489,7 @@ export type Query = {
   getPublicChannel: PublicChannelOutput;
   group: GroupDto;
   groups: Array<GroupDto>;
+  listNotifications: PaginatedNotificationOutput;
   liveEvent: LiveEvent;
   liveEvents: PaginatedLiveEventsOutput;
   me: Me;
@@ -3664,6 +3717,11 @@ export type QueryGroupsArgs = {
   limit?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
   sortBy?: Maybe<GroupsSortBy>;
+};
+
+
+export type QueryListNotificationsArgs = {
+  payload?: Maybe<ListNotificationInput>;
 };
 
 
@@ -5006,6 +5064,13 @@ export type ChannelsQueryVariables = Exact<{
 
 export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<Kinds> }> };
 
+export type PublicChannelsQueryVariables = Exact<{
+  filter: ChannelFindAllFilter;
+}>;
+
+
+export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<Kinds> }> };
+
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
@@ -5130,7 +5195,7 @@ export type GetPubicPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 export type GetPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
@@ -7350,6 +7415,62 @@ export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
 export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
 export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
+export const PublicChannelsDocument = gql`
+    query PublicChannels($filter: ChannelFindAllFilter!) {
+  publicChannels(filter: $filter) {
+    ... on AvailableChannel {
+      id
+      kind
+      description
+      geofence
+      slug
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      thumbnail
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type PublicChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicChannelsQuery, PublicChannelsQueryVariables>, 'query'> & ({ variables: PublicChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const PublicChannelsComponent = (props: PublicChannelsComponentProps) => (
+      <ApolloReactComponents.Query<PublicChannelsQuery, PublicChannelsQueryVariables> query={PublicChannelsDocument} {...props} />
+    );
+    
+
+/**
+ * __usePublicChannelsQuery__
+ *
+ * To run a query within a React component, call `usePublicChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicChannelsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function usePublicChannelsQuery(baseOptions: Apollo.QueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
+      }
+export function usePublicChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
+        }
+export type PublicChannelsQueryHookResult = ReturnType<typeof usePublicChannelsQuery>;
+export type PublicChannelsLazyQueryHookResult = ReturnType<typeof usePublicChannelsLazyQuery>;
+export type PublicChannelsQueryResult = Apollo.QueryResult<PublicChannelsQuery, PublicChannelsQueryVariables>;
 export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
@@ -8383,6 +8504,7 @@ export const GetPubicPostsDocument = gql`
           id
           duration
           thumbnailPath
+          baseUrl
         }
         ... on MediaAudio {
           id
