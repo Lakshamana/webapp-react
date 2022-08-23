@@ -11,8 +11,7 @@ export const initializeOneSignal = async () => {
       OneSignal.init({
         appId: configEnvs.onesignalAppId,
         safari_web_id: configEnvs.onesignalSafariWebId,
-        autoResubscribe: true,
-        allowLocalhostAsSecureOrigin: true,
+        autoResubscribe: false,
         promptOptions: {
           slidedown: {
             prompts: [
