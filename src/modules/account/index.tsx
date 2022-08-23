@@ -3,16 +3,17 @@ import { Box } from '@chakra-ui/layout'
 import { useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 import {
-  AlertComponent, Container,
+  AlertComponent,
+  Container,
   Select,
-  Skeleton, ToggleButton
+  Skeleton,
+  ToggleButton
 } from 'components'
 import { APP_LOCALE } from 'config/constants'
 import { useAuth } from 'contexts/auth'
 import { ForgetAccountInput, UpdatePasswordOnlyInput } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import OneSignal from 'react-onesignal'
 import {
   MUTATION_CREATE_UPLOAD,
   MUTATION_FORGET_ACCOUNT,
@@ -25,6 +26,10 @@ import { useAuthStore, useCommonStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { sizes } from 'styles'
 import { AlertObjectType } from 'types/common'
+import {
+  getSubscriptionState,
+  isPushPermissionDenied
+} from 'utils/pushNotifications'
 import {
   AccountInfo,
   ConfigBox,
@@ -45,12 +50,17 @@ const AccountPage = () => {
   const [updateAccountError, setUpdateAccountError] = useState('')
   const [updateProfileError, setUpdateProfileError] = useState('')
   const [forgetAccountError, setForgetAccountError] = useState('')
-  const [isPushEnabled, setIsPushEnabled] = useState(false)
+
+  const [isPushEnabled, setIsPushEnabled] = useState<boolean>()
+  const [isPushDenied, setIsPushDenied] = useState<boolean>()
+
   const [updatePasswordMsg, setUpdatePasswordMsg] =
     useState<AlertObjectType | null>()
   const { user, account } = useAuthStore()
   const { setPageTitle } = useCommonStore()
   const useDisclosureProps = useDisclosure()
+
+  const OneSignal = window.OneSignal
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -140,22 +150,19 @@ const AccountPage = () => {
     {
       onCompleted: async () => signOut(),
       onError: async () =>
-        setForgetAccountError(t('page.account.delete_account_error'))
+        setForgetAccountError(t('page.account.delete_account_error')),
     }
   )
 
-  const [createUpload] = useMutation(
-    MUTATION_CREATE_UPLOAD,
-    {
-      variables: {
-        payload: {
-          expireIn: 3600,
-          filename: 'avatar-image.jpeg',
-          isAvatar: true,
-        },
+  const [createUpload] = useMutation(MUTATION_CREATE_UPLOAD, {
+    variables: {
+      payload: {
+        expireIn: 3600,
+        filename: 'avatar-image.jpeg',
+        isAvatar: true,
       },
-    }
-  )
+    },
+  })
 
   const callForgetAccount = (input: ForgetAccountInput) => {
     forgetAccount({
@@ -169,9 +176,20 @@ const AccountPage = () => {
   useEffect(() => {
     getAccount()
     setPageTitle(t('page.account.title'))
-    OneSignal.isPushNotificationsEnabled().then((result) =>
-      setIsPushEnabled(result)
-    )
+
+    isPushPermissionDenied().then((isDenied: boolean) => {
+      setIsPushDenied(isDenied)
+    })
+
+    getSubscriptionState().then((result: any) => {
+      setIsPushEnabled(!result.isOptedOut && result.isPushEnabled)
+    })
+
+    OneSignal.push(function () {
+      OneSignal.on('subscriptionChange', function (isSubscribed: boolean) {
+        setIsPushEnabled(isSubscribed)
+      })
+    })
     // eslint-disable-next-line
   }, [])
 
@@ -183,32 +201,37 @@ const AccountPage = () => {
   }
 
   const onManageWebPushSubscriptionToggleClicked = () => {
-    OneSignal.isPushNotificationsEnabled().then((result: any) => {
-      if (result) {
+    getSubscriptionState().then((result: any) => {
+      if (result.isPushEnabled) {
         /* Subscribed, opt them out */
         OneSignal.setSubscription(false)
-        setIsPushEnabled(false)
       } else {
-        OneSignal.getNotificationPermission().then((result: any) => {
-          if (result === 'granted') {
-            OneSignal.setSubscription(true)
-            setIsPushEnabled(true)
-          }
-          if (result === 'default') OneSignal.showSlidedownPrompt()
-          //TODO: Alert user about how enable permissions on browser
-          if (result === 'denied')
-            console.log('give permission to your browser')
-        })
+        if (result.isOptedOut) {
+          /* Opted out, opt them back in */
+          OneSignal.setSubscription(true)
+        } else {
+          /* Unsubscribed, subscribe them */
+          OneSignal.registerForPushNotifications()
+        }
       }
     })
   }
 
   const callUpdateAvatar = async (image: any) => {
     try {
-      const { data: { createUpload: { upload, media } } } = await createUpload()
-      await axios.put(upload.url, image, { headers: { 'Content-Type': 'image/jpg' } })
+      const {
+        data: {
+          createUpload: { upload, media },
+        },
+      } = await createUpload()
+      await axios.put(upload.url, image, {
+        headers: { 'Content-Type': 'image/jpg' },
+      })
       // TO-DO: mudar forma de chamar call update my profile
-      setTimeout(async () => await callUpdateMyProfile({ avatar: media.id }), 3000)
+      setTimeout(
+        async () => await callUpdateMyProfile({ avatar: media.id }),
+        3000
+      )
       useDisclosureProps.onClose()
     } catch (e) {
       console.error(e)
@@ -253,7 +276,6 @@ const AccountPage = () => {
           </ConfigBox>
         </Skeleton>
       </ContentBlock>
-
       <ContentBlock
         mb={[3, 3, 3, 4]}
         title={t('page.account.account_info')}
@@ -303,6 +325,7 @@ const AccountPage = () => {
               <ToggleButton
                 size="md"
                 isChecked={isPushEnabled}
+                isDisabled={isPushDenied}
                 onChange={onManageWebPushSubscriptionToggleClicked}
               />
             }
@@ -467,4 +490,3 @@ const AccountPage = () => {
 }
 
 export { AccountPage }
-
