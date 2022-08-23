@@ -1,4 +1,8 @@
-import { SimpleGrid, Skeleton as SkeletonLoading, useMediaQuery } from '@chakra-ui/react'
+import {
+  SimpleGrid,
+  Skeleton as SkeletonLoading,
+  useMediaQuery
+} from '@chakra-ui/react'
 import { useThemeStore } from 'services/stores/theme'
 import { breakpoints, colors } from 'styles'
 import { RANDOM_ID } from 'utils/helperFunctions'
@@ -18,21 +22,23 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
             spacingX={4}
             spacingY={3}
           >
-            {Array.from(Array(numberOfCards || isDesktop ? 4 : 2).keys()).map(() => {
-              return (
-                <SkeletonLoading
-                  key={`loading-${RANDOM_ID()}`}
-                  startColor={colors.skeleton.initial[colorMode]}
-                  fadeDuration={0.4}
-                  speed={0.8}
-                  borderRadius={'4px'}
-                  endColor={colors.skeleton.end[colorMode]}
-                  {...props}
-                >
-                  <PostCard>{}</PostCard>
-                </SkeletonLoading>
-              )
-            })}
+            {Array.from(Array(numberOfCards || isDesktop ? 4 : 2).keys()).map(
+              () => {
+                return (
+                  <SkeletonLoading
+                    key={`loading-${RANDOM_ID()}`}
+                    startColor={colors.skeleton.initial[colorMode]}
+                    fadeDuration={0.4}
+                    speed={0.8}
+                    borderRadius={'4px'}
+                    endColor={colors.skeleton.end[colorMode]}
+                    {...props}
+                  >
+                    <PostCard>{}</PostCard>
+                  </SkeletonLoading>
+                )
+              }
+            )}
           </SimpleGrid>
         )
       case 'posts':
@@ -59,6 +65,28 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
               )
             })}
           </SimpleGrid>
+        )
+      case 'playlist':
+        return (
+          <>
+            {Array.from(Array(numberOfCards).keys()).map(() => {
+              return (
+                <SkeletonLoading
+                  my={2}
+                  key={`loading-${RANDOM_ID()}`}
+                  startColor={colors.skeleton.initial[colorMode]}
+                  fadeDuration={0.8}
+                  speed={2}
+                  height="120px"
+                  borderRadius={'4px'}
+                  endColor={colors.skeleton.end[colorMode]}
+                  {...props}
+                >
+                  <FeedContent>{}</FeedContent>
+                </SkeletonLoading>
+              )
+            })}
+          </>
         )
       case 'default':
         return (

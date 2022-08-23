@@ -1,14 +1,17 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, Spinner } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { getData, saveData } from 'services/storage'
 import {
-  useChannelsStore, useThemeStore, useVideoPlayerStore
+  useChannelsStore,
+  useThemeStore,
+  useVideoPlayerStore
 } from 'services/stores'
 
-import { PlaylistPostCard, Text, ToggleButton } from 'components'
+import { PlaylistPostCard, Skeleton, Text, ToggleButton } from 'components'
 import { VIDEO_AUTOPLAY } from 'config/constants'
 import { Post } from 'generated/graphql'
 import { colors } from 'styles'
@@ -22,6 +25,9 @@ const VideoPlaylist = ({
   videos,
   showAutoplay,
   activeVideo,
+  hasMoreResults,
+  loading,
+  loadMore,
 }: VideoPlaylistProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -143,7 +149,33 @@ const VideoPlaylist = ({
           </Text>
         </Flex>
       )}
-      <Box maxHeight={'700px'} overflowY='scroll'>{!!playlist?.length && renderPlaylist()}</Box>
+
+      <Box
+        maxHeight={'700px'}
+        overflowY="auto"
+        overflowX="clip"
+        id="scrollableDiv"
+      >
+        {loading && !playlist?.length && (
+          <Skeleton kind="playlist" numberOfCards={4} />
+        )}
+        {!!playlist?.length && (
+          <InfiniteScroll
+            dataLength={playlist?.length}
+            next={loadMore}
+            hasMore={hasMoreResults || false}
+            loader={
+              <Box pt={5} textAlign={'center'}>
+                <Spinner color={colors.brand.primary[colorMode]} />
+              </Box>
+            }
+            pullDownToRefreshThreshold={50}
+            scrollableTarget="scrollableDiv"
+          >
+            {renderPlaylist()}
+          </InfiniteScroll>
+        )}
+      </Box>
     </Flex>
   )
 }
