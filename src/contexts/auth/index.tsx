@@ -124,8 +124,18 @@ export const AuthProvider = ({ children }) => {
           const userData = data.me.profile
           const accountData = data.me.account
           updateUser(userData)
-          if (data.me.profile?.locale)
-            i18n.changeLanguage(data.me.profile.locale)
+          if (data.me.profile?.locale) {
+            switch (data.me.profile?.locale) {
+              case 'pt':
+                i18n.changeLanguage('pt-BR')
+                break;
+              case 'en':
+                i18n.changeLanguage('en-US')
+                break;
+              default:
+                i18n.changeLanguage(data.me.profile.locale)
+            }
+          }
           updateAccount(accountData)
         }
         resolve(data.me)
