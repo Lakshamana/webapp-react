@@ -50,6 +50,7 @@ import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
 import { convertToValidColor } from 'utils/helperFunctions'
 
 import { sizes } from 'styles'
+import { askForPushPermission } from 'utils/pushNotifications'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
@@ -217,6 +218,8 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
+    // Ask for permission to show push notifications
+    askForPushPermission()
     // eslint-disable-next-line
   }, [])
 
