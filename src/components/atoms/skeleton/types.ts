@@ -5,7 +5,7 @@ export interface Props extends SkeletonProps {
     kind: SkeletonKind
 }
 
-export type SkeletonKind = 'default' | 'cards' | 'posts'
+export type SkeletonKind = 'default' | 'cards' | 'posts' | 'playlist'
 
 export const defaultProps = {
     kind: 'default'
