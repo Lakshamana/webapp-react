@@ -6,8 +6,8 @@ export const liveEventsFilter = (page: number) => {
     filter: {
       status: [Status.Live, Status.Scheduled, Status.Ready],
       sortBy: 'scheduledStartAt.asc',
-      pageSize: MAX_CARDS_SCROLLER_RESULTS,
-      page,
+      // pageSize: MAX_CARDS_SCROLLER_RESULTS,
+      // page,
     },
   }
 }

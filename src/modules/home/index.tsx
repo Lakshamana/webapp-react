@@ -50,6 +50,7 @@ import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
 
 import { convertToValidColor } from 'utils/helperFunctions'
 
+import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import { sizes } from 'styles'
 import { askForPushPermission } from 'utils/pushNotifications'
 
@@ -112,6 +113,7 @@ const HomePage = () => {
         }))
       },
       fetchPolicy: 'cache-and-network',
+      pollInterval: DEFAULT_POLLING_INTERVAL,
     }
   )
 
@@ -457,7 +459,7 @@ const HomePage = () => {
             <div key={key}>{renderCarouselsOrderedByRemoteConfig(item)}</div>
           ))}
         {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
-        {isLoading && (
+        {isLoading && !hasResults && (
           <Box p={sizes.paddingSm} width="100%">
             <Skeleton kind="cards" numberOfCards={4} />
           </Box>
