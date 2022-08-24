@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next'
 import { useCustomizationStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors, fonts, sizes } from 'styles'
-import { initialValues, validationSchema } from './settings'
+import * as Yup from 'yup'
+import { initialValues } from './settings'
 import { RegistrationProps } from './types'
 
 const RegistrationForm = ({
@@ -48,7 +49,29 @@ const RegistrationForm = ({
     initialValues: {
       ...initialValues,
     },
-    validationSchema,
+    validationSchema: Yup.object().shape({
+      createAccount: Yup.object().shape({
+        password: Yup.string()
+          .required('signup.registration.errors.password_required')
+          .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%&])(?=.{8,})/,
+            'common.error.password_error'
+          ),
+        email: Yup.string()
+          .required('signup.registration.errors.email_required')
+          .email(('common.error.valid_email')),
+        confirm_email: Yup.string()
+          .required('signup.registration.errors.confirm_email_required')
+          .oneOf(
+            [Yup.ref('email'), null],
+            'signup.registration.errors.confirm_email_must_match'
+          ),
+        terms_of_service: Yup.boolean().oneOf(
+          [true],
+          'common.error.accept_terms_and_conditions'
+        ),
+      }),
+    }),
     validateOnChange: true,
     validateOnBlur: false,
     onSubmit: async () => {
@@ -113,7 +136,7 @@ const RegistrationForm = ({
         value={values.createAccount.email}
         onChange={handleChange}
         onBlur={handleBlur}
-        errorMessage={errors.createAccount?.email}
+        errorMessage={errors.createAccount?.email ? t(errors.createAccount.email) : ''}
         error={!!errors.createAccount?.email && touched.createAccount?.email}
         placeholder={t('signup.label.email')}
       />
@@ -122,7 +145,7 @@ const RegistrationForm = ({
         value={values.createAccount.confirm_email}
         onChange={handleChange}
         onBlur={handleBlur}
-        errorMessage={errors.createAccount?.confirm_email}
+        errorMessage={errors.createAccount?.confirm_email ? t(errors.createAccount?.confirm_email) :  ''}
         error={
           !!errors.createAccount?.confirm_email &&
           touched.createAccount?.confirm_email
@@ -134,7 +157,7 @@ const RegistrationForm = ({
         value={values.createAccount.password}
         onChange={handleChange}
         onBlur={handleBlur}
-        errorMessage={errors.createAccount?.password}
+        errorMessage={errors.createAccount?.password ? t(errors.createAccount?.password) : ''}
         error={
           !!errors.createAccount?.password && touched.createAccount?.password
         }
@@ -168,3 +191,4 @@ const RegistrationForm = ({
 }
 
 export { RegistrationForm }
+
