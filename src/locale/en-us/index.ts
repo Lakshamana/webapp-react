@@ -1,6 +1,7 @@
 const EN_US = {
   translations: {
     common: {
+      access: 'Access',
       custom_field: {
         cpf: 'CPF',
         phone: 'Phone',
@@ -243,7 +244,7 @@ const EN_US = {
         featured_posts: 'Featured',
         featured_categories: 'Featured categories',
         popular: 'Popular',
-        cardInfoViews: 'Views',
+        cardInfoViews: 'Views'
       },
       channels: {
         title: 'Choose a channel:',
