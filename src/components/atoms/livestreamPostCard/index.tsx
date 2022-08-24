@@ -1,88 +1,46 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
-import { Container, Modal, ModalCloseButton, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import {
+  useDisclosure
+} from '@chakra-ui/react'
+import { Modal as MobileViewModal } from 'components'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { useThemeStore } from 'services/stores'
-import { breakpoints, colors } from 'styles'
+import { breakpoints } from 'styles'
 import { LivestreamPostCardProps } from 'types/livestreams'
+import { MobileView } from './mobileView'
 import { PostCard } from './postCard'
 
 const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
   const history = useHistory()
-  const { colorMode } = useThemeStore()
   const [hover, setHover] = useState(false)
-  const [mobileBehavior, setMobileBehavior] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const actionHover = (status: boolean) => () => {
-    if (isDesktop) {
-      setHover(status)
-      setMobileBehavior(false)
-    }
+    if (isDesktop) setHover(status)
   }
 
-  const defineAction = () => {
-    if (isDesktop || mobileBehavior) {
-      history.push(`${props.url}`)
-      return
-    }
-    setHover(true)
-    setMobileBehavior(true)
-    onOpen()
-  }
-
-  const ModalWrapper = ({ children }) => {
-    const closeModal = () => {
-      setHover(false)
-      setMobileBehavior(false)
-      onClose()
-    }
-    return (
-      <Modal
-        size={'xs'}
-        isOpen={isOpen}
-        onClose={closeModal}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent
-          color={colors.generalText[colorMode]}
-          background={colors.cardBg[colorMode]}
-        >
-          <Container
-            zIndex={999}
-            className='absolute'
-            color={colors.generalText[colorMode]}
-          >
-            <ModalCloseButton backgroundColor={colors.cardBg[colorMode]} rounded={'full'} />
-          </Container>
-          {children}
-        </ModalContent>
-      </Modal>
-    )
+  const selectLive = () => {
+    isDesktop ? history.push(`${props.url}`) : onOpen()
   }
 
   return (
     <>
       <PostCard
         hover={hover}
-        defineAction={defineAction}
         actionHover={actionHover}
-        mobileBehavior={mobileBehavior}
+        onClickCard={selectLive}
         {...props}
       />
-      {
-        !isDesktop &&
-        <ModalWrapper>
-          <PostCard
-            hover={hover}
-            defineAction={defineAction}
-            actionHover={actionHover}
-            {...props}
-          />
-        </ModalWrapper>
-      }
+      <MobileViewModal
+        onClose={onClose}
+        defaultActions={false}
+        isOpen={isOpen}
+        isCentered
+        closeButton
+      >
+        <MobileView {...props} />
+      </MobileViewModal>
     </>
   )
 }

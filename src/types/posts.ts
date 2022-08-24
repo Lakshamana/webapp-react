@@ -34,10 +34,12 @@ type PostCardProps = {
   mobileBehavior?: boolean
   isLoading: boolean
   isPostPinned: boolean
+  isOpen?: boolean
   pinPost: () => void
   unpinPost: () => void
   actionHover: (status: boolean) => () => void
-  defineAction: () => void
+  defineAction?: () => void
+  onClickCard: () => void
 }
 
 export type ComponentPostCardProps = VideoPostCardProps & PostCardProps

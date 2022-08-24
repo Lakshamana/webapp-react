@@ -1,6 +1,7 @@
 const PT_BR = {
   translations: {
     common: {
+      access: 'Acessar',
       custom_field: {
         cpf: 'CPF',
         phone: 'Telefone',

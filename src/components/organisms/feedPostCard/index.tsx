@@ -77,9 +77,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
       },
     }
 
-    if (isEntityBlocked(item)) {
-      imageOptions.blur = 20
-    }
+    if (isEntityBlocked(item)) imageOptions.blur = 20
 
     const secondImgUrl =
       item.media?.__typename === 'MediaVideo'
