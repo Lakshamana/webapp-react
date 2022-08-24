@@ -1,13 +1,13 @@
 import { Flex } from '@chakra-ui/react'
+import { Button, Input, Text } from 'components'
 import { useFormik } from 'formik'
-import { useTranslation } from 'react-i18next'
-import { useThemeStore } from 'services/stores/theme'
-import { useOrganizationStore } from 'services/stores'
-import { Button, Text, Input } from 'components'
-import { ConfirmAgeProps } from './types'
-import { sizes, colors } from 'styles'
-import { initialValues, validationSchema } from './settings'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useOrganizationStore } from 'services/stores'
+import { useThemeStore } from 'services/stores/theme'
+import { colors, sizes } from 'styles'
+import { initialValues, validationSchema } from './settings'
+import { ConfirmAgeProps } from './types'
 
 const ConfirmEmail = ({
   handleFormSubmit,
@@ -98,7 +98,7 @@ const ConfirmEmail = ({
         width={[sizes.loginButtonWidth]}
         type={'submit'}
         label={t('common.agree')}
-        onClick={() => handleSubmit}
+        onClick={() => handleSubmit()}
         isDisabled={!(dirty && isValid)}
       ></Button>
       <Button
