@@ -119,6 +119,12 @@ const EN_US = {
           'Provide your email address and choose a password to create your account and enjoy access to exclusive content.',
         already_have_account: 'You already have an account?',
         free_registration: 'Sign Up now!',
+        errors: {
+          password_required: 'Field Password is required',
+          email_required: 'Field Email is required',
+          confirm_email_required: 'Field Confirm Email is required',
+          confirm_email_must_match: 'Confirm Email must match',
+        }
       },
       GDPR: {
         citizen: 'Are you a citizen or resident of the European Union?',

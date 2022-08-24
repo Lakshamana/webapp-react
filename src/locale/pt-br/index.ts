@@ -116,6 +116,12 @@ const PT_BR = {
           'Insira seu endereço de e-mail e escolha uma senha para criar sua conta e ter acesso a conteúdos exclusivos.',
         already_have_account: 'Voce já tem uma conta?',
         free_registration: 'Crie uma conta agora!',
+        errors: {
+          password_required: 'Campo Senha é obrigatório',
+          email_required: 'Campo Email é obrigatório',
+          confirm_email_required: 'Campo Confirmar Email é obrigatório',
+          confirm_email_must_match: 'Email deve ser igual',
+        }
       },
       GDPR: {
         citizen: 'Você é cidadão ou residente da União Europeia?',
