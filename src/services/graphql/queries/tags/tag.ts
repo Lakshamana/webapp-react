@@ -24,6 +24,7 @@ export const QUERY_TAG = gql`
       }
       relatedPosts {
         access
+        type
         slug
         status
         pinnedStatus {
@@ -67,11 +68,20 @@ query Tags{
           }
         }
         relatedPosts {
+          type
           access
           slug
           status
           pinnedStatus {
             pinned
+          }
+          media {
+            ... on MediaVideo {
+            id
+            duration
+            thumbnailPath
+            baseUrl
+          }
           }
           id
           description

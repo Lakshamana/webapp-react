@@ -252,14 +252,17 @@ const PostPage = () => {
                   loadMore={() => {}}
                 />
               )}
-              <VideoPlaylist
-                loading={loadingVideosRelated}
-                title={t('page.post.related_videos')}
-                videos={relatedPostsData?.rows}
-                showAutoplay={false}
-                hasMoreResults={relatedPostsData?.hasNextPage}
-                loadMore={loadMoreRelatedPosts}
-              />
+              {(postData?.type === PostType.Video ||
+                postData?.type === PostType.OnDemand) && (
+                <VideoPlaylist
+                  loading={loadingVideosRelated}
+                  title={t('page.post.related_videos')}
+                  videos={relatedPostsData?.rows}
+                  showAutoplay={false}
+                  hasMoreResults={relatedPostsData?.hasNextPage}
+                  loadMore={loadMoreRelatedPosts}
+                />
+              )}
             </Box>
           </PostComments>
         )}

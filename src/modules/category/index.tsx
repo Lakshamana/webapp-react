@@ -10,6 +10,7 @@ import {
   Skeleton,
   Text
 } from 'components'
+import { PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -38,6 +39,9 @@ const CategoryPage = () => {
     useLazyQuery(QUERY_CATEGORY, {
       variables: {
         slug: slug,
+        postFilter: {
+          typeIn: [PostType.Video, PostType.OnDemand],
+        },
       },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',
