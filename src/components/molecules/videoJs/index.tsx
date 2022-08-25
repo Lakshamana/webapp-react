@@ -61,9 +61,9 @@ export const VideoJS = (props: any): ReactElement => {
     }
   }, [])
 
-  const classes = `${
-    props?.skin ? `vjs-theme--${props.skin}` : 'vjs-theme-fanhero'
-  }`
+  const classes = `video-js ${
+    props?.skin ? `vjs-theme-${props.skin}` : 'vjs-theme-fanhero'
+  } vjs-big-play-centered`
 
   return (
     <div data-vjs-player video-js vjs-fluid>

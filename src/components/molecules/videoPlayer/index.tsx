@@ -86,11 +86,11 @@ const VideoPlayerComponent = ({
           showTimestamp: true,
         })
       }
-      player.vr({
-        projection: 'AUTO',
-        debug: true,
-        forceCardboard: false
-      })
+      // player.vr({
+      //   projection: 'AUTO',
+      //   debug: true,
+      //   forceCardboard: false
+      // })
     })
 
     player?.qualityLevels().on('addqualitylevel', function (event) {
