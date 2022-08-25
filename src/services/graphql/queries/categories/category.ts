@@ -34,8 +34,10 @@ export const QUERY_CATEGORY = gql`
           access
           title
           description
+          geofence
           kind
           slug
+          status
           pinnedStatus {
             pinned
           }
