@@ -128,28 +128,8 @@ const VideoPlaylist = ({
       />
     ))
 
-  return (
-    <Flex flexDirection="column" mb={5}>
-      <Text
-        fontWeight="bolder"
-        fontSize="1.4rem"
-        mb={2}
-        color={colors.generalText[colorMode]}
-      >
-        {title}
-      </Text>
-      {showAutoplay && (
-        <Flex alignItems="center" mb={2}>
-          <ToggleButton checked={autoplay} onChange={toggleAutoplay} />
-          <Text
-            ml={theme.pxToRem(12)}
-            color={theme.colors.generalText[colorMode]}
-          >
-            {t('page.post.autoplay')}
-          </Text>
-        </Flex>
-      )}
-
+  if (loading)
+    return (
       <Box
         maxHeight={'700px'}
         overflowY="auto"
@@ -159,24 +139,64 @@ const VideoPlaylist = ({
         {loading && !playlist?.length && (
           <Skeleton kind="playlist" numberOfCards={4} />
         )}
-        {!!playlist?.length && (
-          <InfiniteScroll
-            dataLength={playlist?.length}
-            next={loadMore}
-            hasMore={hasMoreResults || false}
-            loader={
-              <Box pt={5} textAlign={'center'}>
-                <Spinner color={colors.brand.primary[colorMode]} />
-              </Box>
-            }
-            pullDownToRefreshThreshold={50}
-            scrollableTarget="scrollableDiv"
-          >
-            {renderPlaylist()}
-          </InfiniteScroll>
-        )}
       </Box>
-    </Flex>
+    )
+
+  return (
+    <>
+      {playlist?.length ? (
+        <Flex flexDirection="column" mb={5}>
+          <Text
+            fontWeight="bolder"
+            fontSize="1.4rem"
+            mb={2}
+            color={colors.generalText[colorMode]}
+          >
+            {title}
+          </Text>
+          {showAutoplay && (
+            <Flex alignItems="center" mb={2}>
+              <ToggleButton checked={autoplay} onChange={toggleAutoplay} />
+              <Text
+                ml={theme.pxToRem(12)}
+                color={theme.colors.generalText[colorMode]}
+              >
+                {t('page.post.autoplay')}
+              </Text>
+            </Flex>
+          )}
+
+          <Box
+            maxHeight={'700px'}
+            overflowY="auto"
+            overflowX="clip"
+            id="scrollableDiv"
+          >
+            {loading && !playlist?.length && (
+              <Skeleton kind="playlist" numberOfCards={4} />
+            )}
+            {!!playlist?.length && (
+              <InfiniteScroll
+                dataLength={playlist?.length}
+                next={loadMore}
+                hasMore={hasMoreResults || false}
+                loader={
+                  <Box pt={5} textAlign={'center'}>
+                    <Spinner color={colors.brand.primary[colorMode]} />
+                  </Box>
+                }
+                pullDownToRefreshThreshold={50}
+                scrollableTarget="scrollableDiv"
+              >
+                {renderPlaylist()}
+              </InfiniteScroll>
+            )}
+          </Box>
+        </Flex>
+      ) : (
+        <></>
+      )}
+    </>
   )
 }
 
