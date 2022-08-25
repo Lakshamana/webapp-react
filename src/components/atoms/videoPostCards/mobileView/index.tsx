@@ -32,13 +32,13 @@ const MobileView = ({ ...props }: MobileViewProps) => {
 
   return (
     <Box>
-      <Box position={'relative'}> 
+      <Box position={'relative'}>
         <Image boxSize="auto" objectFit="contain" src={props.thumbnail}></Image>
         {isPostBlocked && (
           <BlockedContent>
             <Icon
               width={25}
-              color={colors.white} 
+              color={colors.white}
               icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
             />
           </BlockedContent>
@@ -47,12 +47,17 @@ const MobileView = ({ ...props }: MobileViewProps) => {
       <Text
         py={2}
         fontWeight="bolder"
+        noOfLines={2}
         fontSize={'1.2rem'}
         color={colors.generalText[colorMode]}
       >
         {stripHTML(props.title || '')}
       </Text>
-      <Text fontSize={'0.95rem'} color={colors.secondaryText[colorMode]}>
+      <Text
+        fontSize={'0.95rem'}
+        noOfLines={6}
+        color={colors.secondaryText[colorMode]}
+      >
         {stripHTML(props.description || '')}
       </Text>
       <Flex mt={4}>
@@ -69,15 +74,19 @@ const MobileView = ({ ...props }: MobileViewProps) => {
         )}
         <Spacer px={1} />
         {props.mediaLength && (
-          <Text
-            fontWeight={'bolder'}
-            display="flex"
-            alignItems="center"
-            fontSize="0.95rem"
-            color={colors.generalText[colorMode]}
-          >
-            {formattedSeconds(props?.mediaLength)}
-          </Text>
+          <Flex alignItems={'center'}> 
+            <Icon width={20} color={colors.white} icon={'mdi:clock'} />
+            <Text
+              fontWeight={'bolder'}
+              display="flex"
+              alignItems="center"
+              fontSize="0.95rem"
+              ml={2}
+              color={colors.generalText[colorMode]}
+            >
+              {formattedSeconds(props?.mediaLength)}
+            </Text>
+          </Flex>
         )}
       </Flex>
       <Box my={5}>
