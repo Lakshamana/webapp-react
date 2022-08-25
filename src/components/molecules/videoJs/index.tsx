@@ -67,7 +67,7 @@ export const VideoJS = (props: any): ReactElement => {
 
   return (
     <div data-vjs-player video-js vjs-fluid>
-      <video ref={videoRef} className={classes} />
+      <video ref={videoRef} className={classes} playsInline/>
     </div>
   )
 }
