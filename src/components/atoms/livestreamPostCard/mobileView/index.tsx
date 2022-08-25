@@ -59,11 +59,12 @@ const MobileView = ({ ...props }: MobileViewProps) => {
         py={2}
         fontWeight="bolder"
         fontSize={'1.2rem'}
+        noOfLines={2}
         color={colors.generalText[colorMode]}
       >
         {stripHTML(props.title || '')}
       </Text>
-      <Text fontSize={'0.95rem'} color={colors.secondaryText[colorMode]}>
+      <Text fontSize={'0.95rem'} noOfLines={6} color={colors.secondaryText[colorMode]}>
         {stripHTML(props.description || '')}
       </Text>
       <Box my={5}>
