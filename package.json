@@ -66,6 +66,7 @@
     "videojs-hlsjs-plugin": "^1.0.5",
     "videojs-http-source-selector": "^1.1.6",
     "videojs-mux": "^4.7.1",
+    "videojs-vr": "^1.10.1",
     "videojs-vtt-thumbnails": "^0.0.13",
     "videojs-youtube": "^2.4.1",
     "web-vitals": "^1.0.1",
