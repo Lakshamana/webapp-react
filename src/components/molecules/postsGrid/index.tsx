@@ -8,7 +8,9 @@ import { useChannelsStore, useThemeStore } from 'services/stores'
 import { breakpoints, colors, sizes } from 'styles'
 import { VideoPostCardProps, VideosGridProps } from 'types/posts'
 import {
-  isEntityBlocked, isEntityGeolocked
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
 } from 'utils/accessVerifications'
 import { Wrapper } from './style'
 
@@ -26,25 +28,29 @@ const PostsGrid = ({
   const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {
       size: {
-        height: 400,
+        width: 400,
+        height: 0,
       },
     }
 
-    if (isEntityBlocked(post)) {
-      imageOptions.blur = 20
-    }
+    if (isEntityBlocked(post)) imageOptions.blur = 20
 
     const thumbnailPath =
-      post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
+      post.media?.__typename === 'MediaVideo' ? post.thumbnail?.imgPath : ''
 
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || thumbnailPath || '',
-      imageOptions,
-      post.thumbnail?.imgPath ? null : post.media?.baseUrl
-    )
+    const secondImgUrl =
+      post.media?.__typename === 'MediaVideo'
+        ? `${post.media.baseUrl}/${post.media.thumbnailPath}`
+        : ''
 
-    return image
+    if (thumbnailPath) {
+      return generateImage(
+        ThumborInstanceTypes.IMAGE,
+        thumbnailPath,
+        imageOptions
+      )
+    }
+    return secondImgUrl
   }
 
   const getPostUrl = (slug: string) => {
@@ -71,7 +77,7 @@ const PostsGrid = ({
               ? item.media?.duration
               : undefined,
           countViews: undefined,
-          isExclusive: isEntityBlocked(item),
+          isExclusive: isEntityExclusive(item),
           isGeolocked: isEntityGeolocked(item),
           isPinned: item.pinnedStatus?.pinned,
         }
@@ -99,12 +105,7 @@ const PostsGrid = ({
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            <VideoPostCard
-              postUnpinned={(id) => {
-                callUnpinEvent(id)
-              }}
-              {...item}
-            />
+            <VideoPostCard {...item} />
           </Wrapper>
         ))}
       </SimpleGrid>
