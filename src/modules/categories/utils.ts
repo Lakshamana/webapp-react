@@ -31,7 +31,7 @@ export const categoriesWithChildrenFilter = (page: number) => {
     filter: {
       sortBy,
       isParent: true,
-      pageSize,
+      pageSize: 3,
       page,
     },
   }
