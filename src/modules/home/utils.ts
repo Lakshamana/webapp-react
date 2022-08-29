@@ -24,13 +24,13 @@ export const postsFilter = (page: number) => {
   }
 }
 
-export const categoriesFilter = (page: number, isParent?: boolean, featured?: boolean) => {
+export const categoriesFilter = (page: number, isParent?: boolean, featured?: boolean, pageSize?: number) => {
   return {
     filter: {
       featured,
       isParent,
       sortBy: 'sort.asc',
-      pageSize: MAX_CARDS_SCROLLER_RESULTS,
+      pageSize: pageSize || MAX_CARDS_SCROLLER_RESULTS,
       page,
     },
   }
