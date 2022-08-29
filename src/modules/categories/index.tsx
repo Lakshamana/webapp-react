@@ -1,7 +1,8 @@
 import { useLazyQuery } from '@apollo/client'
-import { Box, Flex } from '@chakra-ui/layout'
+import { Box, Flex, Spinner } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { Category, Kinds, PaginatedCategoriesOutput } from 'generated/graphql'
 import {
@@ -10,12 +11,17 @@ import {
   QUERY_PUBLIC_CATEGORIES,
   QUERY_PUBLIC_CATEGORIES_CARDS
 } from 'services/graphql'
-import { useAuthStore, useChannelsStore, useCommonStore } from 'services/stores'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useCommonStore,
+  useThemeStore
+} from 'services/stores'
 
 import { Container, EmptyState, Skeleton } from 'components'
 import { BillboardScroller, CategoriesScroller } from 'components/molecules'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { sizes } from 'styles'
+import { colors, sizes } from 'styles'
 import {
   categoriesWithChildrenFilter,
   categoriesWithoutChildrenFilter,
@@ -26,6 +32,7 @@ const CategoriesPage = () => {
   const { t } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { activeChannel } = useChannelsStore()
+  const { colorMode } = useThemeStore()
   const [categoriesBillboardItems, setCategoriesBillboardItems] =
     useState<any>()
   const [featuredCategories, setFeaturedCategories] =
@@ -36,7 +43,8 @@ const CategoriesPage = () => {
     useState<PaginatedCategoriesOutput>()
   const { isAnonymousAccess } = useAuthStore()
 
-  const isAnonymousAllowed = isAnonymousAccess && activeChannel?.kind === Kinds.Public
+  const isAnonymousAllowed =
+    isAnonymousAccess && activeChannel?.kind === Kinds.Public
 
   const { generateImage } = useThumbor()
 
@@ -75,7 +83,6 @@ const CategoriesPage = () => {
     }
   )
 
-  //TODO: Implement vertical infinite loading
   const [
     getCategoriesWithChildren,
     { loading: loadingCategoriesWithChildren },
@@ -124,6 +131,16 @@ const CategoriesPage = () => {
           ...categoriesWithoutChildrenFilter(
             categoriesWithoutChildren.page + 1
           ),
+        },
+      })
+    }
+  }
+
+  const loadMoreCategoriesWithChildren = () => {
+    if (categoriesWithChildren?.hasNextPage) {
+      getCategoriesWithChildren({
+        variables: {
+          ...categoriesWithChildrenFilter(categoriesWithChildren.page + 1),
         },
       })
     }
@@ -196,9 +213,23 @@ const CategoriesPage = () => {
       <Flex pb={10} gridGap={10} flexDirection={'column'}>
         {!!categoriesWithoutChildren?.rows?.length &&
           renderCategoriesWithoutChildren()}
-        {!!categoriesWithChildren?.rows?.length &&
-          renderCategoriesWithChildren()}
-        {isLoading && (
+        {!!categoriesWithChildren?.rows?.length && (
+          <InfiniteScroll
+            style={{ overflowX: 'hidden' }}
+            dataLength={categoriesWithChildren.rows.length}
+            next={loadMoreCategoriesWithChildren}
+            hasMore={categoriesWithChildren.hasNextPage}
+            loader={
+              <Box pt={5} textAlign={'center'}>
+                <Spinner color={colors.brand.primary[colorMode]} />
+              </Box>
+            }
+          >
+            {renderCategoriesWithChildren()}
+          </InfiniteScroll>
+        )}
+
+        {isLoading && !hasResults && (
           <Box p={sizes.paddingSm} width="100%">
             <Skeleton kind="cards" />
           </Box>
