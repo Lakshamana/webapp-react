@@ -40,7 +40,8 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const storedSingleChannel = getData(APP_SINGLE_CHANNEL)
 
   const [getChannels, { loading }] = useLazyQuery(
-    isAnonymousAccess && organization?.kind === Kinds.Public
+    isAnonymousAccess && 
+    (organization?.kind === Kinds.Public || organization?.kind === Kinds.Exclusive)
       ? QUERY_PUBLIC_CHANNELS
       : QUERY_CHANNELS,
     {
