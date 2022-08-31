@@ -14,7 +14,7 @@ import {
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
-import { isEntityBlocked, isEntityGeolocked } from 'utils/accessVerifications'
+import { isEntityBlocked, isEntityExclusive, isEntityGeolocked } from 'utils/accessVerifications'
 import { convertCountMessage } from 'utils/helperFunctions'
 import { SetMediaType } from './components'
 import {
@@ -77,9 +77,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
       },
     }
 
-    if (isEntityBlocked(item)) {
-      imageOptions.blur = 20
-    }
+    if (isEntityBlocked(item)) imageOptions.blur = 20
 
     const secondImgUrl =
       item.media?.__typename === 'MediaVideo'
@@ -129,7 +127,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
       // views: item.counts?.countViews,
       //TODO: Waiting for Audio posts on API
       // voted: !!item.myVote,
-      isExclusive: isEntityBlocked(item),
+      isExclusive: isEntityExclusive(item),
       isGeolocked: isEntityGeolocked(item),
     })
     //eslint-disable-next-line

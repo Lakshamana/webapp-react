@@ -44,9 +44,20 @@ const ModalComponent = ({
           backgroundColor={colors.cardBg[colorMode]}
         >
           {children ? (
-            <Box px={6} py={4}>
-              {children}
-            </Box>
+            <>
+              <Box mb={6}>
+                {closeButton && (
+                  <ModalCloseButton
+                    autoFocus={false}
+                    _focus={{ boxShadow: 'none' }}
+                    textColor={colors.generalText[colorMode]}
+                  />
+                )}
+              </Box>
+              <Box px={6} py={4}>
+                {children}
+              </Box>
+            </>
           ) : (
             <>
               <ModalHeader

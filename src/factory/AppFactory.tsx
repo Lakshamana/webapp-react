@@ -80,8 +80,8 @@ const AppFactory = () => {
                         flexDir="column"
                         gridGap="1em"
                     >
-                        <Icon icon="ci:off-outline-close" width="40px" />
-                        <Text>Platform Not Found!</Text>
+                        <Icon icon="ci:off-outline-close" width="60px" />
+                        <Text my={1} fontSize={'1.6rem'}>Platform Not Found!</Text>
                     </Flex>
                     <Flex
                         w="100%"
@@ -90,7 +90,7 @@ const AppFactory = () => {
                         alignItems="center"
                         fontWeight="500"
                     >
-                        <Text color="#666666">Please check your url and try again!</Text>
+                        <Text fontSize={'1.3rem'} color="#666666">Please check your url and try again!</Text>
                     </Flex>
                 </Flex>
             </Center>

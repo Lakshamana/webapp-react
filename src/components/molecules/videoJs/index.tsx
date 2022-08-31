@@ -2,15 +2,24 @@ import React, { ReactElement } from 'react'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
 
-import './facebook.css'
-import './magnified.css'
-import './rotten-tomatoes.css'
-import './sunrise.css'
-import './techskin.css'
-import './twitch-tv.css'
-import './twitter.css'
-import './vsg.css'
-import './youtube.css'
+import './skins/facebook.css'
+import './skins/magnified.css'
+import './skins/rotten-tomatoes.css'
+import './skins/sunrise.css'
+import './skins/techskin.css'
+import './skins/twitch-tv.css'
+import './skins/twitter.css'
+import './skins/vsg.css'
+import './skins/youtube.css'
+
+import './skins/city.css'
+import './skins/fanhero.css'
+import './skins/fantasy.css'
+import './skins/forest.css'
+import './skins/sea.css'
+import './skins/tech.css'
+import './skins/tube.css'
+
 import './styles.css'
 
 require('@silvermine/videojs-chromecast')(videojs)
@@ -53,12 +62,12 @@ export const VideoJS = (props: any): ReactElement => {
   }, [])
 
   const classes = `video-js ${
-    props?.skin ? `${props.skin}-skin` : 'vjs-default-skin'
+    props?.skin ? `vjs-theme-${props.skin}` : 'vjs-theme-fanhero'
   } vjs-big-play-centered`
 
   return (
-    <div data-vjs-player>
-      <video ref={videoRef} className={classes} />
+    <div data-vjs-player video-js vjs-fluid>
+      <video ref={videoRef} className={classes} playsInline/>
     </div>
   )
 }

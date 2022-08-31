@@ -1,11 +1,21 @@
+import { Icon } from '@iconify/react'
+import { colors } from 'styles'
 import { FeedPostCardProps } from '../../types'
-import { ExclusiveBlocked, GeolockedBlocked, ImageContent } from './style'
+import { BlockedContent, ImageContent } from './style'
 
 const ImagePost = ({ ...props }: FeedPostCardProps) => {
+  const isPostBlocked = props.isExclusive || props.isGeolocked
   return (
     <ImageContent {...props}>
-      {props.isExclusive && <ExclusiveBlocked />}
-      {props.isGeolocked && <GeolockedBlocked />}
+      {isPostBlocked && (
+        <BlockedContent>
+          <Icon
+            width={20}
+            color={colors.white}
+            icon={`mdi:${props.isExclusive ? 'lock' : 'earth'}`}
+          />
+        </BlockedContent>
+      )}
     </ImageContent>
   )
 }

@@ -15,7 +15,6 @@ export const QUERY_CHANNELS = gql`
       ... on GeolockedChannel {
         id
         name
-        thumbnail
         kind
         __typename
       }
@@ -38,7 +37,6 @@ export const QUERY_PUBLIC_CHANNELS = gql`
       ... on GeolockedChannel {
         id
         name
-        thumbnail
         kind
         __typename
       }

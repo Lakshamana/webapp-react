@@ -7,12 +7,18 @@ import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
 import 'videojs-mux'
 import overlay from 'videojs-overlay'
 import 'videojs-overlay/dist/videojs-overlay.css'
+import 'videojs-vr'
 import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { saveData } from 'services/storage'
-import { useAuthStore, useChannelsStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useOrganizationStore,
+  useVideoPlayerStore
+} from 'services/stores'
 import { getDefaultConfigs } from './settings'
 import { VideoPlayerProps } from './types'
 
@@ -36,7 +42,9 @@ const VideoPlayerComponent = ({
   const { activeChannelConfig } = useCustomizationStore()
   const playerRef = useRef(null)
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
-  const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
+  const setRemainingTime = useVideoPlayerStore(
+    (state) => state.setRemainingTime
+  )
   const { account } = useAuthStore()
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
@@ -49,12 +57,12 @@ const VideoPlayerComponent = ({
     categoryId,
     title,
     subtitle,
-    isLiveStream ? 'livestream': 'onDemand',
+    isLiveStream ? 'livestream' : 'onDemand',
     video_duration,
     post_type,
     organization?.id,
     activeChannel?.id,
-    organization?.web_url?.[0],
+    organization?.web_url?.[0]
   )
 
   const handlePlayerReady = (player: any) => {
@@ -78,12 +86,17 @@ const VideoPlayerComponent = ({
           showTimestamp: true,
         })
       }
+      // player.vr({
+      //   projection: 'AUTO',
+      //   debug: true,
+      //   forceCardboard: false
+      // })
     })
 
-    player?.qualityLevels().on('addqualitylevel', function(event) {
-      const qualityLevel = event.qualityLevel;
-      qualityLevel.enabled = qualityLevel.bitrate >= 1579131;
-    });
+    player?.qualityLevels().on('addqualitylevel', function (event) {
+      const qualityLevel = event.qualityLevel
+      qualityLevel.enabled = qualityLevel.bitrate >= 1579131
+    })
 
     player?.on('ended', () => setEndedVideo(true))
     player?.on('volumechange', () => {
@@ -94,7 +107,8 @@ const VideoPlayerComponent = ({
     })
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
-      const isRemainingTime = Boolean(remainingTime) && remainingTime < SHOW_NEXT_VIDEO_IN
+      const isRemainingTime =
+        Boolean(remainingTime) && remainingTime < SHOW_NEXT_VIDEO_IN
       setRemainingTime(isRemainingTime)
     })
   }
