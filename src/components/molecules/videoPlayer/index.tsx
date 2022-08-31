@@ -3,7 +3,8 @@ import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
 import VideoJS from 'components/molecules/videoJs'
-import { memo, ReactElement, useRef, useState } from 'react'
+import { memo, ReactElement, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { saveData } from 'services/storage'
 import { useAuthStore, useChannelsStore, useCustomizationStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
@@ -39,7 +40,8 @@ const VideoPlayerComponent = ({
   video_duration
 }: VideoPlayerProps): ReactElement => {
   const playerRef: any = useRef(null)
-  const [watching, setWatching] = useState({ isLoading: true, position: 0, hasContinue: false })
+  const { t } = useTranslation()
+  const [watchingPosition, setWatchingPosition] = useState({ showModal: false, position: 0 })
   const { account, isAnonymousAccess, user } = useAuthStore()
   const { activeChannelConfig, organizationConfig } = useCustomizationStore()
   const { colorMode } = useThemeStore()
@@ -49,7 +51,7 @@ const VideoPlayerComponent = ({
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
 
-  const ANALYTICS_API = `http://localhost:3005`
+  const ANALYTICS_API = process.env.REACT_APP_ANALYTICS_API
 
   const defaultOptions = getDefaultConfigs(
     src,
@@ -110,11 +112,13 @@ const VideoPlayerComponent = ({
         try {
           const lastPosition = await axios.get(`${ANALYTICS_API}/watching/${videoId}/${user?.id}`)
           const position = lastPosition?.data?.position
-          if (position) {
-            return setWatching({ ...watching, position, hasContinue: true })
-          }
-        } catch (error) { }
-        setWatching({ ...watching, isLoading: false, hasContinue: false })
+          if (position) return setWatchingPosition({ showModal: true, position })
+          setWatchingPosition({ ...watchingPosition, showModal: false })
+        } catch (error) {
+          setWatchingPosition({ ...watchingPosition, showModal: false })
+        }
+      } else {
+        player?.play()
       }
 
       player.chromecast()
@@ -188,14 +192,21 @@ const VideoPlayerComponent = ({
     }
   }
 
+  useEffect(() => {
+    if (!watchingPosition.showModal) {
+      playerRef.current?.play()
+    }
+  }, [watchingPosition])
+
+  const closeModal = () => setWatchingPosition({ ...watchingPosition, showModal: false })
+
   const continueAction = () => {
-    playerRef.current?.currentTime(watching.position)
-    playerRef.current?.play()
-    // setWatching({...watching, isLoading: })
+    playerRef.current?.currentTime(watchingPosition.position)
+    closeModal()
   }
   const continueCancel = () => {
     playerRef.current?.currentTime(0)
-    setWatching({ ...watching, hasContinue: false })
+    closeModal()
   }
 
   if (!src) return <></>
@@ -205,15 +216,15 @@ const VideoPlayerComponent = ({
       <ContinueModal
         onConfirm={continueAction}
         onClose={continueCancel}
-        isOpen={watching.hasContinue}
+        isOpen={watchingPosition.showModal}
         isCentered
         closeButton
-        title='Continue watching'
-        subtitle='Do you want to resume last time?'
+        title={t('page.post.modal.continue_watching')}
+        subtitle={t('page.post.modal.continue_subtitle')}
         actionButton
-        actionLabel='Yes, please.'
+        actionLabel={t('page.post.modal.continue_action_label')}
         cancelButton
-        cancelLabel='No, Thanks.'
+        cancelLabel={t('page.post.modal.continue_cancel_label')}
       />
       <VideoJS
         options={{
