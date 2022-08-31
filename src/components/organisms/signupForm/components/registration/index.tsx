@@ -76,7 +76,7 @@ const RegistrationForm = ({
     validateOnBlur: false,
     onSubmit: async () => {
       handleFormSubmit({
-        email: values.createAccount.email,
+        email: values.createAccount.email.toLowerCase(),
         password: values.createAccount.password,
       })
     },

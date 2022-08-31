@@ -94,7 +94,8 @@ const LoginPage = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd && !isSocialSignin) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin)
+          setActiveStep('ConfirmEmail')
         isSocialSignin && history.push('/channels')
       },
       onError: ({ message }) => setError(errorMessage(message)),
@@ -111,7 +112,15 @@ const LoginPage = () => {
     })
   }
 
-  const handleFormSubmit = (FormData) => signIn({ variables: { ...FormData } })
+  const handleFormSubmit = (FormData) =>
+    signIn({
+      variables: {
+        payload: {
+          email: FormData.payload.email.toLowerCase(),
+          password: FormData.payload.password,
+        },
+      },
+    })
 
   const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)
