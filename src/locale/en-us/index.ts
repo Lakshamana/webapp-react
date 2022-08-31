@@ -433,6 +433,12 @@ const EN_US = {
         participants: 'Participants:',
         reactions: 'Reactions',
         comments: 'Comments',
+        modal: {
+          continue_watching: 'Continue watching',
+          continue_subtitle: 'Do you want to resume last time?',
+          continue_action_label: 'Yes, please.',
+          continue_cancel_label: 'No, Thanks.'
+        },
         comment: {
           hide: 'Hide',
           see: 'See',

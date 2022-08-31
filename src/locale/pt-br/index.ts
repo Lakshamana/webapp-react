@@ -433,6 +433,12 @@ const PT_BR = {
         participants: 'Participantes:',
         reactions: 'Reações',
         comments: 'Comentários',
+        modal: {
+          continue_watching: 'Continuar assistindo',
+          continue_subtitle: 'Deseja continuar de onde parou?',
+          continue_action_label: 'Sim',
+          continue_cancel_label: 'Não'
+        },
         comment: {
           hide: 'Esconder',
           see: 'Mostrar',
