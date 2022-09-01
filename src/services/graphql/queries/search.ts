@@ -36,6 +36,9 @@ export const QUERY_SEARCH = gql`
             id
             name
           }
+          thumbnail {
+            imgPath
+          }
           id
           slug
           title

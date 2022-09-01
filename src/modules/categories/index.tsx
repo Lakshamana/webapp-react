@@ -118,6 +118,7 @@ const CategoriesPage = () => {
         cover,
         banner,
         isPinned: !!item.pinnedStatus?.pinned,
+        slug: item.slug
       }
     })
     setCategoriesBillboardItems(billboardItems)

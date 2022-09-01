@@ -87,7 +87,7 @@ const SignupForm = () => {
         if (!result?.socialSignIn.account.status.gdpr) {
           setActiveStep('GDPR')
         } else {
-          history.push('/home')
+          history.push('/channels')
         }
       },
       onError: (error) => setSocialSignUpError(`${error}`),
