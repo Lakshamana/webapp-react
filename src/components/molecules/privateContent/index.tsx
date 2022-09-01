@@ -1,12 +1,12 @@
-import { useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { Modal, Text, Input } from 'components'
+import { AlertComponent, Input, Modal, Text } from 'components'
+import { Kinds } from 'generated/graphql'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useChannelsStore, useThemeStore } from 'services/stores'
 import { useHistory } from 'react-router'
-import { Props } from './types'
+import { useAuthStore, useChannelsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
-import { AlertComponent } from 'components'
+import { Props } from './types'
 
 const PrivateContent = ({
   requestAccess,
@@ -18,7 +18,8 @@ const PrivateContent = ({
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [password, setPassword] = useState<string>('')
-  const { clearActiveChannel } = useChannelsStore()
+  const { clearActiveChannel, activeChannelKind } = useChannelsStore()
+  const { isAnonymousAccess } = useAuthStore()
 
   const getTitleByType = () => {
     let title = {
@@ -31,6 +32,14 @@ const PrivateContent = ({
   const clearChannelAndRedirect = () => {
     clearActiveChannel()
     window.location.href = '/'
+  }
+
+  if (
+    activeChannelKind === Kinds.Private &&
+    isAnonymousAccess
+  ) {
+    window.location.href = '/login'
+    return null
   }
 
   return (
@@ -87,3 +96,4 @@ const PrivateContent = ({
 }
 
 export { PrivateContent }
+
