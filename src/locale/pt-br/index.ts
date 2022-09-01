@@ -56,6 +56,8 @@ const PT_BR = {
       confirm_signout: 'Tem certeza que deseja sair?',
       update: 'Atualizar',
       accept_all: 'Eu aceito todos os',
+      agree: 'Concordo',
+      cancel_registration: 'Cancelar cadastro',
       push: {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
