@@ -116,6 +116,10 @@ export const Live = styled.div`
     height: 60vh;
   }
 
+  @media screen and (max-width: ${breakpoints.lg}) and (orientation: landscape) {
+    height: 80vh;
+  }
+
   @media screen and (max-width: ${breakpoints.md}) {
     flex-flow: column;
     height: 55vh;
