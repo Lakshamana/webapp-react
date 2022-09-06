@@ -1,4 +1,4 @@
-import '@filmgardi/videojs-collect-data'
+import '@fanhero/analytics'
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
@@ -110,9 +110,9 @@ const VideoPlayerComponent = ({
       if (setVolumeValue) player.volume(setVolumeValue)
       if (!isAnonymousAccess && !isLiveStream) {
         try {
-          const lastPosition = await axios.get(`${ANALYTICS_API}/watching/${videoId}/${user?.id}`)
+          const lastPosition = await axios.get(`${ANALYTICS_API}/continue-watching-by-id/${videoId}/${user?.id}`)
           const position = lastPosition?.data?.position
-          if (position) return setWatchingPosition({ showModal: true, position })
+          if (position && position !== 0) return setWatchingPosition({ showModal: true, position })
           setWatchingPosition({ ...watchingPosition, showModal: false })
         } catch (error) {
           setWatchingPosition({ ...watchingPosition, showModal: false })
@@ -152,7 +152,6 @@ const VideoPlayerComponent = ({
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
     player?.on('ended', () => {
-      //TODO: clear last watching
       setEndedVideo(true)
     })
     player?.on('volumechange', () => {
@@ -174,13 +173,12 @@ const VideoPlayerComponent = ({
       url: `${ANALYTICS_API}/watching`,
     }
     const defineBody = {
-      currentTime: player.currentTime(),
-      remainingTime: player.remainingTime(),
+      currentTime: 'FG-VIDEO_CURRENT_TIME',
       orgId: organization?.id,
       channelId: activeChannel?.id,
       videoDuration: video_duration,
-      postId: videoId,
-      userId: user?.id
+      userId: user?.id,
+      videoId
     }
     const collectDataOption = {
       intervalTime: 166,
@@ -188,7 +186,7 @@ const VideoPlayerComponent = ({
       altAction: [{ ...defineEndpoint, body: { params: { ...defineBody } } }]
     }
     if (!isAnonymousAccess && !isLiveStream) {
-      player.collectData(collectDataOption)
+      player.Analytics(collectDataOption)
     }
   }
 
