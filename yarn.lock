@@ -2538,10 +2538,9 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@filmgardi/videojs-collect-data@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@filmgardi/videojs-collect-data/-/videojs-collect-data-2.0.2.tgz#03099b06c4b5129aa78a4629c04bf95c37a6d49b"
-  integrity sha512-V5zTlCUMf8RADpoQXbXRSje/KisffLEwX+b+LmXbx03T0rTgAM4A+yay4rWbzka9+aCXye+Bmj0t22lmEa7kLw==
+"@fanhero/analytics@https://github.com/RenatoSiqueira/fanhero-analytics.git":
+  version "1.0.0"
+  resolved "https://github.com/RenatoSiqueira/fanhero-analytics.git#ccbc2671117de9ba959c589f1d5f269a18aed645"
   dependencies:
     clientjs "^0.2.1"
     global "^4.3.2"
