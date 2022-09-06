@@ -151,9 +151,7 @@ const VideoPlayerComponent = ({
       const qualityLevel = event.qualityLevel
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
-    player?.on('ended', () => {
-      setEndedVideo(true)
-    })
+    player?.on('ended', () => setEndedVideo(true))
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
       saveData(VIDEO_VOLUME, newVolumeValue)
