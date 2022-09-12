@@ -1,4 +1,3 @@
-import '@fanhero/analytics'
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
@@ -80,6 +79,19 @@ const VideoPlayerComponent = ({
     )
   }
 
+  const sendContinueWatchingData = (currentTime: number) => {
+    if (isAnonymousAccess || isLiveStream) return
+    const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+    axios.post(`${ANALYTICS_API}/watching${URL_PARAMS}`, {
+      orgId: organization?.id,
+      channelId: activeChannel?.id,
+      videoDuration: video_duration,
+      userId: user?.id,
+      currentTime,
+      videoId
+    })
+  }
+
   const handlePlayerReady = (player: any) => {
     playerRef.current = player
 
@@ -110,7 +122,8 @@ const VideoPlayerComponent = ({
       if (setVolumeValue) player.volume(setVolumeValue)
       if (!isAnonymousAccess && !isLiveStream) {
         try {
-          const lastPosition = await axios.get(`${ANALYTICS_API}/continue-watching-by-id/${videoId}/${user?.id}`)
+          const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+          const lastPosition = await axios.get(`${ANALYTICS_API}/watching${URL_PARAMS}`)
           const position = lastPosition?.data?.position
           if (position && position !== 0) return setWatchingPosition({ showModal: true, position })
           setWatchingPosition({ ...watchingPosition, showModal: false })
@@ -124,16 +137,17 @@ const VideoPlayerComponent = ({
       player.chromecast()
 
       // TODO: Elaborate task
-      const Watermark = {
-        start: 'playing',
-        end: 'ended',
-        attachToControlBar: true,
-        showBackground: false,
-        content: `<img src="${generateOrgChannelLogo()}" />`,
-        align: 'bottom-right'
-      }
+      // const Watermark = {
+      // start: 'playing',
+      // end: 'ended',
+      // attachToControlBar: true,
+      // showBackground: false,
+      // content: `<img src="${generateOrgChannelLogo()}" />`,
+      // align: 'bottom-right'
+      // }
 
-      player.overlay({ overlays: [...(overlays || []), Watermark] })
+      // player.overlay({ overlays: [...(overlays || []), Watermark] })
+      player.overlay({ overlays: [...(overlays || [])] })
       if (vttSrc) {
         player.vttThumbnails({
           src: vttSrc,
@@ -151,41 +165,38 @@ const VideoPlayerComponent = ({
       const qualityLevel = event.qualityLevel
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
-    player?.on('ended', () => setEndedVideo(true))
+    player?.on('ended', () => {
+      async function continueWatchingEnded() {
+        const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+        await axios.delete(`${ANALYTICS_API}/watching${URL_PARAMS}`)
+      }
+      if (!isAnonymousAccess && !isLiveStream) {
+        continueWatchingEnded()
+      }
+      setEndedVideo(true)
+    })
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
       saveData(VIDEO_VOLUME, newVolumeValue)
       const defineIsMuted = player.muted()
       saveData(VIDEO_MUTED, defineIsMuted)
     })
+
+    let lastCurrent = 0;
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
       const isRemainingTime =
         Boolean(remainingTime) && remainingTime < SHOW_NEXT_VIDEO_IN
       setRemainingTime(isRemainingTime)
+
+      const currentTime = Math.trunc(player.currentTime())
+      if (currentTime % 5 === 0 && currentTime !== lastCurrent) {
+        lastCurrent = currentTime
+        sendContinueWatchingData(player.currentTime())
+      }
     })
 
-    const defineEndpoint = {
-      name: 'Analytics Watching',
-      method: 'POST',
-      url: `${ANALYTICS_API}/watching`,
-    }
-    const defineBody = {
-      currentTime: 'FG-VIDEO_CURRENT_TIME',
-      orgId: organization?.id,
-      channelId: activeChannel?.id,
-      videoDuration: video_duration,
-      userId: user?.id,
-      videoId
-    }
-    const collectDataOption = {
-      intervalTime: 166,
-      action: { ...defineEndpoint, body: { params: { ...defineBody } } },
-      altAction: [{ ...defineEndpoint, body: { params: { ...defineBody } } }]
-    }
-    if (!isAnonymousAccess && !isLiveStream) {
-      player.Analytics(collectDataOption)
-    }
+    player?.on('seeked', () => sendContinueWatchingData(player.currentTime()))
   }
 
   useEffect(() => {
@@ -202,6 +213,7 @@ const VideoPlayerComponent = ({
   }
   const continueCancel = () => {
     playerRef.current?.currentTime(0)
+    sendContinueWatchingData(0)
     closeModal()
   }
 
