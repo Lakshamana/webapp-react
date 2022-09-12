@@ -270,6 +270,7 @@ const PT_BR = {
         drama: 'Drama',
         family: 'Família',
         watch_now: 'Assistir agora',
+        continue_watch: 'Continue assistindo',
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
       },
@@ -435,6 +436,12 @@ const PT_BR = {
         participants: 'Participantes:',
         reactions: 'Reações',
         comments: 'Comentários',
+        modal: {
+          continue_watching: 'Continuar assistindo',
+          continue_subtitle: 'Deseja continuar de onde parou?',
+          continue_action_label: 'Sim',
+          continue_cancel_label: 'Não'
+        },
         comment: {
           hide: 'Esconder',
           see: 'Mostrar',

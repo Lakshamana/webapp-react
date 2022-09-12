@@ -1,7 +1,13 @@
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
+import axios from 'axios'
+import { Modal as ContinueModal } from 'components'
 import VideoJS from 'components/molecules/videoJs'
-import { memo, ReactElement, useRef } from 'react'
-import { useCustomizationStore } from 'services/stores'
+import { memo, ReactElement, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { saveData } from 'services/storage'
+import { useAuthStore, useChannelsStore, useCustomizationStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
+import { useThemeStore } from 'services/stores/theme'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
 import 'videojs-mux'
@@ -12,13 +18,6 @@ import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
-import { saveData } from 'services/storage'
-import {
-  useAuthStore,
-  useChannelsStore,
-  useOrganizationStore,
-  useVideoPlayerStore
-} from 'services/stores'
 import { getDefaultConfigs } from './settings'
 import { VideoPlayerProps } from './types'
 
@@ -37,17 +36,21 @@ const VideoPlayerComponent = ({
   videoId,
   categoryId,
   post_type,
-  video_duration,
+  video_duration
 }: VideoPlayerProps): ReactElement => {
-  const { activeChannelConfig } = useCustomizationStore()
-  const playerRef = useRef(null)
+  const playerRef: any = useRef(null)
+  const { t } = useTranslation()
+  const [watchingPosition, setWatchingPosition] = useState({ showModal: false, position: 0 })
+  const { account, isAnonymousAccess, user } = useAuthStore()
+  const { activeChannelConfig, organizationConfig } = useCustomizationStore()
+  const { colorMode } = useThemeStore()
   const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
-  const setRemainingTime = useVideoPlayerStore(
-    (state) => state.setRemainingTime
-  )
-  const { account } = useAuthStore()
+  const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
+  const { generateImage } = useThumbor()
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
+
+  const ANALYTICS_API = process.env.REACT_APP_ANALYTICS_API
 
   const defaultOptions = getDefaultConfigs(
     src,
@@ -65,21 +68,86 @@ const VideoPlayerComponent = ({
     organization?.web_url?.[0]
   )
 
+  const generateOrgChannelLogo = () => {
+    if (!activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO && !organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
+    const theme = colorMode?.toUpperCase()
+    const defineSource = activeChannelConfig?.IMAGES?.CHANNEL_LOGO[theme] || organizationConfig?.IMAGES?.ORGANIZATION_LOGO[theme]
+    return generateImage(
+      ThumborInstanceTypes.IMAGE,
+      defineSource,
+      { size: { height: 60 } }
+    )
+  }
+
+  const sendContinueWatchingData = (currentTime: number) => {
+    if (isAnonymousAccess || isLiveStream) return
+    const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+    axios.post(`${ANALYTICS_API}/watching${URL_PARAMS}`, {
+      orgId: organization?.id,
+      channelId: activeChannel?.id,
+      videoDuration: video_duration,
+      userId: user?.id,
+      currentTime,
+      videoId
+    })
+  }
+
   const handlePlayerReady = (player: any) => {
     playerRef.current = player
 
     player?.on('dispose', () => {
-      player.registerPlugin('qualityLevel', videoJsContribQualityLevels)
-      player.registerPlugin('hlsQualitySelector', videoJsHlsQualitySelector)
-      player.registerPlugin('overlay', overlay)
-      player.registerPlugin('vttThumbnails', videoJsVttThumbnails)
+      player?.registerPlugin('qualityLevel', videoJsContribQualityLevels)
+      player?.registerPlugin('hlsQualitySelector', videoJsHlsQualitySelector)
+      player?.registerPlugin('overlay', overlay)
+      player?.registerPlugin('vttThumbnails', videoJsVttThumbnails)
     })
-    player?.on('ready', () => {
+
+    //TODO: Elaborate task (FH/Brado maybe?)
+    // const fanheroButton = player?.controlBar.addChild('button')
+    // fanheroButton.controlText('Visit Fanhero site!');
+    // player.controlBar
+    //   .el()
+    //   .insertBefore(
+    //     fanheroButton.el(),
+    //     player.controlBar.getChild('playToggle').el()
+    //   );
+    // const buttonDom = fanheroButton.el();
+    // buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em;')
+    // buttonDom.innerHTML = "<img src='/logo-fh.png' />";
+    // buttonDom.onclick = function () {
+    //   window.open('https://fanhero.tv/', '_blank')
+    // }
+
+    player?.on('ready', async () => {
       if (setVolumeValue) player.volume(setVolumeValue)
+      if (!isAnonymousAccess && !isLiveStream) {
+        try {
+          const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+          const lastPosition = await axios.get(`${ANALYTICS_API}/watching${URL_PARAMS}`)
+          const position = lastPosition?.data?.position
+          if (position && position !== 0) return setWatchingPosition({ showModal: true, position })
+          setWatchingPosition({ ...watchingPosition, showModal: false })
+        } catch (error) {
+          setWatchingPosition({ ...watchingPosition, showModal: false })
+        }
+      } else {
+        player?.play()
+      }
+
       player.chromecast()
-      player.overlay({
-        overlays: [...(overlays || [])],
-      })
+
+      // TODO: Elaborate task
+      // const Watermark = {
+      // start: 'playing',
+      // end: 'ended',
+      // attachToControlBar: true,
+      // showBackground: false,
+      // content: `<img src="${generateOrgChannelLogo()}" />`,
+      // align: 'bottom-right'
+      // }
+
+      // player.overlay({ overlays: [...(overlays || []), Watermark] })
+      player.overlay({ overlays: [...(overlays || [])] })
       if (vttSrc) {
         player.vttThumbnails({
           src: vttSrc,
@@ -97,37 +165,88 @@ const VideoPlayerComponent = ({
       const qualityLevel = event.qualityLevel
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
-
-    player?.on('ended', () => setEndedVideo(true))
+    player?.on('ended', () => {
+      async function continueWatchingEnded() {
+        const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+        await axios.delete(`${ANALYTICS_API}/watching${URL_PARAMS}`)
+      }
+      if (!isAnonymousAccess && !isLiveStream) {
+        continueWatchingEnded()
+      }
+      setEndedVideo(true)
+    })
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
       saveData(VIDEO_VOLUME, newVolumeValue)
       const defineIsMuted = player.muted()
       saveData(VIDEO_MUTED, defineIsMuted)
     })
+
+    let lastCurrent = 0;
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
       const isRemainingTime =
         Boolean(remainingTime) && remainingTime < SHOW_NEXT_VIDEO_IN
       setRemainingTime(isRemainingTime)
+
+      const currentTime = Math.trunc(player.currentTime())
+      if (currentTime % 5 === 0 && currentTime !== lastCurrent) {
+        lastCurrent = currentTime
+        sendContinueWatchingData(player.currentTime())
+      }
     })
+
+    player?.on('seeked', () => sendContinueWatchingData(player.currentTime()))
+  }
+
+  useEffect(() => {
+    if (!watchingPosition.showModal) {
+      playerRef.current?.play()
+    }
+  }, [watchingPosition])
+
+  const closeModal = () => setWatchingPosition({ ...watchingPosition, showModal: false })
+
+  const continueAction = () => {
+    playerRef.current?.currentTime(watchingPosition.position)
+    closeModal()
+  }
+  const continueCancel = () => {
+    playerRef.current?.currentTime(0)
+    sendContinueWatchingData(0)
+    closeModal()
   }
 
   if (!src) return <></>
 
   return (
-    <VideoJS
-      options={{
-        ...defaultOptions,
-        muted: isMuted,
-        ...(isLiveStream ? { playbackRates: undefined } : {}),
-        ...(isLiveStream ? { liveui: true } : {}),
-        ...options,
-      }}
-      islivestream
-      skin={activeChannelConfig?.PLAYER?.SKIN}
-      onReady={handlePlayerReady}
-    />
+    <>
+      <ContinueModal
+        onConfirm={continueAction}
+        onClose={continueCancel}
+        isOpen={watchingPosition.showModal}
+        isCentered
+        closeButton
+        title={t('page.post.modal.continue_watching')}
+        subtitle={t('page.post.modal.continue_subtitle')}
+        actionButton
+        actionLabel={t('page.post.modal.continue_action_label')}
+        cancelButton
+        cancelLabel={t('page.post.modal.continue_cancel_label')}
+      />
+      <VideoJS
+        options={{
+          ...defaultOptions,
+          muted: isMuted,
+          ...(isLiveStream ? { playbackRates: undefined } : {}),
+          ...(isLiveStream ? { liveui: true } : {}),
+          ...options,
+        }}
+        islivestream
+        skin={activeChannelConfig?.PLAYER?.SKIN}
+        onReady={handlePlayerReady}
+      />
+    </>
   )
 }
 

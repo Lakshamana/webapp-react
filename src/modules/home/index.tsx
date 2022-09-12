@@ -1,8 +1,6 @@
 import { useLazyQuery } from '@apollo/client'
 import { Box, Flex, Spinner } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-
+import axios from 'axios'
 import {
   Billboard,
   Category,
@@ -11,6 +9,8 @@ import {
   PaginatedLiveEventsOutput,
   PaginatedPostsOutput
 } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   QUERY_BILLBOARDS,
@@ -39,22 +39,18 @@ import { CarouselFlags } from 'types/flags'
 import {
   BillboardScroller,
   CategoriesScroller,
-  Container,
-  EmptyState,
+  Container, ContinueWatchingScroller, EmptyState,
   LivestreamScroller,
   Skeleton,
   TagsScroller,
   VideosScroller
 } from 'components'
-
-import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
-
-import { convertToValidColor } from 'utils/helperFunctions'
-
 import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { colors, sizes } from 'styles'
+import { convertToValidColor } from 'utils/helperFunctions'
 import { askForPushPermission } from 'utils/pushNotifications'
+import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
@@ -63,8 +59,7 @@ const HomePage = () => {
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const { activeChannel } = useChannelsStore()
-
-  const { isAnonymousAccess } = useAuthStore()
+  const { isAnonymousAccess, user } = useAuthStore()
 
   const isAnonymousAllowed =
     isAnonymousAccess && activeChannel?.kind === Kinds.Public
@@ -81,6 +76,8 @@ const HomePage = () => {
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<PaginatedCategoriesOutput>()
 
+  const [continueWatchingListData, setContinueWatchingListData] = useState<any>()
+
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
     useState(true)
@@ -94,11 +91,7 @@ const HomePage = () => {
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
-      variables: {
-        filter: {
-          target: BillboardTarget.Home,
-        },
-      },
+      variables: { filter: { target: BillboardTarget.Home } },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
     })
@@ -178,9 +171,7 @@ const HomePage = () => {
       query: QUERY_LOOP_TAGS(tagsIds),
       fetchPolicy: 'no-cache',
     })
-      .then((result) => {
-        setTagsData(result.data)
-      })
+      .then((result) => setTagsData(result.data))
       .finally(() => setLoadingTags(false))
   }
 
@@ -306,21 +297,15 @@ const HomePage = () => {
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
 
-    return () => {
-      setTagsIds([])
-    }
+    return () => setTagsIds([])
     //eslint-disable-next-line
   }, [activeChannelConfig])
 
   useEffect(() => {
     if (isFeaturedPostsActive)
-      getFeaturedPosts({
-        variables: { ...postsFilter(1) },
-      })
+      getFeaturedPosts({ variables: { ...postsFilter(1) } })
     if (isFeaturedCategoriesActive)
-      getFeaturedCategories({
-        variables: { ...categoriesFilter(1, undefined, true) },
-      })
+      getFeaturedCategories({ variables: { ...categoriesFilter(1, undefined, true) } })
     if (isLiveEventsActive)
       getLiveEvents({ variables: { ...liveEventsFilter(1) } })
     // eslint-disable-next-line
@@ -331,7 +316,6 @@ const HomePage = () => {
       setTagsData({})
       return
     }
-
     loadTags()
     //eslint-disable-next-line
   }, [tagsIds])
@@ -369,7 +353,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => {}}
+      reachEnd={() => { }}
       items={billboardItems}
       customButtons={true}
     />
@@ -410,20 +394,58 @@ const HomePage = () => {
       />
     )
 
+  const continueWatchingList = async (lastId?: String) => {
+    const URL = process.env.REACT_APP_ANALYTICS_API
+    let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}`
+    if (lastId) URL_PARAMS += `&lastId=${lastId}`
+    try {
+      const { data } = await axios.get(`${URL}/posts/continue-watching${URL_PARAMS}`)
+      if (data?.statusCode === 200) {
+        const { rows, ...allRest } = data.body.data
+        setContinueWatchingListData((previous) => ({
+          ...continueWatchingListData,
+          ...allRest,
+          rows: [...(previous?.rows || []), ...rows],
+        }))
+      }
+    } catch (error) { }
+  }
+
+  useEffect(() => {
+    if (!isAnonymousAccess && user?.id && activeChannel?.id) continueWatchingList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, activeChannel])
+
+  const loadMoreContinueWatchingPosts = () => {
+    if (continueWatchingListData?.hasNextPage) {
+      continueWatchingList(continueWatchingListData?.lastId)
+    }
+  }
+
+  const renderContinueWatchingScroller = (item: CarouselFlags) =>
+    !!continueWatchingListData?.rows?.length && (
+      <ContinueWatchingScroller
+        key={`${item.LABEL[0].VALUE}`}
+        items={continueWatchingListData.rows}
+        sectionTitle={getCarouselLabel(item)}
+        loadMoreItems={loadMoreContinueWatchingPosts}
+        sectionUrl={''}
+      />
+    )
+
   const renderTagsScroller = (item: CarouselFlags) => {
     const currentTag = tagsData[`tag${item.TAGS}`]
-    if (currentTag)
-      return (
-        <TagsScroller
-          key={`${item.TAGS}`}
-          tagData={currentTag}
-          hasMoreLink={true}
-          content={item.CONTENT_TYPE}
-          sectionTitle={getCarouselLabel(item)}
-          sectionUrl={`/c/${activeChannel?.slug}/tag/`}
-        />
-      )
-    return undefined
+    if (!currentTag) return undefined
+    return (
+      <TagsScroller
+        key={`${item.TAGS}`}
+        tagData={currentTag}
+        hasMoreLink={true}
+        content={item.CONTENT_TYPE}
+        sectionTitle={getCarouselLabel(item)}
+        sectionUrl={`/c/${activeChannel?.slug}/tag/`}
+      />
+    )
   }
 
   const getCarouselLabel = (item: CarouselFlags) => {
@@ -447,8 +469,7 @@ const HomePage = () => {
         case HomeCarouselsTypes.Collections:
           return renderFeaturedCategoriesScroller(item)
         case HomeCarouselsTypes.ContinueWatching:
-          //TODO: Waiting for API
-          return ''
+          return renderContinueWatchingScroller(item)
       }
     } else {
       return renderTagsScroller(item)
@@ -466,9 +487,10 @@ const HomePage = () => {
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
-            <div key={key}>{renderCarouselsOrderedByRemoteConfig(item)}</div>
+            <div key={key}>
+              {renderCarouselsOrderedByRemoteConfig(item)}
+            </div>
           ))}
-
         {!!categoriesWithChildrenData?.rows.length && (
           <InfiniteScroll
             style={{ overflowX: 'hidden' }}

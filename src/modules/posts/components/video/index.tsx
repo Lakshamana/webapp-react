@@ -8,35 +8,26 @@ import { AlertNextVideo } from './AlertNextVideo'
 import { Video } from './style'
 
 const VideoPost = ({ ...postData }: Post) => {
+  const [mediaUrl, setMediaUrl] = useState<string>('')
   const definePlayerVolume = getData(VIDEO_VOLUME)
-  const [mediaUrl, setMediaUrl] = useState('')
-
   const definePlayerIsMuted = getData(VIDEO_MUTED)
 
   const videoUrl = () => {
     const { media } = postData || {}
     const hlsPath = media?.__typename === 'MediaVideo' ? media.hlsPath : null
-    if (!media || !hlsPath) {
-      return ''
-    }
+    if (!media || !hlsPath) return ''
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
   }
 
   const getCategoryId = (post: Post) => {
     if (post && post.categories) {
-      return post.categories
-        .map((el) => {
-          return el.id
-        })
-        .join(',')
+      return post.categories.map((el) => el.id).join(',')
     }
     return ''
   }
 
-  useEffect(() => {
-    setMediaUrl(videoUrl())
-    //eslint-disable-next-line
-  }, [postData])
+  // eslint-disable-next-line
+  useEffect(() => setMediaUrl(videoUrl()), [postData])
 
   return (
     <Video>

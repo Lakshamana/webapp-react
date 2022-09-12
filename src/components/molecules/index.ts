@@ -4,6 +4,7 @@ export * from './cardsScroller'
 export * from './categoriesGrid'
 export * from './categoriesScroller'
 export * from './comment'
+export * from './continueWatchingScroller'
 export * from './emptyHeader'
 export * from './externalFooter'
 export * from './externalHeader'
@@ -30,6 +31,4 @@ export * from './videoPlayer'
 export * from './videoPlaylist'
 export * from './videoRelated'
 export * from './videosScroller'
-
-
 
