@@ -38,6 +38,7 @@ const PrivateContent = ({
     activeChannelKind === Kinds.Private &&
     isAnonymousAccess
   ) {
+    clearActiveChannel()
     window.location.href = '/login'
     return null
   }
