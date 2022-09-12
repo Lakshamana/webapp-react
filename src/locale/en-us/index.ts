@@ -270,6 +270,7 @@ const EN_US = {
         drama: 'Drama',
         family: 'Family',
         watch_now: 'Watch Now',
+        continue_watch: 'Continue Watching',
         my_list: 'My List',
         more_categories: 'More categories',
       },

@@ -268,6 +268,7 @@ const PT_BR = {
         drama: 'Drama',
         family: 'Família',
         watch_now: 'Assistir agora',
+        continue_watch: 'Continue assistindo',
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
       },
