@@ -27,6 +27,7 @@ import {
   useThemeStore
 } from 'services/stores'
 
+import { Cookie } from 'components/atoms'
 import { configEnvs } from 'config/envs'
 import { initializeFacebookPixel } from 'config/facebookPixel'
 import { initializeGTM } from 'config/gtm'
@@ -83,6 +84,7 @@ const TemplateProvider = ({ children }: any) => {
           </HelmetProvider>
         </ChakraProvider>
       </ThemeProvider>
+      <Cookie />
     </ApolloProvider>
   )
 }
