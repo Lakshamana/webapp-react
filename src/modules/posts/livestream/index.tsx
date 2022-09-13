@@ -16,7 +16,7 @@ import { Livechat } from 'components/organisms'
 import { VerifyContentKind } from '../components'
 
 import { breakpoints, colors, sizes } from 'styles'
-import { Live, LiveDetails, Subtitle, Title } from './style'
+import { CustomBox, Live, LiveDetails, Subtitle, Title } from './style'
 
 import { LiveEvent, PostType, Status } from 'generated/graphql'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
@@ -160,7 +160,7 @@ const LivePostPage = () => {
         alignItems="center"
       >
         <Live>
-          <Box
+          <CustomBox
             position="relative"
             backgroundColor={'black'}
             height={{ base: '30vh', md: '100%' }}
@@ -207,7 +207,7 @@ const LivePostPage = () => {
               />
             )}
             {liveStatus === Status.Finished && renderEndedLiveText()}
-          </Box>
+          </CustomBox>
           {isChatVisible && (
             <Box
               height={{ base: '62vh', md: '100%' }}
@@ -240,3 +240,4 @@ const LivePostPage = () => {
 }
 
 export { LivePostPage }
+
