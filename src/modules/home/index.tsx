@@ -395,7 +395,7 @@ const HomePage = () => {
     )
 
   const continueWatchingList = async (lastId?: String) => {
-    const URL = process.env.REACT_APP_ANALYTICS_API
+    const URL = process.env.REACT_APP_API_ENDPOINT
     let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}`
     if (lastId) URL_PARAMS += `&lastId=${lastId}`
     try {
