@@ -130,3 +130,9 @@ export const Live = styled.div`
     height: 100%;
   }
 `
+
+export const CustomBox = styled(Box)`
+  @media screen and (max-width: ${breakpoints.md}) and (orientation: landscape) {
+    height: 50vh;
+  }
+`
