@@ -1,5 +1,5 @@
-import * as Yup from 'yup'
 import i18n from 'config/i18n'
+import * as Yup from 'yup'
 
 export const initialValues = {
   email: '',
@@ -7,7 +7,7 @@ export const initialValues = {
 }
 
 export const validationSchema = Yup.object().shape({
-  confirm_email: Yup.string()
+  confirm_email: Yup.string().lowercase()
     .required(
       i18n.t('common.error.field_required', {
         field_name: i18n.t('signin.label.email'),
