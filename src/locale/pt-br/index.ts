@@ -232,7 +232,7 @@ const PT_BR = {
     },
     page: {
       search: {
-        results_for: '{{count}} resultados encontrados para {{string}}:',
+        results_for: '{{count}} resultados encontrados para {{string}}',
         videos_section: 'Vídeos',
         categories_section: 'Categorias',
         live_events_section: 'Ao vivo',
@@ -508,6 +508,7 @@ const PT_BR = {
       link: 'nossa Política de Privacidade',
       description_2: 'e nosso uso de cookies.',
       accept: 'Aceitar',
+      decline: 'Recusar'
     },
   },
 }

@@ -234,7 +234,7 @@ const EN_US = {
     },
     page: {
       search: {
-        results_for: '{{count}} results found for {{string}}:',
+        results_for: '{{count}} results found for {{string}}',
         videos_section: 'Video',
         categories_section: 'Categories',
         live_events_section: 'Live Events',
@@ -505,10 +505,11 @@ const EN_US = {
     cookieConsent: {
       notice: 'Notice.',
       description_1:
-        'uses cookies to provide necessary website functionality, improve your experience and analyze our traffic. By using our website, you agree to',
+        'This site uses cookies to provide necessary functionality, improve your experience and analyze our traffic. By using our website, you agree to',
       link: 'our Privacy Policy',
       description_2: 'and our cookies usage.',
       accept: 'Accept',
+      decline: 'Decline'
     },
   },
 }
