@@ -1,18 +1,11 @@
 import { HomeCarouselsTypes } from './common'
 
-export type PLAYER_LOGO = {
-  IMAGE: string
-  ALT_TEXT: string
-  LINK: string
-}
-
 export type OrganizationFlags = {
   APP_BRAND?: string
   COLORS?: ColorFlags
   DFP_ACTIVE?: boolean
   DISPLAY_SIGNUP_BUTTON?: boolean
   FACEBOOK_PIXEL_CODE?: string
-  PLAYER_LOGO?: PLAYER_LOGO
   GDPR_URL?: string
   HEADER?: {
     TABS: TabFlags[]
