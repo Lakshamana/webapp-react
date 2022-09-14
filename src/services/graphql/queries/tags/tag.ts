@@ -53,31 +53,32 @@ export const QUERY_TAG = gql`
   }
 `
 
-export const QUERY_LOOP_TAGS = (ids) => gql`
+export const QUERY_LOOP_TAGS = (ids: String[]) => gql`
 query Tags{
   ${ids?.map(
-    (id, index) =>
-      `tag${id}: tag(id: "${id}") {
+  (id: String) =>
+    `tag${id}: tag(id: "${id}") {
+      id
+      title
+      description
+      relatedCategories {
+        access
+        slug
+        pinnedStatus {
+          pinned
+        }
         id
-        title
         description
-        relatedCategories {
-          access
-          slug
-          pinnedStatus {
-            pinned
-          }
-          id
-          description
-          name
-          kind
-          customization {
-            thumbnail {
-              imgPath
-            }
+        name
+        kind
+        customization {
+          thumbnail {
+            imgPath
           }
         }
-        relatedPosts {
+      }
+      relatedPosts {
+        rows {
           type
           access
           slug
@@ -87,11 +88,11 @@ query Tags{
           }
           media {
             ... on MediaVideo {
-            id
-            duration
-            thumbnailPath
-            baseUrl
-          }
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
           }
           id
           description
@@ -101,8 +102,9 @@ query Tags{
             imgPath
           }
         }
-        slug
-      }`
-  )}
+      }
+      slug
+    }`
+)}
 }
 `
