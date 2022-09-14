@@ -19,6 +19,7 @@ const Cookie = () => {
         padding: '20px 10px',
         alignItems: 'center',
         textAlign: 'center',
+        justifyContent: 'center',
       }}
       buttonStyle={{
         background: colors.brand.primary[colorMode],
