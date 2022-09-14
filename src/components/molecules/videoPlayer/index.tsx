@@ -2,6 +2,7 @@ import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
 import VideoJS from 'components/molecules/videoJs'
+import { configEnvs } from 'config/envs'
 import { memo, ReactElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
@@ -103,7 +104,7 @@ const VideoPlayerComponent = ({
     })
 
     const fanheroButton = player?.controlBar.addChild('button')
-    fanheroButton.controlText(organizationConfig?.PLAYER_LOGO?.ALT_TEXT || 'Visit fanhero site');
+    fanheroButton.controlText(configEnvs?.playerLogo?.altText || 'Visit fanhero site');
     player.controlBar
       .el()
       .insertBefore(
@@ -112,9 +113,9 @@ const VideoPlayerComponent = ({
       );
     const buttonDom = fanheroButton.el();
     buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em; margin-left: 1em;')
-    buttonDom.innerHTML = `<img src=${organizationConfig?.PLAYER_LOGO?.IMAGE ?? '/logo-fh.png'} />`;
+    buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'} />`;
     buttonDom.onclick = function () {
-      window.open(`${organizationConfig?.PLAYER_LOGO?.LINK || 'https://fanhero.tv/'}`, '_blank')
+      window.open(`${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`, '_blank')
     }
 
     player?.on('ready', async () => {
