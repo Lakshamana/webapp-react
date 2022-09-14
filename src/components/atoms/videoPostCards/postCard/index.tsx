@@ -12,7 +12,7 @@ import {
 } from 'utils/helperFunctions'
 import { BlockedContent, CardWrapper, PlayContent, PostContent } from './style'
 
-const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
+const PostCard = ({ onClickCard, hasPinButton, ...props }: ComponentPostCardProps) => {
   const isPostBlocked = props.isExclusive || props.isGeolocked
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
@@ -116,7 +116,7 @@ const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
             </Flex>
             <Spacer />
             {
-              !props?.progress &&
+              !props?.progress && hasPinButton &&
               <RenderAddToMyListIcon />
             }
           </Flex>
