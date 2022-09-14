@@ -65,9 +65,9 @@ const VideoPostCard = ({
     <>
       <PostCard
         onClickCard={selectPost}
-        hasPinButton={hasPinButton}
         pinPost={isAnonymousAccess ? showActionNotAllowedAlert : pinPost}
         {...{
+          hasPinButton,
           hover,
           isLoading,
           isPostPinned,
@@ -83,9 +83,8 @@ const VideoPostCard = ({
         {...{ onClose, isOpen }}
       >
         <MobileView
-          hasPinButton={hasPinButton}
           handlePinPost={isPostPinned ? unpinPost : pinPost}
-          {...{ isLoading, isPostPinned, ...props }}
+          {...{ isLoading, isPostPinned, hasPinButton, ...props }}
         />
       </MobileViewModal>
     </>
