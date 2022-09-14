@@ -23,19 +23,21 @@ export const QUERY_TAG = gql`
         }
       }
       relatedPosts {
-        access
-        type
-        slug
-        status
-        pinnedStatus {
-          pinned
-        }
-        id
-        description
-        title
-        kind
-        thumbnail {
-          imgPath
+        rows {
+          access
+          type
+          slug
+          status
+          pinnedStatus {
+            pinned
+          }
+          id
+          description
+          title
+          kind
+          thumbnail {
+            imgPath
+          }
         }
       }
       slug
