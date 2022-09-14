@@ -14,11 +14,7 @@ import {
 } from 'utils/accessVerifications'
 import { Wrapper } from './style'
 
-const PostsGrid = ({
-  sendUnpinEvent,
-  items,
-  sectionTitle,
-}: VideosGridProps) => {
+const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const { generateImage } = useThumbor()
   const { colorMode } = useThemeStore()
   const { activeChannel } = useChannelsStore()
@@ -57,18 +53,14 @@ const PostsGrid = ({
     return `/c/${activeChannel?.slug}/post/${slug}`
   }
 
-  const callUnpinEvent = (postId: string) => {
-    if (sendUnpinEvent) sendUnpinEvent(postId)
-  }
-
   useEffect(() => {
     if (items && items?.length) {
       const mappedArr = items?.map((item: Post) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(`${item.slug}`)
         return {
-          id: item.id,
-          title: item.title,
+          id: item.id || '',
+          title: item.title || '',
           description: item.description,
           url,
           thumbnail,
@@ -79,7 +71,8 @@ const PostsGrid = ({
           countViews: undefined,
           isExclusive: isEntityExclusive(item),
           isGeolocked: isEntityGeolocked(item),
-          isPinned: item.pinnedStatus?.pinned,
+          isPinned:
+            item.__typename === 'Post' ? item.pinnedStatus?.pinned : false,
         }
       })
       setGridItems(mappedArr)
@@ -105,7 +98,7 @@ const PostsGrid = ({
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            <VideoPostCard {...item} />
+            <VideoPostCard hasPinButton={false} {...item} />
           </Wrapper>
         ))}
       </SimpleGrid>

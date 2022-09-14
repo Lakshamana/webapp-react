@@ -29,6 +29,7 @@ const SearchPage = () => {
     variables: {
       filters: {
         query: stringToSearch,
+        pageSize: 1000
       },
     },
     onCompleted: (result) => {
@@ -87,7 +88,7 @@ const SearchPage = () => {
         >
           {t('page.search.results_for', {
             string: stringToSearch,
-            count: data?.search?.rows?.length,
+            count: data?.search?.total,
           })}
         </Text>
       </Box>
