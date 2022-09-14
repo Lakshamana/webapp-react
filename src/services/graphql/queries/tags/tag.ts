@@ -22,7 +22,7 @@ export const QUERY_TAG = gql`
           }
         }
       }
-      relatedPosts {
+      relatedPosts(filters: { typeIn: [ON_DEMAND, VIDEO] }) {
         rows {
           access
           type
@@ -35,6 +35,14 @@ export const QUERY_TAG = gql`
           description
           title
           kind
+          media {
+            ... on MediaVideo {
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
+          }
           thumbnail {
             imgPath
           }
