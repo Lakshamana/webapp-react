@@ -21,7 +21,7 @@ const TagsScroller = ({
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
   useEffect(() => {
-    const postItems = tagData?.relatedPosts.filter(
+    const postItems = tagData?.relatedPosts.rows.filter(
       (item) => item.type === PostType.Video || item.type === PostType.OnDemand
     )
     const categoryItems = tagData?.relatedCategories
@@ -54,7 +54,7 @@ const TagsScroller = ({
           description: item.description,
           duration:
             item.__typename === 'Post' &&
-            item.media?.__typename === 'MediaVideo'
+              item.media?.__typename === 'MediaVideo'
               ? item.media?.duration
               : '',
           isExclusive: isEntityBlocked(item),
