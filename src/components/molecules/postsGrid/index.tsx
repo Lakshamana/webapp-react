@@ -31,8 +31,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
 
     if (isEntityBlocked(post)) imageOptions.blur = 20
 
-    const thumbnailPath =
-      post.media?.__typename === 'MediaVideo' ? post.thumbnail?.imgPath : ''
+    const thumbnailPath = post.thumbnail?.imgPath
 
     const secondImgUrl =
       post.media?.__typename === 'MediaVideo'
@@ -107,3 +106,4 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
 }
 
 export { PostsGrid }
+

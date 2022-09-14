@@ -22,20 +22,30 @@ export const QUERY_TAG = gql`
           }
         }
       }
-      relatedPosts {
-        access
-        type
-        slug
-        status
-        pinnedStatus {
-          pinned
-        }
-        id
-        description
-        title
-        kind
-        thumbnail {
-          imgPath
+      relatedPosts(filters: { typeIn: [ON_DEMAND, VIDEO] }) {
+        rows {
+          access
+          type
+          slug
+          status
+          pinnedStatus {
+            pinned
+          }
+          id
+          description
+          title
+          kind
+          media {
+            ... on MediaVideo {
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
+          }
+          thumbnail {
+            imgPath
+          }
         }
       }
       slug
