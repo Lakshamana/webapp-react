@@ -46,7 +46,6 @@ const LivePostPage = () => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const [getLiveEvent, { loading }] = useLazyQuery(QUERY_LIVE_EVENT, {
-    variables: { slug },
     onCompleted: (result) => {
       setLivestream(result.liveEvent)
       setIsCommentsEnabled(result.liveEvent?.commentsEnabled)
@@ -120,11 +119,11 @@ const LivePostPage = () => {
     if (livestream) {
       setPageTitle(livestream?.title)
     }
-
     // Unsubscribe on unmount to avoid a memory leak
     return () => {
       liveUnsubscriber()
     }
+
     // eslint-disable-next-line
   }, [livestream])
 
@@ -134,7 +133,9 @@ const LivePostPage = () => {
   }, [liveStatus])
 
   useEffect(() => {
-    if (!isVerifyingAccessPermission) getLiveEvent()
+    if (!isVerifyingAccessPermission) {
+      getLiveEvent({ variables: { slug } })
+    }
     //eslint-disable-next-line
   }, [isVerifyingAccessPermission])
 
