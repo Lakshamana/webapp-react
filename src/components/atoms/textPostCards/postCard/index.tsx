@@ -65,12 +65,12 @@ const PostCard = ({ onClickCard, hasPinButton, ...props }: ComponentPostCardProp
             />
           </BlockedContent>
         )}
-        {!isPostBlocked && props.hover && (
+        {!isPostBlocked && (
           <PlayContent>
             <Icon
               width={50}
               color={colors.white}
-              icon={`mdi:play-circle-outline`}
+              icon='bi:file-earmark-text'
             />
           </PlayContent>
         )}
@@ -150,3 +150,4 @@ const PostCard = ({ onClickCard, hasPinButton, ...props }: ComponentPostCardProp
 }
 
 export { PostCard }
+
