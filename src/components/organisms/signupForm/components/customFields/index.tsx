@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Spinner } from '@chakra-ui/react'
 import { Button, CustomForm, Text } from 'components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -78,8 +78,19 @@ const CustomFieldsForm = ({
           />
         )
       }
+      {
+        loading && (
+          <Spinner
+            speed="0.65s"
+            thickness={'3px'}
+            size={'xl'}
+            color={colors.secondaryText[colorMode]}
+          />
+        )
+      }
     </Flex>
   )
 }
 
 export { CustomFieldsForm }
+
