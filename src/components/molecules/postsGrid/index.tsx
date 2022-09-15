@@ -8,15 +8,13 @@ import { useChannelsStore, useThemeStore } from 'services/stores'
 import { breakpoints, colors, sizes } from 'styles'
 import { VideoPostCardProps, VideosGridProps } from 'types/posts'
 import {
-  isEntityBlocked, isEntityGeolocked
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
 } from 'utils/accessVerifications'
 import { Wrapper } from './style'
 
-const PostsGrid = ({
-  sendUnpinEvent,
-  items,
-  sectionTitle,
-}: VideosGridProps) => {
+const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const { generateImage } = useThumbor()
   const { colorMode } = useThemeStore()
   const { activeChannel } = useChannelsStore()
@@ -26,33 +24,32 @@ const PostsGrid = ({
   const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {
       size: {
-        height: 400,
+        width: 400,
+        height: 0,
       },
     }
 
-    if (isEntityBlocked(post)) {
-      imageOptions.blur = 20
+    if (isEntityBlocked(post)) imageOptions.blur = 20
+
+    const thumbnailPath = post.thumbnail?.imgPath
+
+    const secondImgUrl =
+      post.media?.__typename === 'MediaVideo'
+        ? `${post.media.baseUrl}/${post.media.thumbnailPath}`
+        : ''
+
+    if (thumbnailPath) {
+      return generateImage(
+        ThumborInstanceTypes.IMAGE,
+        thumbnailPath,
+        imageOptions
+      )
     }
-
-    const thumbnailPath =
-      post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
-
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || thumbnailPath || '',
-      imageOptions,
-      post.thumbnail?.imgPath ? null : post.media?.baseUrl
-    )
-
-    return image
+    return secondImgUrl
   }
 
   const getPostUrl = (slug: string) => {
     return `/c/${activeChannel?.slug}/post/${slug}`
-  }
-
-  const callUnpinEvent = (postId: string) => {
-    if (sendUnpinEvent) sendUnpinEvent(postId)
   }
 
   useEffect(() => {
@@ -61,8 +58,8 @@ const PostsGrid = ({
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(`${item.slug}`)
         return {
-          id: item.id,
-          title: item.title,
+          id: item.id || '',
+          title: item.title || '',
           description: item.description,
           url,
           thumbnail,
@@ -71,9 +68,10 @@ const PostsGrid = ({
               ? item.media?.duration
               : undefined,
           countViews: undefined,
-          isExclusive: isEntityBlocked(item),
+          isExclusive: isEntityExclusive(item),
           isGeolocked: isEntityGeolocked(item),
-          isPinned: item.pinnedStatus?.pinned,
+          isPinned:
+            item.__typename === 'Post' ? item.pinnedStatus?.pinned : false,
         }
       })
       setGridItems(mappedArr)
@@ -99,12 +97,7 @@ const PostsGrid = ({
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            <VideoPostCard
-              postUnpinned={(id) => {
-                callUnpinEvent(id)
-              }}
-              {...item}
-            />
+            <VideoPostCard hasPinButton={false} {...item} />
           </Wrapper>
         ))}
       </SimpleGrid>
@@ -113,3 +106,4 @@ const PostsGrid = ({
 }
 
 export { PostsGrid }
+

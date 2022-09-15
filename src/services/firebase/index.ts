@@ -1,7 +1,5 @@
 import { AUTH_TOKEN, FIREBASE_TOKEN } from 'config/constants'
-import { configEnvs } from 'config/envs'
 import { firebaseApp } from 'config/firebase'
-import { initializeApp } from 'firebase/app'
 import {
   AuthError,
   FacebookAuthProvider,
@@ -41,14 +39,6 @@ export const anonymousAuth = (): Promise<boolean> => {
     })
   })
 }
-
-const AUTH_CONFIG = {
-  apiKey: configEnvs.firebaseAuthApiKey,
-  authDomain: configEnvs.firebaseAuthDomain,
-}
-
-const FirebaseAuth = initializeApp(AUTH_CONFIG, 'Auth')
-const AUTH = getAuth(FirebaseAuth)
 
 const FB_PROVIDER = new FacebookAuthProvider()
 const GOOGLE_PROVIDER = new GoogleAuthProvider()
@@ -93,7 +83,7 @@ export const SocialSignIn = (
 ): Promise<CreateAccountSocialSignInDto> => {
   const PROVIDER = getProvider(kind)
   return new Promise(function (resolve, reject) {
-    signInWithPopup(AUTH, PROVIDER)
+    signInWithPopup(CUSTOM_TOKEN_AUTH, PROVIDER)
       .then((result: UserCredential) => {
         // console.log("==> fluxo sucesso login")
         const credential = generateCredential(kind, result)
@@ -113,7 +103,7 @@ export const SocialSignIn = (
         const pendingCred = generatePendingCredential(kind, err)
         if (err.code === 'auth/account-exists-with-different-credential') {
           // console.log("==> fluxo erro 'auth/account-exists-with-different-credential'")
-          fetchSignInMethodsForEmail(AUTH, email).then((methods) => {
+          fetchSignInMethodsForEmail(CUSTOM_TOKEN_AUTH, email).then((methods) => {
             // console.log(methods)
             if (methods[0] === 'password') {
               // console.log("==> fluxo erro method 'password'")
@@ -122,7 +112,7 @@ export const SocialSignIn = (
             const provider = getProvider(methods[0])
             if (methods[0] !== kind) {
               // console.log("==> fluxo erro if kind diferente do method")
-              const { currentUser } = AUTH
+              const { currentUser } = CUSTOM_TOKEN_AUTH
               if (currentUser) {
                 // console.log("==> fluxo de link de provinders")
                 linkWithPopup(currentUser, provider)
@@ -147,7 +137,7 @@ export const SocialSignIn = (
                   })
               }
             }
-            signInWithPopup(AUTH, provider)
+            signInWithPopup(CUSTOM_TOKEN_AUTH, provider)
               .then((result: UserCredential) => {
                 if (pendingCred) {
                   linkWithCredential(result.user, pendingCred)

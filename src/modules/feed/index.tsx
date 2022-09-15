@@ -8,13 +8,14 @@ import {
   Skeleton,
   Text
 } from 'components'
-import { Post, SortDirection } from 'generated/graphql'
+import { Kinds, Post, SortDirection } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { QUERY_POSTS, QUERY_PUBLIC_POSTS } from 'services/graphql'
 import {
   useAuthStore,
+  useChannelsStore,
   useCommonStore,
   useFeedStore,
   useThemeStore
@@ -33,17 +34,19 @@ const FeedPage = () => {
   const [filterBy, setFilterBy] = useState<SortDirection>()
   const [isPositioned, setIsPositioned] = useState<boolean>(false)
 
-  // const [posts, setPosts] = useState<PaginatedPostsOutput>()
   const { isAnonymousAccess } = useAuthStore()
+  const { activeChannel } = useChannelsStore()
 
+  const isAnonymousAllowed =
+    isAnonymousAccess && activeChannel?.kind === Kinds.Public
   const getSortByFilter = () =>
     filterBy === 'ASC' ? 'publishedAt.asc' : 'publishedAt.desc'
 
   const [getFeedPosts, { loading: loadingPosts }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_POSTS : QUERY_POSTS,
+    isAnonymousAllowed ? QUERY_PUBLIC_POSTS : QUERY_POSTS,
     {
       onCompleted: (result) => {
-        const posts = isAnonymousAccess ? result.publicPosts : result.posts
+        const posts = isAnonymousAllowed ? result.publicPosts : result.posts
         const previousRows = feedPosts?.rows
         setFeedPosts({
           ...posts,
@@ -135,7 +138,11 @@ const FeedPage = () => {
           dataLength={feedPosts?.rows.length}
           next={loadMoreFeedPosts}
           hasMore={feedPosts.hasNextPage}
-          loader={<Box pt={5} textAlign={'center'}><Spinner color={colors.brand.primary[colorMode]}/></Box>}
+          loader={
+            <Box pt={5} textAlign={'center'}>
+              <Spinner color={colors.brand.primary[colorMode]} />
+            </Box>
+          }
           endMessage={
             <Container mt={2} justifyContent={'center'}>
               <Text color={colors.generalText[colorMode]}>

@@ -8,7 +8,7 @@ import {
   PostsGrid,
   Skeleton
 } from 'components'
-import { Category, LiveEvent, Post } from 'generated/graphql'
+import { Category, LiveEvent, Post, PostType } from 'generated/graphql'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
@@ -25,16 +25,18 @@ const SearchPage = () => {
   const [categories, setCategories] = useState<Category[]>()
   const [liveEvents, setLiveEvents] = useState<LiveEvent[]>()
 
-  // TODO: Implement pagination like in feed
   const [doSearch, { data, loading }] = useLazyQuery(QUERY_SEARCH, {
     variables: {
       filters: {
         query: stringToSearch,
+        pageSize: 1000
       },
     },
     onCompleted: (result) => {
       setPosts(
-        result?.search?.rows.filter((item) => item.__typename === 'SearchPost')
+        result?.search?.rows
+          .filter((item) => item.__typename === 'SearchPost')
+          .filter((post) => post.type === PostType.Video || post.type === PostType.OnDemand)
       )
       setCategories(
         result?.search?.rows.filter(
@@ -81,12 +83,12 @@ const SearchPage = () => {
       <Box width={'100%'} textAlign={'right'}>
         <Text
           paddingX={{ base: sizes.paddingSm, md: sizes.paddingMd }}
-          fontSize={'18px'}
+          fontSize={{sm: '14px', md: '18px'}}
           color={colors.generalText[colorMode]}
         >
           {t('page.search.results_for', {
             string: stringToSearch,
-            count: data?.search?.rows?.length,
+            count: data?.search?.total,
           })}
         </Text>
       </Box>

@@ -1,15 +1,16 @@
 import { useLazyQuery } from '@apollo/client'
-import { Box, Flex } from '@chakra-ui/layout'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-
+import { Box, Flex, Spinner } from '@chakra-ui/react'
+import axios from 'axios'
 import {
   Billboard,
   Category,
+  Kinds,
   PaginatedCategoriesOutput,
   PaginatedLiveEventsOutput,
   PaginatedPostsOutput
 } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   QUERY_BILLBOARDS,
@@ -26,7 +27,8 @@ import {
   useAuthStore,
   useChannelsStore,
   useCommonStore,
-  useCustomizationStore
+  useCustomizationStore,
+  useThemeStore
 } from 'services/stores'
 
 import { Client } from 'services/api'
@@ -37,27 +39,30 @@ import { CarouselFlags } from 'types/flags'
 import {
   BillboardScroller,
   CategoriesScroller,
-  Container,
-  EmptyState,
+  Container, ContinueWatchingScroller, EmptyState,
   LivestreamScroller,
   Skeleton,
   TagsScroller,
   VideosScroller
 } from 'components'
-
-import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
-
+import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { colors, sizes } from 'styles'
 import { convertToValidColor } from 'utils/helperFunctions'
-
-import { sizes } from 'styles'
+import { askForPushPermission } from 'utils/pushNotifications'
+import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
+  const { colorMode } = useThemeStore()
   const { generateImage } = useThumbor()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const { activeChannel } = useChannelsStore()
+  const { isAnonymousAccess, user } = useAuthStore()
 
-  const { isAnonymousAccess } = useAuthStore()
+  const isAnonymousAllowed =
+    isAnonymousAccess && activeChannel?.kind === Kinds.Public
 
   const [featuredPostsData, setFeaturedPostsData] =
     useState<PaginatedPostsOutput>()
@@ -69,9 +74,10 @@ const HomePage = () => {
     useState<PaginatedCategoriesOutput>()
 
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
-    useState<Category[]>()
+    useState<PaginatedCategoriesOutput>()
 
-  const { activeChannel } = useChannelsStore()
+  const [continueWatchingListData, setContinueWatchingListData] = useState<any>()
+
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
     useState(true)
@@ -85,20 +91,16 @@ const HomePage = () => {
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
-      variables: {
-        filter: {
-          target: BillboardTarget.Home,
-        },
-      },
+      variables: { filter: { target: BillboardTarget.Home } },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
     })
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
+    isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
-        const liveEvents = isAnonymousAccess
+        const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
         setLiveEventsData((previous) => ({
@@ -107,14 +109,15 @@ const HomePage = () => {
         }))
       },
       fetchPolicy: 'cache-and-network',
+      pollInterval: DEFAULT_POLLING_INTERVAL,
     }
   )
 
   const [getFeaturedPosts, { loading: loadingFeaturedPosts }] = useLazyQuery(
-    isAnonymousAccess ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
+    isAnonymousAllowed ? QUERY_PUBLIC_POSTS_CARDS : QUERY_POSTS_CARDS,
     {
       onCompleted: (result) => {
-        const posts = isAnonymousAccess ? result.publicPosts : result.posts
+        const posts = isAnonymousAllowed ? result.publicPosts : result.posts
         setFeaturedPostsData((previous) => ({
           ...posts,
           rows: [...(previous?.rows || []), ...posts.rows],
@@ -126,12 +129,12 @@ const HomePage = () => {
 
   const [getFeaturedCategories, { loading: loadingFeaturedCategories }] =
     useLazyQuery(
-      isAnonymousAccess
+      isAnonymousAllowed
         ? QUERY_PUBLIC_CATEGORIES_CARDS
         : QUERY_CATEGORIES_CARDS,
       {
         onCompleted: (result) => {
-          const categories = isAnonymousAccess
+          const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
           setFeaturedCategoriesData((previous) => ({
@@ -145,15 +148,18 @@ const HomePage = () => {
 
   const [getCategories, { loading: loadingCategoriesWithChildren }] =
     useLazyQuery(
-      isAnonymousAccess
+      isAnonymousAllowed
         ? QUERY_PUBLIC_CATEGORIES_CARDS
         : QUERY_CATEGORIES_CARDS,
       {
         onCompleted: (result) => {
-          const categories = isAnonymousAccess
+          const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
-          setCategoriesWithChildrenData(categories?.rows)
+          setCategoriesWithChildrenData((previous) => ({
+            ...categories,
+            rows: [...(previous?.rows || []), ...categories.rows],
+          }))
         },
         fetchPolicy: 'cache-and-network',
       }
@@ -165,9 +171,7 @@ const HomePage = () => {
       query: QUERY_LOOP_TAGS(tagsIds),
       fetchPolicy: 'no-cache',
     })
-      .then((result) => {
-        setTagsData(result.data)
-      })
+      .then((result) => setTagsData(result.data))
       .finally(() => setLoadingTags(false))
   }
 
@@ -197,6 +201,21 @@ const HomePage = () => {
     }
   }
 
+  const loadMoreCategories = () => {
+    if (categoriesWithChildrenData?.hasNextPage) {
+      getCategories({
+        variables: {
+          ...categoriesFilter(
+            categoriesWithChildrenData.page + 1,
+            true,
+            undefined,
+            3
+          ),
+        },
+      })
+    }
+  }
+
   const isLoading =
     loadingLiveEvents ||
     loadingFeaturedCategories ||
@@ -210,13 +229,15 @@ const HomePage = () => {
     liveEventsData?.rows?.length ||
     featuredPostsData?.rows?.length ||
     featuredCategoriesData?.rows?.length ||
-    (isHomeDisplayingCategories && categoriesWithChildrenData?.length) ||
+    (isHomeDisplayingCategories && categoriesWithChildrenData?.rows?.length) ||
     Object.keys(tagsData).length !== 0
 
   const isEmpty = !isLoading && !hasResults
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
+    // Ask for permission to show push notifications
+    askForPushPermission()
     // eslint-disable-next-line
   }, [])
 
@@ -224,7 +245,7 @@ const HomePage = () => {
     setLiveEventsData(undefined)
     setFeaturedCategoriesData(undefined)
     setFeaturedPostsData(undefined)
-    setCategoriesWithChildrenData([])
+    setCategoriesWithChildrenData(undefined)
     setBillboardItems([])
     setTagsData({})
   }
@@ -270,27 +291,21 @@ const HomePage = () => {
     })
 
     if (activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES)
-      getCategories({ variables: { ...categoriesFilter(1, true, undefined) } })
+      getCategories({ variables: { ...categoriesFilter(1, true, undefined, 3) } })
 
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
 
-    return () => {
-      setTagsIds([])
-    }
+    return () => setTagsIds([])
     //eslint-disable-next-line
   }, [activeChannelConfig])
 
   useEffect(() => {
     if (isFeaturedPostsActive)
-      getFeaturedPosts({
-        variables: { ...postsFilter(1) },
-      })
+      getFeaturedPosts({ variables: { ...postsFilter(1) } })
     if (isFeaturedCategoriesActive)
-      getFeaturedCategories({
-        variables: { ...categoriesFilter(1, undefined, true) },
-      })
+      getFeaturedCategories({ variables: { ...categoriesFilter(1, undefined, true) } })
     if (isLiveEventsActive)
       getLiveEvents({ variables: { ...liveEventsFilter(1) } })
     // eslint-disable-next-line
@@ -301,7 +316,6 @@ const HomePage = () => {
       setTagsData({})
       return
     }
-
     loadTags()
     //eslint-disable-next-line
   }, [tagsIds])
@@ -339,7 +353,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => {}}
+      reachEnd={() => { }}
       items={billboardItems}
       customButtons={true}
     />
@@ -380,31 +394,58 @@ const HomePage = () => {
       />
     )
 
-  const renderCategoriesWithChildren = () =>
-    categoriesWithChildrenData?.map((category: Category) => (
-      <CategoriesScroller
-        key={category.id}
-        items={category.children}
-        sectionTitle={category?.name}
-        hasMoreLink={true}
-        sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
+  const continueWatchingList = async (lastId?: String) => {
+    const URL = process.env.REACT_APP_API_ENDPOINT
+    let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}`
+    if (lastId) URL_PARAMS += `&lastId=${lastId}`
+    try {
+      const { data } = await axios.get(`${URL}/posts/continue-watching${URL_PARAMS}`)
+      if (data?.statusCode === 200) {
+        const { rows, ...allRest } = data.body.data
+        setContinueWatchingListData((previous) => ({
+          ...continueWatchingListData,
+          ...allRest,
+          rows: [...(previous?.rows || []), ...rows],
+        }))
+      }
+    } catch (error) { }
+  }
+
+  useEffect(() => {
+    if (!isAnonymousAccess && user?.id && activeChannel?.id) continueWatchingList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, activeChannel])
+
+  const loadMoreContinueWatchingPosts = () => {
+    if (continueWatchingListData?.hasNextPage) {
+      continueWatchingList(continueWatchingListData?.lastId)
+    }
+  }
+
+  const renderContinueWatchingScroller = (item: CarouselFlags) =>
+    !!continueWatchingListData?.rows?.length && (
+      <ContinueWatchingScroller
+        key={`${item.LABEL[0].VALUE}`}
+        items={continueWatchingListData.rows}
+        sectionTitle={getCarouselLabel(item)}
+        loadMoreItems={loadMoreContinueWatchingPosts}
+        sectionUrl={''}
       />
-    ))
+    )
 
   const renderTagsScroller = (item: CarouselFlags) => {
     const currentTag = tagsData[`tag${item.TAGS}`]
-    if (currentTag)
-      return (
-        <TagsScroller
-          key={`${item.TAGS}`}
-          tagData={currentTag}
-          hasMoreLink={true}
-          content={item.CONTENT_TYPE}
-          sectionTitle={getCarouselLabel(item)}
-          sectionUrl={`/c/${activeChannel?.slug}/tag/`}
-        />
-      )
-    return undefined
+    if (!currentTag) return undefined
+    return (
+      <TagsScroller
+        key={`${item.TAGS}`}
+        tagData={currentTag}
+        hasMoreLink={true}
+        content={item.CONTENT_TYPE}
+        sectionTitle={getCarouselLabel(item)}
+        sectionUrl={`/c/${activeChannel?.slug}/tag/`}
+      />
+    )
   }
 
   const getCarouselLabel = (item: CarouselFlags) => {
@@ -428,8 +469,7 @@ const HomePage = () => {
         case HomeCarouselsTypes.Collections:
           return renderFeaturedCategoriesScroller(item)
         case HomeCarouselsTypes.ContinueWatching:
-          //TODO: Waiting for API
-          return ''
+          return renderContinueWatchingScroller(item)
       }
     } else {
       return renderTagsScroller(item)
@@ -447,10 +487,35 @@ const HomePage = () => {
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
-            <div key={key}>{renderCarouselsOrderedByRemoteConfig(item)}</div>
+            <div key={key}>
+              {renderCarouselsOrderedByRemoteConfig(item)}
+            </div>
           ))}
-        {!!categoriesWithChildrenData?.length && renderCategoriesWithChildren()}
-        {isLoading && (
+        {!!categoriesWithChildrenData?.rows.length && (
+          <InfiniteScroll
+            style={{ overflowX: 'hidden' }}
+            dataLength={categoriesWithChildrenData.rows.length}
+            next={loadMoreCategories}
+            hasMore={categoriesWithChildrenData.hasNextPage}
+            loader={
+              <Box pt={5} textAlign={'center'}>
+                <Spinner color={colors.brand.primary[colorMode]} />
+              </Box>
+            }
+          >
+            {categoriesWithChildrenData?.rows?.map((category: Category) => (
+              <CategoriesScroller
+                key={category.id}
+                items={category.children}
+                sectionTitle={category?.name}
+                hasMoreLink={true}
+                sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
+              />
+            ))}
+          </InfiniteScroll>
+        )}
+
+        {isLoading && !hasResults && (
           <Box p={sizes.paddingSm} width="100%">
             <Skeleton kind="cards" numberOfCards={4} />
           </Box>

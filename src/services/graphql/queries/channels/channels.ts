@@ -15,7 +15,28 @@ export const QUERY_CHANNELS = gql`
       ... on GeolockedChannel {
         id
         name
-        thumbnail
+        kind
+        __typename
+      }
+    }
+  }
+`
+
+export const QUERY_PUBLIC_CHANNELS = gql`
+  query PublicChannels($filter: ChannelFindAllFilter!) {
+    publicChannels(filter: $filter) {
+      ... on AvailableChannel {
+        id
+        kind
+        description
+        geofence
+        slug
+        name
+        __typename
+      }
+      ... on GeolockedChannel {
+        id
+        name
         kind
         __typename
       }

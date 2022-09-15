@@ -39,18 +39,17 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
           />
         </Container>
       )}
-      {!isAnonymousAccess && (
-        <IconContainer {...{ open }}>
-          <Icon
-            width={20}
-            height={20}
-            icon="mdi:chevron-down"
-            color={colors.secondaryText[colorMode]}
-          />
-        </IconContainer>
-      )}
+      <IconContainer {...{ open }}>
+        <Icon
+          width={20}
+          height={20}
+          icon="mdi:chevron-down"
+          color={colors.secondaryText[colorMode]}
+        />
+      </IconContainer>
     </Container>
   )
 }
 
 export { ChannelSelected }
+

@@ -1,6 +1,7 @@
 const PT_BR = {
   translations: {
     common: {
+      access: 'Acessar',
       custom_field: {
         cpf: 'CPF',
         phone: 'Telefone',
@@ -55,6 +56,8 @@ const PT_BR = {
       confirm_signout: 'Tem certeza que deseja sair?',
       update: 'Atualizar',
       accept_all: 'Eu aceito todos os',
+      agree: 'Concordo',
+      cancel_registration: 'Cancelar cadastro',
       push: {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
@@ -116,6 +119,12 @@ const PT_BR = {
           'Insira seu endereço de e-mail e escolha uma senha para criar sua conta e ter acesso a conteúdos exclusivos.',
         already_have_account: 'Voce já tem uma conta?',
         free_registration: 'Crie uma conta agora!',
+        errors: {
+          password_required: 'Campo Senha é obrigatório',
+          email_required: 'Campo Email é obrigatório',
+          confirm_email_required: 'Campo Confirmar Email é obrigatório',
+          confirm_email_must_match: 'Email deve ser igual',
+        }
       },
       GDPR: {
         citizen: 'Você é cidadão ou residente da União Europeia?',
@@ -225,7 +234,7 @@ const PT_BR = {
     },
     page: {
       search: {
-        results_for: '{{count}} resultados encontrados para {{string}}:',
+        results_for: '{{count}} resultados encontrados para {{string}}',
         videos_section: 'Vídeos',
         categories_section: 'Categorias',
         live_events_section: 'Ao vivo',
@@ -261,6 +270,7 @@ const PT_BR = {
         drama: 'Drama',
         family: 'Família',
         watch_now: 'Assistir agora',
+        continue_watch: 'Continue assistindo',
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
       },
@@ -426,6 +436,12 @@ const PT_BR = {
         participants: 'Participantes:',
         reactions: 'Reações',
         comments: 'Comentários',
+        modal: {
+          continue_watching: 'Continuar assistindo',
+          continue_subtitle: 'Deseja continuar de onde parou?',
+          continue_action_label: 'Sim',
+          continue_cancel_label: 'Não'
+        },
         comment: {
           hide: 'Esconder',
           see: 'Mostrar',
@@ -497,10 +513,11 @@ const PT_BR = {
     cookieConsent: {
       notice: 'Aviso prévio.',
       description_1:
-        'usa cookies para fornecer a funcionalidade necessária do site, melhorar sua experiência e analisar nosso tráfego. Ao usar nosso site, você concorda com',
+        'Este site usa cookies para fornecer as funcionalidades necessárias do site, melhorar sua experiência e analisar nosso tráfego. Ao usar nosso site, você concorda com',
       link: 'nossa Política de Privacidade',
       description_2: 'e nosso uso de cookies.',
       accept: 'Aceitar',
+      decline: 'Recusar'
     },
   },
 }

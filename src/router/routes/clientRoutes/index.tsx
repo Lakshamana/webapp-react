@@ -17,12 +17,10 @@ import {
   MyListPage,
   NotAuthorized,
   NotFound,
-  Password,
-  RecoverPasswordPage,
+  Password, PostPage, RecoverPasswordPage,
   SearchPage,
   SignupPage,
-  TagPage,
-  VideoPostPage
+  TagPage
 } from 'modules'
 import { ClientRoute } from '../../components'
 
@@ -117,7 +115,7 @@ const ClientRoutes = () => {
       <ClientRoute
         isAccesible={true}
         path="/c/:channel/post/:slug"
-        component={VideoPostPage}
+        component={PostPage}
         template={MainLayout}
       />
       <ClientRoute

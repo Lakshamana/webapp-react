@@ -15,7 +15,7 @@ export const PostContent = styled.div<CategoryPostCardProps>`
   padding-top: 56.25%;
   height: auto;
   position: relative;
-  border-radius: ${({ hover }) => hover ? '4px 4px 0 0' : '4px'};
+  border-radius: 4px;
   ${(props: CategoryPostCardProps) => `background: url('${props.thumbnail}');`}
   cursor: pointer;
   background-position: center;

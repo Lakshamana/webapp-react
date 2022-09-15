@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_CATEGORY = gql`
-  query GetCategory($slug: String) {
+  query GetCategory($slug: String, $postFilter: PostFilter) {
     category(slug: $slug) {
       id
       access
@@ -21,7 +21,7 @@ export const QUERY_CATEGORY = gql`
           imgPath
         }
       }
-      posts {
+      posts(filters: $postFilter) {
         hasNextPage
         hasPreviousPage
         isFirstPage
@@ -34,8 +34,10 @@ export const QUERY_CATEGORY = gql`
           access
           title
           description
+          geofence
           kind
           slug
+          status
           pinnedStatus {
             pinned
           }

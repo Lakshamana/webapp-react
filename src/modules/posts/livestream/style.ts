@@ -116,6 +116,10 @@ export const Live = styled.div`
     height: 60vh;
   }
 
+  @media screen and (max-width: ${breakpoints.lg}) and (orientation: landscape) {
+    height: 80vh;
+  }
+
   @media screen and (max-width: ${breakpoints.md}) {
     flex-flow: column;
     height: 55vh;
@@ -124,5 +128,11 @@ export const Live = styled.div`
   @media screen and (max-width: ${breakpoints.sm}) {
     flex-flow: column;
     height: 100%;
+  }
+`
+
+export const CustomBox = styled(Box)`
+  @media screen and (max-width: ${breakpoints.md}) and (orientation: landscape) {
+    height: 50vh;
   }
 `

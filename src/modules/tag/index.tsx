@@ -1,14 +1,10 @@
 import { useQuery } from '@apollo/client'
-import { Flex, Box } from '@chakra-ui/react'
-import { useParams } from 'react-router'
-import { useTranslation } from 'react-i18next'
+import { Box, Flex } from '@chakra-ui/react'
 import {
-  Container,
-  Skeleton,
-  CategoriesGrid,
-  PostsGrid,
-  EmptyState,
+  CategoriesGrid, Container, EmptyState, PostsGrid, Skeleton
 } from 'components'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router'
 import { QUERY_TAG } from 'services/graphql'
 import { sizes } from 'styles'
 
@@ -23,7 +19,7 @@ const TagPage = () => {
   })
 
   const isEmpty =
-    !data?.tag?.relatedCategories?.length && !data?.tag?.relatedPosts?.length
+    !data?.tag?.relatedCategories?.length && !data?.tag?.relatedPosts?.rows?.length
 
   if (loading)
     return (
@@ -43,10 +39,10 @@ const TagPage = () => {
             items={data?.tag?.relatedCategories}
           />
         )}
-        {!!data?.tag?.relatedPosts?.length && (
+        {!!data?.tag?.relatedPosts?.rows?.length && (
           <PostsGrid
             sectionTitle={t('page.category.videos')}
-            items={data?.tag?.relatedPosts}
+            items={data?.tag?.relatedPosts?.rows}
           ></PostsGrid>
         )}
       </Flex>

@@ -17,7 +17,7 @@ export const getDefaultConfigs = (
   channel_id,
   organization_url,
 ) => ({
-  autoplay: true,
+  autoplay: false,
   controls: true,
   muted: true,
   responsive: true,

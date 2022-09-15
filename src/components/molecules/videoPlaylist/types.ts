@@ -5,4 +5,7 @@ export interface VideoPlaylistProps {
   showAutoplay?: boolean
   videos?: Post[]
   activeVideo?: string
+  loading?: boolean
+  loadMore: () => void
+  hasMoreResults?: boolean
 }

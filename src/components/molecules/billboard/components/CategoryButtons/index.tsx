@@ -4,11 +4,12 @@ import { Button, Text } from 'components'
 import { useAccessVerifications } from 'contexts/accessVerifications'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 import {
   MUTATION_PIN_CATEGORY,
   MUTATION_UNPIN_CATEGORY
 } from 'services/graphql'
-import { useAuthStore, useThemeStore } from 'services/stores'
+import { useAuthStore, useChannelsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { BoxButtons, ContentButton } from '../BillboardItems/style'
 import { Props } from './types'
@@ -16,10 +17,14 @@ import { Props } from './types'
 const CategoryButtons = ({ ...props }: Props) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const history = useHistory()
+  const { activeChannel } = useChannelsStore()
 
   const [isCategoryPinned, setIsCategoryPinned] = useState(false)
   const { showActionNotAllowedAlert } = useAccessVerifications()
   const { isAnonymousAccess } = useAuthStore()
+
+  const url = `/c/${activeChannel?.slug}/category/${props.categorySlug}`
 
   useEffect(() => {
     setIsCategoryPinned(props.isPinned || false)
@@ -72,6 +77,7 @@ const CategoryButtons = ({ ...props }: Props) => {
           label={t('page.categories.watch_now')}
           width={'100%'}
           height={'100%'}
+          onClick={() => history.push(url)}
         />
       </ContentButton>
       <ContentButton>

@@ -1,35 +1,9 @@
 import { Text } from '@chakra-ui/react'
 import styled from 'styled-components'
-import { pxToRem } from 'styles/metrics'
 import { breakpoints, sizes } from 'styles'
+import { pxToRem } from 'styles/metrics'
 
-export const Video = styled.div`
-  position: relative;
-  height: 72vh;
-  width: 75vw;
-
-  @media screen and (max-width: ${breakpoints.xl}) {
-    width: 80vw;
-    height: 65vh;
-  }
-
-  @media screen and (max-width: ${breakpoints.lg}) {
-    width: 100vw;
-    height: 60vh;
-  }
-
-  @media screen and (max-width: ${breakpoints.md}) {
-    width: 100vw;
-    height: 55vh;
-  }
-
-  @media screen and (max-width: ${breakpoints.sm}) {
-    width: 100vw;
-    height: 35vh;
-  }
-`
-
-export const VideoDetails = styled.div`
+export const PostDetails = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -84,7 +58,7 @@ export const Subtitle = styled(Text)`
   }
 `
 
-export const VideoComments = styled.div`
+export const PostComments = styled.div`
   background-color: ${({ theme }) => theme.colors.cardBg[theme.colorMode]};
   display: flex;
   margin-top: 30px;

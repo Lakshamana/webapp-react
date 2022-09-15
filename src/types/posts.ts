@@ -26,6 +26,8 @@ export type VideoPostCardProps = {
   isGeolocked?: boolean
   isPinned?: boolean
   isActive?: boolean
+  progress?: string
+  hasPinButton?: boolean
   postUnpinned?: (postId: string) => void
 }
 
@@ -34,10 +36,13 @@ type PostCardProps = {
   mobileBehavior?: boolean
   isLoading: boolean
   isPostPinned: boolean
+  isOpen?: boolean
+  progress?: string
   pinPost: () => void
   unpinPost: () => void
   actionHover: (status: boolean) => () => void
-  defineAction: () => void
+  defineAction?: () => void
+  onClickCard: () => void
 }
 
 export type ComponentPostCardProps = VideoPostCardProps & PostCardProps

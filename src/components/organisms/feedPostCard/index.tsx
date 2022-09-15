@@ -14,7 +14,7 @@ import {
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
-import { isEntityBlocked, isEntityGeolocked } from 'utils/accessVerifications'
+import { isEntityBlocked, isEntityExclusive, isEntityGeolocked } from 'utils/accessVerifications'
 import { convertCountMessage } from 'utils/helperFunctions'
 import { SetMediaType } from './components'
 import {
@@ -56,8 +56,19 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
     'page.feed.comments',
   ]
 
+  const itemMedia = () => {
+    switch (item.media?.__typename) {
+      case 'MediaAudio':
+        return null
+      case 'MediaPhoto':
+        return item.media.imgPath
+      case 'MediaVideo':
+        return item.thumbnail?.imgPath
+    }
+  }
+
   const getImageUrl = () => {
-    if (item.media?.__typename === 'MediaAudio') return
+    const url = itemMedia()
 
     const imageOptions: ThumborParams = {
       size: {
@@ -66,12 +77,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
       },
     }
 
-    if (isEntityBlocked(item)) {
-      imageOptions.blur = 20
-    }
-
-    const url =
-      item.media?.__typename === 'MediaVideo' ? item.thumbnail?.imgPath : null
+    if (isEntityBlocked(item)) imageOptions.blur = 20
 
     const secondImgUrl =
       item.media?.__typename === 'MediaVideo'
@@ -81,6 +87,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
     if (url) {
       return generateImage(ThumborInstanceTypes.IMAGE, url, imageOptions)
     }
+
     return secondImgUrl
   }
 
@@ -120,7 +127,7 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
       // views: item.counts?.countViews,
       //TODO: Waiting for Audio posts on API
       // voted: !!item.myVote,
-      isExclusive: isEntityBlocked(item),
+      isExclusive: isEntityExclusive(item),
       isGeolocked: isEntityGeolocked(item),
     })
     //eslint-disable-next-line

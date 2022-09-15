@@ -1,14 +1,17 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, Spinner } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { getData, saveData } from 'services/storage'
 import {
-  useChannelsStore, useThemeStore, useVideoPlayerStore
+  useChannelsStore,
+  useThemeStore,
+  useVideoPlayerStore
 } from 'services/stores'
 
-import { PlaylistPostCard, Text, ToggleButton } from 'components'
+import { PlaylistPostCard, Skeleton, Text, ToggleButton } from 'components'
 import { VIDEO_AUTOPLAY } from 'config/constants'
 import { Post } from 'generated/graphql'
 import { colors } from 'styles'
@@ -22,6 +25,9 @@ const VideoPlaylist = ({
   videos,
   showAutoplay,
   activeVideo,
+  hasMoreResults,
+  loading,
+  loadMore,
 }: VideoPlaylistProps) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -122,29 +128,75 @@ const VideoPlaylist = ({
       />
     ))
 
-  return (
-    <Flex flexDirection="column" mb={5}>
-      <Text
-        fontWeight="bolder"
-        fontSize="1.4rem"
-        mb={2}
-        color={colors.generalText[colorMode]}
+  if (loading)
+    return (
+      <Box
+        maxHeight={'700px'}
+        overflowY="auto"
+        overflowX="clip"
+        id="scrollableDiv"
       >
-        {title}
-      </Text>
-      {showAutoplay && (
-        <Flex alignItems="center" mb={2}>
-          <ToggleButton checked={autoplay} onChange={toggleAutoplay} />
+        {loading && !playlist?.length && (
+          <Skeleton kind="playlist" numberOfCards={4} />
+        )}
+      </Box>
+    )
+
+  return (
+    <>
+      {playlist?.length ? (
+        <Flex flexDirection="column" mb={5}>
           <Text
-            ml={theme.pxToRem(12)}
-            color={theme.colors.generalText[colorMode]}
+            fontWeight="bolder"
+            fontSize="1.4rem"
+            mb={2}
+            color={colors.generalText[colorMode]}
           >
-            {t('page.post.autoplay')}
+            {title}
           </Text>
+          {showAutoplay && (
+            <Flex alignItems="center" mb={2}>
+              <ToggleButton checked={autoplay} onChange={toggleAutoplay} />
+              <Text
+                ml={theme.pxToRem(12)}
+                color={theme.colors.generalText[colorMode]}
+              >
+                {t('page.post.autoplay')}
+              </Text>
+            </Flex>
+          )}
+
+          <Box
+            maxHeight={'700px'}
+            overflowY="auto"
+            overflowX="clip"
+            id="scrollableDiv"
+          >
+            {loading && !playlist?.length && (
+              <Skeleton kind="playlist" numberOfCards={4} />
+            )}
+            {!!playlist?.length && (
+              <InfiniteScroll
+                dataLength={playlist?.length}
+                next={loadMore}
+                hasMore={hasMoreResults || false}
+                loader={
+                  <Box pt={5} textAlign={'center'}>
+                    <Spinner color={colors.brand.primary[colorMode]} />
+                  </Box>
+                }
+                pullDownToRefreshThreshold={50}
+                scrollableTarget="scrollableDiv"
+              >
+                {renderPlaylist()}
+              </InfiniteScroll>
+            )}
+          </Box>
         </Flex>
+      ) : (
+        <></>
       )}
-      <Box maxHeight={'700px'} overflowY='scroll'>{!!playlist?.length && renderPlaylist()}</Box>
-    </Flex>
+    </>
   )
 }
 

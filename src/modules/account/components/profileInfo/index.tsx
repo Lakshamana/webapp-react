@@ -140,13 +140,16 @@ const ProfileInfo = ({
       custom_fields: Yup.object().shape(shape),
     }),
     onSubmit: async () => {
-      if(values.birthday === '') {
-        delete values.birthday
+      const requestValues = { ...values }
+
+      if(requestValues.birthday === '') {
+        requestValues.birthday = validateDate(requestValues.birthday)
+        setFieldValue('birthday', requestValues.birthday)
       }
 
-      if(!values.custom_fields || Object.keys(values.custom_fields).length === 0) delete values.custom_fields
+      if(!requestValues.custom_fields || Object.keys(requestValues.custom_fields).length === 0) delete requestValues.custom_fields
 
-      updateProfile({ ...values, locale: locale })
+      updateProfile({ ...requestValues, locale: locale })
     },
   })
 

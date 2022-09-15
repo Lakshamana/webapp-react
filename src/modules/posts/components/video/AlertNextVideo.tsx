@@ -1,7 +1,7 @@
-import { useEffect } from "react"
-import { useHistory } from 'react-router'
 import { Box, Collapse } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
 import { useVideoPlayerStore } from 'services/stores'
 
 const AlertNextVideo = () => {

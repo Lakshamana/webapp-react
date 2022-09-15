@@ -1,6 +1,6 @@
 import { CardsScroller, VideoPostCard } from 'components'
 import { CategoryPostCard } from 'components/atoms'
-import { Category, Post } from 'generated/graphql'
+import { Category, Post, PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
@@ -21,7 +21,9 @@ const TagsScroller = ({
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
   useEffect(() => {
-    const postItems = tagData?.relatedPosts
+    const postItems = tagData?.relatedPosts.rows.filter(
+      (item) => item.type === PostType.Video || item.type === PostType.OnDemand
+    )
     const categoryItems = tagData?.relatedCategories
     const myArr = postItems
       .concat(categoryItems)

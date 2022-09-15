@@ -25,17 +25,31 @@ const VideosScroller = ({
   const { activeChannel } = useChannelsStore()
 
   const getImageUrl = (post: Post) => {
-    const imageOptions: ThumborParams = { size: { height: 400 } }
+    const imageOptions: ThumborParams = {
+      size: {
+        width: 400,
+        height: 0,
+      },
+    }
+
     if (isEntityBlocked(post)) imageOptions.blur = 20
+
     const thumbnailPath =
-      post.media?.__typename === 'MediaVideo' ? post.media?.thumbnailPath : ''
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      post.thumbnail?.imgPath || thumbnailPath || '',
-      imageOptions,
-      post.thumbnail?.imgPath ? null : post.media?.baseUrl
-    )
-    return image
+      post.media?.__typename === 'MediaVideo' ? post.thumbnail?.imgPath : ''
+
+    const secondImgUrl =
+      post.media?.__typename === 'MediaVideo'
+        ? `${post.media.baseUrl}/${post.media.thumbnailPath}`
+        : ''
+
+    if (thumbnailPath) {
+      return generateImage(
+        ThumborInstanceTypes.IMAGE,
+        thumbnailPath,
+        imageOptions
+      )
+    }
+    return secondImgUrl
   }
 
   useEffect(() => {

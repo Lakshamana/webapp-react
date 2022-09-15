@@ -1,10 +1,10 @@
-import { Badge } from '@chakra-ui/react'
+import { Badge, Box, Flex, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Status } from 'generated/graphql'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { ComponentPostCardProps } from 'types/livestreams'
-import { DetailCard } from '../detailCard'
+import { stripHTML, stripHTMLExceptLineBreaks } from 'utils/helperFunctions'
 import { BlockedContent, CardWrapper, PostContent } from './style'
 
 const PostCard = (props: ComponentPostCardProps) => {
@@ -16,7 +16,7 @@ const PostCard = (props: ComponentPostCardProps) => {
       onMouseLeave={props.actionHover(false)}
       onMouseEnter={props.actionHover(true)}
     >
-      <PostContent onClick={props.defineAction} {...props}>
+      <PostContent onClick={props.onClickCard} {...props}>
         {(props.isExclusive || props.isGeolocked) && (
           <BlockedContent>
             <Icon
@@ -40,11 +40,41 @@ const PostCard = (props: ComponentPostCardProps) => {
           </Badge>
         )}
       </PostContent>
-      {
-        props.hover &&
-        !props.mobileBehavior &&
-        <DetailCard {...props} />
-      }
+      {props.hover && (
+        <Box
+          position="absolute"
+          padding="0.6rem"
+          borderBottomLeftRadius="4px"
+          borderBottomRightRadius="4px"
+          w={'100%'}
+          background={colors.footerBg[colorMode]}
+        >
+          <Flex direction="column">
+            <Text
+              fontSize="0.85rem"
+              fontWeight="bolder"
+              color={colors.generalText[colorMode]}
+            >
+              {stripHTML(props.title || '')}
+            </Text>
+            {props.description && (
+              <Text
+                mt={1}
+                fontSize="0.7rem"
+                noOfLines={2}
+                lineHeight={'0.9rem'}
+                color={colors.secondaryText[colorMode]}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: stripHTMLExceptLineBreaks(props.description),
+                  }}
+                />
+              </Text>
+            )}
+          </Flex>
+        </Box>
+      )}
     </CardWrapper>
   )
 }
