@@ -42,6 +42,10 @@ export const QUERY_TAG = gql`
               thumbnailPath
               baseUrl
             }
+            ... on MediaPhoto {
+              id
+              imgPath
+            }
           }
           thumbnail {
             imgPath
