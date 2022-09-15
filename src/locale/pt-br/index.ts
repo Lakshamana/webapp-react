@@ -273,6 +273,7 @@ const PT_BR = {
         continue_watch: 'Continue assistindo',
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
+        view_post: 'Visualizar',
       },
       category: {
         videos: 'Vídeos',

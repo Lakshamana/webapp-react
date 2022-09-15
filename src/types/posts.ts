@@ -28,6 +28,7 @@ export type VideoPostCardProps = {
   isActive?: boolean
   progress?: string
   hasPinButton?: boolean
+  type?: string
   postUnpinned?: (postId: string) => void
 }
 

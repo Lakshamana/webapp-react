@@ -1,6 +1,6 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Flex, SimpleGrid } from '@chakra-ui/react'
-import { Text, VideoPostCard } from 'components'
+import { AudioPostCard, ImagePostCard, Text, TextPostCard, VideoPostCard } from 'components'
 import { Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
@@ -31,7 +31,9 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
 
     if (isEntityBlocked(post)) imageOptions.blur = 20
 
-    const thumbnailPath = post.thumbnail?.imgPath
+    const thumbnailPath = post.type === 'PHOTO' ? 
+      post.media?.['imgPath'] :
+      post.thumbnail?.imgPath
 
     const secondImgUrl =
       post.media?.__typename === 'MediaVideo'
@@ -72,6 +74,7 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
           isGeolocked: isEntityGeolocked(item),
           isPinned:
             item.__typename === 'Post' ? item.pinnedStatus?.pinned : false,
+          type: item.type
         }
       })
       setGridItems(mappedArr)
@@ -97,7 +100,22 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            <VideoPostCard hasPinButton={false} {...item} />
+            {
+              (item.type === 'AUDIO') &&
+              <AudioPostCard hasPinButton={false} {...item} />
+            }
+            {
+              (item.type === 'PHOTO') &&
+              <ImagePostCard hasPinButton={false} {...item} />
+            }
+            {
+              (item.type === 'TEXT') &&
+              <TextPostCard hasPinButton={false} {...item} />
+            }
+            {
+              (item.type === 'ON_DEMAND' || item.type === 'VIDEO') &&
+              <VideoPostCard hasPinButton={false} {...item} />
+            }
           </Wrapper>
         ))}
       </SimpleGrid>
