@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import { Flex, Text, Box } from '@chakra-ui/react'
-import { Props } from './types'
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
-import { ptBR, enUS } from 'date-fns/locale'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { APP_LOCALE } from 'config/constants'
+import { format } from 'date-fns'
+import { enUS, ptBR } from 'date-fns/locale'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getData } from 'services/storage'
+import { Props } from './types'
 
 const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
   const { t } = useTranslation()
@@ -58,8 +57,8 @@ const Countdown = ({ eventStartDate, fallbackMessage }: Props) => {
 
   const renderText = (value: string) => (
     <Text
-      fontSize={{ base: '1.2rem', lg: '2.8rem' }}
-      fontWeight="bolder"
+      fontSize={{ base: '1.3rem', sm: '1.5rem', md: '2.3rem', lg: '2.8rem' }}
+      fontWeight="600"
       color={'white'}
       textAlign="center"
     >

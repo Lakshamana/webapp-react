@@ -25,6 +25,7 @@ import { ImageUpload } from 'modules/account/components/imageUpload'
 import InputMask from 'react-input-mask'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { get } from 'utils/location'
 import * as Yup from 'yup'
 import { UpdateButtons } from '../updateButtons'
 import { ProfileData } from './types'
@@ -53,10 +54,32 @@ const ProfileInfo = ({
     return image
   }
 
-  const { data: customFieldsData, loading: customFieldsLoading } =
-    useQuery(QUERY_CUSTOM_FIELDS)
+  const [customFieldsData, setcustomFieldsData] = useState<any>(null)
+  const itsNotBrazil = (value) => value.name !== 'rg' && value.name !== 'cpf'
+  const getLocation = async (data) => {
+    try {
+      const {
+        country: { iso_code },
+      } = await get()
+      if (iso_code !== 'BR') {
+        const filteredData = data.filter(itsNotBrazil)
+        setcustomFieldsData(filteredData)
+        return
+      }
+      setcustomFieldsData(data)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
-  const shape = (customFieldsData?.customFields[0]?.fields || []).reduce(
+  const { loading: customFieldsLoading } = useQuery(
+    QUERY_CUSTOM_FIELDS, {
+      onCompleted: async (data) => {
+        getLocation(data?.customFields[0]?.fields)
+      },
+    })
+
+  const shape = (customFieldsData || []).reduce(
     (memo, curr) => {
       switch (curr.type) {
         case CustomFieldTypesEnum.Number:
@@ -202,7 +225,7 @@ const ProfileInfo = ({
         return (
           <Flex width="100%" alignItems="left" flexDirection="column">
             {!customFieldsLoading &&
-              (customFieldsData?.customFields[0]?.fields || []).map(
+              (customFieldsData || []).map(
                 ({ label, required, ...field }, index) => (
                   <Box
                     width="100%"
@@ -304,7 +327,7 @@ const ProfileInfo = ({
         return (
           <Flex width="100%" alignItems="left" flexDirection="column">
             {!customFieldsLoading &&
-              (customFieldsData?.customFields[0]?.fields || []).map(
+              (customFieldsData || []).map(
                 ({ label, required, ...field }, index) => (
                   <Box
                     width={'100%'}
