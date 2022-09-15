@@ -273,6 +273,7 @@ const EN_US = {
         continue_watch: 'Continue Watching',
         my_list: 'My List',
         more_categories: 'More categories',
+        view_post: 'View Post',
       },
       category: {
         videos: 'Videos',
