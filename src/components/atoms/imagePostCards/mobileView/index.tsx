@@ -95,12 +95,7 @@ const MobileView = ({ hasPinButton, ...props }: MobileViewProps) => {
       <Box my={5}>
         <Button
           onClick={() => history.push(`${props.url}`)}
-          iconName={'play'}
-          label={t(
-            props.progress
-              ? 'page.categories.continue_watch'
-              : 'page.categories.watch_now'
-          )}
+          label={t('page.categories.view_post')}
         />
         {!props.progress && props.isLoading && (
           <Button mt={2} variant={'outline'} disabled>
@@ -130,3 +125,4 @@ const MobileView = ({ hasPinButton, ...props }: MobileViewProps) => {
 }
 
 export { MobileView }
+
