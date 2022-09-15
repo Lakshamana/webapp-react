@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Spacer, Spinner, Text } from '@chakra-ui/react'
+import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Button, ProgressBar } from 'components'
 import { useTranslation } from 'react-i18next'
@@ -35,7 +35,6 @@ const MobileView = ({ hasPinButton, ...props }: MobileViewProps) => {
   return (
     <Box>
       <Box position={'relative'}>
-        <Image boxSize="auto" objectFit="contain" src={props.thumbnail}></Image>
         {props?.progress && <ProgressBar value={props.progress} />}
         {isPostBlocked && (
           <BlockedContent>
@@ -95,12 +94,7 @@ const MobileView = ({ hasPinButton, ...props }: MobileViewProps) => {
       <Box my={5}>
         <Button
           onClick={() => history.push(`${props.url}`)}
-          iconName={'play'}
-          label={t(
-            props.progress
-              ? 'page.categories.continue_watch'
-              : 'page.categories.watch_now'
-          )}
+          label={t('page.categories.view_post')}
         />
         {!props.progress && props.isLoading && (
           <Button mt={2} variant={'outline'} disabled>
@@ -130,3 +124,4 @@ const MobileView = ({ hasPinButton, ...props }: MobileViewProps) => {
 }
 
 export { MobileView }
+
