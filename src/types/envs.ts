@@ -1,3 +1,9 @@
+type PlayerLogo = {
+  image: string
+  altText: string
+  link: string
+}
+
 export type EnvProps = {
   apiEndpoint?: string
   createdAt?: string
@@ -15,10 +21,11 @@ export type EnvProps = {
   firebaseSender?: string
   muxKey?: string
   onesignalAppId?: string
-  onesignalSafariWebId?:  string
+  onesignalSafariWebId?: string
   organization?: string
   remoteConfigSecret?: string
   updatedAt?: string
   googleTag?: string
   facebookTag?: string
+  playerLogo?: PlayerLogo
 }

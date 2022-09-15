@@ -2,6 +2,7 @@ import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
 import VideoJS from 'components/molecules/videoJs'
+import { configEnvs } from 'config/envs'
 import { memo, ReactElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
@@ -102,21 +103,20 @@ const VideoPlayerComponent = ({
       player?.registerPlugin('vttThumbnails', videoJsVttThumbnails)
     })
 
-    //TODO: Elaborate task (FH/Brado maybe?)
-    // const fanheroButton = player?.controlBar.addChild('button')
-    // fanheroButton.controlText('Visit Fanhero site!');
-    // player.controlBar
-    //   .el()
-    //   .insertBefore(
-    //     fanheroButton.el(),
-    //     player.controlBar.getChild('playToggle').el()
-    //   );
-    // const buttonDom = fanheroButton.el();
-    // buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em;')
-    // buttonDom.innerHTML = "<img src='/logo-fh.png' />";
-    // buttonDom.onclick = function () {
-    //   window.open('https://fanhero.tv/', '_blank')
-    // }
+    const fanheroButton = player?.controlBar.addChild('button')
+    fanheroButton.controlText(configEnvs?.playerLogo?.altText || 'Visit fanhero site');
+    player.controlBar
+      .el()
+      .insertBefore(
+        fanheroButton.el(),
+        player.controlBar.getChild('playToggle').el()
+      );
+    const buttonDom = fanheroButton.el();
+    buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em; margin-left: 1em;')
+    buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'} />`;
+    buttonDom.onclick = function () {
+      window.open(`${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`, '_blank')
+    }
 
     player?.on('ready', async () => {
       if (setVolumeValue) player.volume(setVolumeValue)
