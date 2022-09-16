@@ -1,11 +1,16 @@
-import { Box, Flex,  Text } from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-
+import { Input as InputChakra } from '@chakra-ui/input'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { Input } from 'components'
+import { useFormik } from 'formik'
+import InputMask from 'react-input-mask'
+import PhoneInput from 'react-phone-input-2'
+import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
+import * as Yup from 'yup'
 import { Props } from './types'
 
 const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) => {
+  const { colorMode } = useThemeStore()
   const shape = fields.reduce((memo, curr) => {
     if (curr.required) {
       switch (curr.type) {
@@ -40,6 +45,72 @@ const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) 
     },
   })
 
+  const renderInputCustomField = (field, index) => {
+    switch (field.name) {
+      case 'phone':
+        return (
+          <PhoneInput
+            enableSearch={true}
+            country={'us'}
+            onChange={(phone) =>
+              formik.setFieldValue(field.name, phone)
+            }
+            inputStyle={{
+              color: colors.inputText[colorMode],
+              background: colors.inputBg[colorMode],
+              border: 'none',
+              borderColor: colors.secondaryText[colorMode],
+              borderRadius: '4px',
+              width: '100%',
+              paddingTop: '8px',
+              paddingBottom: '8px',
+              height: '56px',
+              boxShadow: "none",
+            }}
+          />
+        )
+      case 'cpf':
+        return (
+          <InputMask
+            name={field.name}
+            mask="999.999.999-99"
+            value={formik.values[field.name]}
+            onChange={formik.handleChange}
+            style={{
+              color: colors.inputText[colorMode],
+              background: colors.inputBg[colorMode],
+              border: 'none',
+              borderRadius: '4px',
+              width: '100%',
+              paddingTop: '8px',
+              paddingBottom: '8px',
+              height: '56px',
+              boxShadow: "none",
+            }}
+          >
+            {(inputProps) => (
+              <InputChakra
+                width="100%"
+                placeholder="000.000.000-00"
+                {...inputProps}
+              />
+            )}
+          </InputMask>
+        )
+      default:
+        return (
+          <Input
+            {...field}
+            placeholder={field.name}
+            key={`${index}formFieldInput${field.name}`}
+            onChange={formik.handleChange}
+            error={!!formik.errors[field.name]}
+            errorMessage={formik.errors[field.name]?.toString()}
+          />
+        )
+    }
+  }
+
   return (
     <Flex alignItems={'center'} flexDirection={'column'} gridGap={2} width={'100%'}>
       {fields.map(({ label, required, ...field }, index) => (
@@ -52,14 +123,7 @@ const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) 
           {/* field.type === 'number' */}
           {/* field.type === 'checkbox' */}
 
-          <Input
-            {...field}
-            placeholder={field.name}
-            key={`${index}formFieldInput${field.name}`}
-            onChange={formik.handleChange}
-            error={!!formik.errors[field.name]}
-            errorMessage={formik.errors[field.name]?.toString()}
-          />
+          {renderInputCustomField(field, index)}
         </Box>
       ))}
 
@@ -69,3 +133,4 @@ const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) 
 }
 
 export { CustomForm }
+
