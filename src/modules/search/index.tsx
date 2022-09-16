@@ -49,6 +49,7 @@ const SearchPage = () => {
         )
       )
     },
+    fetchPolicy: 'cache-and-network' 
   })
 
   const useQuery = () =>
