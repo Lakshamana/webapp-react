@@ -2,11 +2,11 @@ import { Input as InputChakra } from '@chakra-ui/input'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { Input } from 'components'
 import { useFormik } from 'formik'
-import InputMask from 'react-input-mask'
 import PhoneInput from 'react-phone-input-2'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import * as Yup from 'yup'
+import { InputMaskStyled } from './style'
 import { Props } from './types'
 
 const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) => {
@@ -71,22 +71,11 @@ const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) 
         )
       case 'cpf':
         return (
-          <InputMask
+          <InputMaskStyled
             name={field.name}
             mask="999.999.999-99"
             value={formik.values[field.name]}
             onChange={formik.handleChange}
-            style={{
-              color: colors.inputText[colorMode],
-              background: colors.inputBg[colorMode],
-              border: 'none',
-              borderRadius: '4px',
-              width: '100%',
-              paddingTop: '8px',
-              paddingBottom: '8px',
-              height: '56px',
-              boxShadow: "none",
-            }}
           >
             {(inputProps) => (
               <InputChakra
@@ -95,7 +84,7 @@ const CustomForm = ({ handleFormSubmit, fields, button, initialValues }: Props) 
                 {...inputProps}
               />
             )}
-          </InputMask>
+          </InputMaskStyled>
         )
       default:
         return (
