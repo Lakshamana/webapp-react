@@ -52,6 +52,8 @@ const LivePostPage = () => {
       setIsReactionsEnabled(result.liveEvent?.reactionsEnabled)
       setIsPresenceEnabled(result.liveEvent?.presenceEnabled)
       setLiveStatus(result.liveEvent?.status)
+      setHlsPlaybackUrl(result.liveEvent?.hlsPlaybackUrl)
+      setPageTitle(result.liveEvent?.title)
     },
   })
 
@@ -116,9 +118,6 @@ const LivePostPage = () => {
       })
     })
 
-    if (livestream) {
-      setPageTitle(livestream?.title)
-    }
     // Unsubscribe on unmount to avoid a memory leak
     return () => {
       liveUnsubscriber()
