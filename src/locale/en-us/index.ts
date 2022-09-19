@@ -86,6 +86,9 @@ const EN_US = {
       action_not_allowed: 'You need to have an account to perform this action',
       create_a_new_account:
         "Creating an account is easy and free, create your own to have access to the platform's content!",
+      scroller: {
+        more: 'do you want see more?'
+      }
     },
     signin: {
       title: 'Access {{org}} now',
@@ -424,7 +427,7 @@ const EN_US = {
           },
         },
         password: {
-          title: 'You are almos there',
+          title: 'You are almost there',
           subtitle:
             'Your account is almost ready. Please choose a password for your account and enjoy the show.',
           password_input: 'Password',

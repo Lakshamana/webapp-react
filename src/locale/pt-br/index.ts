@@ -84,6 +84,9 @@ const PT_BR = {
       action_not_allowed: 'Você precisa ter uma conta para executar essa ação',
       create_a_new_account:
         'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!',
+      scroller: {
+        more: 'deseja ver todos?'
+      }
     },
     signin: {
       title: 'Acesse {{org}} agora',
