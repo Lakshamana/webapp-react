@@ -3,7 +3,7 @@ import { LiveEvent, Status } from 'generated/graphql'
 export type LivestreamsScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
-  hasMoreLink?: boolean
+  isLoading?: boolean
   items?: LiveEvent[]
   loadMoreItems?: () => void
 }

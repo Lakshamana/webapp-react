@@ -3,7 +3,7 @@ import { Category } from 'generated/graphql'
 export type CategoriesScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
-  hasMoreLink?: boolean
+  isLoading?: boolean
   items?: Maybe<Category[]>
   loadMoreItems?: () => void
 }
@@ -26,7 +26,7 @@ export type CategoryPostCardProps = {
   isExclusive?: boolean
   isGeolocked?: boolean
   categoryUnpinned?: (categoryId: string) => void
-  
+
 }
 
 type PostCardProps = {

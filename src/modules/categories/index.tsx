@@ -184,7 +184,6 @@ const CategoriesPage = () => {
     <CategoriesScroller
       items={categoriesWithoutChildren?.rows}
       sectionTitle={t('page.categories.more_categories')}
-      hasMoreLink={false}
       loadMoreItems={loadMoreCategoriesWithoutChildren}
     />
   )
@@ -195,7 +194,6 @@ const CategoriesPage = () => {
         key={category.id}
         items={category.children as Category[]}
         sectionTitle={category?.name}
-        hasMoreLink={true}
         sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
       />
     ))
