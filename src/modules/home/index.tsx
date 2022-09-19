@@ -21,7 +21,7 @@ import {
   TagsScroller,
   VideosScroller
 } from 'components'
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
+import { DEFAULT_POLLING_INTERVAL, MAXIMUM_SCROLLER_REQUESTS } from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Client } from 'services/api'
 import {
@@ -96,11 +96,10 @@ const HomePage = () => {
   })
 
   const updateFetchControl = (scrollerName: string) => {
-    const MAXIMUM_REQUESTS = process.env.MAXIMUM_SCROLLER_REQUESTS ?? 4
     let updateRequest = fetchControl[scrollerName]
       ? fetchControl[scrollerName] + 1
       : 1
-    if (updateRequest >= MAXIMUM_REQUESTS) updateRequest = true
+    if (updateRequest >= MAXIMUM_SCROLLER_REQUESTS) updateRequest = true
     setFetchControl((previous => ({ ...previous, [scrollerName]: updateRequest })))
   }
 
