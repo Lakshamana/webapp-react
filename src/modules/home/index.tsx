@@ -13,6 +13,18 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
+  BillboardScroller,
+  CategoriesScroller,
+  Container, ContinueWatchingScroller, EmptyState,
+  LivestreamScroller,
+  Skeleton,
+  TagsScroller,
+  VideosScroller
+} from 'components'
+import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { Client } from 'services/api'
+import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
@@ -30,24 +42,9 @@ import {
   useCustomizationStore,
   useThemeStore
 } from 'services/stores'
-
-import { Client } from 'services/api'
-
+import { colors, sizes } from 'styles'
 import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
-
-import {
-  BillboardScroller,
-  CategoriesScroller,
-  Container, ContinueWatchingScroller, EmptyState,
-  LivestreamScroller,
-  Skeleton,
-  TagsScroller,
-  VideosScroller
-} from 'components'
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { colors, sizes } from 'styles'
 import { convertToValidColor } from 'utils/helperFunctions'
 import { askForPushPermission } from 'utils/pushNotifications'
 import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
@@ -66,18 +63,14 @@ const HomePage = () => {
 
   const [featuredPostsData, setFeaturedPostsData] =
     useState<PaginatedPostsOutput>()
-
   const [liveEventsData, setLiveEventsData] =
     useState<PaginatedLiveEventsOutput>()
-
   const [featuredCategoriesData, setFeaturedCategoriesData] =
     useState<PaginatedCategoriesOutput>()
-
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<PaginatedCategoriesOutput>()
-
   const [continueWatchingListData, setContinueWatchingListData] = useState<any>()
-
+  const [isCWatchingLoading, setIsCWatchingLoading] = useState<boolean>(false)
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
     useState(true)
@@ -88,6 +81,7 @@ const HomePage = () => {
   const [tagsIds, setTagsIds] = useState<string[]>([])
   const [tagsData, setTagsData] = useState({})
   const [loadingTags, setLoadingTags] = useState(false)
+  const [fetchControl, setFetchControl] = useState({})
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
     useLazyQuery(QUERY_BILLBOARDS, {
@@ -96,6 +90,20 @@ const HomePage = () => {
       fetchPolicy: 'no-cache',
     })
 
+  const appendNewData = (previous: any, newData: any) => ({
+    ...newData,
+    rows: [...(previous?.rows || []), ...newData?.rows],
+  })
+
+  const updateFetchControl = (scrollerName: string) => {
+    const MAXIMUM_REQUESTS = process.env.MAXIMUM_SCROLLER_REQUESTS ?? 4
+    let updateRequest = fetchControl[scrollerName]
+      ? fetchControl[scrollerName] + 1
+      : 1
+    if (updateRequest >= MAXIMUM_REQUESTS) updateRequest = true
+    setFetchControl((previous => ({ ...previous, [scrollerName]: updateRequest })))
+  }
+
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
@@ -103,10 +111,7 @@ const HomePage = () => {
         const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
-        setLiveEventsData((previous) => ({
-          ...liveEvents,
-          rows: [...(previous?.rows || []), ...liveEvents?.rows],
-        }))
+        setLiveEventsData(previous => appendNewData(previous, liveEvents))
       },
       fetchPolicy: 'cache-and-network',
       pollInterval: DEFAULT_POLLING_INTERVAL,
@@ -118,10 +123,7 @@ const HomePage = () => {
     {
       onCompleted: (result) => {
         const posts = isAnonymousAllowed ? result.publicPosts : result.posts
-        setFeaturedPostsData((previous) => ({
-          ...posts,
-          rows: [...(previous?.rows || []), ...posts.rows],
-        }))
+        setFeaturedPostsData(previous => appendNewData(previous, posts))
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -137,10 +139,7 @@ const HomePage = () => {
           const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
-          setFeaturedCategoriesData((previous) => ({
-            ...categories,
-            rows: [...(previous?.rows || []), ...categories.rows],
-          }))
+          setFeaturedCategoriesData(previous => appendNewData(previous, categories))
         },
         fetchPolicy: 'cache-and-network',
       }
@@ -156,10 +155,7 @@ const HomePage = () => {
           const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
-          setCategoriesWithChildrenData((previous) => ({
-            ...categories,
-            rows: [...(previous?.rows || []), ...categories.rows],
-          }))
+          setCategoriesWithChildrenData(previous => appendNewData(previous, categories))
         },
         fetchPolicy: 'cache-and-network',
       }
@@ -171,28 +167,40 @@ const HomePage = () => {
       query: QUERY_LOOP_TAGS(tagsIds),
       fetchPolicy: 'no-cache',
     })
-      .then((result) => setTagsData(result.data))
+      .then(({ data }) => setTagsData(data))
       .finally(() => setLoadingTags(false))
   }
 
-  const loadMoreLiveEvents = () => {
-    if (liveEventsData?.hasNextPage) {
+  const loadMoreLiveEvents = (scrollerName: string) => () => {
+    if (
+      liveEventsData?.hasNextPage &&
+      typeof fetchControl[scrollerName] !== 'boolean'
+    ) {
+      updateFetchControl(scrollerName)
       getLiveEvents({
         variables: { ...liveEventsFilter(liveEventsData.page + 1) },
       })
     }
   }
 
-  const loadMoreFeaturedPosts = () => {
-    if (featuredPostsData?.hasNextPage) {
+  const loadMoreFeaturedPosts = (scrollerName: string) => () => {
+    if (
+      featuredPostsData?.hasNextPage &&
+      typeof fetchControl[scrollerName] !== 'boolean'
+    ) {
+      updateFetchControl(scrollerName)
       getFeaturedPosts({
         variables: { ...postsFilter(featuredPostsData.page + 1) },
       })
     }
   }
 
-  const loadMoreFeaturedCategories = () => {
-    if (featuredCategoriesData?.hasNextPage) {
+  const loadMoreFeaturedCategories = (scrollerName: string) => () => {
+    if (
+      featuredCategoriesData?.hasNextPage &&
+      typeof fetchControl[scrollerName] !== 'boolean'
+    ) {
+      updateFetchControl(scrollerName)
       getFeaturedCategories({
         variables: {
           ...categoriesFilter(featuredCategoriesData.page + 1, undefined, true),
@@ -236,7 +244,6 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
-    // Ask for permission to show push notifications
     askForPushPermission()
     // eslint-disable-next-line
   }, [])
@@ -311,14 +318,8 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
 
-  useEffect(() => {
-    if (!tagsIds?.length) {
-      setTagsData({})
-      return
-    }
-    loadTags()
-    //eslint-disable-next-line
-  }, [tagsIds])
+  //eslint-disable-next-line
+  useEffect(() => tagsIds?.length ? loadTags() : setTagsData({}), [tagsIds])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path, {
@@ -359,45 +360,53 @@ const HomePage = () => {
     />
   )
 
-  const renderLiveEventsScroller = (item: CarouselFlags) =>
-    !!liveEventsData?.rows?.length && (
+  const renderLiveEventsScroller = (item: CarouselFlags) => {
+    const scrollerName = `${item.LABEL[0].VALUE}`
+    return (
       <LivestreamScroller
-        loadMoreItems={loadMoreLiveEvents}
+        key={scrollerName}
         items={liveEventsData?.rows}
-        key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
-        hasMoreLink={true}
-        sectionUrl={`/c/${activeChannel?.slug}/lives`}
+        loadMoreItems={loadMoreLiveEvents(scrollerName)}
+        isLoading={loadingLiveEvents}
       />
     )
+  }
 
-  const renderFeaturedPostsScroller = (item: CarouselFlags) =>
-    !!featuredPostsData?.rows?.length && (
+  const renderFeaturedPostsScroller = (item: CarouselFlags) => {
+    const scrollerName = `${item.LABEL[0].VALUE}`
+    return (
       <VideosScroller
-        key={`${item.LABEL[0].VALUE}`}
-        items={featuredPostsData.rows}
+        key={scrollerName}
+        items={featuredPostsData?.rows}
         sectionTitle={getCarouselLabel(item)}
-        sectionUrl={''}
-        loadMoreItems={loadMoreFeaturedPosts}
+        loadMoreItems={loadMoreFeaturedPosts(scrollerName)}
+        isLoading={loadingFeaturedPosts}
+        showCardMore={fetchControl[scrollerName]}
+        {...featuredPostsData}
       />
     )
+  }
 
-  const renderFeaturedCategoriesScroller = (item: CarouselFlags) =>
-    !!featuredCategoriesData?.rows?.length && (
+  const renderFeaturedCategoriesScroller = (item: CarouselFlags) => {
+    const scrollerName = "featured-categories"
+    return (
       <CategoriesScroller
-        loadMoreItems={loadMoreFeaturedCategories}
-        key="featured-categories"
-        items={featuredCategoriesData.rows}
+        key={scrollerName}
+        items={featuredCategoriesData?.rows}
         sectionTitle={getCarouselLabel(item)}
-        hasMoreLink={true}
         sectionUrl={`/c/${activeChannel?.slug}/categories`}
+        loadMoreItems={loadMoreFeaturedCategories(scrollerName)}
+        isLoading={loadingFeaturedCategories}
       />
     )
+  }
 
   const continueWatchingList = async (lastId?: String) => {
     const URL = process.env.REACT_APP_API_ENDPOINT
     let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}`
     if (lastId) URL_PARAMS += `&lastId=${lastId}`
+    setIsCWatchingLoading(true)
     try {
       const { data } = await axios.get(`${URL}/posts/continue-watching${URL_PARAMS}`)
       if (data?.statusCode === 200) {
@@ -409,6 +418,7 @@ const HomePage = () => {
         }))
       }
     } catch (error) { }
+    finally { setIsCWatchingLoading(false) }
   }
 
   useEffect(() => {
@@ -423,13 +433,16 @@ const HomePage = () => {
   }
 
   const renderContinueWatchingScroller = (item: CarouselFlags) =>
-    !!continueWatchingListData?.rows?.length && (
+    !isAnonymousAccess &&
+    user?.id &&
+    activeChannel?.id && (
       <ContinueWatchingScroller
         key={`${item.LABEL[0].VALUE}`}
-        items={continueWatchingListData.rows}
+        items={continueWatchingListData?.rows}
         sectionTitle={getCarouselLabel(item)}
-        loadMoreItems={loadMoreContinueWatchingPosts}
         sectionUrl={''}
+        loadMoreItems={loadMoreContinueWatchingPosts}
+        isLoading={isCWatchingLoading}
       />
     )
 
@@ -440,10 +453,10 @@ const HomePage = () => {
       <TagsScroller
         key={`${item.TAGS}`}
         tagData={currentTag}
-        hasMoreLink={true}
         content={item.CONTENT_TYPE}
         sectionTitle={getCarouselLabel(item)}
         sectionUrl={`/c/${activeChannel?.slug}/tag/`}
+        isLoading={loadingTags}
       />
     )
   }
@@ -508,7 +521,6 @@ const HomePage = () => {
                 key={category.id}
                 items={category.children}
                 sectionTitle={category?.name}
-                hasMoreLink={true}
                 sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
               />
             ))}
