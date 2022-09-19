@@ -1,4 +1,4 @@
-import { CardsScroller, VideoPostCard } from 'components'
+import { CardMore, CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
 import { Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
@@ -18,10 +18,11 @@ const VideosScroller = ({
   sectionTitle,
   sectionUrl,
   loadMoreItems,
+  showCardMore,
+  isLoading
 }: VideosScrollerProps) => {
   const { generateImage } = useThumbor()
   const [scrollerItems, setScrollerItems] = useState<VideoPostCardProps[]>()
-
   const { activeChannel } = useChannelsStore()
 
   const getImageUrl = (post: Post) => {
@@ -31,9 +32,7 @@ const VideosScroller = ({
         height: 0,
       },
     }
-
     if (isEntityBlocked(post)) imageOptions.blur = 20
-
     const thumbnailPath =
       post.media?.__typename === 'MediaVideo' ? post.thumbnail?.imgPath : ''
 
@@ -77,17 +76,30 @@ const VideosScroller = ({
 
   return (
     <ContentScroller>
+      {
+        isLoading &&
+        !scrollerItems?.length &&
+        <SkeletonScroller />
+      }
       {!!scrollerItems?.length && (
         <CardsScroller
           title={sectionTitle}
           moreUrl={sectionUrl}
           reachEnd={loadMoreItems}
+          {...{ isLoading }}
         >
           {scrollerItems?.map((item: VideoPostCardProps) => (
             <SwiperSlide key={`slide-${item.id}-featured`}>
               <VideoPostCard {...item} />
             </SwiperSlide>
           ))}
+          {
+            showCardMore &&
+            sectionUrl &&
+            <SwiperSlide>
+              <CardMore {...{ sectionUrl }} />
+            </SwiperSlide>
+          }
         </CardsScroller>
       )}
     </ContentScroller>
@@ -95,3 +107,4 @@ const VideosScroller = ({
 }
 
 export { VideosScroller }
+
