@@ -18,7 +18,7 @@ import { colors } from 'styles'
 import { Label } from '../../styles'
 
 import { useQuery } from '@apollo/client'
-import { AvatarBadge } from '@chakra-ui/react'
+import { AvatarBadge, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { CustomFieldTypesEnum } from 'generated/graphql'
 import { ImageUpload } from 'modules/account/components/imageUpload'
@@ -43,14 +43,10 @@ const ProfileInfo = ({
   const { colorMode } = useThemeStore()
   const minimumAge = 13
   const { generateImage } = useThumbor()
+  const [loading, setloading] = useState(false)
 
   const getImageUrl = (imagePath: string) => {
-
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      imagePath,
-    )
-
+    const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
     return image
   }
 
@@ -69,47 +65,56 @@ const ProfileInfo = ({
       setcustomFieldsData(data)
     } catch (e) {
       console.error(e)
+    } finally {
+      setloading(false)
     }
   }
 
-  const { loading: customFieldsLoading } = useQuery(
-    QUERY_CUSTOM_FIELDS, {
-      onCompleted: async (data) => {
-        getLocation(data?.customFields[0]?.fields)
-      },
-    })
-
-  const shape = (customFieldsData || []).reduce(
-    (memo, curr) => {
-      switch (curr.type) {
-        case CustomFieldTypesEnum.Number:
-          let validationNumber = Yup.number()
-          if (curr.required){
-            validationNumber = validationNumber.required(t('common.error.field_required'))
-          }
-          memo[curr.name] = validationNumber
-          break
-
-        case CustomFieldTypesEnum.String:
-          let validationText = Yup.string()
-          if (curr.required){
-            validationText = validationText.required(t('common.error.field_required'))
-          }
-          memo[curr.name] = validationText
-          break
-
-        default:
-          let validation = Yup.string()
-          if (curr.required){
-            validation = validation.required(t('common.error.field_required'))
-          }
-          memo[curr.name] = validation
-          break
-      }
-      return memo
+  const { loading: customFieldsLoading } = useQuery(QUERY_CUSTOM_FIELDS, {
+    onCompleted: async (data) => {
+      const newData = data?.customFields[0]?.fields.map((item) => {
+        if(item.name === 'cpf' || item.name === 'rg'){
+          return { ...item, required: false }
+        }
+        return item
+      })
+      setcustomFieldsData(newData)
+      // getLocation(data?.customFields[0]?.fields)
     },
-    {}
-  )
+  })
+
+  const shape = (customFieldsData || []).reduce((memo, curr) => {
+    switch (curr.type) {
+      case CustomFieldTypesEnum.Number:
+        let validationNumber = Yup.number()
+        if (curr.required) {
+          validationNumber = validationNumber.required(
+            t('common.error.field_required')
+          )
+        }
+        memo[curr.name] = validationNumber
+        break
+
+      case CustomFieldTypesEnum.String:
+        let validationText = Yup.string()
+        if (curr.required) {
+          validationText = validationText.required(
+            t('common.error.field_required')
+          )
+        }
+        memo[curr.name] = validationText
+        break
+
+      default:
+        let validation = Yup.string()
+        if (curr.required) {
+          validation = validation.required(t('common.error.field_required'))
+        }
+        memo[curr.name] = validation
+        break
+    }
+    return memo
+  }, {})
 
   const dateYearsInThePast = (years: number) => {
     let d = new Date()
@@ -142,19 +147,25 @@ const ProfileInfo = ({
     onSubmit: async () => {
       const requestValues = { ...values }
 
-      if(requestValues.birthday === '') {
+      if (requestValues.birthday === '') {
         requestValues.birthday = validateDate(requestValues.birthday)
         setFieldValue('birthday', requestValues.birthday)
       }
 
-      if(!requestValues.custom_fields || Object.keys(requestValues.custom_fields).length === 0) delete requestValues.custom_fields
+      if (
+        !requestValues.custom_fields ||
+        Object.keys(requestValues.custom_fields).length === 0
+      )
+        delete requestValues.custom_fields
 
       updateProfile({ ...requestValues, locale: locale })
     },
   })
 
   const validateDate = (value) =>
-    Date.parse(value) ? new Date(value) : new Date(dateYearsInThePast(minimumAge))
+    Date.parse(value)
+      ? new Date(value)
+      : new Date(dateYearsInThePast(minimumAge))
 
   const formatDate = (value) =>
     Date.parse(value)
@@ -289,6 +300,7 @@ const ProfileInfo = ({
                 width="100%"
                 variant="flushed"
                 placeholder="000.000.000-00"
+                isDisabled={true}
                 {...inputProps}
               />
             )}
@@ -303,6 +315,7 @@ const ProfileInfo = ({
             placeholder={field.name}
             key={`${index}formFieldInput${field.name}`}
             onChange={handleChange}
+            isDisabled={field.name ==='rg'}
             variant="flushed"
           />
         )
@@ -348,11 +361,12 @@ const ProfileInfo = ({
                       :
                     </Label>
                     {renderInputCustomField(field, index)}
-                    {
-                      errors.custom_fields?.[field.name] &&
-                      touched.custom_fields?.[field.name] &&
-                      (<Text fontSize="0.8em" color="#ff0000" mt="5px">{ errors.custom_fields[field.name] }</Text>)
-                    }
+                    {errors.custom_fields?.[field.name] &&
+                      touched.custom_fields?.[field.name] && (
+                        <Text fontSize="0.8em" color="#ff0000" mt="5px">
+                          {errors.custom_fields[field.name]}
+                        </Text>
+                      )}
                   </Box>
                 )
               )}
@@ -377,47 +391,66 @@ const ProfileInfo = ({
 
   return (
     <>
-      <Flex width={'100%'} alignItems="left" direction="column">
-        <Flex justifyContent="center" py={5}>
-          <Avatar size="xl" src={getImageUrl(user?.avatar?.imgPath || '')}>
-            <AvatarBadge boxSize='44px' bg={colors.brand.primary[colorMode]} border='4px solid'>
-              <Icon icon='eva:edit-outline'/>
-              <ImageUpload
-                image={getImageUrl(user?.avatar?.imgPath || '') || ''}
-                uploadImage={updateAvatar}
-                useDisclosureProps={useDisclosureProps}
-              />
-            </AvatarBadge>
-          </Avatar>
+      {loading && (
+        <Flex h='150px' justifyContent='center' alignItems='center'>
+          <Spinner
+            thickness="4px"
+            width="48px"
+            height="48px"
+            color={colors.brand.primary[colorMode]}
+          />
         </Flex>
-        {Object.keys(values).map((key) => {
-          return (
-            <Box
-              color={colors.secondaryText[colorMode]}
-              key={key}
-              display="flex"
-              py={key === 'custom_fields' ? '0px' : '10px'}
-              flexDirection={isEditing ? 'column' : 'row'}
-            >
-              {key !== 'custom_fields' && (
-                <Label fontSize={pxToRem(16)} fontWeight="500">
-                  {t(`page.account.${key}`)}:
-                </Label>
-              )}
-              {isEditing
-                ? renderInputByType(key, values[key])
-                : renderLabel(key, values[key])}
-            </Box>
-          )
-        })}
-      </Flex>
-      <UpdateButtons
-        editFormActive={isEditing}
-        isLoadingAction={isLoading}
-        handleIsEditing={(value) => setIsEditing(value)}
-        handleSubmit={handleSubmit}
-        resetValues={resetForm}
-      ></UpdateButtons>
+      )}
+      {!loading && (
+        <>
+          <Flex width={'100%'} alignItems="left" direction="column">
+            <Flex justifyContent="center" py={5}>
+              <Avatar size="xl" src={getImageUrl(user?.avatar?.imgPath || '')}>
+                <AvatarBadge
+                  boxSize="44px"
+                  bg={colors.brand.primary[colorMode]}
+                  border="4px solid"
+                >
+                  <Icon icon="eva:edit-outline" />
+                  <ImageUpload
+                    image={getImageUrl(user?.avatar?.imgPath || '') || ''}
+                    uploadImage={updateAvatar}
+                    useDisclosureProps={useDisclosureProps}
+                  />
+                </AvatarBadge>
+              </Avatar>
+            </Flex>
+            {!loading &&
+              Object.keys(values).map((key) => {
+                return (
+                  <Box
+                    color={colors.secondaryText[colorMode]}
+                    key={key}
+                    display="flex"
+                    py={key === 'custom_fields' ? '0px' : '10px'}
+                    flexDirection={isEditing ? 'column' : 'row'}
+                  >
+                    {key !== 'custom_fields' && (
+                      <Label fontSize={pxToRem(16)} fontWeight="500">
+                        {t(`page.account.${key}`)}:
+                      </Label>
+                    )}
+                    {isEditing
+                      ? renderInputByType(key, values[key])
+                      : renderLabel(key, values[key])}
+                  </Box>
+                )
+              })}
+          </Flex>
+          <UpdateButtons
+            editFormActive={isEditing}
+            isLoadingAction={isLoading}
+            handleIsEditing={(value) => setIsEditing(value)}
+            handleSubmit={handleSubmit}
+            resetValues={resetForm}
+          ></UpdateButtons>
+        </>
+      )}
     </>
   )
 }
