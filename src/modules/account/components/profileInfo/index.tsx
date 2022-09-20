@@ -43,7 +43,7 @@ const ProfileInfo = ({
   const { colorMode } = useThemeStore()
   const minimumAge = 13
   const { generateImage } = useThumbor()
-  const [loading, setloading] = useState(true)
+  const [loading, setloading] = useState(false)
 
   const getImageUrl = (imagePath: string) => {
     const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
@@ -72,7 +72,14 @@ const ProfileInfo = ({
 
   const { loading: customFieldsLoading } = useQuery(QUERY_CUSTOM_FIELDS, {
     onCompleted: async (data) => {
-      getLocation(data?.customFields[0]?.fields)
+      const newData = data?.customFields[0]?.fields.map((item) => {
+        if(item.name === 'cpf' || item.name === 'rg'){
+          return { ...item, required: false }
+        }
+        return item
+      })
+      setcustomFieldsData(newData)
+      // getLocation(data?.customFields[0]?.fields)
     },
   })
 
@@ -293,6 +300,7 @@ const ProfileInfo = ({
                 width="100%"
                 variant="flushed"
                 placeholder="000.000.000-00"
+                isDisabled={true}
                 {...inputProps}
               />
             )}
@@ -307,6 +315,7 @@ const ProfileInfo = ({
             placeholder={field.name}
             key={`${index}formFieldInput${field.name}`}
             onChange={handleChange}
+            isDisabled={field.name ==='rg'}
             variant="flushed"
           />
         )
