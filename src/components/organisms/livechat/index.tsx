@@ -23,6 +23,7 @@ const Livechat = ({
   entityId,
   isCommentsEnabled,
   isReactionsEnabled,
+  sendReaction
 }: Props) => {
   const [messages, setMessagesData] = useState<DocumentData[]>([])
   const [reactions, setReactionsData] = useState<DocumentData[]>([])
@@ -76,6 +77,8 @@ const Livechat = ({
   const sendNewReaction = (reaction: string) => {
     if (!reaction) return
 
+    sendReaction(reaction)
+
     const reactionToSend: ReactionDocumentData = {
       dateAdded: timestampNow(),
       name: reaction,
@@ -123,7 +126,9 @@ const Livechat = ({
       <LivechatBody enabled={isCommentsEnabled} messages={messages} />
       <LivechatFooter
         sendMessage={sendNewMessage}
-        sendReaction={isAnonymousAccess ? showActionNotAllowedAlert : debouncedSendReaction}
+        sendReaction={
+          isAnonymousAccess ? showActionNotAllowedAlert : debouncedSendReaction
+        }
         reactions={reactions}
         reactionsEnabled={isReactionsEnabled}
         commentsEnabled={isCommentsEnabled}
