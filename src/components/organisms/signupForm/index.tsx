@@ -16,6 +16,7 @@ import {
 } from 'services/graphql'
 import { saveData } from 'services/storage'
 import { useAuthStore } from 'services/stores'
+import { sendAuthReport } from 'utils/analytics'
 import {
   ConfirmEmailForm,
   CustomFieldsForm,
@@ -30,7 +31,7 @@ const SignupForm = () => {
   const { updateAccount } = useAuth()
 
   const [activeStep, setActiveStep] = useState<SignUpSteps>('Register')
-  const [emailExistsError, setemailExistsError] = useState('')
+  const [emailExistsError, setEmailExistsError] = useState('')
   const [socialSignUpError, setSocialSignUpError] = useState('')
   const [createAccountError, setCreateAccountError] = useState('')
   const [accountID, setAccountID] = useState('')
@@ -48,11 +49,11 @@ const SignupForm = () => {
     {
       onCompleted: async (result) => {
         if (result.verifyMail.exist)
-          setemailExistsError(t('signup.error.email_exists'))
+          setEmailExistsError(t('signup.error.email_exists'))
       },
       onError: (error) => {
         if (error.message !== 'exception:ACCOUNT_NOT_FOUND') {
-          setemailExistsError(`${error.message}`)
+          setEmailExistsError(`${error.message}`)
           return
         }
 
@@ -107,6 +108,7 @@ const SignupForm = () => {
               },
             },
           })
+          sendAuthReport({ email: createAccountData.email, kind: 'signup' })
         }
       },
       onError: (error) => {
@@ -189,7 +191,7 @@ const SignupForm = () => {
             error={emailExistsError}
             isLoading={verifyMailLoading || SocialLoading}
             dispatchError={() => {
-              setemailExistsError('')
+              setEmailExistsError('')
             }}
           ></RegistrationForm>
         )
