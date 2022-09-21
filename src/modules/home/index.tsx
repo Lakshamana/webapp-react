@@ -297,7 +297,9 @@ const HomePage = () => {
     })
 
     if (activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES)
-      getCategories({ variables: { ...categoriesFilter(1, true, undefined, 3) } })
+      getCategories({
+        variables: { ...categoriesFilter(1, true, undefined, 3) },
+      })
 
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
@@ -311,7 +313,9 @@ const HomePage = () => {
     if (isFeaturedPostsActive)
       getFeaturedPosts({ variables: { ...postsFilter(1) } })
     if (isFeaturedCategoriesActive)
-      getFeaturedCategories({ variables: { ...categoriesFilter(1, undefined, true) } })
+      getFeaturedCategories({
+        variables: { ...categoriesFilter(1, undefined, true) },
+      })
     if (isLiveEventsActive)
       getLiveEvents({ variables: { ...liveEventsFilter(1) } })
     // eslint-disable-next-line
@@ -353,7 +357,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => { }}
+      reachEnd={() => {}}
       items={billboardItems}
       customButtons={true}
     />
@@ -422,7 +426,8 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    if (!isAnonymousAccess && user?.id && activeChannel?.id) continueWatchingList()
+    if (!isAnonymousAccess && user?.id && activeChannel?.id)
+      continueWatchingList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, activeChannel])
 
@@ -500,9 +505,7 @@ const HomePage = () => {
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
-            <div key={key}>
-              {renderCarouselsOrderedByRemoteConfig(item)}
-            </div>
+            <div key={key}>{renderCarouselsOrderedByRemoteConfig(item)}</div>
           ))}
         {!!categoriesWithChildrenData?.rows.length && (
           <InfiniteScroll
@@ -517,12 +520,13 @@ const HomePage = () => {
             }
           >
             {categoriesWithChildrenData?.rows?.map((category: Category) => (
-              <CategoriesScroller
-                key={category.id}
-                items={category.children}
-                sectionTitle={category?.name}
-                sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
-              />
+              <Flex gridGap={5} key={category.id} flexDirection={'column'}>
+                <CategoriesScroller
+                  items={category.children}
+                  sectionTitle={category?.name}
+                  sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
+                />
+              </Flex>
             ))}
           </InfiniteScroll>
         )}
