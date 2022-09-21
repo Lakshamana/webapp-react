@@ -8,6 +8,7 @@ export const VIDEO_AUTOPLAY = '@fh:video-autoplay'
 export const VIDEO_MUTED = '@fh:video-muted'
 export const VIDEO_VOLUME = '@fh:video-volume'
 export const ANONYMOUS_AUTH = '@fh:anonymous-auth'
+export const APP_USER = '@fh:user'
 export const SHOW_NEXT_VIDEO_IN = 10
 export const MAX_CARDS_SCROLLER_RESULTS = 10
 export const MAX_PLAYLIST_RESULTS = 8
