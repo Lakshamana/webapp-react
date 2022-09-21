@@ -5,7 +5,12 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { useCommonStore, useThemeStore } from 'services/stores'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useCommonStore,
+  useThemeStore
+} from 'services/stores'
 
 import { firebaseDB } from 'config/firebase'
 import { collection, onSnapshot, query } from 'firebase/firestore'
@@ -25,9 +30,14 @@ import { FirebaseSession } from 'utils/firebaseSession'
 import { stripHTML } from 'utils/helperFunctions'
 import { StatusBadge } from './utils'
 
+import { sendPostReactionReport } from 'utils/analytics'
+import { RANDOM_ID } from 'utils/helperFunctions'
+
 const LivePostPage = () => {
   const { t } = useTranslation()
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
+  const { activeChannel } = useChannelsStore()
+  const { user } = useAuthStore()
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
@@ -87,6 +97,22 @@ const LivePostPage = () => {
       </Text>
     </Flex>
   )
+
+  const sendNewReaction = (reaction: string) => {
+    sendPostReactionReport(
+      {
+        channelId: activeChannel?.id,
+        contentTitle: livestream?.title,
+        mediaSessionId: RANDOM_ID(),
+        contentId: livestream?.id,
+        reaction,
+        collectionId: livestream?.category?.id,
+        typename: livestream?.__typename,
+        userId: user?.id,
+      },
+      'live'
+    )
+  }
 
   useEffect(() => {
     const liveUnsubscriber = onSnapshot(liveQuery, (snapshot) => {
@@ -219,6 +245,7 @@ const LivePostPage = () => {
                   isCommentsEnabled={isCommentsEnabled}
                   isReactionsEnabled={isReactionsEnabled}
                   entityId={livestream?.id}
+                  sendReaction={sendNewReaction}
                 />
               )}
             </Box>
