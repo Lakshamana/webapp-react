@@ -366,6 +366,7 @@ const HomePage = () => {
         key={scrollerName}
         items={liveEventsData?.rows}
         sectionTitle={getCarouselLabel(item)}
+        sectionUrl={`/c/${activeChannel?.slug}/lives`}
         loadMoreItems={loadMoreLiveEvents(scrollerName)}
         isLoading={loadingLiveEvents}
       />
