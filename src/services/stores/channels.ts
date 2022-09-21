@@ -1,8 +1,9 @@
-import create from 'zustand'
+import { setChannel } from 'config/analytics'
+import { APP_SINGLE_CHANNEL, CHANNEL_INFO } from 'config/constants'
 import { Channel, Kinds } from 'generated/graphql'
 import { getData, removeData, saveData } from 'services/storage'
-import { CHANNEL_INFO, APP_SINGLE_CHANNEL } from 'config/constants'
 import { ChannelStorageData } from 'types/channel'
+import create from 'zustand'
 
 type ChannelsState = {
   activeChannel: Maybe<ChannelStorageData>
@@ -23,6 +24,7 @@ export const useChannelsStore = create<ChannelsState>((set) => ({
   activeChannelKind: null,
   isSingleChannel: null,
   setActiveChannel: (activeChannel: ChannelStorageData) => {
+    setChannel(activeChannel.id, activeChannel.name)
     const storedChannelStatus = getData(APP_SINGLE_CHANNEL)
     saveData(CHANNEL_INFO, activeChannel)
     return set((state) => ({
