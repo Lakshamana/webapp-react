@@ -3,7 +3,8 @@ import { Post } from 'generated/graphql'
 export type VideosScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
-  hasMoreLink?: boolean
+  showCardMore?: number | boolean | undefined
+  isLoading?: boolean
   items?: Post[]
   loadMoreItems?: () => void
 }

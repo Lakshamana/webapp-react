@@ -138,10 +138,13 @@ export const SwiperStyled = styled(Swiper)`
     right: 0;
     height: 100%;
   }
+
+  .loading:after {
+    content: none;
+  }
 `
 export const Header: any = styled.div`
 	display: flex;
 	align-items: baseline;
 	margin-bottom: 10px;
 `
-

@@ -1,4 +1,4 @@
-import { CardsScroller } from 'components'
+import { CardsScroller, SkeletonScroller } from 'components'
 import { CategoryPostCard } from 'components/atoms'
 import { Category } from 'generated/graphql'
 import { useEffect, useState } from 'react'
@@ -20,6 +20,7 @@ const CategoriesScroller = ({
   items,
   sectionTitle,
   sectionUrl,
+  isLoading,
   loadMoreItems,
 }: CategoriesScrollerProps) => {
   const { generateImage } = useThumbor()
@@ -59,7 +60,12 @@ const CategoriesScroller = ({
 
   return (
     <ContentScroller>
-      {scrollerItems?.length && (
+      {
+        isLoading &&
+        !scrollerItems?.length &&
+        <SkeletonScroller />
+      }
+      {!!scrollerItems?.length && (
         <CardsScroller
           title={sectionTitle}
           moreUrl={sectionUrl}

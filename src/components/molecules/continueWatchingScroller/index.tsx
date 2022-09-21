@@ -1,4 +1,4 @@
-import { CardsScroller, VideoPostCard } from 'components'
+import { CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
 import { useEffect, useState } from 'react'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
@@ -17,6 +17,7 @@ const ContinueWatchingScroller = ({
   sectionTitle,
   sectionUrl,
   loadMoreItems,
+  isLoading
 }) => {
   const { generateImage } = useThumbor()
   const { activeChannel } = useChannelsStore()
@@ -56,6 +57,11 @@ const ContinueWatchingScroller = ({
 
   return (
     <ContentScroller>
+      {
+        isLoading &&
+        !scrollerItems?.length &&
+        <SkeletonScroller />
+      }
       {!!scrollerItems?.length && (
         <CardsScroller
           title={sectionTitle}
