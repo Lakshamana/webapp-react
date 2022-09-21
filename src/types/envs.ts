@@ -28,4 +28,6 @@ export type EnvProps = {
   googleTag?: string
   facebookTag?: string
   playerLogo?: PlayerLogo
+  analyticsAPI?: string
+  analyticsRTAPI?: string
 }
