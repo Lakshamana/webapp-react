@@ -399,7 +399,7 @@ const HomePage = () => {
     let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}`
     if (lastId) URL_PARAMS += `&lastId=${lastId}`
     try {
-      const { data } = await axios.get(`${URL}/posts/continue-watching${URL_PARAMS}`)
+      const { data } = await axios.get(`https://${URL}/posts/continue-watching${URL_PARAMS}`)
       if (data?.statusCode === 200) {
         const { rows, ...allRest } = data.body.data
         setContinueWatchingListData((previous) => ({
