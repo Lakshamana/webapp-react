@@ -1,7 +1,9 @@
 # @fh-webapp
- FanHero's browser-based brand-app client.
 
-## Access the project on: 
+FanHero's browser-based brand-app client.
+
+## Access the project on:
+
 - [marvel] https://marvel.fanhero.tv
 - [valetudo] https://valetudo.fanhero.tv
 - [heroflix] https://heroflix-dev.fanhero.tv
@@ -12,10 +14,12 @@
 ### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Requirements
+
 - [node](https://nodejs.org) `nvm install --lts`
 - [yarn](https://www.npmjs.com/package/yarn?activeTab=versions) `npm i -g yarn`
 
 ### [Important] Add the necessary env vars
+
 - Env vars for development are on .env.example
 
 ## Available Scripts
