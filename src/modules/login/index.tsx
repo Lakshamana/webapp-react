@@ -15,10 +15,12 @@ import {
   MUTATION_SIGNIN,
   MUTATION_SOCIAL_SIGNIN
 } from 'services/graphql'
+
 import { saveData } from 'services/storage'
 import { useAuthStore, useCommonStore } from 'services/stores'
 import { sizes } from 'styles'
 import { SocialType } from 'types/common'
+import { sendAuthReport } from 'utils/analytics'
 import { Container } from './styles'
 import { SignInSteps } from './types'
 
@@ -112,15 +114,18 @@ const LoginPage = () => {
     })
   }
 
-  const handleFormSubmit = (FormData) =>
+  const handleFormSubmit = (FormData) => {
+    const email = FormData.payload.email.toLowerCase()
     signIn({
       variables: {
         payload: {
-          email: FormData.payload.email.toLowerCase(),
+          email,
           password: FormData.payload.password,
         },
       },
     })
+    sendAuthReport({ email, kind: 'login' })
+  }
 
   const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)

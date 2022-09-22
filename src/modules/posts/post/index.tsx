@@ -29,11 +29,14 @@ import {
 } from 'services/graphql'
 import {
   useAuthStore,
+  useChannelsStore,
   useCommonStore,
   useCustomizationStore,
   useThemeStore
 } from 'services/stores'
 import { breakpoints, colors } from 'styles'
+import { sendPostReactionReport } from 'utils/analytics'
+import { RANDOM_ID } from 'utils/helperFunctions'
 import { VerifyContentKind } from '../components'
 import { PhotoPost } from '../components/photo'
 import { VideoPost } from '../components/video'
@@ -46,6 +49,8 @@ const PostPage = () => {
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const { activeChannel } = useChannelsStore()
+  const { user } = useAuthStore()
   const { slug } = useParams<{ channel: string; slug: string }>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
@@ -56,10 +61,24 @@ const PostPage = () => {
   const [playlistData, setPlaylistData] = useState<PlaylistOutput>()
   const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
   const [relatedCategories, setRelatedCategories] = useState<string[]>()
+  const [activeReaction, setActiveReaction] = useState<string>()
 
   const [activeMedia, setActiveMedia] = useState('')
 
-  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION)
+  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION, {
+    onCompleted: () => {
+      sendPostReactionReport({
+        channelId: activeChannel?.id,
+        contentTitle: postData?.title,
+        mediaSessionId: RANDOM_ID(),
+        contentId: postData?.id,
+        reaction: activeReaction,
+        collectionId: postData?.categories[0].id,
+        typename: postData?.__typename,
+        userId: user?.id,
+      }, 'post')
+    },
+  })
   const [removeMyReaction] = useMutation(MUTATION_REMOVE_MY_REACTION)
 
   const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
@@ -212,6 +231,7 @@ const PostPage = () => {
               myReactions={postData?.myReactions ?? []}
               removeMyReaction={removeMyReaction}
               addMyReaction={addMyReaction}
+              setNewReaction={(reaction) => setActiveReaction(reaction)}
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
