@@ -18,7 +18,7 @@ import { colors } from 'styles'
 import { Label } from '../../styles'
 
 import { useQuery } from '@apollo/client'
-import { AvatarBadge, Spinner } from '@chakra-ui/react'
+import { AvatarBadge, InputGroup, InputRightElement, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { CustomFieldTypesEnum } from 'generated/graphql'
 import { ImageUpload } from 'modules/account/components/imageUpload'
@@ -44,6 +44,19 @@ const ProfileInfo = ({
   const minimumAge = 13
   const { generateImage } = useThumbor()
   const [loading, setloading] = useState(false)
+  const [fieldEnable, setfieldEnable] = useState({ cpf: true, rg: true})
+
+  useEffect(() => {
+    const { cpf, rg } = user.custom_fields
+    const fieldEnableCopy = {...fieldEnable}
+    if(cpf !== null && cpf !== undefined) {
+      setfieldEnable(({...fieldEnableCopy, cpf: false}))
+    }
+    if(rg !== null && rg !== undefined) {
+      setfieldEnable({...fieldEnableCopy, rg: false})
+    }
+  }, [user])
+  
 
   const getImageUrl = (imagePath: string) => {
     const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
@@ -148,8 +161,7 @@ const ProfileInfo = ({
       const requestValues = { ...values }
 
       if (requestValues.birthday === '') {
-        requestValues.birthday = validateDate(requestValues.birthday)
-        setFieldValue('birthday', requestValues.birthday)
+        delete requestValues.birthday
       }
 
       if (
@@ -291,33 +303,47 @@ const ProfileInfo = ({
         return (
           <InputMask
             mask="999.999.999-99"
+            alwaysShowMask={false}
             value={values.custom_fields[field.name]}
             name={`custom_fields.${field.name}`}
             onChange={handleChange}
           >
             {(inputProps) => (
-              <Input
-                width="100%"
-                variant="flushed"
-                placeholder="000.000.000-00"
-                isDisabled={true}
-                {...inputProps}
-              />
+              <InputGroup>
+                <Input
+                  width="100%"
+                  variant="flushed"
+                  isDisabled={!fieldEnable.cpf}
+                  {...inputProps}
+                />
+                {
+                  !fieldEnable.cpf && (
+                    <InputRightElement children={<Icon icon='clarity:lock-line' />} />
+                  )
+                }
+              </InputGroup>
             )}
           </InputMask>
         )
       default:
         return (
-          <Input
-            {...field}
-            value={values.custom_fields[field.name]}
-            name={`custom_fields.${field.name}`}
-            placeholder={field.name}
-            key={`${index}formFieldInput${field.name}`}
-            onChange={handleChange}
-            isDisabled={field.name ==='rg'}
-            variant="flushed"
-          />
+          <InputGroup>
+            <Input
+              {...field}
+              value={values.custom_fields[field.name]}
+              name={`custom_fields.${field.name}`}
+              placeholder={field.name}
+              key={`${index}formFieldInput${field.name}`}
+              onChange={handleChange}
+              isDisabled={field.name ==='rg' && !fieldEnable.rg}
+              variant="flushed"
+            />
+            {
+              field.name ==='rg' && !fieldEnable.rg && (
+                <InputRightElement children={<Icon icon='clarity:lock-line' />} />
+              )
+            }
+          </InputGroup>
         )
     }
   }
