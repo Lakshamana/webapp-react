@@ -172,7 +172,6 @@ const heartbeat = async () => {
     await log('Application Heartbeat')
   } catch (e) {
     console.log('heartbeat failure')
-    return
   }
 }
 
