@@ -176,7 +176,6 @@ const heartbeat = async () => {
 }
 
 const getInstance = async () => {
-  console.log('instance')
   if (!_instance) {
     _instance = createAnalyticsInstance({
       appName,
