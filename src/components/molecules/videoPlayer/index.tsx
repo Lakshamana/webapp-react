@@ -5,10 +5,8 @@ import VideoJS from 'components/molecules/videoJs'
 import { configEnvs } from 'config/envs'
 import { memo, ReactElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { saveData } from 'services/storage'
-import { useAuthStore, useChannelsStore, useCustomizationStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
-import { useThemeStore } from 'services/stores/theme'
+import { PlayerEventName, useAuthStore, useChannelsStore, useCustomizationStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
 import 'videojs-mux'
@@ -43,11 +41,9 @@ const VideoPlayerComponent = ({
   const { t } = useTranslation()
   const [watchingPosition, setWatchingPosition] = useState({ showModal: false, position: 0 })
   const { account, isAnonymousAccess, user } = useAuthStore()
-  const { activeChannelConfig, organizationConfig } = useCustomizationStore()
-  const { colorMode } = useThemeStore()
-  const setEndedVideo = useVideoPlayerStore((state) => state.setEndedVideo)
+  const { activeChannelConfig } = useCustomizationStore()
+  const setEventUpdate = useVideoPlayerStore((state) => state.setEventUpdate)
   const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
-  const { generateImage } = useThumbor()
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
 
@@ -68,17 +64,6 @@ const VideoPlayerComponent = ({
     activeChannel?.id,
     organization?.web_url?.[0]
   )
-
-  const generateOrgChannelLogo = () => {
-    if (!activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO && !organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
-    const theme = colorMode?.toUpperCase()
-    const defineSource = activeChannelConfig?.IMAGES?.CHANNEL_LOGO[theme] || organizationConfig?.IMAGES?.ORGANIZATION_LOGO[theme]
-    return generateImage(
-      ThumborInstanceTypes.IMAGE,
-      defineSource,
-      { size: { height: 60 } }
-    )
-  }
 
   const sendContinueWatchingData = (currentTime: number) => {
     if (isAnonymousAccess || isLiveStream) return
@@ -119,6 +104,7 @@ const VideoPlayerComponent = ({
     }
 
     player?.on('ready', async () => {
+      setEventUpdate(PlayerEventName.EVENT_READY)
       if (setVolumeValue) player.volume(setVolumeValue)
       if (!isAnonymousAccess && !isLiveStream) {
         try {
@@ -136,17 +122,6 @@ const VideoPlayerComponent = ({
 
       player.chromecast()
 
-      // TODO: Elaborate task
-      // const Watermark = {
-      // start: 'playing',
-      // end: 'ended',
-      // attachToControlBar: true,
-      // showBackground: false,
-      // content: `<img src="${generateOrgChannelLogo()}" />`,
-      // align: 'bottom-right'
-      // }
-
-      // player.overlay({ overlays: [...(overlays || []), Watermark] })
       player.overlay({ overlays: [...(overlays || [])] })
       if (vttSrc) {
         player.vttThumbnails({
@@ -161,7 +136,7 @@ const VideoPlayerComponent = ({
       // })
     })
 
-    player?.qualityLevels().on('addqualitylevel', function (event) {
+    player?.qualityLevels().on('addqualitylevel', function (event: any) {
       const qualityLevel = event.qualityLevel
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
@@ -173,7 +148,7 @@ const VideoPlayerComponent = ({
       if (!isAnonymousAccess && !isLiveStream) {
         continueWatchingEnded()
       }
-      setEndedVideo(true)
+      setEventUpdate(PlayerEventName.EVENT_ENDED)
     })
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
@@ -196,7 +171,27 @@ const VideoPlayerComponent = ({
       }
     })
 
-    player?.on('seeked', () => sendContinueWatchingData(player.currentTime()))
+    player?.on('seeked', () => {
+      sendContinueWatchingData(player.currentTime())
+      setEventUpdate(PlayerEventName.EVENT_SEEKED)
+    })
+    player?.on('error', () => setEventUpdate(PlayerEventName.EVENT_ERROR))
+    player?.on('play', () => setEventUpdate(PlayerEventName.EVENT_PLAY))
+    player?.on('pause', () => setEventUpdate(PlayerEventName.EVENT_PAUSE))
+    player?.on('progress', () => {
+      const playerDuration = player?.duration()
+      const playerCurrentTime = player?.currentTime()
+      const playerBuffered = player?.buffered()
+      if (playerDuration > 0) {
+        for (let i = 0; i < playerBuffered.length; i++) {
+          if (playerBuffered.start(playerBuffered.length - 1 - i) < playerCurrentTime) {
+            const buffer = (playerBuffered.end(playerBuffered.length - 1 - i) * 100) / playerDuration
+            setEventUpdate(PlayerEventName.EVENT_BUFFER, buffer)
+            break
+          }
+        }
+      }
+    })
   }
 
   useEffect(() => {
