@@ -2,23 +2,23 @@ import { Box, Collapse } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
-import { useVideoPlayerStore } from 'services/stores'
+import { PlayerEventName, useVideoPlayerStore } from 'services/stores'
 
 const AlertNextVideo = () => {
   const history = useHistory()
   const { t } = useTranslation()
-  const { endedVideo, hasAutoplay, remainingTime, isLastVideo, nextVideo, setEndedVideo, setRemainingTime } = useVideoPlayerStore()
+  const { eventEnded, hasAutoplay, remainingTime, isLastVideo, nextVideo, setEventUpdate, setRemainingTime } = useVideoPlayerStore()
   const setIsLastVideo = useVideoPlayerStore(state => state.setIsLastVideo)
 
   useEffect(() => {
     if (isLastVideo) return
-    if (endedVideo && hasAutoplay) {
-      setEndedVideo(false)
+    if (eventEnded && hasAutoplay) {
+      setEventUpdate(PlayerEventName.EVENT_ENDED, false)
       setIsLastVideo(true)
       history.push(nextVideo)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [endedVideo, hasAutoplay])
+  }, [eventEnded, hasAutoplay])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setRemainingTime(false), [])
