@@ -75,11 +75,9 @@ const Skeleton = ({ children, numberOfCards, kind, ...props }: Props) => {
                   my={2}
                   key={`loading-${RANDOM_ID()}`}
                   startColor={colors.skeleton.initial[colorMode]}
-                  fadeDuration={0.8}
-                  speed={2}
+                  endColor={colors.skeleton.end[colorMode]}
                   height="120px"
                   borderRadius={'4px'}
-                  endColor={colors.skeleton.end[colorMode]}
                   {...props}
                 >
                   <FeedContent>{}</FeedContent>
