@@ -67,8 +67,7 @@ const VideoPlayerComponent = ({
 
   const sendContinueWatchingData = (currentTime: number) => {
     if (isAnonymousAccess || isLiveStream) return
-    const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
-    axios.post(`${ANALYTICS_API}/watching${URL_PARAMS}`, {
+    axios.post(`${ANALYTICS_API}/watching`, {
       orgId: organization?.id,
       channelId: activeChannel?.id,
       videoDuration: video_duration,
@@ -91,9 +90,9 @@ const VideoPlayerComponent = ({
     player?.on('ready', async () => {
       setEventUpdate(PlayerEventName.EVENT_READY)
       if (setVolumeValue) player.volume(setVolumeValue)
-      if (!isAnonymousAccess && !isLiveStream) {
+      if (!isAnonymousAccess && !isLiveStream && activeChannel?.id) {
         try {
-          const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+          const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
           const lastPosition = await axios.get(`${ANALYTICS_API}/watching${URL_PARAMS}`)
           const position = lastPosition?.data?.position
           if (position && position !== 0) return setWatchingPosition({ showModal: true, position })
@@ -137,7 +136,7 @@ const VideoPlayerComponent = ({
     })
     player?.on('ended', () => {
       async function continueWatchingEnded() {
-        const URL_PARAMS = `?userId=${user?.id}&videoId=${videoId}`
+        const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}&videoId=${videoId}`
         await axios.delete(`${ANALYTICS_API}/watching${URL_PARAMS}`)
       }
       if (!isAnonymousAccess && !isLiveStream) {
