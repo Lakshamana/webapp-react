@@ -5,10 +5,14 @@ export const QUERY_PLAYLIST = gql`
     playlist(id: $id) {
       id
       title
-      posts (postsFilters: $postsFilters) {
-        total
+      posts(postsFilters: $postsFilters) {
         hasNextPage
+        hasPreviousPage
+        isFirstPage
+        isLastPage
         page
+        pageCount
+        total
         rows {
           id
           access
@@ -28,11 +32,6 @@ export const QUERY_PLAYLIST = gql`
               duration
               thumbnailPath
               baseUrl
-            }
-            ... on MediaAudio {
-              # id
-              duration
-              mp3Path
             }
           }
           type

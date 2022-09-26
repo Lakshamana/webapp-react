@@ -24,6 +24,12 @@ export type Scalars = {
   VoidScalar: any;
 };
 
+export enum AccessKinds {
+  Available = 'AVAILABLE',
+  Geolocked = 'GEOLOCKED',
+  Redacted = 'REDACTED'
+}
+
 export type AccessToken = {
   __typename?: 'AccessToken';
   accessToken: Scalars['String'];
@@ -205,6 +211,7 @@ export type AudioInput = {
 
 export type AvailableChannel = {
   __typename?: 'AvailableChannel';
+  access: AccessKinds;
   banner?: Maybe<Scalars['JSON']>;
   customization?: Maybe<ChannelCustomizationOutput>;
   deleted: Scalars['Boolean'];
@@ -1303,6 +1310,7 @@ export type GeofenceInput = {
 
 export type GeolockedChannel = {
   __typename?: 'GeolockedChannel';
+  access: AccessKinds;
   banner?: Maybe<Scalars['JSON']>;
   customization?: Maybe<ChannelCustomizationOutput>;
   deleted: Scalars['Boolean'];
@@ -3036,6 +3044,7 @@ export enum OrderStatus {
 
 export type Organization = {
   __typename?: 'Organization';
+  access: AccessKinds;
   audioCdnBaseUrl?: Maybe<Scalars['String']>;
   avatarCdnBaseUrl?: Maybe<Scalars['String']>;
   bundle_id?: Maybe<Scalars['String']>;
@@ -5490,10 +5499,11 @@ export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizati
 
 export type GetPlaylistQueryVariables = Exact<{
   id: Scalars['ID'];
+  postsFilters: PostFilter;
 }>;
 
 
-export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: { __typename?: 'PaginatedPostsOutput', total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } } };
+export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } } };
 
 export type GetPostQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -8501,11 +8511,17 @@ export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrg
 export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
 export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
 export const GetPlaylistDocument = gql`
-    query GetPlaylist($id: ID!) {
+    query GetPlaylist($id: ID!, $postsFilters: PostFilter!) {
   playlist(id: $id) {
     id
     title
-    posts {
+    posts(postsFilters: $postsFilters) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageCount
       total
       rows {
         id
@@ -8526,10 +8542,6 @@ export const GetPlaylistDocument = gql`
             duration
             thumbnailPath
             baseUrl
-          }
-          ... on MediaAudio {
-            duration
-            mp3Path
           }
         }
         type
@@ -8559,6 +8571,7 @@ export type GetPlaylistComponentProps = Omit<ApolloReactComponents.QueryComponen
  * const { data, loading, error } = useGetPlaylistQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      postsFilters: // value for 'postsFilters'
  *   },
  * });
  */
