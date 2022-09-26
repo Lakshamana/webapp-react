@@ -25,7 +25,7 @@ const TagsScroller = ({
     const postItems = tagData?.relatedPosts.rows.filter(
       (item) => item.type === PostType.Video || item.type === PostType.OnDemand
     )
-    const categoryItems = tagData?.relatedCategories
+    const categoryItems = tagData?.relatedCategories.rows
     const myArr = postItems
       .concat(categoryItems)
       .sort(
