@@ -15,13 +15,18 @@ import { useTranslation } from 'react-i18next'
 import {
   BillboardScroller,
   CategoriesScroller,
-  Container, ContinueWatchingScroller, EmptyState,
+  Container,
+  ContinueWatchingScroller,
+  EmptyState,
   LivestreamScroller,
   Skeleton,
   TagsScroller,
   VideosScroller
 } from 'components'
-import { DEFAULT_POLLING_INTERVAL, MAXIMUM_SCROLLER_REQUESTS } from 'config/constants'
+import {
+  DEFAULT_POLLING_INTERVAL,
+  MAXIMUM_SCROLLER_REQUESTS
+} from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Client } from 'services/api'
 import {
@@ -69,7 +74,8 @@ const HomePage = () => {
     useState<PaginatedCategoriesOutput>()
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<PaginatedCategoriesOutput>()
-  const [continueWatchingListData, setContinueWatchingListData] = useState<any>()
+  const [continueWatchingListData, setContinueWatchingListData] =
+    useState<any>()
   const [isCWatchingLoading, setIsCWatchingLoading] = useState<boolean>(false)
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
@@ -100,7 +106,10 @@ const HomePage = () => {
       ? fetchControl[scrollerName] + 1
       : 1
     if (updateRequest >= MAXIMUM_SCROLLER_REQUESTS) updateRequest = true
-    setFetchControl((previous => ({ ...previous, [scrollerName]: updateRequest })))
+    setFetchControl((previous) => ({
+      ...previous,
+      [scrollerName]: updateRequest,
+    }))
   }
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
@@ -110,7 +119,7 @@ const HomePage = () => {
         const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
-        setLiveEventsData(previous => appendNewData(previous, liveEvents))
+        setLiveEventsData((previous) => appendNewData(previous, liveEvents))
       },
       fetchPolicy: 'cache-and-network',
       pollInterval: DEFAULT_POLLING_INTERVAL,
@@ -122,7 +131,7 @@ const HomePage = () => {
     {
       onCompleted: (result) => {
         const posts = isAnonymousAllowed ? result.publicPosts : result.posts
-        setFeaturedPostsData(previous => appendNewData(previous, posts))
+        setFeaturedPostsData((previous) => appendNewData(previous, posts))
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -138,7 +147,9 @@ const HomePage = () => {
           const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
-          setFeaturedCategoriesData(previous => appendNewData(previous, categories))
+          setFeaturedCategoriesData((previous) =>
+            appendNewData(previous, categories)
+          )
         },
         fetchPolicy: 'cache-and-network',
       }
@@ -154,7 +165,9 @@ const HomePage = () => {
           const categories = isAnonymousAllowed
             ? result.publicCategories
             : result.categories
-          setCategoriesWithChildrenData(previous => appendNewData(previous, categories))
+          setCategoriesWithChildrenData((previous) =>
+            appendNewData(previous, categories)
+          )
         },
         fetchPolicy: 'cache-and-network',
       }
@@ -322,7 +335,7 @@ const HomePage = () => {
   }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
 
   //eslint-disable-next-line
-  useEffect(() => tagsIds?.length ? loadTags() : setTagsData({}), [tagsIds])
+  useEffect(() => (tagsIds?.length ? loadTags() : setTagsData({})), [tagsIds])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path, {
@@ -393,7 +406,7 @@ const HomePage = () => {
   }
 
   const renderFeaturedCategoriesScroller = (item: CarouselFlags) => {
-    const scrollerName = "featured-categories"
+    const scrollerName = 'featured-categories'
     return (
       <CategoriesScroller
         key={scrollerName}
@@ -412,7 +425,9 @@ const HomePage = () => {
     if (lastId) URL_PARAMS += `&lastId=${lastId}`
     setIsCWatchingLoading(true)
     try {
-      const { data } = await axios.get(`https://${URL}/posts/continue-watching${URL_PARAMS}`)
+      const { data } = await axios.get(
+        `https://${URL}/posts/continue-watching${URL_PARAMS}`
+      )
       if (data?.statusCode === 200) {
         const { rows, ...allRest } = data.body.data
         setContinueWatchingListData((previous) => ({
@@ -421,8 +436,10 @@ const HomePage = () => {
           rows: [...(previous?.rows || []), ...rows],
         }))
       }
-    } catch (error) { }
-    finally { setIsCWatchingLoading(false) }
+    } catch (error) {
+    } finally {
+      setIsCWatchingLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -519,15 +536,16 @@ const HomePage = () => {
               </Box>
             }
           >
-            {categoriesWithChildrenData?.rows?.map((category: Category) => (
-              <Flex gridGap={5} key={category.id} flexDirection={'column'}>
+            <Flex gridGap={5} flexDirection={'column'}>
+              {categoriesWithChildrenData?.rows?.map((category: Category) => (
                 <CategoriesScroller
+                  key={category.id}
                   items={category.children}
                   sectionTitle={category?.name}
                   sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
                 />
-              </Flex>
-            ))}
+              ))}
+            </Flex>
           </InfiniteScroll>
         )}
 
