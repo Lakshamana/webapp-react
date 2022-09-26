@@ -88,21 +88,6 @@ const VideoPlayerComponent = ({
       player?.registerPlugin('vttThumbnails', videoJsVttThumbnails)
     })
 
-    const fanheroButton = player?.controlBar.addChild('button')
-    fanheroButton.controlText(configEnvs?.playerLogo?.altText || 'Visit fanhero site');
-    player.controlBar
-      .el()
-      .insertBefore(
-        fanheroButton.el(),
-        player.controlBar.getChild('playToggle').el()
-      );
-    const buttonDom = fanheroButton.el();
-    buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em; margin-left: 1em;')
-    buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'} />`;
-    buttonDom.onclick = function () {
-      window.open(`${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`, '_blank')
-    }
-
     player?.on('ready', async () => {
       setEventUpdate(PlayerEventName.EVENT_READY)
       if (setVolumeValue) player.volume(setVolumeValue)
@@ -121,6 +106,16 @@ const VideoPlayerComponent = ({
       }
 
       player.chromecast()
+
+      const fanheroButton = player?.controlBar.addChild('button')
+      fanheroButton.controlText(configEnvs?.playerLogo?.altText || 'Visit fanhero site');
+      player.controlBar.el(fanheroButton.el());
+      const buttonDom = fanheroButton.el();
+      buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em; margin-left: 1em;')
+      buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'} />`;
+      buttonDom.onclick = function () {
+        window.open(`${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`, '_blank')
+      }
 
       player.overlay({ overlays: [...(overlays || [])] })
       if (vttSrc) {
