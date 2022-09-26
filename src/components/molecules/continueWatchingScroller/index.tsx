@@ -26,12 +26,8 @@ const ContinueWatchingScroller = ({
   const getImageUrl = (item) => {
     const imageOptions: ThumborParams = { size: { height: 400 } }
     if (isEntityBlocked(item)) imageOptions.blur = 20
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      item?.thumbnail?.imgPath || '',
-      imageOptions
-    )
-    return image
+    const path = item.thumbnail?.imgPath || ''
+    return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
   }
 
   useEffect(() => {
@@ -67,6 +63,7 @@ const ContinueWatchingScroller = ({
           title={sectionTitle}
           moreUrl={sectionUrl}
           reachEnd={loadMoreItems}
+          {...{ isLoading }}
         >
           {scrollerItems?.map((item: VideoPostCardProps) => (
             <SwiperSlide key={`slide-${item.id}-featured`}>
