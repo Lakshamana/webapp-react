@@ -67,7 +67,7 @@ const Comments = ({ ...props }: Post) => {
           mediaSessionId: RANDOM_ID(),
           typename: props.__typename || '',
           userId: user?.id || '',
-          collectionId: props.categories[0].id,
+          collectionId: props.categories?.length ? props.categories[0].id : '',
           comment: 1,
         })
       },

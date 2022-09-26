@@ -59,7 +59,6 @@ export const QUERY_CHANNEL = gql`
       ... on GeolockedChannel {
         id
         name
-        thumbnail
         slug
         kind
         __typename
