@@ -18,9 +18,7 @@ import {
   Container,
   ContinueWatchingScroller,
   EmptyState,
-  LivestreamScroller,
-  Skeleton,
-  TagsScroller,
+  LivestreamScroller, TagsScroller,
   VideosScroller
 } from 'components'
 import {
@@ -47,7 +45,7 @@ import {
   useCustomizationStore,
   useThemeStore
 } from 'services/stores'
-import { colors, sizes } from 'styles'
+import { colors } from 'styles'
 import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
 import { convertToValidColor } from 'utils/helperFunctions'
@@ -547,12 +545,6 @@ const HomePage = () => {
               ))}
             </Flex>
           </InfiniteScroll>
-        )}
-
-        {isLoading && !hasResults && (
-          <Box p={sizes.paddingSm} width="100%">
-            <Skeleton kind="cards" numberOfCards={4} />
-          </Box>
         )}
         {isEmpty && <EmptyState />}
       </Flex>
