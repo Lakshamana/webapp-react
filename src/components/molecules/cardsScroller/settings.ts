@@ -26,11 +26,11 @@ export const SWIPPER_PARAMS: SwiperOptions = {
       slidesPerView: 4.3,
       slidesPerGroup: 4,
     },
-    768: {
+    832: {
       slidesPerView: 3.3,
       slidesPerGroup: 3,
     },
-    425: {
+    639: {
       slidesPerView: 2.2,
       slidesPerGroup: 2,
       spaceBetween: 5,
