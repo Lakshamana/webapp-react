@@ -24,8 +24,7 @@ import {
   VideosScroller
 } from 'components'
 import {
-  DEFAULT_POLLING_INTERVAL,
-  MAXIMUM_SCROLLER_REQUESTS
+  DEFAULT_POLLING_INTERVAL, MAXIMUM_SCROLLER_REQUESTS, MAX_CARDS_SCROLLER_RESULTS
 } from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Client } from 'services/api'
@@ -370,7 +369,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => {}}
+      reachEnd={() => { }}
       items={billboardItems}
       customButtons={true}
     />
@@ -419,10 +418,10 @@ const HomePage = () => {
     )
   }
 
-  const continueWatchingList = async (lastId?: String) => {
+  const continueWatchingList = async (lastVideoId?: String) => {
     const URL = process.env.REACT_APP_API_ENDPOINT
-    let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}`
-    if (lastId) URL_PARAMS += `&lastId=${lastId}`
+    let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}&limit=${MAX_CARDS_SCROLLER_RESULTS}`
+    if (lastVideoId) URL_PARAMS += `&lastVideoId=${lastVideoId}`
     setIsCWatchingLoading(true)
     try {
       const { data } = await axios.get(
@@ -450,7 +449,7 @@ const HomePage = () => {
 
   const loadMoreContinueWatchingPosts = () => {
     if (continueWatchingListData?.hasNextPage) {
-      continueWatchingList(continueWatchingListData?.lastId)
+      continueWatchingList(continueWatchingListData?.lastVideoId)
     }
   }
 
