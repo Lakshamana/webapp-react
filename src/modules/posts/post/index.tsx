@@ -11,6 +11,7 @@ import {
 } from 'components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 
+import { VerifyContentKind } from 'components/organisms'
 import {
   PaginatedPostsOutput,
   PlaylistOutput,
@@ -37,7 +38,6 @@ import {
 import { breakpoints, colors } from 'styles'
 import { sendPostReactionReport } from 'utils/analytics'
 import { RANDOM_ID } from 'utils/helperFunctions'
-import { VerifyContentKind } from '../components'
 import { PhotoPost } from '../components/photo'
 import { VideoPost } from '../components/video'
 import { PostComments, PostDetails, Subtitle, Title } from './style'
