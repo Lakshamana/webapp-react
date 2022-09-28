@@ -18,11 +18,14 @@ import {
   Container,
   ContinueWatchingScroller,
   EmptyState,
-  LivestreamScroller, TagsScroller,
+  LivestreamScroller,
+  TagsScroller,
   VideosScroller
 } from 'components'
 import {
-  DEFAULT_POLLING_INTERVAL, MAXIMUM_SCROLLER_REQUESTS, MAX_CARDS_SCROLLER_RESULTS
+  DEFAULT_POLLING_INTERVAL,
+  MAXIMUM_SCROLLER_REQUESTS,
+  MAX_CARDS_SCROLLER_RESULTS
 } from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Client } from 'services/api'
@@ -367,7 +370,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => { }}
+      reachEnd={() => {}}
       items={billboardItems}
       customButtons={true}
     />
@@ -514,8 +517,9 @@ const HomePage = () => {
       <Flex
         gridGap={5}
         flexDirection={'column'}
-        mt={billboardItems ? 0 : 7}
+        mt={billboardItems && !isLoading ? -8 : 7}
         w={'100vw'}
+        zIndex={9999}
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
