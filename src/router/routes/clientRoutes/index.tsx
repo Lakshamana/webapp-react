@@ -10,14 +10,13 @@ import {
   CheckoutCustomField,
   CheckoutLogin,
   FeedPage,
-  HomePage,
-  LivePostPage,
-  Livestreams,
-  LoginPage,
+  HomePage, LiveEvent, LiveEvents, LoginPage,
   MyListPage,
   NotAuthorized,
   NotFound,
-  Password, PostPage, RecoverPasswordPage,
+  Password,
+  PostPage,
+  RecoverPasswordPage,
   SearchPage,
   SignupPage,
   TagPage
@@ -103,13 +102,13 @@ const ClientRoutes = () => {
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/lives"
-        component={Livestreams}
+        component={LiveEvents}
         template={MainLayout}
       />
       <ClientRoute
         isAccesible={signed}
         path="/c/:channel/live/:slug"
-        component={LivePostPage}
+        component={LiveEvent}
         template={MainLayout}
       />
       <ClientRoute
