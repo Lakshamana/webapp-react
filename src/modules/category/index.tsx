@@ -10,6 +10,7 @@ import {
   Skeleton,
   Text
 } from 'components'
+import { VerifyContentKind } from 'components/organisms'
 import { PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,7 +24,6 @@ import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useThemeStore } from 'services/stores'
 import { colors, sizes } from 'styles'
 import { HeroBannerProps } from 'types/common'
-import { VerifyCategoryKind } from './components'
 
 const CategoryPage = () => {
   const { t } = useTranslation()
@@ -111,8 +111,9 @@ const CategoryPage = () => {
 
   if (isVerifyingAccessPermission)
     return (
-      <VerifyCategoryKind
-        categorySlug={slug}
+      <VerifyContentKind
+        contentSlug={slug}
+        contentType={'category'}
         accessGranted={() => {
           setIsVerifyingAccessPermission(false)
           getCategory()
@@ -165,7 +166,7 @@ const CategoryPage = () => {
           )}
         </Flex>
       </HeroBanner>
-      <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'}>
+      <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'} mt={-20} zIndex={9999}>
         {!!categoryData?.category?.children?.length && (
           <CategoriesGrid
             sectionTitle={t('page.category.categories')}

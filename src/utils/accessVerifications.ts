@@ -17,6 +17,7 @@ type EntityType =
   | SearchCategory
   | SearchPost
   | SearchLiveEvent
+  | Channel
 
 export const isEntityOnPaywall = (entity: EntityType) => {
   return entity.access !== AccessEnum.AVAILABLE && entity.kind === Kinds.Paywall

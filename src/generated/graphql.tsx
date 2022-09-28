@@ -216,7 +216,7 @@ export type AvailableChannel = {
   customization?: Maybe<ChannelCustomizationOutput>;
   deleted: Scalars['Boolean'];
   description: Scalars['String'];
-  entitlements?: Maybe<Scalars['JSON']>;
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
@@ -318,14 +318,16 @@ export type CancelNotificationOutput = {
 
 export type Category = {
   __typename?: 'Category';
-  access?: Maybe<Scalars['String']>;
+  access?: Maybe<AccessKinds>;
   channel: Scalars['ID'];
   children: Array<Category>;
   createdAt: Scalars['DateTime'];
   customization?: Maybe<CategoryCustomization>;
   description?: Maybe<Scalars['String']>;
+  entitlements: Array<Scalars['JSONObject']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
   id: Scalars['ID'];
   isChild?: Maybe<Scalars['Boolean']>;
   isDeleted?: Maybe<Scalars['Boolean']>;
@@ -383,9 +385,10 @@ export type CategoryInput = {
   access?: Maybe<Scalars['String']>;
   customization?: Maybe<CategoryCustomizationInput>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['JSONObject']>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   isChild?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
   name: Scalars['String'];
@@ -671,7 +674,7 @@ export type CreateAudioPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -702,8 +705,9 @@ export type CreateBillboardInput = {
 export type CreateChannelInput = {
   customization?: Maybe<ChannelCustomizationInput>;
   description: Scalars['String'];
-  entitlements?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['ID']>>;
   geofence?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind?: Maybe<Kinds>;
   menu?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
@@ -850,7 +854,9 @@ export type CreateNestedPermissionsInput = {
 };
 
 export type CreateOrganizationInput = {
+  entitlements?: Maybe<Array<Scalars['String']>>;
   favicon?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind: Kinds;
   logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
@@ -869,7 +875,7 @@ export type CreatePhotoPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -929,7 +935,7 @@ export type CreateTextPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -961,7 +967,7 @@ export type CreateVideoPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -1315,7 +1321,7 @@ export type GeolockedChannel = {
   customization?: Maybe<ChannelCustomizationOutput>;
   deleted: Scalars['Boolean'];
   description: Scalars['String'];
-  entitlements?: Maybe<Scalars['JSON']>;
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
@@ -1562,7 +1568,7 @@ export type ListNotificationInput = {
 
 export type LiveEvent = {
   __typename?: 'LiveEvent';
-  access?: Maybe<Scalars['String']>;
+  access?: Maybe<AccessKinds>;
   backupPublishEndpoint?: Maybe<Scalars['String']>;
   backupStreamName?: Maybe<Scalars['String']>;
   category?: Maybe<Category>;
@@ -3051,6 +3057,8 @@ export type Organization = {
   current_version?: Maybe<Scalars['String']>;
   customization?: Maybe<Scalars['JSON']>;
   email_settings?: Maybe<Scalars['JSON']>;
+  entitlements: Array<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   identifier?: Maybe<Scalars['String']>;
   imageCdnBaseUrl?: Maybe<Scalars['String']>;
@@ -3399,6 +3407,7 @@ export type PinnedChannelOutput = {
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
@@ -4629,7 +4638,7 @@ export type UpdateAudioPost = {
   access?: Maybe<PostAccess>;
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -4663,7 +4672,7 @@ export type UpdateCategoryInput = {
   access?: Maybe<Scalars['String']>;
   customization?: Maybe<CategoryCustomizationInput>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['JSONObject']>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
   isChild?: Maybe<Scalars['Boolean']>;
@@ -4686,8 +4695,9 @@ export type UpdateCategorySortingItem = {
 export type UpdateChannelInput = {
   customization?: Maybe<ChannelCustomizationInput>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['ID']>>;
   geofence?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind?: Maybe<Kinds>;
   menu?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
@@ -4892,7 +4902,9 @@ export type UpdateOrderCustomFields = {
 };
 
 export type UpdateOrganizationInput = {
+  entitlements?: Maybe<Array<Scalars['String']>>;
   favicon?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
@@ -4922,7 +4934,7 @@ export type UpdatePhotoPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -5010,7 +5022,7 @@ export type UpdateTextPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -5041,7 +5053,7 @@ export type UpdateVideoPost = {
   allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Array<Scalars['ID']>>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
@@ -5354,28 +5366,28 @@ export type GetCategoriesQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<AccessKinds>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetPublicCategoriesQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<AccessKinds>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetCategoriesCardsQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetPublicCategoriesCardsQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetCategoryQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5383,21 +5395,21 @@ export type GetCategoryQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
 
 export type GetCategoryKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, kind: Kinds, name: string } };
+export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string } };
 
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, access: AccessKinds, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
 
 export type PublicChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
@@ -5411,7 +5423,7 @@ export type ChannelQueryVariables = Exact<{
 }>;
 
 
-export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
+export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
 
 export type PublicChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5439,28 +5451,28 @@ export type GetLiveEventQueryVariables = Exact<{
 }>;
 
 
-export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
+export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
 
 export type GetLiveEventKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetLiveEventKindQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, title: string, access?: Maybe<string>, kind: Kinds, entitlements: Array<any> } };
+export type GetLiveEventKindQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, title: string, access?: Maybe<AccessKinds>, kind: Kinds, entitlements: Array<any> } };
 
 export type GetLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
 }>;
 
 
-export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 export type GetPublicLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
 }>;
 
 
-export type GetPublicLiveEventsQuery = { __typename?: 'Query', publicLiveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetPublicLiveEventsQuery = { __typename?: 'Query', publicLiveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 export type MenusQueryVariables = Exact<{
   filter?: Maybe<MenuFilter>;
@@ -7703,6 +7715,7 @@ export const ChannelsDocument = gql`
   channels(filter: $filter) {
     ... on AvailableChannel {
       id
+      access
       kind
       description
       geofence
@@ -7812,6 +7825,7 @@ export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
     ... on AvailableChannel {
+      access
       id
       kind
       description

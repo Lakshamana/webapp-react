@@ -39,7 +39,7 @@ import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 
 import { onDemandFilter, upcomingFilter } from './utils'
 
-const Livestreams = () => {
+const LiveEvents = () => {
   const { t, i18n } = useTranslation()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
@@ -297,4 +297,4 @@ const Livestreams = () => {
     </Container>
   )
 }
-export { Livestreams }
+export { LiveEvents }
