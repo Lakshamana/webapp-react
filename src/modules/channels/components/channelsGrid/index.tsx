@@ -6,7 +6,7 @@ import { Props } from './types'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 
 import { useCustomizationStore } from 'services/stores'
-import { isEntityPrivate } from 'utils/accessVerifications'
+import { isEntityBlocked, isEntityGeolocked } from 'utils/accessVerifications'
 
 const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const { generateImage } = useThumbor()
@@ -19,7 +19,7 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
       },
     }
 
-    if (isEntityPrivate(channel)) {
+    if (isEntityBlocked(channel)) {
       imageOptions.blur = 20
     }
 
@@ -41,9 +41,8 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
             description={channel.description}
             key={channel.id}
             onClick={(value) => channelSelected(value)}
-            isExclusive={isEntityPrivate(channel)}
-            //TODO: waiitng for API
-            isGeolocked={false}
+            isExclusive={isEntityBlocked(channel)}
+            isGeolocked={isEntityGeolocked(channel)}
             image={channelThumbnail}
           />
         )

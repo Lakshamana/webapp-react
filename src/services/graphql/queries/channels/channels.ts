@@ -5,6 +5,7 @@ export const QUERY_CHANNELS = gql`
     channels(filter: $filter) {
       ... on AvailableChannel {
         id
+        access
         kind
         description
         geofence
@@ -48,6 +49,7 @@ export const QUERY_CHANNEL = gql`
   query Channel($slug: String) {
     channel(slug: $slug) {
       ... on AvailableChannel {
+        access
         id
         kind
         description
