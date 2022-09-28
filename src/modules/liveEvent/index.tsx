@@ -17,13 +17,12 @@ import { collection, onSnapshot, query } from 'firebase/firestore'
 
 import { Badge, Container, Countdown, Skeleton } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
-import { Livechat } from 'components/organisms'
-import { VerifyContentKind } from '../components'
+import { Livechat, VerifyContentKind } from 'components/organisms'
 
 import { breakpoints, colors, sizes } from 'styles'
 import { CustomBox, Live, LiveDetails, Subtitle, Title } from './style'
 
-import { LiveEvent, PostType, Status } from 'generated/graphql'
+import { LiveEvent as LiveEventType, PostType, Status } from 'generated/graphql'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
 import { LivestreamBadge } from 'types/livestreams'
 import { FirebaseSession } from 'utils/firebaseSession'
@@ -33,7 +32,7 @@ import { StatusBadge } from './utils'
 import { sendPostReactionReport } from 'utils/analytics'
 import { RANDOM_ID } from 'utils/helperFunctions'
 
-const LivePostPage = () => {
+const LiveEvent = () => {
   const { t } = useTranslation()
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
   const { activeChannel } = useChannelsStore()
@@ -52,7 +51,7 @@ const LivePostPage = () => {
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
 
   const { slug } = useParams<{ slug: string }>()
-  const [livestream, setLivestream] = useState<LiveEvent>()
+  const [livestream, setLivestream] = useState<LiveEventType>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const [getLiveEvent, { loading }] = useLazyQuery(QUERY_LIVE_EVENT, {
@@ -168,7 +167,7 @@ const LivePostPage = () => {
     return (
       <VerifyContentKind
         contentSlug={slug}
-        contentType={'live'}
+        contentType={'liveEvent'}
         accessGranted={() => setIsVerifyingAccessPermission(false)}
       />
     )
@@ -266,4 +265,4 @@ const LivePostPage = () => {
   )
 }
 
-export { LivePostPage }
+export { LiveEvent }
