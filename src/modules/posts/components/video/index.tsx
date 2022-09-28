@@ -4,7 +4,7 @@ import { Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { getData } from 'services/storage'
 import { buildUrlFromPath } from 'utils/helperFunctions'
-import { AlertNextVideo } from './AlertNextVideo'
+import { AlertNextVideo } from './components/AlertNextVideo'
 import { Video } from './style'
 
 const VideoPost = ({ ...postData }: Post) => {
