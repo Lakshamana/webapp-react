@@ -55,6 +55,7 @@ const VideoPost = ({ ...postData }: Post) => {
         categoryId={getCategoryId(postData)}
         post_type={postData?.type}
         video_duration={postData?.media?.['duration']}
+        tracks={getTracks()}
       />
       <AlertNextVideo />
     </Video>
