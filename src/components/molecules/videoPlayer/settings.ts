@@ -37,6 +37,7 @@ export const getDefaultConfigs = (
     },
     nativeAudioTracks: false,
     nativeVideoTracks: false,
+    nativeTextTracks: false,
     useBandwidthFromLocalStorage: true
   },
   playbackRates: [0.5, 1, 1.5, 2],
