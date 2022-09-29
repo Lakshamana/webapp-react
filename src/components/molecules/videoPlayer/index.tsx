@@ -35,7 +35,8 @@ const VideoPlayerComponent = ({
   videoId,
   categoryId,
   post_type,
-  video_duration
+  video_duration,
+  tracks,
 }: VideoPlayerProps): ReactElement => {
   const playerRef: any = useRef(null)
   const { t } = useTranslation()
@@ -230,6 +231,7 @@ const VideoPlayerComponent = ({
           ...(isLiveStream ? { playbackRates: undefined } : {}),
           ...(isLiveStream ? { liveui: true } : {}),
           ...options,
+          tracks,
         }}
         islivestream
         skin={activeChannelConfig?.PLAYER?.SKIN}

@@ -19,6 +19,19 @@ const VideoPost = ({ ...postData }: Post) => {
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
   }
 
+  const getTracks = () => {
+    const { media } = postData || {}
+    if(media?.['subtitles']) {
+      return media?.['subtitles'].map((item)=>({
+        src: `${media.baseUrl}/${item.vttPath}`,
+        kind: 'captions',
+        srclang: item.locale,
+        label: item.label
+      }))
+    }
+    return []
+  }
+
   const getCategoryId = (post: Post) => {
     if (post && post.categories) {
       return post.categories.map((el) => el.id).join(',')
@@ -42,6 +55,7 @@ const VideoPost = ({ ...postData }: Post) => {
         categoryId={getCategoryId(postData)}
         post_type={postData?.type}
         video_duration={postData?.media?.['duration']}
+        tracks={getTracks()}
       />
       <AlertNextVideo />
     </Video>
