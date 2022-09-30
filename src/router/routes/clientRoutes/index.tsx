@@ -10,7 +10,10 @@ import {
   CheckoutCustomField,
   CheckoutLogin,
   FeedPage,
-  HomePage, LiveEvent, LiveEvents, LoginPage,
+  HomePage,
+  LiveEvent,
+  LiveEvents,
+  LoginPage,
   MyListPage,
   NotAuthorized,
   NotFound,
@@ -25,6 +28,7 @@ import { ClientRoute } from '../../components'
 
 import { EmptyLayout, LoginLayout, MainLayout } from 'components'
 import { useAuth } from 'contexts/auth'
+
 
 const ClientRoutes = () => {
   const { signed } = useAuth()
@@ -127,7 +131,8 @@ const ClientRoutes = () => {
         isAccesible={signed}
         path="/channels"
         component={ChannelsPage}
-        template={EmptyLayout}
+        template={MainLayout}
+        templateProps={{ emptyHeader: true }}
       />
       <ClientRoute
         isAccesible={true}
