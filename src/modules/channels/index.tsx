@@ -6,7 +6,12 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { QUERY_CHANNELS, QUERY_PUBLIC_CHANNELS } from 'services/graphql'
-import { useAuthStore, useChannelsStore, useCommonStore, useOrganizationStore } from 'services/stores'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useCommonStore,
+  useOrganizationStore
+} from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 import { ChannelsGrid } from './components'
@@ -16,7 +21,12 @@ const ChannelsPage = () => {
   const { t } = useTranslation()
   const history = useHistory()
   const { colorMode } = useThemeStore()
-  const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
+  const {
+    setChannelsList,
+    channelsList,
+    setActiveChannel,
+    clearActiveChannel,
+  } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
   const { isAnonymousAccess } = useAuthStore()
   const { organization } = useOrganizationStore()
@@ -26,8 +36,9 @@ const ChannelsPage = () => {
     name,
     slug = '',
     kind = '',
+    access = '',
   }: IDefinedChannels) => {
-    await setActiveChannel({ id, name, slug, kind })
+    await setActiveChannel({ id, name, slug, kind, access })
     history.push(`/c/${slug}`)
   }
 
@@ -65,17 +76,20 @@ const ChannelsPage = () => {
         name: selected.name,
         slug: selected.slug || '',
         kind: selected.kind || '',
+        access: selected.access || '',
       })
     }
   }
 
   useEffect(() => {
     setPageTitle(t('page.channels.page_title'))
+    clearActiveChannel()
     //eslint-disable-next-line
   }, [])
 
   useEffect(() => {
-    if (organization?.kind === Kinds.Exclusive && isAnonymousAccess) history.replace('/login')
+    if (organization?.kind === Kinds.Exclusive && isAnonymousAccess)
+      history.replace('/login')
     //eslint-disable-next-line
   }, [organization])
 
