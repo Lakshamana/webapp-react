@@ -519,7 +519,7 @@ const HomePage = () => {
         flexDirection={'column'}
         mt={billboardItems && !isLoading ? -8 : 7}
         w={'100vw'}
-        zIndex={9999}
+        zIndex={billboardItems?.length ? 9999 : 0}
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
@@ -549,7 +549,7 @@ const HomePage = () => {
             </Flex>
           </InfiniteScroll>
         )}
-        {isEmpty && <EmptyState />}
+        {isEmpty && <Box mt={7}><EmptyState /></Box>}
       </Flex>
     </Container>
   )
