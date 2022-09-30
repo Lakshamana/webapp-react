@@ -4,4 +4,5 @@ export interface Props {
   isAccesible: boolean;
   redirectTo?: string;
   template: any
+  templateProps?: Object
 }

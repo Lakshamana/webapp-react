@@ -25,6 +25,7 @@ const ReactionBar = ({
   totalReactions,
   removeMyReaction,
   addMyReaction,
+  setNewReaction,
 }: ReactionsCount) => {
   const { colorMode } = useThemeStore()
   const { isAnonymousAccess } = useAuthStore()
@@ -89,6 +90,7 @@ const ReactionBar = ({
         reaction,
       },
     }
+    if (setNewReaction) setNewReaction(reaction)
     setUpdatingReactions({ reaction, isLoading: true })
     const myReactionsContains = myActiveReactions.find(
       (each) => each.name === reaction

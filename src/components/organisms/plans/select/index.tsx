@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client'
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { Button } from 'components/atoms'
 import { useTranslation } from 'react-i18next'
 import { MUTATION_ADD_PENDING_ORDER } from 'services/graphql'
 import { useThemeStore } from 'services/stores'
@@ -76,14 +77,14 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                 <Text
                   color={colors.generalText[colorMode]}
                   fontWeight="600"
-                  fontSize="18px"
+                  fontSize="1.2rem"
                 >
                   {plan.name}
                 </Text>
                 <Text
                   color={colors.secondaryText[colorMode]}
                   fontWeight="400"
-                  fontSize="12px"
+                  fontSize={'1rem'}
                   maxW="256px"
                   w="100%"
                   mt="6px"
@@ -91,18 +92,14 @@ export const SelectPlan = ({ plans, selectPlan, nextStep }: Props) => {
                   {plan.description}
                 </Text>
                 <Flex
-                  mt="15px"
+                  mt={8}
                   justifyContent="space-between"
                   alignItems="center"
                 >
                   <Button
-                    h="36px"
                     w="156px"
-                    bg="#0660F9"
-                    color="white"
-                    fontSize="12px"
-                    textTransform="uppercase"
-                    fontWeight="400"
+                    fontWeight={500}
+                    size='md'
                     disabled={loading}
                     onClick={handleAction(plan)}
                   >

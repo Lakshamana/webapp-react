@@ -2,7 +2,6 @@ import { SwiperOptions } from 'swiper'
 
 export const SWIPPER_PARAMS: SwiperOptions = {
   autoHeight: true,
-
   spaceBetween: 10,
   observer: true,
   preloadImages: true,
@@ -11,9 +10,7 @@ export const SWIPPER_PARAMS: SwiperOptions = {
   watchOverflow: true,
   autoplay: false,
   lazy: true,
-  allowTouchMove: true,
-  touchMoveStopPropagation: true,
-  touchStartPreventDefault: true,
+  allowTouchMove: false,
   grabCursor: false,
   slidesOffsetAfter: 32,
   slidesOffsetBefore: 32,
@@ -27,11 +24,11 @@ export const SWIPPER_PARAMS: SwiperOptions = {
       slidesPerView: 4.3,
       slidesPerGroup: 4,
     },
-    768: {
+    832: {
       slidesPerView: 3.3,
       slidesPerGroup: 3,
     },
-    425: {
+    639: {
       slidesPerView: 2.2,
       slidesPerGroup: 2,
       spaceBetween: 5,
@@ -47,6 +44,6 @@ export const SWIPPER_PARAMS: SwiperOptions = {
     },
   },
   pagination: {
-    el: '.cards-scroller-pagination',
+    el: '.cards-scroller-pagination'
   },
 }

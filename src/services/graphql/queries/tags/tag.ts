@@ -23,19 +23,33 @@ export const QUERY_TAG = gql`
         }
       }
       relatedPosts {
-        access
-        type
-        slug
-        status
-        pinnedStatus {
-          pinned
-        }
-        id
-        description
-        title
-        kind
-        thumbnail {
-          imgPath
+        rows {
+          access
+          type
+          slug
+          status
+          pinnedStatus {
+            pinned
+          }
+          id
+          description
+          title
+          kind
+          media {
+            ... on MediaVideo {
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
+            ... on MediaPhoto {
+              id
+              imgPath
+            }
+          }
+          thumbnail {
+            imgPath
+          }
         }
       }
       slug
@@ -43,15 +57,16 @@ export const QUERY_TAG = gql`
   }
 `
 
-export const QUERY_LOOP_TAGS = (ids) => gql`
+export const QUERY_LOOP_TAGS = (ids: String[]) => gql`
 query Tags{
   ${ids?.map(
-    (id, index) =>
-      `tag${id}: tag(id: "${id}") {
-        id
-        title
-        description
-        relatedCategories {
+  (id: String) =>
+    `tag${id}: tag(id: "${id}") {
+      id
+      title
+      description
+      relatedCategories {
+        rows {
           access
           slug
           pinnedStatus {
@@ -67,7 +82,9 @@ query Tags{
             }
           }
         }
-        relatedPosts {
+      }
+      relatedPosts {
+        rows {
           type
           access
           slug
@@ -77,11 +94,11 @@ query Tags{
           }
           media {
             ... on MediaVideo {
-            id
-            duration
-            thumbnailPath
-            baseUrl
-          }
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
           }
           id
           description
@@ -91,8 +108,9 @@ query Tags{
             imgPath
           }
         }
-        slug
-      }`
-  )}
+      }
+      slug
+    }`
+)}
 }
 `

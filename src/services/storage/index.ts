@@ -1,6 +1,7 @@
 import {
   ANONYMOUS_AUTH,
   APP_SINGLE_CHANNEL,
+  APP_USER,
   AUTH_TOKEN,
   CHANNEL_INFO,
   FIREBASE_TOKEN
@@ -41,6 +42,7 @@ export const clearData = () => {
     localStorage.removeItem(AUTH_TOKEN)
     localStorage.removeItem(FIREBASE_TOKEN)
     localStorage.removeItem(ANONYMOUS_AUTH)
+    localStorage.removeItem(APP_USER)
   } catch (error) {
     console.error(`ERROR ON CLEAR DATA`, error)
   }

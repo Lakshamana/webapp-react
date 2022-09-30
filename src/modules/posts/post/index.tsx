@@ -11,6 +11,7 @@ import {
 } from 'components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 
+import { VerifyContentKind } from 'components/organisms'
 import {
   PaginatedPostsOutput,
   PlaylistOutput,
@@ -29,16 +30,18 @@ import {
 } from 'services/graphql'
 import {
   useAuthStore,
+  useChannelsStore,
   useCommonStore,
   useCustomizationStore,
   useThemeStore
 } from 'services/stores'
 import { breakpoints, colors } from 'styles'
-import { VerifyContentKind } from '../components'
+import { sendPostReactionReport } from 'utils/analytics'
+import { RANDOM_ID } from 'utils/helperFunctions'
 import { PhotoPost } from '../components/photo'
 import { VideoPost } from '../components/video'
 import { PostComments, PostDetails, Subtitle, Title } from './style'
-import { relatedPostsFilter } from './utils'
+import { playlistPostsFilter, relatedPostsFilter } from './utils'
 
 const PostPage = () => {
   const { t } = useTranslation()
@@ -46,6 +49,8 @@ const PostPage = () => {
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
+  const { activeChannel } = useChannelsStore()
+  const { user } = useAuthStore()
   const { slug } = useParams<{ channel: string; slug: string }>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
@@ -56,10 +61,29 @@ const PostPage = () => {
   const [playlistData, setPlaylistData] = useState<PlaylistOutput>()
   const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
   const [relatedCategories, setRelatedCategories] = useState<string[]>()
+  const [activeReaction, setActiveReaction] = useState<string>()
 
   const [activeMedia, setActiveMedia] = useState('')
 
-  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION)
+  const [addMyReaction] = useMutation(MUTATION_ADD_MY_REACTION, {
+    onCompleted: () => {
+      sendPostReactionReport(
+        {
+          channelId: activeChannel?.id,
+          contentTitle: postData?.title,
+          mediaSessionId: RANDOM_ID(),
+          contentId: postData?.id,
+          reaction: activeReaction,
+          collectionId: postData?.categories?.length
+            ? `${postData?.categories[0].id}`
+            : '',
+          typename: postData?.__typename,
+          userId: user?.id,
+        },
+        'post'
+      )
+    },
+  })
   const [removeMyReaction] = useMutation(MUTATION_REMOVE_MY_REACTION)
 
   const [getPost, { loading: loadingPost }] = useLazyQuery(QUERY_POST, {
@@ -79,25 +103,31 @@ const PostPage = () => {
     QUERY_POSTS_CARDS,
     {
       onCompleted: (result) => {
-        // setRelatedPostsData(result.posts)
         setRelatedPostsData((previous) => ({
           ...result.posts,
           rows: [...(previous?.rows || []), ...result.posts.rows],
         }))
       },
       fetchPolicy: 'cache-and-network',
-      notifyOnNetworkStatusChange: false,
     }
   )
 
-  //TODO: Create skeleton loading for playlist cards
   const [getPlaylist, { loading: loadingPlaylist }] = useLazyQuery(
     QUERY_PLAYLIST,
     {
       onCompleted: (result) => {
-        if (result?.playlist) setPlaylistData(result.playlist)
+        setPlaylistData((previous) => ({
+          ...result.playlist,
+          posts: {
+            ...result.playlist.posts,
+            rows: [
+              ...(previous?.posts?.rows || []),
+              ...result.playlist.posts.rows,
+            ],
+          },
+        }))
       },
-      fetchPolicy: 'no-cache',
+      fetchPolicy: 'cache-and-network',
     }
   )
 
@@ -106,6 +136,16 @@ const PostPage = () => {
       getRelatedPosts({
         variables: {
           ...relatedPostsFilter(relatedPostsData.page + 1, relatedCategories),
+        },
+      })
+  }
+
+  const loadMorePlaylists = () => {
+    if (playlistData?.posts?.hasNextPage && postData?.playlists?.length)
+      getPlaylist({
+        variables: {
+          id: postData?.playlists[0].id,
+          ...playlistPostsFilter(playlistData.posts.page + 1),
         },
       })
   }
@@ -130,6 +170,7 @@ const PostPage = () => {
       getPlaylist({
         variables: {
           id: postData?.playlists[0].id,
+          ...playlistPostsFilter(1),
         },
       })
     }
@@ -212,6 +253,7 @@ const PostPage = () => {
               myReactions={postData?.myReactions ?? []}
               removeMyReaction={removeMyReaction}
               addMyReaction={addMyReaction}
+              setNewReaction={(reaction) => setActiveReaction(reaction)}
             />
           )}
           <Spacer mt={isDesktop ? 0 : 4} />
@@ -233,7 +275,7 @@ const PostPage = () => {
               <Box
                 w={
                   !!relatedPostsData?.rows?.length ||
-                  !!playlistData?.posts?.length
+                  !!playlistData?.posts?.rows.length
                     ? { sm: '100%', md: '53%', lg: '55%', xl: '70%' }
                     : '100%'
                 }
@@ -243,26 +285,31 @@ const PostPage = () => {
             )}
             <Spacer mx={3} />
             <Box w={{ sm: '100%', md: '47%', lg: '45%', xl: '30%' }}>
-              {playlistData && (
-                <VideoPlaylist
-                  activeVideo={postData?.id}
-                  title={playlistData?.title}
-                  videos={playlistData?.posts}
-                  showAutoplay={true}
-                  loadMore={() => {}}
-                />
-              )}
-              {(postData?.type === PostType.Video ||
-                postData?.type === PostType.OnDemand) && (
-                <VideoPlaylist
-                  loading={loadingVideosRelated}
-                  title={t('page.post.related_videos')}
-                  videos={relatedPostsData?.rows}
-                  showAutoplay={false}
-                  hasMoreResults={relatedPostsData?.hasNextPage}
-                  loadMore={loadMoreRelatedPosts}
-                />
-              )}
+              <Box>
+                {playlistData?.posts && (
+                  <VideoPlaylist
+                    loading={loadingPlaylist}
+                    activeVideo={postData?.id}
+                    title={playlistData?.title}
+                    videos={playlistData?.posts.rows}
+                    hasMoreResults={playlistData?.posts.hasNextPage}
+                    showAutoplay
+                    loadMore={loadMorePlaylists}
+                  />
+                )}
+              </Box>
+              <Box mt={10}>
+                {(postData?.type === PostType.Video ||
+                  postData?.type === PostType.OnDemand) && (
+                  <VideoPlaylist
+                    loading={loadingVideosRelated}
+                    title={t('page.post.related_videos')}
+                    videos={relatedPostsData?.rows}
+                    hasMoreResults={relatedPostsData?.hasNextPage}
+                    loadMore={loadMoreRelatedPosts}
+                  />
+                )}
+              </Box>
             </Box>
           </PostComments>
         )}

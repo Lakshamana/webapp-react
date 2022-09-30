@@ -24,6 +24,7 @@ export const QUERY_SEARCH = gql`
               imgPath
             }
           }
+          id
           name
           slug
           tags {
@@ -36,6 +37,9 @@ export const QUERY_SEARCH = gql`
             id
             name
           }
+          thumbnail {
+            imgPath
+          }
           id
           slug
           title
@@ -46,35 +50,25 @@ export const QUERY_SEARCH = gql`
         }
         ... on SearchPost {
           id
-          categories {
-            id
-            name
-          }
           slug
+          description
           title
-          tags {
-            id
-            title
-          }
           type
+          thumbnail {
+            imgPath
+            baseUrl
+          }
           media {
             ... on MediaAudio {
               mp3Path
-              baseUrl
               filename
-              status
-              type
             }
             ... on MediaPhoto {
-              baseUrl
-              filename
               imgPath
             }
             ... on MediaVideo {
-              baseUrl
-              filename
-              mp4Path
               thumbnailPath
+              baseUrl
             }
           }
         }

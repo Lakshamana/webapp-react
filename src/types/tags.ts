@@ -4,7 +4,7 @@ import { HomeCarouselsTypes } from './common'
 export type TagsScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
-  hasMoreLink?: boolean
+  isLoading?: boolean
   tagContent?: TagOutput[]
   tagData: any
   content?: HomeCarouselsTypes[]

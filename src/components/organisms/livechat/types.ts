@@ -4,4 +4,5 @@ export interface Props {
   entityId: Maybe<string>
   isCommentsEnabled?: boolean
   isReactionsEnabled?: boolean
+  sendReaction: (reaction: string) => void
 }

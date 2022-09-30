@@ -2,6 +2,9 @@ const PT_BR = {
   translations: {
     common: {
       access: 'Acessar',
+      private: 'Private',
+      paywall: 'Paywall',
+      geolocked: 'Geoblocked',
       custom_field: {
         cpf: 'CPF',
         phone: 'Telefone',
@@ -56,6 +59,8 @@ const PT_BR = {
       confirm_signout: 'Tem certeza que deseja sair?',
       update: 'Atualizar',
       accept_all: 'Eu aceito todos os',
+      agree: 'Concordo',
+      cancel_registration: 'Cancelar cadastro',
       push: {
         allow: 'Permitir',
         cancel: 'Não, obrigado.',
@@ -82,6 +87,9 @@ const PT_BR = {
       action_not_allowed: 'Você precisa ter uma conta para executar essa ação',
       create_a_new_account:
         'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!',
+      scroller: {
+        more: 'deseja ver todos?'
+      }
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -231,6 +239,9 @@ const PT_BR = {
       },
     },
     page: {
+      organization: {
+        private: 'Organização privada'
+      },
       search: {
         results_for: '{{count}} resultados encontrados para {{string}}',
         videos_section: 'Vídeos',
@@ -268,8 +279,10 @@ const PT_BR = {
         drama: 'Drama',
         family: 'Família',
         watch_now: 'Assistir agora',
+        continue_watch: 'Continue assistindo',
         my_list: 'Minha Lista',
         more_categories: 'Mais categorias',
+        view_post: 'Visualizar',
       },
       category: {
         videos: 'Vídeos',
@@ -433,6 +446,12 @@ const PT_BR = {
         participants: 'Participantes:',
         reactions: 'Reações',
         comments: 'Comentários',
+        modal: {
+          continue_watching: 'Continuar assistindo',
+          continue_subtitle: 'Deseja continuar de onde parou?',
+          continue_action_label: 'Sim',
+          continue_cancel_label: 'Não'
+        },
         comment: {
           hide: 'Esconder',
           see: 'Mostrar',

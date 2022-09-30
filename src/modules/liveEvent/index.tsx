@@ -5,29 +5,38 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { useCommonStore, useThemeStore } from 'services/stores'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useCommonStore,
+  useThemeStore
+} from 'services/stores'
 
 import { firebaseDB } from 'config/firebase'
 import { collection, onSnapshot, query } from 'firebase/firestore'
 
 import { Badge, Container, Countdown, Skeleton } from 'components/atoms'
 import { VideoPlayer } from 'components/molecules'
-import { Livechat } from 'components/organisms'
-import { VerifyContentKind } from '../components'
+import { Livechat, VerifyContentKind } from 'components/organisms'
 
 import { breakpoints, colors, sizes } from 'styles'
-import { Live, LiveDetails, Subtitle, Title } from './style'
+import { CustomBox, Live, LiveDetails, Subtitle, Title } from './style'
 
-import { LiveEvent, PostType, Status } from 'generated/graphql'
+import { LiveEvent as LiveEventType, PostType, Status } from 'generated/graphql'
 import { QUERY_LIVE_EVENT } from 'services/graphql'
 import { LivestreamBadge } from 'types/livestreams'
 import { FirebaseSession } from 'utils/firebaseSession'
 import { stripHTML } from 'utils/helperFunctions'
 import { StatusBadge } from './utils'
 
-const LivePostPage = () => {
+import { sendPostReactionReport } from 'utils/analytics'
+import { RANDOM_ID } from 'utils/helperFunctions'
+
+const LiveEvent = () => {
   const { t } = useTranslation()
   const [liveBadge, setLiveBadge] = useState<LivestreamBadge>()
+  const { activeChannel } = useChannelsStore()
+  const { user } = useAuthStore()
   const { colorMode } = useThemeStore()
   const { setPageTitle } = useCommonStore()
   const [isVerifyingAccessPermission, setIsVerifyingAccessPermission] =
@@ -42,7 +51,7 @@ const LivePostPage = () => {
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
 
   const { slug } = useParams<{ slug: string }>()
-  const [livestream, setLivestream] = useState<LiveEvent>()
+  const [livestream, setLivestream] = useState<LiveEventType>()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const [getLiveEvent, { loading }] = useLazyQuery(QUERY_LIVE_EVENT, {
@@ -87,6 +96,22 @@ const LivePostPage = () => {
       </Text>
     </Flex>
   )
+
+  const sendNewReaction = (reaction: string) => {
+    sendPostReactionReport(
+      {
+        channelId: activeChannel?.id,
+        contentTitle: livestream?.title,
+        mediaSessionId: RANDOM_ID(),
+        contentId: livestream?.id,
+        reaction,
+        collectionId: livestream?.category?.id,
+        typename: livestream?.__typename,
+        userId: user?.id,
+      },
+      'live'
+    )
+  }
 
   useEffect(() => {
     const liveUnsubscriber = onSnapshot(liveQuery, (snapshot) => {
@@ -142,7 +167,7 @@ const LivePostPage = () => {
     return (
       <VerifyContentKind
         contentSlug={slug}
-        contentType={'live'}
+        contentType={'liveEvent'}
         accessGranted={() => setIsVerifyingAccessPermission(false)}
       />
     )
@@ -160,7 +185,7 @@ const LivePostPage = () => {
         alignItems="center"
       >
         <Live>
-          <Box
+          <CustomBox
             position="relative"
             backgroundColor={'black'}
             height={{ base: '30vh', md: '100%' }}
@@ -207,7 +232,7 @@ const LivePostPage = () => {
               />
             )}
             {liveStatus === Status.Finished && renderEndedLiveText()}
-          </Box>
+          </CustomBox>
           {isChatVisible && (
             <Box
               height={{ base: '62vh', md: '100%' }}
@@ -219,6 +244,7 @@ const LivePostPage = () => {
                   isCommentsEnabled={isCommentsEnabled}
                   isReactionsEnabled={isReactionsEnabled}
                   entityId={livestream?.id}
+                  sendReaction={sendNewReaction}
                 />
               )}
             </Box>
@@ -239,4 +265,4 @@ const LivePostPage = () => {
   )
 }
 
-export { LivePostPage }
+export { LiveEvent }

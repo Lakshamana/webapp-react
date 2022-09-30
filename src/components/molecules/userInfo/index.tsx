@@ -6,7 +6,13 @@ import { useHistory } from 'react-router-dom'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useAuthStore } from 'services/stores'
 import { colors } from 'styles'
-import { ModalLogout, NotLogged, PopoverOption, UserMenu, UserSidebar } from './components'
+import {
+  ModalLogout,
+  NotLogged,
+  PopoverOption,
+  UserMenu,
+  UserSidebar
+} from './components'
 import { OptionsList, UserContainer } from './styles'
 import { PropsUserInfo } from './types'
 
@@ -15,7 +21,7 @@ const UserInfo = ({
   delimited = true,
   colorMode,
   toggleColorMode,
-  closeSideMenu
+  closeSideMenu,
 }: PropsUserInfo) => {
   const history = useHistory()
   const { t } = useTranslation()
@@ -23,16 +29,13 @@ const UserInfo = ({
   const { account, user } = useAuthStore()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  if (!account) {
-    return <NotLogged {...{ display, colorMode }} />
+  const getImageUrl = (imagePath: string) => {
+    const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
+    return image
   }
 
-  const getImageUrl = (imagePath: string) => {
-    const image = generateImage(
-      ThumborInstanceTypes.IMAGE,
-      imagePath,
-    )
-    return image
+  if (!account) {
+    return <NotLogged {...{ display, colorMode }} />
   }
 
   if (display === 'sidebar') {
@@ -41,7 +44,7 @@ const UserInfo = ({
         {...{
           account,
           avatarUrl: getImageUrl(user?.avatar?.imgPath ?? '') || '',
-          toggleColorMode
+          toggleColorMode,
         }}
       />
     )
@@ -49,10 +52,7 @@ const UserInfo = ({
 
   return (
     <>
-      <ModalLogout
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <ModalLogout isOpen={isOpen} onClose={onClose} />
       <Container
         display={
           display === 'menu'
@@ -69,10 +69,14 @@ const UserInfo = ({
           display="sidebar"
           popoverTrigger={
             <button>
-              <UserContainer
-                onClick={closeSideMenu}
-                {...{ delimited }}>
-                <UserMenu {...{ colorMode, account, avatar_url: getImageUrl(user?.avatar?.imgPath ?? '') }} />
+              <UserContainer onClick={closeSideMenu} {...{ delimited }}>
+                <UserMenu
+                  {...{
+                    colorMode,
+                    account,
+                    avatar_url: getImageUrl(user?.avatar?.imgPath ?? ''),
+                  }}
+                />
               </UserContainer>
             </button>
           }

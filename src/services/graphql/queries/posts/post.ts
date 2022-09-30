@@ -8,6 +8,7 @@ export const QUERY_POST = gql`
       allowComments
       countComments
       countReactions
+      slug
       description
       categories {
         id
@@ -35,6 +36,12 @@ export const QUERY_POST = gql`
           aspectRatio
           createdAt
           hlsPath
+          subtitles {
+            id
+            locale
+            vttPath
+            label
+          }
         }
         ... on MediaAudio {
           id

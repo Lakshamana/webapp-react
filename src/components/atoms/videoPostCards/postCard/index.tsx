@@ -1,5 +1,6 @@
 import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
+import { ProgressBar } from 'components/atoms'
 import { useTranslation } from 'react-i18next'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
@@ -11,13 +12,13 @@ import {
 } from 'utils/helperFunctions'
 import { BlockedContent, CardWrapper, PlayContent, PostContent } from './style'
 
-const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
+const PostCard = ({ onClickCard, hasPinButton, ...props }: ComponentPostCardProps) => {
   const isPostBlocked = props.isExclusive || props.isGeolocked
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
   const { activeChannelConfig } = useCustomizationStore()
 
-  const renderAddToMyListIcon = () => (
+  const RenderAddToMyListIcon = () => (
     <Box
       backgroundColor={colors.cardBg[colorMode]}
       borderRadius="100%"
@@ -74,6 +75,10 @@ const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
           </PlayContent>
         )}
       </PostContent>
+      {
+        props?.progress &&
+        <ProgressBar value={props.progress} />
+      }
       {props.hover && (
         <Box
           position="absolute"
@@ -110,7 +115,10 @@ const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
               )}
             </Flex>
             <Spacer />
-            {renderAddToMyListIcon()}
+            {
+              !props?.progress && hasPinButton &&
+              <RenderAddToMyListIcon />
+            }
           </Flex>
           <Flex mt={1}>
             {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS && (

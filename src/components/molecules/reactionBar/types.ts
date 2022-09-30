@@ -14,6 +14,7 @@ export type ReactionsCount = {
   myReactions: MyReactionType[]
   removeMyReaction: Function
   addMyReaction: Function
+  setNewReaction?: Function
 }
 
 export type ReactionProps = {

@@ -47,7 +47,7 @@ jobs:
       # Run Yarn
       - name: Install Yarn dependencies
         run: |
-          yarn
+          yarn setup
           
       # Build Storybook
       - name: Build Storybook react app

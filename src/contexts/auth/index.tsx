@@ -3,6 +3,7 @@ import {
   ANONYMOUS_AUTH,
   APP_LOCALE,
   APP_THEME,
+  APP_USER,
   AUTH_TOKEN,
   FIREBASE_TOKEN
 } from 'config/constants'
@@ -23,8 +24,10 @@ import {
   useThemeStore
 } from 'services/stores'
 
+import { setUser as setAnalyticsUser } from 'config/analytics'
+
 import { LoadingScreen } from 'components'
-import { clearData, getData } from 'services/storage'
+import { clearData, getData, saveData } from 'services/storage'
 
 import { useTranslation } from 'react-i18next'
 import { AuthTypes } from './types'
@@ -110,6 +113,7 @@ export const AuthProvider = ({ children }) => {
         name: channel.name,
         slug: channel.slug || '',
         kind: channel.kind || '',
+        access: channel.access || '',
       })
     }
   }
@@ -122,16 +126,17 @@ export const AuthProvider = ({ children }) => {
         })
         if (data?.me) {
           const userData = data.me.profile
+          saveData(APP_USER, userData.id)
           const accountData = data.me.account
           updateUser(userData)
           if (data.me.profile?.locale) {
             switch (data.me.profile?.locale) {
               case 'pt':
                 i18n.changeLanguage('pt-BR')
-                break;
+                break
               case 'en':
                 i18n.changeLanguage('en-US')
-                break;
+                break
               default:
                 i18n.changeLanguage(data.me.profile.locale)
             }
@@ -214,6 +219,7 @@ export const AuthProvider = ({ children }) => {
     }
     await signOutFB()
     await clearData()
+    await setAnalyticsUser(null)
     // TODO: Redirect based on Org kind
     window.location.href = '/login'
   }

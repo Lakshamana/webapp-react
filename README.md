@@ -2,12 +2,12 @@
  FanHero's browser-based brand-app client.
 
 ## Access the project on: 
-- [marvel] https://marvel.fanhero.tv
-- [valetudo] https://valetudo.fanhero.tv
-- [heroflix] https://heroflix-dev.fanhero.tv
-- [herotube] https://herotube-dev.fanhero.tv
-- [spacex] https://spacex-stg.fanhero.tv
-- [storybook] https://storybook.fanhero.net/?path=/story/introduction--page
+- [marvel - develoment] https://marvel-dev.fanhero.tv
+- [valetudo - develoment] https://valetudo.fanhero.tv
+- [heroflix - develoment] https://heroflix-dev.fanhero.tv
+- [herotube - develoment] https://herotube-dev.fanhero.tv
+- [spacex - staging] https://spacex-stg.fanhero.tv
+- [storybook - components library] https://storybook.fanhero.net/?path=/story/introduction--page
 
 ### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -16,17 +16,22 @@
 - [yarn](https://www.npmjs.com/package/yarn?activeTab=versions) `npm i -g yarn`
 
 ### [Important] Add the necessary env vars
-- Env vars for development are on .env.example
+- Env vars for development/staging/production are on .env.example
+
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ```
-yarn install
+yarn setup
 ```
 
-Runs the app in the development mode.\
+Install project dependencies.
+
+
+```
+yarn dev
+```
+Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
