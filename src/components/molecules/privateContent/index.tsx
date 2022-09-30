@@ -1,10 +1,9 @@
 import { Box } from '@chakra-ui/react'
 import { AlertComponent, Input, Modal, Text } from 'components'
-import { Kinds } from 'generated/graphql'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
-import { useAuthStore, useChannelsStore, useThemeStore } from 'services/stores'
+import { useChannelsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { Props } from './types'
 
@@ -18,12 +17,12 @@ const PrivateContent = ({
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [password, setPassword] = useState<string>('')
-  const { clearActiveChannel, activeChannelKind } = useChannelsStore()
-  const { isAnonymousAccess } = useAuthStore()
+  const { clearActiveChannel } = useChannelsStore()
 
   const getTitleByType = () => {
     let title = {
       channel: t('page.channels.private_channel'),
+      organization: t('page.organization.private'),
       default: t('page.post.private_content.title'),
     }
     return title[type || 'default']
@@ -31,16 +30,8 @@ const PrivateContent = ({
 
   const clearChannelAndRedirect = () => {
     clearActiveChannel()
-    window.location.href = '/'
-  }
-
-  if (
-    activeChannelKind === Kinds.Private &&
-    isAnonymousAccess
-  ) {
-    clearActiveChannel()
-    window.location.href = '/login'
-    return null
+    //TODO: fix this using router
+    window.location.href = '/channels'
   }
 
   return (
@@ -52,6 +43,7 @@ const PrivateContent = ({
         type === 'channel' ? clearChannelAndRedirect() : history.go(-1)
       }
       onConfirm={() => requestAccess(password)}
+      cancelButton={type !== 'organization'}
       loading={isLoadingRequest}
       isActionDisabled={!password}
       closeOnOverlayClick={false}
@@ -97,4 +89,3 @@ const PrivateContent = ({
 }
 
 export { PrivateContent }
-
