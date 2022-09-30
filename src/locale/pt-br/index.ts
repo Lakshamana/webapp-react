@@ -2,6 +2,9 @@ const PT_BR = {
   translations: {
     common: {
       access: 'Acessar',
+      private: 'Private',
+      paywall: 'Paywall',
+      geolocked: 'Geoblocked',
       custom_field: {
         cpf: 'CPF',
         phone: 'Telefone',
@@ -236,6 +239,9 @@ const PT_BR = {
       },
     },
     page: {
+      organization: {
+        private: 'Organização privada'
+      },
       search: {
         results_for: '{{count}} resultados encontrados para {{string}}',
         videos_section: 'Vídeos',

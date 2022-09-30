@@ -1,11 +1,11 @@
 import { Box } from '@chakra-ui/layout'
 import { useMediaQuery } from '@chakra-ui/media-query'
+import { Container, Logo, UserInfo } from 'components'
+import { LanguageSelector } from 'components/atoms'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
-import { Logo, UserInfo, Container } from 'components'
-import { BoxHeader, HeaderItems } from './style'
 import { breakpoints } from 'styles'
-import { LanguageSelector } from 'components/atoms'
+import { BoxHeader, HeaderItems } from './style'
 
 const EmptyHeader = () => {
   const { organizationConfig } = useCustomizationStore()
@@ -16,7 +16,7 @@ const EmptyHeader = () => {
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
 
   const generateOrgLogo = () => {
-    const theme = colorMode.toUpperCase()
+    const theme = colorMode?.toUpperCase()
     if (!organizationConfig?.IMAGES?.ORGANIZATION_LOGO) return ''
     return generateImage(
       ThumborInstanceTypes.IMAGE,
@@ -36,9 +36,9 @@ const EmptyHeader = () => {
           py={20}
           src={generateOrgLogo()}
           ignoreFallback
-        ></Logo>
+        />
         <Box marginLeft={'auto'} mr={3}>
-          <LanguageSelector></LanguageSelector>
+          <LanguageSelector/>
         </Box>
         <Container>
           <UserInfo display={'menu'} {...{ colorMode, toggleColorMode }} />

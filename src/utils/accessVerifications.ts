@@ -3,12 +3,14 @@ import {
   Channel,
   Kinds,
   LiveEvent,
+  Organization,
   Post,
   SearchCategory,
   SearchLiveEvent,
   SearchPost
 } from 'generated/graphql'
 import { AccessEnum } from 'types/access'
+import { ChannelStorageData } from 'types/channel'
 
 type EntityType =
   | Post
@@ -18,12 +20,14 @@ type EntityType =
   | SearchPost
   | SearchLiveEvent
   | Channel
+  | Organization
+  | ChannelStorageData
 
 export const isEntityOnPaywall = (entity: EntityType) => {
   return entity.access !== AccessEnum.AVAILABLE && entity.kind === Kinds.Paywall
 }
 
-export const isEntityPrivate = (entity: EntityType | Channel) => {
+export const isEntityPrivate = (entity: EntityType) => {
   return entity.kind === Kinds.Private
 }
 

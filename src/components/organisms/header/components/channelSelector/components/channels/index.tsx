@@ -2,10 +2,16 @@ import { Badge, Flex, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Avatar, Container, Text } from 'components'
 import { Channel } from 'generated/graphql'
+import { useTranslation } from 'react-i18next'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { useCustomizationStore } from 'services/stores'
 import { colors } from 'styles'
-import { isEntityPrivate } from 'utils/accessVerifications'
+import {
+  isEntityBlocked,
+  isEntityGeolocked,
+  isEntityOnPaywall,
+  isEntityPrivate
+} from 'utils/accessVerifications'
 import { ChannelItem, ChannelList } from './styles'
 import { PropsChannels } from './types'
 
@@ -18,13 +24,21 @@ const Channels = ({
 }: PropsChannels) => {
   const { generateImage } = useThumbor()
   const { customizationData } = useCustomizationStore()
+  const { t } = useTranslation()
 
   const generateChannelImage = (icon: any) => {
-    const theme = colorMode.toUpperCase()
+    const theme = colorMode?.toUpperCase()
     if (!icon) return ''
     return generateImage(ThumborInstanceTypes.IMAGE, icon[theme], {
       size: { height: 80 },
     })
+  }
+
+  const getBadgeLabel = (channel) => {
+    if (isEntityPrivate(channel)) return t('common.private')
+    if (isEntityGeolocked(channel)) return t('common.geolocked')
+    if (isEntityOnPaywall(channel)) return t('common.paywall')
+    return ''
   }
 
   return (
@@ -74,7 +88,7 @@ const Channels = ({
                   >
                     {channel.name}
                   </Text>
-                  {isEntityPrivate(channel) && (
+                  {isEntityBlocked(channel) && (
                     <Badge
                       ml={2}
                       backgroundColor={colors.brand.indicator[colorMode]}
@@ -83,7 +97,7 @@ const Channels = ({
                       alignItems="center"
                     >
                       <Icon color="white" icon="mdi:lock" />
-                      <Text ml={1}>Private </Text>
+                      <Text ml={1}>{getBadgeLabel(channel)} </Text>
                     </Badge>
                   )}
                 </Container>
