@@ -5251,6 +5251,14 @@ export type ConfirmOrderMutationVariables = Exact<{
 
 export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any> } };
 
+export type OrganizationPasswordCheckMutationVariables = Exact<{
+  organizationId: Scalars['ID'];
+  password: Scalars['String'];
+}>;
+
+
+export type OrganizationPasswordCheckMutation = { __typename?: 'Mutation', organizationPasswordCheck: { __typename?: 'OrganizationPasswordCheck', correct: boolean } };
+
 export type AddCommentMutationVariables = Exact<{
   payload: AddComment;
 }>;
@@ -5404,20 +5412,6 @@ export type GetCategoryKindQueryVariables = Exact<{
 
 export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string } };
 
-export type ChannelsQueryVariables = Exact<{
-  filter: ChannelFindAllFilter;
-}>;
-
-
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, access: AccessKinds, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
-
-export type PublicChannelsQueryVariables = Exact<{
-  filter: ChannelFindAllFilter;
-}>;
-
-
-export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
-
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
@@ -5431,6 +5425,34 @@ export type PublicChannelQueryVariables = Exact<{
 
 
 export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string } };
+
+export type GetChannelKindQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetChannelKindQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, access: AccessKinds, kind?: Maybe<Kinds> } };
+
+export type GetChannelEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetChannelEntitlementsQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', slug?: Maybe<string>, entitlements?: Maybe<Array<any>> } | { __typename?: 'GeolockedChannel' } };
+
+export type ChannelsQueryVariables = Exact<{
+  filter: ChannelFindAllFilter;
+}>;
+
+
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, access: AccessKinds, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
+
+export type PublicChannelsQueryVariables = Exact<{
+  filter: ChannelFindAllFilter;
+}>;
+
+
+export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, access: AccessKinds, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -5495,19 +5517,19 @@ export type GetOrderResultQueryVariables = Exact<{
 
 export type GetOrderResultQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: string, account?: Maybe<string>, status?: Maybe<OrderStatus> } };
 
-export type OrganizationQueryVariables = Exact<{
+export type GetOrganizationKindQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type OrganizationQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string } };
+export type GetOrganizationKindQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, access: AccessKinds, kind?: Maybe<Kinds> } };
 
-export type OrganizationPublicSettingsQueryVariables = Exact<{
+export type GetOrganizationEntitlementsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'OrganizationPublic', id: string, name?: Maybe<string>, kind?: Maybe<Kinds>, status?: Maybe<string>, tenant_id?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
+export type GetOrganizationEntitlementsQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, entitlements: Array<any> } };
 
 export type GetPlaylistQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -6445,6 +6467,46 @@ export function useConfirmOrderMutation(baseOptions?: Apollo.MutationHookOptions
 export type ConfirmOrderMutationHookResult = ReturnType<typeof useConfirmOrderMutation>;
 export type ConfirmOrderMutationResult = Apollo.MutationResult<ConfirmOrderMutation>;
 export type ConfirmOrderMutationOptions = Apollo.BaseMutationOptions<ConfirmOrderMutation, ConfirmOrderMutationVariables>;
+export const OrganizationPasswordCheckDocument = gql`
+    mutation OrganizationPasswordCheck($organizationId: ID!, $password: String!) {
+  organizationPasswordCheck(organizationId: $organizationId, password: $password) {
+    correct
+  }
+}
+    `;
+export type OrganizationPasswordCheckMutationFn = Apollo.MutationFunction<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>;
+export type OrganizationPasswordCheckComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>, 'mutation'>;
+
+    export const OrganizationPasswordCheckComponent = (props: OrganizationPasswordCheckComponentProps) => (
+      <ApolloReactComponents.Mutation<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables> mutation={OrganizationPasswordCheckDocument} {...props} />
+    );
+    
+
+/**
+ * __useOrganizationPasswordCheckMutation__
+ *
+ * To run a mutation, you first call `useOrganizationPasswordCheckMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationPasswordCheckMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [organizationPasswordCheckMutation, { data, loading, error }] = useOrganizationPasswordCheckMutation({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useOrganizationPasswordCheckMutation(baseOptions?: Apollo.MutationHookOptions<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>(OrganizationPasswordCheckDocument, options);
+      }
+export type OrganizationPasswordCheckMutationHookResult = ReturnType<typeof useOrganizationPasswordCheckMutation>;
+export type OrganizationPasswordCheckMutationResult = Apollo.MutationResult<OrganizationPasswordCheckMutation>;
+export type OrganizationPasswordCheckMutationOptions = Apollo.BaseMutationOptions<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>;
 export const AddCommentDocument = gql`
     mutation addComment($payload: AddComment!) {
   addComment(payload: $payload) {
@@ -7710,117 +7772,6 @@ export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
 export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
 export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
-export const ChannelsDocument = gql`
-    query Channels($filter: ChannelFindAllFilter!) {
-  channels(filter: $filter) {
-    ... on AvailableChannel {
-      id
-      access
-      kind
-      description
-      geofence
-      slug
-      name
-      __typename
-    }
-    ... on GeolockedChannel {
-      id
-      name
-      kind
-      __typename
-    }
-  }
-}
-    `;
-export type ChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelsQuery, ChannelsQueryVariables>, 'query'> & ({ variables: ChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const ChannelsComponent = (props: ChannelsComponentProps) => (
-      <ApolloReactComponents.Query<ChannelsQuery, ChannelsQueryVariables> query={ChannelsDocument} {...props} />
-    );
-    
-
-/**
- * __useChannelsQuery__
- *
- * To run a query within a React component, call `useChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useChannelsQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useChannelsQuery(baseOptions: Apollo.QueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
-      }
-export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
-        }
-export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
-export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
-export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
-export const PublicChannelsDocument = gql`
-    query PublicChannels($filter: ChannelFindAllFilter!) {
-  publicChannels(filter: $filter) {
-    ... on AvailableChannel {
-      id
-      kind
-      description
-      geofence
-      slug
-      name
-      __typename
-    }
-    ... on GeolockedChannel {
-      id
-      name
-      kind
-      __typename
-    }
-  }
-}
-    `;
-export type PublicChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicChannelsQuery, PublicChannelsQueryVariables>, 'query'> & ({ variables: PublicChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const PublicChannelsComponent = (props: PublicChannelsComponentProps) => (
-      <ApolloReactComponents.Query<PublicChannelsQuery, PublicChannelsQueryVariables> query={PublicChannelsDocument} {...props} />
-    );
-    
-
-/**
- * __usePublicChannelsQuery__
- *
- * To run a query within a React component, call `usePublicChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `usePublicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePublicChannelsQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function usePublicChannelsQuery(baseOptions: Apollo.QueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
-      }
-export function usePublicChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
-        }
-export type PublicChannelsQueryHookResult = ReturnType<typeof usePublicChannelsQuery>;
-export type PublicChannelsLazyQueryHookResult = ReturnType<typeof usePublicChannelsLazyQuery>;
-export type PublicChannelsQueryResult = Apollo.QueryResult<PublicChannelsQuery, PublicChannelsQueryVariables>;
 export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
@@ -7922,6 +7873,216 @@ export function usePublicChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type PublicChannelQueryHookResult = ReturnType<typeof usePublicChannelQuery>;
 export type PublicChannelLazyQueryHookResult = ReturnType<typeof usePublicChannelLazyQuery>;
 export type PublicChannelQueryResult = Apollo.QueryResult<PublicChannelQuery, PublicChannelQueryVariables>;
+export const GetChannelKindDocument = gql`
+    query GetChannelKind($slug: String) {
+  channel(slug: $slug) {
+    ... on AvailableChannel {
+      access
+      id
+      kind
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      access
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type GetChannelKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelKindQuery, GetChannelKindQueryVariables>, 'query'>;
+
+    export const GetChannelKindComponent = (props: GetChannelKindComponentProps) => (
+      <ApolloReactComponents.Query<GetChannelKindQuery, GetChannelKindQueryVariables> query={GetChannelKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetChannelKindQuery__
+ *
+ * To run a query within a React component, call `useGetChannelKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetChannelKindQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+      }
+export function useGetChannelKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+        }
+export type GetChannelKindQueryHookResult = ReturnType<typeof useGetChannelKindQuery>;
+export type GetChannelKindLazyQueryHookResult = ReturnType<typeof useGetChannelKindLazyQuery>;
+export type GetChannelKindQueryResult = Apollo.QueryResult<GetChannelKindQuery, GetChannelKindQueryVariables>;
+export const GetChannelEntitlementsDocument = gql`
+    query GetChannelEntitlements($slug: String) {
+  channel(slug: $slug) {
+    ... on AvailableChannel {
+      slug
+      entitlements
+    }
+  }
+}
+    `;
+export type GetChannelEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>, 'query'>;
+
+    export const GetChannelEntitlementsComponent = (props: GetChannelEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables> query={GetChannelEntitlementsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetChannelEntitlementsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelEntitlementsQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetChannelEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+      }
+export function useGetChannelEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+        }
+export type GetChannelEntitlementsQueryHookResult = ReturnType<typeof useGetChannelEntitlementsQuery>;
+export type GetChannelEntitlementsLazyQueryHookResult = ReturnType<typeof useGetChannelEntitlementsLazyQuery>;
+export type GetChannelEntitlementsQueryResult = Apollo.QueryResult<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>;
+export const ChannelsDocument = gql`
+    query Channels($filter: ChannelFindAllFilter!) {
+  channels(filter: $filter) {
+    ... on AvailableChannel {
+      id
+      access
+      kind
+      description
+      geofence
+      slug
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type ChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelsQuery, ChannelsQueryVariables>, 'query'> & ({ variables: ChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const ChannelsComponent = (props: ChannelsComponentProps) => (
+      <ApolloReactComponents.Query<ChannelsQuery, ChannelsQueryVariables> query={ChannelsDocument} {...props} />
+    );
+    
+
+/**
+ * __useChannelsQuery__
+ *
+ * To run a query within a React component, call `useChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChannelsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useChannelsQuery(baseOptions: Apollo.QueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+      }
+export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+        }
+export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
+export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
+export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
+export const PublicChannelsDocument = gql`
+    query PublicChannels($filter: ChannelFindAllFilter!) {
+  publicChannels(filter: $filter) {
+    ... on AvailableChannel {
+      id
+      kind
+      access
+      description
+      geofence
+      slug
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type PublicChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicChannelsQuery, PublicChannelsQueryVariables>, 'query'> & ({ variables: PublicChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const PublicChannelsComponent = (props: PublicChannelsComponentProps) => (
+      <ApolloReactComponents.Query<PublicChannelsQuery, PublicChannelsQueryVariables> query={PublicChannelsDocument} {...props} />
+    );
+    
+
+/**
+ * __usePublicChannelsQuery__
+ *
+ * To run a query within a React component, call `usePublicChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicChannelsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function usePublicChannelsQuery(baseOptions: Apollo.QueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
+      }
+export function usePublicChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
+        }
+export type PublicChannelsQueryHookResult = ReturnType<typeof usePublicChannelsQuery>;
+export type PublicChannelsLazyQueryHookResult = ReturnType<typeof usePublicChannelsLazyQuery>;
+export type PublicChannelsQueryResult = Apollo.QueryResult<PublicChannelsQuery, PublicChannelsQueryVariables>;
 export const CommentsDocument = gql`
     query Comments($filter: CommentFilter) {
   comments(filter: $filter) {
@@ -8434,96 +8595,91 @@ export function useGetOrderResultLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetOrderResultQueryHookResult = ReturnType<typeof useGetOrderResultQuery>;
 export type GetOrderResultLazyQueryHookResult = ReturnType<typeof useGetOrderResultLazyQuery>;
 export type GetOrderResultQueryResult = Apollo.QueryResult<GetOrderResultQuery, GetOrderResultQueryVariables>;
-export const OrganizationDocument = gql`
-    query Organization($id: ID!) {
+export const GetOrganizationKindDocument = gql`
+    query GetOrganizationKind($id: ID!) {
   organization(id: $id) {
     id
-  }
-}
-    `;
-export type OrganizationComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationQuery, OrganizationQueryVariables>, 'query'> & ({ variables: OrganizationQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const OrganizationComponent = (props: OrganizationComponentProps) => (
-      <ApolloReactComponents.Query<OrganizationQuery, OrganizationQueryVariables> query={OrganizationDocument} {...props} />
-    );
-    
-
-/**
- * __useOrganizationQuery__
- *
- * To run a query within a React component, call `useOrganizationQuery` and pass it any options that fit your needs.
- * When your component renders, `useOrganizationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useOrganizationQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useOrganizationQuery(baseOptions: Apollo.QueryHookOptions<OrganizationQuery, OrganizationQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<OrganizationQuery, OrganizationQueryVariables>(OrganizationDocument, options);
-      }
-export function useOrganizationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationQuery, OrganizationQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<OrganizationQuery, OrganizationQueryVariables>(OrganizationDocument, options);
-        }
-export type OrganizationQueryHookResult = ReturnType<typeof useOrganizationQuery>;
-export type OrganizationLazyQueryHookResult = ReturnType<typeof useOrganizationLazyQuery>;
-export type OrganizationQueryResult = Apollo.QueryResult<OrganizationQuery, OrganizationQueryVariables>;
-export const OrganizationPublicSettingsDocument = gql`
-    query OrganizationPublicSettings($id: ID!) {
-  organizationPublicSettings(id: $id) {
-    id
-    name
+    access
     kind
-    status
-    tenant_id
-    customization
-    avatarCdnBaseUrl
-    audioCdnBaseUrl
-    imageCdnBaseUrl
   }
 }
     `;
-export type OrganizationPublicSettingsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>, 'query'> & ({ variables: OrganizationPublicSettingsQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type GetOrganizationKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>, 'query'> & ({ variables: GetOrganizationKindQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const OrganizationPublicSettingsComponent = (props: OrganizationPublicSettingsComponentProps) => (
-      <ApolloReactComponents.Query<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables> query={OrganizationPublicSettingsDocument} {...props} />
+    export const GetOrganizationKindComponent = (props: GetOrganizationKindComponentProps) => (
+      <ApolloReactComponents.Query<GetOrganizationKindQuery, GetOrganizationKindQueryVariables> query={GetOrganizationKindDocument} {...props} />
     );
     
 
 /**
- * __useOrganizationPublicSettingsQuery__
+ * __useGetOrganizationKindQuery__
  *
- * To run a query within a React component, call `useOrganizationPublicSettingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useOrganizationPublicSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetOrganizationKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizationKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useOrganizationPublicSettingsQuery({
+ * const { data, loading, error } = useGetOrganizationKindQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useOrganizationPublicSettingsQuery(baseOptions: Apollo.QueryHookOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>) {
+export function useGetOrganizationKindQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>(OrganizationPublicSettingsDocument, options);
+        return Apollo.useQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
       }
-export function useOrganizationPublicSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>) {
+export function useGetOrganizationKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>(OrganizationPublicSettingsDocument, options);
+          return Apollo.useLazyQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
         }
-export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsQuery>;
-export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
-export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
+export type GetOrganizationKindQueryHookResult = ReturnType<typeof useGetOrganizationKindQuery>;
+export type GetOrganizationKindLazyQueryHookResult = ReturnType<typeof useGetOrganizationKindLazyQuery>;
+export type GetOrganizationKindQueryResult = Apollo.QueryResult<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>;
+export const GetOrganizationEntitlementsDocument = gql`
+    query GetOrganizationEntitlements($id: ID!) {
+  organization(id: $id) {
+    id
+    entitlements
+  }
+}
+    `;
+export type GetOrganizationEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>, 'query'> & ({ variables: GetOrganizationEntitlementsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetOrganizationEntitlementsComponent = (props: GetOrganizationEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables> query={GetOrganizationEntitlementsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetOrganizationEntitlementsQuery__
+ *
+ * To run a query within a React component, call `useGetOrganizationEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizationEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrganizationEntitlementsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrganizationEntitlementsQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+      }
+export function useGetOrganizationEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+        }
+export type GetOrganizationEntitlementsQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsQuery>;
+export type GetOrganizationEntitlementsLazyQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsLazyQuery>;
+export type GetOrganizationEntitlementsQueryResult = Apollo.QueryResult<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>;
 export const GetPlaylistDocument = gql`
     query GetPlaylist($id: ID!, $postsFilters: PostFilter!) {
   playlist(id: $id) {
