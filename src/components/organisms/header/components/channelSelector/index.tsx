@@ -9,7 +9,13 @@ import { PropsChannelSelector } from './types'
 import { Channel, Kinds } from 'generated/graphql'
 
 import { QUERY_CHANNELS, QUERY_PUBLIC_CHANNELS } from 'services/graphql'
-import { useAuthStore, useChannelsStore, useOrganizationStore, useTabsStore, useThemeStore } from 'services/stores'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useOrganizationStore,
+  useTabsStore,
+  useThemeStore
+} from 'services/stores'
 
 import { Container, Popover, Text } from 'components'
 import { Channels, ChannelSelected } from './components'
@@ -40,8 +46,9 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const storedSingleChannel = getData(APP_SINGLE_CHANNEL)
 
   const [getChannels, { loading }] = useLazyQuery(
-    isAnonymousAccess && 
-    (organization?.kind === Kinds.Public || organization?.kind === Kinds.Exclusive)
+    isAnonymousAccess &&
+      (organization?.kind === Kinds.Public ||
+        organization?.kind === Kinds.Exclusive)
       ? QUERY_PUBLIC_CHANNELS
       : QUERY_CHANNELS,
     {
@@ -59,7 +66,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   )
 
   useEffect(() => {
-      getChannels()
+    getChannels()
     //eslint-disable-next-line
   }, [])
 
@@ -71,8 +78,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
     setOpen(true)
   }
 
-  // const handleSearch = (e: any) => setSearch(e.target.value)
-
   const handleSelect = (channel: Channel) => {
     let homeTab = tabsList.find((item) => item.TAB === 'home')
     if (homeTab) setActiveTab(homeTab)
@@ -81,6 +86,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
       name: channel.name,
       slug: channel.slug || '',
       kind: channel.kind || '',
+      access: channel.access || '',
     })
     setOpen(false)
     history.push(`/c/${channel.slug}`)
@@ -121,9 +127,9 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
           >
             <Container flexDirection="column">
               {/* <ChannelSearch
-            {...{ search, colorMode }}
-            onChange={() => handleSearch}
-          /> */}
+              {...{ search, colorMode }}
+              onChange={() => handleSearch}
+              /> */}
               <Channels
                 selected={activeChannel}
                 channels={channelsList || []}
@@ -140,4 +146,3 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
 }
 
 export { ChannelSelector }
-
