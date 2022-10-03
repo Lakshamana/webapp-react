@@ -1,6 +1,6 @@
 {
   "name": "@fanhero/webapp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "engines": {
     "yarn": "^1.22.4"
