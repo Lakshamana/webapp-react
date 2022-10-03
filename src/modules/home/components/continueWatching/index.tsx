@@ -27,7 +27,6 @@ const ContinueWatchingScrollerComponent = ({ item, getCarouselLabel }: Props) =>
       account
     }
     if (lastVideoId) params['lastVideoId'] = lastVideoId
-    console.log(account)
     setIsCWatchingLoading(true)
     try {
       const { data } = await axios.post(`https://${URL}/posts/continue-watching`, params)
