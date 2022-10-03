@@ -13,19 +13,18 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
     rows: [],
     slug: null,
     postFilters: { page: 0, hasNextPage: true },
-    collectionsFilters: { page: 0, hasNextPage: true }
+    categoryFilters: { page: 0, hasNextPage: true }
   })
   const { activeChannel } = useChannelsStore()
 
   const [getData, { loading }] = useLazyQuery(QUERY_PAGINATE_TAG(item.CONTENT_TYPE),
     {
       onCompleted: (result) => {
-        const { relatedPosts, ...all } = result.tag
+        const { relatedPosts, relatedCategories, ...all } = result.tag
         setTag((previous) => {
-          let rows: any = []
-          if (relatedPosts) {
-            rows = [...(previous.rows || []), ...relatedPosts?.rows]
-          }
+          let rows: any = [...(previous.rows)] || []
+          if (relatedPosts) rows = [...rows, ...relatedPosts?.rows]
+          if (relatedCategories) rows = [...rows, ...relatedCategories?.rows]
           return ({
             ...previous,
             ...all,
@@ -34,6 +33,10 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
               page: relatedPosts?.page,
               hasNextPage: relatedPosts?.hasNextPage,
             },
+            categoryFilters: {
+              page: relatedCategories?.page,
+              hasNextPage: relatedCategories?.hasNextPage,
+            },
           })
         })
       },
@@ -41,28 +44,33 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
     }
   )
 
+  const calculateRate = (contentType: string[]) =>
+    contentType.length >= 2
+      ? Math.round(MAX_CARDS_SCROLLER_RESULTS / 2)
+      : MAX_CARDS_SCROLLER_RESULTS
+
   const defineVariables = () => {
     setVariables((previous) => {
-      let defaultValues: any = { ...previous }
+      let defineParams: any = { ...previous }
       if (item.CONTENT_TYPE.includes(HomeCarouselsTypes.Posts)) {
-        defaultValues = {
-          ...defaultValues,
+        defineParams = {
+          ...defineParams,
           postFilters: {
-            pageSize: MAX_CARDS_SCROLLER_RESULTS,
+            pageSize: calculateRate(item.CONTENT_TYPE),
             page: tag.postFilters.page + 1 ?? 1
           }
         }
       }
       if (item.CONTENT_TYPE.includes(HomeCarouselsTypes.Collections)) {
-        defaultValues = {
-          ...defaultValues,
-          collectionsFilters: {
-            pageSize: MAX_CARDS_SCROLLER_RESULTS,
-            page: tag.collectionsFilters.page + 1 ?? 1
+        defineParams = {
+          ...defineParams,
+          categoryFilters: {
+            pageSize: calculateRate(item.CONTENT_TYPE),
+            page: tag.categoryFilters.page + 1 ?? 1
           }
         }
       }
-      return defaultValues
+      return defineParams
     })
   }
 
@@ -73,8 +81,16 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
   useEffect(() => defineVariables(), [item])
 
   const loadMore = () => {
-    if (!tag.postFilters.hasNextPage) return
-    defineVariables()
+    if (item.CONTENT_TYPE.length >= 2) {
+      if (!tag.postFilters.hasNextPage && !tag.categoryFilters.hasNextPage) return
+      defineVariables()
+    }
+    if (item.CONTENT_TYPE.includes(HomeCarouselsTypes.Posts)) {
+      return tag.postFilters.hasNextPage ? defineVariables() : null
+    }
+    if (item.CONTENT_TYPE.includes(HomeCarouselsTypes.Collections)) {
+      return tag.categoryFilters.hasNextPage ? defineVariables() : null
+    }
   }
 
   return (
