@@ -1,7 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import { Box, Flex } from '@chakra-ui/layout'
 import { Center, Divider, useMediaQuery } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { PropsChannelSelector } from './types'
@@ -64,11 +64,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
       },
     }
   )
-
-  useEffect(() => {
-    getChannels()
-    //eslint-disable-next-line
-  }, [])
 
   const openChannelsList = () => {
     if (!channelsList?.length && !isAnonymousAccess) {
