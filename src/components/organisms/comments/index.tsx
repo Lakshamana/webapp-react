@@ -28,12 +28,15 @@ import {
 } from 'services/graphql'
 import { useAuthStore, useCommentsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
+import { sendPostCommentReport } from 'utils/analytics'
+import { RANDOM_ID } from 'utils/helperFunctions'
 import { initialValues, validationSchema } from './settings'
 import { ISelectPopup, typeOfCard } from './types'
 
 const Comments = ({ ...props }: Post) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
+  const { user } = useAuthStore()
   const {
     commentsStore,
     repliesStore,
@@ -53,9 +56,22 @@ const Comments = ({ ...props }: Post) => {
     }
   )
   const { isAnonymousAccess } = useAuthStore()
-  const { showActionNotAllowedAlert} = useAccessVerifications()
+  const { showActionNotAllowedAlert } = useAccessVerifications()
   const [addComment, { data: newComment, loading: newCommentLoading }] =
-    useMutation(MUTATION_ADD_COMMENT)
+    useMutation(MUTATION_ADD_COMMENT, {
+      onCompleted: () => {
+        sendPostCommentReport({
+          channelId: props.channel,
+          contentId: props.id,
+          contentTitle: props.title,
+          mediaSessionId: RANDOM_ID(),
+          typename: props.__typename || '',
+          userId: user?.id || '',
+          collectionId: props.categories?.length ? props.categories[0].id : '',
+          comment: 1,
+        })
+      },
+    })
   const [editComment, { data: editedComment, loading: editedCommentLoading }] =
     useMutation(MUTATION_UPDATE_COMMENT)
   const [
@@ -384,8 +400,12 @@ const Comments = ({ ...props }: Post) => {
             <CommentCard
               key={`comment-${comment.id}`}
               postId={props.id}
-              addComment={isAnonymousAccess ? showActionNotAllowedAlert : addComment}
-              editComment={isAnonymousAccess ? showActionNotAllowedAlert : editComment}
+              addComment={
+                isAnonymousAccess ? showActionNotAllowedAlert : addComment
+              }
+              editComment={
+                isAnonymousAccess ? showActionNotAllowedAlert : editComment
+              }
               selectPopupOption={handleSelectPopupOption}
               newCommentLoading={newCommentLoading}
               editedCommentLoading={editedCommentLoading}

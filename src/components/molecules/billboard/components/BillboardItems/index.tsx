@@ -65,6 +65,7 @@ const SwiperSlideList = ({ items, customButtons, reachEnd }: Props) => {
                   <CategoryButtons
                     isPinned={item.isPinned || false}
                     categoryId={item.id}
+                    categorySlug={item.slug || ''}
                   />
                 )}
               </InfoContent>

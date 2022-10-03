@@ -15,10 +15,12 @@ import {
   MUTATION_SIGNIN,
   MUTATION_SOCIAL_SIGNIN
 } from 'services/graphql'
+
 import { saveData } from 'services/storage'
 import { useAuthStore, useCommonStore } from 'services/stores'
 import { sizes } from 'styles'
 import { SocialType } from 'types/common'
+import { sendAuthReport } from 'utils/analytics'
 import { Container } from './styles'
 import { SignInSteps } from './types'
 
@@ -94,7 +96,8 @@ const LoginPage = () => {
   const [createAccountGDPR, { loading: createAccountGDPRLoading }] =
     useMutation(MUTATION_CREATE_ACCOUNT_GDPR, {
       onCompleted: async (result) => {
-        if (result.createAccountGdprLgpd && !isSocialSignin) setActiveStep('ConfirmEmail')
+        if (result.createAccountGdprLgpd && !isSocialSignin)
+          setActiveStep('ConfirmEmail')
         isSocialSignin && history.push('/channels')
       },
       onError: ({ message }) => setError(errorMessage(message)),
@@ -111,7 +114,18 @@ const LoginPage = () => {
     })
   }
 
-  const handleFormSubmit = (FormData) => signIn({ variables: { ...FormData } })
+  const handleFormSubmit = (FormData) => {
+    const email = FormData.payload.email.toLowerCase()
+    signIn({
+      variables: {
+        payload: {
+          email,
+          password: FormData.payload.password,
+        },
+      },
+    })
+    sendAuthReport({ email, kind: 'login' })
+  }
 
   const handleSocialSignIn = (kind: SocialType) => {
     SocialSignIn(kind)

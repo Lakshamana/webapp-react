@@ -12,3 +12,14 @@ export const relatedPostsFilter = (page: number, categories?: string[]) => {
     },
   }
 }
+
+export const playlistPostsFilter = (page: number) => {
+  return {
+    postsFilters: {
+      typeIn: [PostType.Video, PostType.OnDemand],
+      status: Status.Published,
+      pageSize: MAX_PLAYLIST_RESULTS,
+      page,
+    },
+  }
+}

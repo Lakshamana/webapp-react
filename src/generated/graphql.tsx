@@ -24,6 +24,12 @@ export type Scalars = {
   VoidScalar: any;
 };
 
+export enum AccessKinds {
+  Available = 'AVAILABLE',
+  Geolocked = 'GEOLOCKED',
+  Redacted = 'REDACTED'
+}
+
 export type AccessToken = {
   __typename?: 'AccessToken';
   accessToken: Scalars['String'];
@@ -205,11 +211,12 @@ export type AudioInput = {
 
 export type AvailableChannel = {
   __typename?: 'AvailableChannel';
+  access: AccessKinds;
   banner?: Maybe<Scalars['JSON']>;
   customization?: Maybe<ChannelCustomizationOutput>;
   deleted: Scalars['Boolean'];
   description: Scalars['String'];
-  entitlements?: Maybe<Scalars['JSON']>;
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
@@ -220,7 +227,6 @@ export type AvailableChannel = {
   password?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
-  thumbnail?: Maybe<Scalars['JSON']>;
 };
 
 export type BanAccountTemporary = {
@@ -279,14 +285,14 @@ export enum BillboardTarget {
 }
 
 export type BillingAddressInput = {
-  address1: Scalars['String'];
-  address2: Scalars['String'];
-  city: Scalars['String'];
+  address1?: Maybe<Scalars['String']>;
+  address2?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
   countryId: Scalars['String'];
-  neighborhood: Scalars['String'];
-  stateId: Scalars['String'];
-  streetNumber: Scalars['String'];
-  zipCode: Scalars['String'];
+  neighborhood?: Maybe<Scalars['String']>;
+  stateId?: Maybe<Scalars['String']>;
+  streetNumber?: Maybe<Scalars['String']>;
+  zipCode?: Maybe<Scalars['String']>;
 };
 
 export type BillingPeriodsOutput = {
@@ -301,16 +307,27 @@ export type BillingTypesOutput = {
   name: Scalars['String'];
 };
 
+export type CancelNotificationInput = {
+  oneSignalId: Scalars['String'];
+};
+
+export type CancelNotificationOutput = {
+  __typename?: 'CancelNotificationOutput';
+  success: Scalars['Boolean'];
+};
+
 export type Category = {
   __typename?: 'Category';
-  access?: Maybe<Scalars['String']>;
+  access?: Maybe<AccessKinds>;
   channel: Scalars['ID'];
   children: Array<Category>;
   createdAt: Scalars['DateTime'];
   customization?: Maybe<CategoryCustomization>;
   description?: Maybe<Scalars['String']>;
+  entitlements: Array<Scalars['JSONObject']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
   id: Scalars['ID'];
   isChild?: Maybe<Scalars['Boolean']>;
   isDeleted?: Maybe<Scalars['Boolean']>;
@@ -361,15 +378,17 @@ export type CategoryFilter = {
   parent?: Maybe<Scalars['ID']>;
   pinned?: Maybe<Scalars['Boolean']>;
   sortBy?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type CategoryInput = {
   access?: Maybe<Scalars['String']>;
   customization?: Maybe<CategoryCustomizationInput>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['JSONObject']>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   isChild?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
   name: Scalars['String'];
@@ -415,15 +434,15 @@ export type ChannelCustomizationLightDarkInput = {
 
 export type ChannelCustomizationLightDarkOutput = {
   __typename?: 'ChannelCustomizationLightDarkOutput';
-  dark?: Maybe<Scalars['ID']>;
-  light?: Maybe<Scalars['ID']>;
+  dark?: Maybe<CustomizationMediaOutput>;
+  light?: Maybe<CustomizationMediaOutput>;
 };
 
 export type ChannelCustomizationOutput = {
   __typename?: 'ChannelCustomizationOutput';
   icon?: Maybe<ChannelCustomizationLightDarkOutput>;
   logo?: Maybe<ChannelCustomizationLightDarkOutput>;
-  thumbnail?: Maybe<Scalars['ID']>;
+  thumbnail?: Maybe<CustomizationMediaOutput>;
 };
 
 export type ChannelFindAllFilter = {
@@ -523,6 +542,9 @@ export type ConfirmOrder = {
   country?: Maybe<Scalars['String']>;
   /** Customer CPF */
   cpf: Scalars['String'];
+  currencyId?: Maybe<Scalars['String']>;
+  customerGrossAmount?: Maybe<Scalars['Float']>;
+  description?: Maybe<Scalars['String']>;
   /** the user card expiration date */
   expirationDate?: Maybe<Scalars['String']>;
   /** the last 4 values of user card */
@@ -536,6 +558,7 @@ export type ConfirmOrder = {
   product: Scalars['String'];
   /** the product price id of inspire product */
   productPrice: Scalars['String'];
+  statementDescriptor?: Maybe<Scalars['String']>;
 };
 
 export type CouponCode = {
@@ -648,18 +671,22 @@ export type CreateAccountSocialSignInDto = {
 
 export type CreateAudioPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
+  hiddenFromFeed?: Maybe<Scalars['Boolean']>;
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
-  media: Scalars['ID'];
+  media?: Maybe<Scalars['ID']>;
   playlists?: Maybe<Array<Scalars['String']>>;
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  tags?: Maybe<Array<Scalars['String']>>;
   thumbnail: Scalars['ID'];
   title: Scalars['String'];
 };
@@ -678,13 +705,15 @@ export type CreateBillboardInput = {
 export type CreateChannelInput = {
   customization?: Maybe<ChannelCustomizationInput>;
   description: Scalars['String'];
-  entitlements?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['ID']>>;
   geofence?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind?: Maybe<Kinds>;
   menu?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   password?: Maybe<Scalars['String']>;
   status?: Maybe<ChannelStatus>;
+  thumbnail?: Maybe<Scalars['ID']>;
 };
 
 export type CreateCouponCodeInput = {
@@ -730,7 +759,9 @@ export type CreateEmailTemplateDto = {
 };
 
 export type CreateEnvConfigInput = {
+  analyticsAPI?: Maybe<Scalars['String']>;
   apiEndpoint: Scalars['String'];
+  facebookTag?: Maybe<Scalars['String']>;
   firebaseApiKey: Scalars['String'];
   firebaseAppId: Scalars['String'];
   firebaseAuthApiKey: Scalars['String'];
@@ -741,7 +772,22 @@ export type CreateEnvConfigInput = {
   firebaseMeasurementId: Scalars['String'];
   firebaseProject: Scalars['String'];
   firebaseSender: Scalars['String'];
+  googleTag?: Maybe<Scalars['String']>;
+  inspireAuthUrl?: Maybe<Scalars['String']>;
+  inspirePassword?: Maybe<Scalars['String']>;
+  inspirePaymentUrl?: Maybe<Scalars['String']>;
+  inspireTenantId?: Maybe<Scalars['String']>;
+  inspireUrl?: Maybe<Scalars['String']>;
+  inspireUsername?: Maybe<Scalars['String']>;
+  muxKey?: Maybe<Scalars['String']>;
+  onesignalAppId?: Maybe<Scalars['String']>;
+  onesignalSafariWebId?: Maybe<Scalars['String']>;
   remoteConfigSecret: Scalars['String'];
+  s3SignedUrl?: Maybe<Scalars['String']>;
+  uploadAwsKey?: Maybe<Scalars['String']>;
+  videoAnalyticsPassword?: Maybe<Scalars['String']>;
+  videoAnalyticsUrl?: Maybe<Scalars['String']>;
+  videoAnalyticsUsername?: Maybe<Scalars['String']>;
 };
 
 export type CreateGroupDto = {
@@ -782,6 +828,7 @@ export type CreateMediaInput = {
   height?: Maybe<Scalars['Float']>;
   hlsPath?: Maybe<Scalars['String']>;
   imgPath?: Maybe<Scalars['String']>;
+  locale?: Maybe<MediaLocale>;
   mp4Path?: Maybe<Scalars['String']>;
   mp4VodUrl?: Maybe<Scalars['String']>;
   orientation?: Maybe<MediaOrientation>;
@@ -789,6 +836,7 @@ export type CreateMediaInput = {
   thumbnailPath?: Maybe<Array<Scalars['String']>>;
   type?: Maybe<MediaTypeEnum>;
   upload?: Maybe<Scalars['ID']>;
+  vttPath?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Float']>;
 };
 
@@ -806,7 +854,11 @@ export type CreateNestedPermissionsInput = {
 };
 
 export type CreateOrganizationInput = {
+  entitlements?: Maybe<Array<Scalars['String']>>;
+  favicon?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind: Kinds;
+  logo?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   password?: Maybe<Scalars['String']>;
 };
@@ -820,17 +872,21 @@ export type CreatePermissionInput = {
 
 export type CreatePhotoPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
+  hiddenFromFeed?: Maybe<Scalars['Boolean']>;
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
   media: Scalars['ID'];
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  tags?: Maybe<Array<Scalars['String']>>;
   title: Scalars['String'];
 };
 
@@ -876,17 +932,21 @@ export type CreateTagInput = {
 
 export type CreateTextPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
+  hiddenFromFeed?: Maybe<Scalars['Boolean']>;
   inFeed?: Maybe<Scalars['Boolean']>;
   kind?: Maybe<Kinds>;
-  media: Scalars['ID'];
+  media?: Maybe<Scalars['ID']>;
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  tags?: Maybe<Array<Scalars['String']>>;
   title: Scalars['String'];
 };
 
@@ -896,6 +956,8 @@ export type CreateUploadInput = {
   expired?: Maybe<Scalars['Boolean']>;
   filename: Scalars['String'];
   isAvatar?: Maybe<Scalars['Boolean']>;
+  locale?: Maybe<MediaLocale>;
+  mediaVideoId?: Maybe<Scalars['String']>;
   status?: Maybe<UploadStatusEnum>;
   url?: Maybe<Scalars['String']>;
 };
@@ -906,6 +968,7 @@ export type CreateVideoPost = {
   categories?: Maybe<Array<Scalars['String']>>;
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['String']>>;
+  featured?: Maybe<Scalars['Boolean']>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geofence?: Maybe<GeofenceInput>;
   geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
@@ -917,6 +980,7 @@ export type CreateVideoPost = {
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  subtitles?: Maybe<Array<Scalars['String']>>;
   tags?: Maybe<Array<Scalars['String']>>;
   thumbnail?: Maybe<Scalars['ID']>;
   title: Scalars['String'];
@@ -942,6 +1006,64 @@ export enum CustomFieldTypesEnum {
   Boolean = 'BOOLEAN',
   Number = 'NUMBER',
   String = 'STRING'
+}
+
+export type CustomPushNotificationInput = {
+  /** Only one notification with the same id will be shown on the device. Use the same id to update an existing notification instead of showing a new one. Limit of 64 characters. */
+  collapse_id?: Maybe<Scalars['String']>;
+  /** A custom map of data that is passed back to your app. */
+  data?: Maybe<Scalars['JSONObject']>;
+  /** Possible values are: timezone (Deliver at a specific time-of-day in each users own timezone) last-active Same as Intelligent Delivery . (Deliver at the same time of day as each user last used your app). If send_after is used, this takes effect after the send_after time has elapsed. */
+  delayed_option?: Maybe<DelayedOptionEnum>;
+  /** Time for delivery using timezone (if the time is in the past for specific user, will be sent in next day) */
+  delivery_time_of_day?: Maybe<Scalars['String']>;
+  /** Media for icon */
+  iconMediaId?: Maybe<Scalars['String']>;
+  /** Media for image */
+  imageMediaId?: Maybe<Scalars['String']>;
+  /** The segment names you want to target. Users in these segments will receive a notification.  */
+  included_segments?: Maybe<Array<Scalars['String']>>;
+  /** Indicates whether to send to all devices registered under your app's Google Android platform. */
+  isAndroid?: Maybe<Scalars['Boolean']>;
+  /** Indicates whether to send to all Google Chrome, Chrome on Android, and Mozilla Firefox users registered under your Chrome & Firefox web push platform. */
+  isChromeWeb?: Maybe<Scalars['Boolean']>;
+  /** Indicates whether to send to all Edge browsers */
+  isEdge?: Maybe<Scalars['Boolean']>;
+  /** Indicates whether to send to all Mozilla Firefox desktop users registered under your Firefox web push platform. */
+  isFirefox?: Maybe<Scalars['Boolean']>;
+  /** Indicates whether to send to all devices registered under your app's Apple iOS platform. */
+  isIos?: Maybe<Scalars['Boolean']>;
+  /** Does not support iOS Safari. Indicates whether to send to all Apple's Safari desktop users registered under your Safari web push platform.  */
+  isSafari?: Maybe<Scalars['Boolean']>;
+  languageMessages: Array<LanguageMessage>;
+  /** An internal name to assist with your campaign organization. */
+  name?: Maybe<Scalars['String']>;
+  /** Delivery priority through the push server (example GCM/FCM). Pass 10 for high priority or any other integer for normal priority. */
+  priority?: Maybe<Scalars['String']>;
+  /** Schedule notification for future delivery. */
+  send_after?: Maybe<Scalars['DateTime']>;
+  /** Time To Live - In seconds. The notification will be expired if the device does not come back online within this time. The default is 259,200 seconds (3 days). */
+  ttl?: Maybe<Scalars['String']>;
+  /** The URL to open in the browser when a user clicks on the notification. */
+  url?: Maybe<Scalars['String']>;
+  /** Display multiple notifications at once with different topics. */
+  web_push_topic?: Maybe<Scalars['String']>;
+};
+
+export type CustomizationMediaOutput = {
+  __typename?: 'CustomizationMediaOutput';
+  account?: Maybe<Scalars['ID']>;
+  baseUrl?: Maybe<Scalars['String']>;
+  channel?: Maybe<Scalars['ID']>;
+  filename?: Maybe<Scalars['String']>;
+  imgPath?: Maybe<Scalars['String']>;
+  isAvatar: Scalars['Boolean'];
+  upload?: Maybe<Scalars['ID']>;
+};
+
+export enum DelayedOptionEnum {
+  LastActive = 'LAST_ACTIVE',
+  Timezone = 'TIMEZONE'
 }
 
 export type EmailResponseEnvelopeDto = {
@@ -1018,7 +1140,9 @@ export type EntitlementsGeofenceInput = {
 
 export type EnvConfig = {
   __typename?: 'EnvConfig';
+  analyticsAPI?: Maybe<Scalars['String']>;
   apiEndpoint: Scalars['String'];
+  facebookTag?: Maybe<Scalars['String']>;
   firebaseApiKey: Scalars['String'];
   firebaseAppId: Scalars['String'];
   firebaseAuthApiKey: Scalars['String'];
@@ -1029,9 +1153,24 @@ export type EnvConfig = {
   firebaseMeasurementId: Scalars['String'];
   firebaseProject: Scalars['String'];
   firebaseSender: Scalars['String'];
+  googleTag?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  inspireAuthUrl?: Maybe<Scalars['String']>;
+  inspirePassword?: Maybe<Scalars['String']>;
+  inspirePaymentUrl?: Maybe<Scalars['String']>;
+  inspireTenantId?: Maybe<Scalars['String']>;
+  inspireUrl?: Maybe<Scalars['String']>;
+  inspireUsername?: Maybe<Scalars['String']>;
+  muxKey?: Maybe<Scalars['String']>;
+  onesignalAppId?: Maybe<Scalars['String']>;
+  onesignalSafariWebId?: Maybe<Scalars['String']>;
   organization: Scalars['ID'];
   remoteConfigSecret: Scalars['String'];
+  s3SignedUrl?: Maybe<Scalars['String']>;
+  uploadAwsKey?: Maybe<Scalars['String']>;
+  videoAnalyticsPassword?: Maybe<Scalars['String']>;
+  videoAnalyticsUrl?: Maybe<Scalars['String']>;
+  videoAnalyticsUsername?: Maybe<Scalars['String']>;
 };
 
 export type FilterFindAll = {
@@ -1177,11 +1316,12 @@ export type GeofenceInput = {
 
 export type GeolockedChannel = {
   __typename?: 'GeolockedChannel';
+  access: AccessKinds;
   banner?: Maybe<Scalars['JSON']>;
   customization?: Maybe<ChannelCustomizationOutput>;
   deleted: Scalars['Boolean'];
   description: Scalars['String'];
-  entitlements?: Maybe<Scalars['JSON']>;
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
   geofence?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
@@ -1192,7 +1332,6 @@ export type GeolockedChannel = {
   password?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
-  thumbnail?: Maybe<Scalars['JSON']>;
 };
 
 export type GetSubscriptionCouponRedeems = {
@@ -1415,6 +1554,13 @@ export enum Kinds {
   Public = 'PUBLIC'
 }
 
+export type LanguageMessage = {
+  header?: Maybe<Scalars['String']>;
+  language: OneSignalLanguage;
+  message: Scalars['String'];
+  subtitle?: Maybe<Scalars['String']>;
+};
+
 export type ListNotificationInput = {
   page?: Maybe<Scalars['Float']>;
   pageSize?: Maybe<Scalars['Float']>;
@@ -1422,7 +1568,7 @@ export type ListNotificationInput = {
 
 export type LiveEvent = {
   __typename?: 'LiveEvent';
-  access?: Maybe<Scalars['String']>;
+  access?: Maybe<AccessKinds>;
   backupPublishEndpoint?: Maybe<Scalars['String']>;
   backupStreamName?: Maybe<Scalars['String']>;
   category?: Maybe<Category>;
@@ -1513,7 +1659,7 @@ export type LiveEventInput = {
   presenceEnabled?: Maybe<Scalars['Boolean']>;
   pushNotification?: Maybe<PushNotification>;
   reactionsEnabled?: Maybe<Scalars['Boolean']>;
-  scheduledStartAt?: Maybe<Scalars['DateTime']>;
+  scheduledStartAt: Scalars['DateTime'];
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
@@ -1573,6 +1719,7 @@ export type Media = {
   hlsPath?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isAvatar: Scalars['Boolean'];
+  label?: Maybe<Scalars['String']>;
   mp4Path?: Maybe<Scalars['String']>;
   orientation?: Maybe<Scalars['String']>;
   status: MediaStatusEnum;
@@ -1592,6 +1739,7 @@ export type MediaAudio = {
   filename?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isAvatar: Scalars['Boolean'];
+  label?: Maybe<Scalars['String']>;
   mp3Path?: Maybe<Scalars['String']>;
   status?: Maybe<MediaStatusEnum>;
   type?: Maybe<MediaTypeEnum>;
@@ -1612,6 +1760,16 @@ export type MediaFromLiveResult = {
   status: Scalars['String'];
 };
 
+export enum MediaLocale {
+  EnGb = 'EN_GB',
+  EnUs = 'EN_US',
+  EsEs = 'ES_ES',
+  FrCa = 'FR_CA',
+  FrFr = 'FR_FR',
+  PtBr = 'PT_BR',
+  PtPt = 'PT_PT'
+}
+
 export enum MediaOrientation {
   Landscape = 'landscape',
   Portrait = 'portrait'
@@ -1629,6 +1787,7 @@ export type MediaPhoto = {
   id: Scalars['ID'];
   imgPath?: Maybe<Scalars['String']>;
   isAvatar: Scalars['Boolean'];
+  label?: Maybe<Scalars['String']>;
   orientation?: Maybe<MediaOrientation>;
   status?: Maybe<MediaStatusEnum>;
   type?: Maybe<MediaTypeEnum>;
@@ -1651,19 +1810,38 @@ export enum MediaStatusEnum {
   Ingest = 'Ingest',
   Processing = 'Processing',
   Ready = 'Ready',
+  SubtitleComplete = 'SubtitleComplete',
   Transcoding = 'Transcoding',
   Uploaded = 'Uploaded',
   Uploading = 'Uploading'
 }
 
+export type MediaSubtitle = {
+  __typename?: 'MediaSubtitle';
+  account?: Maybe<Scalars['ID']>;
+  baseUrl?: Maybe<Scalars['String']>;
+  channel?: Maybe<Scalars['ID']>;
+  createdAt: Scalars['DateTime'];
+  filename?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  isAvatar: Scalars['Boolean'];
+  label?: Maybe<Scalars['String']>;
+  locale?: Maybe<Scalars['String']>;
+  status?: Maybe<MediaStatusEnum>;
+  type?: Maybe<MediaTypeEnum>;
+  upload?: Maybe<Scalars['ID']>;
+  vttPath?: Maybe<Scalars['String']>;
+};
+
 export enum MediaTypeEnum {
   Audio = 'Audio',
   Image = 'Image',
   Livestream = 'Livestream',
+  Subtitle = 'Subtitle',
   Video = 'Video'
 }
 
-export type MediaUnion = MediaAudio | MediaPhoto | MediaVideo;
+export type MediaUnion = MediaAudio | MediaPhoto | MediaSubtitle | MediaVideo;
 
 export type MediaVideo = {
   __typename?: 'MediaVideo';
@@ -1675,17 +1853,20 @@ export type MediaVideo = {
   dashPath?: Maybe<Scalars['String']>;
   duration?: Maybe<Scalars['Int']>;
   filename?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Int']>;
   hlsPath?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isAvatar: Scalars['Boolean'];
+  label?: Maybe<Scalars['String']>;
   mp4Path?: Maybe<Scalars['String']>;
   orientation?: Maybe<MediaOrientation>;
   status?: Maybe<MediaStatusEnum>;
+  subtitles?: Maybe<Array<MediaSubtitle>>;
   thumbnailPath?: Maybe<Scalars['String']>;
+  transcodePercentComplete?: Maybe<Scalars['Float']>;
   type?: Maybe<MediaTypeEnum>;
   upload?: Maybe<Scalars['ID']>;
-  width?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
 };
 
 export type Menu = {
@@ -1728,6 +1909,7 @@ export type Mutation = {
   addPendingOrder: Order;
   addReaction: Array<ReactionsAggregate>;
   addReport: Report;
+  addView: Post;
   addVote: AddedCommentVote;
   archiveCouponCode: Scalars['VoidScalar'];
   atomicUpdateCategorySorting: CategorySortingOutput;
@@ -1736,6 +1918,7 @@ export type Mutation = {
   banAccountPerm: Account;
   banAccountTemp: Account;
   bindChannelAndOrganization: Account;
+  cancelNotification: CancelNotificationOutput;
   categoryPasswordCheck: CategoryPasswordCheck;
   channelPasswordCheck: ChannelPasswordCheck;
   confirmOrder: Order;
@@ -1775,6 +1958,7 @@ export type Mutation = {
   createUpload: ResponseUploadCreation;
   createVideoMedia: MediaVideo;
   createVideoPost: Post;
+  customPushNotification: PushNotificationResult;
   deactiveAccount: Account;
   deleteAccountPinnedCategory: AccountPinnedCategory;
   deleteAccountPinnedPost: AccountPinnedPost;
@@ -1860,6 +2044,7 @@ export type Mutation = {
   updateLiveEvent: LiveEvent;
   updateMediaAudio: MediaAudio;
   updateMediaPhoto: MediaPhoto;
+  updateMediaSubtitle: MediaSubtitle;
   updateMediaVideo: MediaVideo;
   updateMenu: Menu;
   updateMyAccount: Account;
@@ -1920,6 +2105,11 @@ export type MutationAddReportArgs = {
 };
 
 
+export type MutationAddViewArgs = {
+  postId: Scalars['String'];
+};
+
+
 export type MutationAddVoteArgs = {
   input: AddCommentVote;
 };
@@ -1961,6 +2151,11 @@ export type MutationBindChannelAndOrganizationArgs = {
   accountId: Scalars['ID'];
   channelId: Scalars['ID'];
   organizationId: Scalars['ID'];
+};
+
+
+export type MutationCancelNotificationArgs = {
+  payload: CancelNotificationInput;
 };
 
 
@@ -2157,6 +2352,11 @@ export type MutationCreateVideoPostArgs = {
 };
 
 
+export type MutationCustomPushNotificationArgs = {
+  payload: CustomPushNotificationInput;
+};
+
+
 export type MutationDeactiveAccountArgs = {
   account: Scalars['String'];
 };
@@ -2280,7 +2480,7 @@ export type MutationLiveEventPasswordCheckArgs = {
 
 
 export type MutationOneTimePaymentArgs = {
-  payload: OneTimePayment;
+  payload: ConfirmOrder;
 };
 
 
@@ -2588,6 +2788,12 @@ export type MutationUpdateMediaPhotoArgs = {
 };
 
 
+export type MutationUpdateMediaSubtitleArgs = {
+  id: Scalars['String'];
+  payload: UpdateMediaSubtitlesInput;
+};
+
+
 export type MutationUpdateMediaVideoArgs = {
   id: Scalars['String'];
   payload: UpdateMediaVideo;
@@ -2716,6 +2922,8 @@ export type MutationVerifyMailArgs = {
 
 export type NotificationOutput = {
   __typename?: 'NotificationOutput';
+  /** If notification is canceled */
+  canceled: Scalars['Boolean'];
   /** Date indicating when message delivery was completed. */
   completedAt?: Maybe<Scalars['DateTime']>;
   /** Contents of the notification */
@@ -2724,12 +2932,30 @@ export type NotificationOutput = {
   converted: Scalars['Float'];
   /** Message with the organization language */
   defaultLangMessage: Scalars['String'];
+  /** Title with the organization language */
+  defaultLangTitle: Scalars['String'];
   /** Number of devices with an error. */
   errored: Scalars['Float'];
   /** Number of devices reported as unsubscribed. */
   failed: Scalars['Float'];
+  /** Contents of the notification */
+  headings: Scalars['JSONObject'];
   /** Segments that this notification was sent to */
   includedSegments: Array<Scalars['String']>;
+  /** Indicates whether to send to all devices registered under your app's Google Android platform. */
+  isAndroid: Scalars['Boolean'];
+  /** Indicates whether to send to all Google Chrome, Chrome on Android, and Mozilla Firefox users registered under your Chrome & Firefox web push platform. */
+  isChromeWeb: Scalars['Boolean'];
+  /** Indicates whether to send to all devices registered under edge browser */
+  isEdge: Scalars['Boolean'];
+  /** Indicates whether to send to all Mozilla Firefox desktop users registered under your Firefox web push platform. */
+  isFirefox: Scalars['Boolean'];
+  /** Indicates whether to send to all devices registered under your app's Apple iOS platform */
+  isIos: Scalars['Boolean'];
+  /** Does not support iOS Safari. Indicates whether to send to all Apple's Safari desktop users registered under your Safari web push platform. */
+  isSafari: Scalars['Boolean'];
+  /** Name for the signal */
+  name: Scalars['String'];
   /** One Signal ID */
   oneSignalId: Scalars['String'];
   /** Date indicating when the message was created. */
@@ -2740,26 +2966,66 @@ export type NotificationOutput = {
   remaining: Scalars['Float'];
   /** Date when message delivery should begin. */
   sendAfter?: Maybe<Scalars['DateTime']>;
+  status: OneSignalStatusEnum;
   /** Number of notifications delivered to the Google/Apple/Windows servers. */
   successful: Scalars['Float'];
   /** Optional URL for the notification */
   url?: Maybe<Scalars['String']>;
 };
 
-export type OneTimePayment = {
-  currencyId: Scalars['String'];
-  customerCard: OneTimePaymentCustomerCard;
-  customerGrossAmount: Scalars['Float'];
-  saveCardToCustomer?: Maybe<Scalars['Boolean']>;
-};
+export enum OneSignalLanguage {
+  Arabic = 'ARABIC',
+  Azerbaijani = 'AZERBAIJANI',
+  Bosnian = 'BOSNIAN',
+  Bulgarian = 'BULGARIAN',
+  Catalan = 'CATALAN',
+  Chinese2 = 'CHINESE2',
+  Chinese3 = 'CHINESE3',
+  Croatian = 'CROATIAN',
+  Czech = 'CZECH',
+  Danish = 'DANISH',
+  Default = 'DEFAULT',
+  Dutch = 'DUTCH',
+  English = 'ENGLISH',
+  Estonian = 'ESTONIAN',
+  Finnish = 'FINNISH',
+  French = 'FRENCH',
+  Georgian = 'GEORGIAN',
+  German = 'GERMAN',
+  Greek = 'GREEK',
+  Hebrew = 'HEBREW',
+  Hindi = 'HINDI',
+  Hungarian = 'HUNGARIAN',
+  Indonesian = 'INDONESIAN',
+  Italian = 'ITALIAN',
+  Japanese = 'JAPANESE',
+  Korean = 'KOREAN',
+  Latvian = 'LATVIAN',
+  Lithuanian = 'LITHUANIAN',
+  Malay = 'MALAY',
+  Norwegian = 'NORWEGIAN',
+  Persian = 'PERSIAN',
+  Polish = 'POLISH',
+  Portuguese = 'PORTUGUESE',
+  Punjabi = 'PUNJABI',
+  Romanian = 'ROMANIAN',
+  Russian = 'RUSSIAN',
+  Serbian = 'SERBIAN',
+  Slovak = 'SLOVAK',
+  Spanish = 'SPANISH',
+  Swedish = 'SWEDISH',
+  Thai = 'THAI',
+  Turkish = 'TURKISH',
+  Ukrainian = 'UKRAINIAN',
+  Vietnamese = 'Vietnamese'
+}
 
-export type OneTimePaymentCustomerCard = {
-  cardBrand: Scalars['String'];
-  expiredDate: Scalars['String'];
-  isDefault?: Maybe<Scalars['Boolean']>;
-  lastDigits: Scalars['String'];
-  paymentGatewayToken: Scalars['String'];
-};
+export enum OneSignalStatusEnum {
+  Canceled = 'Canceled',
+  Schedule = 'Schedule',
+  Sending = 'Sending',
+  Sent = 'Sent'
+}
 
 export type Order = {
   __typename?: 'Order';
@@ -2784,12 +3050,15 @@ export enum OrderStatus {
 
 export type Organization = {
   __typename?: 'Organization';
+  access: AccessKinds;
   audioCdnBaseUrl?: Maybe<Scalars['String']>;
   avatarCdnBaseUrl?: Maybe<Scalars['String']>;
   bundle_id?: Maybe<Scalars['String']>;
   current_version?: Maybe<Scalars['String']>;
   customization?: Maybe<Scalars['JSON']>;
   email_settings?: Maybe<Scalars['JSON']>;
+  entitlements: Array<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   identifier?: Maybe<Scalars['String']>;
   imageCdnBaseUrl?: Maybe<Scalars['String']>;
@@ -2886,8 +3155,10 @@ export type OrganizationSettings = {
   bucket?: Maybe<Scalars['String']>;
   defaultGeofence?: Maybe<Scalars['JSON']>;
   facebook?: Maybe<Scalars['JSON']>;
+  favicon?: Maybe<CustomizationMediaOutput>;
   firebase?: Maybe<Scalars['JSON']>;
   language?: Maybe<Scalars['String']>;
+  logo?: Maybe<CustomizationMediaOutput>;
   onesignal: OrganizationOneSignalOutput;
   sessionsLimit?: Maybe<Scalars['JSON']>;
   spreedly?: Maybe<Scalars['JSON']>;
@@ -3136,6 +3407,7 @@ export type PinnedChannelOutput = {
   description: Scalars['String'];
   entitlements?: Maybe<Scalars['JSON']>;
   geofence?: Maybe<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
@@ -3155,9 +3427,14 @@ export type PlaylistOutput = {
   channel: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
-  posts: Array<Post>;
+  posts: PaginatedPostsOutput;
   slug: Scalars['String'];
   title: Scalars['String'];
+};
+
+
+export type PlaylistOutputPostsArgs = {
+  postsFilters?: Maybe<PostFilter>;
 };
 
 export type PlaylistsOutput = {
@@ -3179,15 +3456,16 @@ export type Post = {
   access: Scalars['String'];
   account: Scalars['ID'];
   allowComments: Scalars['Boolean'];
-  categories: Array<Category>;
+  categories?: Maybe<Array<Category>>;
   channel: Scalars['ID'];
   countComments: Scalars['Int'];
   countReactions: Scalars['Int'];
   countUniqueCommenters: Scalars['Int'];
+  countViewsTotal: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   devices: Scalars['JSONObject'];
-  embed: Scalars['ID'];
+  embed?: Maybe<Scalars['ID']>;
   engagedUsers: Array<EngagedUser>;
   entitlements: Array<Scalars['JSONObject']>;
   excerpt: Scalars['JSONObject'];
@@ -3195,6 +3473,7 @@ export type Post = {
   folder: Scalars['ID'];
   geofence?: Maybe<Scalars['JSONObject']>;
   geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
+  hiddenFromFeed: Scalars['Boolean'];
   id: Scalars['ID'];
   inFeed: Scalars['Boolean'];
   kind: Scalars['String'];
@@ -3209,7 +3488,7 @@ export type Post = {
   schedule: Scalars['DateTime'];
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
-  tags: Array<TagOutput>;
+  tags?: Maybe<Array<TagOutput>>;
   teaser: Scalars['ID'];
   thumbnail?: Maybe<MediaPhoto>;
   title: Scalars['String'];
@@ -4192,6 +4471,7 @@ export type SearchPost = {
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<SearchTag>>;
+  thumbnail?: Maybe<MediaPhoto>;
   title?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
@@ -4243,6 +4523,8 @@ export enum SortDirection {
 
 export type StartMediaUploadInput = {
   filename: Scalars['String'];
+  locale?: Maybe<MediaLocale>;
+  mediaVideoId?: Maybe<Scalars['String']>;
 };
 
 export enum Status {
@@ -4289,11 +4571,21 @@ export type TagOutput = {
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  relatedCategories: Array<Category>;
-  relatedPosts: Array<Post>;
+  relatedCategories: PaginatedCategoriesOutput;
+  relatedPosts: PaginatedPostsOutput;
   slug: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+};
+
+
+export type TagOutputRelatedCategoriesArgs = {
+  filters?: Maybe<CategoryFilter>;
+};
+
+
+export type TagOutputRelatedPostsArgs = {
+  filters?: Maybe<PostFilter>;
 };
 
 export type TagsOutput = {
@@ -4380,7 +4672,7 @@ export type UpdateCategoryInput = {
   access?: Maybe<Scalars['String']>;
   customization?: Maybe<CategoryCustomizationInput>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['JSONObject']>;
+  entitlements?: Maybe<Array<Scalars['String']>>;
   featuredAt?: Maybe<Scalars['DateTime']>;
   geoFence?: Maybe<Scalars['JSONObject']>;
   isChild?: Maybe<Scalars['Boolean']>;
@@ -4403,13 +4695,15 @@ export type UpdateCategorySortingItem = {
 export type UpdateChannelInput = {
   customization?: Maybe<ChannelCustomizationInput>;
   description?: Maybe<Scalars['String']>;
-  entitlements?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['ID']>>;
   geofence?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind?: Maybe<Kinds>;
   menu?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   status?: Maybe<ChannelStatus>;
+  thumbnail?: Maybe<Scalars['ID']>;
 };
 
 export type UpdateComment = {
@@ -4441,7 +4735,9 @@ export type UpdateEmbed = {
 };
 
 export type UpdateEnvConfigInput = {
+  analyticsAPI?: Maybe<Scalars['String']>;
   apiEndpoint?: Maybe<Scalars['String']>;
+  facebookTag?: Maybe<Scalars['String']>;
   firebaseApiKey?: Maybe<Scalars['String']>;
   firebaseAppId?: Maybe<Scalars['String']>;
   firebaseAuthApiKey?: Maybe<Scalars['String']>;
@@ -4452,7 +4748,22 @@ export type UpdateEnvConfigInput = {
   firebaseMeasurementId?: Maybe<Scalars['String']>;
   firebaseProject?: Maybe<Scalars['String']>;
   firebaseSender?: Maybe<Scalars['String']>;
+  googleTag?: Maybe<Scalars['String']>;
+  inspireAuthUrl?: Maybe<Scalars['String']>;
+  inspirePassword?: Maybe<Scalars['String']>;
+  inspirePaymentUrl?: Maybe<Scalars['String']>;
+  inspireTenantId?: Maybe<Scalars['String']>;
+  inspireUrl?: Maybe<Scalars['String']>;
+  inspireUsername?: Maybe<Scalars['String']>;
+  muxKey?: Maybe<Scalars['String']>;
+  onesignalAppId?: Maybe<Scalars['String']>;
+  onesignalSafariWebId?: Maybe<Scalars['String']>;
   remoteConfigSecret?: Maybe<Scalars['String']>;
+  s3SignedUrl?: Maybe<Scalars['String']>;
+  uploadAwsKey?: Maybe<Scalars['String']>;
+  videoAnalyticsPassword?: Maybe<Scalars['String']>;
+  videoAnalyticsUrl?: Maybe<Scalars['String']>;
+  videoAnalyticsUsername?: Maybe<Scalars['String']>;
 };
 
 export type UpdateGroupDto = {
@@ -4511,6 +4822,28 @@ export type UpdateMediaPhoto = {
   width?: Maybe<Scalars['Int']>;
 };
 
+export type UpdateMediaSubtitlesInput = {
+  aspectRatio?: Maybe<Scalars['String']>;
+  baseUrl?: Maybe<Scalars['String']>;
+  dashPath?: Maybe<Scalars['String']>;
+  duration?: Maybe<Scalars['Float']>;
+  filename?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  hlsPath?: Maybe<Scalars['String']>;
+  imgPath?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  locale?: Maybe<MediaLocale>;
+  mp4Path?: Maybe<Scalars['String']>;
+  mp4VodUrl?: Maybe<Scalars['String']>;
+  orientation?: Maybe<MediaOrientation>;
+  status?: Maybe<MediaStatusEnum>;
+  thumbnailPath?: Maybe<Array<Scalars['String']>>;
+  type?: Maybe<MediaTypeEnum>;
+  upload?: Maybe<Scalars['ID']>;
+  vttPath?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Float']>;
+};
+
 export type UpdateMediaVideo = {
   aspectRatio?: Maybe<Scalars['String']>;
   baseUrl?: Maybe<Scalars['String']>;
@@ -4522,6 +4855,7 @@ export type UpdateMediaVideo = {
   mp4Path?: Maybe<Scalars['String']>;
   orientation?: Maybe<MediaOrientation>;
   status?: Maybe<MediaStatusEnum>;
+  subtitles?: Maybe<Array<Scalars['String']>>;
   thumbnailPath?: Maybe<Array<Scalars['String']>>;
   upload?: Maybe<Scalars['String']>;
   width?: Maybe<Scalars['Int']>;
@@ -4568,7 +4902,11 @@ export type UpdateOrderCustomFields = {
 };
 
 export type UpdateOrganizationInput = {
+  entitlements?: Maybe<Array<Scalars['String']>>;
+  favicon?: Maybe<Scalars['String']>;
+  geofenceEntitlements?: Maybe<EntitlementsGeofenceInput>;
   kind?: Maybe<Kinds>;
+  logo?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
 };
@@ -4593,6 +4931,7 @@ export type UpdatePermissionInput = {
 
 export type UpdatePhotoPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
   categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
@@ -4606,6 +4945,7 @@ export type UpdatePhotoPost = {
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  tags?: Maybe<Array<Scalars['String']>>;
   title?: Maybe<Scalars['String']>;
 };
 
@@ -4679,6 +5019,8 @@ export type UpdateTagInput = {
 
 export type UpdateTextPost = {
   access?: Maybe<PostAccess>;
+  allowComments?: Maybe<Scalars['Boolean']>;
+  categories?: Maybe<Array<Scalars['String']>>;
   description?: Maybe<Scalars['String']>;
   entitlements?: Maybe<Array<Scalars['String']>>;
   featured?: Maybe<Scalars['Boolean']>;
@@ -4690,6 +5032,7 @@ export type UpdateTextPost = {
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  tags?: Maybe<Array<Scalars['String']>>;
   title?: Maybe<Scalars['String']>;
 };
 
@@ -4699,6 +5042,8 @@ export type UpdateUploadInput = {
   expired?: Maybe<Scalars['Boolean']>;
   filename?: Maybe<Scalars['String']>;
   isAvatar?: Maybe<Scalars['Boolean']>;
+  locale?: Maybe<MediaLocale>;
+  mediaVideoId?: Maybe<Scalars['String']>;
   status?: Maybe<UploadStatusEnum>;
   url?: Maybe<Scalars['String']>;
 };
@@ -4721,6 +5066,7 @@ export type UpdateVideoPost = {
   pushNotification?: Maybe<PushNotification>;
   slug?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
+  subtitles?: Maybe<Array<Scalars['String']>>;
   tags?: Maybe<Array<Scalars['String']>>;
   thumbnail?: Maybe<Scalars['ID']>;
   title?: Maybe<Scalars['String']>;
@@ -4905,6 +5251,14 @@ export type ConfirmOrderMutationVariables = Exact<{
 
 export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any> } };
 
+export type OrganizationPasswordCheckMutationVariables = Exact<{
+  organizationId: Scalars['ID'];
+  password: Scalars['String'];
+}>;
+
+
+export type OrganizationPasswordCheckMutation = { __typename?: 'Mutation', organizationPasswordCheck: { __typename?: 'OrganizationPasswordCheck', correct: boolean } };
+
 export type AddCommentMutationVariables = Exact<{
   payload: AddComment;
 }>;
@@ -5020,63 +5374,50 @@ export type GetCategoriesQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetCategoriesQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<AccessKinds>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetPublicCategoriesQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<string>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<AccessKinds>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetCategoriesCardsQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetCategoriesCardsQuery = { __typename?: 'Query', categories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetPublicCategoriesCardsQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
 }>;
 
 
-export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<string>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetCategoryQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
+  postFilter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
 
 export type GetCategoryKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<string>, kind: Kinds, name: string } };
-
-export type ChannelsQueryVariables = Exact<{
-  filter: ChannelFindAllFilter;
-}>;
-
-
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<Kinds> }> };
-
-export type PublicChannelsQueryVariables = Exact<{
-  filter: ChannelFindAllFilter;
-}>;
-
-
-export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, kind?: Maybe<Kinds> }> };
+export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string } };
 
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, thumbnail?: Maybe<any>, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
+export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
 
 export type PublicChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5084,6 +5425,34 @@ export type PublicChannelQueryVariables = Exact<{
 
 
 export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string } };
+
+export type GetChannelKindQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetChannelKindQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, access: AccessKinds, kind?: Maybe<Kinds> } };
+
+export type GetChannelEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetChannelEntitlementsQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', slug?: Maybe<string>, entitlements?: Maybe<Array<any>> } | { __typename?: 'GeolockedChannel' } };
+
+export type ChannelsQueryVariables = Exact<{
+  filter: ChannelFindAllFilter;
+}>;
+
+
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, access: AccessKinds, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
+
+export type PublicChannelsQueryVariables = Exact<{
+  filter: ChannelFindAllFilter;
+}>;
+
+
+export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, access: AccessKinds, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -5104,28 +5473,28 @@ export type GetLiveEventQueryVariables = Exact<{
 }>;
 
 
-export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<string>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
+export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
 
 export type GetLiveEventKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetLiveEventKindQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, title: string, access?: Maybe<string>, kind: Kinds, entitlements: Array<any> } };
+export type GetLiveEventKindQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, title: string, access?: Maybe<AccessKinds>, kind: Kinds, entitlements: Array<any> } };
 
 export type GetLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
 }>;
 
 
-export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetLiveEventsQuery = { __typename?: 'Query', liveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 export type GetPublicLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
 }>;
 
 
-export type GetPublicLiveEventsQuery = { __typename?: 'Query', publicLiveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<string>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
+export type GetPublicLiveEventsQuery = { __typename?: 'Query', publicLiveEvents: { __typename?: 'PaginatedLiveEventsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, slug?: Maybe<string>, status?: Maybe<Status>, title: string, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }> }> } };
 
 export type MenusQueryVariables = Exact<{
   filter?: Maybe<MenuFilter>;
@@ -5148,33 +5517,34 @@ export type GetOrderResultQueryVariables = Exact<{
 
 export type GetOrderResultQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: string, account?: Maybe<string>, status?: Maybe<OrderStatus> } };
 
-export type OrganizationQueryVariables = Exact<{
+export type GetOrganizationKindQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type OrganizationQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string } };
+export type GetOrganizationKindQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, access: AccessKinds, kind?: Maybe<Kinds> } };
 
-export type OrganizationPublicSettingsQueryVariables = Exact<{
+export type GetOrganizationEntitlementsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type OrganizationPublicSettingsQuery = { __typename?: 'Query', organizationPublicSettings: { __typename?: 'OrganizationPublic', id: string, name?: Maybe<string>, kind?: Maybe<Kinds>, status?: Maybe<string>, tenant_id?: Maybe<string>, customization?: Maybe<any>, avatarCdnBaseUrl?: Maybe<string>, audioCdnBaseUrl?: Maybe<string>, imageCdnBaseUrl?: Maybe<string> } };
+export type GetOrganizationEntitlementsQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, entitlements: Array<any> } };
 
 export type GetPlaylistQueryVariables = Exact<{
   id: Scalars['ID'];
+  postsFilters: PostFilter;
 }>;
 
 
-export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } } };
 
 export type GetPostQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories: Array<{ __typename?: 'Category', id: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5188,35 +5558,35 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 export type GetPubicPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 export type GetPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type GetPublicPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type SearchQueryVariables = Exact<{
   filters?: Maybe<SearchFilter>;
 }>;
 
 
-export type SearchQuery = { __typename?: 'Query', search: { __typename?: 'PaginatedSearchResultOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, total: number, rows: Array<{ __typename?: 'SearchCategory', name?: Maybe<string>, slug?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>> } | { __typename?: 'SearchLiveEvent', id?: Maybe<string>, slug?: Maybe<string>, title?: Maybe<string>, category?: Maybe<{ __typename?: 'SearchCategoryHead', id?: Maybe<string>, name?: Maybe<string> }>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>> } | { __typename?: 'SearchPost', id?: Maybe<string>, slug?: Maybe<string>, title?: Maybe<string>, type?: Maybe<string>, categories?: Maybe<Array<{ __typename?: 'SearchCategoryHead', id?: Maybe<string>, name?: Maybe<string> }>>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>>, media?: Maybe<{ __typename?: 'MediaAudio', mp3Path?: Maybe<string>, baseUrl?: Maybe<string>, filename?: Maybe<string>, status?: Maybe<MediaStatusEnum>, type?: Maybe<MediaTypeEnum> } | { __typename?: 'MediaPhoto', baseUrl?: Maybe<string>, filename?: Maybe<string>, imgPath?: Maybe<string> } | { __typename?: 'MediaVideo', baseUrl?: Maybe<string>, filename?: Maybe<string>, mp4Path?: Maybe<string>, thumbnailPath?: Maybe<string> }> }> } };
+export type SearchQuery = { __typename?: 'Query', search: { __typename?: 'PaginatedSearchResultOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, total: number, rows: Array<{ __typename?: 'SearchCategory', id?: Maybe<string>, name?: Maybe<string>, slug?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>> } | { __typename?: 'SearchLiveEvent', id?: Maybe<string>, slug?: Maybe<string>, title?: Maybe<string>, category?: Maybe<{ __typename?: 'SearchCategoryHead', id?: Maybe<string>, name?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>> } | { __typename?: 'SearchPost', id?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, title?: Maybe<string>, type?: Maybe<string>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string>, baseUrl?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', mp3Path?: Maybe<string>, filename?: Maybe<string> } | { __typename?: 'MediaPhoto', imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 
 export const CreateAccountDocument = gql`
@@ -6097,6 +6467,46 @@ export function useConfirmOrderMutation(baseOptions?: Apollo.MutationHookOptions
 export type ConfirmOrderMutationHookResult = ReturnType<typeof useConfirmOrderMutation>;
 export type ConfirmOrderMutationResult = Apollo.MutationResult<ConfirmOrderMutation>;
 export type ConfirmOrderMutationOptions = Apollo.BaseMutationOptions<ConfirmOrderMutation, ConfirmOrderMutationVariables>;
+export const OrganizationPasswordCheckDocument = gql`
+    mutation OrganizationPasswordCheck($organizationId: ID!, $password: String!) {
+  organizationPasswordCheck(organizationId: $organizationId, password: $password) {
+    correct
+  }
+}
+    `;
+export type OrganizationPasswordCheckMutationFn = Apollo.MutationFunction<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>;
+export type OrganizationPasswordCheckComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>, 'mutation'>;
+
+    export const OrganizationPasswordCheckComponent = (props: OrganizationPasswordCheckComponentProps) => (
+      <ApolloReactComponents.Mutation<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables> mutation={OrganizationPasswordCheckDocument} {...props} />
+    );
+    
+
+/**
+ * __useOrganizationPasswordCheckMutation__
+ *
+ * To run a mutation, you first call `useOrganizationPasswordCheckMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationPasswordCheckMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [organizationPasswordCheckMutation, { data, loading, error }] = useOrganizationPasswordCheckMutation({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useOrganizationPasswordCheckMutation(baseOptions?: Apollo.MutationHookOptions<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>(OrganizationPasswordCheckDocument, options);
+      }
+export type OrganizationPasswordCheckMutationHookResult = ReturnType<typeof useOrganizationPasswordCheckMutation>;
+export type OrganizationPasswordCheckMutationResult = Apollo.MutationResult<OrganizationPasswordCheckMutation>;
+export type OrganizationPasswordCheckMutationOptions = Apollo.BaseMutationOptions<OrganizationPasswordCheckMutation, OrganizationPasswordCheckMutationVariables>;
 export const AddCommentDocument = gql`
     mutation addComment($payload: AddComment!) {
   addComment(payload: $payload) {
@@ -7203,7 +7613,7 @@ export type GetPublicCategoriesCardsQueryHookResult = ReturnType<typeof useGetPu
 export type GetPublicCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsLazyQuery>;
 export type GetPublicCategoriesCardsQueryResult = Apollo.QueryResult<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>;
 export const GetCategoryDocument = gql`
-    query GetCategory($slug: String) {
+    query GetCategory($slug: String, $postFilter: PostFilter) {
   category(slug: $slug) {
     id
     access
@@ -7223,7 +7633,7 @@ export const GetCategoryDocument = gql`
         imgPath
       }
     }
-    posts {
+    posts(filters: $postFilter) {
       hasNextPage
       hasPreviousPage
       isFirstPage
@@ -7236,8 +7646,10 @@ export const GetCategoryDocument = gql`
         access
         title
         description
+        geofence
         kind
         slug
+        status
         pinnedStatus {
           pinned
         }
@@ -7301,6 +7713,7 @@ export type GetCategoryComponentProps = Omit<ApolloReactComponents.QueryComponen
  * const { data, loading, error } = useGetCategoryQuery({
  *   variables: {
  *      slug: // value for 'slug'
+ *      postFilter: // value for 'postFilter'
  *   },
  * });
  */
@@ -7359,122 +7772,11 @@ export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
 export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
 export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
-export const ChannelsDocument = gql`
-    query Channels($filter: ChannelFindAllFilter!) {
-  channels(filter: $filter) {
-    ... on AvailableChannel {
-      id
-      kind
-      description
-      geofence
-      slug
-      name
-      __typename
-    }
-    ... on GeolockedChannel {
-      id
-      name
-      thumbnail
-      kind
-      __typename
-    }
-  }
-}
-    `;
-export type ChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelsQuery, ChannelsQueryVariables>, 'query'> & ({ variables: ChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const ChannelsComponent = (props: ChannelsComponentProps) => (
-      <ApolloReactComponents.Query<ChannelsQuery, ChannelsQueryVariables> query={ChannelsDocument} {...props} />
-    );
-    
-
-/**
- * __useChannelsQuery__
- *
- * To run a query within a React component, call `useChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useChannelsQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function useChannelsQuery(baseOptions: Apollo.QueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
-      }
-export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
-        }
-export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
-export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
-export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
-export const PublicChannelsDocument = gql`
-    query PublicChannels($filter: ChannelFindAllFilter!) {
-  publicChannels(filter: $filter) {
-    ... on AvailableChannel {
-      id
-      kind
-      description
-      geofence
-      slug
-      name
-      __typename
-    }
-    ... on GeolockedChannel {
-      id
-      name
-      thumbnail
-      kind
-      __typename
-    }
-  }
-}
-    `;
-export type PublicChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicChannelsQuery, PublicChannelsQueryVariables>, 'query'> & ({ variables: PublicChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const PublicChannelsComponent = (props: PublicChannelsComponentProps) => (
-      <ApolloReactComponents.Query<PublicChannelsQuery, PublicChannelsQueryVariables> query={PublicChannelsDocument} {...props} />
-    );
-    
-
-/**
- * __usePublicChannelsQuery__
- *
- * To run a query within a React component, call `usePublicChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `usePublicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePublicChannelsQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *   },
- * });
- */
-export function usePublicChannelsQuery(baseOptions: Apollo.QueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
-      }
-export function usePublicChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
-        }
-export type PublicChannelsQueryHookResult = ReturnType<typeof usePublicChannelsQuery>;
-export type PublicChannelsLazyQueryHookResult = ReturnType<typeof usePublicChannelsLazyQuery>;
-export type PublicChannelsQueryResult = Apollo.QueryResult<PublicChannelsQuery, PublicChannelsQueryVariables>;
 export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
     ... on AvailableChannel {
+      access
       id
       kind
       description
@@ -7486,7 +7788,6 @@ export const ChannelDocument = gql`
     ... on GeolockedChannel {
       id
       name
-      thumbnail
       slug
       kind
       __typename
@@ -7572,6 +7873,216 @@ export function usePublicChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type PublicChannelQueryHookResult = ReturnType<typeof usePublicChannelQuery>;
 export type PublicChannelLazyQueryHookResult = ReturnType<typeof usePublicChannelLazyQuery>;
 export type PublicChannelQueryResult = Apollo.QueryResult<PublicChannelQuery, PublicChannelQueryVariables>;
+export const GetChannelKindDocument = gql`
+    query GetChannelKind($slug: String) {
+  channel(slug: $slug) {
+    ... on AvailableChannel {
+      access
+      id
+      kind
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      access
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type GetChannelKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelKindQuery, GetChannelKindQueryVariables>, 'query'>;
+
+    export const GetChannelKindComponent = (props: GetChannelKindComponentProps) => (
+      <ApolloReactComponents.Query<GetChannelKindQuery, GetChannelKindQueryVariables> query={GetChannelKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetChannelKindQuery__
+ *
+ * To run a query within a React component, call `useGetChannelKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetChannelKindQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+      }
+export function useGetChannelKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+        }
+export type GetChannelKindQueryHookResult = ReturnType<typeof useGetChannelKindQuery>;
+export type GetChannelKindLazyQueryHookResult = ReturnType<typeof useGetChannelKindLazyQuery>;
+export type GetChannelKindQueryResult = Apollo.QueryResult<GetChannelKindQuery, GetChannelKindQueryVariables>;
+export const GetChannelEntitlementsDocument = gql`
+    query GetChannelEntitlements($slug: String) {
+  channel(slug: $slug) {
+    ... on AvailableChannel {
+      slug
+      entitlements
+    }
+  }
+}
+    `;
+export type GetChannelEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>, 'query'>;
+
+    export const GetChannelEntitlementsComponent = (props: GetChannelEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables> query={GetChannelEntitlementsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetChannelEntitlementsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelEntitlementsQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetChannelEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+      }
+export function useGetChannelEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+        }
+export type GetChannelEntitlementsQueryHookResult = ReturnType<typeof useGetChannelEntitlementsQuery>;
+export type GetChannelEntitlementsLazyQueryHookResult = ReturnType<typeof useGetChannelEntitlementsLazyQuery>;
+export type GetChannelEntitlementsQueryResult = Apollo.QueryResult<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>;
+export const ChannelsDocument = gql`
+    query Channels($filter: ChannelFindAllFilter!) {
+  channels(filter: $filter) {
+    ... on AvailableChannel {
+      id
+      access
+      kind
+      description
+      geofence
+      slug
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type ChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelsQuery, ChannelsQueryVariables>, 'query'> & ({ variables: ChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const ChannelsComponent = (props: ChannelsComponentProps) => (
+      <ApolloReactComponents.Query<ChannelsQuery, ChannelsQueryVariables> query={ChannelsDocument} {...props} />
+    );
+    
+
+/**
+ * __useChannelsQuery__
+ *
+ * To run a query within a React component, call `useChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChannelsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useChannelsQuery(baseOptions: Apollo.QueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+      }
+export function useChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelsQuery, ChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChannelsQuery, ChannelsQueryVariables>(ChannelsDocument, options);
+        }
+export type ChannelsQueryHookResult = ReturnType<typeof useChannelsQuery>;
+export type ChannelsLazyQueryHookResult = ReturnType<typeof useChannelsLazyQuery>;
+export type ChannelsQueryResult = Apollo.QueryResult<ChannelsQuery, ChannelsQueryVariables>;
+export const PublicChannelsDocument = gql`
+    query PublicChannels($filter: ChannelFindAllFilter!) {
+  publicChannels(filter: $filter) {
+    ... on AvailableChannel {
+      id
+      kind
+      access
+      description
+      geofence
+      slug
+      name
+      __typename
+    }
+    ... on GeolockedChannel {
+      id
+      name
+      kind
+      __typename
+    }
+  }
+}
+    `;
+export type PublicChannelsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PublicChannelsQuery, PublicChannelsQueryVariables>, 'query'> & ({ variables: PublicChannelsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const PublicChannelsComponent = (props: PublicChannelsComponentProps) => (
+      <ApolloReactComponents.Query<PublicChannelsQuery, PublicChannelsQueryVariables> query={PublicChannelsDocument} {...props} />
+    );
+    
+
+/**
+ * __usePublicChannelsQuery__
+ *
+ * To run a query within a React component, call `usePublicChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePublicChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePublicChannelsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function usePublicChannelsQuery(baseOptions: Apollo.QueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
+      }
+export function usePublicChannelsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PublicChannelsQuery, PublicChannelsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PublicChannelsQuery, PublicChannelsQueryVariables>(PublicChannelsDocument, options);
+        }
+export type PublicChannelsQueryHookResult = ReturnType<typeof usePublicChannelsQuery>;
+export type PublicChannelsLazyQueryHookResult = ReturnType<typeof usePublicChannelsLazyQuery>;
+export type PublicChannelsQueryResult = Apollo.QueryResult<PublicChannelsQuery, PublicChannelsQueryVariables>;
 export const CommentsDocument = gql`
     query Comments($filter: CommentFilter) {
   comments(filter: $filter) {
@@ -8084,127 +8595,127 @@ export function useGetOrderResultLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetOrderResultQueryHookResult = ReturnType<typeof useGetOrderResultQuery>;
 export type GetOrderResultLazyQueryHookResult = ReturnType<typeof useGetOrderResultLazyQuery>;
 export type GetOrderResultQueryResult = Apollo.QueryResult<GetOrderResultQuery, GetOrderResultQueryVariables>;
-export const OrganizationDocument = gql`
-    query Organization($id: ID!) {
+export const GetOrganizationKindDocument = gql`
+    query GetOrganizationKind($id: ID!) {
   organization(id: $id) {
     id
-  }
-}
-    `;
-export type OrganizationComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationQuery, OrganizationQueryVariables>, 'query'> & ({ variables: OrganizationQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const OrganizationComponent = (props: OrganizationComponentProps) => (
-      <ApolloReactComponents.Query<OrganizationQuery, OrganizationQueryVariables> query={OrganizationDocument} {...props} />
-    );
-    
-
-/**
- * __useOrganizationQuery__
- *
- * To run a query within a React component, call `useOrganizationQuery` and pass it any options that fit your needs.
- * When your component renders, `useOrganizationQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useOrganizationQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useOrganizationQuery(baseOptions: Apollo.QueryHookOptions<OrganizationQuery, OrganizationQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<OrganizationQuery, OrganizationQueryVariables>(OrganizationDocument, options);
-      }
-export function useOrganizationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationQuery, OrganizationQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<OrganizationQuery, OrganizationQueryVariables>(OrganizationDocument, options);
-        }
-export type OrganizationQueryHookResult = ReturnType<typeof useOrganizationQuery>;
-export type OrganizationLazyQueryHookResult = ReturnType<typeof useOrganizationLazyQuery>;
-export type OrganizationQueryResult = Apollo.QueryResult<OrganizationQuery, OrganizationQueryVariables>;
-export const OrganizationPublicSettingsDocument = gql`
-    query OrganizationPublicSettings($id: ID!) {
-  organizationPublicSettings(id: $id) {
-    id
-    name
+    access
     kind
-    status
-    tenant_id
-    customization
-    avatarCdnBaseUrl
-    audioCdnBaseUrl
-    imageCdnBaseUrl
   }
 }
     `;
-export type OrganizationPublicSettingsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>, 'query'> & ({ variables: OrganizationPublicSettingsQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type GetOrganizationKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>, 'query'> & ({ variables: GetOrganizationKindQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const OrganizationPublicSettingsComponent = (props: OrganizationPublicSettingsComponentProps) => (
-      <ApolloReactComponents.Query<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables> query={OrganizationPublicSettingsDocument} {...props} />
+    export const GetOrganizationKindComponent = (props: GetOrganizationKindComponentProps) => (
+      <ApolloReactComponents.Query<GetOrganizationKindQuery, GetOrganizationKindQueryVariables> query={GetOrganizationKindDocument} {...props} />
     );
     
 
 /**
- * __useOrganizationPublicSettingsQuery__
+ * __useGetOrganizationKindQuery__
  *
- * To run a query within a React component, call `useOrganizationPublicSettingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useOrganizationPublicSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetOrganizationKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizationKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useOrganizationPublicSettingsQuery({
+ * const { data, loading, error } = useGetOrganizationKindQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useOrganizationPublicSettingsQuery(baseOptions: Apollo.QueryHookOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>) {
+export function useGetOrganizationKindQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>(OrganizationPublicSettingsDocument, options);
+        return Apollo.useQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
       }
-export function useOrganizationPublicSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>) {
+export function useGetOrganizationKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>(OrganizationPublicSettingsDocument, options);
+          return Apollo.useLazyQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
         }
-export type OrganizationPublicSettingsQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsQuery>;
-export type OrganizationPublicSettingsLazyQueryHookResult = ReturnType<typeof useOrganizationPublicSettingsLazyQuery>;
-export type OrganizationPublicSettingsQueryResult = Apollo.QueryResult<OrganizationPublicSettingsQuery, OrganizationPublicSettingsQueryVariables>;
+export type GetOrganizationKindQueryHookResult = ReturnType<typeof useGetOrganizationKindQuery>;
+export type GetOrganizationKindLazyQueryHookResult = ReturnType<typeof useGetOrganizationKindLazyQuery>;
+export type GetOrganizationKindQueryResult = Apollo.QueryResult<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>;
+export const GetOrganizationEntitlementsDocument = gql`
+    query GetOrganizationEntitlements($id: ID!) {
+  organization(id: $id) {
+    id
+    entitlements
+  }
+}
+    `;
+export type GetOrganizationEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>, 'query'> & ({ variables: GetOrganizationEntitlementsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetOrganizationEntitlementsComponent = (props: GetOrganizationEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables> query={GetOrganizationEntitlementsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetOrganizationEntitlementsQuery__
+ *
+ * To run a query within a React component, call `useGetOrganizationEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizationEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrganizationEntitlementsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrganizationEntitlementsQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+      }
+export function useGetOrganizationEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+        }
+export type GetOrganizationEntitlementsQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsQuery>;
+export type GetOrganizationEntitlementsLazyQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsLazyQuery>;
+export type GetOrganizationEntitlementsQueryResult = Apollo.QueryResult<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>;
 export const GetPlaylistDocument = gql`
-    query GetPlaylist($id: ID!) {
+    query GetPlaylist($id: ID!, $postsFilters: PostFilter!) {
   playlist(id: $id) {
     id
     title
-    posts {
-      id
-      access
-      title
-      description
-      kind
-      slug
-      pinnedStatus {
-        pinned
-      }
-      thumbnail {
-        imgPath
-      }
-      media {
-        ... on MediaVideo {
-          id
-          duration
-          thumbnailPath
-          baseUrl
+    posts(postsFilters: $postsFilters) {
+      hasNextPage
+      hasPreviousPage
+      isFirstPage
+      isLastPage
+      page
+      pageCount
+      total
+      rows {
+        id
+        access
+        title
+        description
+        kind
+        slug
+        pinnedStatus {
+          pinned
         }
-        ... on MediaAudio {
-          duration
-          mp3Path
+        thumbnail {
+          imgPath
         }
+        media {
+          ... on MediaVideo {
+            id
+            duration
+            thumbnailPath
+            baseUrl
+          }
+        }
+        type
       }
-      type
     }
     __typename
   }
@@ -8230,6 +8741,7 @@ export type GetPlaylistComponentProps = Omit<ApolloReactComponents.QueryComponen
  * const { data, loading, error } = useGetPlaylistQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      postsFilters: // value for 'postsFilters'
  *   },
  * });
  */
@@ -8252,6 +8764,7 @@ export const GetPostDocument = gql`
     allowComments
     countComments
     countReactions
+    slug
     description
     categories {
       id
@@ -8727,6 +9240,7 @@ export const SearchDocument = gql`
             imgPath
           }
         }
+        id
         name
         slug
         tags {
@@ -8739,6 +9253,9 @@ export const SearchDocument = gql`
           id
           name
         }
+        thumbnail {
+          imgPath
+        }
         id
         slug
         title
@@ -8749,35 +9266,25 @@ export const SearchDocument = gql`
       }
       ... on SearchPost {
         id
-        categories {
-          id
-          name
-        }
         slug
+        description
         title
-        tags {
-          id
-          title
-        }
         type
+        thumbnail {
+          imgPath
+          baseUrl
+        }
         media {
           ... on MediaAudio {
             mp3Path
-            baseUrl
             filename
-            status
-            type
           }
           ... on MediaPhoto {
-            baseUrl
-            filename
             imgPath
           }
           ... on MediaVideo {
-            baseUrl
-            filename
-            mp4Path
             thumbnailPath
+            baseUrl
           }
         }
       }

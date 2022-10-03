@@ -1,6 +1,6 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Flex, SimpleGrid } from '@chakra-ui/react'
-import { Text, VideoPostCard } from 'components'
+import { AudioPostCard, ImagePostCard, Text, TextPostCard, VideoPostCard } from 'components'
 import { Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
@@ -14,11 +14,7 @@ import {
 } from 'utils/accessVerifications'
 import { Wrapper } from './style'
 
-const PostsGrid = ({
-  sendUnpinEvent,
-  items,
-  sectionTitle,
-}: VideosGridProps) => {
+const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
   const { generateImage } = useThumbor()
   const { colorMode } = useThemeStore()
   const { activeChannel } = useChannelsStore()
@@ -35,8 +31,9 @@ const PostsGrid = ({
 
     if (isEntityBlocked(post)) imageOptions.blur = 20
 
-    const thumbnailPath =
-      post.media?.__typename === 'MediaVideo' ? post.thumbnail?.imgPath : ''
+    const thumbnailPath = post.type === 'PHOTO' ? 
+      post.media?.['imgPath'] :
+      post.thumbnail?.imgPath
 
     const secondImgUrl =
       post.media?.__typename === 'MediaVideo'
@@ -57,18 +54,14 @@ const PostsGrid = ({
     return `/c/${activeChannel?.slug}/post/${slug}`
   }
 
-  const callUnpinEvent = (postId: string) => {
-    if (sendUnpinEvent) sendUnpinEvent(postId)
-  }
-
   useEffect(() => {
     if (items && items?.length) {
       const mappedArr = items?.map((item: Post) => {
         const thumbnail = getImageUrl(item)
         const url = getPostUrl(`${item.slug}`)
         return {
-          id: item.id,
-          title: item.title,
+          id: item.id || '',
+          title: item.title || '',
           description: item.description,
           url,
           thumbnail,
@@ -79,7 +72,9 @@ const PostsGrid = ({
           countViews: undefined,
           isExclusive: isEntityExclusive(item),
           isGeolocked: isEntityGeolocked(item),
-          isPinned: item.pinnedStatus?.pinned,
+          isPinned:
+            item.__typename === 'Post' ? item.pinnedStatus?.pinned : false,
+          type: item.type
         }
       })
       setGridItems(mappedArr)
@@ -105,7 +100,22 @@ const PostsGrid = ({
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            <VideoPostCard {...item} />
+            {
+              (item.type === 'AUDIO') &&
+              <AudioPostCard hasPinButton={false} {...item} />
+            }
+            {
+              (item.type === 'PHOTO') &&
+              <ImagePostCard hasPinButton={false} {...item} />
+            }
+            {
+              (item.type === 'TEXT') &&
+              <TextPostCard hasPinButton={false} {...item} />
+            }
+            {
+              (item.type === 'ON_DEMAND' || item.type === 'VIDEO') &&
+              <VideoPostCard hasPinButton={false} {...item} />
+            }
           </Wrapper>
         ))}
       </SimpleGrid>
@@ -114,3 +124,4 @@ const PostsGrid = ({
 }
 
 export { PostsGrid }
+

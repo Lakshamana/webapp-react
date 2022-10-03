@@ -12,7 +12,11 @@ import { VideoPostCardProps } from 'types/posts'
 import { MobileView } from './mobileView'
 import { PostCard } from './postCard'
 
-const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
+const VideoPostCard = ({
+  postUnpinned,
+  hasPinButton = true,
+  ...props
+}: VideoPostCardProps) => {
   const history = useHistory()
 
   const [hover, setHover] = useState(false)
@@ -60,27 +64,27 @@ const VideoPostCard = ({ postUnpinned, ...props }: VideoPostCardProps) => {
   return (
     <>
       <PostCard
-        hover={hover}
-        actionHover={actionHover}
-        isLoading={isLoading}
-        pinPost={isAnonymousAccess ? showActionNotAllowedAlert : pinPost}
-        unpinPost={unpinPost}
-        isPostPinned={isPostPinned}
         onClickCard={selectPost}
-        {...props}
+        pinPost={isAnonymousAccess ? showActionNotAllowedAlert : pinPost}
+        {...{
+          hasPinButton,
+          hover,
+          isLoading,
+          isPostPinned,
+          actionHover,
+          unpinPost,
+          ...props,
+        }}
       />
       <MobileViewModal
-        onClose={onClose}
-        defaultActions={false}
-        isOpen={isOpen}
         isCentered
         closeButton
+        defaultActions={false}
+        {...{ onClose, isOpen }}
       >
         <MobileView
-          isLoading={isLoading}
-          isPostPinned={isPostPinned}
           handlePinPost={isPostPinned ? unpinPost : pinPost}
-          {...props}
+          {...{ isLoading, isPostPinned, hasPinButton, ...props }}
         />
       </MobileViewModal>
     </>

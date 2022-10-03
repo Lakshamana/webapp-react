@@ -64,7 +64,7 @@ export const Info = styled.div`
   position: absolute;
   display: flex;
   align-items: flex-end;
-  padding: 0px 0px 100px 35px;
+  padding: 0px 0px 130px 35px;
   width: 60%;
   height: 100%;
 
@@ -159,8 +159,9 @@ export const SwiperStyled = styled(Swiper)`
 
   .billboard-pagination > .swiper-pagination-bullet {
     width: 60px;
-    height: 4px;
-    border-radius: 0;
+    height: 6px;
+    opacity: 0.7;
+    border-radius: 4px;
   }
 
   .billboard-pagination > .swiper-pagination-bullet:hover,

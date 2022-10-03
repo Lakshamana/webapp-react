@@ -1,4 +1,4 @@
-import { CardsScroller, VideoPostCard } from 'components'
+import { CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
 import { CategoryPostCard } from 'components/atoms'
 import { Category, Post, PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
@@ -13,6 +13,7 @@ const TagsScroller = ({
   tagData,
   sectionTitle,
   sectionUrl,
+  isLoading
 }: TagsScrollerProps) => {
   const { generateImage } = useThumbor()
 
@@ -21,10 +22,10 @@ const TagsScroller = ({
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
   useEffect(() => {
-    const postItems = tagData?.relatedPosts.filter(
+    const postItems = tagData?.relatedPosts.rows.filter(
       (item) => item.type === PostType.Video || item.type === PostType.OnDemand
     )
-    const categoryItems = tagData?.relatedCategories
+    const categoryItems = tagData?.relatedCategories.rows
     const myArr = postItems
       .concat(categoryItems)
       .sort(
@@ -54,7 +55,7 @@ const TagsScroller = ({
           description: item.description,
           duration:
             item.__typename === 'Post' &&
-            item.media?.__typename === 'MediaVideo'
+              item.media?.__typename === 'MediaVideo'
               ? item.media?.duration
               : '',
           isExclusive: isEntityBlocked(item),
@@ -80,27 +81,31 @@ const TagsScroller = ({
     return image
   }
 
-  const RenderScroller = () => (
-    <CardsScroller
-      title={sectionTitle}
-      moreUrl={`${sectionUrl}${tagData?.slug}`}
-    >
-      {filteredItems?.map((item: TagScrollerItem) => (
-        <SwiperSlide key={`slide-${item.id}`}>
-          {item.__typename === 'Post' && (
-            <VideoPostCard key={`post-${item.id}`} {...item} />
-          )}
-          {item.__typename === 'Category' && (
-            <CategoryPostCard key={`category-${item.id}`} {...item} />
-          )}
-        </SwiperSlide>
-      ))}
-    </CardsScroller>
-  )
-
   return (
     <ContentScroller>
-      {!!filteredItems?.length && <RenderScroller />}
+      {
+        isLoading &&
+        !filteredItems?.length &&
+        <SkeletonScroller />
+      }
+      {!!filteredItems?.length && (
+        <CardsScroller
+          title={sectionTitle}
+          moreUrl={`${sectionUrl}${tagData?.slug}`}
+        >
+          {filteredItems?.map((item: TagScrollerItem) => (
+            <SwiperSlide key={`slide-${item.id}`}>
+              {item.__typename === 'Post' && (
+                <VideoPostCard key={`post-${item.id}`} {...item} />
+              )}
+              {item.__typename === 'Category' && (
+                <CategoryPostCard key={`category-${item.id}`} {...item} />
+              )}
+            </SwiperSlide>
+          ))}
+        </CardsScroller>
+      )
+      }
     </ContentScroller>
   )
 }

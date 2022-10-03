@@ -2,6 +2,9 @@ const EN_US = {
   translations: {
     common: {
       access: 'Access',
+      private: 'Private',
+      paywall: 'Paywall',
+      geolocked: 'Geoblocked',
       custom_field: {
         cpf: 'CPF',
         phone: 'Phone',
@@ -86,6 +89,9 @@ const EN_US = {
       action_not_allowed: 'You need to have an account to perform this action',
       create_a_new_account:
         "Creating an account is easy and free, create your own to have access to the platform's content!",
+      scroller: {
+        more: 'do you want see more?'
+      }
     },
     signin: {
       title: 'Access {{org}} now',
@@ -233,8 +239,11 @@ const EN_US = {
       },
     },
     page: {
+      organization: {
+        private: 'Private Organization'
+      },
       search: {
-        results_for: '{{count}} results found for {{string}}:',
+        results_for: '{{count}} results found for {{string}}',
         videos_section: 'Video',
         categories_section: 'Categories',
         live_events_section: 'Live Events',
@@ -270,8 +279,10 @@ const EN_US = {
         drama: 'Drama',
         family: 'Family',
         watch_now: 'Watch Now',
+        continue_watch: 'Continue Watching',
         my_list: 'My List',
         more_categories: 'More categories',
+        view_post: 'View Post',
       },
       category: {
         videos: 'Videos',
@@ -422,7 +433,7 @@ const EN_US = {
           },
         },
         password: {
-          title: 'You are almos there',
+          title: 'You are almost there',
           subtitle:
             'Your account is almost ready. Please choose a password for your account and enjoy the show.',
           password_input: 'Password',
@@ -433,6 +444,12 @@ const EN_US = {
         participants: 'Participants:',
         reactions: 'Reactions',
         comments: 'Comments',
+        modal: {
+          continue_watching: 'Continue watching',
+          continue_subtitle: 'Do you want to resume last time?',
+          continue_action_label: 'Yes, please.',
+          continue_cancel_label: 'No, Thanks.'
+        },
         comment: {
           hide: 'Hide',
           see: 'See',
@@ -505,10 +522,11 @@ const EN_US = {
     cookieConsent: {
       notice: 'Notice.',
       description_1:
-        'uses cookies to provide necessary website functionality, improve your experience and analyze our traffic. By using our website, you agree to',
+        'This site uses cookies to provide necessary functionality, improve your experience and analyze our traffic. By using our website, you agree to',
       link: 'our Privacy Policy',
       description_2: 'and our cookies usage.',
       accept: 'Accept',
+      decline: 'Decline'
     },
   },
 }

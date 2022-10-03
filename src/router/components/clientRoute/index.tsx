@@ -9,6 +9,7 @@ const ClientRoute = ({
   isAccesible,
   redirectTo,
   template: Template,
+  templateProps,
   ...rest
 }: Props) => {
   const { signed } = useAuth()
@@ -23,7 +24,7 @@ const ClientRoute = ({
       {...rest}
       render={() =>
         isAccesible ? (
-          <Template>
+          <Template {...templateProps}>
             <Component />
           </Template>
         ) : (

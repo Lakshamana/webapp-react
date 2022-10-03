@@ -1,4 +1,5 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
+import { Spinner } from '@chakra-ui/react'
 import { Link, Text } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores'
@@ -11,7 +12,7 @@ import { Props } from './types'
 
 SwiperCore.use([Navigation, Pagination, Lazy])
 
-const CardsScroller = ({ children, title, moreUrl, reachEnd }: Props) => {
+const CardsScroller = ({ children, title, moreUrl, isLoading, reachEnd }: Props) => {
   SWIPPER_PARAMS['navigation'] = {
     prevEl: `.swiper-button-prev`,
     nextEl: `.swiper-button-next`,
@@ -52,10 +53,22 @@ const CardsScroller = ({ children, title, moreUrl, reachEnd }: Props) => {
         onReachEnd={reachEnd}
         {...SWIPPER_PARAMS}
       >
-        <div className="swiper-wrapper">{children}</div>
+        <div className="swiper-wrapper">
+          {children}
+        </div>
         <div className="swiper-pagination-cards cards-scroller-pagination" />
         <div className={`swiper-button-prev`} />
-        <div className={`swiper-button-next`} />
+        <div className={`swiper-button-next ${isLoading && 'loading'}`} >
+          {
+            isLoading &&
+            <Spinner
+              speed="0.65s"
+              thickness={'3px'}
+              size={'md'}
+              color={colors.brand.action_link[colorMode]}
+            />
+          }
+        </div>
       </SwiperStyled>
     </Content>
   )

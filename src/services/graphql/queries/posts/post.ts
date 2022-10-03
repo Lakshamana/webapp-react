@@ -36,6 +36,12 @@ export const QUERY_POST = gql`
           aspectRatio
           createdAt
           hlsPath
+          subtitles {
+            id
+            locale
+            vttPath
+            label
+          }
         }
         ... on MediaAudio {
           id

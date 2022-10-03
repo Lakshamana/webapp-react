@@ -5,4 +5,4 @@ export type Props = {
   type?: ContentType
 }
 
-type ContentType = 'channel' | 'post' | 'organization' | 'live' | 'room'
+type ContentType = 'post' | 'liveEvent' | 'category' | 'channel' | 'organization'

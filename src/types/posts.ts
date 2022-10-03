@@ -3,7 +3,8 @@ import { Post } from 'generated/graphql'
 export type VideosScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
-  hasMoreLink?: boolean
+  showCardMore?: number | boolean | undefined
+  isLoading?: boolean
   items?: Post[]
   loadMoreItems?: () => void
 }
@@ -26,6 +27,9 @@ export type VideoPostCardProps = {
   isGeolocked?: boolean
   isPinned?: boolean
   isActive?: boolean
+  progress?: string
+  hasPinButton?: boolean
+  type?: string
   postUnpinned?: (postId: string) => void
 }
 
@@ -35,6 +39,7 @@ type PostCardProps = {
   isLoading: boolean
   isPostPinned: boolean
   isOpen?: boolean
+  progress?: string
   pinPost: () => void
   unpinPost: () => void
   actionHover: (status: boolean) => () => void

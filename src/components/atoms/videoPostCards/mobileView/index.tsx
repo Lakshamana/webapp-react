@@ -1,6 +1,6 @@
 import { Box, Flex, Image, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
-import { Button } from 'components'
+import { Button, ProgressBar } from 'components'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
@@ -20,10 +20,12 @@ type MobileViewProps = {
   isGeolocked?: boolean
   isPostPinned?: boolean
   isLoading: boolean
+  progress?: string
+  hasPinButton?: boolean
   handlePinPost: () => void
 }
 
-const MobileView = ({ ...props }: MobileViewProps) => {
+const MobileView = ({ hasPinButton, ...props }: MobileViewProps) => {
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
@@ -34,6 +36,7 @@ const MobileView = ({ ...props }: MobileViewProps) => {
     <Box>
       <Box position={'relative'}>
         <Image boxSize="auto" objectFit="contain" src={props.thumbnail}></Image>
+        {props?.progress && <ProgressBar value={props.progress} />}
         {isPostBlocked && (
           <BlockedContent>
             <Icon
@@ -74,7 +77,7 @@ const MobileView = ({ ...props }: MobileViewProps) => {
         )}
         <Spacer px={1} />
         {props.mediaLength && (
-          <Flex alignItems={'center'}> 
+          <Flex alignItems={'center'}>
             <Icon width={20} color={colors.white} icon={'mdi:clock'} />
             <Text
               fontWeight={'bolder'}
@@ -93,9 +96,13 @@ const MobileView = ({ ...props }: MobileViewProps) => {
         <Button
           onClick={() => history.push(`${props.url}`)}
           iconName={'play'}
-          label={t('page.categories.watch_now')}
+          label={t(
+            props.progress
+              ? 'page.categories.continue_watch'
+              : 'page.categories.watch_now'
+          )}
         />
-        {props.isLoading ? (
+        {!props.progress && props.isLoading && (
           <Button mt={2} variant={'outline'} disabled>
             <Spinner
               thickness="1px"
@@ -106,7 +113,9 @@ const MobileView = ({ ...props }: MobileViewProps) => {
             />
             <Text>{t('page.categories.my_list')}</Text>
           </Button>
-        ) : (
+        )}
+
+        {hasPinButton && !props.progress && !props.isLoading && (
           <Button
             mt={2}
             variant={'outline'}

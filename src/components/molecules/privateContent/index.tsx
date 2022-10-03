@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { Modal, Text, Input } from 'components'
+import { AlertComponent, Input, Modal, Text } from 'components'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useChannelsStore, useThemeStore } from 'services/stores'
 import { useHistory } from 'react-router'
-import { Props } from './types'
+import { useChannelsStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
-import { AlertComponent } from 'components'
+import { Props } from './types'
 
 const PrivateContent = ({
   requestAccess,
@@ -23,6 +22,7 @@ const PrivateContent = ({
   const getTitleByType = () => {
     let title = {
       channel: t('page.channels.private_channel'),
+      organization: t('page.organization.private'),
       default: t('page.post.private_content.title'),
     }
     return title[type || 'default']
@@ -30,7 +30,8 @@ const PrivateContent = ({
 
   const clearChannelAndRedirect = () => {
     clearActiveChannel()
-    window.location.href = '/'
+    //TODO: fix this using router
+    window.location.href = '/channels'
   }
 
   return (
@@ -42,6 +43,7 @@ const PrivateContent = ({
         type === 'channel' ? clearChannelAndRedirect() : history.go(-1)
       }
       onConfirm={() => requestAccess(password)}
+      cancelButton={type !== 'organization'}
       loading={isLoadingRequest}
       isActionDisabled={!password}
       closeOnOverlayClick={false}

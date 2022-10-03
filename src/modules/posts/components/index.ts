@@ -1,1 +1,2 @@
-export * from './verifyContentKind'
+export * from './photo'
+export * from './video'

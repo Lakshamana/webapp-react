@@ -17,7 +17,7 @@ export const getDefaultConfigs = (
   channel_id,
   organization_url,
 ) => ({
-  autoplay: true,
+  autoplay: false,
   controls: true,
   muted: true,
   responsive: true,
@@ -37,6 +37,7 @@ export const getDefaultConfigs = (
     },
     nativeAudioTracks: false,
     nativeVideoTracks: false,
+    nativeTextTracks: false,
     useBandwidthFromLocalStorage: true
   },
   playbackRates: [0.5, 1, 1.5, 2],

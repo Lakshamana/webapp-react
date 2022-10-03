@@ -3,4 +3,5 @@ export interface IDefinedChannels {
   name: string
   slug?: string
   kind?: string
+  access?: string
 }
