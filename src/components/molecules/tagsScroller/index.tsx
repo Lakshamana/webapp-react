@@ -1,36 +1,25 @@
 import { CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
 import { CategoryPostCard } from 'components/atoms'
-import { Category, Post, PostType } from 'generated/graphql'
+import { Category, Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
-// import { TagScrollerItem, TagsScrollerProps } from 'types/tags'
 import { TagScrollerItem } from 'types/tags'
 import { isEntityBlocked } from 'utils/accessVerifications'
 import { ContentScroller } from './styles'
 import { Props } from './types'
 
-//{  tagData,  sectionTitle,  sectionUrl}: TagsScrollerProps
-
 const TagsScroller = (props: Props) => {
   const { generateImage } = useThumbor()
-
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
   useEffect(() => {
-    const allowedTypes = ({ type }) => type === PostType.Video || type === PostType.OnDemand
-    console.log('PROPS:', props.rows)
-    const postItems = props.rows.filter(allowedTypes)
-    // const categoryItems = props.rows
-    // console.log('POST', postItems, 'CAT', categoryItems)
-    const allItems: any = postItems
-      // .concat(categoryItems)
+    const allItems: any = props.rows
       .sort((a, b) => (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt))
     setScrollerItems(allItems)
-    console.log(allItems, 'ALL ITEMS')
     //eslint-disable-next-line
   }, [props])
 
@@ -62,7 +51,6 @@ const TagsScroller = (props: Props) => {
           __typename: item.__typename,
         }
       })
-      console.log(mappedArr, 'MAPP')
       setFilteredItems(mappedArr)
     }
     //eslint-disable-next-line
@@ -93,7 +81,6 @@ const TagsScroller = (props: Props) => {
           reachEnd={props.onReachEnd}
           {...{ isLoading: props.isLoading }}
         >
-          {console.log(filteredItems)}
           {filteredItems?.map((item: TagScrollerItem) => (
             <SwiperSlide key={`slide-${item.id}`}>
               {item.__typename === 'Post' && (
