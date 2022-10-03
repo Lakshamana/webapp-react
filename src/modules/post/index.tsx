@@ -11,6 +11,7 @@ import {
 } from 'components'
 import { TypeParticipant } from 'components/molecules/participants/types'
 
+import { VerifyContentKind } from 'components/organisms'
 import {
   PaginatedPostsOutput,
   PlaylistOutput,
@@ -37,9 +38,8 @@ import {
 import { breakpoints, colors } from 'styles'
 import { sendPostReactionReport } from 'utils/analytics'
 import { RANDOM_ID } from 'utils/helperFunctions'
-import { VerifyContentKind } from '../components'
-import { PhotoPost } from '../components/photo'
-import { VideoPost } from '../components/video'
+import { PhotoPost } from './components/photo'
+import { VideoPost } from './components/video'
 import { PostComments, PostDetails, Subtitle, Title } from './style'
 import { playlistPostsFilter, relatedPostsFilter } from './utils'
 
@@ -57,8 +57,9 @@ const PostPage = () => {
     useState<boolean>(true)
   const [postData, setPostData] = useState<Post>()
   const [relatedPostsData, setRelatedPostsData] =
-    useState<PaginatedPostsOutput>()
-  const [playlistData, setPlaylistData] = useState<PlaylistOutput>()
+    useState<Maybe<PaginatedPostsOutput>>()
+  const [playlistData, setPlaylistData] = useState<Maybe<PlaylistOutput>>()
+  const [activePlaylist, setActivePlaylist] = useState<string>()
   const [engagedUsers, setEngagedUsers] = useState<TypeParticipant[]>()
   const [relatedCategories, setRelatedCategories] = useState<string[]>()
   const [activeReaction, setActiveReaction] = useState<string>()
@@ -167,18 +168,23 @@ const PostPage = () => {
     setEngagedUsers(engagedUsers)
 
     if (!!postData?.playlists?.length && !isAnonymousAccess) {
-      getPlaylist({
-        variables: {
-          id: postData?.playlists[0].id,
-          ...playlistPostsFilter(1),
-        },
-      })
+      if (activePlaylist !== postData?.playlists[0].id) {
+        setActivePlaylist(postData?.playlists[0].id)
+        setPlaylistData(null)
+        getPlaylist({
+          variables: {
+            id: postData?.playlists[0].id,
+            ...playlistPostsFilter(1),
+          },
+        })
+      }
     }
     //eslint-disable-next-line
   }, [postData])
 
   useEffect(() => {
     if (!!relatedCategories?.length && !isAnonymousAccess) {
+      setRelatedPostsData(null)
       getRelatedPosts({
         variables: {
           ...relatedPostsFilter(1, relatedCategories),

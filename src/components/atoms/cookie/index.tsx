@@ -20,6 +20,7 @@ const Cookie = () => {
         alignItems: 'center',
         textAlign: 'center',
         justifyContent: 'center',
+        zIndex: 9999
       }}
       buttonStyle={{
         background: colors.brand.primary[colorMode],

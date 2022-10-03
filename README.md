@@ -2,12 +2,12 @@
  FanHero's browser-based brand-app client.
 
 ## Access the project on: 
-- [marvel] https://marvel-dev.fanhero.tv
-- [valetudo] https://valetudo.fanhero.tv
-- [heroflix] https://heroflix-dev.fanhero.tv
-- [herotube] https://herotube-dev.fanhero.tv
-- [spacex] https://spacex-stg.fanhero.tv
-- [storybook] https://storybook.fanhero.net/?path=/story/introduction--page
+- [marvel - develoment] https://marvel-dev.fanhero.tv
+- [valetudo - develoment] https://valetudo.fanhero.tv
+- [heroflix - develoment] https://heroflix-dev.fanhero.tv
+- [herotube - develoment] https://herotube-dev.fanhero.tv
+- [spacex - staging] https://spacex-stg.fanhero.tv
+- [storybook - components library] https://storybook.fanhero.net/?path=/story/introduction--page
 
 ### This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

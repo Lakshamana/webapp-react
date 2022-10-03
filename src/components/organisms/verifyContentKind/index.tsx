@@ -6,12 +6,14 @@ import {
   PrivateContent,
   Skeleton
 } from 'components'
-import { LiveEvent, Post } from 'generated/graphql'
+
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  MUTATION_CATEGORY_PASSWORD_CHECK,
   MUTATION_LIVE_EVENT_PASSWORD_CHECK,
   MUTATION_POST_PASSWORD_CHECK,
+  QUERY_VERIFY_CATEGORY_KIND,
   QUERY_VERIFY_LIVE_EVENT_KIND,
   QUERY_VERIFY_POST_KIND
 } from 'services/graphql'
@@ -22,7 +24,7 @@ import {
   isEntityOnPaywall,
   isEntityPrivate
 } from 'utils/accessVerifications'
-import { Props } from './types'
+import { ElegibleContent, Props } from './types'
 
 const VerifyContentKind = ({
   contentSlug,
@@ -35,33 +37,45 @@ const VerifyContentKind = ({
   const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
   const [password, setPassword] = useState('')
-  const [contentKind, setContentKind] = useState<Post | LiveEvent>()
+  const [contentKind, setContentKind] = useState<ElegibleContent>()
   const { activeChannel } = useChannelsStore()
 
+  const getContentKindQuery = () => {
+    const query = {
+      post: QUERY_VERIFY_POST_KIND,
+      category: QUERY_VERIFY_CATEGORY_KIND,
+      liveEvent: QUERY_VERIFY_LIVE_EVENT_KIND,
+    }
+    return query[contentType]
+  }
+
+  const getRequestContentAccessQuery = () => {
+    const query = {
+      post: MUTATION_POST_PASSWORD_CHECK,
+      category: MUTATION_CATEGORY_PASSWORD_CHECK,
+      liveEvent: MUTATION_LIVE_EVENT_PASSWORD_CHECK,
+    }
+    return query[contentType]
+  }
+
   const [getContentKind, { loading: isLoadingVerifyContentKind }] =
-    useLazyQuery(
-      contentType === 'live'
-        ? QUERY_VERIFY_LIVE_EVENT_KIND
-        : QUERY_VERIFY_POST_KIND,
-      {
-        variables: {
-          slug: contentSlug,
-        },
-        onCompleted: (result) => {
-          setContentKind(
-            contentType === 'live' ? result?.liveEvent : result?.post
-          )
-        },
-        fetchPolicy: 'no-cache',
-      }
-    )
+    useLazyQuery(getContentKindQuery(), {
+      variables: {
+        slug: contentSlug,
+      },
+      onCompleted: (result) => {
+        const content = result[`${contentType}`]
+        setContentKind(content)
+      },
+      fetchPolicy: 'cache-and-network',
+    })
 
   const setError = () => {
     setErrorOnRequestAccess(t('page.post.private_content.incorrect_password'))
   }
 
-  const [requestLiveAccess, { loading: isLoadingLivePasswordCheck }] =
-    useMutation(MUTATION_LIVE_EVENT_PASSWORD_CHECK, {
+  const [requestContentAccess, { loading: isLoadingPasswordCheck }] =
+    useMutation(getRequestContentAccessQuery(), {
       variables: {
         id: contentKind?.id,
         payload: {
@@ -69,27 +83,15 @@ const VerifyContentKind = ({
         },
       },
       onCompleted: (result) => {
-        result?.liveEventPasswordCheck?.correct ? accessGranted() : setError()
+        const passwordCheckResult = result[`${contentType}PasswordCheck`]
+        passwordCheckResult.correct ? accessGranted() : setError()
       },
     })
 
-  const [requestPostAccess, { loading: isLoadingPostPasswordCheck }] =
-    useMutation(MUTATION_POST_PASSWORD_CHECK, {
-      variables: {
-        id: contentKind?.id,
-        payload: {
-          password,
-        },
-      },
-      onCompleted: (result) => {
-        result?.postPasswordCheck?.correct ? accessGranted() : setError()
-      },
-    })
-
-  const sendRequestToAccessPrivatePost = async (password: string) => {
+  const sendRequestToAccessPrivateContent = async (password: string) => {
     await setPassword(password)
     setErrorOnRequestAccess('')
-    contentType === 'live' ? requestLiveAccess() : requestPostAccess()
+    requestContentAccess()
   }
 
   useEffect(() => {
@@ -110,9 +112,6 @@ const VerifyContentKind = ({
     //eslint-disable-next-line
   }, [activeChannel])
 
-  const isLoadingPasswordCheck =
-    isLoadingLivePasswordCheck || isLoadingPostPasswordCheck
-
   if (isLoadingVerifyContentKind)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
@@ -127,11 +126,14 @@ const VerifyContentKind = ({
       <PrivateContent
         error={errorOnRequestAccess}
         isLoadingRequest={isLoadingPasswordCheck}
-        requestAccess={(password) => sendRequestToAccessPrivatePost(password)}
+        requestAccess={(password) =>
+          sendRequestToAccessPrivateContent(password)
+        }
       />
     )
+
   if (isOnPaywall)
-    return <PlanSelectFlow entitlement={contentKind?.entitlements} />
+    return <PlanSelectFlow entitlement={contentKind?.entitlements || []} />
 
   if (isGeolocked) return <GeolockedContent />
 

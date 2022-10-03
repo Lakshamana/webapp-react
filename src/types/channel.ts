@@ -15,4 +15,5 @@ export type ChannelStorageData = {
   name: string
   slug: string
   kind: string
+  access: string
 }

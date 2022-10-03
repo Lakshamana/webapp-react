@@ -5,6 +5,7 @@ export const QUERY_CHANNELS = gql`
     channels(filter: $filter) {
       ... on AvailableChannel {
         id
+        access
         kind
         description
         geofence
@@ -28,6 +29,7 @@ export const QUERY_PUBLIC_CHANNELS = gql`
       ... on AvailableChannel {
         id
         kind
+        access
         description
         geofence
         slug
@@ -44,36 +46,3 @@ export const QUERY_PUBLIC_CHANNELS = gql`
   }
 `
 
-export const QUERY_CHANNEL = gql`
-  query Channel($slug: String) {
-    channel(slug: $slug) {
-      ... on AvailableChannel {
-        id
-        kind
-        description
-        geofence
-        slug
-        name
-        __typename
-      }
-      ... on GeolockedChannel {
-        id
-        name
-        slug
-        kind
-        __typename
-      }
-    }
-  }
-`
-
-export const QUERY_PUBLIC_CHANNEL = gql`
-  query PublicChannel($slug: String) {
-    getPublicChannel(slug: $slug) {
-      id
-      name
-      kind
-      slug
-    }
-  }
-`

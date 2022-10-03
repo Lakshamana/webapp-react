@@ -19,7 +19,10 @@ import {
   LivestreamScroller,
   VideosScroller
 } from 'components'
-import { DEFAULT_POLLING_INTERVAL, MAXIMUM_SCROLLER_REQUESTS } from 'config/constants'
+import {
+  DEFAULT_POLLING_INTERVAL,
+  MAXIMUM_SCROLLER_REQUESTS
+} from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {
   QUERY_BILLBOARDS,
@@ -416,8 +419,9 @@ const HomePage = () => {
       <Flex
         gridGap={5}
         flexDirection={'column'}
-        mt={billboardItems ? 0 : 7}
+        mt={billboardItems && !isLoading ? -8 : 7}
         w={'100vw'}
+        zIndex={billboardItems?.length ? 9999 : 0}
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
@@ -447,7 +451,7 @@ const HomePage = () => {
             </Flex>
           </InfiniteScroll>
         )}
-        {isEmpty && <EmptyState />}
+        {isEmpty && <Box mt={7}><EmptyState /></Box>}
       </Flex>
     </Container>
   )

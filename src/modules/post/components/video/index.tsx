@@ -4,7 +4,7 @@ import { Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { getData } from 'services/storage'
 import { buildUrlFromPath } from 'utils/helperFunctions'
-import { AlertNextVideo } from './AlertNextVideo'
+import { AlertNextVideo } from './components/AlertNextVideo'
 import { Video } from './style'
 
 const VideoPost = ({ ...postData }: Post) => {
@@ -17,6 +17,19 @@ const VideoPost = ({ ...postData }: Post) => {
     const hlsPath = media?.__typename === 'MediaVideo' ? media.hlsPath : null
     if (!media || !hlsPath) return ''
     return buildUrlFromPath(media?.baseUrl!, hlsPath, 'https')
+  }
+
+  const getTracks = () => {
+    const { media } = postData || {}
+    if(media?.['subtitles']) {
+      return media?.['subtitles'].map((item)=>({
+        src: `${media.baseUrl}/${item.vttPath}`,
+        kind: 'captions',
+        srclang: item.locale,
+        label: item.label
+      }))
+    }
+    return []
   }
 
   const getCategoryId = (post: Post) => {
@@ -42,6 +55,7 @@ const VideoPost = ({ ...postData }: Post) => {
         categoryId={getCategoryId(postData)}
         post_type={postData?.type}
         video_duration={postData?.media?.['duration']}
+        tracks={getTracks()}
       />
       <AlertNextVideo />
     </Video>

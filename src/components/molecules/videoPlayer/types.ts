@@ -17,4 +17,12 @@ export interface VideoPlayerProps {
   categoryId?: string;
   post_type?: PostType | string;
   video_duration?: number;
+  tracks?: TracksProps[]
+}
+
+export interface TracksProps {
+  src: string,
+  kind: string,
+  srclang: string,
+  label: string,
 }

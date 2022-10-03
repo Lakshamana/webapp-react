@@ -1,15 +1,28 @@
-import { useApolloClient } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { MUTATION_CHANNEL_PASSWORD_CHECK } from 'services/graphql'
-import { useAuthStore, useChannelsStore } from 'services/stores'
 
-import { PrivateContent } from 'components'
+import {
+  MUTATION_CHANNEL_PASSWORD_CHECK,
+  MUTATION_ORGANIZATION_PASSWORD_CHECK,
+  QUERY_CHANNEL_ENTITLEMENTS,
+  QUERY_ORGANIZATION_ENTITLEMENTS
+} from 'services/graphql'
 
-import { Kinds } from 'generated/graphql'
+import {
+  useAuthStore,
+  useChannelsStore,
+  useOrganizationStore
+} from 'services/stores'
 
 import { useDisclosure } from '@chakra-ui/react'
 import { AccessVerificationsTypes } from './types'
+
+import { useTranslation } from 'react-i18next'
+import {
+  isEntityGeolocked,
+  isEntityOnPaywall,
+  isEntityPrivate
+} from 'utils/accessVerifications'
 
 const AccessVerificationsContext = createContext({})
 
@@ -19,77 +32,146 @@ export const useAccessVerifications = () => {
 }
 
 export const AccessVerificationsProvider = ({ children }) => {
-  const { t } = useTranslation()
   const { isOpen, onClose, onOpen } = useDisclosure()
-  const [channelAccessGranted, setChannelAccesGranted] =
-    useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
-  const { activeChannel, activeChannelKind } = useChannelsStore()
+
+  const { t } = useTranslation()
+
+  const [isPrivate, setIsPrivate] = useState<boolean>(false)
+  const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
+  const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
+
+  const [errorOnPrivateRequestAccess, setErrorOnPrivateRequestAccess] =
+    useState<string>('')
+
+  const [contentType, setContentType] = useState<'channel' | 'organization'>(
+    'channel'
+  )
+
+  const [entitlements, setEntitlements] = useState([])
+
+  const { activeChannel } = useChannelsStore()
+
+  const { organization } = useOrganizationStore()
+
   const { isAnonymousAccess } = useAuthStore()
 
-  const client = useApolloClient()
-
-  const requestPrivateChannelAccess = async (password: string) => {
-    setIsLoading(true)
-    setError('')
-    await client
-      .mutate({
-        mutation: MUTATION_CHANNEL_PASSWORD_CHECK,
-        variables: {
-          channelId: activeChannel?.id,
-          password,
-        },
-      })
-      .then((result) => {
-        result.data.channelPasswordCheck.correct
-          ? setChannelAccesGranted(true)
-          : setError(t('page.channels.incorrect_password'))
-      })
-      .finally(() => setIsLoading(false))
+  const getRequestContentAccessQuery = () => {
+    const query = {
+      channel: MUTATION_CHANNEL_PASSWORD_CHECK,
+      organization: MUTATION_ORGANIZATION_PASSWORD_CHECK,
+    }
+    return query[contentType]
   }
 
-  const isRouteElegibleToChannelAnonymous =
-    window.location.pathname === `/c/${activeChannel?.slug}` ||
-    window.location.pathname === `/c/${activeChannel?.slug}/categories` ||
-    window.location.pathname === `/c/${activeChannel?.slug}/feed` ||
-    window.location.pathname === `/c/${activeChannel?.slug}/mylist` ||
-    window.location.pathname === `/c/${activeChannel?.slug}/live`
+  const [getEntitlements, { loading: isLoadingEntitlements }] = useLazyQuery(
+    contentType === 'channel'
+      ? QUERY_CHANNEL_ENTITLEMENTS
+      : QUERY_ORGANIZATION_ENTITLEMENTS,
+    {
+      variables: {
+        id: contentType === 'channel' ? activeChannel?.id : organization?.id,
+      },
+      onCompleted: (result) => {
+        setEntitlements(result[contentType].entitlements)
+      },
+    }
+  )
 
-  const showActionNotAllowedAlert = () => onOpen()
+  const requestContentAccess = (password: string) => {
+    setErrorOnPrivateRequestAccess('')
 
-  const closeActionNotAllowed = () => onClose()
+    const isChannel = contentType === 'channel'
 
-  const isActionNotAllowedOpen = isOpen
+    privateContentAccess({
+      variables: {
+        [isChannel ? 'channelId' : 'organizationId']: isChannel
+          ? activeChannel?.id
+          : organization?.id,
+        password,
+      },
+    })
+  }
+
+  const [privateContentAccess, { loading: isLoadingPasswordCheck }] =
+    useMutation(getRequestContentAccessQuery(), {
+      onCompleted: (result) => {
+        const passwordCheckResult = result[`${contentType}PasswordCheck`]
+        passwordCheckResult.correct
+          ? setIsPrivate(false)
+          : setErrorOnPrivateRequestAccess(
+              t('page.post.private_content.incorrect_password')
+            )
+      },
+    })
+
+  const channelRoutes = [
+    `/c/${activeChannel?.slug}`,
+    `/c/${activeChannel?.slug}/categories`,
+    `/c/${activeChannel?.slug}/feed`,
+    `/c/${activeChannel?.slug}/mylist`,
+    `/c/${activeChannel?.slug}/live`,
+  ]
+
+  const organizationRoutes = ['/channels']
 
   useEffect(() => {
-    if (activeChannelKind === Kinds.Private) setChannelAccesGranted(false)
-    if (
-      activeChannelKind === Kinds.Exclusive &&
-      isAnonymousAccess &&
-      isRouteElegibleToChannelAnonymous
-    ) {
-      window.location.href = '/create-your-account'
+    const isOrgRoute = organizationRoutes.includes(window.location.pathname)
+    if (isOrgRoute && organization) {
+      setContentType('organization')
+      setIsPrivate(isEntityPrivate(organization))
+      setIsOnPaywall(isEntityOnPaywall(organization))
+      setIsGeolocked(isEntityGeolocked(organization))
     }
     //eslint-disable-next-line
-  }, [activeChannelKind])
+  }, [organization])
 
-  if (activeChannelKind === Kinds.Private && !channelAccessGranted)
-    return (
-      <PrivateContent
-        type="channel"
-        requestAccess={(password) => requestPrivateChannelAccess(password)}
-        isLoadingRequest={isLoading}
-        error={error}
-      />
-    )
+  const clearAllStatus = () => {
+    setIsOnPaywall(false)
+    setIsGeolocked(false)
+    setIsPrivate(false)
+  }
+
+  useEffect(() => {
+    const isChannelRoute = channelRoutes.includes(window.location.pathname)
+
+    if (isChannelRoute && activeChannel) {
+      setContentType('channel')
+      setIsPrivate(isEntityPrivate(activeChannel))
+      setIsOnPaywall(isEntityOnPaywall(activeChannel))
+      setIsGeolocked(isEntityGeolocked(activeChannel))
+    }
+    //eslint-disable-next-line
+  }, [activeChannel])
+
+  useEffect(() => {
+    if (isOnPaywall && isAnonymousAccess) {
+      window.location.href = '/create-your-account'
+    }
+    if (isOnPaywall) getEntitlements()
+
+    //eslint-disable-next-line
+  }, [isOnPaywall])
+
+  const showActionNotAllowedAlert = () => onOpen()
+  const closeActionNotAllowed = () => onClose()
+  const isActionNotAllowedOpen = isOpen
 
   return (
     <AccessVerificationsContext.Provider
       value={{
+        contentType,
         showActionNotAllowedAlert,
         isActionNotAllowedOpen,
         closeActionNotAllowed,
+        isOnPaywall,
+        isPrivate,
+        isGeolocked,
+        entitlements,
+        isLoadingEntitlements,
+        isLoadingPasswordCheck,
+        requestContentAccess,
+        errorOnPrivateRequestAccess,
+        clearAllStatus,
       }}
     >
       {children}

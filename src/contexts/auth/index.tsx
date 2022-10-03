@@ -113,6 +113,7 @@ export const AuthProvider = ({ children }) => {
         name: channel.name,
         slug: channel.slug || '',
         kind: channel.kind || '',
+        access: channel.access || '',
       })
     }
   }
@@ -185,7 +186,6 @@ export const AuthProvider = ({ children }) => {
             'en-US'
 
           i18n.changeLanguage(language)
-          
 
           const storedTheme = getData(APP_THEME)
 
