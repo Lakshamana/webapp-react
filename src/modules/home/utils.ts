@@ -35,3 +35,8 @@ export const categoriesFilter = (page: number, isParent?: boolean, featured?: bo
     },
   }
 }
+
+export const appendNewData = (previous: any, newData: any) => ({
+  ...newData,
+  rows: [...(previous?.rows || []), ...newData?.rows],
+})
