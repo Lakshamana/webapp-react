@@ -114,3 +114,45 @@ query Tags{
 )}
 }
 `
+
+export const QUERY_PAGINATE_TAG = gql`
+  query Tag($tagId: ID!, $filters: PostFilter) {
+    tag(id: $tagId) {
+      id
+      title
+      description
+      slug
+      relatedPosts(filters: $filters) {
+        total
+        hasNextPage
+        hasPreviousPage
+        page
+        pageCount
+        rows {
+          access
+          type
+          title
+          thumbnail {
+            imgPath
+          }
+          status
+          slug
+          pinnedStatus {
+            pinned
+          }
+          media {
+            ... on MediaVideo {
+              id
+              duration
+              thumbnailPath
+              baseUrl
+            }
+          }
+          id
+          description
+          kind
+        }
+      }
+    }
+  }
+`
