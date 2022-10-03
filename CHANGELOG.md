@@ -1,3 +1,16 @@
+# 1.2.1
+- Organization Paywall
+- Channel Paywall
+- Category Paywall
+- LiveEvent Paywall
+- Organization Private
+- Channel Private
+- Cards scroller touch fix
+- Continue Watching
+- Logo on player
+- Analytics
+- Cards scroller loading
+
 # 1.2.0
 - Public Posts
 - Public Category
