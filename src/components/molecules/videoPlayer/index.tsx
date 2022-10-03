@@ -39,7 +39,7 @@ const VideoPlayerComponent = ({
 }: VideoPlayerProps): ReactElement => {
   const playerRef: any = useRef(null)
   const { t } = useTranslation()
-  const [watchingPosition, setWatchingPosition] = useState({ showModal: false, position: 0 })
+  const [watchingPosition, setWatchingPosition] = useState({ showModal: false, position: 0, ended: false })
   const { account, isAnonymousAccess, user } = useAuthStore()
   const { activeChannelConfig } = useCustomizationStore()
   const setEventUpdate = useVideoPlayerStore((state) => state.setEventUpdate)
@@ -95,7 +95,9 @@ const VideoPlayerComponent = ({
           const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
           const lastPosition = await axios.get(`${ANALYTICS_API}/watching${URL_PARAMS}`)
           const position = lastPosition?.data?.position
-          if (position && position !== 0) return setWatchingPosition({ showModal: true, position })
+          if (position && position !== 0) {
+            return setWatchingPosition({ showModal: true, position, ended: false })
+          }
           setWatchingPosition({ ...watchingPosition, showModal: false })
         } catch (error) {
           setWatchingPosition({ ...watchingPosition, showModal: false })
@@ -104,7 +106,7 @@ const VideoPlayerComponent = ({
         player?.play()
       }
 
-      player.chromecast()
+      player?.chromecast()
 
       const fanheroButton = player?.controlBar.addChild('button')
       fanheroButton.controlText(configEnvs?.playerLogo?.altText || 'Visit fanhero site');
@@ -141,6 +143,7 @@ const VideoPlayerComponent = ({
       }
       if (!isAnonymousAccess && !isLiveStream) {
         continueWatchingEnded()
+        setWatchingPosition({ ...watchingPosition, ended: true })
       }
       setEventUpdate(PlayerEventName.EVENT_ENDED)
     })
@@ -159,7 +162,7 @@ const VideoPlayerComponent = ({
       setRemainingTime(isRemainingTime)
 
       const currentTime = Math.trunc(player.currentTime())
-      if (currentTime % 5 === 0 && currentTime !== lastCurrent) {
+      if (currentTime % 5 === 0 && currentTime !== lastCurrent && !watchingPosition.ended) {
         lastCurrent = currentTime
         sendContinueWatchingData(player.currentTime())
       }
