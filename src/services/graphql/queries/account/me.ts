@@ -10,6 +10,9 @@ export const QUERY_ME = gql`
         first_name
         last_name
         username
+        is_admin
+        is_super_user
+        is_tenant_user
       }
       profile {
         id
