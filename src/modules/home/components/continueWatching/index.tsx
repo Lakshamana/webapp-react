@@ -22,7 +22,6 @@ const ContinueWatchingScrollerComponent = ({ item, getCarouselLabel }: Props) =>
   const continueWatchingList = async (lastVideoId?: String) => {
     setIsCWatchingLoading(true)
     try {
-      const URL = `https://${process.env.REACT_APP_API_ENDPOINT}/posts/continue-watching`
       const myIp = await axios.get(GET_IP_API)
       const headers = { 'x-forwarded-for': myIp.data.ip }
       const params = {
@@ -32,6 +31,7 @@ const ContinueWatchingScrollerComponent = ({ item, getCarouselLabel }: Props) =>
       }
       if (lastVideoId) params['lastVideoId'] = lastVideoId
       if (account?.is_admin) params['isAdmin'] = account?.is_admin
+      const URL = `https://${process.env.REACT_APP_API_ENDPOINT}/posts/continue-watching`
       const { data } = await axios.post(URL, params, { headers })
       if (data?.statusCode === 200) {
         const { rows, ...allRest } = data.body.data
