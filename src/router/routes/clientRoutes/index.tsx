@@ -22,6 +22,7 @@ import {
   RecoverPasswordPage,
   SearchPage,
   SignupPage,
+  SubscriptionManagement,
   TagPage
 } from 'modules'
 import { ClientRoute } from '../../components'
@@ -47,6 +48,12 @@ const ClientRoutes = () => {
         isAccesible={signed}
         path="/account"
         component={AccountPage}
+        template={MainLayout}
+      />
+      <ClientRoute
+        isAccesible={signed}
+        path="/subscription-management"
+        component={SubscriptionManagement}
         template={MainLayout}
       />
       <ClientRoute
@@ -174,3 +181,4 @@ const ClientRoutes = () => {
 }
 
 export { ClientRoutes }
+
