@@ -18,3 +18,4 @@ export const DEFAULT_LIMIT_QUERY = 20
 export const DEFAULT_PAGESIZE_FEEDS = 10
 export const DEFAULT_PAGESIZE_COMMENTS = 10
 export const MAXIMUM_SCROLLER_REQUESTS = 4
+export const GET_IP_API = 'https://api.ipify.org/?format=json'
