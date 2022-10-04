@@ -80,13 +80,8 @@ export const AuthProvider = ({ children }) => {
       ? REACT_APP_ORGANIZATION_URL
       : window.location.origin
 
-  const updateAccount = async (account) => {
-    await setAccount(account)
-  }
-
-  const updateUser = async (user) => {
-    await setUser(user)
-  }
+  const updateAccount = async (account) => await setAccount(account)
+  const updateUser = async (user) => await setUser(user)
 
   const loadAccount = async () => {
     if (account && user) {
@@ -127,7 +122,6 @@ export const AuthProvider = ({ children }) => {
         if (data?.me) {
           const userData = data.me.profile
           saveData(APP_USER, userData.id)
-          const accountData = data.me.account
           updateUser(userData)
           if (data.me.profile?.locale) {
             switch (data.me.profile?.locale) {
@@ -141,7 +135,10 @@ export const AuthProvider = ({ children }) => {
                 i18n.changeLanguage(data.me.profile.locale)
             }
           }
-          updateAccount(accountData)
+          const accountData = data.me.account
+          const { is_admin, is_super_user, is_tenant_user, ...account } = accountData
+          const isAdmin = is_admin || is_super_user || is_tenant_user
+          updateAccount({ ...account, is_admin: isAdmin })
         }
         resolve(data.me)
       } catch {
@@ -191,8 +188,8 @@ export const AuthProvider = ({ children }) => {
 
           const customizationTheme = activeChannel
             ? decryptedCustomization?.CHANNELS[
-                activeChannel.id
-              ]?.THEME?.toLowerCase()
+              activeChannel.id
+            ]?.THEME?.toLowerCase()
             : decryptedCustomization?.ORGANIZATION?.THEME?.toLowerCase()
 
           setColorMode(storedTheme || customizationTheme || 'dark')
@@ -243,7 +240,7 @@ export const AuthProvider = ({ children }) => {
         (customizationData?.CHANNELS[
           activeChannel.id
         ]?.THEME.toLowerCase() as ColorMode) ||
-          (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
+        (customizationData?.ORGANIZATION.THEME?.toLocaleLowerCase() as ColorMode)
       )
     }
     // eslint-disable-next-line
