@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { HomeCarouselsTypes } from 'types/common'
 
 export const QUERY_TAG = gql`
   query GetTag($id: ID, $slug: String) {
@@ -57,60 +58,77 @@ export const QUERY_TAG = gql`
   }
 `
 
-export const QUERY_LOOP_TAGS = (ids: String[]) => gql`
-query Tags{
-  ${ids?.map(
-  (id: String) =>
-    `tag${id}: tag(id: "${id}") {
-      id
-      title
-      description
-      relatedCategories {
-        rows {
-          access
-          slug
-          pinnedStatus {
-            pinned
-          }
-          id
-          description
-          name
-          kind
-          customization {
-            thumbnail {
-              imgPath
-            }
-          }
-        }
-      }
-      relatedPosts {
-        rows {
-          type
-          access
-          slug
-          status
-          pinnedStatus {
-            pinned
-          }
-          media {
-            ... on MediaVideo {
+export const QUERY_PAGINATE_TAG = (type: HomeCarouselsTypes[]) => {
+  const hasPost = type.includes(HomeCarouselsTypes.Posts)
+  const hasCategory = type.includes(HomeCarouselsTypes.Collections)
+  return gql`
+    query Tag(
+      $tagId: ID!, 
+      ${hasPost ? '$postFilters: PostFilter' : ''}
+      ${hasCategory ? '$categoryFilters: CategoryFilter' : ''}
+    ) {
+      tag(id: $tagId) {
+        id
+        title
+        description
+        slug
+        ${hasPost ? `
+          relatedPosts(filters: $postFilters) {
+            total
+            hasNextPage
+            page
+            pageCount
+            rows {
+              access
+              type
+              title
+              thumbnail {
+                imgPath
+              }
+              status
+              slug
+              pinnedStatus {
+                pinned
+              }
+              media {
+                ... on MediaVideo {
+                  id
+                  duration
+                  thumbnailPath
+                  baseUrl
+                }
+              }
               id
-              duration
-              thumbnailPath
-              baseUrl
+              description
+              kind
             }
           }
-          id
-          description
-          title
-          kind
-          thumbnail {
-            imgPath
+        ` : ''}
+        ${hasCategory ? `
+          relatedCategories(filters: $categoryFilters) {
+            total
+            hasNextPage
+            page
+            pageCount
+            rows {
+              access
+              slug
+              pinnedStatus {
+                pinned
+              }
+              id
+              description
+              name
+              kind
+              customization {
+                thumbnail {
+                  imgPath
+                }
+              }
+            }
           }
-        }
+        ` : ''}
       }
-      slug
-    }`
-)}
+    }
+  `
 }
-`

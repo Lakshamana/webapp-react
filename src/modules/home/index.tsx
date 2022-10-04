@@ -1,6 +1,5 @@
 import { useLazyQuery } from '@apollo/client'
 import { Box, Flex, Spinner } from '@chakra-ui/react'
-import axios from 'axios'
 import {
   Billboard,
   Category,
@@ -16,24 +15,19 @@ import {
   BillboardScroller,
   CategoriesScroller,
   Container,
-  ContinueWatchingScroller,
   EmptyState,
   LivestreamScroller,
-  TagsScroller,
   VideosScroller
 } from 'components'
 import {
   DEFAULT_POLLING_INTERVAL,
-  MAXIMUM_SCROLLER_REQUESTS,
-  MAX_CARDS_SCROLLER_RESULTS
+  MAXIMUM_SCROLLER_REQUESTS
 } from 'config/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Client } from 'services/api'
 import {
   QUERY_BILLBOARDS,
   QUERY_CATEGORIES_CARDS,
   QUERY_LIVE_EVENTS,
-  QUERY_LOOP_TAGS,
   QUERY_POSTS_CARDS,
   QUERY_PUBLIC_CATEGORIES_CARDS,
   QUERY_PUBLIC_LIVE_EVENTS,
@@ -52,7 +46,8 @@ import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
 import { convertToValidColor } from 'utils/helperFunctions'
 import { askForPushPermission } from 'utils/pushNotifications'
-import { categoriesFilter, liveEventsFilter, postsFilter } from './utils'
+import { ContinueWatchingScrollerComponent, TagsScrollerComponent } from './components'
+import { appendNewData, categoriesFilter, liveEventsFilter, postsFilter } from './utils'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
@@ -61,7 +56,7 @@ const HomePage = () => {
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const { activeChannel } = useChannelsStore()
-  const { isAnonymousAccess, user } = useAuthStore()
+  const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
     isAnonymousAccess && activeChannel?.kind === Kinds.Public
@@ -74,9 +69,7 @@ const HomePage = () => {
     useState<PaginatedCategoriesOutput>()
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<PaginatedCategoriesOutput>()
-  const [continueWatchingListData, setContinueWatchingListData] =
-    useState<any>()
-  const [isCWatchingLoading, setIsCWatchingLoading] = useState<boolean>(false)
+
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
     useState(true)
@@ -84,9 +77,9 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  const [tagsIds, setTagsIds] = useState<string[]>([])
-  const [tagsData, setTagsData] = useState({})
-  const [loadingTags, setLoadingTags] = useState(false)
+  // const [tagsIds, setTagsIds] = useState<string[]>([])
+  // const [loadingTags, setLoadingTags] = useState(false)
+  // const [tagsData, setTagsData] = useState({})
   const [fetchControl, setFetchControl] = useState({})
 
   const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
@@ -95,11 +88,6 @@ const HomePage = () => {
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
     })
-
-  const appendNewData = (previous: any, newData: any) => ({
-    ...newData,
-    rows: [...(previous?.rows || []), ...newData?.rows],
-  })
 
   const updateFetchControl = (scrollerName: string) => {
     let updateRequest = fetchControl[scrollerName]
@@ -131,7 +119,8 @@ const HomePage = () => {
     {
       onCompleted: (result) => {
         const posts = isAnonymousAllowed ? result.publicPosts : result.posts
-        setFeaturedPostsData((previous) => appendNewData(previous, posts))
+        setFeaturedPostsData((previous) =>
+          appendNewData(previous, posts))
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -172,16 +161,6 @@ const HomePage = () => {
         fetchPolicy: 'cache-and-network',
       }
     )
-
-  const loadTags = () => {
-    setLoadingTags(true)
-    Client.query({
-      query: QUERY_LOOP_TAGS(tagsIds),
-      fetchPolicy: 'no-cache',
-    })
-      .then(({ data }) => setTagsData(data))
-      .finally(() => setLoadingTags(false))
-  }
 
   const loadMoreLiveEvents = (scrollerName: string) => () => {
     if (
@@ -241,7 +220,6 @@ const HomePage = () => {
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
     loadingCategoriesWithChildren ||
-    loadingTags ||
     loadingBillboard
 
   const hasResults =
@@ -249,8 +227,7 @@ const HomePage = () => {
     liveEventsData?.rows?.length ||
     featuredPostsData?.rows?.length ||
     featuredCategoriesData?.rows?.length ||
-    (isHomeDisplayingCategories && categoriesWithChildrenData?.rows?.length) ||
-    Object.keys(tagsData).length !== 0
+    (isHomeDisplayingCategories && categoriesWithChildrenData?.rows?.length)
 
   const isEmpty = !isLoading && !hasResults
 
@@ -266,7 +243,6 @@ const HomePage = () => {
     setFeaturedPostsData(undefined)
     setCategoriesWithChildrenData(undefined)
     setBillboardItems([])
-    setTagsData({})
   }
 
   const deactivateAllItems = () => {
@@ -290,16 +266,6 @@ const HomePage = () => {
         (item) => !item?.TAGS?.length && item.IS_ACTIVE
       )
 
-    const tagsCarouselItems = activeChannelConfig?.HOME_ITEMS.CAROUSELS.filter(
-      (item) => item?.TAGS && item.IS_ACTIVE
-    )
-
-    const ids = tagsCarouselItems
-      ?.filter((item) => item.TAGS && item.TAGS.length)
-      .map((item) => item.TAGS)
-
-    ids?.length && setTagsIds(ids)
-
     defaultCarouselsItems?.forEach((item) => {
       if (item.CONTENT_TYPE[0] === HomeCarouselsTypes.Posts)
         setIsFeaturedPostsActive(true)
@@ -318,7 +284,6 @@ const HomePage = () => {
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
 
-    return () => setTagsIds([])
     //eslint-disable-next-line
   }, [activeChannelConfig])
 
@@ -333,9 +298,6 @@ const HomePage = () => {
       getLiveEvents({ variables: { ...liveEventsFilter(1) } })
     // eslint-disable-next-line
   }, [isFeaturedPostsActive, isFeaturedCategoriesActive, isLiveEventsActive])
-
-  //eslint-disable-next-line
-  useEffect(() => (tagsIds?.length ? loadTags() : setTagsData({})), [tagsIds])
 
   const getImageUrl = (path: string) =>
     generateImage(ThumborInstanceTypes.IMAGE, path, {
@@ -370,7 +332,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => {}}
+      reachEnd={() => { }}
       items={billboardItems}
       customButtons={true}
     />
@@ -419,70 +381,6 @@ const HomePage = () => {
     )
   }
 
-  const continueWatchingList = async (lastVideoId?: String) => {
-    const URL = process.env.REACT_APP_API_ENDPOINT
-    let URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}&limit=${MAX_CARDS_SCROLLER_RESULTS}`
-    if (lastVideoId) URL_PARAMS += `&lastVideoId=${lastVideoId}`
-    setIsCWatchingLoading(true)
-    try {
-      const { data } = await axios.get(
-        `https://${URL}/posts/continue-watching${URL_PARAMS}`
-      )
-      if (data?.statusCode === 200) {
-        const { rows, ...allRest } = data.body.data
-        setContinueWatchingListData((previous) => ({
-          ...continueWatchingListData,
-          ...allRest,
-          rows: [...(previous?.rows || []), ...rows],
-        }))
-      }
-    } catch (error) {
-    } finally {
-      setIsCWatchingLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (!isAnonymousAccess && user?.id && activeChannel?.id)
-      continueWatchingList()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, activeChannel])
-
-  const loadMoreContinueWatchingPosts = () => {
-    if (continueWatchingListData?.hasNextPage) {
-      continueWatchingList(continueWatchingListData?.lastVideoId)
-    }
-  }
-
-  const renderContinueWatchingScroller = (item: CarouselFlags) =>
-    !isAnonymousAccess &&
-    user?.id &&
-    activeChannel?.id && (
-      <ContinueWatchingScroller
-        key={`${item.LABEL[0].VALUE}`}
-        items={continueWatchingListData?.rows}
-        sectionTitle={getCarouselLabel(item)}
-        sectionUrl={''}
-        loadMoreItems={loadMoreContinueWatchingPosts}
-        isLoading={isCWatchingLoading}
-      />
-    )
-
-  const renderTagsScroller = (item: CarouselFlags) => {
-    const currentTag = tagsData[`tag${item.TAGS}`]
-    if (!currentTag) return undefined
-    return (
-      <TagsScroller
-        key={`${item.TAGS}`}
-        tagData={currentTag}
-        content={item.CONTENT_TYPE}
-        sectionTitle={getCarouselLabel(item)}
-        sectionUrl={`/c/${activeChannel?.slug}/tag/`}
-        isLoading={loadingTags}
-      />
-    )
-  }
-
   const getCarouselLabel = (item: CarouselFlags) => {
     const label = item.LABEL.find((item) =>
       i18n.language.includes(item.LOCALE || 'en-US')
@@ -504,10 +402,14 @@ const HomePage = () => {
         case HomeCarouselsTypes.Collections:
           return renderFeaturedCategoriesScroller(item)
         case HomeCarouselsTypes.ContinueWatching:
-          return renderContinueWatchingScroller(item)
+          return <ContinueWatchingScrollerComponent {...{ item, getCarouselLabel }} />
       }
     } else {
-      return renderTagsScroller(item)
+      //TODO: this item should be previous filtered by API
+      const isActive = item?.TAGS && item.IS_ACTIVE
+      return isActive
+        ? <TagsScrollerComponent {...{ item, getCarouselLabel }} />
+        : <></>
     }
   }
 

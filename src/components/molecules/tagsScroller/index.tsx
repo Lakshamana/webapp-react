@@ -1,41 +1,27 @@
 import { CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
 import { CategoryPostCard } from 'components/atoms'
-import { Category, Post, PostType } from 'generated/graphql'
+import { Category, Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
-import { TagScrollerItem, TagsScrollerProps } from 'types/tags'
+import { TagScrollerItem } from 'types/tags'
 import { isEntityBlocked } from 'utils/accessVerifications'
 import { ContentScroller } from './styles'
+import { Props } from './types'
 
-const TagsScroller = ({
-  tagData,
-  sectionTitle,
-  sectionUrl,
-  isLoading
-}: TagsScrollerProps) => {
+const TagsScroller = (props: Props) => {
   const { generateImage } = useThumbor()
-
   const { activeChannel } = useChannelsStore()
   const [scrollerItems, setScrollerItems] = useState([])
   const [filteredItems, setFilteredItems] = useState<TagScrollerItem[]>()
 
   useEffect(() => {
-    const postItems = tagData?.relatedPosts.rows.filter(
-      (item) => item.type === PostType.Video || item.type === PostType.OnDemand
-    )
-    const categoryItems = tagData?.relatedCategories.rows
-    const myArr = postItems
-      .concat(categoryItems)
-      .sort(
-        (a, b) =>
-          (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt)
-      )
-
-    setScrollerItems(myArr)
+    const allItems: any = props.rows
+      .sort((a, b) => (a.createdAt || a.publishedAt) - (b.createdAt || b.publishedAt))
+    setScrollerItems(allItems)
     //eslint-disable-next-line
-  }, [])
+  }, [props])
 
   const getPostUrl = (item) =>
     `/c/${activeChannel?.slug}/${item.__typename.toLowerCase()}/${item.slug}`
@@ -84,14 +70,16 @@ const TagsScroller = ({
   return (
     <ContentScroller>
       {
-        isLoading &&
+        props.isLoading &&
         !filteredItems?.length &&
         <SkeletonScroller />
       }
       {!!filteredItems?.length && (
         <CardsScroller
-          title={sectionTitle}
-          moreUrl={`${sectionUrl}${tagData?.slug}`}
+          title={props.sectionTitle}
+          moreUrl={props.sectionUrl}
+          reachEnd={props.onReachEnd}
+          {...{ isLoading: props.isLoading }}
         >
           {filteredItems?.map((item: TagScrollerItem) => (
             <SwiperSlide key={`slide-${item.id}`}>
@@ -104,8 +92,7 @@ const TagsScroller = ({
             </SwiperSlide>
           ))}
         </CardsScroller>
-      )
-      }
+      )}
     </ContentScroller>
   )
 }
