@@ -218,6 +218,7 @@ export type AvailableChannel = {
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['JSON']>>;
   geofence?: Maybe<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
@@ -227,6 +228,7 @@ export type AvailableChannel = {
   password?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
+  thumbnail?: Maybe<Scalars['JSON']>;
 };
 
 export type BanAccountTemporary = {
@@ -1323,6 +1325,7 @@ export type GeolockedChannel = {
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['JSON']>>;
   geofence?: Maybe<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
@@ -1332,6 +1335,7 @@ export type GeolockedChannel = {
   password?: Maybe<Scalars['String']>;
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
+  thumbnail?: Maybe<Scalars['JSON']>;
 };
 
 export type GetSubscriptionCouponRedeems = {
@@ -5410,7 +5414,7 @@ export type GetCategoryKindQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string } };
+export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string, entitlements: Array<any> } };
 
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5434,6 +5438,7 @@ export type GetChannelKindQueryVariables = Exact<{
 export type GetChannelKindQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, access: AccessKinds, kind?: Maybe<Kinds> } };
 
 export type GetChannelEntitlementsQueryVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 }>;
 
@@ -5544,7 +5549,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -7735,6 +7740,7 @@ export const GetCategoryKindDocument = gql`
     access
     kind
     name
+    entitlements
   }
 }
     `;
@@ -7928,8 +7934,8 @@ export type GetChannelKindQueryHookResult = ReturnType<typeof useGetChannelKindQ
 export type GetChannelKindLazyQueryHookResult = ReturnType<typeof useGetChannelKindLazyQuery>;
 export type GetChannelKindQueryResult = Apollo.QueryResult<GetChannelKindQuery, GetChannelKindQueryVariables>;
 export const GetChannelEntitlementsDocument = gql`
-    query GetChannelEntitlements($slug: String) {
-  channel(slug: $slug) {
+    query GetChannelEntitlements($id: ID, $slug: String) {
+  channel(id: $id, slug: $slug) {
     ... on AvailableChannel {
       slug
       entitlements
@@ -7956,6 +7962,7 @@ export type GetChannelEntitlementsComponentProps = Omit<ApolloReactComponents.Qu
  * @example
  * const { data, loading, error } = useGetChannelEntitlementsQuery({
  *   variables: {
+ *      id: // value for 'id'
  *      slug: // value for 'slug'
  *   },
  * });
@@ -8792,6 +8799,12 @@ export const GetPostDocument = gql`
         aspectRatio
         createdAt
         hlsPath
+        subtitles {
+          id
+          locale
+          vttPath
+          label
+        }
       }
       ... on MediaAudio {
         id
