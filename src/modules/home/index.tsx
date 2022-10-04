@@ -46,8 +46,16 @@ import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
 import { convertToValidColor } from 'utils/helperFunctions'
 import { askForPushPermission } from 'utils/pushNotifications'
-import { ContinueWatchingScrollerComponent, TagsScrollerComponent } from './components'
-import { appendNewData, categoriesFilter, liveEventsFilter, postsFilter } from './utils'
+import {
+  ContinueWatchingScrollerComponent,
+  TagsScrollerComponent
+} from './components'
+import {
+  appendNewData,
+  categoriesFilter,
+  liveEventsFilter,
+  postsFilter
+} from './utils'
 
 const HomePage = () => {
   const { t, i18n } = useTranslation()
@@ -119,8 +127,7 @@ const HomePage = () => {
     {
       onCompleted: (result) => {
         const posts = isAnonymousAllowed ? result.publicPosts : result.posts
-        setFeaturedPostsData((previous) =>
-          appendNewData(previous, posts))
+        setFeaturedPostsData((previous) => appendNewData(previous, posts))
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -332,7 +339,7 @@ const HomePage = () => {
 
   const renderBillboard = () => (
     <BillboardScroller
-      reachEnd={() => { }}
+      reachEnd={() => {}}
       items={billboardItems}
       customButtons={true}
     />
@@ -402,14 +409,20 @@ const HomePage = () => {
         case HomeCarouselsTypes.Collections:
           return renderFeaturedCategoriesScroller(item)
         case HomeCarouselsTypes.ContinueWatching:
-          return <ContinueWatchingScrollerComponent {...{ item, getCarouselLabel }} />
+          return (
+            <ContinueWatchingScrollerComponent
+              {...{ item, getCarouselLabel }}
+            />
+          )
       }
     } else {
       //TODO: this item should be previous filtered by API
       const isActive = item?.TAGS && item.IS_ACTIVE
-      return isActive
-        ? <TagsScrollerComponent {...{ item, getCarouselLabel }} />
-        : <></>
+      return isActive ? (
+        <TagsScrollerComponent {...{ item, getCarouselLabel }} />
+      ) : (
+        <></>
+      )
     }
   }
 
@@ -419,9 +432,8 @@ const HomePage = () => {
       <Flex
         gridGap={5}
         flexDirection={'column'}
-        mt={billboardItems && !isLoading ? -8 : 7}
+        mt={billboardItems ? 5 : 7}
         w={'100vw'}
-        zIndex={billboardItems?.length ? 9999 : 0}
       >
         {!!homeCarouselsFiltered?.length &&
           homeCarouselsFiltered.map((item: CarouselFlags, key: number) => (
@@ -451,7 +463,11 @@ const HomePage = () => {
             </Flex>
           </InfiniteScroll>
         )}
-        {isEmpty && <Box mt={7}><EmptyState /></Box>}
+        {isEmpty && (
+          <Box mt={7}>
+            <EmptyState />
+          </Box>
+        )}
       </Flex>
     </Container>
   )
