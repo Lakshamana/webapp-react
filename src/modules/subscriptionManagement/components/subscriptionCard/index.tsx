@@ -4,10 +4,18 @@ import { useThemeStore } from "services/stores"
 import { colors } from "styles"
 
 export const SubscriptionCard = () => {
-  const { label, subtitle, price } = {
+  const {
+    label,
+    subtitle,
+    price,
+    detail,
+  } = {
     label: 'ABS Monthly Plan',
     subtitle: 'Flameng - Campeonato Carioca',
-    price: '$12,99/mo'
+    price: '$12,99/mo',
+    detail: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   }
   const { colorMode } = useThemeStore()
   const [openDetail, setopenDetail] = useState(false)
@@ -59,7 +67,12 @@ export const SubscriptionCard = () => {
       </Flex>
       {
         openDetail && (
-          <Flex>
+          <Flex flexDir='column' gridGap="28px" mt="40px">
+            <Flex flexDir='column' gridGap="28px">
+              <Text fontWeight='400' fontSize='20px' lineHeight='24px'>Plan detail</Text>
+              <Text>{detail}</Text>
+              <Text fontWeight='400' fontSize='14px' lineHeight='17px'>{subtitle}</Text>
+            </Flex>
             <Flex w='100%' justifyContent='center'>
               <Button
                 variant='unstyled'
@@ -71,7 +84,7 @@ export const SubscriptionCard = () => {
                 }}
                 onClick={() => setopenDetail(!openDetail)}
               >CLOSE</Button>
-            </Flex>
+            </Flex> 
           </Flex>
         )
       }
