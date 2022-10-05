@@ -30,6 +30,8 @@ import {
 
 import { useHistory } from 'react-router-dom'
 
+import { channelRoutes, organizationRoutes } from './utils'
+
 const AccessVerificationsContext = createContext({})
 
 export const useAccessVerifications = () => {
@@ -107,7 +109,7 @@ export const AccessVerificationsProvider = ({ children }) => {
   const [privateContentAccess, { loading: isLoadingPasswordCheck }] =
     useMutation(getRequestContentAccessQuery(), {
       onCompleted: (result) => {
-        const passwordCheckResult = result[`${contentType}PasswordCheck`]
+        const passwordCheckResult = result[`${contentType}PasswordCheck`] 
         passwordCheckResult.correct
           ? setIsPrivate(false)
           : setErrorOnPrivateRequestAccess(
@@ -116,17 +118,9 @@ export const AccessVerificationsProvider = ({ children }) => {
       },
     })
 
-  const channelRoutes = [
-    `/c/${activeChannel?.slug}`,
-    `/c/${activeChannel?.slug}/categories`,
-    `/c/${activeChannel?.slug}/feed`,
-    `/c/${activeChannel?.slug}/mylist`,
-    `/c/${activeChannel?.slug}/live`,
-  ]
-
-  const organizationRoutes = ['/channels', '/']
-
-  const isChannelRoute = channelRoutes.includes(history.location.pathname)
+  const isChannelRoute = channelRoutes(activeChannel?.slug).includes(
+    history.location.pathname
+  )
   const isOrgRoute = organizationRoutes.includes(history.location.pathname)
 
   useEffect(() => {
