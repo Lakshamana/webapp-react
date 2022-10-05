@@ -1,3 +1,4 @@
+import { AccessVerificationsProvider } from 'contexts/accessVerifications'
 import { useAuth } from 'contexts/auth'
 import { useEffect } from 'react'
 import { BrowserRouter, useLocation } from 'react-router-dom'
@@ -19,7 +20,11 @@ const Router = () => {
     //eslint-disable-next-line
   }, [activeChannel])
 
-  return <ClientRoutes />
+  return (
+    <AccessVerificationsProvider>
+      <ClientRoutes />
+    </AccessVerificationsProvider>
+  )
 }
 
 const AppRouter = () => (
