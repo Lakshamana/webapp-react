@@ -89,13 +89,17 @@ const HomePage = () => {
   // const [loadingTags, setLoadingTags] = useState(false)
   // const [tagsData, setTagsData] = useState({})
   const [fetchControl, setFetchControl] = useState({})
+  const [isLoadingHome, setIsLoadingHome] = useState<boolean>(true)
 
-  const [getBillboard, { data: billboardData, loading: loadingBillboard }] =
-    useLazyQuery(QUERY_BILLBOARDS, {
+  const [getBillboard, { data: billboardData }] = useLazyQuery(
+    QUERY_BILLBOARDS,
+    {
       variables: { filter: { target: BillboardTarget.Home } },
+      onCompleted: () => setIsLoadingHome(false),
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
-    })
+    }
+  )
 
   const updateFetchControl = (scrollerName: string) => {
     let updateRequest = fetchControl[scrollerName]
@@ -227,7 +231,7 @@ const HomePage = () => {
     loadingFeaturedCategories ||
     loadingFeaturedPosts ||
     loadingCategoriesWithChildren ||
-    loadingBillboard
+    isLoadingHome
 
   const hasResults =
     billboardData?.billboard?.length ||
@@ -418,10 +422,8 @@ const HomePage = () => {
     } else {
       //TODO: this item should be previous filtered by API
       const isActive = item?.TAGS && item.IS_ACTIVE
-      return isActive ? (
-        <TagsScrollerComponent {...{ item, getCarouselLabel }} />
-      ) : (
-        <></>
+      return (
+        isActive && <TagsScrollerComponent {...{ item, getCarouselLabel }} />
       )
     }
   }

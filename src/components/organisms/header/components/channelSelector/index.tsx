@@ -9,12 +9,7 @@ import { PropsChannelSelector } from './types'
 import { Channel } from 'generated/graphql'
 
 import { QUERY_CHANNELS, QUERY_PUBLIC_CHANNELS } from 'services/graphql'
-import {
-  useAuthStore,
-  useChannelsStore,
-  useTabsStore,
-  useThemeStore
-} from 'services/stores'
+import { useAuthStore, useChannelsStore, useThemeStore } from 'services/stores'
 
 import { Container, Popover, Text } from 'components'
 import { Channels, ChannelSelected } from './components'
@@ -26,10 +21,9 @@ import { CustomContainer } from './styles'
 
 const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { colorMode } = useThemeStore()
-  const { setActiveTab, tabsList } = useTabsStore()
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  // const [search, setSearch] = useState('')
+
   const {
     activeChannel,
     setActiveChannel,
@@ -68,8 +62,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   }
 
   const handleSelect = (channel: Channel) => {
-    let homeTab = tabsList.find((item) => item.TAB === 'home')
-    if (homeTab) setActiveTab(homeTab)
     setActiveChannel({
       id: channel.id,
       name: channel.name,
@@ -115,10 +107,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
             }
           >
             <Container flexDirection="column">
-              {/* <ChannelSearch
-              {...{ search, colorMode }}
-              onChange={() => handleSearch}
-              /> */}
               <Channels
                 selected={activeChannel}
                 channels={channelsList || []}
