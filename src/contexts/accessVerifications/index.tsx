@@ -17,12 +17,18 @@ import {
 import { useDisclosure } from '@chakra-ui/react'
 import { AccessVerificationsTypes } from './types'
 
+import { LoadingScreen } from 'components'
+import { Organization } from 'generated/graphql'
 import { useTranslation } from 'react-i18next'
+import { ChannelStorageData } from 'types/channel'
 import {
+  entityRequireLogin,
   isEntityGeolocked,
   isEntityOnPaywall,
   isEntityPrivate
 } from 'utils/accessVerifications'
+
+import { useHistory } from 'react-router-dom'
 
 const AccessVerificationsContext = createContext({})
 
@@ -34,11 +40,17 @@ export const useAccessVerifications = () => {
 export const AccessVerificationsProvider = ({ children }) => {
   const { isOpen, onClose, onOpen } = useDisclosure()
 
+  const history = useHistory()
+
+  const [isLoadingAccessVerifications, setIsLoadingAccessVerifications] =
+    useState<boolean>(true)
+
   const { t } = useTranslation()
 
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
   const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
+  const [isExclusive, setIsExclusive] = useState<boolean>(false)
 
   const [errorOnPrivateRequestAccess, setErrorOnPrivateRequestAccess] =
     useState<string>('')
@@ -49,7 +61,7 @@ export const AccessVerificationsProvider = ({ children }) => {
 
   const [entitlements, setEntitlements] = useState([])
 
-  const { activeChannel } = useChannelsStore()
+  const { activeChannel, clearActiveChannel } = useChannelsStore()
 
   const { organization } = useOrganizationStore()
 
@@ -112,49 +124,62 @@ export const AccessVerificationsProvider = ({ children }) => {
     `/c/${activeChannel?.slug}/live`,
   ]
 
-  const organizationRoutes = ['/channels']
+  const organizationRoutes = ['/channels', '/']
+
+  const isChannelRoute = channelRoutes.includes(history.location.pathname)
+  const isOrgRoute = organizationRoutes.includes(history.location.pathname)
 
   useEffect(() => {
-    const isOrgRoute = organizationRoutes.includes(window.location.pathname)
+    clearAllStatus()
     if (isOrgRoute && organization) {
+      clearActiveChannel()
       setContentType('organization')
-      setIsPrivate(isEntityPrivate(organization))
-      setIsOnPaywall(isEntityOnPaywall(organization))
-      setIsGeolocked(isEntityGeolocked(organization))
+      setEntityStatus(organization).finally(() =>
+        setIsLoadingAccessVerifications(false)
+      )
     }
     //eslint-disable-next-line
-  }, [organization])
+  }, [organization, history.location])
+
+  useEffect(() => {
+    clearAllStatus()
+    if (isChannelRoute && activeChannel) {
+      setContentType('channel')
+      setEntityStatus(activeChannel).finally(() =>
+        setIsLoadingAccessVerifications(false)
+      )
+    }
+    //eslint-disable-next-line
+  }, [activeChannel, history.location])
+
+  useEffect(() => {
+    if (!isChannelRoute && !isOrgRoute) setIsLoadingAccessVerifications(false)
+  }, [isChannelRoute, isOrgRoute])
+
+  const setEntityStatus = async (entity: ChannelStorageData | Organization) => {
+    await setIsPrivate(isEntityPrivate(entity))
+    await setIsOnPaywall(isEntityOnPaywall(entity))
+    await setIsGeolocked(isEntityGeolocked(entity))
+    await setIsExclusive(entityRequireLogin(entity))
+  }
 
   const clearAllStatus = () => {
     setIsOnPaywall(false)
     setIsGeolocked(false)
     setIsPrivate(false)
+    setIsExclusive(false)
   }
 
   useEffect(() => {
-    const isChannelRoute = channelRoutes.includes(window.location.pathname)
-
-    if (isChannelRoute && activeChannel) {
-      setContentType('channel')
-      setIsPrivate(isEntityPrivate(activeChannel))
-      setIsOnPaywall(isEntityOnPaywall(activeChannel))
-      setIsGeolocked(isEntityGeolocked(activeChannel))
-    }
-    //eslint-disable-next-line
-  }, [activeChannel])
-
-  useEffect(() => {
-    if (isOnPaywall && isAnonymousAccess) {
-      window.location.href = '/create-your-account'
-    }
-    if (isOnPaywall) getEntitlements()
-
+    if (isOnPaywall && !isAnonymousAccess) getEntitlements()
     //eslint-disable-next-line
   }, [isOnPaywall])
 
   const showActionNotAllowedAlert = () => onOpen()
   const closeActionNotAllowed = () => onClose()
   const isActionNotAllowedOpen = isOpen
+
+  if (isLoadingAccessVerifications) return <LoadingScreen />
 
   return (
     <AccessVerificationsContext.Provider
@@ -166,6 +191,7 @@ export const AccessVerificationsProvider = ({ children }) => {
         isOnPaywall,
         isPrivate,
         isGeolocked,
+        isExclusive,
         entitlements,
         isLoadingEntitlements,
         isLoadingPasswordCheck,

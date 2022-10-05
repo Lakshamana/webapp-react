@@ -18,7 +18,6 @@ import {
 import { useEffect } from 'react'
 
 import { ApolloProvider } from '@apollo/client'
-import AccessVerificationsProvider from 'contexts/accessVerifications'
 import { Client } from 'services/api'
 import {
   useChannelsStore,
@@ -76,10 +75,7 @@ const TemplateProvider = ({ children }: any) => {
                   ${globalStyles}
                 `}
               />
-
-              <AccessVerificationsProvider>
-                <App />
-              </AccessVerificationsProvider>
+              <App />
             </AuthProvider>
           </HelmetProvider>
         </ChakraProvider>

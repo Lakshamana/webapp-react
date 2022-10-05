@@ -3,7 +3,7 @@ import { AlertComponent, Input, Modal, Text } from 'components'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
-import { useChannelsStore, useThemeStore } from 'services/stores'
+import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { Props } from './types'
 
@@ -17,7 +17,6 @@ const PrivateContent = ({
   const history = useHistory()
   const { colorMode } = useThemeStore()
   const [password, setPassword] = useState<string>('')
-  const { clearActiveChannel } = useChannelsStore()
 
   const getTitleByType = () => {
     let title = {
@@ -28,19 +27,13 @@ const PrivateContent = ({
     return title[type || 'default']
   }
 
-  const clearChannelAndRedirect = () => {
-    clearActiveChannel()
-    //TODO: fix this using router
-    window.location.href = '/channels'
-  }
-
   return (
     <Modal
       isCentered
       closeButton={false}
       isOpen={true}
       onClose={() =>
-        type === 'channel' ? clearChannelAndRedirect() : history.go(-1)
+        type === 'channel' ?  history.replace('/channels') : history.go(-1)
       }
       onConfirm={() => requestAccess(password)}
       cancelButton={type !== 'organization'}

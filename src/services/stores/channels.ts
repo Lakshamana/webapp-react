@@ -23,11 +23,11 @@ export const useChannelsStore = create<ChannelsState>((set) => ({
   activeChannel: null,
   activeChannelKind: null,
   isSingleChannel: null,
-  setActiveChannel: (activeChannel: ChannelStorageData) => {
+  setActiveChannel: async (activeChannel: ChannelStorageData) => {
     setChannel(activeChannel.id, activeChannel.name)
     const storedChannelStatus = getData(APP_SINGLE_CHANNEL)
     saveData(CHANNEL_INFO, activeChannel)
-    return set((state) => ({
+    await set((state) => ({
       activeChannel,
       isSingleChannel: state.isSingleChannel || storedChannelStatus || null,
       activeChannelKind: (activeChannel.kind as Kinds) || null,

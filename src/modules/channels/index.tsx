@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client'
-import { Flex, Spinner } from '@chakra-ui/react'
-import { Container, Text } from 'components'
+import { useLazyQuery } from '@apollo/client'
+import { Box } from '@chakra-ui/react'
+import { Container, SkeletonScroller, Text } from 'components'
 import { Channel, Kinds } from 'generated/graphql'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,12 +21,7 @@ const ChannelsPage = () => {
   const { t } = useTranslation()
   const history = useHistory()
   const { colorMode } = useThemeStore()
-  const {
-    setChannelsList,
-    channelsList,
-    setActiveChannel,
-    clearActiveChannel,
-  } = useChannelsStore()
+  const { setChannelsList, channelsList, setActiveChannel } = useChannelsStore()
   const { setPageTitle } = useCommonStore()
   const { isAnonymousAccess } = useAuthStore()
   const { organization } = useOrganizationStore()
@@ -42,7 +37,7 @@ const ChannelsPage = () => {
     history.push(`/c/${slug}`)
   }
 
-  const { loading } = useQuery(
+  const [getChannels, { loading }] = useLazyQuery(
     isAnonymousAccess && organization?.kind === Kinds.Public
       ? QUERY_PUBLIC_CHANNELS
       : QUERY_CHANNELS,
@@ -62,6 +57,7 @@ const ChannelsPage = () => {
           return
         }
       },
+      fetchPolicy: 'cache-and-network',
     }
   )
 
@@ -83,31 +79,24 @@ const ChannelsPage = () => {
 
   useEffect(() => {
     setPageTitle(t('page.channels.page_title'))
-    clearActiveChannel()
     //eslint-disable-next-line
   }, [])
 
   useEffect(() => {
-    if (organization?.kind === Kinds.Exclusive && isAnonymousAccess)
+    if (organization?.kind === Kinds.Exclusive && isAnonymousAccess) {
       history.replace('/login')
+      return
+    }
+    getChannels()
+
     //eslint-disable-next-line
   }, [organization])
 
-  if (loading)
+  if (loading && !channelsList?.length)
     return (
-      <Flex
-        width="100vw"
-        alignSelf={'center'}
-        justifyContent={'center'}
-        backgroundColor={colors.bodyBg[colorMode]}
-      >
-        <Spinner
-          speed="0.65s"
-          thickness={'3px'}
-          size={'xl'}
-          color={colors.secondaryText[colorMode]}
-        />
-      </Flex>
+      <Box width={'100vw'} mt={7}>
+        <SkeletonScroller />
+      </Box>
     )
 
   return (

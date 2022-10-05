@@ -3,7 +3,7 @@ import i18n from 'config/i18n'
 import { organizationData } from 'config/organization'
 
 window.OneSignal = window.OneSignal || []
-const OneSignal = window.OneSignal
+export const OneSignal = window.OneSignal
 
 export const initializeOneSignal = async () => {
   if (configEnvs.onesignalAppId && configEnvs.onesignalSafariWebId) {

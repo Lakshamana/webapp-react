@@ -39,6 +39,10 @@ export const isEntityExclusive = (entity: EntityType) => {
   return isEntityOnPaywall(entity) || isEntityPrivate(entity)
 }
 
+export const entityRequireLogin = (entity: EntityType) => {
+  return entity.kind === Kinds.Exclusive
+}
+
 export const isEntityBlocked = (entity: EntityType) => {
   return (
     isEntityOnPaywall(entity) ||

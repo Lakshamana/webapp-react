@@ -13,7 +13,7 @@ const SkeletonScroller = () => {
   const cards = sm ? 2 : md ? 3 : lg ? 4 : 5
 
   return (
-    <Flex direction={'column'} paddingX={{ base: 8, ssm: 4, sm: 6 }}>
+    <Flex direction={'column'} paddingX={{ base: 8, ssm: 4, sm: 6 }} width={'100%'}>
       <Skeleton
         height={7}
         width={'15rem'}
