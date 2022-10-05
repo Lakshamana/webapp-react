@@ -5,6 +5,12 @@ const EN_US = {
       private: 'Private',
       paywall: 'Paywall',
       geolocked: 'Geoblocked',
+      organization_welcome: 'Welcome to {{organization}}!',
+      channel_welcome: 'Welcome to {{channel}} channel!',
+      exclusive_organization:
+        'This platform is exclusive, you need to create your account or log into an existing account to see {{organization}} subscription plans.',
+      exclusive_channel:
+        'This channel is exclusive, you need to create your account or log into an existing account to see {{channel}} subscription plans.',
       custom_field: {
         cpf: 'CPF',
         phone: 'Phone',
@@ -90,8 +96,8 @@ const EN_US = {
       create_a_new_account:
         "Creating an account is easy and free, create your own to have access to the platform's content!",
       scroller: {
-        more: 'do you want see more?'
-      }
+        more: 'do you want see more?',
+      },
     },
     signin: {
       title: 'Access {{org}} now',
@@ -131,7 +137,7 @@ const EN_US = {
           email_required: 'Field Email is required',
           confirm_email_required: 'Field Confirm Email is required',
           confirm_email_must_match: 'Confirm Email must match',
-        }
+        },
       },
       GDPR: {
         citizen: 'Are you a citizen or resident of the European Union?',
@@ -240,7 +246,7 @@ const EN_US = {
     },
     page: {
       organization: {
-        private: 'Private Organization'
+        private: 'Private Organization',
       },
       search: {
         results_for: '{{count}} results found for {{string}}',
@@ -253,7 +259,7 @@ const EN_US = {
         featured_posts: 'Featured',
         featured_categories: 'Featured categories',
         popular: 'Popular',
-        cardInfoViews: 'Views'
+        cardInfoViews: 'Views',
       },
       channels: {
         title: 'Choose a channel:',
@@ -333,7 +339,8 @@ const EN_US = {
         language_selection: 'Language Selection',
         delete_account: 'Delete my Account',
         delete_my_account: 'I want to delete my account',
-        delete_account_error: 'Sorry, your account cannot be deleted at this time',
+        delete_account_error:
+          'Sorry, your account cannot be deleted at this time',
         delete_account_info:
           'Please enter your password to confirm you would like to delete your account and have your personal information deleted. If you have a subscription on any app, you must go to the App Store to cancel your subscription. Deleting your account will not cancel any existing subscription. {{organization}} will send an email confirmation to the email used during registration.',
         billing_information: 'Your Billing Information',
@@ -448,7 +455,7 @@ const EN_US = {
           continue_watching: 'Continue watching',
           continue_subtitle: 'Do you want to resume last time?',
           continue_action_label: 'Yes, please.',
-          continue_cancel_label: 'No, Thanks.'
+          continue_cancel_label: 'No, Thanks.',
         },
         comment: {
           hide: 'Hide',
@@ -484,7 +491,7 @@ const EN_US = {
         },
         geolocked_content: {
           title: 'Geoblocked content',
-          subtitle: 'This content is not available in your country.'
+          subtitle: 'This content is not available in your country.',
         },
         live: {
           live_chat: {
@@ -526,7 +533,7 @@ const EN_US = {
       link: 'our Privacy Policy',
       description_2: 'and our cookies usage.',
       accept: 'Accept',
-      decline: 'Decline'
+      decline: 'Decline',
     },
   },
 }

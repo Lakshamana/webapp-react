@@ -5,6 +5,12 @@ const PT_BR = {
       private: 'Private',
       paywall: 'Paywall',
       geolocked: 'Geoblocked',
+      organization_welcome: 'Bem-vindo(a) à {{organization}}!',
+      channel_welcome: 'Welcome to {{channel}} channel!',
+      exclusive_organization:
+        'Esta plataforma é exclusiva, você precisa criar sua conta ou entrar em uma conta existente para ver os planos de assinatura da {{organization}}.',
+      exclusive_channel:
+        'Esse canal é exclusivo, você precisa criar sua conta ou entrar em uma conta existente para ver os planos de assinatura de {{channel}}.',
       custom_field: {
         cpf: 'CPF',
         phone: 'Telefone',
@@ -88,8 +94,8 @@ const PT_BR = {
       create_a_new_account:
         'Criar uma conta é fácil e gratuito, crie a sua para ter acesso ao conteúdo da plataforma!',
       scroller: {
-        more: 'deseja ver todos?'
-      }
+        more: 'deseja ver todos?',
+      },
     },
     signin: {
       title: 'Acesse {{org}} agora',
@@ -130,7 +136,7 @@ const PT_BR = {
           email_required: 'Campo Email é obrigatório',
           confirm_email_required: 'Campo Confirmar Email é obrigatório',
           confirm_email_must_match: 'Email deve ser igual',
-        }
+        },
       },
       GDPR: {
         citizen: 'Você é cidadão ou residente da União Europeia?',
@@ -240,7 +246,7 @@ const PT_BR = {
     },
     page: {
       organization: {
-        private: 'Organização privada'
+        private: 'Organização privada',
       },
       search: {
         results_for: '{{count}} resultados encontrados para {{string}}',
@@ -333,7 +339,8 @@ const PT_BR = {
         language_selection: 'Seleção de Idioma',
         delete_account: 'Deletar Conta',
         delete_my_account: 'Deletar a minha conta',
-        delete_account_error: 'Infelizmente sua conta nao pode ser excluida neste momento',
+        delete_account_error:
+          'Infelizmente sua conta nao pode ser excluida neste momento',
         delete_account_info:
           'Por favor digite sua senha para confirmar que você gostaria de deletar sua conta e ter sua informação pessoal removida. Se você é assinante em qualquer app, você precisa ir até a App Store para cancelar sua assinatura. Deletar sua conta não vai cancelar qualquer assinatura existente. {{organization}} irá enviar uma confirmação para o email usado durante o registro.',
         billing_information: 'Informações de Compra',
@@ -450,7 +457,7 @@ const PT_BR = {
           continue_watching: 'Continuar assistindo',
           continue_subtitle: 'Deseja continuar de onde parou?',
           continue_action_label: 'Sim',
-          continue_cancel_label: 'Não'
+          continue_cancel_label: 'Não',
         },
         comment: {
           hide: 'Esconder',
@@ -485,7 +492,7 @@ const PT_BR = {
         },
         geolocked_content: {
           title: 'Conteúdo bloqueado',
-          subtitle: 'Este conteúdo não está disponível no seu país.'
+          subtitle: 'Este conteúdo não está disponível no seu país.',
         },
         live: {
           live_chat: {
@@ -527,7 +534,7 @@ const PT_BR = {
       link: 'nossa Política de Privacidade',
       description_2: 'e nosso uso de cookies.',
       accept: 'Aceitar',
-      decline: 'Recusar'
+      decline: 'Recusar',
     },
   },
 }
