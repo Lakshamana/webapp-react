@@ -358,6 +358,8 @@ const PT_BR = {
         zoom: 'Zoom',
         rotation: 'Rotação',
         choose_new_photo: 'Escolher nova foto',
+        your_billing_information: 'Suas informações de faturamento',
+        your_payment_information: 'Suas informações de pagamento',
       },
       live: {
         live: 'Ao Vivo',
