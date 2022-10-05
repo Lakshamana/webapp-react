@@ -4,7 +4,7 @@ import { SelectPlan } from '../select'
 import { Steps } from '../types'
 import { Props } from './types'
 
-export const PlanSelectFlow = ({ entitlement, cancel }: Props) => {
+export const PlanSelectFlow = ({ entitlement }: Props) => {
   const [currentState, setcurrentState] = useState(Steps.SELECT_PLAN)
   const [selectedPlan, setselectedPlan] = useState()
   const nextStep = () => setcurrentState(currentState + 1)
