@@ -6,13 +6,12 @@ import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router'
 import { PropsChannelSelector } from './types'
 
-import { Channel, Kinds } from 'generated/graphql'
+import { Channel } from 'generated/graphql'
 
 import { QUERY_CHANNELS, QUERY_PUBLIC_CHANNELS } from 'services/graphql'
 import {
   useAuthStore,
   useChannelsStore,
-  useOrganizationStore,
   useTabsStore,
   useThemeStore
 } from 'services/stores'
@@ -30,7 +29,6 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const { setActiveTab, tabsList } = useTabsStore()
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const { organization } = useOrganizationStore()
   // const [search, setSearch] = useState('')
   const {
     activeChannel,
@@ -46,11 +44,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   const storedSingleChannel = getData(APP_SINGLE_CHANNEL)
 
   const [getChannels, { loading }] = useLazyQuery(
-    isAnonymousAccess &&
-      (organization?.kind === Kinds.Public ||
-        organization?.kind === Kinds.Exclusive)
-      ? QUERY_PUBLIC_CHANNELS
-      : QUERY_CHANNELS,
+    isAnonymousAccess ? QUERY_PUBLIC_CHANNELS : QUERY_CHANNELS,
     {
       variables: {
         filter: {},
@@ -66,7 +60,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   )
 
   const openChannelsList = () => {
-    if (!channelsList?.length && !isAnonymousAccess) {
+    if (!channelsList?.length) {
       getChannels()
     }
     closeSideMenu()
@@ -84,7 +78,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
       access: channel.access || '',
     })
     setOpen(false)
-    history.push(`/c/${channel.slug}`)
+    history.replace(`/c/${channel.slug}`)
   }
 
   if (isSingleChannel || storedSingleChannel) return <></>
