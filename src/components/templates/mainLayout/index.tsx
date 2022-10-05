@@ -8,51 +8,47 @@ import {
   PrivateContent
 } from 'components'
 import { useAccessVerifications } from 'contexts/accessVerifications'
+import { NotAuthorized, PaywallPlatform } from 'modules'
 import { useEffect } from 'react'
-import { initializeOneSignal } from 'utils/pushNotifications'
+import { useAuthStore } from 'services/stores'
+import { initializeOneSignal, OneSignal } from 'utils/pushNotifications'
 import { ChildContainer, LayoutContainer } from './style'
 import { defaultProps, Props } from './types'
 
-import { useHistory } from 'react-router-dom'
-import { useChannelsStore } from 'services/stores'
-
 const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
-  const history = useHistory()
   const {
     isActionNotAllowedOpen,
     closeActionNotAllowed,
     isPrivate,
     isOnPaywall,
     isGeolocked,
+    isExclusive,
     entitlements,
     errorOnPrivateRequestAccess,
     isLoadingPasswordCheck,
     contentType,
-    clearAllStatus,
     requestContentAccess,
   } = useAccessVerifications()
-  const { clearActiveChannel } = useChannelsStore()
+
+  const { isAnonymousAccess } = useAuthStore()
+
+  const isContentaAvailable = !isPrivate && !isOnPaywall
 
   useEffect(() => {
-    initializeOneSignal()
+    if (!OneSignal) initializeOneSignal()
   }, [])
-
-  const isContentAvailable = !isOnPaywall && !isGeolocked && !isPrivate
 
   return (
     <LayoutContainer flexDirection="column">
       {emptyHeader ? <EmptyHeader /> : <Header />}
       <ChildContainer pb={30} justifyContent={'center'} {...props}>
-        {isOnPaywall && (
-          <PlanSelectFlow
-            cancel={() => {
-              clearActiveChannel()
-              history.push('/channels')
-              clearAllStatus()
-            }}
-            entitlement={entitlements}
-          />
+        {isOnPaywall && isAnonymousAccess && (
+          <PaywallPlatform type={contentType} />
         )}
+        {isOnPaywall && !isAnonymousAccess && (
+          <PlanSelectFlow entitlement={entitlements} />
+        )}
+        {isExclusive && isAnonymousAccess && <NotAuthorized />}
         {isPrivate && (
           <PrivateContent
             type={contentType}
@@ -62,7 +58,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
           />
         )}
         {isGeolocked && <GeolockedContent />}
-        {isContentAvailable && children}
+        {isContentaAvailable && children}
       </ChildContainer>
       <InternalFooter />
       <ActionNotAllowed
