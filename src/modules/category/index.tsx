@@ -166,7 +166,7 @@ const CategoryPage = () => {
           )}
         </Flex>
       </HeroBanner>
-      <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'} mt={-20} zIndex={9999}>
+      <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'}>
         {!!categoryData?.category?.children?.length && (
           <CategoriesGrid
             sectionTitle={t('page.category.categories')}
