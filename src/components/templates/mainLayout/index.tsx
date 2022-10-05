@@ -32,7 +32,9 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
 
   const { isAnonymousAccess } = useAuthStore()
 
-  const isContentaAvailable = !isPrivate && !isOnPaywall
+  const exclusiveContent = isExclusive && isAnonymousAccess
+
+  const isContentAvailable = !isPrivate && !isOnPaywall && !exclusiveContent && !isGeolocked
 
   useEffect(() => {
     if (!OneSignal) initializeOneSignal()
@@ -48,7 +50,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
         {isOnPaywall && !isAnonymousAccess && (
           <PlanSelectFlow entitlement={entitlements} />
         )}
-        {isExclusive && isAnonymousAccess && <NotAuthorized />}
+        {exclusiveContent && <NotAuthorized />}
         {isPrivate && (
           <PrivateContent
             type={contentType}
@@ -58,7 +60,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
           />
         )}
         {isGeolocked && <GeolockedContent />}
-        {isContentaAvailable && children}
+        {isContentAvailable && children}
       </ChildContainer>
       <InternalFooter />
       <ActionNotAllowed
