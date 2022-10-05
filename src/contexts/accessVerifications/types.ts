@@ -8,6 +8,7 @@ export interface AccessVerificationsTypes {
   isOnPaywall: boolean
   isPrivate: boolean
   isGeolocked: boolean
+  isExclusive: boolean
   entitlements: any[]
   setContentAccessGranted: (status: boolean) => void
   accessGranted: boolean
