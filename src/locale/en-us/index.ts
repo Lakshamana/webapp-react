@@ -357,6 +357,8 @@ const EN_US = {
         zoom: 'zoom',
         rotation: 'rotation',
         choose_new_photo: 'Choose new photo',
+        your_billing_information: 'Your Billing Information',
+        your_payment_information: 'Your Payment Information',
       },
       live: {
         live: 'Live',
