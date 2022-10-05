@@ -1,15 +1,14 @@
-import create from 'zustand'
 import { CHANNEL_INFO } from 'config/constants'
 import { getData } from 'services/storage'
 import { TabFlags } from 'types/flags'
+import create from 'zustand'
 
 export const mapperTabName = {
   HOME: 'HOME',
   FEED: 'FEED',
   LIVES: 'LIVE',
   CATEGORIES: 'COLLECTIONS',
-  CATEGORY: 'COLLECTIONS',
-  MYLIST: 'MY_LIST',
+  MYLIST: 'MYLIST',
   ROOMS: 'ROOMS',
 }
 
@@ -19,7 +18,6 @@ const getTabURL = (tab: string) => {
     FEED: '/c/:channel/feed',
     LIVE: '/c/:channel/lives',
     COLLECTIONS: '/c/:channel/categories',
-    MY_LIST: '/c/:channel/mylist',
     MYLIST: '/c/:channel/mylist',
     ROOMS: '',
   }
