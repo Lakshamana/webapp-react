@@ -26,7 +26,7 @@ const ContinueWatchingScroller = ({
   const getImageUrl = (item) => {
     const imageOptions: ThumborParams = { size: { height: 400 } }
     if (isEntityBlocked(item)) imageOptions.blur = 20
-    const path = item.thumbnail?.imgPath || ''
+    const path = item.thumbnail[0] || ''
     return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
   }
 

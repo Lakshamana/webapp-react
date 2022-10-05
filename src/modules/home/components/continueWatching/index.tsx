@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ContinueWatchingScroller } from 'components'
-import { MAX_CARDS_SCROLLER_RESULTS } from 'config/constants'
+import { GET_IP_API, MAX_CARDS_SCROLLER_RESULTS } from 'config/constants'
 import { useEffect, useState } from 'react'
 import { useAuthStore, useChannelsStore } from 'services/stores'
 import { Props } from './types'
@@ -20,16 +20,19 @@ const ContinueWatchingScrollerComponent = ({ item, getCarouselLabel }: Props) =>
   }, [user, activeChannel])
 
   const continueWatchingList = async (lastVideoId?: String) => {
-    const URL = process.env.REACT_APP_API_ENDPOINT
-    const params = {
-      channelId: activeChannel?.id,
-      limit: MAX_CARDS_SCROLLER_RESULTS,
-      account
-    }
-    if (lastVideoId) params['lastVideoId'] = lastVideoId
     setIsCWatchingLoading(true)
     try {
-      const { data } = await axios.post(`https://${URL}/posts/continue-watching`, params)
+      const myIp = await axios.get(GET_IP_API)
+      const headers = { 'x-forwarded-for': myIp.data.ip }
+      const params = {
+        channelId: activeChannel?.id,
+        limit: MAX_CARDS_SCROLLER_RESULTS,
+        userId: user?.id
+      }
+      if (lastVideoId) params['lastVideoId'] = lastVideoId
+      if (account?.is_admin) params['isAdmin'] = account?.is_admin
+      const URL = `https://${process.env.REACT_APP_API_ENDPOINT}/posts/continue-watching`
+      const { data } = await axios.post(URL, params, { headers })
       if (data?.statusCode === 200) {
         const { rows, ...allRest } = data.body.data
         setListData((previous) => ({
