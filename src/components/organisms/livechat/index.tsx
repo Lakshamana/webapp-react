@@ -4,9 +4,7 @@ import { useAccessVerifications } from 'contexts/accessVerifications'
 import {
   addDoc,
   collection,
-  DocumentData,
-  limit,
-  onSnapshot,
+  DocumentData, onSnapshot,
   orderBy,
   query,
   startAfter
@@ -41,8 +39,7 @@ const Livechat = ({
 
   const messagesQuery = query(
     messagesCollection,
-    orderBy('dateAdded'),
-    limit(100)
+    orderBy('dateAdded')
   )
 
   const reactionsQuery = query(
