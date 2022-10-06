@@ -1,0 +1,1 @@
+export const BillingInformation = () => <span>Billing Information</span>
