@@ -3,10 +3,17 @@ import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
 import VideoJS from 'components/molecules/videoJs'
 import { configEnvs } from 'config/envs'
-import { memo, ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { saveData } from 'services/storage'
-import { PlayerEventName, useAuthStore, useChannelsStore, useCustomizationStore, useOrganizationStore, useVideoPlayerStore } from 'services/stores'
+import {
+  PlayerEventName,
+  useAuthStore,
+  useChannelsStore,
+  useCustomizationStore,
+  useOrganizationStore,
+  useVideoPlayerStore
+} from 'services/stores'
 import videoJsContribQualityLevels from 'videojs-contrib-quality-levels'
 import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
 import 'videojs-mux'
@@ -20,7 +27,7 @@ import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { getDefaultConfigs } from './settings'
 import { VideoPlayerProps } from './types'
 
-const VideoPlayerComponent = ({
+const VideoPlayer = ({
   src,
   title,
   isLiveStream,
@@ -40,14 +47,21 @@ const VideoPlayerComponent = ({
 }: VideoPlayerProps): ReactElement => {
   const playerRef: any = useRef(null)
   const { t } = useTranslation()
-  const [watchingPosition, setWatchingPosition] = useState({ showModal: false, position: 0 })
+  const [watchingPosition, setWatchingPosition] = useState({
+    showModal: false,
+    position: 0,
+    ended: false,
+  })
   const { account, isAnonymousAccess, user } = useAuthStore()
   const { activeChannelConfig } = useCustomizationStore()
   const setEventUpdate = useVideoPlayerStore((state) => state.setEventUpdate)
-  const setRemainingTime = useVideoPlayerStore((state) => state.setRemainingTime)
+  const setRemainingTime = useVideoPlayerStore(
+    (state) => state.setRemainingTime
+  )
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
 
+  // TO-DO: Change to env-config
   const ANALYTICS_API = process.env.REACT_APP_ANALYTICS_API
 
   const defaultOptions = getDefaultConfigs(
@@ -67,15 +81,16 @@ const VideoPlayerComponent = ({
   )
 
   const sendContinueWatchingData = (currentTime: number) => {
-    if (isAnonymousAccess || isLiveStream) return
-    axios.post(`${ANALYTICS_API}/watching`, {
-      orgId: organization?.id,
-      channelId: activeChannel?.id,
-      videoDuration: video_duration,
-      userId: user?.id,
-      currentTime,
-      videoId
-    })
+    if (!isAnonymousAccess && !isLiveStream) {
+      axios.post(`${ANALYTICS_API}/watching`, {
+        orgId: organization?.id,
+        channelId: activeChannel?.id,
+        videoDuration: video_duration,
+        userId: user?.id,
+        currentTime,
+        videoId,
+      })
+    }
   }
 
   const handlePlayerReady = (player: any) => {
@@ -94,9 +109,17 @@ const VideoPlayerComponent = ({
       if (!isAnonymousAccess && !isLiveStream && activeChannel?.id) {
         try {
           const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
-          const lastPosition = await axios.get(`${ANALYTICS_API}/watching${URL_PARAMS}`)
+          const lastPosition = await axios.get(
+            `${ANALYTICS_API}/watching${URL_PARAMS}`
+          )
           const position = lastPosition?.data?.position
-          if (position && position !== 0) return setWatchingPosition({ showModal: true, position })
+          if (position && position !== 0) {
+            return setWatchingPosition({
+              showModal: true,
+              position,
+              ended: false,
+            })
+          }
           setWatchingPosition({ ...watchingPosition, showModal: false })
         } catch (error) {
           setWatchingPosition({ ...watchingPosition, showModal: false })
@@ -108,13 +131,23 @@ const VideoPlayerComponent = ({
       player.chromecast()
 
       const fanheroButton = player?.controlBar.addChild('button')
-      fanheroButton.controlText(configEnvs?.playerLogo?.altText || 'Visit fanhero site');
-      player.controlBar.el(fanheroButton.el());
-      const buttonDom = fanheroButton.el();
-      buttonDom.setAttribute('style', 'width: 3rem; margin-right: 1em; margin-left: 1em;')
-      buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'} />`;
+      fanheroButton.controlText(
+        configEnvs?.playerLogo?.altText || 'Visit fanhero site'
+      )
+      player.controlBar.el(fanheroButton.el())
+      const buttonDom = fanheroButton.el()
+      buttonDom.setAttribute(
+        'style',
+        'width: 3rem; margin-right: 1em; margin-left: 1em;'
+      )
+      buttonDom.innerHTML = `<img src=${
+        configEnvs?.playerLogo?.image ?? '/logo-fh.png'
+      } />`
       buttonDom.onclick = function () {
-        window.open(`${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`, '_blank')
+        window.open(
+          `${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`,
+          '_blank'
+        )
       }
 
       player.overlay({ overlays: [...(overlays || [])] })
@@ -152,7 +185,7 @@ const VideoPlayerComponent = ({
       saveData(VIDEO_MUTED, defineIsMuted)
     })
 
-    let lastCurrent = 0;
+    let lastCurrent = 0
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
       const isRemainingTime =
@@ -160,7 +193,11 @@ const VideoPlayerComponent = ({
       setRemainingTime(isRemainingTime)
 
       const currentTime = Math.trunc(player.currentTime())
-      if (currentTime % 5 === 0 && currentTime !== lastCurrent) {
+      if (
+        currentTime % 5 === 0 &&
+        currentTime !== lastCurrent &&
+        !watchingPosition.ended
+      ) {
         lastCurrent = currentTime
         sendContinueWatchingData(player.currentTime())
       }
@@ -179,8 +216,13 @@ const VideoPlayerComponent = ({
       const playerBuffered = player?.buffered()
       if (playerDuration > 0) {
         for (let i = 0; i < playerBuffered.length; i++) {
-          if (playerBuffered.start(playerBuffered.length - 1 - i) < playerCurrentTime) {
-            const buffer = (playerBuffered.end(playerBuffered.length - 1 - i) * 100) / playerDuration
+          if (
+            playerBuffered.start(playerBuffered.length - 1 - i) <
+            playerCurrentTime
+          ) {
+            const buffer =
+              (playerBuffered.end(playerBuffered.length - 1 - i) * 100) /
+              playerDuration
             setEventUpdate(PlayerEventName.EVENT_BUFFER, buffer)
             break
           }
@@ -195,7 +237,8 @@ const VideoPlayerComponent = ({
     }
   }, [watchingPosition])
 
-  const closeModal = () => setWatchingPosition({ ...watchingPosition, showModal: false })
+  const closeModal = () =>
+    setWatchingPosition({ ...watchingPosition, showModal: false })
 
   const continueAction = () => {
     playerRef.current?.currentTime(watchingPosition.position)
@@ -228,7 +271,7 @@ const VideoPlayerComponent = ({
         options={{
           ...defaultOptions,
           muted: isMuted,
-          ...(isLiveStream ? { playbackRates: undefined } : {}),
+          ...(isLiveStream ? { playbackRates: [] } : {}),
           ...(isLiveStream ? { liveui: true } : {}),
           ...options,
           tracks,
@@ -241,4 +284,4 @@ const VideoPlayerComponent = ({
   )
 }
 
-export const VideoPlayer = memo(VideoPlayerComponent)
+export { VideoPlayer }
