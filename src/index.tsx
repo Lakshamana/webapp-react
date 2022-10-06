@@ -1,9 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import reportWebVitals from './reportWebVitals'
-import { disableCache } from '@iconify/react'
+import { disableCache } from '@iconify/react';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import "./config/sentry";
+import reportWebVitals from './reportWebVitals';
 
-import { AppFactory } from 'factory/AppFactory'
+import { AppFactory } from 'factory/AppFactory';
 // Disable iconify caching in LocalStorage
 disableCache('local')
 
