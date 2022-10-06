@@ -9,6 +9,6 @@ const sentryConfig = {
   tracesSampleRate: 0.5,
 }
 
-const sentry = Sentry.init(sentryConfig)
+const sentry = process.env.REACT_APP_SENTRY_DSN ? Sentry.init(sentryConfig) : null
 
 export default sentry
