@@ -7,6 +7,7 @@ import {
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
+import * as Sentry from '@sentry/browser'
 import {
   ANONYMOUS_AUTH,
   AUTH_TOKEN,
@@ -25,9 +26,10 @@ import { requestGraphql } from './request'
 const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
   process.env
 
-const ORGANIZATION_URL = NODE_ENV === 'development'
-  ? REACT_APP_ORGANIZATION_URL
-  : window.location.origin
+const ORGANIZATION_URL =
+  NODE_ENV === 'development'
+    ? REACT_APP_ORGANIZATION_URL
+    : window.location.origin
 
 const httpLink = createHttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
@@ -74,6 +76,11 @@ const refreshToken = async (token) => {
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
+    Sentry.configureScope((scope) =>
+      scope.setTransactionName(operation.operationName).setLevel('error')
+    )
+    Sentry.captureException(graphQLErrors || networkError)
+
     if (networkError) {
       console.log(`[Network error]: ${networkError}`)
     }
