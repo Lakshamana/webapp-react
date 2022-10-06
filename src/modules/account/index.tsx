@@ -372,9 +372,7 @@ const AccountPage = () => {
               fontStyle={{ fontWeight: 'bold', fontSize: 18 }}
               action={{
                 text: t('page.account.manage_subscription'),
-                onClick: () => {
-                  history.push("/subscription-management");
-                },
+                onClick: () => history.push("/subscription-management"),
                 fontWeight: 'normal',
                 underline: true,
                 fontSize: 14,
@@ -482,9 +480,7 @@ const AccountPage = () => {
               data={PAYMENT_METHODS}
               onDelete={() => {}}
               onUpdate={() => {}}
-              onSelect={(value: string) =>
-                console.log('paymentMethod', value)
-              }
+              onSelect={() => {}}
             />
           </ConfigBox>
         </ContentBlock>
