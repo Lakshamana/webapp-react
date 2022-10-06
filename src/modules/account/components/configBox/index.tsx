@@ -8,6 +8,7 @@ const ConfigBox = ({ children }: ConfigBoxProps) => (
     paddingX={[15, 24]}
     paddingY={10}
     roundBorder={4}
+    mt='1em'
     removeShadow
   >
     {children}
@@ -15,3 +16,4 @@ const ConfigBox = ({ children }: ConfigBoxProps) => (
 )
 
 export { ConfigBox }
+
