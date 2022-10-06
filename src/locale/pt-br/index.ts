@@ -360,6 +360,8 @@ const PT_BR = {
         choose_new_photo: 'Escolher nova foto',
         your_billing_information: 'Suas informações de faturamento',
         your_payment_information: 'Suas informações de pagamento',
+        subscription_card_plan_detail: 'detalhe do plano',
+        subscription_card_plan_detail_close: 'fechar',
       },
       live: {
         live: 'Ao Vivo',
