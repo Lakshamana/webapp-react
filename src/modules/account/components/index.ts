@@ -1,4 +1,5 @@
 export * from './accountInfo'
+export * from './billingInformation'
 export * from './configBox'
 export * from './contentBlock'
 export * from './customFormProfile'
