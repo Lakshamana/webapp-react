@@ -1,12 +1,12 @@
-import * as Sentry from "@sentry/react"
-import { Integrations } from "@sentry/tracing"
+import * as Sentry from '@sentry/react'
+import { BrowserTracing } from '@sentry/tracing'
 
 const sentryConfig = {
-	dsn: process.env.REACT_APP_SENTRY_DSN,
-	integrations: [new Integrations.BrowserTracing()],
-	autoSessionTracking: true,
-	debug: false,
-	tracesSampleRate: 1.0
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  integrations: [new BrowserTracing()],
+  maxBreadcrumbs: 50,
+  debug: process.env.NODE_ENV === 'development',
+  tracesSampleRate: 0.5,
 }
 
 const sentry = Sentry.init(sentryConfig)
