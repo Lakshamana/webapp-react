@@ -35,8 +35,12 @@ const HeaderComponent = () => {
   const { organizationConfig, activeChannelConfig } = useCustomizationStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
   const { setTabsList, setActiveTab, tabsList } = useTabsStore()
-  const { activeChannel, setActiveChannelMenu, activeChannelMenu } =
-    useChannelsStore()
+  const {
+    activeChannel,
+    setActiveChannelMenu,
+    activeChannelMenu,
+    isSingleChannel,
+  } = useChannelsStore()
   const { generateImage } = useThumbor()
   const history = useHistory()
 
@@ -107,6 +111,18 @@ const HeaderComponent = () => {
       width,
       height,
     }
+  }
+
+  const handleLogoClick = () => {
+    if (
+      activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO ||
+      (!activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO && isSingleChannel)
+    ) {
+      history.push(`/c/${activeChannel?.slug}`)
+      return
+    }
+
+    if (!activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO) history.push('/')
   }
 
   // eslint-disable-next-line
@@ -185,11 +201,7 @@ const HeaderComponent = () => {
                 ? channelLogo()
                 : generateOrgLogo()
             }
-            onClick={() => {
-              activeChannelConfig?.SETTINGS.DISPLAY_CHANNEL_LOGO
-                ? history.push(`/c/${activeChannel?.slug}`)
-                : history.push('/')
-            }}
+            onClick={handleLogoClick}
             maxWidth={isDesktop ? '180px' : '120px'}
           />
           {!state.openSearch && (
