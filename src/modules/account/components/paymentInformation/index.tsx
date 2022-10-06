@@ -1,1 +1,0 @@
-export const PaymentInformation = () => <span>Payment Information</span>
