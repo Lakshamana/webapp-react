@@ -125,7 +125,7 @@ const VideoPlayer = ({
           setWatchingPosition({ ...watchingPosition, showModal: false })
         }
       } else {
-        player?.play()
+        // player?.play()
       }
 
       player.chromecast()
@@ -233,7 +233,7 @@ const VideoPlayer = ({
 
   useEffect(() => {
     if (!watchingPosition.showModal) {
-      playerRef.current?.play()
+      // playerRef.current?.play()
     }
   }, [watchingPosition])
 
