@@ -1,5 +1,7 @@
-import { Button, Flex, FormControl, FormLabel, Switch, Text } from "@chakra-ui/react"
+import { Flex, FormControl, FormLabel, Switch, Text } from "@chakra-ui/react"
+import { Button } from "components"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useThemeStore } from "services/stores"
 import { colors } from "styles"
 import { Props } from "./types"
@@ -17,6 +19,7 @@ export const SubscriptionCard = (
       Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   }: Props
 ) => {
+  const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const [openDetail, setopenDetail] = useState(false)
   return (
@@ -64,7 +67,9 @@ export const SubscriptionCard = (
           }}
           disabled={openDetail}
           onClick={() => setopenDetail(!openDetail)}
-        >PLAN DETAIL</Button>
+          label={t('page.account.subscription_card_plan_detail')}
+          w="fit-content"
+        />
         <FormControl display='flex' alignItems='center' w='auto'>
           <FormLabel htmlFor='active' mb='0'>
             {checked ? 'Active' : 'Inactive'}
@@ -94,7 +99,8 @@ export const SubscriptionCard = (
                   outline: 'none'
                 }}
                 onClick={() => setopenDetail(!openDetail)}
-              >CLOSE</Button>
+                label={t('page.account.subscription_card_plan_detail_close')}
+              />
             </Flex> 
           </Flex>
         )
