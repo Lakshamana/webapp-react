@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
 import VideoJS from 'components/molecules/videoJs'
 import { configEnvs } from 'config/envs'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { memo, ReactElement, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { saveData } from 'services/storage'
 import {
@@ -27,7 +27,7 @@ import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { getDefaultConfigs } from './settings'
 import { VideoPlayerProps } from './types'
 
-const VideoPlayer = ({
+const VideoPlayerComponent = ({
   src,
   title,
   isLiveStream,
@@ -284,4 +284,4 @@ const VideoPlayer = ({
   )
 }
 
-export { VideoPlayer }
+export const VideoPlayer = memo(VideoPlayerComponent)
