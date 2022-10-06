@@ -27,7 +27,7 @@ const Navbar = ({ colorMode, text }: NavbarProps) => {
         <Text
           style={{ textTransform: 'capitalize' }}
           fontWeight='500'
-          fontSize='20px'
+          fontSize='1.25rem'
           color={colors.generalText[colorMode]}
         >
           {text}
