@@ -15,5 +15,6 @@ export * from './post'
 export * from './recoverPassword'
 export * from './search'
 export * from './signup'
+export * from './subscriptionManagement'
 export * from './tag'
 

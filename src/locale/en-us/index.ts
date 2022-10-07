@@ -364,6 +364,10 @@ const EN_US = {
         zoom: 'zoom',
         rotation: 'rotation',
         choose_new_photo: 'Choose new photo',
+        your_billing_information: 'Your Billing Information',
+        your_payment_information: 'Your Payment Information',
+        subscription_card_plan_detail: 'Plan Detail',
+        subscription_card_plan_detail_close: 'Close',
       },
       live: {
         live: 'Live',

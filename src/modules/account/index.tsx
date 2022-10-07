@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { Box } from '@chakra-ui/layout'
-import { useDisclosure } from '@chakra-ui/react'
+import { Text, useDisclosure } from '@chakra-ui/react'
 import axios from 'axios'
 import {
   AlertComponent,
@@ -14,6 +14,7 @@ import { useAuth } from 'contexts/auth'
 import { ForgetAccountInput, UpdatePasswordOnlyInput } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 import {
   MUTATION_CREATE_UPLOAD,
   MUTATION_FORGET_ACCOUNT,
@@ -24,25 +25,25 @@ import {
 import { saveData } from 'services/storage'
 import { useAuthStore, useCommonStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
-import { sizes } from 'styles'
+import { colors, sizes } from 'styles'
 import { AlertObjectType } from 'types/common'
 import {
   getSubscriptionState,
   isPushPermissionDenied
 } from 'utils/pushNotifications'
 import {
-  AccountInfo,
-  ConfigBox,
+  AccountInfo, ConfigBox,
   ContentBlock,
   ForgetAccount,
-  Navbar,
-  ProfileInfo,
+  Navbar, PaymentMethods, ProfileInfo,
   SingleConfiguration,
+  Subscription,
   UpdatePassword
 } from './components'
-import { LANGUAGES } from './settings'
+import { LANGUAGES, PAYMENT_METHODS } from './settings'
 
 const AccountPage = () => {
+  let history = useHistory();
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
   const { updateAccount, updateUser, getAccount, loadingAccount, signOut } =
@@ -353,7 +354,7 @@ const AccountPage = () => {
           ></ForgetAccount>
         </ConfigBox>
       </ContentBlock>
-      {/* <ContentBlock
+      <ContentBlock
           mb={[3, 3, 3, 4]}
           mt={[3, 3, 3, 0]}
           title={t('page.account.billing_information')}
@@ -371,7 +372,7 @@ const AccountPage = () => {
               fontStyle={{ fontWeight: 'bold', fontSize: 18 }}
               action={{
                 text: t('page.account.manage_subscription'),
-                onClick: () => {},
+                onClick: () => history.push("/subscription-management"),
                 fontWeight: 'normal',
                 underline: true,
                 fontSize: 14,
@@ -441,8 +442,8 @@ const AccountPage = () => {
               }}
             />
           </ConfigBox>
-        </ContentBlock> */}
-      {/* <ContentBlock
+        </ContentBlock>
+        <ContentBlock
           mb={[3, 3, 3, 4]}
           mt={[3, 3, 3, 0]}
           title={t('page.account.payment_information')}
@@ -475,18 +476,17 @@ const AccountPage = () => {
                 update: t('page.account.update'),
                 delete: t('page.account.delete'),
               }}
-              selected={values.paymentMethod}
+              selected='1'
               data={PAYMENT_METHODS}
               onDelete={() => {}}
               onUpdate={() => {}}
-              onSelect={(value: string) =>
-                setFieldValue('paymentMethod', value)
-              }
+              onSelect={() => {}}
             />
           </ConfigBox>
-        </ContentBlock> */}
+        </ContentBlock>
     </Container>
   )
 }
 
 export { AccountPage }
+
