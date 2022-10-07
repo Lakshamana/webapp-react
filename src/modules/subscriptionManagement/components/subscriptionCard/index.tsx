@@ -30,13 +30,13 @@ export const SubscriptionCard = (
       maxW="558px"
       w="100%"
       h="100%"
-      p="25px"
-      pt='33px'
+      p={25}
+      pt={33}
       flexDir='column'
     >
       <Flex
         w='100%'
-        gridGap='8px'
+        gridGap={2}
         justifyContent={[
           'flex-start',
           'flex-start',
@@ -51,15 +51,15 @@ export const SubscriptionCard = (
         ]}
       >
         <Flex flexDir='column' gridGap='4px'>
-          <Text fontWeight='400' fontSize='20px' lineHeight='24px'>{label}</Text>
-          <Text fontWeight='400' fontSize='14px' lineHeight='17px'>{subtitle}</Text>
+          <Text fontWeight='400' fontSize='1.25rem' lineHeight='24px'>{label}</Text>
+          <Text fontWeight='400' fontSize='0.875rem' lineHeight='17px'>{subtitle}</Text>
         </Flex>
-        <Text fontWeight='400' fontSize='20px' lineHeight='24px'>{price}</Text>
+        <Text fontWeight='400' fontSize='1.25rem' lineHeight='24px'>{price}</Text>
       </Flex>
       <Flex mt='33px' justifyContent='space-between' w="100%">
         <Button
           variant='unstyled'
-          fontSize='14px'
+          fontSize='0.875rem'
           fontWeight='600'
           color='#0660f9'
           _focus={{
@@ -86,9 +86,9 @@ export const SubscriptionCard = (
         openDetail && (
           <Flex flexDir='column' gridGap="28px" mt="40px">
             <Flex flexDir='column' gridGap="28px">
-              <Text fontWeight='400' fontSize='20px' lineHeight='24px'>Plan detail</Text>
+              <Text fontWeight='400' fontSize='1.25rem' lineHeight='24px'>Plan detail</Text>
               <Text>{description}</Text>
-              <Text fontWeight='400' fontSize='14px' lineHeight='17px'>{subtitle}</Text>
+              <Text fontWeight='400' fontSize='0.875rem' lineHeight='17px'>{subtitle}</Text>
             </Flex>
             <Flex w='100%' justifyContent='center'>
               <Button
