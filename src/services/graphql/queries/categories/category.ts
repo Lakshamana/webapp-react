@@ -89,6 +89,7 @@ export const QUERY_VERIFY_CATEGORY_KIND = gql`
       access
       kind
       name
+      entitlements
     }
   }
 `
