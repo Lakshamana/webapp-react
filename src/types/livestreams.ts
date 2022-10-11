@@ -41,7 +41,7 @@ type PostCardProps = {
   hover: boolean
   mobileBehavior?: boolean
   actionHover: (status: boolean) => () => void
-  onClickCard: () => void
+  hasClickedOnCard: () => void
 }
 
 export type ComponentPostCardProps = LivestreamPostCardProps & PostCardProps

@@ -64,7 +64,7 @@ const TextPostCard = ({
   return (
     <>
       <PostCard
-        onClickCard={selectPost}
+        hasClickedOnCard={selectPost}
         pinPost={isAnonymousAccess ? showActionNotAllowedAlert : pinPost}
         {...{
           hasPinButton,

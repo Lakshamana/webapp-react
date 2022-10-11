@@ -6,7 +6,7 @@ import { ComponentPostCardProps } from 'types/categories'
 import { stripHTML, stripHTMLExceptLineBreaks } from 'utils/helperFunctions'
 import { BlockedContent, CardWrapper, PostContent } from './style'
 
-const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
+const PostCard = ({ hasClickedOnCard, ...props }: ComponentPostCardProps) => {
   const { colorMode } = useThemeStore()
   const isCategoryBlocked = props.isExclusive || props.isGeolocked
 
@@ -49,7 +49,7 @@ const PostCard = ({ onClickCard, ...props }: ComponentPostCardProps) => {
       onMouseEnter={props.actionHover(true)}
       {...props}
     >
-      <PostContent onClick={onClickCard} {...props}>
+      <PostContent onClick={hasClickedOnCard} {...props}>
         {isCategoryBlocked && (
           <BlockedContent>
             <Icon

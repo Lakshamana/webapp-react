@@ -29,7 +29,7 @@ const LivestreamPostCard = ({ ...props }: LivestreamPostCardProps) => {
       <PostCard
         hover={hover}
         actionHover={actionHover}
-        onClickCard={selectLive}
+        hasClickedOnCard={selectLive}
         {...props}
       />
       <MobileViewModal

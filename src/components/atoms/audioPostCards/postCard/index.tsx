@@ -12,7 +12,7 @@ import {
 } from 'utils/helperFunctions'
 import { BlockedContent, CardWrapper, PlayContent, PostContent } from './style'
 
-const PostCard = ({ onClickCard, hasPinButton, ...props }: ComponentPostCardProps) => {
+const PostCard = ({ hasClickedOnCard, hasPinButton, ...props }: ComponentPostCardProps) => {
   const isPostBlocked = props.isExclusive || props.isGeolocked
   const { colorMode } = useThemeStore()
   const { t } = useTranslation()
@@ -55,7 +55,7 @@ const PostCard = ({ onClickCard, hasPinButton, ...props }: ComponentPostCardProp
       onMouseLeave={props.actionHover(false)}
       onMouseEnter={props.actionHover(true)}
     >
-      <PostContent onClick={onClickCard} className="postContent" {...props}>
+      <PostContent onClick={hasClickedOnCard} className="postContent" {...props}>
         {isPostBlocked && (
           <BlockedContent>
             <Icon
