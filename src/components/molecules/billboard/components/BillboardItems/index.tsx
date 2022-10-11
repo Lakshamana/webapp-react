@@ -38,7 +38,7 @@ const SwiperSlideList = ({ items, customButtons, reachEnd }: Props) => {
       onReachEnd={reachEnd}
     >
       {getItems(items).map((item: BillboardItem) => (
-        <SwiperSlide style={{ width: '100%' }} key={item.id} className="slider">
+        <SwiperSlide style={{ width: '100%' }} key={`billboard-${item.id}`} className="slider">
           <BillboardItems>
             <HeroImageWrapper>
               <HeroImg
