@@ -48,6 +48,11 @@ export const Subtitle = styled(Text)`
   font-weight: 300;
   margin-top: ${pxToRem(10)};
 
+  a {
+    color: ${({ theme }) => theme.colors.brand.action_link[theme.colorMode]};
+    font-weight: bolder;
+  }
+
   @media screen and (max-width: ${breakpoints.md}) {
     font-size: ${pxToRem(18)};
   }
