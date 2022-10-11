@@ -48,13 +48,14 @@ const CategoriesPage = () => {
 
   const { generateImage } = useThumbor()
 
-  const [getFeaturedCategories] = useLazyQuery(
+  const [getFeaturedCategories, { loading: loadingFeatured }] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_CATEGORIES : QUERY_CATEGORIES,
     {
       onCompleted: (result) => {
         const categories = isAnonymousAllowed
           ? result.publicCategories
           : result.categories
+        if (categories.rows) formatBillboardItems(categories.rows)
         setFeaturedCategories((previous) => ({
           ...categories,
           rows: [...(previous?.rows || []), ...categories.rows],
@@ -107,8 +108,8 @@ const CategoriesPage = () => {
       size: { width: 1080, height: 0 },
     })
 
-  useEffect(() => {
-    const billboardItems = featuredCategories?.rows?.map((item) => {
+  const formatBillboardItems = async (items: Category[]) => {
+    const billboardItems = await items?.map((item) => {
       const cover = getImageUrl(item?.customization?.mobile?.imgPath || '')
       const banner = getImageUrl(item?.customization?.desktop?.imgPath || '')
       return {
@@ -118,12 +119,14 @@ const CategoriesPage = () => {
         cover,
         banner,
         isPinned: !!item.pinnedStatus?.pinned,
-        slug: item.slug
+        slug: item.slug,
       }
     })
-    setCategoriesBillboardItems(billboardItems)
-    // eslint-disable-next-line
-  }, [featuredCategories])
+
+    setCategoriesBillboardItems((previous) =>
+      previous ? [...previous, ...billboardItems] : billboardItems
+    )
+  }
 
   const loadMoreCategoriesWithoutChildren = () => {
     if (categoriesWithoutChildren?.hasNextPage) {
@@ -188,17 +191,6 @@ const CategoriesPage = () => {
     />
   )
 
-  const renderCategoriesWithChildren = () => {
-    return categoriesWithChildren?.rows.map((category: Category) => (
-      <CategoriesScroller
-        key={category.id}
-        items={category.children as Category[]}
-        sectionTitle={category?.name}
-        sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
-      />
-    ))
-  }
-
   return (
     <Container flexDirection={'column'} width={'100%'}>
       {!!categoriesBillboardItems?.length && (
@@ -209,7 +201,7 @@ const CategoriesPage = () => {
         />
       )}
 
-      <Flex pb={10} gridGap={10} flexDirection={'column'}>
+      <Flex pb={10} gridGap={5} flexDirection={'column'}>
         {!!categoriesWithoutChildren?.rows?.length &&
           renderCategoriesWithoutChildren()}
         {!!categoriesWithChildren?.rows?.length && (
@@ -224,7 +216,16 @@ const CategoriesPage = () => {
               </Box>
             }
           >
-            {renderCategoriesWithChildren()}
+            <Flex gridGap={5} flexDirection={'column'}>
+              {categoriesWithChildren?.rows.map((category: Category) => (
+                <CategoriesScroller
+                  key={`w-children-${category.id}`}
+                  items={category.children as Category[]}
+                  sectionTitle={category?.name}
+                  sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
+                />
+              ))}
+            </Flex>
           </InfiniteScroll>
         )}
 
