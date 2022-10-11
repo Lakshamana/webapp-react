@@ -14,6 +14,7 @@ import { useAuth } from 'contexts/auth'
 import { ForgetAccountInput, UpdatePasswordOnlyInput } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import OneSignal from 'react-onesignal'
 import { useHistory } from 'react-router-dom'
 import {
   MUTATION_CREATE_UPLOAD,
@@ -28,14 +29,13 @@ import { useThemeStore } from 'services/stores/theme'
 import { colors, sizes } from 'styles'
 import { AlertObjectType } from 'types/common'
 import {
-  getSubscriptionState,
-  isPushPermissionDenied
-} from 'utils/pushNotifications'
-import {
-  AccountInfo, ConfigBox,
+  AccountInfo,
+  ConfigBox,
   ContentBlock,
   ForgetAccount,
-  Navbar, PaymentMethods, ProfileInfo,
+  Navbar,
+  PaymentMethods,
+  ProfileInfo,
   SingleConfiguration,
   Subscription,
   UpdatePassword
@@ -43,7 +43,7 @@ import {
 import { LANGUAGES, PAYMENT_METHODS } from './settings'
 
 const AccountPage = () => {
-  let history = useHistory();
+  let history = useHistory()
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
   const { updateAccount, updateUser, getAccount, loadingAccount, signOut } =
@@ -60,8 +60,6 @@ const AccountPage = () => {
   const { user, account } = useAuthStore()
   const { setPageTitle } = useCommonStore()
   const useDisclosureProps = useDisclosure()
-
-  const OneSignal = window.OneSignal
 
   const [updateMyAccount, { loading: loadingUpdateAccount }] = useMutation(
     MUTATION_UPDATE_ACCOUNT,
@@ -178,18 +176,17 @@ const AccountPage = () => {
     getAccount()
     setPageTitle(t('page.account.title'))
 
-    isPushPermissionDenied().then((isDenied: boolean) => {
-      setIsPushDenied(isDenied)
-    })
+    OneSignal.getNotificationPermission().then((result) => {
+      setIsPushDenied(result === 'denied')
 
-    getSubscriptionState().then((result: any) => {
-      setIsPushEnabled(!result.isOptedOut && result.isPushEnabled)
-    })
-
-    OneSignal.push(function () {
-      OneSignal.on('subscriptionChange', function (isSubscribed: boolean) {
-        setIsPushEnabled(isSubscribed)
-      })
+      if (result !== 'denied') {
+        OneSignal.getSubscription().then((result: any) =>
+          setIsPushEnabled(result)
+        )
+        OneSignal.on('subscriptionChange', function (isSubscribed: boolean) {
+          setIsPushEnabled(isSubscribed)
+        })
+      }
     })
     // eslint-disable-next-line
   }, [])
@@ -202,19 +199,9 @@ const AccountPage = () => {
   }
 
   const onManageWebPushSubscriptionToggleClicked = () => {
-    getSubscriptionState().then((result: any) => {
-      if (result.isPushEnabled) {
-        /* Subscribed, opt them out */
-        OneSignal.setSubscription(false)
-      } else {
-        if (result.isOptedOut) {
-          /* Opted out, opt them back in */
-          OneSignal.setSubscription(true)
-        } else {
-          /* Unsubscribed, subscribe them */
-          OneSignal.registerForPushNotifications()
-        }
-      }
+    OneSignal.getSubscription().then((result: any) => {
+      setIsPushEnabled(!result)
+      OneSignal.setSubscription(!result)
     })
   }
 
@@ -228,7 +215,7 @@ const AccountPage = () => {
       await axios.put(upload.url, image, {
         headers: { 'Content-Type': 'image/jpg' },
       })
-      // TO-DO: mudar forma de chamar call update my profile
+      // TODO: mudar forma de chamar call update my profile
       setTimeout(
         async () => await callUpdateMyProfile({ avatar: media.id }),
         3000
@@ -355,138 +342,137 @@ const AccountPage = () => {
         </ConfigBox>
       </ContentBlock>
       <ContentBlock
-          mb={[3, 3, 3, 4]}
-          mt={[3, 3, 3, 0]}
-          title={t('page.account.billing_information')}
-          action={{
-            text: t('page.account.billing_history'),
-            underline: true,
-            fontWeight: 400,
-            fontSize: 14,
-          }}
-          {...{ colorMode }}
-        >
-          <ConfigBox>
-            <SingleConfiguration
-              text={t('page.account.your_subscription')}
-              fontStyle={{ fontWeight: 'bold', fontSize: 18 }}
-              action={{
-                text: t('page.account.manage_subscription'),
-                onClick: () => history.push("/subscription-management"),
-                fontWeight: 'normal',
-                underline: true,
+        mb={[3, 3, 3, 4]}
+        mt={[3, 3, 3, 0]}
+        title={t('page.account.billing_information')}
+        action={{
+          text: t('page.account.billing_history'),
+          underline: true,
+          fontWeight: 400,
+          fontSize: 14,
+        }}
+        {...{ colorMode }}
+      >
+        <ConfigBox>
+          <SingleConfiguration
+            text={t('page.account.your_subscription')}
+            fontStyle={{ fontWeight: 'bold', fontSize: 18 }}
+            action={{
+              text: t('page.account.manage_subscription'),
+              onClick: () => history.push('/subscription-management'),
+              fontWeight: 'normal',
+              underline: true,
+              fontSize: 14,
+              textAlign: 'end',
+            }}
+            {...{ colorMode }}
+          />
+          <Container flexDirection="column">
+            <Subscription
+              title={t('page.account.monthly_plan')}
+              subtitle="Flamengo - Campeonato Carioca"
+              value="$12.99/mo"
+              fontStyle={{
+                fontSize: 20,
+                color: colors.grey['900'],
+              }}
+              fontValueStyle={{
+                fontSize: 20,
+                color: colors.grey['900'],
+              }}
+              {...{ colorMode }}
+            />
+            <Subscription
+              title={t('page.account.next_billing')}
+              value={`$12.99 ${t('page.account.on')} 08/12/21`}
+              fontValueStyle={{
                 fontSize: 14,
-                textAlign: 'end',
+                color: colors.grey['800'],
               }}
               {...{ colorMode }}
             />
-            <Container flexDirection="column">
-              <Subscription
-                title={t('page.account.monthly_plan')}
-                subtitle="Flamengo - Campeonato Carioca"
-                value="$12.99/mo"
-                fontStyle={{
-                  fontSize: 20,
-                  color: colors.grey['900'],
-                }}
-                fontValueStyle={{
-                  fontSize: 20,
-                  color: colors.grey['900'],
-                }}
-                {...{ colorMode }}
-              />
-              <Subscription
-                title={t('page.account.next_billing')}
-                value={`$12.99 ${t('page.account.on')} 08/12/21`}
-                fontValueStyle={{
-                  fontSize: 14,
-                  color: colors.grey['800'],
-                }}
-                {...{ colorMode }}
-              />
-              <Subscription
-                title={t('page.account.last_billing')}
-                value={`$12.99 ${t('page.account.on')} 08/12/21`}
-                separator={false}
-                fontStyle={{
-                  fontSize: 16,
-                  color: colors.grey['650'],
-                }}
-                fontValueStyle={{
-                  fontSize: 14,
-                  color: colors.grey['650'],
-                }}
-                {...{ colorMode }}
-              />
-            </Container>
-          </ConfigBox>
-          <ConfigBox>
-            <SingleConfiguration
-              text={t('page.account.pause_subscription')}
-              action={{
-                text: t('page.account.pause'),
-                onClick: () => {},
-                fontWeight: 'bold',
+            <Subscription
+              title={t('page.account.last_billing')}
+              value={`$12.99 ${t('page.account.on')} 08/12/21`}
+              separator={false}
+              fontStyle={{
+                fontSize: 16,
+                color: colors.grey['650'],
+              }}
+              fontValueStyle={{
+                fontSize: 14,
+                color: colors.grey['650'],
               }}
               {...{ colorMode }}
             />
-          </ConfigBox>
-          <ConfigBox>
-            <SingleConfiguration
-              {...{ colorMode }}
-              text={t('page.account.cancel_subscriptions')}
-              action={{
-                text: t('page.account.cancel'),
-                onClick: () => {},
-                fontWeight: 'bold',
-              }}
-            />
-          </ConfigBox>
-        </ContentBlock>
-        <ContentBlock
-          mb={[3, 3, 3, 4]}
-          mt={[3, 3, 3, 0]}
-          title={t('page.account.payment_information')}
-          action={{
-            text: t('page.account.add_payment'),
-            underline: true,
-            fontWeight: 400,
-            fontSize: 14,
-          }}
-          {...{ colorMode }}
-        >
-          <ConfigBox>
-            <Text
-              fontWeight="bold"
-              color={colors.generalText[colorMode]}
-              mb={3}
-              fontSize={18}
-            >
-              {t('page.account.payment_method')}
-            </Text>
-            <Text
-              fontWeight="bold"
-              fontSize={12}
-              color={colors.generalText[colorMode]}
-            >
-              {t('page.account.default')}
-            </Text>
-            <PaymentMethods
-              strings={{
-                update: t('page.account.update'),
-                delete: t('page.account.delete'),
-              }}
-              selected='1'
-              data={PAYMENT_METHODS}
-              onDelete={() => {}}
-              onUpdate={() => {}}
-              onSelect={() => {}}
-            />
-          </ConfigBox>
-        </ContentBlock>
+          </Container>
+        </ConfigBox>
+        <ConfigBox>
+          <SingleConfiguration
+            text={t('page.account.pause_subscription')}
+            action={{
+              text: t('page.account.pause'),
+              onClick: () => {},
+              fontWeight: 'bold',
+            }}
+            {...{ colorMode }}
+          />
+        </ConfigBox>
+        <ConfigBox>
+          <SingleConfiguration
+            {...{ colorMode }}
+            text={t('page.account.cancel_subscriptions')}
+            action={{
+              text: t('page.account.cancel'),
+              onClick: () => {},
+              fontWeight: 'bold',
+            }}
+          />
+        </ConfigBox>
+      </ContentBlock>
+      <ContentBlock
+        mb={[3, 3, 3, 4]}
+        mt={[3, 3, 3, 0]}
+        title={t('page.account.payment_information')}
+        action={{
+          text: t('page.account.add_payment'),
+          underline: true,
+          fontWeight: 400,
+          fontSize: 14,
+        }}
+        {...{ colorMode }}
+      >
+        <ConfigBox>
+          <Text
+            fontWeight="bold"
+            color={colors.generalText[colorMode]}
+            mb={3}
+            fontSize={18}
+          >
+            {t('page.account.payment_method')}
+          </Text>
+          <Text
+            fontWeight="bold"
+            fontSize={12}
+            color={colors.generalText[colorMode]}
+          >
+            {t('page.account.default')}
+          </Text>
+          <PaymentMethods
+            strings={{
+              update: t('page.account.update'),
+              delete: t('page.account.delete'),
+            }}
+            selected="1"
+            data={PAYMENT_METHODS}
+            onDelete={() => {}}
+            onUpdate={() => {}}
+            onSelect={() => {}}
+          />
+        </ConfigBox>
+      </ContentBlock>
     </Container>
   )
 }
 
 export { AccountPage }
-
