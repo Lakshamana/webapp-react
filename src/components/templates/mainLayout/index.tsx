@@ -7,11 +7,11 @@ import {
   PlanSelectFlow,
   PrivateContent
 } from 'components'
+import { runOneSignal } from 'config/pushNotification'
 import { useAccessVerifications } from 'contexts/accessVerifications'
 import { NotAuthorized, PaywallPlatform } from 'modules'
 import { useEffect } from 'react'
 import { useAuthStore } from 'services/stores'
-import { initializeOneSignal, OneSignal } from 'utils/pushNotifications'
 import { ChildContainer, LayoutContainer } from './style'
 import { defaultProps, Props } from './types'
 
@@ -37,7 +37,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
   const isContentAvailable = !isPrivate && !isOnPaywall && !exclusiveContent && !isGeolocked
 
   useEffect(() => {
-    if (!OneSignal) initializeOneSignal()
+    runOneSignal()
   }, [])
 
   return (

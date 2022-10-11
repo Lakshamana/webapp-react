@@ -45,7 +45,6 @@ import { colors } from 'styles'
 import { BillboardTarget, HomeCarouselsTypes } from 'types/common'
 import { CarouselFlags } from 'types/flags'
 import { convertToValidColor } from 'utils/helperFunctions'
-import { askForPushPermission } from 'utils/pushNotifications'
 import {
   ContinueWatchingScrollerComponent,
   TagsScrollerComponent
@@ -244,7 +243,6 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
-    askForPushPermission()
     // eslint-disable-next-line
   }, [])
 

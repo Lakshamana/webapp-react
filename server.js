@@ -3,6 +3,8 @@ const axios = require('axios')
 const path = require("path")
 const fs = require("fs")
 const app = new express()
+const compression = require('compression')
+
 const PORT = process.env.PORT || 3004
 const API_ENDPOINT = 'https://' + process.env.REACT_APP_API_ENDPOINT
 
@@ -106,6 +108,8 @@ const getTenantData = async (req, res) => {
 }
 
 app.enable('trust proxy')
+app.use(compression())
+app.get(['/manifest.json', '/OneSignalSDKWorker.js'], express.static(path.join(__dirname, 'build')))
 app.use("/static", express.static(path.join(__dirname, "build/static")))
 app.get("*", getTenantData)
 app.listen(PORT, () => console.log("listen on port: " + PORT))
