@@ -19,7 +19,6 @@ import videoJsHlsQualitySelector from 'videojs-hls-quality-selector'
 import 'videojs-mux'
 import overlay from 'videojs-overlay'
 import 'videojs-overlay/dist/videojs-overlay.css'
-import 'videojs-vr'
 import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 
@@ -61,7 +60,7 @@ const VideoPlayerComponent = ({
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
 
-  // TO-DO: Change to env-config
+  // TODO: Change to env-config
   const ANALYTICS_API = process.env.REACT_APP_ANALYTICS_API
 
   const defaultOptions = getDefaultConfigs(
@@ -157,11 +156,6 @@ const VideoPlayerComponent = ({
           showTimestamp: true,
         })
       }
-      // player.vr({
-      //   projection: 'AUTO',
-      //   debug: true,
-      //   forceCardboard: false
-      // })
     })
 
     player?.qualityLevels().on('addqualitylevel', function (event: any) {
