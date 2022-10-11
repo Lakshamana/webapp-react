@@ -76,12 +76,8 @@ const refreshToken = async (token) => {
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
-    Sentry.configureScope((scope) =>
-      scope.setTransactionName(operation.operationName).setLevel('error')
-    )
-    Sentry.captureException(graphQLErrors || networkError)
-
     if (networkError) {
+      Sentry.captureException(`[Network error]: ${networkError}`)
       console.log(`[Network error]: ${networkError}`)
     }
 
@@ -90,6 +86,13 @@ const errorLink = onError(
     if (!graphQLErrors) return
 
     for (let err of graphQLErrors) {
+      if (operation.operationName !== 'Me' && err.extensions.code !== 'UNAUTHENTICATED') {
+        Sentry.configureScope((scope) =>
+          scope.setTransactionName(operation.operationName).setLevel('error')
+        )
+        Sentry.captureException(err)
+      }
+
       if (!err.extensions.code) {
         console.log('This error is not mapped: ', JSON.stringify(graphQLErrors))
         invalidData()
