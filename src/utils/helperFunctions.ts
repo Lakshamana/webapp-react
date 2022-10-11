@@ -94,6 +94,7 @@ export const formattedSeconds = (seconds: number) => {
 
 export function stripHTML(text: string) {
   if (!text) return ''
+  //eslint-disable-next-line
   return text.replace(/(<([^>]+)>)/gi, '').replace(/\&nbsp;/g, '')
 }
 

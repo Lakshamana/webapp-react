@@ -44,7 +44,7 @@ type PostCardProps = {
   unpinPost: () => void
   actionHover: (status: boolean) => () => void
   defineAction?: () => void
-  onClickCard: () => void
+  hasClickedOnCard: () => void
 }
 
 export type ComponentPostCardProps = VideoPostCardProps & PostCardProps

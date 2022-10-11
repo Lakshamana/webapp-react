@@ -39,7 +39,7 @@ type PostCardProps = {
   unpinCategory: () => void
   actionHover: (status: boolean) => () => void
   defineAction?: () => void
-  onClickCard: () => void
+  hasClickedOnCard: () => void
 }
 
 export type ComponentPostCardProps = CategoryPostCardProps & PostCardProps

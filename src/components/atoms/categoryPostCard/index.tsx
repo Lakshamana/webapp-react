@@ -79,7 +79,7 @@ const CategoryPostCard = ({
         }
         unpinCategory={unpinCategory}
         isCategoryPinned={isCategoryPinned}
-        onClickCard={selectCategory}
+        hasClickedOnCard={selectCategory}
         {...props}
       />
       <MobileViewModal

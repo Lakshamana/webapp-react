@@ -16,7 +16,7 @@ const PostCard = (props: ComponentPostCardProps) => {
       onMouseLeave={props.actionHover(false)}
       onMouseEnter={props.actionHover(true)}
     >
-      <PostContent onClick={props.onClickCard} {...props}>
+      <PostContent onClick={props.hasClickedOnCard} {...props}>
         {(props.isExclusive || props.isGeolocked) && (
           <BlockedContent>
             <Icon
