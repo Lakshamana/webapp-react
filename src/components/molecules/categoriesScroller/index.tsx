@@ -60,11 +60,7 @@ const CategoriesScroller = ({
 
   return (
     <ContentScroller>
-      {
-        isLoading &&
-        !scrollerItems?.length &&
-        <SkeletonScroller />
-      }
+      {isLoading && !scrollerItems?.length && <SkeletonScroller />}
       {!!scrollerItems?.length && (
         <CardsScroller
           title={sectionTitle}
