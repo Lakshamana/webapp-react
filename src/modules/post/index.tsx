@@ -210,7 +210,7 @@ const PostPage = () => {
 
   const renderPostType = () => {
     switch (postData?.type) {
-      case PostType.Video:
+      case (PostType.Video, PostType.OnDemand):
         return <VideoPost {...postData} />
       case PostType.Photo:
         return <PhotoPost {...postData} />
