@@ -44,6 +44,10 @@ export const CardDescription: any = styled.div`
 
     ${typography}
     ${space}
+
+    a {
+        color: ${({ theme }) => theme.colors.brand.action_link[theme.colorMode]};  
+    }
 `;
 
 export const CardReactions: any = styled.div`
