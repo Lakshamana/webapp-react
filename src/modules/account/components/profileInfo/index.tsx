@@ -203,7 +203,7 @@ const ProfileInfo = ({
                 country={'us'}
                 value={values.custom_fields[field.name]}
                 inputStyle={{
-                  color: colors.secondaryText[colorMode],
+                  color: colorCustom(),
                   background: 'none',
                   border: 'none',
                   borderBottom: 'none',
