@@ -2,7 +2,7 @@ import { StyleContainer } from 'components'
 import styled from 'styled-components'
 
 export const ChildContainer = styled(StyleContainer)`
-  height: 100%;
+  flex: 1;
 `
 
 export const LayoutContainer = styled(StyleContainer)`
@@ -14,6 +14,8 @@ export const LayoutContainer = styled(StyleContainer)`
 `
 
 export const LayoutMain = styled.div`
+  display: flex;
+  flex-direction: column;
   overflow-y: scroll;
   overflow-x: hidden;
 `
