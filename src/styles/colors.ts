@@ -57,6 +57,10 @@ const defaultColors: any = {
     light: '#E2E9E9',
     dark: '#444444',
   },
+  inputCustomColor: {
+    light: '#010101',
+    dark: '#444444',
+  },
   selectBg: {
     light: '#FFFFFF',
     dark: '#444444',
