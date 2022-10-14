@@ -58,6 +58,7 @@ const ProfileInfo = ({
     //eslint-disable-next-line
   }, [user])
   
+  const isSafari = () => detect().name === 'safari'
 
   const getImageUrl = (imagePath: string) => {
     const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
