@@ -60,6 +60,8 @@ const ProfileInfo = ({
   
   const isSafari = () => detect().name === 'safari'
 
+  const colorCustom = () => isSafari() ? colors.inputCustomColor[colorMode] : colors.secondaryText[colorMode]
+
   const getImageUrl = (imagePath: string) => {
     const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
     return image
