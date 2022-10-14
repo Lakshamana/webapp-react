@@ -25,6 +25,7 @@ import { ImageUpload } from 'modules/account/components/imageUpload'
 import InputMask from 'react-input-mask'
 import { QUERY_CUSTOM_FIELDS } from 'services/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { detect } from 'utils/browser'
 import * as Yup from 'yup'
 import { UpdateButtons } from '../updateButtons'
 import { ProfileData } from './types'
@@ -57,6 +58,9 @@ const ProfileInfo = ({
     //eslint-disable-next-line
   }, [user])
   
+  const isSafari = () => detect().name === 'safari'
+
+  const colorCustom = () => isSafari() ? colors.inputCustomColor[colorMode] : colors.secondaryText[colorMode]
 
   const getImageUrl = (imagePath: string) => {
     const image = generateImage(ThumborInstanceTypes.IMAGE, imagePath)
@@ -199,7 +203,7 @@ const ProfileInfo = ({
                 country={'us'}
                 value={values.custom_fields[field.name]}
                 inputStyle={{
-                  color: colors.secondaryText[colorMode],
+                  color: colorCustom(),
                   background: 'none',
                   border: 'none',
                   borderBottom: 'none',
@@ -223,7 +227,7 @@ const ProfileInfo = ({
             name={`custom_fields.${field.name}`}
             disabled
             style={{
-              color: colors.secondaryText[colorMode],
+              color: colorCustom(),
               background: 'none',
               border: 'none',
               borderBottom: 'none',
