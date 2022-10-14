@@ -227,7 +227,7 @@ const ProfileInfo = ({
             name={`custom_fields.${field.name}`}
             disabled
             style={{
-              color: colors.secondaryText[colorMode],
+              color: colorCustom(),
               background: 'none',
               border: 'none',
               borderBottom: 'none',
