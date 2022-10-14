@@ -1,14 +1,19 @@
-import styled from 'styled-components'
 import { StyleContainer } from 'components'
+import styled from 'styled-components'
 
 export const ChildContainer = styled(StyleContainer)`
-  flex: 1;
+  height: 100%;
 `
 
 export const LayoutContainer = styled(StyleContainer)`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
   background-color: ${({ theme }) => theme.colors.bodyBg[theme.colorMode]};
-  min-height: 100vh;
+`
+
+export const LayoutMain = styled.div`
+  overflow-y: scroll;
+  overflow-x: hidden;
 `
