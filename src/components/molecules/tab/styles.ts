@@ -8,7 +8,7 @@ interface CircleLayout extends LayoutProps {
 export const Circle = styled.div<CircleLayout>`
   ${layout}
   position: absolute;
-  bottom: -13px;
+  bottom: -10px;
   display: flex;
   background-color: ${({ selected, theme }) =>
     selected && `${theme.colors.brand.indicator[theme.colorMode]}`};
