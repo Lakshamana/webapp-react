@@ -43,7 +43,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
   return (
     <LayoutContainer flexDirection="column">
       {emptyHeader ? <EmptyHeader /> : <Header />}
-      <LayoutMain>
+      <LayoutMain id='scroll-master'>
         <ChildContainer pb={30} justifyContent={'center'} {...props}>
           {isOnPaywall && isAnonymousAccess && (
             <PaywallPlatform type={contentType} />
