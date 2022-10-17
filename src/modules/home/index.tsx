@@ -445,6 +445,7 @@ const HomePage = () => {
             dataLength={categoriesWithChildrenData.rows.length}
             next={loadMoreCategories}
             hasMore={categoriesWithChildrenData.hasNextPage}
+            scrollableTarget='scroll-master'
             loader={
               <Box pt={5} textAlign={'center'}>
                 <Spinner color={colors.brand.primary[colorMode]} />
@@ -474,3 +475,4 @@ const HomePage = () => {
 }
 
 export { HomePage }
+
