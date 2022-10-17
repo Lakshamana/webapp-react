@@ -394,6 +394,7 @@ const Comments = ({ ...props }: Post) => {
           dataLength={commentsStore.allComments?.length}
           next={loadMore}
           hasMore={commentsStore?.hasMore || false}
+          scrollableTarget='scroll-master'
           loader={<CommentLoading show={3} />}
         >
           {commentsStore.allComments?.map((comment: CommentType) => (
@@ -419,3 +420,4 @@ const Comments = ({ ...props }: Post) => {
 }
 
 export { Comments }
+
