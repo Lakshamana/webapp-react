@@ -1,10 +1,6 @@
 import {
-    LayoutProps,
-    SpaceProps,
-    FlexboxProps,
-    PositionProps,
-    VariantArgs
-  } from 'styled-system'
+  FlexboxProps, LayoutProps, PositionProps, SpaceProps, VariantArgs
+} from 'styled-system'
   
   type AlertType = 'error' | 'success'
   
@@ -20,7 +16,9 @@ import {
     actionLabel?: string
     toRoute?: string
     toExternalLink?: string
+    actionVariant?: 'ghost' | 'link',
     actionClick?: () => void
+    callToAction?: () => void
   }
   
   export const defaultProps = {
