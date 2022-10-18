@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from 'services/stores/theme'
 import { colors, fonts, sizes } from 'styles'
-import { get } from 'utils/location'
+import { getMaxmindLocation } from 'utils/location'
 import { RegistrationProps } from './types'
 
 const CustomFieldsForm = ({
@@ -23,7 +23,7 @@ const CustomFieldsForm = ({
     try {
       const {
         country: { iso_code },
-      } = await get()
+      } = await getMaxmindLocation()
       if (iso_code !== 'BR') {
         setfields(fields.filter(itsNotBrazil))
       }

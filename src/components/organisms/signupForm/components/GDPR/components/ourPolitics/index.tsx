@@ -1,11 +1,11 @@
-import { useState } from 'react'
 import { Flex } from '@chakra-ui/react'
+import { Button, Checkbox, Container, Link, Text } from 'components'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Text, Container, Checkbox, Link } from 'components'
-import { ConfirmAgeProps } from './types'
+import { useCustomizationStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors, sizes } from 'styles'
-import { useCustomizationStore } from 'services/stores'
+import { ConfirmAgeProps } from './types'
 
 const OurPolitics = ({
   handleFormSubmit,
@@ -67,7 +67,7 @@ const OurPolitics = ({
           name={'createAccount.terms_of_service'}
           paddingTop={2}
           label={renderCheckboxLabel()}
-        ></Checkbox>
+        />
       </Container>
       <Flex
         width={1}

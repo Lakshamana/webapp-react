@@ -4,7 +4,7 @@ import { LocationMaxmindResponse } from 'types/location.d'
 
 const { REACT_APP_API_ENDPOINT } = process.env
 
-export const get = async (): Promise<LocationMaxmindResponse> => {
+export const getMaxmindLocation = async (): Promise<LocationMaxmindResponse> => {
   try {
     const ip = await axios.get(GET_IP_API)
     const city = await axios.post(`https://${REACT_APP_API_ENDPOINT}/maxmind/lookup`, { ip: ip.data.ip })
