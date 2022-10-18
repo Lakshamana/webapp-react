@@ -1,8 +1,8 @@
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { Box, Center } from '@chakra-ui/layout'
 import {
+  CheckoutFlow,
   GeolockedContent,
-  PlanSelectFlow,
   PrivateContent,
   Skeleton
 } from 'components'
@@ -17,7 +17,7 @@ import {
   QUERY_VERIFY_LIVE_EVENT_KIND,
   QUERY_VERIFY_POST_KIND
 } from 'services/graphql'
-import { useChannelsStore } from 'services/stores'
+import { useAuthStore, useChannelsStore } from 'services/stores'
 import {
   isEntityBlocked,
   isEntityGeolocked,
@@ -39,6 +39,7 @@ const VerifyContentKind = ({
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<ElegibleContent>()
   const { activeChannel } = useChannelsStore()
+  const { isAnonymousAccess } = useAuthStore()
 
   const getContentKindQuery = () => {
     const query = {
@@ -132,8 +133,15 @@ const VerifyContentKind = ({
       />
     )
 
+  if (isOnPaywall && isAnonymousAccess) return <div>Simplified CHECKOUT</div>
+
   if (isOnPaywall)
-    return <PlanSelectFlow entitlement={contentKind?.entitlements || []} />
+    return (
+      <CheckoutFlow
+        {...{ accessGranted }}
+        products={contentKind?.entitlements || []}
+      />
+    )
 
   if (isGeolocked) return <GeolockedContent />
 

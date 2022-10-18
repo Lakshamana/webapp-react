@@ -1,11 +1,8 @@
 import {
-  ActionNotAllowed,
-  EmptyHeader,
+  ActionNotAllowed, CheckoutFlow, EmptyHeader,
   GeolockedContent,
   Header,
-  InternalFooter,
-  PlanSelectFlow,
-  PrivateContent
+  InternalFooter, PrivateContent
 } from 'components'
 import { runOneSignal } from 'config/pushNotification'
 import { useAccessVerifications } from 'contexts/accessVerifications'
@@ -48,7 +45,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
           <PaywallPlatform type={contentType} />
         )}
         {isOnPaywall && !isAnonymousAccess && (
-          <PlanSelectFlow entitlement={entitlements} />
+          <CheckoutFlow products={entitlements} />
         )}
         {exclusiveContent && <NotAuthorized />}
         {isPrivate && (
