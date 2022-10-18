@@ -29,7 +29,7 @@ const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
 const ORGANIZATION_URL =
   NODE_ENV === 'development'
     ? REACT_APP_ORGANIZATION_URL
-    : window.location.origin
+    : `https://${window.location.host}`
 
 const httpLink = createHttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,

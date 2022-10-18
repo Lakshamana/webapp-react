@@ -18,8 +18,7 @@ const TagPage = () => {
     },
   })
 
-  const isEmpty =
-    !data?.tag?.relatedCategories?.length && !data?.tag?.relatedPosts?.rows?.length
+  const isEmpty = !data?.tag?.relatedCategories?.rows?.length && !data?.tag?.relatedPosts?.rows?.length
 
   if (loading)
     return (
@@ -33,10 +32,10 @@ const TagPage = () => {
   return (
     <Container flexDirection={'column'} width={'100%'}my={15}>
       <Flex pb={2} gridGap={10} flexDirection={'column'} width={'100%'}>
-        {!!data?.tag?.relatedCategories?.length && (
+        {!!data?.tag?.relatedCategories?.rows?.length && (
           <CategoriesGrid
             sectionTitle={t('page.category.categories')}
-            items={data?.tag?.relatedCategories}
+            items={data?.tag?.relatedCategories?.rows}
           />
         )}
         {!!data?.tag?.relatedPosts?.rows?.length && (

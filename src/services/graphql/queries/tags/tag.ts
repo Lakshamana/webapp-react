@@ -8,18 +8,20 @@ export const QUERY_TAG = gql`
       title
       description
       relatedCategories {
-        access
-        slug
-        pinnedStatus {
-          pinned
-        }
-        id
-        description
-        name
-        kind
-        customization {
-          thumbnail {
-            imgPath
+        rows {
+          access
+          slug
+          pinnedStatus {
+            pinned
+          }
+          id
+          description
+          name
+          kind
+          customization {
+            thumbnail {
+              imgPath
+            }
           }
         }
       }
