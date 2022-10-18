@@ -15,7 +15,7 @@ const UserMenu = ({ colorMode, account, avatar_url }: PropsUserMenu) => (
       </Text>
     </TextContainer>
     <Container>
-      <Avatar name={account?.username || ''} width={'40px'} height={'40px'} src={avatar_url || ''} />
+      <Avatar name={account?.username || ''} width={'34px'} height={'34px'} src={avatar_url || ''} />
     </Container>
   </>
 )

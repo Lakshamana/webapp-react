@@ -1,5 +1,5 @@
 export const sizes = {
-  headerDesktopHeight: "85px",
+  headerDesktopHeight: "70px",
   headerMobileHeight: "65px",
   footerDesktopHeight: "90px",
   footerMobileHeight: "210px",
