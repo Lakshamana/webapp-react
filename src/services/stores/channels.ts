@@ -2,16 +2,15 @@ import { setChannel } from 'config/analytics'
 import { APP_SINGLE_CHANNEL, CHANNEL_INFO } from 'config/constants'
 import { Channel, Kinds } from 'generated/graphql'
 import { getData, removeData, saveData } from 'services/storage'
-import { ChannelStorageData } from 'types/channel'
 import create from 'zustand'
 
 type ChannelsState = {
-  activeChannel: Maybe<ChannelStorageData>
+  activeChannel: Maybe<Channel>
   activeChannelKind: Maybe<Kinds>
   activeChannelMenu: []
   isSingleChannel: Maybe<boolean>
   channelsList: Maybe<Channel[]>
-  setActiveChannel: (channel: ChannelStorageData) => void
+  setActiveChannel: (channel: Channel) => void
   setActiveChannelMenu: (menu: []) => void
   setChannelsList: (channelsList: Channel[]) => void
   setIsSingleChannel: (isSingleChannel: boolean) => void
@@ -23,10 +22,16 @@ export const useChannelsStore = create<ChannelsState>((set) => ({
   activeChannel: null,
   activeChannelKind: null,
   isSingleChannel: null,
-  setActiveChannel: async (activeChannel: ChannelStorageData) => {
+  setActiveChannel: async (activeChannel: Channel) => {
     setChannel(activeChannel.id, activeChannel.name)
     const storedChannelStatus = getData(APP_SINGLE_CHANNEL)
-    saveData(CHANNEL_INFO, activeChannel)
+    saveData(CHANNEL_INFO, {
+      id: activeChannel.id,
+      name: activeChannel.name,
+      slug: activeChannel.slug,
+      kind: activeChannel.kind,
+      access: activeChannel.access,
+    })
     await set((state) => ({
       activeChannel,
       isSingleChannel: state.isSingleChannel || storedChannelStatus || null,

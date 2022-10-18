@@ -15,7 +15,6 @@ import {
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'
 import { ChannelsGrid } from './components'
-import { IDefinedChannels } from './types'
 
 const ChannelsPage = () => {
   const { t } = useTranslation()
@@ -26,15 +25,9 @@ const ChannelsPage = () => {
   const { isAnonymousAccess } = useAuthStore()
   const { organization } = useOrganizationStore()
 
-  const definedChannel = async ({
-    id,
-    name,
-    slug = '',
-    kind = '',
-    access = '',
-  }: IDefinedChannels) => {
-    await setActiveChannel({ id, name, slug, kind, access })
-    history.push(`/c/${slug}`)
+  const definedChannel = async (channel: Channel) => {
+    await setActiveChannel(channel)
+    history.push(`/c/${channel.slug}`)
   }
 
   const [getChannels, { loading }] = useLazyQuery(
@@ -53,7 +46,7 @@ const ChannelsPage = () => {
         setChannelsList(channelsList)
 
         if (channelsList.length === 1) {
-          await definedChannel({ ...channelsList[0] })
+          await definedChannel(channelsList[0])
           return
         }
       },
@@ -67,13 +60,7 @@ const ChannelsPage = () => {
     )
 
     if (selected) {
-      await definedChannel({
-        id: selected.id,
-        name: selected.name,
-        slug: selected.slug || '',
-        kind: selected.kind || '',
-        access: selected.access || '',
-      })
+      await definedChannel(selected)
     }
   }
 
