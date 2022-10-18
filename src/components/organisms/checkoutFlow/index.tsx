@@ -7,7 +7,7 @@ import {
   MUTATION_ONE_TIME_PAYMENT,
   QUERY_GET_ORDER_RESULT
 } from 'services/graphql'
-import { useThemeStore } from 'services/stores'
+import { useCommonStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 import { BillingType, Product, ProductPrice } from 'types/products'
 import { getMaxmindLocation } from 'utils/location'
@@ -23,7 +23,9 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
   const [orderId, setOrderId] = useState<string>()
   const [isLoadingOrder, setIsLoadingOrder] = useState<boolean>(false)
   const [qrCode, setQRCode] = useState<string>()
+  const [boletoUrl, setBoletoURL] = useState<string>()
   const [paymentType, setPaymentType] = useState<PaymentType>('Bexs')
+  const { setPageTitle } = useCommonStore()
   const toast = useToast()
 
   const verifyUserLocation = async () => {
@@ -46,7 +48,7 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
         id: orderId,
       },
       fetchPolicy: 'cache-and-network',
-      pollInterval: 10000,
+      pollInterval: 5000,
     }
   )
 
@@ -60,8 +62,11 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
           billingType === 'Recurring'
             ? result.confirmOrder
             : result.oneTimePayment
-        setQRCode(orderResult.subscription?.billing?.pixQrCodeText)
-        setOrderId(orderResult.id)
+        const qrCode = orderResult?.subscription?.pixQrCodeText
+        const boletoUrl = orderResult?.subscription?.boletoUrl
+        if (qrCode) setQRCode(qrCode)
+        if (boletoUrl) setBoletoURL(boletoUrl)
+        setOrderId(orderResult?.id)
       },
       onError: (error) => {
         toast({
@@ -69,7 +74,7 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
           status: 'error',
           isClosable: true,
           position: 'top',
-          duration: 5000
+          duration: 5000,
         })
         setIsLoadingOrder(false)
       },
@@ -83,10 +88,7 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
   }
 
   const handleConfirmOrder = (payload) => {
-    if (
-      selectedPrice?.billingTypes.name === 'One time' &&
-      payload.variables.payload.paymentMethodType === 'CREDIT_CARD'
-    ) {
+    if (selectedPrice?.billingTypes.name === 'One time') {
       const oneTimePaymentExtraValues = {
         description: selectedProduct?.description,
         statementDescriptor: selectedProduct?.statementDescriptor,
@@ -105,10 +107,12 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
 
   useEffect(() => {
     verifyUserLocation()
+    setPageTitle('Checkout')
   }, [])
 
   useEffect(() => {
     if (orderId) getPendingOrder()
+
     //eslint-disable-next-line
   }, [orderId])
 
@@ -122,6 +126,7 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
           break
         case 'FAILED':
         case 'UNPAID':
+          setIsLoadingOrder(false)
           setCurrentStep(Steps.FAILED)
           stopPolling && stopPolling()
       }
@@ -158,6 +163,7 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
               qrCode,
               isLoadingOrder,
               paymentType,
+              boletoUrl,
             }}
             sendConfirmOrderPayload={handleConfirmOrder}
           />

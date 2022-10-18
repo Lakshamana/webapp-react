@@ -28,7 +28,8 @@ export interface SelectPriceProps extends CustomColors {
 
 export interface PaymentProps extends CustomColors {
   selectedPrice?: ProductPrice
-  qrCode?: any
+  qrCode?: string
+  boletoUrl?: string
   setCurrentStep: (step: number) => void
   sendConfirmOrderPayload: (payload) => void
   isLoadingOrder: boolean
