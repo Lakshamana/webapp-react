@@ -12,6 +12,24 @@ export const QUERY_CHANNEL = gql`
         slug
         name
         __typename
+        customization {
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          logo {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+        }
       }
       ... on GeolockedChannel {
         id
@@ -19,6 +37,24 @@ export const QUERY_CHANNEL = gql`
         slug
         kind
         __typename
+        customization {
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          logo {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+        }
       }
     }
   }
@@ -30,6 +66,24 @@ export const QUERY_PUBLIC_CHANNEL = gql`
       id
       name
       kind
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+      }
       slug
     }
   }
