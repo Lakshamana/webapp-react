@@ -57,10 +57,11 @@ const HeaderComponent = () => {
   }
 
   const channelLogo = () => {
-    const theme = colorMode.toUpperCase()
+    if (!activeChannel?.customization?.logo) return ''
+    
     return generateImage(
       ThumborInstanceTypes.IMAGE,
-      activeChannelConfig?.IMAGES?.CHANNEL_LOGO[theme] || '',
+      `${activeChannel?.customization?.logo[colorMode]?.imgPath}`,
       {
         size: { height: 80 },
       }
