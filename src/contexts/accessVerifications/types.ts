@@ -1,3 +1,4 @@
+import { Product } from 'types/products'
 
 export interface AccessVerificationsTypes {
   contentType: 'channel' | 'organization'
@@ -9,7 +10,7 @@ export interface AccessVerificationsTypes {
   isPrivate: boolean
   isGeolocked: boolean
   isExclusive: boolean
-  entitlements: any[]
+  entitlements: Product[]
   setContentAccessGranted: (status: boolean) => void
   accessGranted: boolean
   isLoadingEntitlements: boolean
