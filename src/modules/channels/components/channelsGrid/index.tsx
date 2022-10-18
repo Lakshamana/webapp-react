@@ -5,14 +5,12 @@ import { Props } from './types'
 
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 
-import { useCustomizationStore } from 'services/stores'
 import { isEntityBlocked, isEntityGeolocked } from 'utils/accessVerifications'
 
 const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const { generateImage } = useThumbor()
-  const { customizationData } = useCustomizationStore()
 
-  const getImageUrl = (path, channel) => {
+  const getImageUrl = (channel) => {
     const imageOptions: ThumborParams = {
       size: {
         height: 400,
@@ -23,17 +21,17 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
       imageOptions.blur = 20
     }
 
-    return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
+    return generateImage(
+      ThumborInstanceTypes.IMAGE,
+      channel.customization?.thumbnail?.imgPath,
+      imageOptions
+    )
   }
 
   return (
     <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
       {channelsList?.map((channel: Channel) => {
-        const channelConfig = customizationData.CHANNELS[channel.id]
-        const channelThumbnail = getImageUrl(
-          channelConfig?.IMAGES?.THUMBNAIL,
-          channel
-        )
+        const channelThumbnail = getImageUrl(channel)
         return (
           <ChannelCard
             id={channel.id}
