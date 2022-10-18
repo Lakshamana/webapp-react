@@ -375,6 +375,10 @@ const EN_US = {
         past: 'Past',
       },
       checkout: {
+        actions: {
+          choose_other_price: 'Change plan',
+          processing_your_payment: 'processing your payment...'
+        },
         login: {
           title: 'Payment',
           subtitle: 'Please complete your purchase and enjoy your content',
@@ -450,6 +454,21 @@ const EN_US = {
           password_input: 'Password',
           saveandcontinue: 'Save and continue',
         },
+        pix: {
+          title: 'PIX',
+          description: 'Your payment approved faster',
+          scan_code: 'Scan QR code to pay',
+          pix_step_one: 'Access your Internet Banking or payment app',
+          pix_step_two: 'Choose to pay using PIX',
+          pix_step_three: 'Scan this code',
+          or_copy_code: 'Or copy this QR code to make payment',
+        },
+        bank_slip: {
+          title: 'Bank slip',
+          description: 'Your payment will be approved in 1 or 2 business days',
+          emit: 'Generate',
+          view: 'View'
+        }
       },
       post: {
         participants: 'Participants:',
@@ -521,8 +540,8 @@ const EN_US = {
           loading: 'Loading',
         },
         selectOption: {
-          title: 'Select option:',
-          choosePaymentMethod: 'Choose a payment method',
+          title: 'Select price option:',
+          choosePaymentMethod: 'Choose a payment method:',
           bankCard: 'Bank Card',
           bankCardDesc: 'Pay with Visa, Mastercard, Maestro and Amex',
           pix: 'PIX',
