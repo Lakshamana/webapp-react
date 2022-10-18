@@ -375,7 +375,11 @@ const PT_BR = {
         upcoming: 'Próximas transmissões',
         past: 'Assistir Novamente',
       },
-      checkout: {
+      checkout: { 
+        actions: {
+        choose_other_price: 'Mudar plano',
+        processing_your_payment: 'processando o seu pagamento...'
+      },
         login: {
           title: 'Pagamento',
           subtitle: 'Por favor, complete sua compra e aproveite seu conteúdo',
@@ -452,6 +456,22 @@ const PT_BR = {
           password_input: 'Senha',
           saveandcontinue: 'Salve e continue',
         },
+        pix: {
+          title: 'PIX',
+          description: 'Seu pagamento aprovado rapidamente',
+          scan_code: 'Escaneie o QR na tela para fazer o pagamento',
+          pix_step_one: 'Acesse o seu internet banking ou app do seu banco',
+          pix_step_two: 'Escolha pagamento usando PIX',
+          pix_step_three: 'Escaneie o QR code',
+          or_copy_code: 'Ou copie o código para fazer o pagamento:',
+        },  
+        bank_slip: {
+          title: 'Boleto',
+          description: "Seu pagamento será aprovado em até 2 dias úteis",
+          emit: 'Emitir boleto',
+          view: 'Visualizar boleto',
+          step_one: 'Imprima o boleto e pague em qualquer banco ou casa lotérica até o vencimento.',
+        }
       },
       post: {
         participants: 'Participantes:',
@@ -522,9 +542,9 @@ const PT_BR = {
           loading: 'Aguarde',
         },
         selectOption: {
-          title: 'Selecione a opção:',
-          choosePaymentMethod: 'Escolha um método de pagamento',
-          bankCard: 'Cartão',
+          title: 'Selecione uma opção:',
+          choosePaymentMethod: 'Escolha um método de pagamento:',
+          bankCard: 'Cartão de crédito',
           bankCardDesc: 'Pague com Visa, Mastercard, Maestro ou Amex',
           pix: 'PIX',
           pixDesc: 'Seu pagamento aprovado rapidamente',

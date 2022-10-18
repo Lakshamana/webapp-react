@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { InputInline, InputWrapper } from 'components/atoms'
+import { useState } from 'react'
 
 import { Props } from './types'
 
@@ -10,13 +10,14 @@ const Input = ({
   type = 'text',
   onChange,
   onBlur,
-  onEnterPress = () => { },
+  onEnterPress = () => {},
   error,
   errorMessage,
   rightIcon = '',
   inverted,
   color = '',
   background = '',
+  disabled = false,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(type !== 'password')
 
@@ -28,10 +29,19 @@ const Input = ({
       {...{ onEnterPress }}
     >
       <InputInline
-        {...{ onChange, onBlur, value, error, placeholder, color, background }}
-        name={name}
+        {...{
+          onChange,
+          onBlur,
+          value,
+          error,
+          placeholder,
+          color,
+          background,
+          disabled,
+          inverted,
+          name,
+        }}
         type={showPassword ? 'text' : type}
-        inverted={inverted}
         autoComplete="off"
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {

@@ -2,9 +2,9 @@ import { Flex, Input } from "@chakra-ui/react";
 import styled from "styled-components";
 
 export const ButtonSelectOption = styled(Flex)`
-  background: #0660F9;
-  color: #fff;
-  font-size: 20px;
+  background: ${({ theme }) => theme.colors.inputBg[theme.colorMode]};
+  color: ${({ theme }) => theme.colors.generalText[theme.colorMode]};
+  font-size: 1.2rem;
   font-weight: 400;
   width: 100%;
   height: 80px;
@@ -16,7 +16,7 @@ export const ButtonSelectOption = styled(Flex)`
 `
 
 export const CardSelectPlan = styled(Flex)`
-  max-width: 556px;
+  max-width: 800px;
   width: 100%;
   height: fit-content;
   border-radius: 8px;

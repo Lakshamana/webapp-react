@@ -4,12 +4,12 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
+  Text
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
-import { Props, ModalType } from './types'
 import { useHistory } from 'react-router'
+import { ModalType, Props } from './types'
 
 export const ModalNotification = ({
   isOpen,
@@ -139,4 +139,4 @@ export const ModalNotification = ({
   )
 }
 
-export { ModalType }; 
+export { ModalType }

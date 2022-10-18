@@ -28,7 +28,7 @@ const GDPRForm = ({
         return (
           <ConfirmCitizenshipForm
             handleFormSubmit={handleCitizenFormSubmit}
-          ></ConfirmCitizenshipForm>
+          />
         )
       case 'ConfirmAge':
         return (
@@ -37,7 +37,7 @@ const GDPRForm = ({
             userEmail={userEmail}
             onCancel={onCancel}
             handleFormSubmit={() => setActiveStep('OurPolitics')}
-          ></ConfirmAgeForm>
+          />
         )
       case 'OurPolitics':
         return (
@@ -45,7 +45,7 @@ const GDPRForm = ({
             handleFormSubmit={handleFormSubmit}
             onCancel={onCancel}
             isLoading={isLoading}
-          ></OurPolitics>
+          />
         )
     }
   }

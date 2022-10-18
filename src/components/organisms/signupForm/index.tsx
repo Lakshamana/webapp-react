@@ -193,7 +193,7 @@ const SignupForm = () => {
             dispatchError={() => {
               setEmailExistsError('')
             }}
-          ></RegistrationForm>
+          />
         )
       case 'Custom':
         return (
@@ -202,7 +202,7 @@ const SignupForm = () => {
               fields={customFieldsData?.customFields[0]?.fields || []}
               handleFormSubmit={handleCustomFieldsSubmit}
               isLoading={customFieldsLoading}
-            ></CustomFieldsForm>
+            />
           )
         )
       case 'GDPR':
@@ -212,14 +212,10 @@ const SignupForm = () => {
             handleFormSubmit={handleGDPRSubmit}
             onCancel={() => history.push('/login')}
             isLoading={createAccountGDPRLoading || createAccountLoading}
-          ></GDPRForm>
+          />
         )
       case 'ConfirmEmail':
-        return (
-          <ConfirmEmailForm
-            onClose={() => history.push('/login')}
-          ></ConfirmEmailForm>
-        )
+        return <ConfirmEmailForm onClose={() => history.push('/login')} />
     }
   }
 
@@ -234,7 +230,7 @@ const SignupForm = () => {
             setCreateAccountError('')
             setSocialSignUpError('')
           }}
-        ></AlertComponent>
+        />
       )}
       {renderStep()}
     </>

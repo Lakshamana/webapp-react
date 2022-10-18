@@ -1,6 +1,5 @@
-import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-import * as React from 'react';
+import { gql } from '@apollo/client';
 import * as ApolloReactComponents from '@apollo/client/react/components';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -3049,7 +3048,8 @@ export type Order = {
 export enum OrderStatus {
   Active = 'ACTIVE',
   Failed = 'FAILED',
-  Pending = 'PENDING'
+  Pending = 'PENDING',
+  Unpaid = 'UNPAID'
 }
 
 export type Organization = {

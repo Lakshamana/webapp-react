@@ -6,6 +6,18 @@ export const MUTATION_CONFIRM_ORDER = gql`
       id
       status
       subscription
+      invoice
+    }
+  }
+`
+
+export const MUTATION_ONE_TIME_PAYMENT = gql`
+  mutation OneTimePayment($payload: ConfirmOrder!) {
+    oneTimePayment(payload: $payload) {
+      id
+      status
+      subscription
+      invoice
     }
   }
 `

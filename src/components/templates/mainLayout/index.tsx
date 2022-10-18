@@ -1,10 +1,10 @@
 import {
   ActionNotAllowed,
+  CheckoutFlow,
   EmptyHeader,
   GeolockedContent,
   Header,
   InternalFooter,
-  PlanSelectFlow,
   PrivateContent
 } from 'components'
 import { runOneSignal } from 'config/pushNotification'
@@ -34,7 +34,8 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
 
   const exclusiveContent = isExclusive && isAnonymousAccess
 
-  const isContentAvailable = !isPrivate && !isOnPaywall && !exclusiveContent && !isGeolocked
+  const isContentAvailable =
+    !isPrivate && !isOnPaywall && !exclusiveContent && !isGeolocked
 
   useEffect(() => {
     runOneSignal()
@@ -43,13 +44,13 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
   return (
     <LayoutContainer flexDirection="column">
       {emptyHeader ? <EmptyHeader /> : <Header />}
-      <LayoutMain id='scroll-master'>
+      <LayoutMain id="scroll-master">
         <ChildContainer pb={30} justifyContent={'center'} {...props}>
           {isOnPaywall && isAnonymousAccess && (
             <PaywallPlatform type={contentType} />
           )}
           {isOnPaywall && !isAnonymousAccess && (
-            <PlanSelectFlow entitlement={entitlements} />
+            <CheckoutFlow products={entitlements} />
           )}
           {exclusiveContent && <NotAuthorized />}
           {isPrivate && (
@@ -76,4 +77,3 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
 MainLayout.defaultProps = defaultProps
 
 export { MainLayout }
-

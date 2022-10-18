@@ -12,4 +12,5 @@ export interface Props {
   inverted?: boolean
   color?: string
   background?: string
+  disabled?: boolean
 }

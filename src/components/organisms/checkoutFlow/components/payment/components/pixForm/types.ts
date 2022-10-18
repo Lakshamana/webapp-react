@@ -15,6 +15,9 @@ export type cardForm = {
 export interface Props {
   productPrice: string
   product: string
+  sendConfirmOrderPayload: (payload) => void
+  qrCode?: any
+  isLoadingOrder: boolean
 }
 
 export enum OrderType {
