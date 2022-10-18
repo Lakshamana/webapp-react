@@ -1,11 +1,12 @@
 import styled from 'styled-components'
-import { space, layout } from 'styled-system'
+import { layout, space } from 'styled-system'
 
 export const UserContainer = styled.div`
   ${space}
   display: flex;
   align-items: center;
   user-select: none;
+  justify-content: center;
   cursor: pointer;
 `
 

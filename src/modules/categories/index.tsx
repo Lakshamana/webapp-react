@@ -210,6 +210,7 @@ const CategoriesPage = () => {
             dataLength={categoriesWithChildren.rows.length}
             next={loadMoreCategoriesWithChildren}
             hasMore={categoriesWithChildren.hasNextPage}
+            scrollableTarget='scroll-master'
             loader={
               <Box pt={5} textAlign={'center'}>
                 <Spinner color={colors.brand.primary[colorMode]} />
@@ -241,3 +242,4 @@ const CategoriesPage = () => {
 }
 
 export { CategoriesPage }
+

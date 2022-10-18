@@ -138,6 +138,7 @@ const FeedPage = () => {
           dataLength={feedPosts?.rows.length}
           next={loadMoreFeedPosts}
           hasMore={feedPosts.hasNextPage}
+          scrollableTarget='scroll-master'
           loader={
             <Box pt={5} textAlign={'center'}>
               <Spinner color={colors.brand.primary[colorMode]} />
@@ -170,3 +171,4 @@ const FeedPage = () => {
 }
 
 export { FeedPage }
+
