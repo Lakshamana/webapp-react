@@ -1,9 +1,9 @@
-import styled from 'styled-components'
 import { StyleContainer } from 'components'
+import styled from 'styled-components'
 import { breakpoints } from 'styles'
 
 export const HeaderContainer = styled(StyleContainer)`
-  overflow-y: hidden;
+  overflow: hidden;
   display: flex;
   background: ${({ theme }) => theme.colors.headerBg[theme.colorMode]};
   padding: 0 ${({ theme }) => theme.sizes.paddingSm};
