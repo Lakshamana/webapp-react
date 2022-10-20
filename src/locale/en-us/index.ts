@@ -251,6 +251,7 @@ const EN_US = {
       search: {
         results_for: '{{count}} results found for {{string}}',
         videos_section: 'Video',
+        posts_section: 'Posts',
         categories_section: 'Categories',
         live_events_section: 'Live Events',
       },
@@ -298,6 +299,7 @@ const EN_US = {
         my_list: 'My List',
         pinned_categories: 'Favorite Categories',
         pinned_videos: 'Favorite Videos',
+        pinned_posts: 'Favorite Posts'
       },
       tag: {
         no_content: 'Tag has no content',
