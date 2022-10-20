@@ -40,7 +40,7 @@ const CategoryPage = () => {
       variables: {
         slug: slug,
         postFilter: {
-          typeIn: [PostType.Video, PostType.OnDemand],
+          typeIn: [PostType.Video, PostType.OnDemand, PostType.Photo, PostType.Text],
         },
       },
       notifyOnNetworkStatusChange: true,
