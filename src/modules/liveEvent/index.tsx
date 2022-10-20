@@ -50,6 +50,7 @@ const LiveEvent = () => {
   const [isPresenceEnabled, setIsPresenceEnabled] = useState<boolean>(false)
   const [userCount, setUserCount] = useState<number>(1)
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
+  const { eventEnded } = useVideoPlayerStore()
 
   const { slug } = useParams<{ slug: string }>()
   const [livestream, setLivestream] = useState<LiveEventType>()
