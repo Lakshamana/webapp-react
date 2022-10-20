@@ -146,6 +146,10 @@ export const QUERY_POSTS_CARDS = gql`
             thumbnailPath
             baseUrl
           }
+          ... on MediaPhoto {
+            id
+            imgPath
+          }
         }
         type
       }
@@ -182,6 +186,10 @@ export const QUERY_PUBLIC_POSTS_CARDS = gql`
             duration
             thumbnailPath
             baseUrl
+          }
+          ... on MediaPhoto {
+            id
+            imgPath
           }
         }
         type
