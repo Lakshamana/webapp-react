@@ -4,7 +4,7 @@ import { PostType, Status } from 'generated/graphql'
 export const relatedPostsFilter = (page: number, categories?: string[]) => {
   return {
     filter: {
-      typeIn: [PostType.Video, PostType.OnDemand],
+      typeIn: [PostType.Video, PostType.OnDemand, PostType.Photo, PostType.Text],
       status: Status.Published,
       pageSize: MAX_PLAYLIST_RESULTS,
       page,
@@ -16,7 +16,7 @@ export const relatedPostsFilter = (page: number, categories?: string[]) => {
 export const playlistPostsFilter = (page: number) => {
   return {
     postsFilters: {
-      typeIn: [PostType.Video, PostType.OnDemand],
+      typeIn: [PostType.Video, PostType.OnDemand, PostType.Photo, PostType.Text],
       status: Status.Published,
       pageSize: MAX_PLAYLIST_RESULTS,
       page,
