@@ -1,14 +1,14 @@
+import { AspectRatio, Box, Image, Text } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { AspectRatio, Image, Box, Text } from '@chakra-ui/react'
-import { Icon } from '@iconify/react'
-import { Wrapper, InfoBox, Title, BlockedContent, PlayIcon } from './style'
-import { VideoPostCardProps } from 'types/posts'
-import { stripHTML, formattedSeconds } from 'utils/helperFunctions'
-import { colors } from 'styles'
 import { useThemeStore } from 'services/stores'
+import { colors } from 'styles'
+import { GeneralPostCardProps } from 'types/posts'
+import { formattedSeconds, stripHTML } from 'utils/helperFunctions'
+import { BlockedContent, InfoBox, PlayIcon, Title, Wrapper } from './style'
 
-const PlaylistPostCard = ({ ...props }: VideoPostCardProps) => {
+const PlaylistPostCard = ({ ...props }: GeneralPostCardProps) => {
   const history = useHistory()
   const [hover, setHover] = useState(false)
   const { colorMode } = useThemeStore()
