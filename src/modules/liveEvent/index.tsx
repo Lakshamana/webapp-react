@@ -233,7 +233,7 @@ const LiveEvent = () => {
                 fallbackMessage={t('page.post.live.will_start_soon')}
               />
             )}
-            {liveStatus === Status.Finished && renderEndedLiveText()}
+            {liveStatus === Status.Finished && eventEnded && renderEndedLiveText()}
           </CustomBox>
           {isChatVisible && (
             <Box
