@@ -251,6 +251,7 @@ const PT_BR = {
       search: {
         results_for: '{{count}} resultados encontrados para {{string}}',
         videos_section: 'Vídeos',
+        posts_section: 'Publicações',
         categories_section: 'Categorias',
         live_events_section: 'Ao vivo',
       },
@@ -298,6 +299,7 @@ const PT_BR = {
         my_list: 'Minha Lista',
         pinned_categories: 'Categorias favoritas',
         pinned_videos: 'Vídeos favoritos',
+        pinned_posts: 'Publicações favoritas'
       },
       tag: {
         no_content: 'Tag sem conteúdo',

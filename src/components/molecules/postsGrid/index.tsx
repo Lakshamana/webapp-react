@@ -1,12 +1,17 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Flex, SimpleGrid } from '@chakra-ui/react'
-import { AudioPostCard, ImagePostCard, Text, TextPostCard, VideoPostCard } from 'components'
-import { Post } from 'generated/graphql'
+import {
+  PhotoPostCard,
+  Text,
+  TextPostCard,
+  VideoPostCard
+} from 'components'
+import { Post, PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore, useThemeStore } from 'services/stores'
 import { breakpoints, colors, sizes } from 'styles'
-import { VideoPostCardProps, VideosGridProps } from 'types/posts'
+import { GeneralPostCardProps, PostsGridProps } from 'types/posts'
 import {
   isEntityBlocked,
   isEntityExclusive,
@@ -14,26 +19,26 @@ import {
 } from 'utils/accessVerifications'
 import { Wrapper } from './style'
 
-const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
+const PostsGrid = ({ items, sectionTitle }: PostsGridProps) => {
   const { generateImage } = useThumbor()
   const { colorMode } = useThemeStore()
   const { activeChannel } = useChannelsStore()
   const [isDesktop] = useMediaQuery(`(min-width: ${breakpoints.sm})`)
-  const [gridItems, setGridItems] = useState<VideoPostCardProps[]>()
+  const [gridItems, setGridItems] = useState<GeneralPostCardProps[]>()
 
   const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {
       size: {
-        width: 400,
-        height: 0,
+        width: 0,
+        height: 250,
       },
     }
 
     if (isEntityBlocked(post)) imageOptions.blur = 20
 
-    const thumbnailPath = post.type === 'PHOTO' ? 
-      post.media?.['imgPath'] :
-      post.thumbnail?.imgPath
+    const thumbnailPath =
+      (post.media?.__typename === 'MediaVideo' && post.thumbnail?.imgPath) ||
+      (post.media?.__typename === 'MediaPhoto' && post.media.imgPath)
 
     const secondImgUrl =
       post.media?.__typename === 'MediaVideo'
@@ -50,18 +55,14 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
     return secondImgUrl
   }
 
-  const getPostUrl = (slug: string) => {
-    return `/c/${activeChannel?.slug}/post/${slug}`
-  }
-
   useEffect(() => {
     if (items && items?.length) {
       const mappedArr = items?.map((item: Post) => {
         const thumbnail = getImageUrl(item)
-        const url = getPostUrl(`${item.slug}`)
+        const url = `/c/${activeChannel?.slug}/post/${item.slug}`
         return {
-          id: item.id || '',
-          title: item.title || '',
+          id: item.id,
+          title: item.title,
           description: item.description,
           url,
           thumbnail,
@@ -69,12 +70,10 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
             item.media?.__typename === 'MediaVideo'
               ? item.media?.duration
               : undefined,
-          countViews: undefined,
           isExclusive: isEntityExclusive(item),
           isGeolocked: isEntityGeolocked(item),
-          isPinned:
-            item.__typename === 'Post' ? item.pinnedStatus?.pinned : false,
-          type: item.type
+          isPinned: item.pinnedStatus?.pinned,
+          type: item.type,
         }
       })
       setGridItems(mappedArr)
@@ -100,22 +99,10 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
       <SimpleGrid width={'100%'} columns={[1, 2, 2, 3, 3, 4, 5]} spacing={3}>
         {gridItems?.map((item) => (
           <Wrapper key={item.id}>
-            {
-              (item.type === 'AUDIO') &&
-              <AudioPostCard hasPinButton={false} {...item} />
-            }
-            {
-              (item.type === 'PHOTO') &&
-              <ImagePostCard hasPinButton={false} {...item} />
-            }
-            {
-              (item.type === 'TEXT') &&
-              <TextPostCard hasPinButton={false} {...item} />
-            }
-            {
-              (item.type === 'ON_DEMAND' || item.type === 'VIDEO') &&
-              <VideoPostCard hasPinButton={false} {...item} />
-            }
+            {(item.type === PostType.Video ||
+              item.type === PostType.OnDemand) && <VideoPostCard {...item} />}
+            {item.type === PostType.Text && <TextPostCard {...item} />}
+            {item.type === PostType.Photo && <PhotoPostCard {...item} />}
           </Wrapper>
         ))}
       </SimpleGrid>
@@ -124,4 +111,3 @@ const PostsGrid = ({ items, sectionTitle }: VideosGridProps) => {
 }
 
 export { PostsGrid }
-

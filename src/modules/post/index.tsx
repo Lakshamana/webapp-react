@@ -38,6 +38,7 @@ import {
 import { breakpoints, colors } from 'styles'
 import { sendPostReactionReport } from 'utils/analytics'
 import { RANDOM_ID } from 'utils/helperFunctions'
+import { TextPost } from './components'
 import { PhotoPost } from './components/photo'
 import { VideoPost } from './components/video'
 import { PostComments, PostDetails, Subtitle, Title } from './style'
@@ -215,6 +216,8 @@ const PostPage = () => {
         return <VideoPost {...postData} />
       case PostType.Photo:
         return <PhotoPost {...postData} />
+      case PostType.Text:
+        return <TextPost {...postData} />
     }
   }
 
@@ -227,6 +230,7 @@ const PostPage = () => {
       />
     )
 
+  //TODO: Create a skeleton loading for posts
   if (loadingPost)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>

@@ -1,6 +1,7 @@
+import { getData } from 'services/storage'
+import { useOrganizationStore } from 'services/stores'
 import Thumbor from 'thumbor-ts'
 import { Format as ThumborFormat } from 'thumbor-ts/dist/types'
-import { useOrganizationStore } from 'services/stores'
 
 export enum ThumborInstanceTypes {
   AVATAR,
@@ -51,39 +52,26 @@ export const useThumbor = () => {
       return ''
     }
 
-    if(customBaseUrl){
-      return thumbor
-        .setPath(path)
-        .buildUrl()
-        .replace('/unsafe', '')
+    if (customBaseUrl) {
+      return thumbor.setPath(path).buildUrl().replace('/unsafe', '')
     }
 
     let image = thumbor.setPath(path)
 
-    let format: Format = options?.format || 'webp'
+    const webpSupport = getData('webpsupport')
 
-    if (format === 'webp' && !(window as any).SUPPORTS_WEBP) {
-      format = 'auto'
-    }
+    if (webpSupport === 1) image = image.format('webp')
 
-    if (format && format !== 'auto') {
-      image = image.format(format)
-    }
-    if (options?.blur) {
-      image = image.blur(options.blur)
-    }
-    if (options?.size) {
+    if (options?.blur) image = image.blur(options.blur)
+
+    if (options?.size)
       image = image.resize(options.size.width || 0, options.size.height || 0)
-    }
-    if (options?.smart) {
-      image = image.smartCrop()
-    }
-    if (options?.fill) {
-      image = image.fill(options.fill, true)
-    }
-    if (!options?.upscale) {
-      image = image.noUpscale()
-    }
+
+    if (options?.smart) image = image.smartCrop()
+
+    if (options?.fill) image = image.fill(options.fill, true)
+
+    if (!options?.upscale) image = image.noUpscale()
 
     const url = image
       .quality(options?.quality || 90)

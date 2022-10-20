@@ -4,7 +4,7 @@ import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
   BillboardScroller,
   LivestreamScroller,
-  VideosScroller
+  PostsScroller
 } from 'components/molecules'
 import {
   Kinds,
@@ -256,7 +256,7 @@ const LiveEvents = () => {
 
   const renderOnDemandPosts = (item: LiveCarouselFlags) =>
     !!onDemandData?.rows?.length && (
-      <VideosScroller
+      <PostsScroller
         key={`${item.LABEL[0].VALUE}`}
         items={onDemandData.rows}
         sectionTitle={getCarouselLabel(item)}
