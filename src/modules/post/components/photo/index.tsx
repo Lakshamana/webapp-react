@@ -50,7 +50,7 @@ const PhotoPost = ({ ...postData }: Post) => {
       alt={postData.title}
       src={postImage}
       htmlWidth="auto"
-      loading="lazy"
+      loading="eager"
     />
   )
 }
