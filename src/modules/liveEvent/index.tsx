@@ -216,7 +216,7 @@ const LiveEvent = () => {
                 </Badge>
               )}
             </Flex>
-            {liveStatus === Status.Live && hlsPlaybackUrl && (
+            {(liveStatus === Status.Live || !eventEnded) && hlsPlaybackUrl &&(
               <VideoPlayer
                 isLiveStream={true}
                 src={hlsPlaybackUrl}
