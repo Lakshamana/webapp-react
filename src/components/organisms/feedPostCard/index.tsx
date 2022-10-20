@@ -72,8 +72,8 @@ const FeedPostCard = ({ item, updateState }: FeedItemProps) => {
 
     const imageOptions: ThumborParams = {
       size: {
-        height: 0,
-        width: 800,
+        height: 500,
+        width: 0,
       },
     }
 
