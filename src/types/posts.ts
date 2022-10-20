@@ -1,6 +1,6 @@
 import { Post } from 'generated/graphql'
 
-export type VideosScrollerProps = {
+export type PostsScrollerProps = {
   sectionTitle?: string
   sectionUrl?: string
   showCardMore?: number | boolean | undefined
@@ -9,13 +9,13 @@ export type VideosScrollerProps = {
   loadMoreItems?: () => void
 }
 
-export type VideosGridProps = {
+export type PostsGridProps = {
   sectionTitle?: string
   items?: Post[]
   sendUnpinEvent?: (postId: string) => void
 }
 
-export type VideoPostCardProps = {
+export interface GeneralPostCardProps {
   id: string
   title?: string
   url?: string
@@ -33,7 +33,7 @@ export type VideoPostCardProps = {
   postUnpinned?: (postId: string) => void
 }
 
-type PostCardProps = {
+interface PostCardProps {
   hover: boolean
   mobileBehavior?: boolean
   isLoading: boolean
@@ -47,4 +47,25 @@ type PostCardProps = {
   hasClickedOnCard: () => void
 }
 
-export type ComponentPostCardProps = VideoPostCardProps & PostCardProps
+export interface ComponentPostCardProps
+  extends GeneralPostCardProps,
+    PostCardProps {}
+
+export interface MobileViewProps {
+  id: string
+  title?: string
+  url?: string
+  description?: Maybe<string>
+  thumbnail?: string
+  mediaLength?: Maybe<number>
+  countViews?: number
+  isExclusive: boolean
+  isGeolocked?: boolean
+  isPostPinned?: boolean
+  isLoading: boolean
+  progress?: string
+  hasPinButton?: boolean
+  handlePinPost: () => void
+  isOpen: boolean
+  onClose: () => void
+}
