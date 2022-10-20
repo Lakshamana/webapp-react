@@ -23,7 +23,7 @@ const VideoPost = ({ ...postData }: Post) => {
     const { media } = postData || {}
     if(media?.['subtitles']) {
       return media?.['subtitles'].map((item)=>({
-        src: `${media.baseUrl}/${item.vttPath}`,
+        src: `${item.baseUrl}/${item.vttPath}`,
         kind: 'captions',
         srclang: item.locale,
         label: item.label

@@ -39,6 +39,7 @@ export const QUERY_POST = gql`
           subtitles {
             id
             locale
+            baseUrl
             vttPath
             label
           }
