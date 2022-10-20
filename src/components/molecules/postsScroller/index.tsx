@@ -1,10 +1,17 @@
-import { CardMore, CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
-import { Post } from 'generated/graphql'
+import {
+  CardMore,
+  CardsScroller,
+  PhotoPostCard,
+  SkeletonScroller,
+  TextPostCard,
+  VideoPostCard
+} from 'components'
+import { Post, PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
-import { VideoPostCardProps, VideosScrollerProps } from 'types/posts'
+import { GeneralPostCardProps, PostsScrollerProps } from 'types/posts'
 import { ContentScroller } from './styles'
 
 import {
@@ -13,28 +20,31 @@ import {
   isEntityGeolocked
 } from 'utils/accessVerifications'
 
-const VideosScroller = ({
+const PostsScroller = ({
   items,
   sectionTitle,
   sectionUrl,
   loadMoreItems,
   showCardMore,
-  isLoading
-}: VideosScrollerProps) => {
+  isLoading,
+}: PostsScrollerProps) => {
   const { generateImage } = useThumbor()
-  const [scrollerItems, setScrollerItems] = useState<VideoPostCardProps[]>()
+  const [scrollerItems, setScrollerItems] = useState<GeneralPostCardProps[]>()
   const { activeChannel } = useChannelsStore()
 
   const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {
       size: {
-        width: 400,
-        height: 0,
+        width: 0,
+        height: 250,
       },
     }
+
     if (isEntityBlocked(post)) imageOptions.blur = 20
+
     const thumbnailPath =
-      post.media?.__typename === 'MediaVideo' ? post.thumbnail?.imgPath : ''
+      (post.media?.__typename === 'MediaVideo' && post.thumbnail?.imgPath) ||
+      (post.media?.__typename === 'MediaPhoto' && post.media.imgPath)
 
     const secondImgUrl =
       post.media?.__typename === 'MediaVideo'
@@ -68,6 +78,7 @@ const VideosScroller = ({
         isExclusive: isEntityExclusive(item),
         isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
+        type: item.type,
       }
     })
     setScrollerItems(mappedArr)
@@ -76,11 +87,7 @@ const VideosScroller = ({
 
   return (
     <ContentScroller>
-      {
-        isLoading &&
-        !scrollerItems?.length &&
-        <SkeletonScroller />
-      }
+      {isLoading && !scrollerItems?.length && <SkeletonScroller />}
       {!!scrollerItems?.length && (
         <CardsScroller
           title={sectionTitle}
@@ -88,23 +95,23 @@ const VideosScroller = ({
           reachEnd={loadMoreItems}
           {...{ isLoading }}
         >
-          {scrollerItems?.map((item: VideoPostCardProps) => (
+          {scrollerItems?.map((item: GeneralPostCardProps) => (
             <SwiperSlide key={`slide-${item.id}-featured`}>
-              <VideoPostCard {...item} />
+              {(item.type === PostType.Video ||
+                item.type === PostType.OnDemand) && <VideoPostCard {...item} />}
+              {item.type === PostType.Text && <TextPostCard {...item} />}
+              {item.type === PostType.Photo && <PhotoPostCard {...item} />}
             </SwiperSlide>
           ))}
-          {
-            showCardMore &&
-            sectionUrl &&
+          {showCardMore && sectionUrl && (
             <SwiperSlide>
               <CardMore {...{ sectionUrl }} />
             </SwiperSlide>
-          }
+          )}
         </CardsScroller>
       )}
     </ContentScroller>
   )
 }
 
-export { VideosScroller }
-
+export { PostsScroller }

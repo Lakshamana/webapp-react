@@ -17,7 +17,7 @@ import {
   Container,
   EmptyState,
   LivestreamScroller,
-  VideosScroller
+  PostsScroller
 } from 'components'
 import {
   DEFAULT_POLLING_INTERVAL,
@@ -364,7 +364,7 @@ const HomePage = () => {
   const renderFeaturedPostsScroller = (item: CarouselFlags) => {
     const scrollerName = `${item.LABEL[0].VALUE}`
     return (
-      <VideosScroller
+      <PostsScroller
         key={scrollerName}
         items={featuredPostsData?.rows}
         sectionTitle={getCarouselLabel(item)}
