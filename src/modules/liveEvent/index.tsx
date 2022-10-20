@@ -9,7 +9,8 @@ import {
   useAuthStore,
   useChannelsStore,
   useCommonStore,
-  useThemeStore
+  useThemeStore,
+  useVideoPlayerStore
 } from 'services/stores'
 
 import { firebaseDB } from 'config/firebase'
