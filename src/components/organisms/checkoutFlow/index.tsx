@@ -125,7 +125,6 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
           stopPolling && stopPolling()
           break
         case 'FAILED':
-        case 'UNPAID':
           setIsLoadingOrder(false)
           setCurrentStep(Steps.FAILED)
           stopPolling && stopPolling()
