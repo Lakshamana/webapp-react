@@ -1,5 +1,6 @@
-import * as Apollo from '@apollo/client';
 import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+import * as React from 'react';
 import * as ApolloReactComponents from '@apollo/client/react/components';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -26,6 +27,7 @@ export type Scalars = {
 export enum AccessKinds {
   Available = 'AVAILABLE',
   Geolocked = 'GEOLOCKED',
+  Public = 'PUBLIC',
   Redacted = 'REDACTED'
 }
 
@@ -132,29 +134,6 @@ export type ActivateAccount = {
   id: Scalars['ID'];
 };
 
-export type ActiveRedemptionsCustomer = {
-  __typename?: 'ActiveRedemptionsCustomer';
-  createDate: Scalars['DateTime'];
-  description: Scalars['String'];
-  email: Scalars['String'];
-  id: Scalars['String'];
-  name: Scalars['String'];
-  paymentMethod: Scalars['String'];
-};
-
-export type ActiveRedemptionsSubscription = {
-  __typename?: 'ActiveRedemptionsSubscription';
-  billing: Scalars['String'];
-  cancelledDate: Scalars['DateTime'];
-  createdDate: Scalars['DateTime'];
-  currentPeriod: Scalars['DateTime'];
-  customer: Scalars['String'];
-  dateStatus: Scalars['DateTime'];
-  id: Scalars['String'];
-  product: Array<Product>;
-  status: Scalars['String'];
-};
-
 export type AddComment = {
   content: Scalars['String'];
   description: Scalars['String'];
@@ -219,6 +198,7 @@ export type AvailableChannel = {
   geofence?: Maybe<Scalars['JSON']>;
   geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
   menu?: Maybe<Menu>;
@@ -317,6 +297,10 @@ export type CancelNotificationOutput = {
   success: Scalars['Boolean'];
 };
 
+export type CancelSubscription = {
+  subscriptionId: Scalars['String'];
+};
+
 export type Category = {
   __typename?: 'Category';
   access?: Maybe<AccessKinds>;
@@ -332,6 +316,7 @@ export type Category = {
   id: Scalars['ID'];
   isChild?: Maybe<Scalars['Boolean']>;
   isDeleted?: Maybe<Scalars['Boolean']>;
+  isKindAuto: Scalars['Boolean'];
   isParent?: Maybe<Scalars['Boolean']>;
   kind: Kinds;
   name: Scalars['String'];
@@ -395,10 +380,28 @@ export type CategoryInput = {
   name: Scalars['String'];
   parentId?: Maybe<Scalars['ID']>;
   password?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   slug?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
+};
+
+export type CategoryKind = {
+  __typename?: 'CategoryKind';
+  channel: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['JSONObject']>>;
+  geoFence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind: Kinds;
+  name: Scalars['String'];
+  organization: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
 };
 
 export type CategoryPasswordCheck = {
@@ -457,6 +460,24 @@ export type ChannelFindAllFilter = {
   status__exact?: Maybe<Scalars['String']>;
 };
 
+export type ChannelKind = {
+  __typename?: 'ChannelKind';
+  banner?: Maybe<Scalars['JSON']>;
+  customization?: Maybe<ChannelCustomizationOutput>;
+  description: Scalars['String'];
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
+  geofence?: Maybe<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind?: Maybe<Kinds>;
+  logo?: Maybe<Scalars['JSON']>;
+  name: Scalars['String'];
+  organization: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
+  thumbnail?: Maybe<Scalars['JSON']>;
+};
+
 export type ChannelPasswordCheck = {
   __typename?: 'ChannelPasswordCheck';
   correct: Scalars['Boolean'];
@@ -472,11 +493,6 @@ export type ChildrenCategoryFilter = {
   isParent?: Maybe<Scalars['Boolean']>;
   sortBy?: Maybe<Scalars['String']>;
 };
-
-export enum CodeTypeEnum {
-  Random = 'RANDOM',
-  Sequential = 'SEQUENTIAL'
-}
 
 export type Comment = {
   __typename?: 'Comment';
@@ -542,7 +558,7 @@ export type ConfirmOrder = {
   /** the country id from country code from inspire api */
   country?: Maybe<Scalars['String']>;
   /** Customer CPF */
-  cpf: Scalars['String'];
+  cpf?: Maybe<Scalars['String']>;
   currencyId?: Maybe<Scalars['String']>;
   customerGrossAmount?: Maybe<Scalars['Float']>;
   description?: Maybe<Scalars['String']>;
@@ -560,75 +576,6 @@ export type ConfirmOrder = {
   /** the product price id of inspire product */
   productPrice: Scalars['String'];
   statementDescriptor?: Maybe<Scalars['String']>;
-};
-
-export type CouponCode = {
-  __typename?: 'CouponCode';
-  code?: Maybe<Scalars['String']>;
-  createdDate?: Maybe<Scalars['DateTime']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  firstTimeTransaction?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  isActive?: Maybe<Scalars['Boolean']>;
-  metadata?: Maybe<Array<InspireMetadata>>;
-  minimumAmount?: Maybe<Scalars['Float']>;
-  redemptions?: Maybe<Scalars['Float']>;
-};
-
-export type CouponCodeOutput = {
-  __typename?: 'CouponCodeOutput';
-  code?: Maybe<Scalars['String']>;
-  createdDate?: Maybe<Scalars['DateTime']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  firstTimeTransaction?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  isActive?: Maybe<Scalars['Boolean']>;
-  metadata: Array<InspireMetadata>;
-  minimumAmount?: Maybe<Scalars['Float']>;
-  redemptions?: Maybe<Scalars['Float']>;
-};
-
-export type CouponCurrency = {
-  __typename?: 'CouponCurrency';
-  isoCode?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-};
-
-export enum CouponDurationEnum {
-  Forever = 'FOREVER',
-  MultipleMonths = 'MULTIPLE_MONTHS',
-  Once = 'ONCE'
-}
-
-export type CouponOutput = {
-  __typename?: 'CouponOutput';
-  additionalTrialDays: Scalars['Float'];
-  codes?: Maybe<Array<CouponCodeOutput>>;
-  couponDuration?: Maybe<CouponDurationEnum>;
-  couponType?: Maybe<CouponTypes>;
-  createdDate: Scalars['DateTime'];
-  currency?: Maybe<CouponCurrency>;
-  discountAmount: Scalars['Float'];
-  discountPercentage: Scalars['Float'];
-  durationMonths: Scalars['Float'];
-  expirationDate: Scalars['DateTime'];
-  id: Scalars['String'];
-  isUnique: Scalars['Boolean'];
-  maxRedemptions: Scalars['Float'];
-  maximumAmount: Scalars['Float'];
-  metadata: Array<InspireMetadata>;
-  name: Scalars['String'];
-  redemptions: Scalars['Float'];
-  subscriptionCouponRedeems: Array<GetSubscriptionCouponRedeems>;
-  trialDays: Scalars['Float'];
-  valid: Scalars['Boolean'];
-};
-
-export type CouponTypes = {
-  __typename?: 'CouponTypes';
-  hasAdditionalTrialDays?: Maybe<Scalars['Boolean']>;
-  name?: Maybe<Scalars['String']>;
 };
 
 export type CreateAccountGdprLgpdInput = {
@@ -717,45 +664,13 @@ export type CreateChannelInput = {
   thumbnail?: Maybe<Scalars['ID']>;
 };
 
-export type CreateCouponCodeInput = {
-  code: Scalars['String'];
-  codeQuantity?: Maybe<Scalars['Float']>;
-  codeTypes?: Maybe<CodeTypeEnum>;
-  currencyId?: Maybe<Scalars['String']>;
-  customerId?: Maybe<Scalars['String']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  firstTimeTransaction?: Maybe<Scalars['Boolean']>;
-  maxRedemptions?: Maybe<Scalars['Float']>;
-  minimumAmount?: Maybe<Scalars['Float']>;
-};
-
-export type CreateCouponInput = {
-  additionalTrialDays?: Maybe<Scalars['Float']>;
-  codes?: Maybe<Scalars['DateTime']>;
-  couponDurations?: Maybe<InspireCouponDurationEnum>;
-  couponTypes?: Maybe<InspireCouponTypeEnum>;
-  currencyId?: Maybe<Scalars['String']>;
-  discountAmount?: Maybe<Scalars['Float']>;
-  discountPercentage?: Maybe<Scalars['Float']>;
-  durationMonths?: Maybe<Scalars['Float']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  isUnique?: Maybe<Scalars['Boolean']>;
-  maxRedemptions?: Maybe<Scalars['Float']>;
-  maximumAmount?: Maybe<Scalars['Float']>;
-  metadata?: Maybe<Array<InspireMetadataInput>>;
-  name: Scalars['String'];
-  productIds?: Maybe<Scalars['String']>;
-  trialDays?: Maybe<Scalars['Float']>;
-};
-
 export type CreateCustomFieldInput = {
   fields: Array<CustomFieldInput>;
 };
 
 export type CreateEmailTemplateDto = {
   name: Scalars['String'];
-  template?: Maybe<Scalars['String']>;
-  templates: Scalars['JSON'];
+  templates: Array<LocaleBody>;
   type: Scalars['String'];
 };
 
@@ -928,6 +843,8 @@ export type CreateSubjectInput = {
 
 export type CreateTagInput = {
   description?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   title: Scalars['String'];
 };
 
@@ -1082,14 +999,20 @@ export type EmailSent = {
 
 export type EmailTemplate = {
   __typename?: 'EmailTemplate';
-  _id: Scalars['ID'];
   channel?: Maybe<Scalars['ID']>;
   deleted_at?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
   name: Scalars['String'];
   organization: Scalars['ID'];
   template?: Maybe<Scalars['String']>;
-  templates?: Maybe<Scalars['JSON']>;
+  templates?: Maybe<Array<EmailTemplateLocales>>;
   type: Scalars['String'];
+};
+
+export type EmailTemplateLocales = {
+  __typename?: 'EmailTemplateLocales';
+  body: Scalars['String'];
+  locale: LocaleTypes;
 };
 
 export type Embed = {
@@ -1208,20 +1131,6 @@ export type FilterPlaylistsInput = {
   sortBy?: Maybe<Scalars['String']>;
 };
 
-export type FindAllCouponCodeParams = {
-  couponId: Scalars['String'];
-  page?: Maybe<Scalars['Float']>;
-  pagesize?: Maybe<Scalars['Float']>;
-};
-
-export type FindAllCouponsQueryParams = {
-  currencyId?: Maybe<Scalars['String']>;
-  keywords?: Maybe<Scalars['String']>;
-  page?: Maybe<Scalars['String']>;
-  pagesize?: Maybe<Scalars['Float']>;
-  productPriceIds?: Maybe<Array<Scalars['String']>>;
-};
-
 export type FindAllGroupsRequestDto = {
   name__contains?: Maybe<Scalars['String']>;
   name__exact?: Maybe<Scalars['String']>;
@@ -1326,6 +1235,7 @@ export type GeolockedChannel = {
   geofence?: Maybe<Scalars['JSON']>;
   geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
   menu?: Maybe<Menu>;
@@ -1335,12 +1245,6 @@ export type GeolockedChannel = {
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   thumbnail?: Maybe<Scalars['JSON']>;
-};
-
-export type GetSubscriptionCouponRedeems = {
-  __typename?: 'GetSubscriptionCouponRedeems';
-  activeRedemptionsCustomers: ActiveRedemptionsCustomer;
-  activeRedemptionsSubscriptions: ActiveRedemptionsSubscription;
 };
 
 export type GroupDto = {
@@ -1389,19 +1293,6 @@ export type InspireBillingTypes = {
   id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
-
-export enum InspireCouponDurationEnum {
-  Forever = 'FOREVER',
-  MultipleMonths = 'MULTIPLE_MONTHS',
-  Once = 'ONCE'
-}
-
-export enum InspireCouponTypeEnum {
-  Amount = 'AMOUNT',
-  Percentage = 'PERCENTAGE',
-  PriceOverride = 'PRICE_OVERRIDE',
-  TrialOnly = 'TRIAL_ONLY'
-}
 
 export type InspireCurrency = {
   __typename?: 'InspireCurrency';
@@ -1586,6 +1477,7 @@ export type LiveEvent = {
   hlsPlaybackUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isDeleted?: Maybe<Scalars['Boolean']>;
+  isKindAuto: Scalars['Boolean'];
   kind: Kinds;
   media?: Maybe<MediaVideo>;
   organization: Scalars['ID'];
@@ -1671,6 +1563,20 @@ export type LiveEventInput = {
   type: LiveEventType;
 };
 
+export type LiveEventKind = {
+  __typename?: 'LiveEventKind';
+  channel: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  geoFence?: Maybe<Scalars['JSONObject']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind: Kinds;
+  organization: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
 export type LiveEventPasswordCheck = {
   __typename?: 'LiveEventPasswordCheck';
   correct: Scalars['Boolean'];
@@ -1696,6 +1602,292 @@ export enum LiveEventType {
   RtmpPull = 'RTMP_PULL',
   RtmpPush = 'RTMP_PUSH',
   RtpPush = 'RTP_PUSH'
+}
+
+export type LocaleBody = {
+  body: Scalars['String'];
+  locale: LocaleTypes;
+};
+
+export enum LocaleTypes {
+  Af = 'AF',
+  AfZa = 'AF_ZA',
+  AmEt = 'AM_ET',
+  Ar = 'AR',
+  ArnCl = 'ARN_CL',
+  ArAe = 'AR_AE',
+  ArBh = 'AR_BH',
+  ArDz = 'AR_DZ',
+  ArEg = 'AR_EG',
+  ArIq = 'AR_IQ',
+  ArJo = 'AR_JO',
+  ArKw = 'AR_KW',
+  ArLb = 'AR_LB',
+  ArLy = 'AR_LY',
+  ArMa = 'AR_MA',
+  ArOm = 'AR_OM',
+  ArQa = 'AR_QA',
+  ArSa = 'AR_SA',
+  ArSy = 'AR_SY',
+  ArTn = 'AR_TN',
+  ArYe = 'AR_YE',
+  AsIn = 'AS_IN',
+  Az = 'AZ',
+  AzCyrlAz = 'AZ_CYRL_AZ',
+  AzLatnAz = 'AZ_LATN_AZ',
+  BaRu = 'BA_RU',
+  Be = 'BE',
+  BeBy = 'BE_BY',
+  Bg = 'BG',
+  BgBg = 'BG_BG',
+  BnBd = 'BN_BD',
+  BnIn = 'BN_IN',
+  BoCn = 'BO_CN',
+  BrFr = 'BR_FR',
+  BsCyrlBa = 'BS_CYRL_BA',
+  BsLatnBa = 'BS_LATN_BA',
+  Ca = 'CA',
+  CaEs = 'CA_ES',
+  CoFr = 'CO_FR',
+  Cs = 'CS',
+  CsCz = 'CS_CZ',
+  CyGb = 'CY_GB',
+  Da = 'DA',
+  DaDk = 'DA_DK',
+  De = 'DE',
+  DeAt = 'DE_AT',
+  DeCh = 'DE_CH',
+  DeDe = 'DE_DE',
+  DeLi = 'DE_LI',
+  DeLu = 'DE_LU',
+  DsbDe = 'DSB_DE',
+  Dv = 'DV',
+  DvMv = 'DV_MV',
+  El = 'EL',
+  ElGr = 'EL_GR',
+  En = 'EN',
+  En_029 = 'EN_029',
+  EnAu = 'EN_AU',
+  EnBz = 'EN_BZ',
+  EnCa = 'EN_CA',
+  EnGb = 'EN_GB',
+  EnIe = 'EN_IE',
+  EnIn = 'EN_IN',
+  EnJm = 'EN_JM',
+  EnMy = 'EN_MY',
+  EnNz = 'EN_NZ',
+  EnPh = 'EN_PH',
+  EnSg = 'EN_SG',
+  EnTt = 'EN_TT',
+  EnUs = 'EN_US',
+  EnZa = 'EN_ZA',
+  EnZw = 'EN_ZW',
+  Es = 'ES',
+  EsAr = 'ES_AR',
+  EsBo = 'ES_BO',
+  EsCl = 'ES_CL',
+  EsCo = 'ES_CO',
+  EsCr = 'ES_CR',
+  EsDo = 'ES_DO',
+  EsEc = 'ES_EC',
+  EsEs = 'ES_ES',
+  EsGt = 'ES_GT',
+  EsHn = 'ES_HN',
+  EsMx = 'ES_MX',
+  EsNi = 'ES_NI',
+  EsPa = 'ES_PA',
+  EsPe = 'ES_PE',
+  EsPr = 'ES_PR',
+  EsPy = 'ES_PY',
+  EsSv = 'ES_SV',
+  EsUs = 'ES_US',
+  EsUy = 'ES_UY',
+  EsVe = 'ES_VE',
+  Et = 'ET',
+  EtEe = 'ET_EE',
+  Eu = 'EU',
+  EuEs = 'EU_ES',
+  Fa = 'FA',
+  FaIr = 'FA_IR',
+  Fi = 'FI',
+  FilPh = 'FIL_PH',
+  FiFi = 'FI_FI',
+  Fo = 'FO',
+  FoFo = 'FO_FO',
+  Fr = 'FR',
+  FrBe = 'FR_BE',
+  FrCa = 'FR_CA',
+  FrCh = 'FR_CH',
+  FrFr = 'FR_FR',
+  FrLu = 'FR_LU',
+  FrMc = 'FR_MC',
+  FyNl = 'FY_NL',
+  GaIe = 'GA_IE',
+  GdGb = 'GD_GB',
+  Gl = 'GL',
+  GlEs = 'GL_ES',
+  GswFr = 'GSW_FR',
+  Gu = 'GU',
+  GuIn = 'GU_IN',
+  HaLatnNg = 'HA_LATN_NG',
+  He = 'HE',
+  HeIl = 'HE_IL',
+  Hi = 'HI',
+  HiIn = 'HI_IN',
+  Hr = 'HR',
+  HrBa = 'HR_BA',
+  HrHr = 'HR_HR',
+  HsbDe = 'HSB_DE',
+  Hu = 'HU',
+  HuHu = 'HU_HU',
+  Hy = 'HY',
+  HyAm = 'HY_AM',
+  Id = 'ID',
+  IdId = 'ID_ID',
+  IgNg = 'IG_NG',
+  IiCn = 'II_CN',
+  Is = 'IS',
+  IsIs = 'IS_IS',
+  It = 'IT',
+  ItCh = 'IT_CH',
+  ItIt = 'IT_IT',
+  IuCansCa = 'IU_CANS_CA',
+  IuLatnCa = 'IU_LATN_CA',
+  Ja = 'JA',
+  JaJp = 'JA_JP',
+  Ka = 'KA',
+  KaGe = 'KA_GE',
+  Kk = 'KK',
+  KkKz = 'KK_KZ',
+  KlGl = 'KL_GL',
+  KmKh = 'KM_KH',
+  Kn = 'KN',
+  KnIn = 'KN_IN',
+  Ko = 'KO',
+  Kok = 'KOK',
+  KokIn = 'KOK_IN',
+  KoKr = 'KO_KR',
+  Ky = 'KY',
+  KyKg = 'KY_KG',
+  LbLu = 'LB_LU',
+  LoLa = 'LO_LA',
+  Lt = 'LT',
+  LtLt = 'LT_LT',
+  Lv = 'LV',
+  LvLv = 'LV_LV',
+  MiNz = 'MI_NZ',
+  Mk = 'MK',
+  MkMk = 'MK_MK',
+  MlIn = 'ML_IN',
+  Mn = 'MN',
+  MnMn = 'MN_MN',
+  MnMongCn = 'MN_MONG_CN',
+  MohCa = 'MOH_CA',
+  Mr = 'MR',
+  MrIn = 'MR_IN',
+  Ms = 'MS',
+  MsBn = 'MS_BN',
+  MsMy = 'MS_MY',
+  MtMt = 'MT_MT',
+  NbNo = 'NB_NO',
+  NeNp = 'NE_NP',
+  Nl = 'NL',
+  NlBe = 'NL_BE',
+  NlNl = 'NL_NL',
+  NnNo = 'NN_NO',
+  No = 'NO',
+  NsoZa = 'NSO_ZA',
+  OcFr = 'OC_FR',
+  OrIn = 'OR_IN',
+  Pa = 'PA',
+  PaIn = 'PA_IN',
+  Pl = 'PL',
+  PlPl = 'PL_PL',
+  PrsAf = 'PRS_AF',
+  PsAf = 'PS_AF',
+  Pt = 'PT',
+  PtBr = 'PT_BR',
+  PtPt = 'PT_PT',
+  QutGt = 'QUT_GT',
+  QuzBo = 'QUZ_BO',
+  QuzEc = 'QUZ_EC',
+  QuzPe = 'QUZ_PE',
+  RmCh = 'RM_CH',
+  Ro = 'RO',
+  RoRo = 'RO_RO',
+  Ru = 'RU',
+  RuRu = 'RU_RU',
+  RwRw = 'RW_RW',
+  Sa = 'SA',
+  SahRu = 'SAH_RU',
+  SaIn = 'SA_IN',
+  SeFi = 'SE_FI',
+  SeNo = 'SE_NO',
+  SeSe = 'SE_SE',
+  SiLk = 'SI_LK',
+  Sk = 'SK',
+  SkSk = 'SK_SK',
+  Sl = 'SL',
+  SlSi = 'SL_SI',
+  SmaNo = 'SMA_NO',
+  SmaSe = 'SMA_SE',
+  SmjNo = 'SMJ_NO',
+  SmjSe = 'SMJ_SE',
+  SmnFi = 'SMN_FI',
+  SmsFi = 'SMS_FI',
+  Sq = 'SQ',
+  SqAl = 'SQ_AL',
+  Sr = 'SR',
+  SrCyrlBa = 'SR_CYRL_BA',
+  SrCyrlCs = 'SR_CYRL_CS',
+  SrCyrlMe = 'SR_CYRL_ME',
+  SrCyrlRs = 'SR_CYRL_RS',
+  SrLatnBa = 'SR_LATN_BA',
+  SrLatnCs = 'SR_LATN_CS',
+  SrLatnMe = 'SR_LATN_ME',
+  SrLatnRs = 'SR_LATN_RS',
+  Sv = 'SV',
+  SvFi = 'SV_FI',
+  SvSe = 'SV_SE',
+  Sw = 'SW',
+  SwKe = 'SW_KE',
+  Syr = 'SYR',
+  SyrSy = 'SYR_SY',
+  Ta = 'TA',
+  TaIn = 'TA_IN',
+  Te = 'TE',
+  TeIn = 'TE_IN',
+  TgCyrlTj = 'TG_CYRL_TJ',
+  Th = 'TH',
+  ThTh = 'TH_TH',
+  TkTm = 'TK_TM',
+  TnZa = 'TN_ZA',
+  Tr = 'TR',
+  TrTr = 'TR_TR',
+  Tt = 'TT',
+  TtRu = 'TT_RU',
+  TzmLatnDz = 'TZM_LATN_DZ',
+  UgCn = 'UG_CN',
+  Uk = 'UK',
+  UkUa = 'UK_UA',
+  Ur = 'UR',
+  UrPk = 'UR_PK',
+  Uz = 'UZ',
+  UzCyrlUz = 'UZ_CYRL_UZ',
+  UzLatnUz = 'UZ_LATN_UZ',
+  Vi = 'VI',
+  ViVn = 'VI_VN',
+  WoSn = 'WO_SN',
+  XhZa = 'XH_ZA',
+  YoNg = 'YO_NG',
+  ZhChs = 'ZH_CHS',
+  ZhCht = 'ZH_CHT',
+  ZhCn = 'ZH_CN',
+  ZhHk = 'ZH_HK',
+  ZhMo = 'ZH_MO',
+  ZhSg = 'ZH_SG',
+  ZhTw = 'ZH_TW',
+  ZuZa = 'ZU_ZA'
 }
 
 export type Me = {
@@ -1914,7 +2106,6 @@ export type Mutation = {
   addReport: Report;
   addView: Post;
   addVote: AddedCommentVote;
-  archiveCouponCode: Scalars['VoidScalar'];
   atomicUpdateCategorySorting: CategorySortingOutput;
   atomicUpdateMenuSorting: MenuSortingOutput;
   avatarUpload: ResponseUploadCreation;
@@ -1922,6 +2113,7 @@ export type Mutation = {
   banAccountTemp: Account;
   bindChannelAndOrganization: Account;
   cancelNotification: CancelNotificationOutput;
+  cancelSubscription: Order;
   categoryPasswordCheck: CategoryPasswordCheck;
   channelPasswordCheck: ChannelPasswordCheck;
   confirmOrder: Order;
@@ -1934,8 +2126,6 @@ export type Mutation = {
   createCategory: Category;
   createChannel: AvailableChannel;
   createChannelRoles: Scalars['String'];
-  createCoupon: CouponOutput;
-  createCouponCode: CouponCode;
   createCustomField: ResponseCustomFieldsOutput;
   createEmailTemplate: EmailTemplate;
   createEmbed: Embed;
@@ -1968,7 +2158,6 @@ export type Mutation = {
   deleteBillboard: Billboard;
   deleteCategory: Category;
   deleteComment: Comment;
-  deleteCoupon: Scalars['VoidScalar'];
   deleteCustomField: ResponseCustomFieldsOutput;
   deleteEmbed: Embed;
   deleteEnvConfig: EnvConfig;
@@ -2020,9 +2209,9 @@ export type Mutation = {
   socialSignIn: SingIn;
   startMediaUpload: ResponseMediaUploadOutput;
   stopLive: LiveEventStopLiveOutput;
-  unarchiveCouponCode: Scalars['VoidScalar'];
   unbanAccountPerm: Account;
   unbanAccountTemp: Account;
+  uncancelSubscription: Order;
   unpinCategory: AccountPinnedCategory;
   unpinChannel: AccountPinnedChannel;
   unpinPost: AccountPinnedPost;
@@ -2036,8 +2225,6 @@ export type Mutation = {
   updateCategory: Category;
   updateChannel: Channel;
   updateComment: Comment;
-  updateCoupon: Scalars['VoidScalar'];
-  updateCouponCode: Scalars['VoidScalar'];
   updateCustomField: ResponseCustomFieldsOutput;
   updateEmailTemplate: EmailTemplate;
   updateEmbed: Embed;
@@ -2118,12 +2305,6 @@ export type MutationAddVoteArgs = {
 };
 
 
-export type MutationArchiveCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-};
-
-
 export type MutationAtomicUpdateCategorySortingArgs = {
   payload: UpdateCategoriesSorting;
 };
@@ -2159,6 +2340,11 @@ export type MutationBindChannelAndOrganizationArgs = {
 
 export type MutationCancelNotificationArgs = {
   payload: CancelNotificationInput;
+};
+
+
+export type MutationCancelSubscriptionArgs = {
+  payload: CancelSubscription;
 };
 
 
@@ -2216,17 +2402,6 @@ export type MutationCreateCategoryArgs = {
 
 export type MutationCreateChannelArgs = {
   payload: CreateChannelInput;
-};
-
-
-export type MutationCreateCouponArgs = {
-  input: CreateCouponInput;
-};
-
-
-export type MutationCreateCouponCodeArgs = {
-  couponId: Scalars['String'];
-  input: CreateCouponCodeInput;
 };
 
 
@@ -2386,11 +2561,6 @@ export type MutationDeleteCategoryArgs = {
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
-};
-
-
-export type MutationDeleteCouponArgs = {
   id: Scalars['String'];
 };
 
@@ -2639,12 +2809,6 @@ export type MutationStopLiveArgs = {
 };
 
 
-export type MutationUnarchiveCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-};
-
-
 export type MutationUnbanAccountPermArgs = {
   account: Scalars['String'];
 };
@@ -2652,6 +2816,11 @@ export type MutationUnbanAccountPermArgs = {
 
 export type MutationUnbanAccountTempArgs = {
   account: Scalars['String'];
+};
+
+
+export type MutationUncancelSubscriptionArgs = {
+  payload: UncancelSubscription;
 };
 
 
@@ -2722,19 +2891,6 @@ export type MutationUpdateChannelArgs = {
 export type MutationUpdateCommentArgs = {
   id: Scalars['String'];
   payload: UpdateComment;
-};
-
-
-export type MutationUpdateCouponArgs = {
-  id: Scalars['String'];
-  input: UpdateCouponInput;
-};
-
-
-export type MutationUpdateCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-  input: UpdateCouponCodeInput;
 };
 
 
@@ -2923,6 +3079,11 @@ export type MutationVerifyMailArgs = {
   payload: VerifyEmailDto;
 };
 
+export type MyProducts = {
+  __typename?: 'MyProducts';
+  products: Array<InspireProduct>;
+};
+
 export type NotificationOutput = {
   __typename?: 'NotificationOutput';
   /** If notification is canceled */
@@ -3037,7 +3198,7 @@ export type Order = {
   createdAt?: Maybe<Scalars['DateTime']>;
   customFields?: Maybe<Scalars['JSONObject']>;
   id: Scalars['String'];
-  invoice?: Maybe<Scalars['String']>;
+  invoices?: Maybe<Array<Scalars['JSONObject']>>;
   payment?: Maybe<Scalars['String']>;
   product?: Maybe<Scalars['String']>;
   status?: Maybe<OrderStatus>;
@@ -3086,6 +3247,21 @@ export type OrganizationFindAllFilter = {
   sort?: Maybe<OrganizationSortArs>;
   status?: Maybe<Scalars['String']>;
   web_url__exact?: Maybe<Scalars['String']>;
+};
+
+export type OrganizationKind = {
+  __typename?: 'OrganizationKind';
+  audioCdnBaseUrl?: Maybe<Scalars['String']>;
+  avatarCdnBaseUrl?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
+  imageCdnBaseUrl?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
+  name?: Maybe<Scalars['String']>;
+  portal_url?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Array<Scalars['String']>>;
 };
 
 export type OrganizationOneSignalOutput = {
@@ -3480,6 +3656,7 @@ export type Post = {
   hiddenFromFeed: Scalars['Boolean'];
   id: Scalars['ID'];
   inFeed: Scalars['Boolean'];
+  isKindAuto: Scalars['Boolean'];
   kind: Scalars['String'];
   media?: Maybe<MediaUnion>;
   myReactions: Array<PostReactions>;
@@ -3520,6 +3697,21 @@ export type PostFilter = {
   sortBy?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
   typeIn?: Maybe<Array<PostType>>;
+};
+
+export type PostKind = {
+  __typename?: 'PostKind';
+  channel: Scalars['ID'];
+  description: Scalars['String'];
+  entitlements?: Maybe<Array<Scalars['JSONObject']>>;
+  geofence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind: Scalars['String'];
+  slug?: Maybe<Scalars['String']>;
+  thumbnail?: Maybe<MediaPhoto>;
+  title: Scalars['String'];
 };
 
 export type PostPasswordCheck = {
@@ -3568,11 +3760,6 @@ export type PriceTierOutput = {
 export type PricingModelOutput = {
   __typename?: 'PricingModelOutput';
   id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type Product = {
-  __typename?: 'Product';
   name: Scalars['String'];
 };
 
@@ -3738,11 +3925,14 @@ export type Query = {
   accounts: PaginatedAccountsOutput;
   accountsCount: ResponseAccountsCount;
   accountsGdprLgpd: Array<AccountGdprLgpd>;
+  activeSubscriptons: Array<Order>;
   billboard: Billboard;
   billboards: PaginatedBillboardsOutput;
   categories: PaginatedCategoriesOutput;
   category: Category;
+  categoryKind: CategoryKind;
   channel: Channel;
+  channelKind: ChannelKind;
   channels: Array<Channel>;
   checkCategorySlug: CategorySlugExists;
   checkChannel: ResponseAvailabilityOutput;
@@ -3757,10 +3947,6 @@ export type Query = {
   countPermissions: Scalars['Int'];
   countRoles: Scalars['Float'];
   countSubjects: Scalars['Int'];
-  coupon: CouponOutput;
-  couponCode: CouponCode;
-  couponCodes: Array<CouponCode>;
-  coupons: Array<CouponOutput>;
   customField: ResponseCustomFieldsOutput;
   customFields: Array<ResponseCustomFieldsOutput>;
   emailTemplate: EmailTemplate;
@@ -3774,6 +3960,7 @@ export type Query = {
   groups: Array<GroupDto>;
   listNotifications: PaginatedNotificationOutput;
   liveEvent: LiveEvent;
+  liveEventKind: LiveEventKind;
   liveEvents: PaginatedLiveEventsOutput;
   me: Me;
   media: MediaUnion;
@@ -3781,9 +3968,11 @@ export type Query = {
   medias: PaginatedMediaUnion;
   menu: Menu;
   menus: PaginatedMenusOutput;
+  myProducts: MyProducts;
   order: Order;
   orders: Array<Order>;
   organization: Organization;
+  organizationKind: OrganizationKind;
   organizationPublicSettings: OrganizationPublic;
   organizations: Array<Organization>;
   permission: PermissionDto;
@@ -3791,6 +3980,7 @@ export type Query = {
   playlist: PlaylistOutput;
   playlists: PlaylistsOutput;
   post: Post;
+  postKind: PostKind;
   posts: PaginatedPostsOutput;
   product: InspireProduct;
   productPrice: ProductPriceOutput;
@@ -3860,6 +4050,11 @@ export type QueryAccountsArgs = {
 };
 
 
+export type QueryActiveSubscriptonsArgs = {
+  filter?: Maybe<FilterFindAllOrders>;
+};
+
+
 export type QueryBillboardArgs = {
   id: Scalars['ID'];
 };
@@ -3881,7 +4076,19 @@ export type QueryCategoryArgs = {
 };
 
 
+export type QueryCategoryKindArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryChannelArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryChannelKindArgs = {
   id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 };
@@ -3930,27 +4137,6 @@ export type QueryCommentsArgs = {
 
 export type QueryCountOrdersArgs = {
   filter?: Maybe<FilterFindAllOrders>;
-};
-
-
-export type QueryCouponArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-};
-
-
-export type QueryCouponCodesArgs = {
-  params: FindAllCouponCodeParams;
-};
-
-
-export type QueryCouponsArgs = {
-  params?: Maybe<FindAllCouponsQueryParams>;
 };
 
 
@@ -4014,6 +4200,12 @@ export type QueryLiveEventArgs = {
 };
 
 
+export type QueryLiveEventKindArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryLiveEventsArgs = {
   filter?: Maybe<LiveEventFilter>;
 };
@@ -4054,6 +4246,11 @@ export type QueryOrganizationArgs = {
 };
 
 
+export type QueryOrganizationKindArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryOrganizationPublicSettingsArgs = {
   id: Scalars['ID'];
 };
@@ -4087,6 +4284,12 @@ export type QueryPlaylistsArgs = {
 
 
 export type QueryPostArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryPostKindArgs = {
   id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 };
@@ -4606,6 +4809,10 @@ export type TagsOutput = {
   total: Scalars['Float'];
 };
 
+export type UncancelSubscription = {
+  subscriptionId: Scalars['String'];
+};
+
 export type UpdateAccountGdprLgpdInput = {
   accepted: Scalars['Boolean'];
 };
@@ -4684,6 +4891,8 @@ export type UpdateCategoryInput = {
   name?: Maybe<Scalars['String']>;
   parentId?: Maybe<Scalars['ID']>;
   password?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   slug?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
@@ -4714,23 +4923,13 @@ export type UpdateComment = {
   description?: Maybe<Scalars['String']>;
 };
 
-export type UpdateCouponCodeInput = {
-  metadata?: Maybe<Array<InspireMetadataInput>>;
-};
-
-export type UpdateCouponInput = {
-  metadata?: Maybe<Array<InspireMetadataInput>>;
-  name: Scalars['String'];
-};
-
 export type UpdateCustomFieldInput = {
   fields: Array<CustomFieldInput>;
 };
 
 export type UpdateEmailTemplateDto = {
   name: Scalars['String'];
-  template?: Maybe<Scalars['String']>;
-  templates: Scalars['JSON'];
+  templates: Array<LocaleBody>;
 };
 
 export type UpdateEmbed = {
@@ -5018,6 +5217,8 @@ export type UpdateSubjectInput = {
 
 export type UpdateTagInput = {
   description?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   title?: Maybe<Scalars['String']>;
 };
 
@@ -5253,7 +5454,14 @@ export type ConfirmOrderMutationVariables = Exact<{
 }>;
 
 
-export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any> } };
+export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any>, invoices?: Maybe<Array<any>> } };
+
+export type OneTimePaymentMutationVariables = Exact<{
+  payload: ConfirmOrder;
+}>;
+
+
+export type OneTimePaymentMutation = { __typename?: 'Mutation', oneTimePayment: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any>, invoices?: Maybe<Array<any>> } };
 
 export type OrganizationPasswordCheckMutationVariables = Exact<{
   organizationId: Scalars['ID'];
@@ -5357,7 +5565,7 @@ export type CustomFieldsQuery = { __typename?: 'Query', customFields: Array<{ __
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> }, profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string>, is_admin?: Maybe<boolean>, is_super_user?: Maybe<boolean>, is_tenant_user?: Maybe<boolean> }, profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } } };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
@@ -5549,7 +5757,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, baseUrl?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type GetPostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5577,14 +5785,14 @@ export type GetPostsCardsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type GetPublicPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type SearchQueryVariables = Exact<{
   filters?: Maybe<SearchFilter>;
@@ -6437,6 +6645,7 @@ export const ConfirmOrderDocument = gql`
     id
     status
     subscription
+    invoices
   }
 }
     `;
@@ -6472,6 +6681,48 @@ export function useConfirmOrderMutation(baseOptions?: Apollo.MutationHookOptions
 export type ConfirmOrderMutationHookResult = ReturnType<typeof useConfirmOrderMutation>;
 export type ConfirmOrderMutationResult = Apollo.MutationResult<ConfirmOrderMutation>;
 export type ConfirmOrderMutationOptions = Apollo.BaseMutationOptions<ConfirmOrderMutation, ConfirmOrderMutationVariables>;
+export const OneTimePaymentDocument = gql`
+    mutation OneTimePayment($payload: ConfirmOrder!) {
+  oneTimePayment(payload: $payload) {
+    id
+    status
+    subscription
+    invoices
+  }
+}
+    `;
+export type OneTimePaymentMutationFn = Apollo.MutationFunction<OneTimePaymentMutation, OneTimePaymentMutationVariables>;
+export type OneTimePaymentComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<OneTimePaymentMutation, OneTimePaymentMutationVariables>, 'mutation'>;
+
+    export const OneTimePaymentComponent = (props: OneTimePaymentComponentProps) => (
+      <ApolloReactComponents.Mutation<OneTimePaymentMutation, OneTimePaymentMutationVariables> mutation={OneTimePaymentDocument} {...props} />
+    );
+    
+
+/**
+ * __useOneTimePaymentMutation__
+ *
+ * To run a mutation, you first call `useOneTimePaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOneTimePaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [oneTimePaymentMutation, { data, loading, error }] = useOneTimePaymentMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useOneTimePaymentMutation(baseOptions?: Apollo.MutationHookOptions<OneTimePaymentMutation, OneTimePaymentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OneTimePaymentMutation, OneTimePaymentMutationVariables>(OneTimePaymentDocument, options);
+      }
+export type OneTimePaymentMutationHookResult = ReturnType<typeof useOneTimePaymentMutation>;
+export type OneTimePaymentMutationResult = Apollo.MutationResult<OneTimePaymentMutation>;
+export type OneTimePaymentMutationOptions = Apollo.BaseMutationOptions<OneTimePaymentMutation, OneTimePaymentMutationVariables>;
 export const OrganizationPasswordCheckDocument = gql`
     mutation OrganizationPasswordCheck($organizationId: ID!, $password: String!) {
   organizationPasswordCheck(organizationId: $organizationId, password: $password) {
@@ -7087,6 +7338,9 @@ export const MeDocument = gql`
       first_name
       last_name
       username
+      is_admin
+      is_super_user
+      is_tenant_user
     }
     profile {
       id
@@ -8802,6 +9056,7 @@ export const GetPostDocument = gql`
         subtitles {
           id
           locale
+          baseUrl
           vttPath
           label
         }
@@ -9119,6 +9374,10 @@ export const GetPostsCardsDocument = gql`
           thumbnailPath
           baseUrl
         }
+        ... on MediaPhoto {
+          id
+          imgPath
+        }
       }
       type
     }
@@ -9188,6 +9447,10 @@ export const GetPublicPostsCardsDocument = gql`
           duration
           thumbnailPath
           baseUrl
+        }
+        ... on MediaPhoto {
+          id
+          imgPath
         }
       }
       type
