@@ -6,6 +6,8 @@ export type OrganizationFlags = {
   DFP_ACTIVE?: boolean
   DISPLAY_SIGNUP_BUTTON?: boolean
   FACEBOOK_PIXEL_CODE?: string
+  FACEBOOK_LOGIN?: boolean
+  GOOGLE_LOGIN?: boolean
   GDPR_URL?: string
   HEADER?: {
     TABS: TabFlags[]

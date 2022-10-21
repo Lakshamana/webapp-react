@@ -1,21 +1,18 @@
-import { Flex, Box } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { useFormik } from 'formik'
+import { Box, Flex } from '@chakra-ui/react'
 import {
-  useThemeStore,
-  useOrganizationStore,
-} from 'services/stores'
-import {
-  Button,
+  AlertComponent, Button,
   Input,
-  Link,
-  Text,
-  SocialSigninButton,
-  AlertComponent,
+  Link, SocialSigninButton, Text
 } from 'components'
+import { useFormik } from 'formik'
+import { useTranslation } from 'react-i18next'
+import {
+  useCustomizationStore,
+  useOrganizationStore, useThemeStore
+} from 'services/stores'
+import { colors, sizes } from 'styles'
 import { initialValues, validationSchema } from './settings'
 import { Props } from './types'
-import { sizes, colors } from 'styles'
 
 const SigninForm = ({
   handleFormSubmit,
@@ -27,6 +24,7 @@ const SigninForm = ({
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const { organization } = useOrganizationStore()
+  const { organizationConfig } = useCustomizationStore()
 
   const {
     values,
@@ -67,28 +65,40 @@ const SigninForm = ({
         {t('signin.subtitle')}
       </Text>
       <Flex gridGap={7} marginY={30} justifyContent={'center'}>
-        <SocialSigninButton
-          onClick={() => handleSocialSubmit('google')}
-          kind={'google'}
-        />
-        <SocialSigninButton
-          onClick={() => handleSocialSubmit('facebook')}
-          kind={'facebook'}
-        />
+        {
+          organizationConfig?.GOOGLE_LOGIN && (
+            <SocialSigninButton
+              onClick={() => handleSocialSubmit('google')}
+              kind={'google'}
+            />
+          )
+        }
+        {
+          organizationConfig?.FACEBOOK_LOGIN && (
+            <SocialSigninButton
+              onClick={() => handleSocialSubmit('facebook')}
+              kind={'facebook'}
+            />
+          )
+        }
         {/* <SocialSigninButton
           onClick={() => handleSocialSubmit('twitter')}
           kind={'twitter'}
         /> */}
       </Flex>
 
-      <Text
-        fontSize={16}
-        textAlign={'center'}
-        marginBottom={error ? 15 : 0}
-        color={colors.secondaryText[colorMode]}
-      >
-        {t('common.or')}
-      </Text>
+      {
+        (organizationConfig?.FACEBOOK_LOGIN || organizationConfig?.GOOGLE_LOGIN) && (
+          <Text
+            fontSize={16}
+            textAlign={'center'}
+            marginBottom={error ? 15 : 0}
+            color={colors.secondaryText[colorMode]}
+          >
+            {t('common.or')}
+          </Text>
+        )
+      }
 
       <Flex
         alignItems={'center'}
@@ -159,3 +169,4 @@ const SigninForm = ({
 }
 
 export { SigninForm }
+
