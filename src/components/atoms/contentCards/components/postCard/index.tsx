@@ -22,6 +22,8 @@ const PostCard = ({
   const { t } = useTranslation()
   const { activeChannelConfig } = useCustomizationStore()
 
+  const postDescription = props.description?.substring(0, 150)
+
   const RenderAddToMyListIcon = () => (
     <Box
       backgroundColor={colors.cardBg[colorMode]}
@@ -122,7 +124,7 @@ const PostCard = ({
               >
                 {stripHTML(props.title || '')}
               </Text>
-              {props.description && (
+              {postDescription && (
                 <Text
                   mt={1}
                   fontSize="0.7rem"
@@ -132,7 +134,7 @@ const PostCard = ({
                 >
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: stripHTMLExceptLineBreaks(props.description),
+                      __html: stripHTMLExceptLineBreaks(postDescription),
                     }}
                   />
                 </Text>
