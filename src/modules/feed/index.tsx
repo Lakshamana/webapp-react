@@ -56,6 +56,11 @@ const FeedPage = () => {
     }
   )
 
+  useEffect(() => {
+    if (activeChannel) resetFeed()
+    //eslint-disable-next-line
+  }, [activeChannel])
+
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
     { value: 'ASC', label: t('page.feed.search_options.old') },
@@ -138,7 +143,7 @@ const FeedPage = () => {
           dataLength={feedPosts?.rows.length}
           next={loadMoreFeedPosts}
           hasMore={feedPosts.hasNextPage}
-          scrollableTarget='scroll-master'
+          scrollableTarget="scroll-master"
           loader={
             <Box pt={5} textAlign={'center'}>
               <Spinner color={colors.brand.primary[colorMode]} />
@@ -171,4 +176,3 @@ const FeedPage = () => {
 }
 
 export { FeedPage }
-
