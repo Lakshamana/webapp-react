@@ -28,7 +28,7 @@ const PhotoPostCard = ({
     setIsPostPinned(props.isPinned || false)
   }, [props.isPinned])
 
-  //TODO: Remove logic from here!
+  //TODO: create hooke to pin/unpin post
   const [pinPost, { loading: loadingPinPost }] = useMutation(
     MUTATION_PIN_POST,
     {
@@ -37,7 +37,7 @@ const PhotoPostCard = ({
     }
   )
 
-  //TODO: remove logic from here!!
+  //TODO: create hooke to pin/unpin post
   const [unpinPost, { loading: loadingUnpinPost }] = useMutation(
     MUTATION_UNPIN_POST,
     {
