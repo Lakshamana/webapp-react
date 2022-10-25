@@ -25,6 +25,8 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
     )
   }
 
+  const channelImage = generateChannelImage()
+
   return (
     <Container alignItems="center">
       {activeChannel && (
@@ -34,7 +36,8 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
             height={isDesktop ? '45px' : '38px'}
             width={isDesktop ? '45px' : '38px'}
             borderRadius={'8px'}
-            src={generateChannelImage()}
+            {...(channelImage ? { background: 'transparent' } : {})}
+            src={channelImage}
           />
         </Container>
       )}
@@ -51,4 +54,3 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
 }
 
 export { ChannelSelected }
-
