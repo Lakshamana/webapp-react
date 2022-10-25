@@ -1,13 +1,13 @@
 import { VideoPlayer } from 'components'
 import { VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
 import { Post } from 'generated/graphql'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { getData } from 'services/storage'
 import { buildUrlFromPath } from 'utils/helperFunctions'
 import { AlertNextVideo } from './components/AlertNextVideo'
 import { Video } from './style'
 
-const VideoPost = ({ ...postData }: Post) => {
+const VideoPostComponent = ({ ...postData }: Post) => {
   const [mediaUrl, setMediaUrl] = useState<string>('')
   const definePlayerVolume = getData(VIDEO_VOLUME)
   const definePlayerIsMuted = getData(VIDEO_MUTED)
@@ -62,4 +62,4 @@ const VideoPost = ({ ...postData }: Post) => {
   )
 }
 
-export { VideoPost }
+export const VideoPost = memo(VideoPostComponent)
