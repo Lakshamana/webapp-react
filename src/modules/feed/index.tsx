@@ -29,7 +29,13 @@ const FeedPage = () => {
   const { setPageTitle } = useCommonStore()
   const lastPositionCard = useFeedStore((state) => state.lastPositionCard)
   const setLastPositionCard = useFeedStore((state) => state.setLastPositionCard)
-  const { feedPosts, setFeedPosts, resetFeed } = useFeedStore()
+  const {
+    feedPosts,
+    setFeedPosts,
+    resetFeed,
+    lastActiveChannel,
+    setLastActiveChannel,
+  } = useFeedStore()
 
   const [filterBy, setFilterBy] = useState<SortDirection>()
   const [isPositioned, setIsPositioned] = useState<boolean>(false)
@@ -39,6 +45,7 @@ const FeedPage = () => {
 
   const isAnonymousAllowed =
     isAnonymousAccess && activeChannel?.kind === Kinds.Public
+
   const getSortByFilter = () =>
     filterBy === 'ASC' ? 'publishedAt.asc' : 'publishedAt.desc'
 
@@ -53,13 +60,9 @@ const FeedPage = () => {
           rows: [...(previousRows || []), ...posts.rows],
         })
       },
+      fetchPolicy: 'cache-and-network',
     }
   )
-
-  useEffect(() => {
-    if (activeChannel) resetFeed()
-    //eslint-disable-next-line
-  }, [activeChannel])
 
   const filterList = [
     { value: 'DESC', label: t('page.feed.search_options.recent') },
@@ -77,20 +80,31 @@ const FeedPage = () => {
     setLastPositionCard(positionY)
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
+  useEffect(() => {
+    setPageTitle(t('header.tabs.feed'))
+
+    return () => {
+      setLastActiveChannel(activeChannel?.slug || '')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!!feedPosts?.rows.length && !isPositioned) {
       setIsPositioned(true)
       window.scrollTo(0, lastPositionCard)
     }
+
+    if (!feedPosts?.rows.length && lastActiveChannel !== activeChannel?.slug)
+      getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPosts])
 
   useEffect(() => {
     if (!feedPosts?.rows.length)
       getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+    if (lastActiveChannel !== activeChannel?.slug) resetFeed()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
