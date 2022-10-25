@@ -55,8 +55,9 @@ const PostCard = ({
   )
 
   const getIconByType = {
-    AUDIO: 'cil:audio-spectrum',
-    TEXT: 'bi:file-earmark-text',
+    AUDIO: 'mdi:waveform',
+    TEXT: 'mdi:card-text',
+    PHOTO: 'mdi:image',
     VIDEO: 'mdi:play-circle-outline',
     ONDEMAND: 'mdi:play-circle-outline',
   }
@@ -80,7 +81,8 @@ const PostCard = ({
             />
           </BlockedContent>
         )}
-        {!isPostBlocked && props.type !== 'TEXT' && props.hover && (
+
+        {!isPostBlocked && props.hover && (
           <PlayContent>
             <Icon
               width={50}
@@ -90,7 +92,7 @@ const PostCard = ({
           </PlayContent>
         )}
 
-        {!isPostBlocked && props.type === 'TEXT' && !props.thumbnail && (
+        {!isPostBlocked && !props.thumbnail && (
           <PlayContent>
             <Icon
               width={35}
