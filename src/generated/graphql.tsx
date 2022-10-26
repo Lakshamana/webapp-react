@@ -298,6 +298,7 @@ export type CancelNotificationOutput = {
 };
 
 export type CancelSubscription = {
+  pauseDuration?: Maybe<Scalars['String']>;
   subscriptionId: Scalars['String'];
 };
 
@@ -979,6 +980,11 @@ export type CustomizationMediaOutput = {
   upload?: Maybe<Scalars['ID']>;
 };
 
+export type DefaultCreditCardPaymentMethod = {
+  __typename?: 'DefaultCreditCardPaymentMethod';
+  payment?: Maybe<Scalars['JSONObject']>;
+};
+
 export enum DelayedOptionEnum {
   LastActive = 'LAST_ACTIVE',
   Timezone = 'TIMEZONE'
@@ -1441,6 +1447,7 @@ export type InviteTeamMemberInput = {
 };
 
 export enum Kinds {
+  Auto = 'AUTO',
   Exclusive = 'EXCLUSIVE',
   Geolocked = 'GEOLOCKED',
   Paywall = 'PAYWALL',
@@ -2177,6 +2184,7 @@ export type Mutation = {
   liveEventPasswordCheck: LiveEventPasswordCheck;
   oneTimePayment: Order;
   organizationPasswordCheck: OrganizationPasswordCheck;
+  pauseSubscription: Order;
   pinCategory: AccountPinnedCategory;
   pinChannel: AccountPinnedChannel;
   pinPost: AccountPinnedPost;
@@ -2201,6 +2209,7 @@ export type Mutation = {
   removeTag: TagOutput;
   resendActivateAccount: AccountActivated;
   resetPassword: EmailSent;
+  restartSubscription: Order;
   searchUpdateChannel: SearchUpdateChannel;
   sendEmail: ResponseEmailSendedDto;
   signIn: SingIn;
@@ -2225,6 +2234,7 @@ export type Mutation = {
   updateCategory: Category;
   updateChannel: Channel;
   updateComment: Comment;
+  updateCreditCardPaymentMethod: DefaultCreditCardPaymentMethod;
   updateCustomField: ResponseCustomFieldsOutput;
   updateEmailTemplate: EmailTemplate;
   updateEmbed: Embed;
@@ -2663,6 +2673,11 @@ export type MutationOrganizationPasswordCheckArgs = {
 };
 
 
+export type MutationPauseSubscriptionArgs = {
+  payload: CancelSubscription;
+};
+
+
 export type MutationPinCategoryArgs = {
   payload: CreateAccountPinnnedCategory;
 };
@@ -2771,6 +2786,11 @@ export type MutationResendActivateAccountArgs = {
 
 export type MutationResetPasswordArgs = {
   payload: ForgotPassword;
+};
+
+
+export type MutationRestartSubscriptionArgs = {
+  payload: CancelSubscription;
 };
 
 
@@ -2891,6 +2911,12 @@ export type MutationUpdateChannelArgs = {
 export type MutationUpdateCommentArgs = {
   id: Scalars['String'];
   payload: UpdateComment;
+};
+
+
+export type MutationUpdateCreditCardPaymentMethodArgs = {
+  id: Scalars['String'];
+  payload: UpdateCreditCardPaymentMethod;
 };
 
 
@@ -4923,6 +4949,24 @@ export type UpdateComment = {
   description?: Maybe<Scalars['String']>;
 };
 
+export type UpdateCreditCardPaymentMethod = {
+  billingAddress: BillingAddressInput;
+  /** the user card brand */
+  cardBrand?: Maybe<Scalars['String']>;
+  /** the user name */
+  cardHolderName?: Maybe<Scalars['String']>;
+  /** the country id from country code from inspire api */
+  country?: Maybe<Scalars['String']>;
+  /** Customer CPF */
+  cpf?: Maybe<Scalars['String']>;
+  /** the user card expiration date */
+  expirationDate?: Maybe<Scalars['String']>;
+  /** the last 4 values of user card */
+  lastDigits?: Maybe<Scalars['String']>;
+  /** the token used on payment gateway */
+  paymentGatewayToken?: Maybe<Scalars['String']>;
+};
+
 export type UpdateCustomFieldInput = {
   fields: Array<CustomFieldInput>;
 };
@@ -5793,6 +5837,13 @@ export type GetPublicPostsCardsQueryVariables = Exact<{
 
 
 export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+
+export type GetProductQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetProductQuery = { __typename?: 'Query', product: { __typename?: 'InspireProduct', description?: Maybe<string>, imageUrl: string, isActive?: Maybe<boolean>, name?: Maybe<string>, unitLabel?: Maybe<string>, metadata?: Maybe<Array<{ __typename?: 'InspireMetadata', key?: Maybe<string>, value?: Maybe<string> }>>, productPrices?: Maybe<Array<{ __typename?: 'InspireProductPrices', id?: Maybe<string>, internalDescription?: Maybe<string>, unitPrice?: Maybe<number>, billingTypes?: Maybe<{ __typename?: 'InspireBillingTypes', id?: Maybe<string>, name?: Maybe<string> }>, currency?: Maybe<{ __typename?: 'InspireCurrency', isoCode?: Maybe<string> }>, billingPeriods?: Maybe<{ __typename?: 'InspireBillingPeriods', id?: Maybe<string>, name?: Maybe<string> }>, recurringUsageTypes?: Maybe<{ __typename?: 'InspireRecurringUsageTypes', id?: Maybe<string>, name?: Maybe<string> }> }>> } };
 
 export type SearchQueryVariables = Exact<{
   filters?: Maybe<SearchFilter>;
@@ -9492,6 +9543,75 @@ export function useGetPublicPostsCardsLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetPublicPostsCardsQueryHookResult = ReturnType<typeof useGetPublicPostsCardsQuery>;
 export type GetPublicPostsCardsLazyQueryHookResult = ReturnType<typeof useGetPublicPostsCardsLazyQuery>;
 export type GetPublicPostsCardsQueryResult = Apollo.QueryResult<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>;
+export const GetProductDocument = gql`
+    query GetProduct($id: String!) {
+  product(id: $id) {
+    description
+    imageUrl
+    isActive
+    metadata {
+      key
+      value
+    }
+    name
+    productPrices {
+      id
+      billingTypes {
+        id
+        name
+      }
+      currency {
+        isoCode
+      }
+      billingPeriods {
+        id
+        name
+      }
+      recurringUsageTypes {
+        id
+        name
+      }
+      internalDescription
+      unitPrice
+    }
+    unitLabel
+  }
+}
+    `;
+export type GetProductComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetProductQuery, GetProductQueryVariables>, 'query'> & ({ variables: GetProductQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetProductComponent = (props: GetProductComponentProps) => (
+      <ApolloReactComponents.Query<GetProductQuery, GetProductQueryVariables> query={GetProductDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetProductQuery__
+ *
+ * To run a query within a React component, call `useGetProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProductQuery(baseOptions: Apollo.QueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+      }
+export function useGetProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+        }
+export type GetProductQueryHookResult = ReturnType<typeof useGetProductQuery>;
+export type GetProductLazyQueryHookResult = ReturnType<typeof useGetProductLazyQuery>;
+export type GetProductQueryResult = Apollo.QueryResult<GetProductQuery, GetProductQueryVariables>;
 export const SearchDocument = gql`
     query Search($filters: SearchFilter) {
   search(filters: $filters) {
