@@ -11,13 +11,15 @@ export enum Steps {
 }
 
 export interface CheckoutFlowProps {
-  products: Product[]
+  products?: Product[]
+  product?: Product
+  simplified?: boolean
   accessGranted?: () => void
   cancel?: () => void
 }
 
 export interface SelectProductProps extends CustomColors {
-  products: Product[]
+  products?: Product[]
   setSelectedProduct: (product: Product) => void
 }
 
