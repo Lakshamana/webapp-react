@@ -1,7 +1,7 @@
 import { Box, Image } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Post } from 'generated/graphql'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import { useThemeStore } from 'services/stores'
 import { colors } from 'styles'
 

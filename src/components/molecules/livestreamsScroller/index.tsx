@@ -1,7 +1,7 @@
 import { CardsScroller, LivestreamPostCard, SkeletonScroller } from 'components'
 import { compareAsc, parseISO } from 'date-fns'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
 import {

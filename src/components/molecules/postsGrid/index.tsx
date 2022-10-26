@@ -7,8 +7,8 @@ import {
   VideoPostCard
 } from 'components'
 import { Post, PostType } from 'generated/graphql'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore, useThemeStore } from 'services/stores'
 import { breakpoints, colors, sizes } from 'styles'
 import { GeneralPostCardProps, PostsGridProps } from 'types/posts'

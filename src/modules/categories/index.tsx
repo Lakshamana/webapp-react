@@ -20,7 +20,7 @@ import {
 
 import { Container, EmptyState, Skeleton } from 'components'
 import { BillboardScroller, CategoriesScroller } from 'components/molecules'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { colors, sizes } from 'styles'
 import {
   categoriesWithChildrenFilter,

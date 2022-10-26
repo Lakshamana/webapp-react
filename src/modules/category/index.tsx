@@ -12,6 +12,7 @@ import {
 } from 'components'
 import { VerifyContentKind } from 'components/organisms'
 import { PostType } from 'generated/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -20,7 +21,6 @@ import {
   MUTATION_UNPIN_CATEGORY,
   QUERY_CATEGORY
 } from 'services/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useThemeStore } from 'services/stores'
 import { colors, sizes } from 'styles'
 import { HeroBannerProps } from 'types/common'

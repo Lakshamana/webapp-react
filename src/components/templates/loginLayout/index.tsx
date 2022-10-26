@@ -1,8 +1,8 @@
 import { ExternalFooter, ExternalHeader } from 'components'
-import { ChildContainer, LayoutContainer } from './style'
-import { Props, defaultProps } from './types'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useCustomizationStore } from 'services/stores'
+import { ChildContainer, LayoutContainer } from './style'
+import { defaultProps, Props } from './types'
 
 const LoginLayout = ({
   children,

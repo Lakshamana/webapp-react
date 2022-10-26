@@ -12,6 +12,7 @@ import {
   PaginatedPostsOutput,
   Status
 } from 'generated/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -21,7 +22,6 @@ import {
   QUERY_PUBLIC_LIVE_EVENTS,
   QUERY_PUBLIC_POSTS_CARDS
 } from 'services/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
   useAuthStore,
   useChannelsStore,

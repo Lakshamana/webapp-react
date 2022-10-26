@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Avatar, Container } from 'components'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { breakpoints, colors } from 'styles'
 import { IconContainer } from './styles'
