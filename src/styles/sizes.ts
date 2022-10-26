@@ -4,6 +4,7 @@ export const sizes = {
   footerDesktopHeight: "90px",
   footerMobileHeight: "210px",
   loginCardWidth: "556px",
+  checkoutLoginCardWidth: "500px",
   loginButtonWidth: "267px",
   paddingSm: "16px",
   paddingMd: "32px",

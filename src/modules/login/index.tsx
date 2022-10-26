@@ -24,7 +24,12 @@ import { sendAuthReport } from 'utils/analytics'
 import { Container } from './styles'
 import { SignInSteps } from './types'
 
-const LoginPage = () => {
+type Props = {
+  isCheckoutLogin?: boolean
+  userIsLogged: () => void
+}
+
+const LoginPage = ({ isCheckoutLogin, userIsLogged }: Props) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { updateAccount } = useAuth()
@@ -67,7 +72,7 @@ const LoginPage = () => {
         firebaseToken: signIn.token.firebaseToken,
         account: signIn.account,
       })
-      history.push('/channels')
+      isCheckoutLogin ? userIsLogged() : history.push('/channels')
     },
     onError: ({ message }) => setError(errorMessage(message)),
   })
@@ -86,7 +91,7 @@ const LoginPage = () => {
           setAccount(result.socialSignIn.account.id)
           setIsSocialSignin(true)
         } else {
-          history.push('/channels')
+          isCheckoutLogin ? userIsLogged() : history.push('/channels')
         }
       },
       onError: ({ message }) => setError(errorMessage(message)),
@@ -144,11 +149,10 @@ const LoginPage = () => {
       case 'Login':
         return (
           <SigninForm
-            handleFormSubmit={handleFormSubmit}
             handleSocialSubmit={handleSocialSignIn}
             dispatchError={() => setError('')}
             isLoading={loading || SocialLoading}
-            error={error}
+            {...{ error, isCheckoutLogin, handleFormSubmit }}
           />
         )
       case 'LGPD':
@@ -165,11 +169,15 @@ const LoginPage = () => {
   }
 
   return (
-    <Container width={1} paddingY={[0, 40]}>
+    <Container width={1} pt={isCheckoutLogin ? [0, 30] : [0, 40]} pb={isCheckoutLogin ? 20 : [0, 40]}>
       <Card
+        removeShadow={isCheckoutLogin}
         paddingX={[30, 60]}
-        paddingY={[40, 40]}
-        width={[1, sizes.loginCardWidth]}
+        paddingY={isCheckoutLogin ? [] : [40, 40]}
+        width={[
+          1,
+          isCheckoutLogin ? sizes.checkoutLoginCardWidth : sizes.loginCardWidth,
+        ]}
       >
         {renderStep()}
       </Card>

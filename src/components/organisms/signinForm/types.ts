@@ -6,5 +6,6 @@ export interface Props {
   handleSocialSubmit: (kind: SocialType) => void
   dispatchError: () => void
   isLoading: boolean
+  isCheckoutLogin?: boolean
   error: string
 }

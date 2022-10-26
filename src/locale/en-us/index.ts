@@ -382,8 +382,8 @@ const EN_US = {
           processing_your_payment: 'processing your payment...'
         },
         login: {
-          title: 'Payment',
-          subtitle: 'Please complete your purchase and enjoy your content',
+          title: 'Create your account',
+          subtitle: 'Please register or login to complete your purchase and start enjoy your content!',
           continue_with: 'Continue with',
           or: 'or',
           input_label_fullname: 'Full Name',
@@ -392,6 +392,10 @@ const EN_US = {
             'By signing up, I agree to the {{org}} Privacy and Policy of Term of Service.',
           signup_btn: 'Sign Up',
           already_have_account: 'Already have an account? Log in here',
+        },
+        payment: {
+          title: 'Hello {{user}}! Welcome to {{org}}.',
+          description: 'Complete your purchase to enjoy all the content of {{product}}',
         },
         more_info: {
           title: 'Custom Field',

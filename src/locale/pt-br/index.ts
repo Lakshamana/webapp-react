@@ -383,8 +383,8 @@ const PT_BR = {
         processing_your_payment: 'processando o seu pagamento...'
       },
         login: {
-          title: 'Pagamento',
-          subtitle: 'Por favor, complete sua compra e aproveite seu conteúdo',
+          title: 'Crie a sua conta',
+          subtitle: 'Por favor, cadastre-se ou faça o login para completar sua compra e aproveitar o seu conteúdo!',
           continue_with: 'Continue com',
           or: 'ou',
           input_label_fullname: 'Nome Completo',
@@ -393,6 +393,10 @@ const PT_BR = {
             'Ao se inscrever, concordo com a Política de Privacidade e Termos de Serviço do FanHero.',
           signup_btn: 'inscrever-se',
           already_have_account: 'já tem uma conta? Entre aqui',
+        },
+        payment: {
+          title: 'Olá, {{user}}! Bem-vindo(a) à {{org}}.',
+          description: 'Finalize o seu pagamento para aproveitar todo o conteúdo de {{product}}',
         },
         more_info: {
           title: 'Campo customizado',

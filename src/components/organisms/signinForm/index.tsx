@@ -1,15 +1,15 @@
 import { Box, Flex } from '@chakra-ui/react'
 import {
-  AlertComponent, Button,
+  AlertComponent,
+  Button,
   Input,
-  Link, SocialSigninButton, Text
+  Link,
+  SocialSigninButton,
+  Text
 } from 'components'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
-import {
-  useCustomizationStore,
-  useOrganizationStore, useThemeStore
-} from 'services/stores'
+import { useCustomizationStore, useOrganizationStore, useThemeStore } from 'services/stores'
 import { colors, sizes } from 'styles'
 import { initialValues, validationSchema } from './settings'
 import { Props } from './types'
@@ -20,6 +20,7 @@ const SigninForm = ({
   dispatchError,
   isLoading,
   error,
+  isCheckoutLogin,
 }: Props) => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
@@ -152,17 +153,19 @@ const SigninForm = ({
             fontWeight={'bolder'}
           />
         </Box>
-        <Flex justifyContent={'center'} flexWrap={'wrap'} mt={5}>
-          <Text color={colors.generalText[colorMode]} paddingRight={1}>
-            {t('signin.label.dont_have_account')}
-          </Text>
-          <Link
-            to={'/signup'}
-            fontWeight={'bolder'}
-            textTransform={'uppercase'}
-            label={t('signin.actions.signup_here')}
-          />
-        </Flex>
+        {!isCheckoutLogin && (
+          <Flex justifyContent={'center'} flexWrap={'wrap'} mt={5}>
+            <Text color={colors.generalText[colorMode]} paddingRight={1}>
+              {t('signin.label.dont_have_account')}
+            </Text>
+            <Link
+              to={'/signup'}
+              fontWeight={'bolder'}
+              textTransform={'uppercase'}
+              label={t('signin.actions.signup_here')}
+            />
+          </Flex>
+        )}
       </Flex>
     </>
   )
