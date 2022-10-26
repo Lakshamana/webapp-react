@@ -1,0 +1,9 @@
+export enum Steps {
+  LOGIN,
+  REGISTER,
+  SELECT_PRICE,
+  PAYMENT,
+  SUCCESS,
+  UNPAID,
+  FAILED,
+}
