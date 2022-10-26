@@ -25,7 +25,12 @@ import {
 } from './components'
 import { SignUpSteps } from './types'
 
-const SignupForm = () => {
+type Props = {
+  isCheckoutSignup?: boolean
+  userIsRegistered?: () => void
+}
+
+const SignupForm = ({ isCheckoutSignup, userIsRegistered }: Props) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { updateAccount } = useAuth()
