@@ -158,6 +158,16 @@ export type AddOrderCustomFields = {
   fullName: Scalars['String'];
 };
 
+export type AddOverrideOrder = {
+  account?: Maybe<Scalars['String']>;
+  accountEmail?: Maybe<Scalars['String']>;
+  accountId?: Maybe<Scalars['String']>;
+  amount: Scalars['Float'];
+  product: Scalars['String'];
+  productPrice: Scalars['String'];
+  status: Scalars['String'];
+};
+
 export type AddPendingOrder = {
   product: Scalars['String'];
 };
@@ -2184,7 +2194,7 @@ export type Mutation = {
   liveEventPasswordCheck: LiveEventPasswordCheck;
   oneTimePayment: Order;
   organizationPasswordCheck: OrganizationPasswordCheck;
-  pauseSubscription: Order;
+  overrideOrder: Order;
   pinCategory: AccountPinnedCategory;
   pinChannel: AccountPinnedChannel;
   pinPost: AccountPinnedPost;
@@ -2673,8 +2683,8 @@ export type MutationOrganizationPasswordCheckArgs = {
 };
 
 
-export type MutationPauseSubscriptionArgs = {
-  payload: CancelSubscription;
+export type MutationOverrideOrderArgs = {
+  payload: AddOverrideOrder;
 };
 
 
@@ -3234,6 +3244,7 @@ export type Order = {
 
 export enum OrderStatus {
   Active = 'ACTIVE',
+  Canceled = 'CANCELED',
   Failed = 'FAILED',
   Pending = 'PENDING',
   Unpaid = 'UNPAID'
@@ -5653,20 +5664,27 @@ export type GetPublicCategoriesCardsQueryVariables = Exact<{
 
 export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
-export type GetCategoryQueryVariables = Exact<{
+export type CategoryQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
   postFilter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
 
-export type GetCategoryKindQueryVariables = Exact<{
+export type CategoryKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string, entitlements: Array<any> } };
+export type CategoryKindQuery = { __typename?: 'Query', categoryKind: { __typename?: 'CategoryKind', id: string, kind: Kinds, geoFence?: Maybe<any>, name: string, isKindAuto: boolean } };
+
+export type CategoryEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CategoryEntitlementsQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, entitlements: Array<any> } };
 
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5682,20 +5700,20 @@ export type PublicChannelQueryVariables = Exact<{
 
 export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string } };
 
-export type GetChannelKindQueryVariables = Exact<{
+export type ChannelKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetChannelKindQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, access: AccessKinds, kind?: Maybe<Kinds> } };
+export type ChannelKindQuery = { __typename?: 'Query', channelKind: { __typename?: 'ChannelKind', id: string, kind?: Maybe<Kinds>, slug?: Maybe<string>, geofence?: Maybe<any>, name: string } };
 
-export type GetChannelEntitlementsQueryVariables = Exact<{
+export type ChannelEntitlementsQueryVariables = Exact<{
   id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetChannelEntitlementsQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', slug?: Maybe<string>, entitlements?: Maybe<Array<any>> } | { __typename?: 'GeolockedChannel' } };
+export type ChannelEntitlementsQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', id: string, access: AccessKinds, entitlements?: Maybe<Array<any>> } | { __typename?: 'GeolockedChannel' } };
 
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
@@ -5725,19 +5743,26 @@ export type EnvConfigQueryVariables = Exact<{
 
 export type EnvConfigQuery = { __typename?: 'Query', envConfig: { __typename?: 'EncryptedEnvConfig', result: string } };
 
-export type GetLiveEventQueryVariables = Exact<{
+export type LiveEventQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
+export type LiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
 
-export type GetLiveEventKindQueryVariables = Exact<{
+export type LiveEventKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetLiveEventKindQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, title: string, access?: Maybe<AccessKinds>, kind: Kinds, entitlements: Array<any> } };
+export type LiveEventKindQuery = { __typename?: 'Query', liveEventKind: { __typename?: 'LiveEventKind', id: string, kind: Kinds, geoFence?: Maybe<any>, slug?: Maybe<string>, title: string } };
+
+export type LiveEventEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type LiveEventEntitlementsQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, entitlements: Array<any> } };
 
 export type GetLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
@@ -5774,19 +5799,19 @@ export type GetOrderResultQueryVariables = Exact<{
 
 export type GetOrderResultQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: string, account?: Maybe<string>, status?: Maybe<OrderStatus> } };
 
-export type GetOrganizationKindQueryVariables = Exact<{
+export type OrganizationKindQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetOrganizationKindQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, access: AccessKinds, kind?: Maybe<Kinds> } };
+export type OrganizationKindQuery = { __typename?: 'Query', organizationKind: { __typename?: 'OrganizationKind', id: string, kind?: Maybe<Kinds> } };
 
-export type GetOrganizationEntitlementsQueryVariables = Exact<{
+export type OrganizationEntitlementsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetOrganizationEntitlementsQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, entitlements: Array<any> } };
+export type OrganizationEntitlementsQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, entitlements: Array<any>, access: AccessKinds } };
 
 export type GetPlaylistQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -5796,19 +5821,26 @@ export type GetPlaylistQueryVariables = Exact<{
 
 export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } } };
 
-export type GetPostQueryVariables = Exact<{
+export type PostQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, baseUrl?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, baseUrl?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
-export type GetPostKindQueryVariables = Exact<{
+export type PostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetPostKindQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, title: string, access: string, kind: string, entitlements: Array<any> } };
+export type PostKindQuery = { __typename?: 'Query', postKind: { __typename?: 'PostKind', id: string, kind: string, title: string, geofence?: Maybe<any>, slug?: Maybe<string> } };
+
+export type PostEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type PostEntitlementsQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, entitlements: Array<any> } };
 
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
@@ -7922,8 +7954,8 @@ export function useGetPublicCategoriesCardsLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetPublicCategoriesCardsQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsQuery>;
 export type GetPublicCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsLazyQuery>;
 export type GetPublicCategoriesCardsQueryResult = Apollo.QueryResult<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>;
-export const GetCategoryDocument = gql`
-    query GetCategory($slug: String, $postFilter: PostFilter) {
+export const CategoryDocument = gql`
+    query Category($slug: String, $postFilter: PostFilter) {
   category(slug: $slug) {
     id
     access
@@ -8003,86 +8035,130 @@ export const GetCategoryDocument = gql`
   }
 }
     `;
-export type GetCategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryQuery, GetCategoryQueryVariables>, 'query'>;
+export type CategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryQuery, CategoryQueryVariables>, 'query'>;
 
-    export const GetCategoryComponent = (props: GetCategoryComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryQuery, GetCategoryQueryVariables> query={GetCategoryDocument} {...props} />
+    export const CategoryComponent = (props: CategoryComponentProps) => (
+      <ApolloReactComponents.Query<CategoryQuery, CategoryQueryVariables> query={CategoryDocument} {...props} />
     );
     
 
 /**
- * __useGetCategoryQuery__
+ * __useCategoryQuery__
  *
- * To run a query within a React component, call `useGetCategoryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryQuery({
+ * const { data, loading, error } = useCategoryQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *      postFilter: // value for 'postFilter'
  *   },
  * });
  */
-export function useGetCategoryQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+export function useCategoryQuery(baseOptions?: Apollo.QueryHookOptions<CategoryQuery, CategoryQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+        return Apollo.useQuery<CategoryQuery, CategoryQueryVariables>(CategoryDocument, options);
       }
-export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+export function useCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryQuery, CategoryQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+          return Apollo.useLazyQuery<CategoryQuery, CategoryQueryVariables>(CategoryDocument, options);
         }
-export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
-export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
-export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
-export const GetCategoryKindDocument = gql`
-    query GetCategoryKind($slug: String) {
-  category(slug: $slug) {
+export type CategoryQueryHookResult = ReturnType<typeof useCategoryQuery>;
+export type CategoryLazyQueryHookResult = ReturnType<typeof useCategoryLazyQuery>;
+export type CategoryQueryResult = Apollo.QueryResult<CategoryQuery, CategoryQueryVariables>;
+export const CategoryKindDocument = gql`
+    query CategoryKind($slug: String) {
+  categoryKind(slug: $slug) {
     id
-    access
     kind
+    geoFence
     name
-    entitlements
+    isKindAuto
   }
 }
     `;
-export type GetCategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>, 'query'>;
+export type CategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryKindQuery, CategoryKindQueryVariables>, 'query'>;
 
-    export const GetCategoryKindComponent = (props: GetCategoryKindComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryKindQuery, GetCategoryKindQueryVariables> query={GetCategoryKindDocument} {...props} />
+    export const CategoryKindComponent = (props: CategoryKindComponentProps) => (
+      <ApolloReactComponents.Query<CategoryKindQuery, CategoryKindQueryVariables> query={CategoryKindDocument} {...props} />
     );
     
 
 /**
- * __useGetCategoryKindQuery__
+ * __useCategoryKindQuery__
  *
- * To run a query within a React component, call `useGetCategoryKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCategoryKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryKindQuery({
+ * const { data, loading, error } = useCategoryKindQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+export function useCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<CategoryKindQuery, CategoryKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+        return Apollo.useQuery<CategoryKindQuery, CategoryKindQueryVariables>(CategoryKindDocument, options);
       }
-export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+export function useCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryKindQuery, CategoryKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+          return Apollo.useLazyQuery<CategoryKindQuery, CategoryKindQueryVariables>(CategoryKindDocument, options);
         }
-export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
-export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
-export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
+export type CategoryKindQueryHookResult = ReturnType<typeof useCategoryKindQuery>;
+export type CategoryKindLazyQueryHookResult = ReturnType<typeof useCategoryKindLazyQuery>;
+export type CategoryKindQueryResult = Apollo.QueryResult<CategoryKindQuery, CategoryKindQueryVariables>;
+export const CategoryEntitlementsDocument = gql`
+    query CategoryEntitlements($slug: String) {
+  category(slug: $slug) {
+    id
+    access
+    slug
+    entitlements
+  }
+}
+    `;
+export type CategoryEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>, 'query'>;
+
+    export const CategoryEntitlementsComponent = (props: CategoryEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables> query={CategoryEntitlementsDocument} {...props} />
+    );
+    
+
+/**
+ * __useCategoryEntitlementsQuery__
+ *
+ * To run a query within a React component, call `useCategoryEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoryEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCategoryEntitlementsQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useCategoryEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>(CategoryEntitlementsDocument, options);
+      }
+export function useCategoryEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>(CategoryEntitlementsDocument, options);
+        }
+export type CategoryEntitlementsQueryHookResult = ReturnType<typeof useCategoryEntitlementsQuery>;
+export type CategoryEntitlementsLazyQueryHookResult = ReturnType<typeof useCategoryEntitlementsLazyQuery>;
+export type CategoryEntitlementsQueryResult = Apollo.QueryResult<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>;
 export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
@@ -8184,105 +8260,97 @@ export function usePublicChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type PublicChannelQueryHookResult = ReturnType<typeof usePublicChannelQuery>;
 export type PublicChannelLazyQueryHookResult = ReturnType<typeof usePublicChannelLazyQuery>;
 export type PublicChannelQueryResult = Apollo.QueryResult<PublicChannelQuery, PublicChannelQueryVariables>;
-export const GetChannelKindDocument = gql`
-    query GetChannelKind($slug: String) {
-  channel(slug: $slug) {
-    ... on AvailableChannel {
-      access
-      id
-      kind
-      name
-      __typename
-    }
-    ... on GeolockedChannel {
-      id
-      name
-      access
-      kind
-      __typename
-    }
+export const ChannelKindDocument = gql`
+    query ChannelKind($slug: String) {
+  channelKind(slug: $slug) {
+    id
+    kind
+    slug
+    geofence
+    name
   }
 }
     `;
-export type GetChannelKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelKindQuery, GetChannelKindQueryVariables>, 'query'>;
+export type ChannelKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelKindQuery, ChannelKindQueryVariables>, 'query'>;
 
-    export const GetChannelKindComponent = (props: GetChannelKindComponentProps) => (
-      <ApolloReactComponents.Query<GetChannelKindQuery, GetChannelKindQueryVariables> query={GetChannelKindDocument} {...props} />
+    export const ChannelKindComponent = (props: ChannelKindComponentProps) => (
+      <ApolloReactComponents.Query<ChannelKindQuery, ChannelKindQueryVariables> query={ChannelKindDocument} {...props} />
     );
     
 
 /**
- * __useGetChannelKindQuery__
+ * __useChannelKindQuery__
  *
- * To run a query within a React component, call `useGetChannelKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useChannelKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelKindQuery({
+ * const { data, loading, error } = useChannelKindQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetChannelKindQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+export function useChannelKindQuery(baseOptions?: Apollo.QueryHookOptions<ChannelKindQuery, ChannelKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+        return Apollo.useQuery<ChannelKindQuery, ChannelKindQueryVariables>(ChannelKindDocument, options);
       }
-export function useGetChannelKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+export function useChannelKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelKindQuery, ChannelKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+          return Apollo.useLazyQuery<ChannelKindQuery, ChannelKindQueryVariables>(ChannelKindDocument, options);
         }
-export type GetChannelKindQueryHookResult = ReturnType<typeof useGetChannelKindQuery>;
-export type GetChannelKindLazyQueryHookResult = ReturnType<typeof useGetChannelKindLazyQuery>;
-export type GetChannelKindQueryResult = Apollo.QueryResult<GetChannelKindQuery, GetChannelKindQueryVariables>;
-export const GetChannelEntitlementsDocument = gql`
-    query GetChannelEntitlements($id: ID, $slug: String) {
+export type ChannelKindQueryHookResult = ReturnType<typeof useChannelKindQuery>;
+export type ChannelKindLazyQueryHookResult = ReturnType<typeof useChannelKindLazyQuery>;
+export type ChannelKindQueryResult = Apollo.QueryResult<ChannelKindQuery, ChannelKindQueryVariables>;
+export const ChannelEntitlementsDocument = gql`
+    query ChannelEntitlements($id: ID, $slug: String) {
   channel(id: $id, slug: $slug) {
     ... on AvailableChannel {
-      slug
+      id
+      access
       entitlements
     }
   }
 }
     `;
-export type GetChannelEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>, 'query'>;
+export type ChannelEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>, 'query'>;
 
-    export const GetChannelEntitlementsComponent = (props: GetChannelEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables> query={GetChannelEntitlementsDocument} {...props} />
+    export const ChannelEntitlementsComponent = (props: ChannelEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables> query={ChannelEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetChannelEntitlementsQuery__
+ * __useChannelEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetChannelEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useChannelEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelEntitlementsQuery({
+ * const { data, loading, error } = useChannelEntitlementsQuery({
  *   variables: {
  *      id: // value for 'id'
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetChannelEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+export function useChannelEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+        return Apollo.useQuery<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>(ChannelEntitlementsDocument, options);
       }
-export function useGetChannelEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+export function useChannelEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+          return Apollo.useLazyQuery<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>(ChannelEntitlementsDocument, options);
         }
-export type GetChannelEntitlementsQueryHookResult = ReturnType<typeof useGetChannelEntitlementsQuery>;
-export type GetChannelEntitlementsLazyQueryHookResult = ReturnType<typeof useGetChannelEntitlementsLazyQuery>;
-export type GetChannelEntitlementsQueryResult = Apollo.QueryResult<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>;
+export type ChannelEntitlementsQueryHookResult = ReturnType<typeof useChannelEntitlementsQuery>;
+export type ChannelEntitlementsLazyQueryHookResult = ReturnType<typeof useChannelEntitlementsLazyQuery>;
+export type ChannelEntitlementsQueryResult = Apollo.QueryResult<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFindAllFilter!) {
   channels(filter: $filter) {
@@ -8502,13 +8570,13 @@ export function useEnvConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type EnvConfigQueryHookResult = ReturnType<typeof useEnvConfigQuery>;
 export type EnvConfigLazyQueryHookResult = ReturnType<typeof useEnvConfigLazyQuery>;
 export type EnvConfigQueryResult = Apollo.QueryResult<EnvConfigQuery, EnvConfigQueryVariables>;
-export const GetLiveEventDocument = gql`
-    query GetLiveEvent($slug: String) {
+export const LiveEventDocument = gql`
+    query LiveEvent($slug: String) {
   liveEvent(slug: $slug) {
+    id
     access
     createdAt
     description
-    id
     kind
     scheduledStartAt
     commentsEnabled
@@ -8523,85 +8591,128 @@ export const GetLiveEventDocument = gql`
   }
 }
     `;
-export type GetLiveEventComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLiveEventQuery, GetLiveEventQueryVariables>, 'query'>;
+export type LiveEventComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventQuery, LiveEventQueryVariables>, 'query'>;
 
-    export const GetLiveEventComponent = (props: GetLiveEventComponentProps) => (
-      <ApolloReactComponents.Query<GetLiveEventQuery, GetLiveEventQueryVariables> query={GetLiveEventDocument} {...props} />
+    export const LiveEventComponent = (props: LiveEventComponentProps) => (
+      <ApolloReactComponents.Query<LiveEventQuery, LiveEventQueryVariables> query={LiveEventDocument} {...props} />
     );
     
 
 /**
- * __useGetLiveEventQuery__
+ * __useLiveEventQuery__
  *
- * To run a query within a React component, call `useGetLiveEventQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLiveEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useLiveEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLiveEventQuery({
+ * const { data, loading, error } = useLiveEventQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetLiveEventQuery(baseOptions?: Apollo.QueryHookOptions<GetLiveEventQuery, GetLiveEventQueryVariables>) {
+export function useLiveEventQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventQuery, LiveEventQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetLiveEventQuery, GetLiveEventQueryVariables>(GetLiveEventDocument, options);
+        return Apollo.useQuery<LiveEventQuery, LiveEventQueryVariables>(LiveEventDocument, options);
       }
-export function useGetLiveEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiveEventQuery, GetLiveEventQueryVariables>) {
+export function useLiveEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventQuery, LiveEventQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetLiveEventQuery, GetLiveEventQueryVariables>(GetLiveEventDocument, options);
+          return Apollo.useLazyQuery<LiveEventQuery, LiveEventQueryVariables>(LiveEventDocument, options);
         }
-export type GetLiveEventQueryHookResult = ReturnType<typeof useGetLiveEventQuery>;
-export type GetLiveEventLazyQueryHookResult = ReturnType<typeof useGetLiveEventLazyQuery>;
-export type GetLiveEventQueryResult = Apollo.QueryResult<GetLiveEventQuery, GetLiveEventQueryVariables>;
-export const GetLiveEventKindDocument = gql`
-    query GetLiveEventKind($slug: String) {
+export type LiveEventQueryHookResult = ReturnType<typeof useLiveEventQuery>;
+export type LiveEventLazyQueryHookResult = ReturnType<typeof useLiveEventLazyQuery>;
+export type LiveEventQueryResult = Apollo.QueryResult<LiveEventQuery, LiveEventQueryVariables>;
+export const LiveEventKindDocument = gql`
+    query LiveEventKind($slug: String) {
+  liveEventKind(slug: $slug) {
+    id
+    kind
+    geoFence
+    slug
+    title
+  }
+}
+    `;
+export type LiveEventKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventKindQuery, LiveEventKindQueryVariables>, 'query'>;
+
+    export const LiveEventKindComponent = (props: LiveEventKindComponentProps) => (
+      <ApolloReactComponents.Query<LiveEventKindQuery, LiveEventKindQueryVariables> query={LiveEventKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useLiveEventKindQuery__
+ *
+ * To run a query within a React component, call `useLiveEventKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLiveEventKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useLiveEventKindQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventKindQuery, LiveEventKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LiveEventKindQuery, LiveEventKindQueryVariables>(LiveEventKindDocument, options);
+      }
+export function useLiveEventKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventKindQuery, LiveEventKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LiveEventKindQuery, LiveEventKindQueryVariables>(LiveEventKindDocument, options);
+        }
+export type LiveEventKindQueryHookResult = ReturnType<typeof useLiveEventKindQuery>;
+export type LiveEventKindLazyQueryHookResult = ReturnType<typeof useLiveEventKindLazyQuery>;
+export type LiveEventKindQueryResult = Apollo.QueryResult<LiveEventKindQuery, LiveEventKindQueryVariables>;
+export const LiveEventEntitlementsDocument = gql`
+    query LiveEventEntitlements($slug: String) {
   liveEvent(slug: $slug) {
     id
-    title
     access
-    kind
     entitlements
   }
 }
     `;
-export type GetLiveEventKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>, 'query'>;
+export type LiveEventEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>, 'query'>;
 
-    export const GetLiveEventKindComponent = (props: GetLiveEventKindComponentProps) => (
-      <ApolloReactComponents.Query<GetLiveEventKindQuery, GetLiveEventKindQueryVariables> query={GetLiveEventKindDocument} {...props} />
+    export const LiveEventEntitlementsComponent = (props: LiveEventEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables> query={LiveEventEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetLiveEventKindQuery__
+ * __useLiveEventEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetLiveEventKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLiveEventKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useLiveEventEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLiveEventKindQuery({
+ * const { data, loading, error } = useLiveEventEntitlementsQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetLiveEventKindQuery(baseOptions?: Apollo.QueryHookOptions<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>) {
+export function useLiveEventEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>(GetLiveEventKindDocument, options);
+        return Apollo.useQuery<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>(LiveEventEntitlementsDocument, options);
       }
-export function useGetLiveEventKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>) {
+export function useLiveEventEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>(GetLiveEventKindDocument, options);
+          return Apollo.useLazyQuery<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>(LiveEventEntitlementsDocument, options);
         }
-export type GetLiveEventKindQueryHookResult = ReturnType<typeof useGetLiveEventKindQuery>;
-export type GetLiveEventKindLazyQueryHookResult = ReturnType<typeof useGetLiveEventKindLazyQuery>;
-export type GetLiveEventKindQueryResult = Apollo.QueryResult<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>;
+export type LiveEventEntitlementsQueryHookResult = ReturnType<typeof useLiveEventEntitlementsQuery>;
+export type LiveEventEntitlementsLazyQueryHookResult = ReturnType<typeof useLiveEventEntitlementsLazyQuery>;
+export type LiveEventEntitlementsQueryResult = Apollo.QueryResult<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>;
 export const GetLiveEventsDocument = gql`
     query GetLiveEvents($filter: LiveEventFilter) {
   liveEvents(filter: $filter) {
@@ -8907,91 +9018,91 @@ export function useGetOrderResultLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetOrderResultQueryHookResult = ReturnType<typeof useGetOrderResultQuery>;
 export type GetOrderResultLazyQueryHookResult = ReturnType<typeof useGetOrderResultLazyQuery>;
 export type GetOrderResultQueryResult = Apollo.QueryResult<GetOrderResultQuery, GetOrderResultQueryVariables>;
-export const GetOrganizationKindDocument = gql`
-    query GetOrganizationKind($id: ID!) {
-  organization(id: $id) {
+export const OrganizationKindDocument = gql`
+    query OrganizationKind($id: ID!) {
+  organizationKind(id: $id) {
     id
-    access
     kind
   }
 }
     `;
-export type GetOrganizationKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>, 'query'> & ({ variables: GetOrganizationKindQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type OrganizationKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationKindQuery, OrganizationKindQueryVariables>, 'query'> & ({ variables: OrganizationKindQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const GetOrganizationKindComponent = (props: GetOrganizationKindComponentProps) => (
-      <ApolloReactComponents.Query<GetOrganizationKindQuery, GetOrganizationKindQueryVariables> query={GetOrganizationKindDocument} {...props} />
+    export const OrganizationKindComponent = (props: OrganizationKindComponentProps) => (
+      <ApolloReactComponents.Query<OrganizationKindQuery, OrganizationKindQueryVariables> query={OrganizationKindDocument} {...props} />
     );
     
 
 /**
- * __useGetOrganizationKindQuery__
+ * __useOrganizationKindQuery__
  *
- * To run a query within a React component, call `useGetOrganizationKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOrganizationKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useOrganizationKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetOrganizationKindQuery({
+ * const { data, loading, error } = useOrganizationKindQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetOrganizationKindQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
+export function useOrganizationKindQuery(baseOptions: Apollo.QueryHookOptions<OrganizationKindQuery, OrganizationKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
+        return Apollo.useQuery<OrganizationKindQuery, OrganizationKindQueryVariables>(OrganizationKindDocument, options);
       }
-export function useGetOrganizationKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
+export function useOrganizationKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationKindQuery, OrganizationKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
+          return Apollo.useLazyQuery<OrganizationKindQuery, OrganizationKindQueryVariables>(OrganizationKindDocument, options);
         }
-export type GetOrganizationKindQueryHookResult = ReturnType<typeof useGetOrganizationKindQuery>;
-export type GetOrganizationKindLazyQueryHookResult = ReturnType<typeof useGetOrganizationKindLazyQuery>;
-export type GetOrganizationKindQueryResult = Apollo.QueryResult<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>;
-export const GetOrganizationEntitlementsDocument = gql`
-    query GetOrganizationEntitlements($id: ID!) {
+export type OrganizationKindQueryHookResult = ReturnType<typeof useOrganizationKindQuery>;
+export type OrganizationKindLazyQueryHookResult = ReturnType<typeof useOrganizationKindLazyQuery>;
+export type OrganizationKindQueryResult = Apollo.QueryResult<OrganizationKindQuery, OrganizationKindQueryVariables>;
+export const OrganizationEntitlementsDocument = gql`
+    query OrganizationEntitlements($id: ID!) {
   organization(id: $id) {
     id
     entitlements
+    access
   }
 }
     `;
-export type GetOrganizationEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>, 'query'> & ({ variables: GetOrganizationEntitlementsQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type OrganizationEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>, 'query'> & ({ variables: OrganizationEntitlementsQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const GetOrganizationEntitlementsComponent = (props: GetOrganizationEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables> query={GetOrganizationEntitlementsDocument} {...props} />
+    export const OrganizationEntitlementsComponent = (props: OrganizationEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables> query={OrganizationEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetOrganizationEntitlementsQuery__
+ * __useOrganizationEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetOrganizationEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOrganizationEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useOrganizationEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetOrganizationEntitlementsQuery({
+ * const { data, loading, error } = useOrganizationEntitlementsQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetOrganizationEntitlementsQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+export function useOrganizationEntitlementsQuery(baseOptions: Apollo.QueryHookOptions<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+        return Apollo.useQuery<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>(OrganizationEntitlementsDocument, options);
       }
-export function useGetOrganizationEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+export function useOrganizationEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+          return Apollo.useLazyQuery<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>(OrganizationEntitlementsDocument, options);
         }
-export type GetOrganizationEntitlementsQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsQuery>;
-export type GetOrganizationEntitlementsLazyQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsLazyQuery>;
-export type GetOrganizationEntitlementsQueryResult = Apollo.QueryResult<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>;
+export type OrganizationEntitlementsQueryHookResult = ReturnType<typeof useOrganizationEntitlementsQuery>;
+export type OrganizationEntitlementsLazyQueryHookResult = ReturnType<typeof useOrganizationEntitlementsLazyQuery>;
+export type OrganizationEntitlementsQueryResult = Apollo.QueryResult<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>;
 export const GetPlaylistDocument = gql`
     query GetPlaylist($id: ID!, $postsFilters: PostFilter!) {
   playlist(id: $id) {
@@ -9068,8 +9179,8 @@ export function useGetPlaylistLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetPlaylistQueryHookResult = ReturnType<typeof useGetPlaylistQuery>;
 export type GetPlaylistLazyQueryHookResult = ReturnType<typeof useGetPlaylistLazyQuery>;
 export type GetPlaylistQueryResult = Apollo.QueryResult<GetPlaylistQuery, GetPlaylistQueryVariables>;
-export const GetPostDocument = gql`
-    query GetPost($slug: String) {
+export const PostDocument = gql`
+    query Post($slug: String) {
   post(slug: $slug) {
     id
     access
@@ -9134,85 +9245,128 @@ export const GetPostDocument = gql`
   }
 }
     `;
-export type GetPostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostQuery, GetPostQueryVariables>, 'query'>;
+export type PostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostQuery, PostQueryVariables>, 'query'>;
 
-    export const GetPostComponent = (props: GetPostComponentProps) => (
-      <ApolloReactComponents.Query<GetPostQuery, GetPostQueryVariables> query={GetPostDocument} {...props} />
+    export const PostComponent = (props: PostComponentProps) => (
+      <ApolloReactComponents.Query<PostQuery, PostQueryVariables> query={PostDocument} {...props} />
     );
     
 
 /**
- * __useGetPostQuery__
+ * __usePostQuery__
  *
- * To run a query within a React component, call `useGetPostQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPostQuery({
+ * const { data, loading, error } = usePostQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetPostQuery(baseOptions?: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+export function usePostQuery(baseOptions?: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
       }
-export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
         }
-export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
-export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
-export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
-export const GetPostKindDocument = gql`
-    query GetPostKind($slug: String) {
+export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
+export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
+export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
+export const PostKindDocument = gql`
+    query PostKind($slug: String) {
+  postKind(slug: $slug) {
+    id
+    kind
+    title
+    geofence
+    slug
+  }
+}
+    `;
+export type PostKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostKindQuery, PostKindQueryVariables>, 'query'>;
+
+    export const PostKindComponent = (props: PostKindComponentProps) => (
+      <ApolloReactComponents.Query<PostKindQuery, PostKindQueryVariables> query={PostKindDocument} {...props} />
+    );
+    
+
+/**
+ * __usePostKindQuery__
+ *
+ * To run a query within a React component, call `usePostKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function usePostKindQuery(baseOptions?: Apollo.QueryHookOptions<PostKindQuery, PostKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostKindQuery, PostKindQueryVariables>(PostKindDocument, options);
+      }
+export function usePostKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostKindQuery, PostKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostKindQuery, PostKindQueryVariables>(PostKindDocument, options);
+        }
+export type PostKindQueryHookResult = ReturnType<typeof usePostKindQuery>;
+export type PostKindLazyQueryHookResult = ReturnType<typeof usePostKindLazyQuery>;
+export type PostKindQueryResult = Apollo.QueryResult<PostKindQuery, PostKindQueryVariables>;
+export const PostEntitlementsDocument = gql`
+    query PostEntitlements($slug: String) {
   post(slug: $slug) {
     id
-    title
     access
-    kind
     entitlements
   }
 }
     `;
-export type GetPostKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostKindQuery, GetPostKindQueryVariables>, 'query'>;
+export type PostEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>, 'query'>;
 
-    export const GetPostKindComponent = (props: GetPostKindComponentProps) => (
-      <ApolloReactComponents.Query<GetPostKindQuery, GetPostKindQueryVariables> query={GetPostKindDocument} {...props} />
+    export const PostEntitlementsComponent = (props: PostEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<PostEntitlementsQuery, PostEntitlementsQueryVariables> query={PostEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetPostKindQuery__
+ * __usePostEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetPostKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPostKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPostKindQuery({
+ * const { data, loading, error } = usePostEntitlementsQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetPostKindQuery(baseOptions?: Apollo.QueryHookOptions<GetPostKindQuery, GetPostKindQueryVariables>) {
+export function usePostEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPostKindQuery, GetPostKindQueryVariables>(GetPostKindDocument, options);
+        return Apollo.useQuery<PostEntitlementsQuery, PostEntitlementsQueryVariables>(PostEntitlementsDocument, options);
       }
-export function useGetPostKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostKindQuery, GetPostKindQueryVariables>) {
+export function usePostEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPostKindQuery, GetPostKindQueryVariables>(GetPostKindDocument, options);
+          return Apollo.useLazyQuery<PostEntitlementsQuery, PostEntitlementsQueryVariables>(PostEntitlementsDocument, options);
         }
-export type GetPostKindQueryHookResult = ReturnType<typeof useGetPostKindQuery>;
-export type GetPostKindLazyQueryHookResult = ReturnType<typeof useGetPostKindLazyQuery>;
-export type GetPostKindQueryResult = Apollo.QueryResult<GetPostKindQuery, GetPostKindQueryVariables>;
+export type PostEntitlementsQueryHookResult = ReturnType<typeof usePostEntitlementsQuery>;
+export type PostEntitlementsLazyQueryHookResult = ReturnType<typeof usePostEntitlementsLazyQuery>;
+export type PostEntitlementsQueryResult = Apollo.QueryResult<PostEntitlementsQuery, PostEntitlementsQueryVariables>;
 export const GetPostsDocument = gql`
     query GetPosts($filter: PostFilter) {
   posts(filters: $filter) {
