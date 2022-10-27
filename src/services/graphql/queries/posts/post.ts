@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_POST = gql`
-  query GetPost($slug: String) {
+  query Post($slug: String) {
     post(slug: $slug) {
       id
       access
@@ -68,12 +68,22 @@ export const QUERY_POST = gql`
 `
 
 export const QUERY_VERIFY_POST_KIND = gql`
-  query GetPostKind($slug: String) {
+  query PostKind($slug: String) {
+    postKind(slug: $slug) {
+      id
+      kind
+      title
+      geofence
+      slug
+    }
+  }
+`
+
+export const GET_POST_ENTITLEMENTS = gql`
+  query PostEntitlements($slug: String) {
     post(slug: $slug) {
       id
-      title
       access
-      kind
       entitlements
     }
   }
