@@ -84,11 +84,9 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  // const [tagsIds, setTagsIds] = useState<string[]>([])
-  // const [loadingTags, setLoadingTags] = useState(false)
-  // const [tagsData, setTagsData] = useState({})
   const [fetchControl, setFetchControl] = useState({})
   const [isLoadingHome, setIsLoadingHome] = useState<boolean>(true)
+  const [hasTagsResults, setHasTagsResults] = useState<boolean>(false)
 
   const [getBillboard, { data: billboardData }] = useLazyQuery(
     QUERY_BILLBOARDS,
@@ -237,6 +235,7 @@ const HomePage = () => {
     liveEventsData?.rows?.length ||
     featuredPostsData?.rows?.length ||
     featuredCategoriesData?.rows?.length ||
+    hasTagsResults ||
     (isHomeDisplayingCategories && categoriesWithChildrenData?.rows?.length)
 
   const isEmpty = !isLoading && !hasResults
@@ -421,7 +420,12 @@ const HomePage = () => {
       //TODO: this item should be previous filtered by API
       const isActive = item?.TAGS && item.IS_ACTIVE
       return (
-        isActive && <TagsScrollerComponent {...{ item, getCarouselLabel }} />
+        isActive && (
+          <TagsScrollerComponent
+            hasResults={() => setHasTagsResults(true)}
+            {...{ item, getCarouselLabel }}
+          />
+        )
       )
     }
   }
@@ -445,7 +449,7 @@ const HomePage = () => {
             dataLength={categoriesWithChildrenData.rows.length}
             next={loadMoreCategories}
             hasMore={categoriesWithChildrenData.hasNextPage}
-            scrollableTarget='scroll-master'
+            scrollableTarget="scroll-master"
             loader={
               <Box pt={5} textAlign={'center'}>
                 <Spinner color={colors.brand.primary[colorMode]} />
@@ -475,4 +479,3 @@ const HomePage = () => {
 }
 
 export { HomePage }
-
