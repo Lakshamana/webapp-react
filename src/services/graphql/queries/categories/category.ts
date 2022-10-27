@@ -51,6 +51,15 @@ export const QUERY_CATEGORY = gql`
               thumbnailPath
               baseUrl
             }
+            ... on MediaAudio {
+              id
+              duration
+              mp3Path
+            }
+            ... on MediaPhoto {
+              id
+              imgPath
+            }
           }
           type
         }
