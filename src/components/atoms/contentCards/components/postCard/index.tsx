@@ -1,6 +1,7 @@
 import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { ProgressBar } from 'components/atoms'
+import { PostType } from 'generated/graphql'
 import { useTranslation } from 'react-i18next'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
