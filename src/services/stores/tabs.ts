@@ -19,6 +19,7 @@ const getTabURL = (tab: string) => {
     LIVE: '/c/:channel/lives',
     COLLECTIONS: '/c/:channel/categories',
     MYLIST: '/c/:channel/mylist',
+    MY_LIST: '/c/:channel/mylist',
     ROOMS: '',
   }
 
