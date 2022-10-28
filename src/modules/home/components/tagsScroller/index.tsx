@@ -7,25 +7,32 @@ import { useChannelsStore } from 'services/stores'
 import { HomeCarouselsTypes } from 'types/common'
 import { Props } from './types'
 
-const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
+const initialTagState = {
+  rows: [],
+  slug: null,
+  postFilters: { page: 0, hasNextPage: true },
+  categoryFilters: { page: 0, hasNextPage: true },
+}
+
+const TagsScrollerComponent = ({
+  item,
+  getCarouselLabel,
+  hasResults,
+}: Props) => {
   const [variables, setVariables] = useState({ tagId: item.TAGS })
-  const [tag, setTag] = useState({
-    rows: [],
-    slug: null,
-    postFilters: { page: 0, hasNextPage: true },
-    categoryFilters: { page: 0, hasNextPage: true }
-  })
+  const [tag, setTag] = useState(initialTagState)
   const { activeChannel } = useChannelsStore()
 
-  const [getData, { loading }] = useLazyQuery(QUERY_PAGINATE_TAG(item.CONTENT_TYPE),
+  const [getData, { loading }] = useLazyQuery(
+    QUERY_PAGINATE_TAG(item.CONTENT_TYPE),
     {
       onCompleted: (result) => {
         const { relatedPosts, relatedCategories, ...all } = result.tag
         setTag((previous) => {
-          let rows: any = [...(previous.rows)] || []
+          let rows: any = [...previous.rows] || []
           if (relatedPosts) rows = [...rows, ...relatedPosts?.rows]
           if (relatedCategories) rows = [...rows, ...relatedCategories?.rows]
-          return ({
+          return {
             ...previous,
             ...all,
             rows,
@@ -37,7 +44,7 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
               page: relatedCategories?.page,
               hasNextPage: relatedCategories?.hasNextPage,
             },
-          })
+          }
         })
       },
       fetchPolicy: 'cache-and-network',
@@ -57,8 +64,8 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
           ...defineParams,
           postFilters: {
             pageSize: calculateRate(item.CONTENT_TYPE),
-            page: tag.postFilters.page + 1 ?? 1
-          }
+            page: tag.postFilters.page + 1 ?? 1,
+          },
         }
       }
       if (item.CONTENT_TYPE.includes(HomeCarouselsTypes.Collections)) {
@@ -66,13 +73,18 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
           ...defineParams,
           categoryFilters: {
             pageSize: calculateRate(item.CONTENT_TYPE),
-            page: tag.categoryFilters.page + 1 ?? 1
-          }
+            page: tag.categoryFilters.page + 1 ?? 1,
+          },
         }
       }
       return defineParams
     })
   }
+
+  useEffect(() => {
+    if (tag.rows.length) hasResults()
+    // eslint-disable-next-line
+  }, [tag])
 
   // eslint-disable-next-line
   useEffect(() => getData({ variables }), [variables])
@@ -80,9 +92,12 @@ const TagsScrollerComponent = ({ item, getCarouselLabel }: Props) => {
   // eslint-disable-next-line
   useEffect(() => defineVariables(), [item])
 
+  useEffect(() => setTag(initialTagState), [activeChannel])
+
   const loadMore = () => {
     if (item.CONTENT_TYPE.length >= 2) {
-      if (!tag.postFilters.hasNextPage && !tag.categoryFilters.hasNextPage) return
+      if (!tag.postFilters.hasNextPage && !tag.categoryFilters.hasNextPage)
+        return
       defineVariables()
     }
     if (item.CONTENT_TYPE.includes(HomeCarouselsTypes.Posts)) {

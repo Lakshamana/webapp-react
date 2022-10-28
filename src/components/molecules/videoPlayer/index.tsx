@@ -124,7 +124,7 @@ const VideoPlayerComponent = ({
           setWatchingPosition({ ...watchingPosition, showModal: false })
         }
       } else {
-        // player?.play()
+        player?.play()
       }
 
       player?.chromecast()
@@ -139,9 +139,8 @@ const VideoPlayerComponent = ({
         'style',
         'width: 3rem; margin-right: 1em; margin-left: 1em;'
       )
-      buttonDom.innerHTML = `<img src=${
-        configEnvs?.playerLogo?.image ?? '/logo-fh.png'
-      } />`
+      buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'
+        } />`
       buttonDom.onclick = function () {
         window.open(
           `${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`,
@@ -228,7 +227,7 @@ const VideoPlayerComponent = ({
 
   useEffect(() => {
     if (!watchingPosition.showModal) {
-      // playerRef.current?.play()
+      playerRef.current?.play()
     }
   }, [watchingPosition])
 
