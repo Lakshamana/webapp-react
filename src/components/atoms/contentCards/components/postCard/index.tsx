@@ -145,7 +145,10 @@ const PostCard = ({
             {!props?.progress && hasPinButton && <RenderAddToMyListIcon />}
           </Flex>
           <Flex mt={1}>
-            {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS && (
+            {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS
+            && props.type !== PostType.Text
+            && props.type !== PostType.Photo
+            && (
               <Text
                 display="flex"
                 alignItems="center"
