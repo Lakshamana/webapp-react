@@ -76,6 +76,9 @@ const HomePage = () => {
     useState<PaginatedCategoriesOutput>()
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<PaginatedCategoriesOutput>()
+  const [homeCarouselsFiltered, setHomeCarouselsFiltered] = useState<
+    CarouselFlags[]
+  >([])
 
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
@@ -109,17 +112,23 @@ const HomePage = () => {
     }))
   }
 
-  const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
+  const [
+    getLiveEvents,
+    { loading: loadingLiveEvents, stopPolling, startPolling },
+  ] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
         const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
+
+        if (!liveEventsData?.rows.length && liveEvents.rows.length) {
+          startPolling && startPolling(DEFAULT_POLLING_INTERVAL)
+        }
         setLiveEventsData((previous) => appendNewData(previous, liveEvents))
       },
       fetchPolicy: 'cache-and-network',
-      pollInterval: DEFAULT_POLLING_INTERVAL,
     }
   )
 
@@ -216,7 +225,7 @@ const HomePage = () => {
             categoriesWithChildrenData.page + 1,
             true,
             undefined,
-            3
+            5
           ),
         },
       })
@@ -242,6 +251,10 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
+
+    return () => {
+      stopPolling && stopPolling()
+    }
     // eslint-disable-next-line
   }, [])
 
@@ -261,6 +274,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (activeChannel) getBillboard()
+    setHomeCarouselsFiltered([])
     return () => {
       deactivateAllItems()
       clearAllItems()
@@ -285,12 +299,18 @@ const HomePage = () => {
 
     if (activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES)
       getCategories({
-        variables: { ...categoriesFilter(1, true, undefined, 3) },
+        variables: { ...categoriesFilter(1, true, undefined, 5) },
       })
 
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
+
+    const filteredCarousel = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
+      (a, b) => a.ORDER - b.ORDER
+    ).filter((item) => item.IS_ACTIVE)
+
+    filteredCarousel?.length && setHomeCarouselsFiltered(filteredCarousel)
 
     //eslint-disable-next-line
   }, [activeChannelConfig])
@@ -396,10 +416,6 @@ const HomePage = () => {
     return label?.VALUE || ''
   }
 
-  const homeCarouselsFiltered = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
-    (a, b) => a.ORDER - b.ORDER
-  ).filter((item) => item.IS_ACTIVE)
-
   const renderCarouselsOrderedByRemoteConfig = (item: CarouselFlags) => {
     if (!item?.TAGS?.length) {
       switch (item.CONTENT_TYPE[0]) {
@@ -459,7 +475,7 @@ const HomePage = () => {
             <Flex gridGap={5} flexDirection={'column'}>
               {categoriesWithChildrenData?.rows?.map((category: Category) => (
                 <CategoriesScroller
-                  key={category.id}
+                  key={`category-${category.id}`}
                   items={category.children}
                   sectionTitle={category?.name}
                   sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
