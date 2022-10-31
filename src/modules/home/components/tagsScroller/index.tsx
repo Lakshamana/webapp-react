@@ -1,7 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import { TagsScroller } from 'components'
 import { MAX_CARDS_SCROLLER_RESULTS } from 'config/constants'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { QUERY_PAGINATE_TAG } from 'services/graphql'
 import { useChannelsStore } from 'services/stores'
 import { HomeCarouselsTypes } from 'types/common'
@@ -10,15 +10,11 @@ import { Props } from './types'
 const initialTagState = {
   rows: [],
   slug: null,
-  postFilters: { page: 0, hasNextPage: true },
-  categoryFilters: { page: 0, hasNextPage: true },
+  postFilters: { page: 0, hasNextPage: false },
+  categoryFilters: { page: 0, hasNextPage: false },
 }
 
-const TagsScrollerComponent = ({
-  item,
-  getCarouselLabel,
-  hasResults,
-}: Props) => {
+const TagsScrollerHome = ({ item, getCarouselLabel, hasResults }: Props) => {
   const [variables, setVariables] = useState({ tagId: item.TAGS })
   const [tag, setTag] = useState(initialTagState)
   const { activeChannel } = useChannelsStore()
@@ -47,7 +43,6 @@ const TagsScrollerComponent = ({
           }
         })
       },
-      fetchPolicy: 'cache-and-network',
     }
   )
 
@@ -86,13 +81,14 @@ const TagsScrollerComponent = ({
     // eslint-disable-next-line
   }, [tag])
 
-  // eslint-disable-next-line
-  useEffect(() => getData({ variables }), [variables])
+  useEffect(() => {
+    if (variables['categoryFilters'] || variables['postFilters'])
+      getData({ variables })
+    // eslint-disable-next-line
+  }, [variables])
 
   // eslint-disable-next-line
   useEffect(() => defineVariables(), [item])
-
-  useEffect(() => setTag(initialTagState), [activeChannel])
 
   const loadMore = () => {
     if (item.CONTENT_TYPE.length >= 2) {
@@ -110,6 +106,7 @@ const TagsScrollerComponent = ({
 
   return (
     <TagsScroller
+      key={`${item.ORDER}-${tag.slug}`}
       sectionTitle={getCarouselLabel(item)}
       sectionUrl={`/c/${activeChannel?.slug}/tag/${tag.slug}`}
       onReachEnd={loadMore}
@@ -119,4 +116,4 @@ const TagsScrollerComponent = ({
   )
 }
 
-export { TagsScrollerComponent }
+export const TagsScrollerComponent = memo(TagsScrollerHome)

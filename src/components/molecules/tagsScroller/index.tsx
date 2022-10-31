@@ -99,12 +99,12 @@ const TagsScroller = (props: Props) => {
           reachEnd={props.onReachEnd}
           {...{ isLoading: props.isLoading }}
         >
-          {filteredItems?.map((item: TagScrollerItem) => (
-            <SwiperSlide key={`slide-${item.id}`}>
+          {filteredItems?.map((item: TagScrollerItem, idx) => (
+            <SwiperSlide key={`slide-${item.id}-${idx}`}>
               {(item.type === PostType.Video ||
-                item.type === PostType.OnDemand) && <VideoPostCard key={`post-${item.id}`} {...item} />}
-              {item.type === PostType.Text && <TextPostCard key={`post-${item.id}`} {...item} />}
-              {item.type === PostType.Photo && <PhotoPostCard key={`post-${item.id}`} {...item} />}
+                item.type === PostType.OnDemand) && <VideoPostCard key={`post-video-${item.id}`} {...item} />}
+              {item.type === PostType.Text && <TextPostCard key={`post-text-${item.id}`} {...item} />}
+              {item.type === PostType.Photo && <PhotoPostCard key={`post-photo-${item.id}`} {...item} />}
               {item.__typename === 'Category' && (
                 <CategoryPostCard key={`category-${item.id}`} {...item} />
               )}
