@@ -10,6 +10,7 @@ import {
 import { Category, Post } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 import { QUERY_CATEGORIES, QUERY_POSTS_CARDS } from 'services/graphql'
 import { useAuthStore, useCommonStore } from 'services/stores'
 import { sizes } from 'styles'
@@ -19,8 +20,9 @@ const MyListPage = () => {
   const { setPageTitle } = useCommonStore()
   const [categories, setCategories] = useState<Category[]>()
   const [posts, setPosts] = useState<Post[]>()
-  const { account } = useAuthStore()
+  const { account, isAnonymousAccess } = useAuthStore()
   const [isLoadingMyList, setIsLoadingMyList] = useState<boolean>(true)
+  const history = useHistory()
 
   const [getPinnedCategories, { loading: loadingPinnedCategories }] =
     useLazyQuery(QUERY_CATEGORIES, {
@@ -63,11 +65,12 @@ const MyListPage = () => {
   useEffect(() => {
     setPageTitle(t('header.tabs.my_list'))
 
-    if (account?.id) {
-      getPinnedCategories()
-      getPinnedPosts()
-      setIsLoadingMyList(false)
-    }
+    if (isAnonymousAccess) history.push('/create-your-account')
+
+    getPinnedCategories()
+    getPinnedPosts()
+    setIsLoadingMyList(false)
+
     //eslint-disable-next-line
   }, [account])
 
