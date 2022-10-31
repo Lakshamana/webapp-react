@@ -79,13 +79,9 @@ export const QUERY_PUBLIC_CATEGORIES = gql`
       pageNumberIsGood
       pageSize
       rows {
-        access
-        pinnedStatus {
-          pinned
-        }
+        id
         parentId
         slug
-        createdAt
         sort
         kind
         customization {
@@ -105,9 +101,6 @@ export const QUERY_PUBLIC_CATEGORIES = gql`
           description
           featuredAt
           sort
-          pinnedStatus {
-            pinned
-          }
           customization {
             desktop {
               imgPath
@@ -194,11 +187,7 @@ export const QUERY_PUBLIC_CATEGORIES_CARDS = gql`
       rows {
         id
         name
-        access
         description
-        pinnedStatus {
-          pinned
-        }
         slug
         kind
         customization {
@@ -209,11 +198,7 @@ export const QUERY_PUBLIC_CATEGORIES_CARDS = gql`
         children(filter: { sortBy: "sort.asc" }) {
           id
           name
-          access
           description
-          pinnedStatus {
-            pinned
-          }
           slug
           kind
           customization {
