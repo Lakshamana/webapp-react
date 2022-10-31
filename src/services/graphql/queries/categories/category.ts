@@ -98,7 +98,6 @@ export const QUERY_VERIFY_CATEGORY_KIND = gql`
       kind
       geoFence
       name
-      isKindAuto
     }
   }
 `
