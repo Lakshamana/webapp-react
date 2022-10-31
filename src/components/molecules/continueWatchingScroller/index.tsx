@@ -35,7 +35,7 @@ const ContinueWatchingScroller = ({
       const thumbnail = getImageUrl(item)
       const url = `/c/${activeChannel?.slug}/post/${item.slug}`
       return {
-        id: item.id,
+        id: item._id,
         title: item.title,
         url,
         description: item?.description,
