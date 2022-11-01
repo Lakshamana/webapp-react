@@ -1,6 +1,7 @@
 import { Box, Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { ProgressBar } from 'components/atoms'
+import { PostType } from 'generated/graphql'
 import { useTranslation } from 'react-i18next'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
 import { colors } from 'styles'
@@ -144,7 +145,10 @@ const PostCard = ({
             {!props?.progress && hasPinButton && <RenderAddToMyListIcon />}
           </Flex>
           <Flex mt={1}>
-            {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS && (
+            {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS
+            && props.type !== PostType.Text
+            && props.type !== PostType.Photo
+            && (
               <Text
                 display="flex"
                 alignItems="center"
