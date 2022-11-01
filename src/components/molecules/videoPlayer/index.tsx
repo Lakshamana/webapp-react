@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
@@ -23,6 +24,7 @@ import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
+import { MUTATION_ADD_VIEW } from 'services/graphql'
 import { getDefaultConfigs } from './settings'
 import { VideoPlayerProps } from './types'
 
@@ -58,8 +60,10 @@ const VideoPlayerComponent = ({
   const setRemainingTime = useVideoPlayerStore(
     (state) => state.setRemainingTime
   )
+  const client = useApolloClient()
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
+  const [isViewed, setIsViewed] = useState<boolean>(false)
 
   // TODO: Change to env-config
   const ANALYTICS_API = process.env.REACT_APP_ANALYTICS_API
@@ -93,8 +97,21 @@ const VideoPlayerComponent = ({
     }
   }
 
+  const addCountView = async () => {
+    if (isViewed) return
+    const { data } = await client.mutate({
+      mutation: MUTATION_ADD_VIEW,
+      variables: {
+        postId: videoId,
+      },
+    })
+
+    if (data.post) setIsViewed(true)
+  }
+
   const handlePlayerReady = (player: any) => {
     playerRef.current = player
+    let lastCurrent = 0
 
     player?.on('dispose', () => {
       player?.registerPlugin('qualityLevel', videoJsContribQualityLevels)
@@ -142,8 +159,9 @@ const VideoPlayerComponent = ({
         'style',
         'width: 3rem; margin-right: 1em; margin-left: 1em;'
       )
-      buttonDom.innerHTML = `<img src=${configEnvs?.playerLogo?.image ?? '/logo-fh.png'
-        } />`
+      buttonDom.innerHTML = `<img src=${
+        configEnvs?.playerLogo?.image ?? '/logo-fh.png'
+      } />`
       buttonDom.onclick = function () {
         window.open(
           `${configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}`,
@@ -164,6 +182,7 @@ const VideoPlayerComponent = ({
       const qualityLevel = event.qualityLevel
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
+
     player?.on('ended', () => {
       async function continueWatchingEnded() {
         const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}&videoId=${videoId}`
@@ -175,6 +194,7 @@ const VideoPlayerComponent = ({
       }
       setEventUpdate(PlayerEventName.EVENT_ENDED)
     })
+
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
       saveData(VIDEO_VOLUME, newVolumeValue)
@@ -182,7 +202,6 @@ const VideoPlayerComponent = ({
       saveData(VIDEO_MUTED, defineIsMuted)
     })
 
-    let lastCurrent = 0
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
       const isRemainingTime =
@@ -204,9 +223,16 @@ const VideoPlayerComponent = ({
       sendContinueWatchingData(player.currentTime())
       setEventUpdate(PlayerEventName.EVENT_SEEKED)
     })
+
     player?.on('error', () => setEventUpdate(PlayerEventName.EVENT_ERROR))
-    player?.on('play', () => setEventUpdate(PlayerEventName.EVENT_PLAY))
+
+    player?.on('play', () => {
+      addCountView()
+      setEventUpdate(PlayerEventName.EVENT_PLAY)
+    })
+
     player?.on('pause', () => setEventUpdate(PlayerEventName.EVENT_PAUSE))
+
     player?.on('progress', () => {
       const playerDuration = player?.duration()
       const playerCurrentTime = player?.currentTime()
