@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const axios = require('axios')
 const path = require("path")
@@ -44,7 +45,7 @@ const getTenantData = async (req, res) => {
     }
     try {
       const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      const ANOTHER_DATA = anotherResponse?.data?.body?.data
+      const ANOTHER_DATA = anotherResponse?.data
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
       return true
@@ -63,7 +64,7 @@ const getTenantData = async (req, res) => {
   } else {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
-      const ORG_VALUES = orgResponse?.data?.body?.data
+      const ORG_VALUES = orgResponse?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
     } catch (error) { }
   }
