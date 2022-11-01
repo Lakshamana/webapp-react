@@ -97,7 +97,8 @@ const CategoriesPage = () => {
           ? result.publicCategories
           : result.categories
 
-        if (categoriesWithChildren && !categoriesWithChildren?.hasNextPage) return
+        if (categoriesWithChildren && !categoriesWithChildren?.hasNextPage)
+          return
 
         setCategoriesWithChildren((previous) => ({
           ...categories,
@@ -167,20 +168,24 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.categories'))
-    getCategoriesWithoutChildren({
-      variables: categoriesWithoutChildrenFilter(1),
-    })
-    getCategoriesWithChildren({
-      variables: categoriesWithChildrenFilter(1),
-    })
-    getFeaturedCategories({
-      variables: featuredCategoriesFilter(1),
-    })
+
+    if (activeChannel) {
+      getCategoriesWithoutChildren({
+        variables: categoriesWithoutChildrenFilter(1),
+      })
+      getCategoriesWithChildren({
+        variables: categoriesWithChildrenFilter(1),
+      })
+      getFeaturedCategories({
+        variables: featuredCategoriesFilter(1),
+      })
+    }
     //eslint-disable-next-line
-  }, [])
+  }, [activeChannel])
 
   const isLoading =
-    loadingCategoriesWithoutChildren || loadingCategoriesWithChildren
+    loadingCategoriesWithoutChildren ||
+    loadingCategoriesWithChildren
 
   const hasResults =
     categoriesWithChildren?.rows?.length ||
@@ -242,6 +247,7 @@ const CategoriesPage = () => {
             <Skeleton kind="cards" />
           </Box>
         )}
+        
       </Flex>
       {isEmpty && <EmptyState />}
     </Container>
