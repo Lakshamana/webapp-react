@@ -43,19 +43,13 @@ const getTenantData = async (req, res) => {
     if (postSlug.indexOf('/') >= 0) {
       postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1).replace(/\//gm, '')
     }
-    console.log('Started')
     try {
       const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
       const ANOTHER_DATA = anotherResponse?.data
-      console.log('Response:', ANOTHER_DATA)
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
-      console.log('DEFINE', defineValues)
       return true
-    } catch (error) {
-      console.log('Error', error)
-      return false
-    }
+    } catch (error) { return false }
   }
 
   let definedRequest
@@ -71,11 +65,8 @@ const getTenantData = async (req, res) => {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
       const ORG_VALUES = orgResponse?.data
-      console.log('ORG', ORG_VALUES)
       defineValues = { ...defineValues, ...ORG_VALUES }
-    } catch (error) {
-      console.log('ORG ERROR', error)
-    }
+    } catch (error) { }
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
