@@ -1,16 +1,16 @@
 import { useMutation } from '@apollo/client'
 import { Participants, ReactionBar, Text } from 'components'
+import {
+  ThumborInstanceTypes,
+  ThumborParams,
+  useThumbor
+} from 'hooks/useThumbor'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   MUTATION_ADD_MY_REACTION,
   MUTATION_REMOVE_MY_REACTION
 } from 'services/graphql'
-import {
-  ThumborInstanceTypes,
-  ThumborParams,
-  useThumbor
-} from 'services/hooks/useThumbor'
 import { useChannelsStore, useCustomizationStore } from 'services/stores'
 import { useThemeStore } from 'services/stores/theme'
 import { colors } from 'styles'

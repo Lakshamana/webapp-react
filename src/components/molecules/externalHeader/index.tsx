@@ -1,11 +1,11 @@
-import { useMediaQuery } from '@chakra-ui/media-query'
 import { Box } from '@chakra-ui/layout'
+import { useMediaQuery } from '@chakra-ui/media-query'
+import { Container, LanguageSelector, Logo } from 'components'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
-import { Logo, LanguageSelector, Container } from 'components'
-import { ExternalHeaderProps } from './types'
-import { BoxHeader, HeaderItems } from './style'
 import { breakpoints } from 'styles'
+import { BoxHeader, HeaderItems } from './style'
+import { ExternalHeaderProps } from './types'
 
 const ExternalHeader = ({
   rightContent,

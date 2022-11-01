@@ -1,11 +1,15 @@
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { Box, Center } from '@chakra-ui/layout'
+import * as Sentry from '@sentry/browser'
 import {
   CheckoutFlow,
   GeolockedContent,
   PrivateContent,
   Skeleton
 } from 'components'
+import { Kinds } from 'generated/graphql'
+import { NotAuthorized, PaywallPlatform } from 'modules'
+import { getMaxmindLocation } from 'utils/location'
 
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,8 +23,8 @@ import {
 } from 'services/graphql'
 import { useAuthStore, useChannelsStore } from 'services/stores'
 import {
+  entityRequireLogin,
   isEntityBlocked,
-  isEntityGeolocked,
   isEntityOnPaywall,
   isEntityPrivate
 } from 'utils/accessVerifications'
@@ -35,11 +39,15 @@ const VerifyContentKind = ({
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
   const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
+  const [isOnPaywallAnonymous, setIsOnPaywallAnonymous] =
+    useState<boolean>(false)
+  const [isExclusive, setIsExclusive] = useState<boolean>(false)
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<ElegibleContent>()
   const { activeChannel } = useChannelsStore()
   const { isAnonymousAccess } = useAuthStore()
+  const [isVerifyingGeo, setIsVerifyingGeo] = useState<boolean>(true)
 
   const getContentKindQuery = () => {
     const query = {
@@ -65,8 +73,9 @@ const VerifyContentKind = ({
         slug: contentSlug,
       },
       onCompleted: (result) => {
-        const content = result[`${contentType}`]
+        const content = result[`${contentType}Kind`]
         setContentKind(content)
+        verifyGeofence(content)
       },
       fetchPolicy: 'cache-and-network',
     })
@@ -95,25 +104,59 @@ const VerifyContentKind = ({
     requestContentAccess()
   }
 
+  const verifyGeofence = async (content: ElegibleContent) => {
+    try {
+      const {
+        country: { iso_code },
+      } = await getMaxmindLocation()
+
+      const geofenceArr = content['geofence'] || content['geoFence']
+      const userGeofenceIsInCountryCodes =
+        geofenceArr['countryCodes'].includes(iso_code)
+
+      if (
+        (geofenceArr['type'] === 'BLACKLIST' && userGeofenceIsInCountryCodes) ||
+        (geofenceArr['type'] === 'WHITELIST' && !userGeofenceIsInCountryCodes)
+      )
+        setIsGeolocked(true)
+    } catch (e) {
+      Sentry.configureScope((scope) =>
+        scope.setTransactionName('get-user-location-error').setLevel('error')
+      )
+      Sentry.captureException(e)
+    } finally {
+      setIsVerifyingGeo(false)
+    }
+  }
+
   useEffect(() => {
     if (contentKind) {
-      if (isEntityBlocked(contentKind)) {
-        setIsPrivate(isEntityPrivate(contentKind))
-        setIsOnPaywall(isEntityOnPaywall(contentKind))
-        setIsGeolocked(isEntityGeolocked(contentKind))
-        return
+      if (!isVerifyingGeo && !isGeolocked) {
+        if (entityRequireLogin(contentKind) && !isAnonymousAccess)
+          accessGranted()
+        if (contentKind.kind !== Kinds.Public) {
+          if (entityRequireLogin(contentKind) && isAnonymousAccess)
+            setIsExclusive(true)
+          if (contentKind.kind === Kinds.Paywall && isAnonymousAccess)
+            setIsOnPaywallAnonymous(true)
+          if (isEntityBlocked(contentKind)) {
+            setIsPrivate(isEntityPrivate(contentKind))
+            setIsOnPaywall(isEntityOnPaywall(contentKind))
+          }
+        } else {
+          accessGranted()
+        }
       }
-      accessGranted()
     }
     //eslint-disable-next-line
-  }, [contentKind])
+  }, [isVerifyingGeo])
 
   useEffect(() => {
     if (activeChannel) getContentKind()
     //eslint-disable-next-line
   }, [activeChannel])
 
-  if (isLoadingVerifyContentKind)
+  if (isLoadingVerifyContentKind || isVerifyingGeo)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
         <Box mt={2}>
@@ -121,6 +164,8 @@ const VerifyContentKind = ({
         </Box>
       </Center>
     )
+
+  if (isExclusive) return <NotAuthorized />
 
   if (isPrivate)
     return (
@@ -133,7 +178,15 @@ const VerifyContentKind = ({
       />
     )
 
-  if (isOnPaywall && isAnonymousAccess) return <div>Simplified CHECKOUT</div>
+  if (isOnPaywallAnonymous)
+    return (
+      <PaywallPlatform
+        type={contentType}
+        contentTitle={
+          contentKind && (contentKind['name'] || contentKind['title'])
+        }
+      />
+    )
 
   if (isOnPaywall)
     return (

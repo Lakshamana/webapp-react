@@ -43,6 +43,8 @@ const FeedPage = () => {
   const { isAnonymousAccess } = useAuthStore()
   const { activeChannel } = useChannelsStore()
 
+  const [initialLoading, setInitialLoading] = useState<boolean>(true)
+
   const isAnonymousAllowed =
     isAnonymousAccess && activeChannel?.kind === Kinds.Public
 
@@ -95,18 +97,24 @@ const FeedPage = () => {
       window.scrollTo(0, lastPositionCard)
     }
 
-    if (!feedPosts?.rows.length && lastActiveChannel !== activeChannel?.slug)
+    if (
+      !feedPosts?.rows.length &&
+      activeChannel &&
+      lastActiveChannel !== activeChannel?.slug
+    )
       getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPosts])
 
   useEffect(() => {
-    if (!feedPosts?.rows.length)
+    if (activeChannel) setInitialLoading(false)
+    if (!feedPosts?.rows.length && activeChannel)
       getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+
     if (lastActiveChannel !== activeChannel?.slug) resetFeed()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [activeChannel])
 
   useEffect(() => {
     if (filterBy) getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
@@ -128,9 +136,11 @@ const FeedPage = () => {
 
   const hasResults = feedPosts?.rows?.length
 
-  const isEmpty = !loadingPosts && !hasResults
+  const isLoading = loadingPosts || initialLoading
 
-  if (loadingPosts && !feedPosts?.rows.length)
+  const isEmpty = !isLoading && !hasResults
+
+  if (isLoading && !feedPosts?.rows.length)
     return (
       <Center width="100%" height="100%" flexDirection="column">
         {loadingItems(4)}

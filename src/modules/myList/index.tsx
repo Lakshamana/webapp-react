@@ -67,9 +67,11 @@ const MyListPage = () => {
 
     if (isAnonymousAccess) history.push('/create-your-account')
 
+    if (account) {
     getPinnedCategories()
     getPinnedPosts()
     setIsLoadingMyList(false)
+    }
 
     //eslint-disable-next-line
   }, [account])

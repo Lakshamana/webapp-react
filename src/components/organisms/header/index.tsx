@@ -13,7 +13,7 @@ import {
   Tabs
 } from './components'
 
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import {
   useAuthStore,
   useChannelsStore,

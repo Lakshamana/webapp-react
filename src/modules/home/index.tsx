@@ -23,6 +23,7 @@ import {
   DEFAULT_POLLING_INTERVAL,
   MAXIMUM_SCROLLER_REQUESTS
 } from 'config/constants'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {
   QUERY_BILLBOARDS,
@@ -33,7 +34,6 @@ import {
   QUERY_PUBLIC_LIVE_EVENTS,
   QUERY_PUBLIC_POSTS_CARDS
 } from 'services/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
   useAuthStore,
   useChannelsStore,

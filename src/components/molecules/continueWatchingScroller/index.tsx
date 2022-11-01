@@ -5,7 +5,7 @@ import { SwiperSlide } from 'swiper/react'
 import { GeneralPostCardProps } from 'types/posts'
 import { ContentScroller } from './styles'
 
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import {
   isEntityBlocked,
   isEntityExclusive,

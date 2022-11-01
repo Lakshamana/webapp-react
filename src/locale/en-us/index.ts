@@ -11,6 +11,8 @@ const EN_US = {
         'This platform is exclusive, you need to create your account or log into an existing account to see {{organization}} subscription plans.',
       exclusive_channel:
         'This channel is exclusive, you need to create your account or log into an existing account to see {{channel}} subscription plans.',
+      exclusive_content:
+        'This content is exclusive, you need to create your account or log into an existing account to see {{content}} subscription plans.',
       custom_field: {
         cpf: 'CPF',
         phone: 'Phone',
@@ -299,7 +301,7 @@ const EN_US = {
         my_list: 'My List',
         pinned_categories: 'Favorite Categories',
         pinned_videos: 'Favorite Videos',
-        pinned_posts: 'Favorite Posts'
+        pinned_posts: 'Favorite Posts',
       },
       tag: {
         no_content: 'Tag has no content',
@@ -377,13 +379,16 @@ const EN_US = {
         past: 'Past',
       },
       checkout: {
+        paywall_content:
+          'This content is on a paywall, create your account or signin to see products and prices for this content!',
         actions: {
           choose_other_price: 'Change plan',
-          processing_your_payment: 'processing your payment...'
+          processing_your_payment: 'processing your payment...',
         },
         login: {
           title: 'Create your account',
-          subtitle: 'Please register or login to complete your purchase and start enjoy your content!',
+          subtitle:
+            'Please register or login to complete your purchase and start enjoy your content!',
           continue_with: 'Continue with',
           or: 'or',
           input_label_fullname: 'Full Name',
@@ -395,7 +400,8 @@ const EN_US = {
         },
         payment: {
           title: 'Hello {{user}}! Welcome to {{org}}.',
-          description: 'Complete your purchase to enjoy all the content of {{product}}',
+          description:
+            'Complete your purchase to enjoy all the content of {{product}}',
         },
         more_info: {
           title: 'Custom Field',
@@ -473,8 +479,8 @@ const EN_US = {
           title: 'Bank slip',
           description: 'Your payment will be approved in 1 or 2 business days',
           emit: 'Generate',
-          view: 'View'
-        }
+          view: 'View',
+        },
       },
       post: {
         participants: 'Participants:',

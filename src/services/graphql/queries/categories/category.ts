@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_CATEGORY = gql`
-  query GetCategory($slug: String, $postFilter: PostFilter) {
+  query Category($slug: String, $postFilter: PostFilter) {
     category(slug: $slug) {
       id
       access
@@ -92,13 +92,14 @@ export const QUERY_CATEGORY = gql`
 `
 
 export const QUERY_VERIFY_CATEGORY_KIND = gql`
-  query GetCategoryKind($slug: String) {
-    category(slug: $slug) {
+  query CategoryKind($slug: String) {
+    categoryKind(slug: $slug) {
       id
-      access
       kind
-      name
+      geoFence
       entitlements
+      name
     }
   }
 `
+

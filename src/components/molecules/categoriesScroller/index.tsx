@@ -1,8 +1,8 @@
 import { CardsScroller, SkeletonScroller } from 'components'
 import { CategoryPostCard } from 'components/atoms'
 import { Category } from 'generated/graphql'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
 import {

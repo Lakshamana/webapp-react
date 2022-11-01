@@ -3,7 +3,7 @@ import { ChannelCard } from 'components'
 import { Channel } from 'generated/graphql'
 import { Props } from './types'
 
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 
 import { useCustomizationStore } from 'services/stores'
 import { isEntityBlocked, isEntityGeolocked } from 'utils/accessVerifications'

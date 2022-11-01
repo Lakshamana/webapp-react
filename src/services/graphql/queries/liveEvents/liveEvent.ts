@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_LIVE_EVENT = gql`
-  query GetLiveEvent($slug: String) {
+  query LiveEvent($slug: String) {
     liveEvent(slug: $slug) {
+      id
       access
       createdAt
       description
-      id
       kind
       scheduledStartAt
       commentsEnabled
@@ -21,14 +21,17 @@ export const QUERY_LIVE_EVENT = gql`
     }
   }
 `
+//TODO: Precisa colocar entitlments qui
 export const QUERY_VERIFY_LIVE_EVENT_KIND = gql`
-  query GetLiveEventKind($slug: String) {
-    liveEvent(slug: $slug) {
+  query LiveEventKind($slug: String) {
+    liveEventKind(slug: $slug) {
       id
-      title
-      access
       kind
       entitlements
+      geoFence
+      slug
+      title
     }
   }
 `
+

@@ -1,6 +1,6 @@
 import { Image } from '@chakra-ui/react'
 import { Post } from 'generated/graphql'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 
 const TextPost = ({ ...postData }: Post) => {
   const { generateImage } = useThumbor()

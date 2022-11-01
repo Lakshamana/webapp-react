@@ -1,9 +1,9 @@
 import { useDisclosure } from '@chakra-ui/hooks'
 import { Icon } from '@iconify/react'
 import { Container, Popover } from 'components'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import { useAuthStore } from 'services/stores'
 import { colors } from 'styles'
 import {
