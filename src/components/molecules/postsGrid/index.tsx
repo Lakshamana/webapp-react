@@ -1,13 +1,12 @@
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Flex, SimpleGrid } from '@chakra-ui/react'
-import {
-  PhotoPostCard,
-  Text,
-  TextPostCard,
-  VideoPostCard
-} from 'components'
+import { PhotoPostCard, Text, TextPostCard, VideoPostCard } from 'components'
 import { Post, PostType } from 'generated/graphql'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
+import {
+  ThumborInstanceTypes,
+  ThumborParams,
+  useThumbor
+} from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
 import { useChannelsStore, useThemeStore } from 'services/stores'
 import { breakpoints, colors, sizes } from 'styles'
@@ -70,6 +69,7 @@ const PostsGrid = ({ items, sectionTitle }: PostsGridProps) => {
             item.media?.__typename === 'MediaVideo'
               ? item.media?.duration
               : undefined,
+          countViews: item.countViewsTotal,
           isExclusive: isEntityExclusive(item),
           isGeolocked: isEntityGeolocked(item),
           isPinned: item.pinnedStatus?.pinned,
