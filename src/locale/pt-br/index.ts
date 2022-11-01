@@ -11,6 +11,8 @@ const PT_BR = {
         'Esta plataforma é exclusiva, você precisa criar sua conta ou entrar em uma conta existente para ver os planos de assinatura da {{organization}}.',
       exclusive_channel:
         'Esse canal é exclusivo, você precisa criar sua conta ou entrar em uma conta existente para ver os planos de assinatura de {{channel}}.',
+      exclusive_content:
+        'Esse conteúdo é exclusivo, você precisa criar sua conta ou entrar em uma conta existente para ver os planos de assinatura de {{content}}.',
       custom_field: {
         cpf: 'CPF',
         phone: 'Telefone',
@@ -299,7 +301,7 @@ const PT_BR = {
         my_list: 'Minha Lista',
         pinned_categories: 'Categorias favoritas',
         pinned_videos: 'Vídeos favoritos',
-        pinned_posts: 'Publicações favoritas'
+        pinned_posts: 'Publicações favoritas',
       },
       tag: {
         no_content: 'Tag sem conteúdo',
@@ -377,14 +379,17 @@ const PT_BR = {
         upcoming: 'Próximas transmissões',
         past: 'Assistir Novamente',
       },
-      checkout: { 
+      checkout: {
+        paywall_content:
+        'Este conteúdo requer a assinatura de um plano, crie sua conta ou faça login para ver produtos e preços para este conteúdo!',
         actions: {
-        choose_other_price: 'Mudar plano',
-        processing_your_payment: 'processando o seu pagamento...'
-      },
+          choose_other_price: 'Mudar plano',
+          processing_your_payment: 'processando o seu pagamento...',
+        },
         login: {
           title: 'Crie a sua conta',
-          subtitle: 'Por favor, cadastre-se ou faça o login para completar sua compra e aproveitar o seu conteúdo!',
+          subtitle:
+            'Por favor, cadastre-se ou faça o login para completar sua compra e aproveitar o seu conteúdo!',
           continue_with: 'Continue com',
           or: 'ou',
           input_label_fullname: 'Nome Completo',
@@ -396,7 +401,8 @@ const PT_BR = {
         },
         payment: {
           title: 'Olá, {{user}}! Bem-vindo(a) à {{org}}.',
-          description: 'Finalize o seu pagamento para aproveitar todo o conteúdo de {{product}}',
+          description:
+            'Finalize o seu pagamento para aproveitar todo o conteúdo de {{product}}',
         },
         more_info: {
           title: 'Campo customizado',
@@ -470,14 +476,15 @@ const PT_BR = {
           pix_step_two: 'Escolha pagamento usando PIX',
           pix_step_three: 'Escaneie o QR code',
           or_copy_code: 'Ou copie o código para fazer o pagamento:',
-        },  
+        },
         bank_slip: {
           title: 'Boleto',
-          description: "Seu pagamento será aprovado em até 2 dias úteis",
+          description: 'Seu pagamento será aprovado em até 2 dias úteis',
           emit: 'Emitir boleto',
           view: 'Visualizar boleto',
-          step_one: 'Imprima o boleto e pague em qualquer banco ou casa lotérica até o vencimento.',
-        }
+          step_one:
+            'Imprima o boleto e pague em qualquer banco ou casa lotérica até o vencimento.',
+        },
       },
       post: {
         participants: 'Participantes:',
