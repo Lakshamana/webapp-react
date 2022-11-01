@@ -74,17 +74,9 @@ export const QUERY_VERIFY_POST_KIND = gql`
       kind
       title
       geofence
+      entitlements
       slug
     }
   }
 `
 
-export const GET_POST_ENTITLEMENTS = gql`
-  query PostEntitlements($slug: String) {
-    post(slug: $slug) {
-      id
-      access
-      entitlements
-    }
-  }
-`

@@ -97,18 +97,9 @@ export const QUERY_VERIFY_CATEGORY_KIND = gql`
       id
       kind
       geoFence
+      entitlements
       name
     }
   }
 `
 
-export const QUERY_CATEGORY_ENTITLEMENTS = gql`
-  query CategoryEntitlements($slug: String) {
-    category(slug: $slug) {
-      id
-      access
-      slug
-      entitlements
-    }
-  }
-`

@@ -21,11 +21,13 @@ export const QUERY_LIVE_EVENT = gql`
     }
   }
 `
+//TODO: Precisa colocar entitlments qui
 export const QUERY_VERIFY_LIVE_EVENT_KIND = gql`
   query LiveEventKind($slug: String) {
     liveEventKind(slug: $slug) {
       id
       kind
+      entitlements
       geoFence
       slug
       title
@@ -33,12 +35,3 @@ export const QUERY_VERIFY_LIVE_EVENT_KIND = gql`
   }
 `
 
-export const QUERY_LIVE_EVENT_ENTITLEMENTS = gql`
-  query LiveEventEntitlements($slug: String) {
-    liveEvent(slug: $slug) {
-      id
-      access
-      entitlements
-    }
-  }
-`
