@@ -20,6 +20,7 @@ export const QUERY_POSTS = gql`
         geofence
         kind
         slug
+        countViewsTotal
         status
         pinnedStatus {
           pinned
@@ -70,6 +71,7 @@ export const QUERY_PUBLIC_POSTS = gql`
       total
       rows {
         id
+        countViewsTotal
         myReactions {
           name
         }
@@ -133,6 +135,7 @@ export const QUERY_POSTS_CARDS = gql`
         description
         kind
         slug
+        countViewsTotal
         pinnedStatus {
           pinned
         }
@@ -172,6 +175,7 @@ export const QUERY_PUBLIC_POSTS_CARDS = gql`
         access
         title
         description
+        countViewsTotal
         kind
         slug
         pinnedStatus {
