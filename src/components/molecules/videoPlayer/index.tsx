@@ -51,6 +51,7 @@ const VideoPlayerComponent = ({
     position: 0,
     ended: false,
   })
+  const [continueAction, setContinueAction] = useState(false)
   const { account, isAnonymousAccess, user } = useAuthStore()
   const { activeChannelConfig } = useCustomizationStore()
   const setEventUpdate = useVideoPlayerStore((state) => state.setEventUpdate)
@@ -105,26 +106,28 @@ const VideoPlayerComponent = ({
     player?.on('ready', async () => {
       setEventUpdate(PlayerEventName.EVENT_READY)
       if (setVolumeValue) player.volume(setVolumeValue)
-      if (!isAnonymousAccess && !isLiveStream && activeChannel?.id) {
-        try {
-          const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
-          const lastPosition = await axios.get(
-            `${ANALYTICS_API}/watching${URL_PARAMS}`
-          )
-          const position = lastPosition?.data?.position
-          if (position && position !== 0) {
-            return setWatchingPosition({
-              showModal: true,
-              position,
-              ended: false,
-            })
+      if (!isLiveStream) {
+        if (!isAnonymousAccess && activeChannel?.id) {
+          try {
+            const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
+            const lastPosition = await axios.get(
+              `${ANALYTICS_API}/watching${URL_PARAMS}`
+            )
+            const position = lastPosition?.data?.position
+            if (position && position !== 0) {
+              return setWatchingPosition({
+                showModal: true,
+                position,
+                ended: false,
+              })
+            }
+            setWatchingPosition({ ...watchingPosition, showModal: false })
+          } catch (error) {
+            setWatchingPosition({ ...watchingPosition, showModal: false })
           }
-          setWatchingPosition({ ...watchingPosition, showModal: false })
-        } catch (error) {
-          setWatchingPosition({ ...watchingPosition, showModal: false })
+        } else {
+          player?.play()
         }
-      } else {
-        player?.play()
       }
 
       player?.chromecast()
@@ -226,18 +229,25 @@ const VideoPlayerComponent = ({
   }
 
   useEffect(() => {
-    if (!watchingPosition.showModal) {
+    if (!watchingPosition.showModal && !isLiveStream) {
       playerRef.current?.play()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchingPosition])
+
+  useEffect(() => {
+    if (playerRef && continueAction) {
+      playerRef.current?.currentTime(watchingPosition.position)
+      closeModal()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerRef, continueAction])
 
   const closeModal = () =>
     setWatchingPosition({ ...watchingPosition, showModal: false })
 
-  const continueAction = () => {
-    playerRef.current?.currentTime(watchingPosition.position)
-    closeModal()
-  }
+  const updateContinueAction = () => setContinueAction(true)
+
   const continueCancel = () => {
     playerRef.current?.currentTime(0)
     sendContinueWatchingData(0)
@@ -249,7 +259,7 @@ const VideoPlayerComponent = ({
   return (
     <>
       <ContinueModal
-        onConfirm={continueAction}
+        onConfirm={updateContinueAction}
         onClose={continueCancel}
         isOpen={watchingPosition.showModal}
         isCentered
