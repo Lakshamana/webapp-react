@@ -61,7 +61,9 @@ const LiveEvents = () => {
   const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,

@@ -66,7 +66,9 @@ const HomePage = () => {
   const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const [featuredPostsData, setFeaturedPostsData] =
     useState<PaginatedPostsOutput>()

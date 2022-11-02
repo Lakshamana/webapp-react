@@ -46,7 +46,9 @@ const FeedPage = () => {
   const [initialLoading, setInitialLoading] = useState<boolean>(true)
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const getSortByFilter = () =>
     filterBy === 'ASC' ? 'publishedAt.asc' : 'publishedAt.desc'

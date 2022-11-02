@@ -44,7 +44,9 @@ const CategoriesPage = () => {
   const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const { generateImage } = useThumbor()
 
@@ -184,8 +186,7 @@ const CategoriesPage = () => {
   }, [activeChannel])
 
   const isLoading =
-    loadingCategoriesWithoutChildren ||
-    loadingCategoriesWithChildren
+    loadingCategoriesWithoutChildren || loadingCategoriesWithChildren
 
   const hasResults =
     categoriesWithChildren?.rows?.length ||
@@ -247,7 +248,6 @@ const CategoriesPage = () => {
             <Skeleton kind="cards" />
           </Box>
         )}
-        
       </Flex>
       {isEmpty && <EmptyState />}
     </Container>
