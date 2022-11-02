@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Button, ProgressBar } from 'components'
+import { PostType } from 'generated/graphql'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
@@ -94,8 +95,10 @@ const MobileView = ({
                 {stripHTML(props.description || '')}
               </Text>
               <Flex my={4}>
-                {activeChannelConfig?.SETTINGS
-                  .DISPLAY_POST_THUMB_COUNT_VIEWS && (
+                {activeChannelConfig?.SETTINGS.DISPLAY_POST_THUMB_COUNT_VIEWS
+                && props.type !== PostType.Text
+                && props.type !== PostType.Photo
+                && (
                   <Text
                     display="flex"
                     alignItems="center"

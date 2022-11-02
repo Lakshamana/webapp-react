@@ -65,6 +65,7 @@ export interface MobileViewProps {
   isLoading: boolean
   progress?: string
   hasPinButton?: boolean
+  type?: string
   handlePinPost: () => void
   isOpen: boolean
   onClose: () => void
