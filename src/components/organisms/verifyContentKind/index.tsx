@@ -1,6 +1,5 @@
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { Box, Center } from '@chakra-ui/layout'
-import * as Sentry from '@sentry/browser'
 import {
   CheckoutFlow,
   GeolockedContent,
@@ -9,7 +8,6 @@ import {
 } from 'components'
 import { Kinds } from 'generated/graphql'
 import { NotAuthorized, PaywallPlatform } from 'modules'
-import { getMaxmindLocation } from 'utils/location'
 
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +23,7 @@ import { useAuthStore, useChannelsStore } from 'services/stores'
 import {
   entityRequireLogin,
   isEntityBlocked,
+  isEntityGeolocked,
   isEntityOnPaywall,
   isEntityPrivate
 } from 'utils/accessVerifications'
@@ -47,7 +46,6 @@ const VerifyContentKind = ({
   const [contentKind, setContentKind] = useState<ElegibleContent>()
   const { activeChannel } = useChannelsStore()
   const { isAnonymousAccess } = useAuthStore()
-  const [isVerifyingGeo, setIsVerifyingGeo] = useState<boolean>(true)
 
   const getContentKindQuery = () => {
     const query = {
@@ -75,7 +73,6 @@ const VerifyContentKind = ({
       onCompleted: (result) => {
         const content = result[`${contentType}Kind`]
         setContentKind(content)
-        verifyGeofence(content)
       },
       fetchPolicy: 'cache-and-network',
     })
@@ -104,59 +101,48 @@ const VerifyContentKind = ({
     requestContentAccess()
   }
 
-  const verifyGeofence = async (content: ElegibleContent) => {
-    try {
-      const {
-        country: { iso_code },
-      } = await getMaxmindLocation()
-
-      const geofenceArr = content['geofence'] || content['geoFence']
-      const userGeofenceIsInCountryCodes =
-        geofenceArr['countryCodes'].includes(iso_code)
-
-      if (
-        (geofenceArr['type'] === 'BLACKLIST' && userGeofenceIsInCountryCodes) ||
-        (geofenceArr['type'] === 'WHITELIST' && !userGeofenceIsInCountryCodes)
-      )
-        setIsGeolocked(true)
-    } catch (e) {
-      Sentry.configureScope((scope) =>
-        scope.setTransactionName('get-user-location-error').setLevel('error')
-      )
-      Sentry.captureException(e)
-    } finally {
-      setIsVerifyingGeo(false)
-    }
-  }
-
   useEffect(() => {
     if (contentKind) {
-      if (!isVerifyingGeo && !isGeolocked) {
-        if (entityRequireLogin(contentKind) && !isAnonymousAccess)
-          accessGranted()
-        if (contentKind.kind !== Kinds.Public) {
-          if (entityRequireLogin(contentKind) && isAnonymousAccess)
-            setIsExclusive(true)
-          if (contentKind.kind === Kinds.Paywall && isAnonymousAccess)
-            setIsOnPaywallAnonymous(true)
-          if (isEntityBlocked(contentKind)) {
-            setIsPrivate(isEntityPrivate(contentKind))
-            setIsOnPaywall(isEntityOnPaywall(contentKind))
-          }
-        } else {
-          accessGranted()
-        }
+      if (isEntityGeolocked(contentKind)) {
+        setIsGeolocked(true)
+        return
+      }
+
+      if (
+        (entityRequireLogin(contentKind) && !isAnonymousAccess) ||
+        contentKind.kind === Kinds.Public
+      ) {
+        accessGranted()
+        return
+      }
+
+      if (entityRequireLogin(contentKind) && isAnonymousAccess) {
+        setIsExclusive(true)
+        return
+      }
+
+      if (contentKind.kind === Kinds.Paywall && isAnonymousAccess) {
+        setIsOnPaywallAnonymous(true)
+        return
+      }
+
+      if (isEntityBlocked(contentKind)) {
+        setIsPrivate(isEntityPrivate(contentKind))
+        setIsOnPaywall(isEntityOnPaywall(contentKind))
+      } else {
+        accessGranted()
       }
     }
+
     //eslint-disable-next-line
-  }, [isVerifyingGeo])
+  }, [contentKind])
 
   useEffect(() => {
     if (activeChannel) getContentKind()
     //eslint-disable-next-line
   }, [activeChannel])
 
-  if (isLoadingVerifyContentKind || isVerifyingGeo)
+  if (isLoadingVerifyContentKind)
     return (
       <Center mt={4} width="100%" height={'100%'} flexDirection={'column'}>
         <Box mt={2}>
