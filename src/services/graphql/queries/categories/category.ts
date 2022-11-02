@@ -95,8 +95,8 @@ export const QUERY_VERIFY_CATEGORY_KIND = gql`
   query CategoryKind($slug: String) {
     categoryKind(slug: $slug) {
       id
+      access
       kind
-      geoFence
       entitlements
       name
     }

@@ -26,9 +26,9 @@ export const QUERY_VERIFY_LIVE_EVENT_KIND = gql`
   query LiveEventKind($slug: String) {
     liveEventKind(slug: $slug) {
       id
+      access
       kind
       entitlements
-      geoFence
       slug
       title
     }
