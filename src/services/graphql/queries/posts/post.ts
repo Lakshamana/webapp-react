@@ -8,6 +8,7 @@ export const QUERY_POST = gql`
       allowComments
       countComments
       countReactions
+      countViewsTotal
       slug
       description
       categories {

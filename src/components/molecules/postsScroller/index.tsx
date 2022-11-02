@@ -75,6 +75,7 @@ const PostsScroller = ({
           item.media?.__typename === 'MediaVideo'
             ? item.media?.duration
             : undefined,
+        countViews: item.countViewsTotal,
         isExclusive: isEntityExclusive(item),
         isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
