@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Button, ProgressBar } from 'components'
+import { PostType } from 'generated/graphql'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
