@@ -72,9 +72,9 @@ export const QUERY_VERIFY_POST_KIND = gql`
   query PostKind($slug: String) {
     postKind(slug: $slug) {
       id
+      access
       kind
       title
-      geofence
       entitlements
       slug
     }
