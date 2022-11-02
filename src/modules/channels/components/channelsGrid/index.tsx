@@ -3,10 +3,18 @@ import { ChannelCard } from 'components'
 import { Channel } from 'generated/graphql'
 import { Props } from './types'
 
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
+import {
+  ThumborInstanceTypes,
+  ThumborParams,
+  useThumbor
+} from 'hooks/useThumbor'
 
 import { useCustomizationStore } from 'services/stores'
-import { isEntityBlocked, isEntityGeolocked } from 'utils/accessVerifications'
+import {
+  isEntityBlocked,
+  isEntityExclusive,
+  isEntityGeolocked
+} from 'utils/accessVerifications'
 
 const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const { generateImage } = useThumbor()
@@ -41,7 +49,7 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
             description={channel.description}
             key={channel.id}
             onClick={(value) => channelSelected(value)}
-            isExclusive={isEntityBlocked(channel)}
+            isExclusive={isEntityExclusive(channel)}
             isGeolocked={isEntityGeolocked(channel)}
             image={channelThumbnail}
           />
