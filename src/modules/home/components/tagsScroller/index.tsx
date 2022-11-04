@@ -1,6 +1,7 @@
 import { useLazyQuery } from '@apollo/client'
 import { TagsScroller } from 'components'
 import { MAX_CARDS_SCROLLER_RESULTS } from 'config/constants'
+import { PostStatus } from 'generated/graphql'
 import { memo, useEffect, useState } from 'react'
 import { QUERY_PAGINATE_TAG } from 'services/graphql'
 import { useChannelsStore } from 'services/stores'
@@ -60,6 +61,7 @@ const TagsScrollerHome = ({ item, getCarouselLabel, hasResults }: Props) => {
           postFilters: {
             pageSize: calculateRate(item.CONTENT_TYPE),
             page: tag.postFilters.page + 1 ?? 1,
+            status: PostStatus.Published,
           },
         }
       }
