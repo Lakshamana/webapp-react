@@ -61,6 +61,7 @@ const TagsScrollerHome = ({ item, getCarouselLabel, hasResults }: Props) => {
           postFilters: {
             pageSize: calculateRate(item.CONTENT_TYPE),
             page: tag.postFilters.page + 1 ?? 1,
+            status: PostStatus.Published,
           },
         }
       }
