@@ -21,7 +21,7 @@ const ChannelsGrid = ({ channelsList, channelSelected }: Props) => {
   const getImageUrl = (channel) => {
     const imageOptions: ThumborParams = {
       size: {
-        height: 400,
+        height: 350,
       },
     }
 
