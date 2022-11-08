@@ -1,3 +1,4 @@
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 import * as React from 'react';
@@ -7,6 +8,7 @@ export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K]
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -401,6 +403,7 @@ export type CategoryInput = {
 
 export type CategoryKind = {
   __typename?: 'CategoryKind';
+  access?: Maybe<Scalars['String']>;
   channel: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
@@ -473,6 +476,7 @@ export type ChannelFindAllFilter = {
 
 export type ChannelKind = {
   __typename?: 'ChannelKind';
+  access?: Maybe<Scalars['String']>;
   banner?: Maybe<Scalars['JSON']>;
   customization?: Maybe<ChannelCustomizationOutput>;
   description: Scalars['String'];
@@ -1582,9 +1586,11 @@ export type LiveEventInput = {
 
 export type LiveEventKind = {
   __typename?: 'LiveEventKind';
+  access?: Maybe<Scalars['String']>;
   channel: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['JSONObject']>>;
   geoFence?: Maybe<Scalars['JSONObject']>;
   id: Scalars['ID'];
   isKindAuto: Scalars['Boolean'];
@@ -2195,6 +2201,7 @@ export type Mutation = {
   oneTimePayment: Order;
   organizationPasswordCheck: OrganizationPasswordCheck;
   overrideOrder: Order;
+  pauseSubscription: Order;
   pinCategory: AccountPinnedCategory;
   pinChannel: AccountPinnedChannel;
   pinPost: AccountPinnedPost;
@@ -2685,6 +2692,11 @@ export type MutationOrganizationPasswordCheckArgs = {
 
 export type MutationOverrideOrderArgs = {
   payload: AddOverrideOrder;
+};
+
+
+export type MutationPauseSubscriptionArgs = {
+  payload: CancelSubscription;
 };
 
 
@@ -3738,6 +3750,7 @@ export type PostFilter = {
 
 export type PostKind = {
   __typename?: 'PostKind';
+  access: Scalars['String'];
   channel: Scalars['ID'];
   description: Scalars['String'];
   entitlements?: Maybe<Array<Scalars['JSONObject']>>;
@@ -3913,6 +3926,7 @@ export type ProfileAvatar = {
 
 export type PublicChannelOutput = {
   __typename?: 'PublicChannelOutput';
+  customization?: Maybe<ChannelCustomizationOutput>;
   id: Scalars['ID'];
   kind: Kinds;
   name: Scalars['String'];
@@ -5547,6 +5561,13 @@ export type AddReportMutationVariables = Exact<{
 
 export type AddReportMutation = { __typename?: 'Mutation', addReport: { __typename?: 'Report', status: ReportStatus } };
 
+export type AddViewMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type AddViewMutation = { __typename?: 'Mutation', addView: { __typename?: 'Post', countViewsTotal: number } };
+
 export type DeleteCommentMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -5648,7 +5669,7 @@ export type GetPublicCategoriesQueryVariables = Exact<{
 }>;
 
 
-export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', access?: Maybe<AccessKinds>, parentId?: Maybe<string>, slug?: Maybe<string>, createdAt: any, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, id: string, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetPublicCategoriesQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, parentId?: Maybe<string>, slug?: Maybe<string>, sort: number, kind: Kinds, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', parentId?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, featuredAt?: Maybe<any>, sort: number, geoFence?: Maybe<any>, id: string, kind: Kinds, name: string, customization?: Maybe<{ __typename: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type GetCategoriesCardsQueryVariables = Exact<{
   filter?: Maybe<CategoryFilter>;
@@ -5662,7 +5683,7 @@ export type GetPublicCategoriesCardsQueryVariables = Exact<{
 }>;
 
 
-export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
+export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
 export type CategoryQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5670,21 +5691,14 @@ export type CategoryQueryVariables = Exact<{
 }>;
 
 
-export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
 
 export type CategoryKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type CategoryKindQuery = { __typename?: 'Query', categoryKind: { __typename?: 'CategoryKind', id: string, kind: Kinds, geoFence?: Maybe<any>, name: string, isKindAuto: boolean } };
-
-export type CategoryEntitlementsQueryVariables = Exact<{
-  slug?: Maybe<Scalars['String']>;
-}>;
-
-
-export type CategoryEntitlementsQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, entitlements: Array<any> } };
+export type CategoryKindQuery = { __typename?: 'Query', categoryKind: { __typename?: 'CategoryKind', id: string, access?: Maybe<string>, kind: Kinds, entitlements?: Maybe<Array<any>>, name: string } };
 
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5755,14 +5769,7 @@ export type LiveEventKindQueryVariables = Exact<{
 }>;
 
 
-export type LiveEventKindQuery = { __typename?: 'Query', liveEventKind: { __typename?: 'LiveEventKind', id: string, kind: Kinds, geoFence?: Maybe<any>, slug?: Maybe<string>, title: string } };
-
-export type LiveEventEntitlementsQueryVariables = Exact<{
-  slug?: Maybe<Scalars['String']>;
-}>;
-
-
-export type LiveEventEntitlementsQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, entitlements: Array<any> } };
+export type LiveEventKindQuery = { __typename?: 'Query', liveEventKind: { __typename?: 'LiveEventKind', id: string, access?: Maybe<string>, kind: Kinds, entitlements?: Maybe<Array<any>>, slug?: Maybe<string>, title: string } };
 
 export type GetLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
@@ -5826,49 +5833,42 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, baseUrl?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, countViewsTotal: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, baseUrl?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
 export type PostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type PostKindQuery = { __typename?: 'Query', postKind: { __typename?: 'PostKind', id: string, kind: string, title: string, geofence?: Maybe<any>, slug?: Maybe<string> } };
-
-export type PostEntitlementsQueryVariables = Exact<{
-  slug?: Maybe<Scalars['String']>;
-}>;
-
-
-export type PostEntitlementsQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, entitlements: Array<any> } };
+export type PostKindQuery = { __typename?: 'Query', postKind: { __typename?: 'PostKind', id: string, access: string, kind: string, title: string, entitlements?: Maybe<Array<any>>, slug?: Maybe<string> } };
 
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, countViewsTotal: number, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 export type GetPubicPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
+export type GetPubicPostsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, countViewsTotal: number, access: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, title: string, type: string, publishedAt?: Maybe<any>, countComments: number, countReactions: number, inFeed: boolean, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }>, reactions: Array<{ __typename?: 'PostReactions', count: number, name: string }> }> } };
 
 export type GetPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, countViewsTotal: number, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type GetPublicPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, countViewsTotal: number, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type GetProductQueryVariables = Exact<{
   id: Scalars['String'];
@@ -5883,6 +5883,2951 @@ export type SearchQueryVariables = Exact<{
 
 
 export type SearchQuery = { __typename?: 'Query', search: { __typename?: 'PaginatedSearchResultOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, pageNumberIsGood: boolean, pageSize: number, total: number, rows: Array<{ __typename?: 'SearchCategory', id?: Maybe<string>, name?: Maybe<string>, slug?: Maybe<string>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>> } | { __typename?: 'SearchLiveEvent', id?: Maybe<string>, slug?: Maybe<string>, title?: Maybe<string>, category?: Maybe<{ __typename?: 'SearchCategoryHead', id?: Maybe<string>, name?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, tags?: Maybe<Array<{ __typename?: 'SearchTag', id?: Maybe<string>, title?: Maybe<string> }>> } | { __typename?: 'SearchPost', id?: Maybe<string>, slug?: Maybe<string>, description?: Maybe<string>, title?: Maybe<string>, type?: Maybe<string>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string>, baseUrl?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', mp3Path?: Maybe<string>, filename?: Maybe<string> } | { __typename?: 'MediaPhoto', imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+
+
+
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
+
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;
+
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
+
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
+}
+
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
+  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
+}
+
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
+
+export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+  parent: TParent,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
+
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+  next: NextResolverFn<TResult>,
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = {
+  AccessKinds: AccessKinds;
+  AccessToken: ResolverTypeWrapper<AccessToken>;
+  Account: ResolverTypeWrapper<Account>;
+  AccountActivated: ResolverTypeWrapper<AccountActivated>;
+  AccountGdprLgpd: ResolverTypeWrapper<AccountGdprLgpd>;
+  AccountPinnedCategory: ResolverTypeWrapper<AccountPinnedCategory>;
+  AccountPinnedChannel: ResolverTypeWrapper<AccountPinnedChannel>;
+  AccountPinnedPost: ResolverTypeWrapper<AccountPinnedPost>;
+  AccountSession: ResolverTypeWrapper<AccountSession>;
+  AccountStatus: ResolverTypeWrapper<AccountStatus>;
+  Actions: Actions;
+  ActivateAccount: ActivateAccount;
+  AddComment: AddComment;
+  AddCommentVote: AddCommentVote;
+  AddOrder: AddOrder;
+  AddOrderCustomFields: AddOrderCustomFields;
+  AddOverrideOrder: AddOverrideOrder;
+  AddPendingOrder: AddPendingOrder;
+  AddReaction: AddReaction;
+  AddReport: AddReport;
+  AddedCommentVote: ResolverTypeWrapper<AddedCommentVote>;
+  AudioInput: AudioInput;
+  AvailableChannel: ResolverTypeWrapper<AvailableChannel>;
+  BanAccountTemporary: BanAccountTemporary;
+  Billboard: ResolverTypeWrapper<Billboard>;
+  BillboardActionInput: BillboardActionInput;
+  BillboardActionsOutput: ResolverTypeWrapper<Omit<BillboardActionsOutput, 'route'> & { route?: Maybe<ResolversTypes['MediaRouteUnion']> }>;
+  BillboardCustomizationInput: BillboardCustomizationInput;
+  BillboardCustomizationOutput: ResolverTypeWrapper<BillboardCustomizationOutput>;
+  BillboardTarget: BillboardTarget;
+  BillingAddressInput: BillingAddressInput;
+  BillingPeriodsOutput: ResolverTypeWrapper<BillingPeriodsOutput>;
+  BillingTypesOutput: ResolverTypeWrapper<BillingTypesOutput>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CancelNotificationInput: CancelNotificationInput;
+  CancelNotificationOutput: ResolverTypeWrapper<CancelNotificationOutput>;
+  CancelSubscription: CancelSubscription;
+  Category: ResolverTypeWrapper<Category>;
+  CategoryCustomization: ResolverTypeWrapper<CategoryCustomization>;
+  CategoryCustomizationInput: CategoryCustomizationInput;
+  CategoryFilter: CategoryFilter;
+  CategoryInput: CategoryInput;
+  CategoryKind: ResolverTypeWrapper<CategoryKind>;
+  CategoryPasswordCheck: ResolverTypeWrapper<CategoryPasswordCheck>;
+  CategoryPasswordCheckInput: CategoryPasswordCheckInput;
+  CategorySlugExists: ResolverTypeWrapper<CategorySlugExists>;
+  CategorySortingOutput: ResolverTypeWrapper<CategorySortingOutput>;
+  Channel: ResolversTypes['AvailableChannel'] | ResolversTypes['GeolockedChannel'];
+  ChannelCustomizationInput: ChannelCustomizationInput;
+  ChannelCustomizationLightDarkInput: ChannelCustomizationLightDarkInput;
+  ChannelCustomizationLightDarkOutput: ResolverTypeWrapper<ChannelCustomizationLightDarkOutput>;
+  ChannelCustomizationOutput: ResolverTypeWrapper<ChannelCustomizationOutput>;
+  ChannelFindAllFilter: ChannelFindAllFilter;
+  ChannelKind: ResolverTypeWrapper<ChannelKind>;
+  ChannelPasswordCheck: ResolverTypeWrapper<ChannelPasswordCheck>;
+  ChannelStatus: ChannelStatus;
+  ChildrenCategoryFilter: ChildrenCategoryFilter;
+  Comment: ResolverTypeWrapper<Comment>;
+  CommentAuthor: ResolverTypeWrapper<CommentAuthor>;
+  CommentFilter: CommentFilter;
+  CommentVote: ResolverTypeWrapper<CommentVote>;
+  CommentVoteDirectionEnum: CommentVoteDirectionEnum;
+  CommentVoteStats: ResolverTypeWrapper<CommentVoteStats>;
+  ConfirmOrder: ConfirmOrder;
+  CreateAccountGdprLgpdInput: CreateAccountGdprLgpdInput;
+  CreateAccountInput: CreateAccountInput;
+  CreateAccountPinnedPost: CreateAccountPinnedPost;
+  CreateAccountPinnnedCategory: CreateAccountPinnnedCategory;
+  CreateAccountSessionInput: CreateAccountSessionInput;
+  CreateAccountSocialSignInDto: CreateAccountSocialSignInDto;
+  CreateAudioPost: CreateAudioPost;
+  CreateBillboardInput: CreateBillboardInput;
+  CreateChannelInput: CreateChannelInput;
+  CreateCustomFieldInput: CreateCustomFieldInput;
+  CreateEmailTemplateDTO: CreateEmailTemplateDto;
+  CreateEnvConfigInput: CreateEnvConfigInput;
+  CreateGroupDto: CreateGroupDto;
+  CreateInspireProductInput: CreateInspireProductInput;
+  CreateMediaFromLiveInput: CreateMediaFromLiveInput;
+  CreateMediaInput: CreateMediaInput;
+  CreateMenu: CreateMenu;
+  CreateNestedPermissionsInput: CreateNestedPermissionsInput;
+  CreateOrganizationInput: CreateOrganizationInput;
+  CreatePermissionInput: CreatePermissionInput;
+  CreatePhotoPost: CreatePhotoPost;
+  CreatePlaylistInput: CreatePlaylistInput;
+  CreateProductPriceInput: CreateProductPriceInput;
+  CreateRoleInput: CreateRoleInput;
+  CreateSubjectInput: CreateSubjectInput;
+  CreateTagInput: CreateTagInput;
+  CreateTextPost: CreateTextPost;
+  CreateUploadInput: CreateUploadInput;
+  CreateVideoPost: CreateVideoPost;
+  CurrencyOutput: ResolverTypeWrapper<CurrencyOutput>;
+  CustomFieldInput: CustomFieldInput;
+  CustomFieldTypesEnum: CustomFieldTypesEnum;
+  CustomPushNotificationInput: CustomPushNotificationInput;
+  CustomizationMediaOutput: ResolverTypeWrapper<CustomizationMediaOutput>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  DefaultCreditCardPaymentMethod: ResolverTypeWrapper<DefaultCreditCardPaymentMethod>;
+  DelayedOptionEnum: DelayedOptionEnum;
+  EmailResponseEnvelopeDTO: ResolverTypeWrapper<EmailResponseEnvelopeDto>;
+  EmailSent: ResolverTypeWrapper<EmailSent>;
+  EmailTemplate: ResolverTypeWrapper<EmailTemplate>;
+  EmailTemplateLocales: ResolverTypeWrapper<EmailTemplateLocales>;
+  Embed: ResolverTypeWrapper<Embed>;
+  EmbedFilterInput: EmbedFilterInput;
+  EmbedInput: EmbedInput;
+  EncryptedEnvConfig: ResolverTypeWrapper<EncryptedEnvConfig>;
+  EngagedUser: ResolverTypeWrapper<EngagedUser>;
+  EntitlementGeofenceInput: EntitlementGeofenceInput;
+  EntitlementsGeofenceInput: EntitlementsGeofenceInput;
+  EnvConfig: ResolverTypeWrapper<EnvConfig>;
+  FilterFindAll: FilterFindAll;
+  FilterFindAllOrders: FilterFindAllOrders;
+  FilterPinnedCategories: FilterPinnedCategories;
+  FilterPinnedPosts: FilterPinnedPosts;
+  FilterPlaylistsInput: FilterPlaylistsInput;
+  FindAllGroupsRequestDto: FindAllGroupsRequestDto;
+  FindAllMediasInput: FindAllMediasInput;
+  FindAllProductPricesParams: FindAllProductPricesParams;
+  FindAllQueryParamsDto: FindAllQueryParamsDto;
+  FindAllRolesRequestDto: FindAllRolesRequestDto;
+  FindAllSubjectsQueryParamsDto: FindAllSubjectsQueryParamsDto;
+  FindBillboardsInput: FindBillboardsInput;
+  FindManyTagsInput: FindManyTagsInput;
+  FindReportsInput: FindReportsInput;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  ForgetAccountInput: ForgetAccountInput;
+  ForgotPassword: ForgotPassword;
+  GeoFenceType: GeoFenceType;
+  GeofenceInput: GeofenceInput;
+  GeolockedChannel: ResolverTypeWrapper<GeolockedChannel>;
+  GroupDto: ResolverTypeWrapper<GroupDto>;
+  GroupsSortBy: GroupsSortBy;
+  GroupsSortFields: GroupsSortFields;
+  HasAccessInput: HasAccessInput;
+  HasAccessOutput: ResolverTypeWrapper<HasAccessOutput>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  InspireBillingPeriods: ResolverTypeWrapper<InspireBillingPeriods>;
+  InspireBillingTypes: ResolverTypeWrapper<InspireBillingTypes>;
+  InspireCurrency: ResolverTypeWrapper<InspireCurrency>;
+  InspireMetadata: ResolverTypeWrapper<InspireMetadata>;
+  InspireMetadataInput: InspireMetadataInput;
+  InspirePaymentLinkItem: ResolverTypeWrapper<InspirePaymentLinkItem>;
+  InspireProduct: ResolverTypeWrapper<InspireProduct>;
+  InspireProductFiltered: ResolverTypeWrapper<InspireProductFiltered>;
+  InspireProductMetadataInput: InspireProductMetadataInput;
+  InspireProductPriceInput: InspireProductPriceInput;
+  InspireProductPriceTier: ResolverTypeWrapper<InspireProductPriceTier>;
+  InspireProductPriceTierInput: InspireProductPriceTierInput;
+  InspireProductPrices: ResolverTypeWrapper<InspireProductPrices>;
+  InspireRecurringUsageTypes: ResolverTypeWrapper<InspireRecurringUsageTypes>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  InviteTeamMemberInput: InviteTeamMemberInput;
+  JSON: ResolverTypeWrapper<Scalars['JSON']>;
+  JSONObject: ResolverTypeWrapper<Scalars['JSONObject']>;
+  Kinds: Kinds;
+  LanguageMessage: LanguageMessage;
+  ListNotificationInput: ListNotificationInput;
+  LiveEvent: ResolverTypeWrapper<LiveEvent>;
+  LiveEventConfig: LiveEventConfig;
+  LiveEventConfigOutput: ResolverTypeWrapper<LiveEventConfigOutput>;
+  LiveEventFilter: LiveEventFilter;
+  LiveEventGoLiveOutput: ResolverTypeWrapper<LiveEventGoLiveOutput>;
+  LiveEventInput: LiveEventInput;
+  LiveEventKind: ResolverTypeWrapper<LiveEventKind>;
+  LiveEventPasswordCheck: ResolverTypeWrapper<LiveEventPasswordCheck>;
+  LiveEventPasswordCheckInput: LiveEventPasswordCheckInput;
+  LiveEventSlugExists: ResolverTypeWrapper<LiveEventSlugExists>;
+  LiveEventStopLiveOutput: ResolverTypeWrapper<LiveEventStopLiveOutput>;
+  LiveEventType: LiveEventType;
+  LocaleBody: LocaleBody;
+  LocaleTypes: LocaleTypes;
+  Me: ResolverTypeWrapper<Me>;
+  Media: ResolverTypeWrapper<Media>;
+  MediaAudio: ResolverTypeWrapper<MediaAudio>;
+  MediaCustomizationOutput: ResolverTypeWrapper<MediaCustomizationOutput>;
+  MediaFromLiveResult: ResolverTypeWrapper<MediaFromLiveResult>;
+  MediaLocale: MediaLocale;
+  MediaOrientation: MediaOrientation;
+  MediaPhoto: ResolverTypeWrapper<MediaPhoto>;
+  MediaRouteContent: ResolverTypeWrapper<MediaRouteContent>;
+  MediaRouteUnion: ResolversTypes['MediaAudio'] | ResolversTypes['MediaPhoto'] | ResolversTypes['MediaRouteContent'] | ResolversTypes['MediaVideo'];
+  MediaStatusEnum: MediaStatusEnum;
+  MediaSubtitle: ResolverTypeWrapper<MediaSubtitle>;
+  MediaTypeEnum: MediaTypeEnum;
+  MediaUnion: ResolversTypes['MediaAudio'] | ResolversTypes['MediaPhoto'] | ResolversTypes['MediaSubtitle'] | ResolversTypes['MediaVideo'];
+  MediaVideo: ResolverTypeWrapper<MediaVideo>;
+  Menu: ResolverTypeWrapper<Menu>;
+  MenuFilter: MenuFilter;
+  MenuSortingOutput: ResolverTypeWrapper<MenuSortingOutput>;
+  Mutation: ResolverTypeWrapper<{}>;
+  MyProducts: ResolverTypeWrapper<MyProducts>;
+  NotificationOutput: ResolverTypeWrapper<NotificationOutput>;
+  OneSignalLanguage: OneSignalLanguage;
+  OneSignalStatusEnum: OneSignalStatusEnum;
+  Order: ResolverTypeWrapper<Order>;
+  OrderStatus: OrderStatus;
+  Organization: ResolverTypeWrapper<Organization>;
+  OrganizationFindAllFilter: OrganizationFindAllFilter;
+  OrganizationKind: ResolverTypeWrapper<OrganizationKind>;
+  OrganizationOneSignalOutput: ResolverTypeWrapper<OrganizationOneSignalOutput>;
+  OrganizationPasswordCheck: ResolverTypeWrapper<OrganizationPasswordCheck>;
+  OrganizationPublic: ResolverTypeWrapper<OrganizationPublic>;
+  OrganizationPublicCustomization: ResolverTypeWrapper<OrganizationPublicCustomization>;
+  OrganizationPublicOutput: ResolverTypeWrapper<OrganizationPublicOutput>;
+  OrganizationPublicSettings: ResolverTypeWrapper<OrganizationPublicSettings>;
+  OrganizationSettings: ResolverTypeWrapper<OrganizationSettings>;
+  OrganizationSortArs: OrganizationSortArs;
+  OrganizationSortFields: OrganizationSortFields;
+  PaginatedAccountsOutput: ResolverTypeWrapper<PaginatedAccountsOutput>;
+  PaginatedBillboardsOutput: ResolverTypeWrapper<PaginatedBillboardsOutput>;
+  PaginatedCategoriesOutput: ResolverTypeWrapper<PaginatedCategoriesOutput>;
+  PaginatedCommentsOutput: ResolverTypeWrapper<PaginatedCommentsOutput>;
+  PaginatedLiveEventsOutput: ResolverTypeWrapper<PaginatedLiveEventsOutput>;
+  PaginatedMediaUnion: ResolverTypeWrapper<Omit<PaginatedMediaUnion, 'rows'> & { rows: Array<ResolversTypes['MediaUnion']> }>;
+  PaginatedMenusOutput: ResolverTypeWrapper<PaginatedMenusOutput>;
+  PaginatedNotificationOutput: ResolverTypeWrapper<PaginatedNotificationOutput>;
+  PaginatedPostsOutput: ResolverTypeWrapper<PaginatedPostsOutput>;
+  PaginatedReportsOutput: ResolverTypeWrapper<PaginatedReportsOutput>;
+  PaginatedRolesOutput: ResolverTypeWrapper<PaginatedRolesOutput>;
+  PaginatedSearchResultOutput: ResolverTypeWrapper<Omit<PaginatedSearchResultOutput, 'rows'> & { rows: Array<ResolversTypes['SearchResult']> }>;
+  PaginationArgs: PaginationArgs;
+  Parameters: ResolverTypeWrapper<Parameters>;
+  PasswordChanged: ResolverTypeWrapper<PasswordChanged>;
+  PasswordOnlyChanged: ResolverTypeWrapper<PasswordOnlyChanged>;
+  PaymentMethods: PaymentMethods;
+  PermissionDto: ResolverTypeWrapper<PermissionDto>;
+  PermissionsSortBy: PermissionsSortBy;
+  PermissionsSortFields: PermissionsSortFields;
+  PhotoInput: PhotoInput;
+  PinnedChannelOutput: ResolverTypeWrapper<PinnedChannelOutput>;
+  PlatformExclusive: PlatformExclusive;
+  PlaylistOutput: ResolverTypeWrapper<PlaylistOutput>;
+  PlaylistsOutput: ResolverTypeWrapper<PlaylistsOutput>;
+  Post: ResolverTypeWrapper<Omit<Post, 'media'> & { media?: Maybe<ResolversTypes['MediaUnion']> }>;
+  PostAccess: PostAccess;
+  PostFilter: PostFilter;
+  PostKind: ResolverTypeWrapper<PostKind>;
+  PostPasswordCheck: ResolverTypeWrapper<PostPasswordCheck>;
+  PostPasswordCheckInput: PostPasswordCheckInput;
+  PostReactions: ResolverTypeWrapper<PostReactions>;
+  PostSlugExists: ResolverTypeWrapper<PostSlugExists>;
+  PostStatus: PostStatus;
+  PostType: PostType;
+  PriceTierOutput: ResolverTypeWrapper<PriceTierOutput>;
+  PricingModelOutput: ResolverTypeWrapper<PricingModelOutput>;
+  ProductOutput: ResolverTypeWrapper<ProductOutput>;
+  ProductPriceOutput: ResolverTypeWrapper<ProductPriceOutput>;
+  ProductPriceTierInput: ProductPriceTierInput;
+  ProductPricesOutput: ResolverTypeWrapper<ProductPricesOutput>;
+  Profile: ResolverTypeWrapper<Profile>;
+  ProfileAvatar: ResolverTypeWrapper<ProfileAvatar>;
+  PublicChannelOutput: ResolverTypeWrapper<PublicChannelOutput>;
+  PublishRemoteConfig: ResolverTypeWrapper<PublishRemoteConfig>;
+  PushNotification: PushNotification;
+  PushNotificationInput: PushNotificationInput;
+  PushNotificationOutput: ResolverTypeWrapper<PushNotificationOutput>;
+  PushNotificationResult: ResolverTypeWrapper<PushNotificationResult>;
+  Query: ResolverTypeWrapper<{}>;
+  Reaction: Reaction;
+  ReactionsAggregate: ResolverTypeWrapper<ReactionsAggregate>;
+  RecurringMeteredUsagesOutput: ResolverTypeWrapper<RecurringMeteredUsagesOutput>;
+  RecurringUsageTypesOutput: ResolverTypeWrapper<RecurringUsageTypesOutput>;
+  RefreshSignIn: ResolverTypeWrapper<RefreshSignIn>;
+  RefreshToken: ResolverTypeWrapper<RefreshToken>;
+  RefreshTokenInput: RefreshTokenInput;
+  RemoteConfig: RemoteConfig;
+  RemoveReaction: RemoveReaction;
+  Report: ResolverTypeWrapper<Omit<Report, 'reportedObject'> & { reportedObject?: Maybe<ResolversTypes['ReportSubjectUnion']> }>;
+  ReportStatus: ReportStatus;
+  ReportSubjectUnion: ResolversTypes['Comment'] | ResolversTypes['Post'] | ResolversTypes['ReportedAccountOutput'];
+  ReportType: ReportType;
+  ReportedAccountOutput: ResolverTypeWrapper<ReportedAccountOutput>;
+  ResendActivateAccount: ResendActivateAccount;
+  ResponseAccountsCount: ResolverTypeWrapper<ResponseAccountsCount>;
+  ResponseAvailabilityOutput: ResolverTypeWrapper<ResponseAvailabilityOutput>;
+  ResponseCustomFieldsOutput: ResolverTypeWrapper<ResponseCustomFieldsOutput>;
+  ResponseEmailSendedDTO: ResolverTypeWrapper<ResponseEmailSendedDto>;
+  ResponseFieldOutput: ResolverTypeWrapper<ResponseFieldOutput>;
+  ResponseMediaUploadOutput: ResolverTypeWrapper<ResponseMediaUploadOutput>;
+  ResponseUploadCreation: ResolverTypeWrapper<ResponseUploadCreation>;
+  ResponseUploadOutput: ResolverTypeWrapper<ResponseUploadOutput>;
+  RolesDto: ResolverTypeWrapper<RolesDto>;
+  RolesMembersOutput: ResolverTypeWrapper<RolesMembersOutput>;
+  SearchCategory: ResolverTypeWrapper<SearchCategory>;
+  SearchCategoryHead: ResolverTypeWrapper<SearchCategoryHead>;
+  SearchFilter: SearchFilter;
+  SearchFilterOperator: SearchFilterOperator;
+  SearchLiveEvent: ResolverTypeWrapper<SearchLiveEvent>;
+  SearchPost: ResolverTypeWrapper<Omit<SearchPost, 'media'> & { media?: Maybe<ResolversTypes['MediaUnion']> }>;
+  SearchResult: ResolversTypes['SearchCategory'] | ResolversTypes['SearchLiveEvent'] | ResolversTypes['SearchPost'];
+  SearchResultEnum: SearchResultEnum;
+  SearchTag: ResolverTypeWrapper<SearchTag>;
+  SearchUpdateChannel: ResolverTypeWrapper<SearchUpdateChannel>;
+  SendEmailDTO: SendEmailDto;
+  SignInInput: SignInInput;
+  SingIn: ResolverTypeWrapper<SingIn>;
+  SortDirection: SortDirection;
+  StartMediaUploadInput: StartMediaUploadInput;
+  Status: Status;
+  StatusFilter: StatusFilter;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  SubjectDto: ResolverTypeWrapper<SubjectDto>;
+  SubjectsSortBy: SubjectsSortBy;
+  SubjectsSortFields: SubjectsSortFields;
+  TagOutput: ResolverTypeWrapper<TagOutput>;
+  TagsOutput: ResolverTypeWrapper<TagsOutput>;
+  UncancelSubscription: UncancelSubscription;
+  UpdateAccountGdprLgpdInput: UpdateAccountGdprLgpdInput;
+  UpdateAccountInput: UpdateAccountInput;
+  UpdateAccountIsAdminInput: UpdateAccountIsAdminInput;
+  UpdateAccountPinnedCategory: UpdateAccountPinnedCategory;
+  UpdateAccountPinnedPost: UpdateAccountPinnedPost;
+  UpdateAccountSessionInput: UpdateAccountSessionInput;
+  UpdateAudioPost: UpdateAudioPost;
+  UpdateBillboardInput: UpdateBillboardInput;
+  UpdateCategoriesSorting: UpdateCategoriesSorting;
+  UpdateCategoryInput: UpdateCategoryInput;
+  UpdateCategorySortingItem: UpdateCategorySortingItem;
+  UpdateChannelInput: UpdateChannelInput;
+  UpdateComment: UpdateComment;
+  UpdateCreditCardPaymentMethod: UpdateCreditCardPaymentMethod;
+  UpdateCustomFieldInput: UpdateCustomFieldInput;
+  UpdateEmailTemplateDTO: UpdateEmailTemplateDto;
+  UpdateEmbed: UpdateEmbed;
+  UpdateEnvConfigInput: UpdateEnvConfigInput;
+  UpdateGroupDto: UpdateGroupDto;
+  UpdateLiveEventInput: UpdateLiveEventInput;
+  UpdateMediaAudio: UpdateMediaAudio;
+  UpdateMediaPhoto: UpdateMediaPhoto;
+  UpdateMediaSubtitlesInput: UpdateMediaSubtitlesInput;
+  UpdateMediaVideo: UpdateMediaVideo;
+  UpdateMenu: UpdateMenu;
+  UpdateMenuSortingItem: UpdateMenuSortingItem;
+  UpdateMenusSorting: UpdateMenusSorting;
+  UpdateMyAccountInput: UpdateMyAccountInput;
+  UpdateOrder: UpdateOrder;
+  UpdateOrderCustomFields: UpdateOrderCustomFields;
+  UpdateOrganizationInput: UpdateOrganizationInput;
+  UpdatePassword: UpdatePassword;
+  UpdatePasswordOnlyInput: UpdatePasswordOnlyInput;
+  UpdatePermissionInput: UpdatePermissionInput;
+  UpdatePhotoPost: UpdatePhotoPost;
+  UpdatePlaylistInput: UpdatePlaylistInput;
+  UpdateProductInput: UpdateProductInput;
+  UpdateProductPriceInput: UpdateProductPriceInput;
+  UpdateProfileInput: UpdateProfileInput;
+  UpdateReport: UpdateReport;
+  UpdateRoleInput: UpdateRoleInput;
+  UpdateSubjectInput: UpdateSubjectInput;
+  UpdateTagInput: UpdateTagInput;
+  UpdateTextPost: UpdateTextPost;
+  UpdateUploadInput: UpdateUploadInput;
+  UpdateVideoPost: UpdateVideoPost;
+  UploadStatusEnum: UploadStatusEnum;
+  VerifyEmailDTO: VerifyEmailDto;
+  VerifyMail: ResolverTypeWrapper<VerifyMail>;
+  VideoInput: VideoInput;
+  VoidScalar: ResolverTypeWrapper<Scalars['VoidScalar']>;
+  filterRange: FilterRange;
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
+  AccessToken: AccessToken;
+  Account: Account;
+  AccountActivated: AccountActivated;
+  AccountGdprLgpd: AccountGdprLgpd;
+  AccountPinnedCategory: AccountPinnedCategory;
+  AccountPinnedChannel: AccountPinnedChannel;
+  AccountPinnedPost: AccountPinnedPost;
+  AccountSession: AccountSession;
+  AccountStatus: AccountStatus;
+  ActivateAccount: ActivateAccount;
+  AddComment: AddComment;
+  AddCommentVote: AddCommentVote;
+  AddOrder: AddOrder;
+  AddOrderCustomFields: AddOrderCustomFields;
+  AddOverrideOrder: AddOverrideOrder;
+  AddPendingOrder: AddPendingOrder;
+  AddReaction: AddReaction;
+  AddReport: AddReport;
+  AddedCommentVote: AddedCommentVote;
+  AudioInput: AudioInput;
+  AvailableChannel: AvailableChannel;
+  BanAccountTemporary: BanAccountTemporary;
+  Billboard: Billboard;
+  BillboardActionInput: BillboardActionInput;
+  BillboardActionsOutput: Omit<BillboardActionsOutput, 'route'> & { route?: Maybe<ResolversParentTypes['MediaRouteUnion']> };
+  BillboardCustomizationInput: BillboardCustomizationInput;
+  BillboardCustomizationOutput: BillboardCustomizationOutput;
+  BillingAddressInput: BillingAddressInput;
+  BillingPeriodsOutput: BillingPeriodsOutput;
+  BillingTypesOutput: BillingTypesOutput;
+  Boolean: Scalars['Boolean'];
+  CancelNotificationInput: CancelNotificationInput;
+  CancelNotificationOutput: CancelNotificationOutput;
+  CancelSubscription: CancelSubscription;
+  Category: Category;
+  CategoryCustomization: CategoryCustomization;
+  CategoryCustomizationInput: CategoryCustomizationInput;
+  CategoryFilter: CategoryFilter;
+  CategoryInput: CategoryInput;
+  CategoryKind: CategoryKind;
+  CategoryPasswordCheck: CategoryPasswordCheck;
+  CategoryPasswordCheckInput: CategoryPasswordCheckInput;
+  CategorySlugExists: CategorySlugExists;
+  CategorySortingOutput: CategorySortingOutput;
+  Channel: ResolversParentTypes['AvailableChannel'] | ResolversParentTypes['GeolockedChannel'];
+  ChannelCustomizationInput: ChannelCustomizationInput;
+  ChannelCustomizationLightDarkInput: ChannelCustomizationLightDarkInput;
+  ChannelCustomizationLightDarkOutput: ChannelCustomizationLightDarkOutput;
+  ChannelCustomizationOutput: ChannelCustomizationOutput;
+  ChannelFindAllFilter: ChannelFindAllFilter;
+  ChannelKind: ChannelKind;
+  ChannelPasswordCheck: ChannelPasswordCheck;
+  ChildrenCategoryFilter: ChildrenCategoryFilter;
+  Comment: Comment;
+  CommentAuthor: CommentAuthor;
+  CommentFilter: CommentFilter;
+  CommentVote: CommentVote;
+  CommentVoteStats: CommentVoteStats;
+  ConfirmOrder: ConfirmOrder;
+  CreateAccountGdprLgpdInput: CreateAccountGdprLgpdInput;
+  CreateAccountInput: CreateAccountInput;
+  CreateAccountPinnedPost: CreateAccountPinnedPost;
+  CreateAccountPinnnedCategory: CreateAccountPinnnedCategory;
+  CreateAccountSessionInput: CreateAccountSessionInput;
+  CreateAccountSocialSignInDto: CreateAccountSocialSignInDto;
+  CreateAudioPost: CreateAudioPost;
+  CreateBillboardInput: CreateBillboardInput;
+  CreateChannelInput: CreateChannelInput;
+  CreateCustomFieldInput: CreateCustomFieldInput;
+  CreateEmailTemplateDTO: CreateEmailTemplateDto;
+  CreateEnvConfigInput: CreateEnvConfigInput;
+  CreateGroupDto: CreateGroupDto;
+  CreateInspireProductInput: CreateInspireProductInput;
+  CreateMediaFromLiveInput: CreateMediaFromLiveInput;
+  CreateMediaInput: CreateMediaInput;
+  CreateMenu: CreateMenu;
+  CreateNestedPermissionsInput: CreateNestedPermissionsInput;
+  CreateOrganizationInput: CreateOrganizationInput;
+  CreatePermissionInput: CreatePermissionInput;
+  CreatePhotoPost: CreatePhotoPost;
+  CreatePlaylistInput: CreatePlaylistInput;
+  CreateProductPriceInput: CreateProductPriceInput;
+  CreateRoleInput: CreateRoleInput;
+  CreateSubjectInput: CreateSubjectInput;
+  CreateTagInput: CreateTagInput;
+  CreateTextPost: CreateTextPost;
+  CreateUploadInput: CreateUploadInput;
+  CreateVideoPost: CreateVideoPost;
+  CurrencyOutput: CurrencyOutput;
+  CustomFieldInput: CustomFieldInput;
+  CustomPushNotificationInput: CustomPushNotificationInput;
+  CustomizationMediaOutput: CustomizationMediaOutput;
+  DateTime: Scalars['DateTime'];
+  DefaultCreditCardPaymentMethod: DefaultCreditCardPaymentMethod;
+  EmailResponseEnvelopeDTO: EmailResponseEnvelopeDto;
+  EmailSent: EmailSent;
+  EmailTemplate: EmailTemplate;
+  EmailTemplateLocales: EmailTemplateLocales;
+  Embed: Embed;
+  EmbedFilterInput: EmbedFilterInput;
+  EmbedInput: EmbedInput;
+  EncryptedEnvConfig: EncryptedEnvConfig;
+  EngagedUser: EngagedUser;
+  EntitlementGeofenceInput: EntitlementGeofenceInput;
+  EntitlementsGeofenceInput: EntitlementsGeofenceInput;
+  EnvConfig: EnvConfig;
+  FilterFindAll: FilterFindAll;
+  FilterFindAllOrders: FilterFindAllOrders;
+  FilterPinnedCategories: FilterPinnedCategories;
+  FilterPinnedPosts: FilterPinnedPosts;
+  FilterPlaylistsInput: FilterPlaylistsInput;
+  FindAllGroupsRequestDto: FindAllGroupsRequestDto;
+  FindAllMediasInput: FindAllMediasInput;
+  FindAllProductPricesParams: FindAllProductPricesParams;
+  FindAllQueryParamsDto: FindAllQueryParamsDto;
+  FindAllRolesRequestDto: FindAllRolesRequestDto;
+  FindAllSubjectsQueryParamsDto: FindAllSubjectsQueryParamsDto;
+  FindBillboardsInput: FindBillboardsInput;
+  FindManyTagsInput: FindManyTagsInput;
+  FindReportsInput: FindReportsInput;
+  Float: Scalars['Float'];
+  ForgetAccountInput: ForgetAccountInput;
+  ForgotPassword: ForgotPassword;
+  GeofenceInput: GeofenceInput;
+  GeolockedChannel: GeolockedChannel;
+  GroupDto: GroupDto;
+  GroupsSortBy: GroupsSortBy;
+  HasAccessInput: HasAccessInput;
+  HasAccessOutput: HasAccessOutput;
+  ID: Scalars['ID'];
+  InspireBillingPeriods: InspireBillingPeriods;
+  InspireBillingTypes: InspireBillingTypes;
+  InspireCurrency: InspireCurrency;
+  InspireMetadata: InspireMetadata;
+  InspireMetadataInput: InspireMetadataInput;
+  InspirePaymentLinkItem: InspirePaymentLinkItem;
+  InspireProduct: InspireProduct;
+  InspireProductFiltered: InspireProductFiltered;
+  InspireProductMetadataInput: InspireProductMetadataInput;
+  InspireProductPriceInput: InspireProductPriceInput;
+  InspireProductPriceTier: InspireProductPriceTier;
+  InspireProductPriceTierInput: InspireProductPriceTierInput;
+  InspireProductPrices: InspireProductPrices;
+  InspireRecurringUsageTypes: InspireRecurringUsageTypes;
+  Int: Scalars['Int'];
+  InviteTeamMemberInput: InviteTeamMemberInput;
+  JSON: Scalars['JSON'];
+  JSONObject: Scalars['JSONObject'];
+  LanguageMessage: LanguageMessage;
+  ListNotificationInput: ListNotificationInput;
+  LiveEvent: LiveEvent;
+  LiveEventConfig: LiveEventConfig;
+  LiveEventConfigOutput: LiveEventConfigOutput;
+  LiveEventFilter: LiveEventFilter;
+  LiveEventGoLiveOutput: LiveEventGoLiveOutput;
+  LiveEventInput: LiveEventInput;
+  LiveEventKind: LiveEventKind;
+  LiveEventPasswordCheck: LiveEventPasswordCheck;
+  LiveEventPasswordCheckInput: LiveEventPasswordCheckInput;
+  LiveEventSlugExists: LiveEventSlugExists;
+  LiveEventStopLiveOutput: LiveEventStopLiveOutput;
+  LocaleBody: LocaleBody;
+  Me: Me;
+  Media: Media;
+  MediaAudio: MediaAudio;
+  MediaCustomizationOutput: MediaCustomizationOutput;
+  MediaFromLiveResult: MediaFromLiveResult;
+  MediaPhoto: MediaPhoto;
+  MediaRouteContent: MediaRouteContent;
+  MediaRouteUnion: ResolversParentTypes['MediaAudio'] | ResolversParentTypes['MediaPhoto'] | ResolversParentTypes['MediaRouteContent'] | ResolversParentTypes['MediaVideo'];
+  MediaSubtitle: MediaSubtitle;
+  MediaUnion: ResolversParentTypes['MediaAudio'] | ResolversParentTypes['MediaPhoto'] | ResolversParentTypes['MediaSubtitle'] | ResolversParentTypes['MediaVideo'];
+  MediaVideo: MediaVideo;
+  Menu: Menu;
+  MenuFilter: MenuFilter;
+  MenuSortingOutput: MenuSortingOutput;
+  Mutation: {};
+  MyProducts: MyProducts;
+  NotificationOutput: NotificationOutput;
+  Order: Order;
+  Organization: Organization;
+  OrganizationFindAllFilter: OrganizationFindAllFilter;
+  OrganizationKind: OrganizationKind;
+  OrganizationOneSignalOutput: OrganizationOneSignalOutput;
+  OrganizationPasswordCheck: OrganizationPasswordCheck;
+  OrganizationPublic: OrganizationPublic;
+  OrganizationPublicCustomization: OrganizationPublicCustomization;
+  OrganizationPublicOutput: OrganizationPublicOutput;
+  OrganizationPublicSettings: OrganizationPublicSettings;
+  OrganizationSettings: OrganizationSettings;
+  OrganizationSortArs: OrganizationSortArs;
+  PaginatedAccountsOutput: PaginatedAccountsOutput;
+  PaginatedBillboardsOutput: PaginatedBillboardsOutput;
+  PaginatedCategoriesOutput: PaginatedCategoriesOutput;
+  PaginatedCommentsOutput: PaginatedCommentsOutput;
+  PaginatedLiveEventsOutput: PaginatedLiveEventsOutput;
+  PaginatedMediaUnion: Omit<PaginatedMediaUnion, 'rows'> & { rows: Array<ResolversParentTypes['MediaUnion']> };
+  PaginatedMenusOutput: PaginatedMenusOutput;
+  PaginatedNotificationOutput: PaginatedNotificationOutput;
+  PaginatedPostsOutput: PaginatedPostsOutput;
+  PaginatedReportsOutput: PaginatedReportsOutput;
+  PaginatedRolesOutput: PaginatedRolesOutput;
+  PaginatedSearchResultOutput: Omit<PaginatedSearchResultOutput, 'rows'> & { rows: Array<ResolversParentTypes['SearchResult']> };
+  PaginationArgs: PaginationArgs;
+  Parameters: Parameters;
+  PasswordChanged: PasswordChanged;
+  PasswordOnlyChanged: PasswordOnlyChanged;
+  PermissionDto: PermissionDto;
+  PermissionsSortBy: PermissionsSortBy;
+  PhotoInput: PhotoInput;
+  PinnedChannelOutput: PinnedChannelOutput;
+  PlaylistOutput: PlaylistOutput;
+  PlaylistsOutput: PlaylistsOutput;
+  Post: Omit<Post, 'media'> & { media?: Maybe<ResolversParentTypes['MediaUnion']> };
+  PostFilter: PostFilter;
+  PostKind: PostKind;
+  PostPasswordCheck: PostPasswordCheck;
+  PostPasswordCheckInput: PostPasswordCheckInput;
+  PostReactions: PostReactions;
+  PostSlugExists: PostSlugExists;
+  PriceTierOutput: PriceTierOutput;
+  PricingModelOutput: PricingModelOutput;
+  ProductOutput: ProductOutput;
+  ProductPriceOutput: ProductPriceOutput;
+  ProductPriceTierInput: ProductPriceTierInput;
+  ProductPricesOutput: ProductPricesOutput;
+  Profile: Profile;
+  ProfileAvatar: ProfileAvatar;
+  PublicChannelOutput: PublicChannelOutput;
+  PublishRemoteConfig: PublishRemoteConfig;
+  PushNotification: PushNotification;
+  PushNotificationInput: PushNotificationInput;
+  PushNotificationOutput: PushNotificationOutput;
+  PushNotificationResult: PushNotificationResult;
+  Query: {};
+  ReactionsAggregate: ReactionsAggregate;
+  RecurringMeteredUsagesOutput: RecurringMeteredUsagesOutput;
+  RecurringUsageTypesOutput: RecurringUsageTypesOutput;
+  RefreshSignIn: RefreshSignIn;
+  RefreshToken: RefreshToken;
+  RefreshTokenInput: RefreshTokenInput;
+  RemoteConfig: RemoteConfig;
+  RemoveReaction: RemoveReaction;
+  Report: Omit<Report, 'reportedObject'> & { reportedObject?: Maybe<ResolversParentTypes['ReportSubjectUnion']> };
+  ReportSubjectUnion: ResolversParentTypes['Comment'] | ResolversParentTypes['Post'] | ResolversParentTypes['ReportedAccountOutput'];
+  ReportedAccountOutput: ReportedAccountOutput;
+  ResendActivateAccount: ResendActivateAccount;
+  ResponseAccountsCount: ResponseAccountsCount;
+  ResponseAvailabilityOutput: ResponseAvailabilityOutput;
+  ResponseCustomFieldsOutput: ResponseCustomFieldsOutput;
+  ResponseEmailSendedDTO: ResponseEmailSendedDto;
+  ResponseFieldOutput: ResponseFieldOutput;
+  ResponseMediaUploadOutput: ResponseMediaUploadOutput;
+  ResponseUploadCreation: ResponseUploadCreation;
+  ResponseUploadOutput: ResponseUploadOutput;
+  RolesDto: RolesDto;
+  RolesMembersOutput: RolesMembersOutput;
+  SearchCategory: SearchCategory;
+  SearchCategoryHead: SearchCategoryHead;
+  SearchFilter: SearchFilter;
+  SearchFilterOperator: SearchFilterOperator;
+  SearchLiveEvent: SearchLiveEvent;
+  SearchPost: Omit<SearchPost, 'media'> & { media?: Maybe<ResolversParentTypes['MediaUnion']> };
+  SearchResult: ResolversParentTypes['SearchCategory'] | ResolversParentTypes['SearchLiveEvent'] | ResolversParentTypes['SearchPost'];
+  SearchTag: SearchTag;
+  SearchUpdateChannel: SearchUpdateChannel;
+  SendEmailDTO: SendEmailDto;
+  SignInInput: SignInInput;
+  SingIn: SingIn;
+  StartMediaUploadInput: StartMediaUploadInput;
+  StatusFilter: StatusFilter;
+  String: Scalars['String'];
+  SubjectDto: SubjectDto;
+  SubjectsSortBy: SubjectsSortBy;
+  TagOutput: TagOutput;
+  TagsOutput: TagsOutput;
+  UncancelSubscription: UncancelSubscription;
+  UpdateAccountGdprLgpdInput: UpdateAccountGdprLgpdInput;
+  UpdateAccountInput: UpdateAccountInput;
+  UpdateAccountIsAdminInput: UpdateAccountIsAdminInput;
+  UpdateAccountPinnedCategory: UpdateAccountPinnedCategory;
+  UpdateAccountPinnedPost: UpdateAccountPinnedPost;
+  UpdateAccountSessionInput: UpdateAccountSessionInput;
+  UpdateAudioPost: UpdateAudioPost;
+  UpdateBillboardInput: UpdateBillboardInput;
+  UpdateCategoriesSorting: UpdateCategoriesSorting;
+  UpdateCategoryInput: UpdateCategoryInput;
+  UpdateCategorySortingItem: UpdateCategorySortingItem;
+  UpdateChannelInput: UpdateChannelInput;
+  UpdateComment: UpdateComment;
+  UpdateCreditCardPaymentMethod: UpdateCreditCardPaymentMethod;
+  UpdateCustomFieldInput: UpdateCustomFieldInput;
+  UpdateEmailTemplateDTO: UpdateEmailTemplateDto;
+  UpdateEmbed: UpdateEmbed;
+  UpdateEnvConfigInput: UpdateEnvConfigInput;
+  UpdateGroupDto: UpdateGroupDto;
+  UpdateLiveEventInput: UpdateLiveEventInput;
+  UpdateMediaAudio: UpdateMediaAudio;
+  UpdateMediaPhoto: UpdateMediaPhoto;
+  UpdateMediaSubtitlesInput: UpdateMediaSubtitlesInput;
+  UpdateMediaVideo: UpdateMediaVideo;
+  UpdateMenu: UpdateMenu;
+  UpdateMenuSortingItem: UpdateMenuSortingItem;
+  UpdateMenusSorting: UpdateMenusSorting;
+  UpdateMyAccountInput: UpdateMyAccountInput;
+  UpdateOrder: UpdateOrder;
+  UpdateOrderCustomFields: UpdateOrderCustomFields;
+  UpdateOrganizationInput: UpdateOrganizationInput;
+  UpdatePassword: UpdatePassword;
+  UpdatePasswordOnlyInput: UpdatePasswordOnlyInput;
+  UpdatePermissionInput: UpdatePermissionInput;
+  UpdatePhotoPost: UpdatePhotoPost;
+  UpdatePlaylistInput: UpdatePlaylistInput;
+  UpdateProductInput: UpdateProductInput;
+  UpdateProductPriceInput: UpdateProductPriceInput;
+  UpdateProfileInput: UpdateProfileInput;
+  UpdateReport: UpdateReport;
+  UpdateRoleInput: UpdateRoleInput;
+  UpdateSubjectInput: UpdateSubjectInput;
+  UpdateTagInput: UpdateTagInput;
+  UpdateTextPost: UpdateTextPost;
+  UpdateUploadInput: UpdateUploadInput;
+  UpdateVideoPost: UpdateVideoPost;
+  VerifyEmailDTO: VerifyEmailDto;
+  VerifyMail: VerifyMail;
+  VideoInput: VideoInput;
+  VoidScalar: Scalars['VoidScalar'];
+  filterRange: FilterRange;
+};
+
+export type AccessTokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccessToken'] = ResolversParentTypes['AccessToken']> = {
+  accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  display_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  first_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  is_admin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  is_super_user?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  is_tenant_user?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  last_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organization?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organizations?: Resolver<Maybe<Array<ResolversTypes['OrganizationPublicOutput']>>, ParentType, ContextType>;
+  profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
+  roles?: Resolver<Maybe<Array<ResolversTypes['RolesDto']>>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['AccountStatus']>, ParentType, ContextType>;
+  tenant_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountActivatedResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountActivated'] = ResolversParentTypes['AccountActivated']> = {
+  activated?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  activationCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountGdprLgpdResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountGdprLgpd'] = ResolversParentTypes['AccountGdprLgpd']> = {
+  accepted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  accepted_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  ip?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountPinnedCategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountPinnedCategory'] = ResolversParentTypes['AccountPinnedCategory']> = {
+  account?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  pinned?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pinnedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountPinnedChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountPinnedChannel'] = ResolversParentTypes['AccountPinnedChannel']> = {
+  account?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['PinnedChannelOutput'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  pinned?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pinnedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountPinnedPostResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountPinnedPost'] = ResolversParentTypes['AccountPinnedPost']> = {
+  account?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  pinned?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pinnedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  post?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountSession'] = ResolversParentTypes['AccountSession']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  account?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  expires_in?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id_token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  refresh_token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['AccountStatus'] = ResolversParentTypes['AccountStatus']> = {
+  active?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  block_perm?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  block_temp?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  gdpr?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  pending_activation?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AddedCommentVoteResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddedCommentVote'] = ResolversParentTypes['AddedCommentVote']> = {
+  comment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
+  commentVote?: Resolver<ResolversTypes['CommentVote'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AvailableChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['AvailableChannel'] = ResolversParentTypes['AvailableChannel']> = {
+  access?: Resolver<ResolversTypes['AccessKinds'], ParentType, ContextType>;
+  banner?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['ChannelCustomizationOutput']>, ParentType, ContextType>;
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  geofence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  menu?: Resolver<Maybe<ResolversTypes['Menu']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BillboardResolvers<ContextType = any, ParentType extends ResolversParentTypes['Billboard'] = ResolversParentTypes['Billboard']> = {
+  actions?: Resolver<Array<ResolversTypes['BillboardActionsOutput']>, ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  customization?: Resolver<ResolversTypes['BillboardCustomizationOutput'], ParentType, ContextType>;
+  delay?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  sort?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  target?: Resolver<Maybe<ResolversTypes['BillboardTarget']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BillboardActionsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['BillboardActionsOutput'] = ResolversParentTypes['BillboardActionsOutput']> = {
+  bgColor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  borderColor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  route?: Resolver<Maybe<ResolversTypes['MediaRouteUnion']>, ParentType, ContextType>;
+  textColor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BillboardCustomizationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['BillboardCustomizationOutput'] = ResolversParentTypes['BillboardCustomizationOutput']> = {
+  desktop?: Resolver<Maybe<ResolversTypes['MediaCustomizationOutput']>, ParentType, ContextType>;
+  mobile?: Resolver<Maybe<ResolversTypes['MediaCustomizationOutput']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BillingPeriodsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['BillingPeriodsOutput'] = ResolversParentTypes['BillingPeriodsOutput']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BillingTypesOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['BillingTypesOutput'] = ResolversParentTypes['BillingTypesOutput']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CancelNotificationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CancelNotificationOutput'] = ResolversParentTypes['CancelNotificationOutput']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
+  access?: Resolver<Maybe<ResolversTypes['AccessKinds']>, ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  children?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType, Partial<CategoryChildrenArgs>>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['CategoryCustomization']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  entitlements?: Resolver<Array<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  featuredAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  geoFence?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isChild?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isDeleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isParent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['Kinds'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  parentId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pinnedStatus?: Resolver<Maybe<ResolversTypes['AccountPinnedCategory']>, ParentType, ContextType>;
+  posts?: Resolver<ResolversTypes['PaginatedPostsOutput'], ParentType, ContextType, Partial<CategoryPostsArgs>>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sort?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['TagOutput']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CategoryCustomizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategoryCustomization'] = ResolversParentTypes['CategoryCustomization']> = {
+  desktop?: Resolver<Maybe<ResolversTypes['MediaCustomizationOutput']>, ParentType, ContextType>;
+  mobile?: Resolver<Maybe<ResolversTypes['MediaCustomizationOutput']>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['MediaCustomizationOutput']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CategoryKindResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategoryKind'] = ResolversParentTypes['CategoryKind']> = {
+  access?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
+  geoFence?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['Kinds'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CategoryPasswordCheckResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategoryPasswordCheck'] = ResolversParentTypes['CategoryPasswordCheck']> = {
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CategorySlugExistsResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategorySlugExists'] = ResolversParentTypes['CategorySlugExists']> = {
+  exists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CategorySortingOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CategorySortingOutput'] = ResolversParentTypes['CategorySortingOutput']> = {
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
+  __resolveType: TypeResolveFn<'AvailableChannel' | 'GeolockedChannel', ParentType, ContextType>;
+};
+
+export type ChannelCustomizationLightDarkOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelCustomizationLightDarkOutput'] = ResolversParentTypes['ChannelCustomizationLightDarkOutput']> = {
+  dark?: Resolver<Maybe<ResolversTypes['CustomizationMediaOutput']>, ParentType, ContextType>;
+  light?: Resolver<Maybe<ResolversTypes['CustomizationMediaOutput']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelCustomizationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelCustomizationOutput'] = ResolversParentTypes['ChannelCustomizationOutput']> = {
+  icon?: Resolver<Maybe<ResolversTypes['ChannelCustomizationLightDarkOutput']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['ChannelCustomizationLightDarkOutput']>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['CustomizationMediaOutput']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelKindResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelKind'] = ResolversParentTypes['ChannelKind']> = {
+  access?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  banner?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['ChannelCustomizationOutput']>, ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  geofence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ChannelPasswordCheckResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChannelPasswordCheck'] = ResolversParentTypes['ChannelPasswordCheck']> = {
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
+  account?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  author?: Resolver<Maybe<ResolversTypes['CommentAuthor']>, ParentType, ContextType>;
+  commentVoteStats?: Resolver<ResolversTypes['CommentVoteStats'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  countComments?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  myVote?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  parent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentAuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentAuthor'] = ResolversParentTypes['CommentAuthor']> = {
+  displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  first_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  last_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tenant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentVoteResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentVote'] = ResolversParentTypes['CommentVote']> = {
+  account?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  countDownvotes?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  countUpvotes?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  direction?: Resolver<ResolversTypes['CommentVoteDirectionEnum'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentVoteStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentVoteStats'] = ResolversParentTypes['CommentVoteStats']> = {
+  countDownvotes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  countUpvotes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CurrencyOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CurrencyOutput'] = ResolversParentTypes['CurrencyOutput']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isDefault?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isoCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  symbol?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CustomizationMediaOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomizationMediaOutput'] = ResolversParentTypes['CustomizationMediaOutput']> = {
+  account?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  filename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imgPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isAvatar?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  upload?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
+export type DefaultCreditCardPaymentMethodResolvers<ContextType = any, ParentType extends ResolversParentTypes['DefaultCreditCardPaymentMethod'] = ResolversParentTypes['DefaultCreditCardPaymentMethod']> = {
+  payment?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EmailResponseEnvelopeDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailResponseEnvelopeDTO'] = ResolversParentTypes['EmailResponseEnvelopeDTO']> = {
+  from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  to?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EmailSentResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailSent'] = ResolversParentTypes['EmailSent']> = {
+  sent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EmailTemplateResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailTemplate'] = ResolversParentTypes['EmailTemplate']> = {
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  deleted_at?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templates?: Resolver<Maybe<Array<ResolversTypes['EmailTemplateLocales']>>, ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EmailTemplateLocalesResolvers<ContextType = any, ParentType extends ResolversParentTypes['EmailTemplateLocales'] = ResolversParentTypes['EmailTemplateLocales']> = {
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  locale?: Resolver<ResolversTypes['LocaleTypes'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EmbedResolvers<ContextType = any, ParentType extends ResolversParentTypes['Embed'] = ResolversParentTypes['Embed']> = {
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  customization?: Resolver<ResolversTypes['JSONObject'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  uploadedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EncryptedEnvConfigResolvers<ContextType = any, ParentType extends ResolversParentTypes['EncryptedEnvConfig'] = ResolversParentTypes['EncryptedEnvConfig']> = {
+  result?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EngagedUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['EngagedUser'] = ResolversParentTypes['EngagedUser']> = {
+  displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tenant?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EnvConfigResolvers<ContextType = any, ParentType extends ResolversParentTypes['EnvConfig'] = ResolversParentTypes['EnvConfig']> = {
+  analyticsAPI?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  apiEndpoint?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  facebookTag?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firebaseApiKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseAppId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseAuthApiKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseAuthDomain?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseBucket?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseDatabaseUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseDomain?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseMeasurementId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseProject?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firebaseSender?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  googleTag?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  inspireAuthUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  inspirePassword?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  inspirePaymentUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  inspireTenantId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  inspireUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  inspireUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  muxKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  onesignalAppId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  onesignalSafariWebId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  remoteConfigSecret?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  s3SignedUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  uploadAwsKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  videoAnalyticsPassword?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  videoAnalyticsUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  videoAnalyticsUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GeolockedChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['GeolockedChannel'] = ResolversParentTypes['GeolockedChannel']> = {
+  access?: Resolver<ResolversTypes['AccessKinds'], ParentType, ContextType>;
+  banner?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['ChannelCustomizationOutput']>, ParentType, ContextType>;
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  geofence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  menu?: Resolver<Maybe<ResolversTypes['Menu']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GroupDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['GroupDto'] = ResolversParentTypes['GroupDto']> = {
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  default?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  public?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  roles?: Resolver<Array<ResolversTypes['RolesDto']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type HasAccessOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['HasAccessOutput'] = ResolversParentTypes['HasAccessOutput']> = {
+  have?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireBillingPeriodsResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireBillingPeriods'] = ResolversParentTypes['InspireBillingPeriods']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireBillingTypesResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireBillingTypes'] = ResolversParentTypes['InspireBillingTypes']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireCurrencyResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireCurrency'] = ResolversParentTypes['InspireCurrency']> = {
+  isoCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  symbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireMetadataResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireMetadata'] = ResolversParentTypes['InspireMetadata']> = {
+  key?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspirePaymentLinkItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspirePaymentLinkItem'] = ResolversParentTypes['InspirePaymentLinkItem']> = {
+  billingPeriods?: Resolver<Maybe<ResolversTypes['InspireBillingPeriods']>, ParentType, ContextType>;
+  billingTypes?: Resolver<Maybe<ResolversTypes['InspireBillingTypes']>, ParentType, ContextType>;
+  canAdjustQuantity?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  currency?: Resolver<Maybe<ResolversTypes['InspireCurrency']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  installments?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  internalDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  paymentLinkId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productPriceId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  quantity?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  unitPrice?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireProduct'] = ResolversParentTypes['InspireProduct']> = {
+  createdDate?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  metadata?: Resolver<Maybe<Array<ResolversTypes['InspireMetadata']>>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productPrices?: Resolver<Maybe<Array<ResolversTypes['InspireProductPrices']>>, ParentType, ContextType>;
+  setupFee?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  statementDescriptor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  unitLabel?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedDate?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireProductFilteredResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireProductFiltered'] = ResolversParentTypes['InspireProductFiltered']> = {
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  createdDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productPrices?: Resolver<Array<ResolversTypes['InspireProductPrices']>, ParentType, ContextType>;
+  setupFee?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  startingPrice?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireProductPriceTierResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireProductPriceTier'] = ResolversParentTypes['InspireProductPriceTier']> = {
+  flatPrice?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productPricesId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  unitPrice?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  upTo?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireProductPricesResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireProductPrices'] = ResolversParentTypes['InspireProductPrices']> = {
+  billingPeriodId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  billingPeriods?: Resolver<Maybe<ResolversTypes['InspireBillingPeriods']>, ParentType, ContextType>;
+  billingTypes?: Resolver<Maybe<ResolversTypes['InspireBillingTypes']>, ParentType, ContextType>;
+  billingTypesId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdDate?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  currency?: Resolver<Maybe<ResolversTypes['InspireCurrency']>, ParentType, ContextType>;
+  currencyId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customIntervalCount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  installments?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  internalDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isIncludingCountries?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  neverUsedSubscription?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  numberActiveSubscriptions?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  onlyProductPrice?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  packageUnits?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  paymentLinkItems?: Resolver<Maybe<Array<ResolversTypes['InspirePaymentLinkItem']>>, ParentType, ContextType>;
+  pricingModelId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productPriceTiers?: Resolver<Maybe<Array<ResolversTypes['InspireProductPriceTier']>>, ParentType, ContextType>;
+  productsId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  recurringMeteredUsageId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  recurringTrialPeriodDays?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  recurringUsageTypes?: Resolver<Maybe<ResolversTypes['InspireRecurringUsageTypes']>, ParentType, ContextType>;
+  recurringUsageTypesId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  unitPrice?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type InspireRecurringUsageTypesResolvers<ContextType = any, ParentType extends ResolversParentTypes['InspireRecurringUsageTypes'] = ResolversParentTypes['InspireRecurringUsageTypes']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
+
+export interface JsonObjectScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSONObject'], any> {
+  name: 'JSONObject';
+}
+
+export type LiveEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEvent'] = ResolversParentTypes['LiveEvent']> = {
+  access?: Resolver<Maybe<ResolversTypes['AccessKinds']>, ParentType, ContextType>;
+  backupPublishEndpoint?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  backupStreamName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  commentsEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  config?: Resolver<Maybe<ResolversTypes['LiveEventConfigOutput']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  encodingProfile?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  entitlements?: Resolver<Array<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  geoFence?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  hlsPlaybackUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isDeleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['Kinds'], ParentType, ContextType>;
+  media?: Resolver<Maybe<ResolversTypes['MediaVideo']>, ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  orientation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  presenceEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  primaryPublishEndpoint?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  primaryStreamName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pushNotification?: Resolver<Maybe<ResolversTypes['PushNotificationOutput']>, ParentType, ContextType>;
+  reactionsEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  scheduledStartAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  source?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
+  streamName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['TagOutput']>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['MediaPhoto']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['LiveEventType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LiveEventConfigOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEventConfigOutput'] = ResolversParentTypes['LiveEventConfigOutput']> = {
+  drm?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  dvr?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  introVideo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  loop?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  primarySource?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  redundancy?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  secondarySource?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  streamInput?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  streamProfile?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LiveEventGoLiveOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEventGoLiveOutput'] = ResolversParentTypes['LiveEventGoLiveOutput']> = {
+  live?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  liveAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LiveEventKindResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEventKind'] = ResolversParentTypes['LiveEventKind']> = {
+  access?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
+  geoFence?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['Kinds'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LiveEventPasswordCheckResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEventPasswordCheck'] = ResolversParentTypes['LiveEventPasswordCheck']> = {
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LiveEventSlugExistsResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEventSlugExists'] = ResolversParentTypes['LiveEventSlugExists']> = {
+  exists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LiveEventStopLiveOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['LiveEventStopLiveOutput'] = ResolversParentTypes['LiveEventStopLiveOutput']> = {
+  live?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Me'] = ResolversParentTypes['Me']> = {
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['OrganizationPublicOutput'], ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaResolvers<ContextType = any, ParentType extends ResolversParentTypes['Media'] = ResolversParentTypes['Media']> = {
+  account?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  aspectRatio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  dashPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  height?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  hlsPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isAvatar?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  mp4Path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orientation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['MediaStatusEnum'], ParentType, ContextType>;
+  thumbnailPath?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['MediaTypeEnum'], ParentType, ContextType>;
+  upload?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  width?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaAudioResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAudio'] = ResolversParentTypes['MediaAudio']> = {
+  account?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  filename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isAvatar?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  mp3Path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['MediaStatusEnum']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['MediaTypeEnum']>, ParentType, ContextType>;
+  upload?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaCustomizationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaCustomizationOutput'] = ResolversParentTypes['MediaCustomizationOutput']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  imgPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaFromLiveResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaFromLiveResult'] = ResolversParentTypes['MediaFromLiveResult']> = {
+  channelId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  liveId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  orgId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaPhotoResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaPhoto'] = ResolversParentTypes['MediaPhoto']> = {
+  account?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  aspectRatio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  filename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  height?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  imgPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isAvatar?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orientation?: Resolver<Maybe<ResolversTypes['MediaOrientation']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['MediaStatusEnum']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['MediaTypeEnum']>, ParentType, ContextType>;
+  upload?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  width?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaRouteContentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaRouteContent'] = ResolversParentTypes['MediaRouteContent']> = {
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  contentWeb?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaRouteUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaRouteUnion'] = ResolversParentTypes['MediaRouteUnion']> = {
+  __resolveType: TypeResolveFn<'MediaAudio' | 'MediaPhoto' | 'MediaRouteContent' | 'MediaVideo', ParentType, ContextType>;
+};
+
+export type MediaSubtitleResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaSubtitle'] = ResolversParentTypes['MediaSubtitle']> = {
+  account?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  filename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isAvatar?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  locale?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['MediaStatusEnum']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['MediaTypeEnum']>, ParentType, ContextType>;
+  upload?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  vttPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaUnion'] = ResolversParentTypes['MediaUnion']> = {
+  __resolveType: TypeResolveFn<'MediaAudio' | 'MediaPhoto' | 'MediaSubtitle' | 'MediaVideo', ParentType, ContextType>;
+};
+
+export type MediaVideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaVideo'] = ResolversParentTypes['MediaVideo']> = {
+  account?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  aspectRatio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  dashPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  duration?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  filename?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  height?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  hlsPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isAvatar?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  mp4Path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orientation?: Resolver<Maybe<ResolversTypes['MediaOrientation']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['MediaStatusEnum']>, ParentType, ContextType>;
+  subtitles?: Resolver<Maybe<Array<ResolversTypes['MediaSubtitle']>>, ParentType, ContextType>;
+  thumbnailPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  transcodePercentComplete?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['MediaTypeEnum']>, ParentType, ContextType>;
+  upload?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  width?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MenuResolvers<ContextType = any, ParentType extends ResolversParentTypes['Menu'] = ResolversParentTypes['Menu']> = {
+  channel?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  children?: Resolver<Array<ResolversTypes['Menu']>, ParentType, ContextType>;
+  deleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isChild?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organization?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  parameters?: Resolver<Maybe<ResolversTypes['Parameters']>, ParentType, ContextType>;
+  parent?: Resolver<Maybe<ResolversTypes['Menu']>, ParentType, ContextType>;
+  platformExclusive?: Resolver<Maybe<ResolversTypes['PlatformExclusive']>, ParentType, ContextType>;
+  route?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sort?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MenuSortingOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['MenuSortingOutput'] = ResolversParentTypes['MenuSortingOutput']> = {
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  activateAccount?: Resolver<ResolversTypes['AccountActivated'], ParentType, ContextType, RequireFields<MutationActivateAccountArgs, 'payload'>>;
+  activeAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationActiveAccountArgs, 'account'>>;
+  addComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationAddCommentArgs, 'payload'>>;
+  addOrder?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationAddOrderArgs, 'payload'>>;
+  addPendingOrder?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationAddPendingOrderArgs, 'payload'>>;
+  addReaction?: Resolver<Array<ResolversTypes['ReactionsAggregate']>, ParentType, ContextType, RequireFields<MutationAddReactionArgs, 'input'>>;
+  addReport?: Resolver<ResolversTypes['Report'], ParentType, ContextType, RequireFields<MutationAddReportArgs, 'payload'>>;
+  addView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationAddViewArgs, 'postId'>>;
+  addVote?: Resolver<ResolversTypes['AddedCommentVote'], ParentType, ContextType, RequireFields<MutationAddVoteArgs, 'input'>>;
+  atomicUpdateCategorySorting?: Resolver<ResolversTypes['CategorySortingOutput'], ParentType, ContextType, RequireFields<MutationAtomicUpdateCategorySortingArgs, 'payload'>>;
+  atomicUpdateMenuSorting?: Resolver<ResolversTypes['MenuSortingOutput'], ParentType, ContextType, RequireFields<MutationAtomicUpdateMenuSortingArgs, 'payload'>>;
+  avatarUpload?: Resolver<ResolversTypes['ResponseUploadCreation'], ParentType, ContextType, RequireFields<MutationAvatarUploadArgs, 'payload'>>;
+  banAccountPerm?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationBanAccountPermArgs, 'account'>>;
+  banAccountTemp?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationBanAccountTempArgs, 'account' | 'input'>>;
+  bindChannelAndOrganization?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationBindChannelAndOrganizationArgs, 'accountId' | 'channelId' | 'organizationId'>>;
+  cancelNotification?: Resolver<ResolversTypes['CancelNotificationOutput'], ParentType, ContextType, RequireFields<MutationCancelNotificationArgs, 'payload'>>;
+  cancelSubscription?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationCancelSubscriptionArgs, 'payload'>>;
+  categoryPasswordCheck?: Resolver<ResolversTypes['CategoryPasswordCheck'], ParentType, ContextType, RequireFields<MutationCategoryPasswordCheckArgs, 'id' | 'payload'>>;
+  channelPasswordCheck?: Resolver<ResolversTypes['ChannelPasswordCheck'], ParentType, ContextType, RequireFields<MutationChannelPasswordCheckArgs, 'channelId' | 'password'>>;
+  confirmOrder?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationConfirmOrderArgs, 'payload'>>;
+  createAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationCreateAccountArgs, 'createAccountInput'>>;
+  createAccountGdprLgpd?: Resolver<ResolversTypes['AccountGdprLgpd'], ParentType, ContextType, RequireFields<MutationCreateAccountGdprLgpdArgs, 'payload'>>;
+  createAccountSession?: Resolver<ResolversTypes['AccountSession'], ParentType, ContextType, RequireFields<MutationCreateAccountSessionArgs, 'input'>>;
+  createAudioMedia?: Resolver<ResolversTypes['MediaAudio'], ParentType, ContextType, RequireFields<MutationCreateAudioMediaArgs, 'payload'>>;
+  createAudioPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreateAudioPostArgs, 'payload'>>;
+  createBillboard?: Resolver<ResolversTypes['Billboard'], ParentType, ContextType, RequireFields<MutationCreateBillboardArgs, 'payload'>>;
+  createCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'payload'>>;
+  createChannel?: Resolver<ResolversTypes['AvailableChannel'], ParentType, ContextType, RequireFields<MutationCreateChannelArgs, 'payload'>>;
+  createChannelRoles?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createCustomField?: Resolver<ResolversTypes['ResponseCustomFieldsOutput'], ParentType, ContextType, RequireFields<MutationCreateCustomFieldArgs, 'payload'>>;
+  createEmailTemplate?: Resolver<ResolversTypes['EmailTemplate'], ParentType, ContextType, RequireFields<MutationCreateEmailTemplateArgs, 'payload'>>;
+  createEmbed?: Resolver<ResolversTypes['Embed'], ParentType, ContextType, RequireFields<MutationCreateEmbedArgs, 'payload'>>;
+  createEnvConfig?: Resolver<ResolversTypes['EnvConfig'], ParentType, ContextType, RequireFields<MutationCreateEnvConfigArgs, 'payload'>>;
+  createGroup?: Resolver<ResolversTypes['GroupDto'], ParentType, ContextType, RequireFields<MutationCreateGroupArgs, 'payload'>>;
+  createLiveEvent?: Resolver<ResolversTypes['LiveEvent'], ParentType, ContextType, RequireFields<MutationCreateLiveEventArgs, 'payload'>>;
+  createMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationCreateMediaArgs, 'payload'>>;
+  createMediaFromLive?: Resolver<ResolversTypes['MediaFromLiveResult'], ParentType, ContextType, RequireFields<MutationCreateMediaFromLiveArgs, 'payload'>>;
+  createMenu?: Resolver<ResolversTypes['Menu'], ParentType, ContextType, RequireFields<MutationCreateMenuArgs, 'payload'>>;
+  createOrganization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'payload'>>;
+  createPermission?: Resolver<ResolversTypes['PermissionDto'], ParentType, ContextType, RequireFields<MutationCreatePermissionArgs, 'payload'>>;
+  createPhotoMedia?: Resolver<ResolversTypes['MediaPhoto'], ParentType, ContextType, RequireFields<MutationCreatePhotoMediaArgs, 'payload'>>;
+  createPhotoPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreatePhotoPostArgs, 'payload'>>;
+  createPlaylist?: Resolver<ResolversTypes['PlaylistOutput'], ParentType, ContextType, RequireFields<MutationCreatePlaylistArgs, 'payload'>>;
+  createProduct?: Resolver<ResolversTypes['InspireProduct'], ParentType, ContextType, RequireFields<MutationCreateProductArgs, 'input'>>;
+  createProductPrice?: Resolver<ResolversTypes['ProductPriceOutput'], ParentType, ContextType, RequireFields<MutationCreateProductPriceArgs, 'params'>>;
+  createPublicUpload?: Resolver<ResolversTypes['ResponseUploadCreation'], ParentType, ContextType, RequireFields<MutationCreatePublicUploadArgs, 'payload'>>;
+  createRole?: Resolver<ResolversTypes['RolesDto'], ParentType, ContextType, RequireFields<MutationCreateRoleArgs, 'payload'>>;
+  createSubject?: Resolver<ResolversTypes['SubjectDto'], ParentType, ContextType, RequireFields<MutationCreateSubjectArgs, 'payload'>>;
+  createTag?: Resolver<ResolversTypes['TagOutput'], ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'payload'>>;
+  createTenantAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationCreateTenantAccountArgs, 'createAccountInput'>>;
+  createTextPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreateTextPostArgs, 'payload'>>;
+  createUpload?: Resolver<ResolversTypes['ResponseUploadCreation'], ParentType, ContextType, RequireFields<MutationCreateUploadArgs, 'payload'>>;
+  createVideoMedia?: Resolver<ResolversTypes['MediaVideo'], ParentType, ContextType, RequireFields<MutationCreateVideoMediaArgs, 'payload'>>;
+  createVideoPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationCreateVideoPostArgs, 'payload'>>;
+  customPushNotification?: Resolver<ResolversTypes['PushNotificationResult'], ParentType, ContextType, RequireFields<MutationCustomPushNotificationArgs, 'payload'>>;
+  deactiveAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationDeactiveAccountArgs, 'account'>>;
+  deleteAccountPinnedCategory?: Resolver<ResolversTypes['AccountPinnedCategory'], ParentType, ContextType, RequireFields<MutationDeleteAccountPinnedCategoryArgs, 'id'>>;
+  deleteAccountPinnedPost?: Resolver<ResolversTypes['AccountPinnedPost'], ParentType, ContextType, RequireFields<MutationDeleteAccountPinnedPostArgs, 'id'>>;
+  deleteBillboard?: Resolver<ResolversTypes['Billboard'], ParentType, ContextType, RequireFields<MutationDeleteBillboardArgs, 'id'>>;
+  deleteCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationDeleteCategoryArgs, 'id'>>;
+  deleteComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
+  deleteCustomField?: Resolver<ResolversTypes['ResponseCustomFieldsOutput'], ParentType, ContextType, RequireFields<MutationDeleteCustomFieldArgs, 'id'>>;
+  deleteEmbed?: Resolver<ResolversTypes['Embed'], ParentType, ContextType, RequireFields<MutationDeleteEmbedArgs, 'id'>>;
+  deleteEnvConfig?: Resolver<ResolversTypes['EnvConfig'], ParentType, ContextType, RequireFields<MutationDeleteEnvConfigArgs, 'envConfigId'>>;
+  deleteLiveEvent?: Resolver<ResolversTypes['LiveEvent'], ParentType, ContextType, RequireFields<MutationDeleteLiveEventArgs, 'id'>>;
+  deleteMedia?: Resolver<ResolversTypes['MediaUnion'], ParentType, ContextType, RequireFields<MutationDeleteMediaArgs, 'id'>>;
+  deleteMenu?: Resolver<ResolversTypes['Menu'], ParentType, ContextType, RequireFields<MutationDeleteMenuArgs, 'id'>>;
+  deleteMyAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationDeleteMyAccountArgs, 'input'>>;
+  deleteOrder?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationDeleteOrderArgs, 'id'>>;
+  deletePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'id'>>;
+  deleteProduct?: Resolver<ResolversTypes['VoidScalar'], ParentType, ContextType, RequireFields<MutationDeleteProductArgs, 'id'>>;
+  deleteProductPrice?: Resolver<ResolversTypes['VoidScalar'], ParentType, ContextType, RequireFields<MutationDeleteProductPriceArgs, 'id'>>;
+  deleteUpload?: Resolver<ResolversTypes['ResponseUploadOutput'], ParentType, ContextType, RequireFields<MutationDeleteUploadArgs, 'id'>>;
+  forgetAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationForgetAccountArgs, 'id' | 'input'>>;
+  goLive?: Resolver<ResolversTypes['LiveEventGoLiveOutput'], ParentType, ContextType, RequireFields<MutationGoLiveArgs, 'id'>>;
+  hasProductAccess?: Resolver<ResolversTypes['HasAccessOutput'], ParentType, ContextType, RequireFields<MutationHasProductAccessArgs, 'payload'>>;
+  inviteTeamMember?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationInviteTeamMemberArgs, 'payload'>>;
+  liveEventPasswordCheck?: Resolver<ResolversTypes['LiveEventPasswordCheck'], ParentType, ContextType, RequireFields<MutationLiveEventPasswordCheckArgs, 'id' | 'payload'>>;
+  oneTimePayment?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationOneTimePaymentArgs, 'payload'>>;
+  organizationPasswordCheck?: Resolver<ResolversTypes['OrganizationPasswordCheck'], ParentType, ContextType, RequireFields<MutationOrganizationPasswordCheckArgs, 'organizationId' | 'password'>>;
+  overrideOrder?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationOverrideOrderArgs, 'payload'>>;
+  pauseSubscription?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationPauseSubscriptionArgs, 'payload'>>;
+  pinCategory?: Resolver<ResolversTypes['AccountPinnedCategory'], ParentType, ContextType, RequireFields<MutationPinCategoryArgs, 'payload'>>;
+  pinChannel?: Resolver<ResolversTypes['AccountPinnedChannel'], ParentType, ContextType>;
+  pinPost?: Resolver<ResolversTypes['AccountPinnedPost'], ParentType, ContextType, RequireFields<MutationPinPostArgs, 'payload'>>;
+  populateTemplatesForOrganization?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationPopulateTemplatesForOrganizationArgs, 'id'>>;
+  postPasswordCheck?: Resolver<ResolversTypes['PostPasswordCheck'], ParentType, ContextType, RequireFields<MutationPostPasswordCheckArgs, 'id' | 'payload'>>;
+  publishRemoteConfig?: Resolver<ResolversTypes['PublishRemoteConfig'], ParentType, ContextType, RequireFields<MutationPublishRemoteConfigArgs, 'payload'>>;
+  pushNotification?: Resolver<ResolversTypes['PushNotificationResult'], ParentType, ContextType, RequireFields<MutationPushNotificationArgs, 'payload'>>;
+  refreshToken?: Resolver<ResolversTypes['RefreshSignIn'], ParentType, ContextType>;
+  removeAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationRemoveAccountArgs, 'id'>>;
+  removeAccountGdprLgpd?: Resolver<ResolversTypes['AccountGdprLgpd'], ParentType, ContextType, RequireFields<MutationRemoveAccountGdprLgpdArgs, 'account'>>;
+  removeAccountSession?: Resolver<ResolversTypes['AccountSession'], ParentType, ContextType, RequireFields<MutationRemoveAccountSessionArgs, 'id'>>;
+  removeChannel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType, RequireFields<MutationRemoveChannelArgs, 'id'>>;
+  removeEmailTemplate?: Resolver<ResolversTypes['EmailTemplate'], ParentType, ContextType, RequireFields<MutationRemoveEmailTemplateArgs, 'id'>>;
+  removeGroup?: Resolver<ResolversTypes['GroupDto'], ParentType, ContextType, RequireFields<MutationRemoveGroupArgs, 'id'>>;
+  removeOrganization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationRemoveOrganizationArgs, 'id'>>;
+  removePermission?: Resolver<ResolversTypes['PermissionDto'], ParentType, ContextType, RequireFields<MutationRemovePermissionArgs, 'id'>>;
+  removePlaylist?: Resolver<ResolversTypes['PlaylistOutput'], ParentType, ContextType, RequireFields<MutationRemovePlaylistArgs, 'id'>>;
+  removeProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationRemoveProfileArgs, 'id'>>;
+  removeReaction?: Resolver<Array<ResolversTypes['ReactionsAggregate']>, ParentType, ContextType, RequireFields<MutationRemoveReactionArgs, 'input'>>;
+  removeRole?: Resolver<ResolversTypes['RolesDto'], ParentType, ContextType, RequireFields<MutationRemoveRoleArgs, 'id'>>;
+  removeSubject?: Resolver<ResolversTypes['SubjectDto'], ParentType, ContextType, RequireFields<MutationRemoveSubjectArgs, 'id'>>;
+  removeTag?: Resolver<ResolversTypes['TagOutput'], ParentType, ContextType, RequireFields<MutationRemoveTagArgs, 'id'>>;
+  resendActivateAccount?: Resolver<ResolversTypes['AccountActivated'], ParentType, ContextType, RequireFields<MutationResendActivateAccountArgs, 'payload'>>;
+  resetPassword?: Resolver<ResolversTypes['EmailSent'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'payload'>>;
+  restartSubscription?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationRestartSubscriptionArgs, 'payload'>>;
+  searchUpdateChannel?: Resolver<ResolversTypes['SearchUpdateChannel'], ParentType, ContextType>;
+  sendEmail?: Resolver<ResolversTypes['ResponseEmailSendedDTO'], ParentType, ContextType, RequireFields<MutationSendEmailArgs, 'payload'>>;
+  signIn?: Resolver<ResolversTypes['SingIn'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'payload'>>;
+  signInTenantUser?: Resolver<ResolversTypes['SingIn'], ParentType, ContextType, RequireFields<MutationSignInTenantUserArgs, 'payload'>>;
+  signOut?: Resolver<ResolversTypes['VoidScalar'], ParentType, ContextType, RequireFields<MutationSignOutArgs, 'payload'>>;
+  socialSignIn?: Resolver<ResolversTypes['SingIn'], ParentType, ContextType, RequireFields<MutationSocialSignInArgs, 'input'>>;
+  startMediaUpload?: Resolver<ResolversTypes['ResponseMediaUploadOutput'], ParentType, ContextType, RequireFields<MutationStartMediaUploadArgs, 'payload'>>;
+  stopLive?: Resolver<ResolversTypes['LiveEventStopLiveOutput'], ParentType, ContextType, RequireFields<MutationStopLiveArgs, 'id'>>;
+  unbanAccountPerm?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUnbanAccountPermArgs, 'account'>>;
+  unbanAccountTemp?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUnbanAccountTempArgs, 'account'>>;
+  uncancelSubscription?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationUncancelSubscriptionArgs, 'payload'>>;
+  unpinCategory?: Resolver<ResolversTypes['AccountPinnedCategory'], ParentType, ContextType, RequireFields<MutationUnpinCategoryArgs, 'categoryId'>>;
+  unpinChannel?: Resolver<ResolversTypes['AccountPinnedChannel'], ParentType, ContextType>;
+  unpinPost?: Resolver<ResolversTypes['AccountPinnedPost'], ParentType, ContextType, RequireFields<MutationUnpinPostArgs, 'postId'>>;
+  updateAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateAccountArgs, 'id' | 'payload'>>;
+  updateAccountGdprLgpd?: Resolver<ResolversTypes['AccountGdprLgpd'], ParentType, ContextType, RequireFields<MutationUpdateAccountGdprLgpdArgs, 'account' | 'payload'>>;
+  updateAccountPinnedCategory?: Resolver<ResolversTypes['AccountPinnedCategory'], ParentType, ContextType, RequireFields<MutationUpdateAccountPinnedCategoryArgs, 'id' | 'input'>>;
+  updateAccountPinnedPost?: Resolver<ResolversTypes['AccountPinnedPost'], ParentType, ContextType, RequireFields<MutationUpdateAccountPinnedPostArgs, 'id' | 'input'>>;
+  updateAccountSession?: Resolver<ResolversTypes['AccountSession'], ParentType, ContextType, RequireFields<MutationUpdateAccountSessionArgs, 'id' | 'updateAccountSessionInput'>>;
+  updateAudioPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationUpdateAudioPostArgs, 'id' | 'payload'>>;
+  updateBillboard?: Resolver<ResolversTypes['Billboard'], ParentType, ContextType, RequireFields<MutationUpdateBillboardArgs, 'id' | 'payload'>>;
+  updateCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'id' | 'payload'>>;
+  updateChannel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType, RequireFields<MutationUpdateChannelArgs, 'id' | 'payload'>>;
+  updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'id' | 'payload'>>;
+  updateCreditCardPaymentMethod?: Resolver<ResolversTypes['DefaultCreditCardPaymentMethod'], ParentType, ContextType, RequireFields<MutationUpdateCreditCardPaymentMethodArgs, 'id' | 'payload'>>;
+  updateCustomField?: Resolver<ResolversTypes['ResponseCustomFieldsOutput'], ParentType, ContextType, RequireFields<MutationUpdateCustomFieldArgs, 'id' | 'payload'>>;
+  updateEmailTemplate?: Resolver<ResolversTypes['EmailTemplate'], ParentType, ContextType, RequireFields<MutationUpdateEmailTemplateArgs, 'id' | 'payload'>>;
+  updateEmbed?: Resolver<ResolversTypes['Embed'], ParentType, ContextType, RequireFields<MutationUpdateEmbedArgs, 'id' | 'payload'>>;
+  updateEnvConfig?: Resolver<ResolversTypes['EnvConfig'], ParentType, ContextType, RequireFields<MutationUpdateEnvConfigArgs, 'envConfigId' | 'payload'>>;
+  updateGroup?: Resolver<ResolversTypes['GroupDto'], ParentType, ContextType, RequireFields<MutationUpdateGroupArgs, 'id' | 'payload'>>;
+  updateIsAdminAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateIsAdminAccountArgs, 'payload'>>;
+  updateLiveEvent?: Resolver<ResolversTypes['LiveEvent'], ParentType, ContextType, RequireFields<MutationUpdateLiveEventArgs, 'id' | 'payload'>>;
+  updateMediaAudio?: Resolver<ResolversTypes['MediaAudio'], ParentType, ContextType, RequireFields<MutationUpdateMediaAudioArgs, 'id' | 'payload'>>;
+  updateMediaPhoto?: Resolver<ResolversTypes['MediaPhoto'], ParentType, ContextType, RequireFields<MutationUpdateMediaPhotoArgs, 'id' | 'payload'>>;
+  updateMediaSubtitle?: Resolver<ResolversTypes['MediaSubtitle'], ParentType, ContextType, RequireFields<MutationUpdateMediaSubtitleArgs, 'id' | 'payload'>>;
+  updateMediaVideo?: Resolver<ResolversTypes['MediaVideo'], ParentType, ContextType, RequireFields<MutationUpdateMediaVideoArgs, 'id' | 'payload'>>;
+  updateMenu?: Resolver<ResolversTypes['Menu'], ParentType, ContextType, RequireFields<MutationUpdateMenuArgs, 'id'>>;
+  updateMyAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateMyAccountArgs, 'payload'>>;
+  updateMyProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationUpdateMyProfileArgs, 'payload'>>;
+  updateOrder?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<MutationUpdateOrderArgs, 'id'>>;
+  updateOrganization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationUpdateOrganizationArgs, 'id' | 'payload'>>;
+  updatePassword?: Resolver<ResolversTypes['PasswordChanged'], ParentType, ContextType, RequireFields<MutationUpdatePasswordArgs, 'payload'>>;
+  updatePasswordOnly?: Resolver<ResolversTypes['PasswordOnlyChanged'], ParentType, ContextType, RequireFields<MutationUpdatePasswordOnlyArgs, 'payload'>>;
+  updatePermission?: Resolver<ResolversTypes['PermissionDto'], ParentType, ContextType, RequireFields<MutationUpdatePermissionArgs, 'id' | 'payload'>>;
+  updatePhotoPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationUpdatePhotoPostArgs, 'id' | 'payload'>>;
+  updatePlaylist?: Resolver<ResolversTypes['PlaylistOutput'], ParentType, ContextType, RequireFields<MutationUpdatePlaylistArgs, 'id' | 'payload'>>;
+  updateProduct?: Resolver<ResolversTypes['InspireProduct'], ParentType, ContextType, RequireFields<MutationUpdateProductArgs, 'id' | 'input'>>;
+  updateProductPrice?: Resolver<ResolversTypes['ProductPriceOutput'], ParentType, ContextType, RequireFields<MutationUpdateProductPriceArgs, 'id' | 'input'>>;
+  updateProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'account' | 'payload'>>;
+  updateReport?: Resolver<ResolversTypes['Report'], ParentType, ContextType, RequireFields<MutationUpdateReportArgs, 'payload' | 'reportId'>>;
+  updateRole?: Resolver<ResolversTypes['RolesDto'], ParentType, ContextType, RequireFields<MutationUpdateRoleArgs, 'id' | 'payload'>>;
+  updateSubject?: Resolver<ResolversTypes['SubjectDto'], ParentType, ContextType, RequireFields<MutationUpdateSubjectArgs, 'id' | 'payload'>>;
+  updateTag?: Resolver<ResolversTypes['TagOutput'], ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'id' | 'payload'>>;
+  updateTextPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationUpdateTextPostArgs, 'id' | 'payload'>>;
+  updateUpload?: Resolver<ResolversTypes['ResponseUploadOutput'], ParentType, ContextType, RequireFields<MutationUpdateUploadArgs, 'id' | 'payload'>>;
+  updateVideoPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationUpdateVideoPostArgs, 'id' | 'payload'>>;
+  verifyMail?: Resolver<ResolversTypes['VerifyMail'], ParentType, ContextType, RequireFields<MutationVerifyMailArgs, 'payload'>>;
+};
+
+export type MyProductsResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyProducts'] = ResolversParentTypes['MyProducts']> = {
+  products?: Resolver<Array<ResolversTypes['InspireProduct']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NotificationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['NotificationOutput'] = ResolversParentTypes['NotificationOutput']> = {
+  canceled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  completedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  contents?: Resolver<ResolversTypes['JSONObject'], ParentType, ContextType>;
+  converted?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  defaultLangMessage?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  defaultLangTitle?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  errored?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  failed?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  headings?: Resolver<ResolversTypes['JSONObject'], ParentType, ContextType>;
+  includedSegments?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  isAndroid?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isChromeWeb?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isEdge?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirefox?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isIos?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isSafari?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  oneSignalId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  queuedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  received?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  remaining?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  sendAfter?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['OneSignalStatusEnum'], ParentType, ContextType>;
+  successful?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Order'] = ResolversParentTypes['Order']> = {
+  account?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  amount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  customFields?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  invoices?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
+  payment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  product?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['OrderStatus']>, ParentType, ContextType>;
+  subscription?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = {
+  access?: Resolver<ResolversTypes['AccessKinds'], ParentType, ContextType>;
+  audioCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatarCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bundle_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  current_version?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  email_settings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  entitlements?: Resolver<Array<ResolversTypes['JSON']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  identifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imageCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  itunes_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  min_compat_version?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  onesignal_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  portal_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  settings?: Resolver<Maybe<ResolversTypes['OrganizationSettings']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tenant_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  web_url?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationKindResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationKind'] = ResolversParentTypes['OrganizationKind']> = {
+  audioCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatarCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  imageCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  portal_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  web_url?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationOneSignalOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationOneSignalOutput'] = ResolversParentTypes['OrganizationOneSignalOutput']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  safari_web_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationPasswordCheckResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationPasswordCheck'] = ResolversParentTypes['OrganizationPasswordCheck']> = {
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationPublicResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationPublic'] = ResolversParentTypes['OrganizationPublic']> = {
+  audioCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatarCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  current_version?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  identifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imageCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  min_compat_version?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  portal_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  settings?: Resolver<Maybe<ResolversTypes['OrganizationPublicSettings']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tenant_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  web_url?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationPublicCustomizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationPublicCustomization'] = ResolversParentTypes['OrganizationPublicCustomization']> = {
+  configuration?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  favIcon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  loginImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationPublicOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationPublicOutput'] = ResolversParentTypes['OrganizationPublicOutput']> = {
+  audioCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatarCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  current_version?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['OrganizationPublicCustomization']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  identifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imageCdnBaseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  min_compat_version?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  portal_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  settings?: Resolver<Maybe<ResolversTypes['OrganizationPublicSettings']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  web_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationPublicSettingsResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationPublicSettings'] = ResolversParentTypes['OrganizationPublicSettings']> = {
+  bucket?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type OrganizationSettingsResolvers<ContextType = any, ParentType extends ResolversParentTypes['OrganizationSettings'] = ResolversParentTypes['OrganizationSettings']> = {
+  apple?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  aws?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  bex?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  bucket?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  defaultGeofence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  facebook?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  favicon?: Resolver<Maybe<ResolversTypes['CustomizationMediaOutput']>, ParentType, ContextType>;
+  firebase?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  language?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['CustomizationMediaOutput']>, ParentType, ContextType>;
+  onesignal?: Resolver<ResolversTypes['OrganizationOneSignalOutput'], ParentType, ContextType>;
+  sessionsLimit?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  spreedly?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  stripe?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  verifyEmail?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  zoho?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedAccountsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedAccountsOutput'] = ResolversParentTypes['PaginatedAccountsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedBillboardsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedBillboardsOutput'] = ResolversParentTypes['PaginatedBillboardsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Billboard']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedCategoriesOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedCategoriesOutput'] = ResolversParentTypes['PaginatedCategoriesOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedCommentsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedCommentsOutput'] = ResolversParentTypes['PaginatedCommentsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedLiveEventsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedLiveEventsOutput'] = ResolversParentTypes['PaginatedLiveEventsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['LiveEvent']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedMediaUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedMediaUnion'] = ResolversParentTypes['PaginatedMediaUnion']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['MediaUnion']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedMenusOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedMenusOutput'] = ResolversParentTypes['PaginatedMenusOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Menu']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedNotificationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedNotificationOutput'] = ResolversParentTypes['PaginatedNotificationOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['NotificationOutput']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedPostsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedPostsOutput'] = ResolversParentTypes['PaginatedPostsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedReportsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedReportsOutput'] = ResolversParentTypes['PaginatedReportsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedRolesOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedRolesOutput'] = ResolversParentTypes['PaginatedRolesOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['RolesDto']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaginatedSearchResultOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedSearchResultOutput'] = ResolversParentTypes['PaginatedSearchResultOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['SearchResult']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['Parameters'] = ResolversParentTypes['Parameters']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  missing?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PasswordChangedResolvers<ContextType = any, ParentType extends ResolversParentTypes['PasswordChanged'] = ResolversParentTypes['PasswordChanged']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PasswordOnlyChangedResolvers<ContextType = any, ParentType extends ResolversParentTypes['PasswordOnlyChanged'] = ResolversParentTypes['PasswordOnlyChanged']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PermissionDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionDto'] = ResolversParentTypes['PermissionDto']> = {
+  actions?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  subject?: Resolver<ResolversTypes['SubjectDto'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PinnedChannelOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PinnedChannelOutput'] = ResolversParentTypes['PinnedChannelOutput']> = {
+  banner?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  geofence?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  logo?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['ChannelStatus'], ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PlaylistOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PlaylistOutput'] = ResolversParentTypes['PlaylistOutput']> = {
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  posts?: Resolver<ResolversTypes['PaginatedPostsOutput'], ParentType, ContextType, Partial<PlaylistOutputPostsArgs>>;
+  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PlaylistsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PlaylistsOutput'] = ResolversParentTypes['PlaylistsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['PlaylistOutput']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
+  access?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  account?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  allowComments?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  countComments?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  countReactions?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  countUniqueCommenters?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  countViewsTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  devices?: Resolver<ResolversTypes['JSONObject'], ParentType, ContextType>;
+  embed?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  engagedUsers?: Resolver<Array<ResolversTypes['EngagedUser']>, ParentType, ContextType>;
+  entitlements?: Resolver<Array<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  excerpt?: Resolver<ResolversTypes['JSONObject'], ParentType, ContextType>;
+  featured?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  folder?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  geofence?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  hiddenFromFeed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  inFeed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  media?: Resolver<Maybe<ResolversTypes['MediaUnion']>, ParentType, ContextType>;
+  myReactions?: Resolver<Array<ResolversTypes['PostReactions']>, ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pinnedStatus?: Resolver<Maybe<ResolversTypes['AccountPinnedPost']>, ParentType, ContextType>;
+  playlists?: Resolver<Maybe<Array<ResolversTypes['PlaylistOutput']>>, ParentType, ContextType>;
+  publishedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  pushNotification?: Resolver<Maybe<ResolversTypes['PushNotificationOutput']>, ParentType, ContextType>;
+  reactions?: Resolver<Array<ResolversTypes['PostReactions']>, ParentType, ContextType>;
+  schedule?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<ResolversTypes['TagOutput']>>, ParentType, ContextType>;
+  teaser?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['MediaPhoto']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PostKindResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostKind'] = ResolversParentTypes['PostKind']> = {
+  access?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entitlements?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
+  geofence?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  geofenceEntitlements?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isKindAuto?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['MediaPhoto']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PostPasswordCheckResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostPasswordCheck'] = ResolversParentTypes['PostPasswordCheck']> = {
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PostReactionsResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostReactions'] = ResolversParentTypes['PostReactions']> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PostSlugExistsResolvers<ContextType = any, ParentType extends ResolversParentTypes['PostSlugExists'] = ResolversParentTypes['PostSlugExists']> = {
+  exists?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PriceTierOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PriceTierOutput'] = ResolversParentTypes['PriceTierOutput']> = {
+  flatPrice?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  productPriceTiersId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  productPricesId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  unitPrice?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  upTo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PricingModelOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PricingModelOutput'] = ResolversParentTypes['PricingModelOutput']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductOutput'] = ResolversParentTypes['ProductOutput']> = {
+  createdDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  imageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  metadata?: Resolver<Array<ResolversTypes['InspireMetadata']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  statementDescriptor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  unitLabel?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductPriceOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductPriceOutput'] = ResolversParentTypes['ProductPriceOutput']> = {
+  billingPeriodId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  billingPeriods?: Resolver<ResolversTypes['BillingPeriodsOutput'], ParentType, ContextType>;
+  billingTypes?: Resolver<ResolversTypes['BillingTypesOutput'], ParentType, ContextType>;
+  billingTypesId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdDate?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  currencies?: Resolver<ResolversTypes['CurrencyOutput'], ParentType, ContextType>;
+  currencyId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  customIntervalCount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  installment?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  internalDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isIncludingCountries?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  metadata?: Resolver<Maybe<Array<ResolversTypes['InspireMetadata']>>, ParentType, ContextType>;
+  neverUsedSubscription?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  numberActiveSubscriptions?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  onlyProductPrice?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  packageUnits?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  priceTiers?: Resolver<Array<ResolversTypes['PriceTierOutput']>, ParentType, ContextType>;
+  pricingModelId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  pricingModels?: Resolver<ResolversTypes['PricingModelOutput'], ParentType, ContextType>;
+  products?: Resolver<ResolversTypes['ProductOutput'], ParentType, ContextType>;
+  productsId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  recurringMeteredUsageId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  recurringMeteredUsages?: Resolver<ResolversTypes['RecurringMeteredUsagesOutput'], ParentType, ContextType>;
+  recurringTrialPeriodDays?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  recurringUsageTypes?: Resolver<ResolversTypes['RecurringUsageTypesOutput'], ParentType, ContextType>;
+  recurringUsageTypesId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  unitPrice?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  unitPriceInstallment?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  updatedDate?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProductPricesOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductPricesOutput'] = ResolversParentTypes['ProductPricesOutput']> = {
+  billingPeriodId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  billingPeriods?: Resolver<Maybe<ResolversTypes['PriceTierOutput']>, ParentType, ContextType>;
+  billingTypes?: Resolver<Maybe<ResolversTypes['BillingTypesOutput']>, ParentType, ContextType>;
+  billingTypesId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  currencyId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customIntervalCount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  internalDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isIncludingCountries?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  numberActiveSubscriptions?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  packageUnits?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  paymentLinkItems?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  priceTiers?: Resolver<Maybe<Array<ResolversTypes['PriceTierOutput']>>, ParentType, ContextType>;
+  pricingModelId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  productsId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  recurringMeteredUsageId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  recurringTrialPeriodDays?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  recurringUsageTypes?: Resolver<Maybe<ResolversTypes['RecurringUsageTypesOutput']>, ParentType, ContextType>;
+  recurringUsageTypesId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  unitPrice?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  unitPriceInstallment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = {
+  account?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  avatar?: Resolver<Maybe<ResolversTypes['ProfileAvatar']>, ParentType, ContextType>;
+  birthday?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  cpf?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  created_at?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  custom_fields?: Resolver<Maybe<ResolversTypes['JSONObject']>, ParentType, ContextType>;
+  gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  locale?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updated_at?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ProfileAvatarResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProfileAvatar'] = ResolversParentTypes['ProfileAvatar']> = {
+  aspectRatio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  baseUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  height?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  imgPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  width?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PublicChannelOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PublicChannelOutput'] = ResolversParentTypes['PublicChannelOutput']> = {
+  customization?: Resolver<Maybe<ResolversTypes['ChannelCustomizationOutput']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes['Kinds'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PublishRemoteConfigResolvers<ContextType = any, ParentType extends ResolversParentTypes['PublishRemoteConfig'] = ResolversParentTypes['PublishRemoteConfig']> = {
+  configuration?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  published?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PushNotificationOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PushNotificationOutput'] = ResolversParentTypes['PushNotificationOutput']> = {
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ignore?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PushNotificationResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['PushNotificationResult'] = ResolversParentTypes['PushNotificationResult']> = {
+  external_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  recipients?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<QueryAccountArgs, 'id'>>;
+  accountGdprLgpd?: Resolver<ResolversTypes['AccountGdprLgpd'], ParentType, ContextType, RequireFields<QueryAccountGdprLgpdArgs, 'account'>>;
+  accountPinnedCategories?: Resolver<Array<ResolversTypes['AccountPinnedCategory']>, ParentType, ContextType, RequireFields<QueryAccountPinnedCategoriesArgs, 'pagination'>>;
+  accountPinnedCategory?: Resolver<ResolversTypes['AccountPinnedCategory'], ParentType, ContextType, RequireFields<QueryAccountPinnedCategoryArgs, 'id'>>;
+  accountPinnedPost?: Resolver<ResolversTypes['AccountPinnedPost'], ParentType, ContextType, RequireFields<QueryAccountPinnedPostArgs, 'id'>>;
+  accountPinnedPosts?: Resolver<Array<ResolversTypes['AccountPinnedPost']>, ParentType, ContextType, RequireFields<QueryAccountPinnedPostsArgs, 'pagination'>>;
+  accountSession?: Resolver<ResolversTypes['AccountSession'], ParentType, ContextType, RequireFields<QueryAccountSessionArgs, 'id'>>;
+  accountSessions?: Resolver<Array<ResolversTypes['AccountSession']>, ParentType, ContextType>;
+  accounts?: Resolver<ResolversTypes['PaginatedAccountsOutput'], ParentType, ContextType, Partial<QueryAccountsArgs>>;
+  accountsCount?: Resolver<ResolversTypes['ResponseAccountsCount'], ParentType, ContextType>;
+  accountsGdprLgpd?: Resolver<Array<ResolversTypes['AccountGdprLgpd']>, ParentType, ContextType>;
+  activeSubscriptons?: Resolver<Array<ResolversTypes['Order']>, ParentType, ContextType, Partial<QueryActiveSubscriptonsArgs>>;
+  billboard?: Resolver<ResolversTypes['Billboard'], ParentType, ContextType, RequireFields<QueryBillboardArgs, 'id'>>;
+  billboards?: Resolver<ResolversTypes['PaginatedBillboardsOutput'], ParentType, ContextType, Partial<QueryBillboardsArgs>>;
+  categories?: Resolver<ResolversTypes['PaginatedCategoriesOutput'], ParentType, ContextType, Partial<QueryCategoriesArgs>>;
+  category?: Resolver<ResolversTypes['Category'], ParentType, ContextType, Partial<QueryCategoryArgs>>;
+  categoryKind?: Resolver<ResolversTypes['CategoryKind'], ParentType, ContextType, Partial<QueryCategoryKindArgs>>;
+  channel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType, Partial<QueryChannelArgs>>;
+  channelKind?: Resolver<ResolversTypes['ChannelKind'], ParentType, ContextType, Partial<QueryChannelKindArgs>>;
+  channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, Partial<QueryChannelsArgs>>;
+  checkCategorySlug?: Resolver<ResolversTypes['CategorySlugExists'], ParentType, ContextType, RequireFields<QueryCheckCategorySlugArgs, 'slug'>>;
+  checkChannel?: Resolver<ResolversTypes['ResponseAvailabilityOutput'], ParentType, ContextType, RequireFields<QueryCheckChannelArgs, 'name' | 'organizationId'>>;
+  checkLiveEventSlug?: Resolver<ResolversTypes['LiveEventSlugExists'], ParentType, ContextType, RequireFields<QueryCheckLiveEventSlugArgs, 'slug'>>;
+  checkOrg?: Resolver<ResolversTypes['ResponseAvailabilityOutput'], ParentType, ContextType, RequireFields<QueryCheckOrgArgs, 'name'>>;
+  checkPostSlug?: Resolver<ResolversTypes['PostSlugExists'], ParentType, ContextType, RequireFields<QueryCheckPostSlugArgs, 'slug'>>;
+  comment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<QueryCommentArgs, 'commentId'>>;
+  comments?: Resolver<ResolversTypes['PaginatedCommentsOutput'], ParentType, ContextType, Partial<QueryCommentsArgs>>;
+  countAccountPinnedCategory?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  countAccountPinnedPost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  countOrders?: Resolver<ResolversTypes['Int'], ParentType, ContextType, Partial<QueryCountOrdersArgs>>;
+  countPermissions?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  countRoles?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  countSubjects?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  customField?: Resolver<ResolversTypes['ResponseCustomFieldsOutput'], ParentType, ContextType, RequireFields<QueryCustomFieldArgs, 'id'>>;
+  customFields?: Resolver<Array<ResolversTypes['ResponseCustomFieldsOutput']>, ParentType, ContextType>;
+  emailTemplate?: Resolver<ResolversTypes['EmailTemplate'], ParentType, ContextType, RequireFields<QueryEmailTemplateArgs, 'id'>>;
+  emailTemplates?: Resolver<Array<ResolversTypes['EmailTemplate']>, ParentType, ContextType>;
+  embed?: Resolver<ResolversTypes['Embed'], ParentType, ContextType, RequireFields<QueryEmbedArgs, 'id'>>;
+  embeds?: Resolver<Array<ResolversTypes['Embed']>, ParentType, ContextType, Partial<QueryEmbedsArgs>>;
+  embedsCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType, Partial<QueryEmbedsCountArgs>>;
+  envConfig?: Resolver<ResolversTypes['EncryptedEnvConfig'], ParentType, ContextType, RequireFields<QueryEnvConfigArgs, 'origin'>>;
+  getPublicChannel?: Resolver<ResolversTypes['PublicChannelOutput'], ParentType, ContextType, Partial<QueryGetPublicChannelArgs>>;
+  group?: Resolver<ResolversTypes['GroupDto'], ParentType, ContextType, RequireFields<QueryGroupArgs, 'id'>>;
+  groups?: Resolver<Array<ResolversTypes['GroupDto']>, ParentType, ContextType, RequireFields<QueryGroupsArgs, 'limit' | 'skip'>>;
+  listNotifications?: Resolver<ResolversTypes['PaginatedNotificationOutput'], ParentType, ContextType, Partial<QueryListNotificationsArgs>>;
+  liveEvent?: Resolver<ResolversTypes['LiveEvent'], ParentType, ContextType, Partial<QueryLiveEventArgs>>;
+  liveEventKind?: Resolver<ResolversTypes['LiveEventKind'], ParentType, ContextType, Partial<QueryLiveEventKindArgs>>;
+  liveEvents?: Resolver<ResolversTypes['PaginatedLiveEventsOutput'], ParentType, ContextType, Partial<QueryLiveEventsArgs>>;
+  me?: Resolver<ResolversTypes['Me'], ParentType, ContextType>;
+  media?: Resolver<ResolversTypes['MediaUnion'], ParentType, ContextType, RequireFields<QueryMediaArgs, 'id'>>;
+  mediaCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  medias?: Resolver<ResolversTypes['PaginatedMediaUnion'], ParentType, ContextType, Partial<QueryMediasArgs>>;
+  menu?: Resolver<ResolversTypes['Menu'], ParentType, ContextType, RequireFields<QueryMenuArgs, 'id'>>;
+  menus?: Resolver<ResolversTypes['PaginatedMenusOutput'], ParentType, ContextType, Partial<QueryMenusArgs>>;
+  myProducts?: Resolver<ResolversTypes['MyProducts'], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes['Order'], ParentType, ContextType, RequireFields<QueryOrderArgs, 'id'>>;
+  orders?: Resolver<Array<ResolversTypes['Order']>, ParentType, ContextType, Partial<QueryOrdersArgs>>;
+  organization?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<QueryOrganizationArgs, 'id'>>;
+  organizationKind?: Resolver<ResolversTypes['OrganizationKind'], ParentType, ContextType, RequireFields<QueryOrganizationKindArgs, 'id'>>;
+  organizationPublicSettings?: Resolver<ResolversTypes['OrganizationPublic'], ParentType, ContextType, RequireFields<QueryOrganizationPublicSettingsArgs, 'id'>>;
+  organizations?: Resolver<Array<ResolversTypes['Organization']>, ParentType, ContextType, Partial<QueryOrganizationsArgs>>;
+  permission?: Resolver<ResolversTypes['PermissionDto'], ParentType, ContextType, RequireFields<QueryPermissionArgs, 'id'>>;
+  permissions?: Resolver<Array<ResolversTypes['PermissionDto']>, ParentType, ContextType, RequireFields<QueryPermissionsArgs, 'limit' | 'skip' | 'sort'>>;
+  playlist?: Resolver<ResolversTypes['PlaylistOutput'], ParentType, ContextType, RequireFields<QueryPlaylistArgs, 'id'>>;
+  playlists?: Resolver<ResolversTypes['PlaylistsOutput'], ParentType, ContextType, Partial<QueryPlaylistsArgs>>;
+  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType, Partial<QueryPostArgs>>;
+  postKind?: Resolver<ResolversTypes['PostKind'], ParentType, ContextType, Partial<QueryPostKindArgs>>;
+  posts?: Resolver<ResolversTypes['PaginatedPostsOutput'], ParentType, ContextType, Partial<QueryPostsArgs>>;
+  product?: Resolver<ResolversTypes['InspireProduct'], ParentType, ContextType, RequireFields<QueryProductArgs, 'id'>>;
+  productPrice?: Resolver<ResolversTypes['ProductPriceOutput'], ParentType, ContextType, RequireFields<QueryProductPriceArgs, 'id'>>;
+  productPrices?: Resolver<Array<ResolversTypes['ProductPricesOutput']>, ParentType, ContextType, Partial<QueryProductPricesArgs>>;
+  products?: Resolver<Array<ResolversTypes['InspireProductFiltered']>, ParentType, ContextType>;
+  profile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<QueryProfileArgs, 'account'>>;
+  profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfilesArgs, 'page' | 'pageSize' | 'sortBy'>>;
+  publicCategories?: Resolver<ResolversTypes['PaginatedCategoriesOutput'], ParentType, ContextType, Partial<QueryPublicCategoriesArgs>>;
+  publicChannels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType, Partial<QueryPublicChannelsArgs>>;
+  publicLiveEvents?: Resolver<ResolversTypes['PaginatedLiveEventsOutput'], ParentType, ContextType, Partial<QueryPublicLiveEventsArgs>>;
+  publicMenus?: Resolver<ResolversTypes['PaginatedMenusOutput'], ParentType, ContextType, Partial<QueryPublicMenusArgs>>;
+  publicPosts?: Resolver<ResolversTypes['PaginatedPostsOutput'], ParentType, ContextType, Partial<QueryPublicPostsArgs>>;
+  publicTags?: Resolver<ResolversTypes['TagsOutput'], ParentType, ContextType, Partial<QueryPublicTagsArgs>>;
+  report?: Resolver<ResolversTypes['Report'], ParentType, ContextType, RequireFields<QueryReportArgs, 'reportId'>>;
+  reports?: Resolver<ResolversTypes['PaginatedReportsOutput'], ParentType, ContextType, Partial<QueryReportsArgs>>;
+  role?: Resolver<ResolversTypes['RolesDto'], ParentType, ContextType, RequireFields<QueryRoleArgs, 'id'>>;
+  roles?: Resolver<ResolversTypes['PaginatedRolesOutput'], ParentType, ContextType, Partial<QueryRolesArgs>>;
+  search?: Resolver<ResolversTypes['PaginatedSearchResultOutput'], ParentType, ContextType, Partial<QuerySearchArgs>>;
+  subject?: Resolver<ResolversTypes['SubjectDto'], ParentType, ContextType, RequireFields<QuerySubjectArgs, 'id'>>;
+  subjects?: Resolver<Array<ResolversTypes['SubjectDto']>, ParentType, ContextType, RequireFields<QuerySubjectsArgs, 'limit' | 'skip' | 'sort'>>;
+  tag?: Resolver<ResolversTypes['TagOutput'], ParentType, ContextType, Partial<QueryTagArgs>>;
+  tags?: Resolver<ResolversTypes['TagsOutput'], ParentType, ContextType, Partial<QueryTagsArgs>>;
+  upload?: Resolver<ResolversTypes['ResponseUploadOutput'], ParentType, ContextType, RequireFields<QueryUploadArgs, 'id'>>;
+  uploads?: Resolver<Array<ResolversTypes['ResponseUploadOutput']>, ParentType, ContextType, RequireFields<QueryUploadsArgs, 'filter'>>;
+};
+
+export type ReactionsAggregateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReactionsAggregate'] = ResolversParentTypes['ReactionsAggregate']> = {
+  count?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RecurringMeteredUsagesOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RecurringMeteredUsagesOutput'] = ResolversParentTypes['RecurringMeteredUsagesOutput']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  usage?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RecurringUsageTypesOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RecurringUsageTypesOutput'] = ResolversParentTypes['RecurringUsageTypesOutput']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RefreshSignInResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefreshSignIn'] = ResolversParentTypes['RefreshSignIn']> = {
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
+  refreshToken?: Resolver<ResolversTypes['RefreshToken'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RefreshTokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefreshToken'] = ResolversParentTypes['RefreshToken']> = {
+  accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  firebaseToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReportResolvers<ContextType = any, ParentType extends ResolversParentTypes['Report'] = ResolversParentTypes['Report']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  idReported?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  reason?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  reportedObject?: Resolver<Maybe<ResolversTypes['ReportSubjectUnion']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['ReportStatus'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['ReportType'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReportSubjectUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportSubjectUnion'] = ResolversParentTypes['ReportSubjectUnion']> = {
+  __resolveType: TypeResolveFn<'Comment' | 'Post' | 'ReportedAccountOutput', ParentType, ContextType>;
+};
+
+export type ReportedAccountOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReportedAccountOutput'] = ResolversParentTypes['ReportedAccountOutput']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseAccountsCountResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseAccountsCount'] = ResolversParentTypes['ResponseAccountsCount']> = {
+  count?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseAvailabilityOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseAvailabilityOutput'] = ResolversParentTypes['ResponseAvailabilityOutput']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isAvailable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseCustomFieldsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseCustomFieldsOutput'] = ResolversParentTypes['ResponseCustomFieldsOutput']> = {
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  fields?: Resolver<Array<ResolversTypes['ResponseFieldOutput']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  organization?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseEmailSendedDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseEmailSendedDTO'] = ResolversParentTypes['ResponseEmailSendedDTO']> = {
+  accepted?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  envelope?: Resolver<ResolversTypes['EmailResponseEnvelopeDTO'], ParentType, ContextType>;
+  envelopeTime?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  messageId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  messageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  messageTime?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rejected?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  response?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseFieldOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseFieldOutput'] = ResolversParentTypes['ResponseFieldOutput']> = {
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  required?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['CustomFieldTypesEnum'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseMediaUploadOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseMediaUploadOutput'] = ResolversParentTypes['ResponseMediaUploadOutput']> = {
+  bucket?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  media?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
+  uploadId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseUploadCreationResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseUploadCreation'] = ResolversParentTypes['ResponseUploadCreation']> = {
+  media?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
+  upload?: Resolver<ResolversTypes['ResponseUploadOutput'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ResponseUploadOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['ResponseUploadOutput'] = ResolversParentTypes['ResponseUploadOutput']> = {
+  bucket?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  expireIn?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  expired?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isExpiredCalc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['UploadStatusEnum'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RolesDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['RolesDto'] = ResolversParentTypes['RolesDto']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  default?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  membersAggregate?: Resolver<ResolversTypes['RolesMembersOutput'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  permissions?: Resolver<Array<ResolversTypes['PermissionDto']>, ParentType, ContextType>;
+  public?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RolesMembersOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['RolesMembersOutput'] = ResolversParentTypes['RolesMembersOutput']> = {
+  members?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SearchCategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchCategory'] = ResolversParentTypes['SearchCategory']> = {
+  access?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  customization?: Resolver<Maybe<ResolversTypes['CategoryCustomization']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  featuredAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pinnedStatus?: Resolver<Maybe<ResolversTypes['AccountPinnedCategory']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<ResolversTypes['SearchTag']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SearchCategoryHeadResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchCategoryHead'] = ResolversParentTypes['SearchCategoryHead']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SearchLiveEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchLiveEvent'] = ResolversParentTypes['SearchLiveEvent']> = {
+  access?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  category?: Resolver<Maybe<ResolversTypes['SearchCategoryHead']>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  scheduledStartAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<ResolversTypes['SearchTag']>>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['MediaPhoto']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SearchPostResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchPost'] = ResolversParentTypes['SearchPost']> = {
+  access?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  audioArtist?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  audioTitle?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  categories?: Resolver<Maybe<Array<ResolversTypes['SearchCategoryHead']>>, ParentType, ContextType>;
+  channel?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  kind?: Resolver<Maybe<ResolversTypes['Kinds']>, ParentType, ContextType>;
+  media?: Resolver<Maybe<ResolversTypes['MediaUnion']>, ParentType, ContextType>;
+  publishedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<ResolversTypes['SearchTag']>>, ParentType, ContextType>;
+  thumbnail?: Resolver<Maybe<ResolversTypes['MediaPhoto']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SearchResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult']> = {
+  __resolveType: TypeResolveFn<'SearchCategory' | 'SearchLiveEvent' | 'SearchPost', ParentType, ContextType>;
+};
+
+export type SearchTagResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchTag'] = ResolversParentTypes['SearchTag']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SearchUpdateChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchUpdateChannel'] = ResolversParentTypes['SearchUpdateChannel']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  timestamp?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SingInResolvers<ContextType = any, ParentType extends ResolversParentTypes['SingIn'] = ResolversParentTypes['SingIn']> = {
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['AccessToken'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubjectDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubjectDto'] = ResolversParentTypes['SubjectDto']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  entity?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fields?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagOutput'] = ResolversParentTypes['TagOutput']> = {
+  channel?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  relatedCategories?: Resolver<ResolversTypes['PaginatedCategoriesOutput'], ParentType, ContextType, Partial<TagOutputRelatedCategoriesArgs>>;
+  relatedPosts?: Resolver<ResolversTypes['PaginatedPostsOutput'], ParentType, ContextType, Partial<TagOutputRelatedPostsArgs>>;
+  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TagsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagsOutput'] = ResolversParentTypes['TagsOutput']> = {
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFirstPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isLastPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageCount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  pageNumberIsGood?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  pageSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  rows?: Resolver<Array<ResolversTypes['TagOutput']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VerifyMailResolvers<ContextType = any, ParentType extends ResolversParentTypes['VerifyMail'] = ResolversParentTypes['VerifyMail']> = {
+  exist?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface VoidScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['VoidScalar'], any> {
+  name: 'VoidScalar';
+}
+
+export type Resolvers<ContextType = any> = {
+  AccessToken?: AccessTokenResolvers<ContextType>;
+  Account?: AccountResolvers<ContextType>;
+  AccountActivated?: AccountActivatedResolvers<ContextType>;
+  AccountGdprLgpd?: AccountGdprLgpdResolvers<ContextType>;
+  AccountPinnedCategory?: AccountPinnedCategoryResolvers<ContextType>;
+  AccountPinnedChannel?: AccountPinnedChannelResolvers<ContextType>;
+  AccountPinnedPost?: AccountPinnedPostResolvers<ContextType>;
+  AccountSession?: AccountSessionResolvers<ContextType>;
+  AccountStatus?: AccountStatusResolvers<ContextType>;
+  AddedCommentVote?: AddedCommentVoteResolvers<ContextType>;
+  AvailableChannel?: AvailableChannelResolvers<ContextType>;
+  Billboard?: BillboardResolvers<ContextType>;
+  BillboardActionsOutput?: BillboardActionsOutputResolvers<ContextType>;
+  BillboardCustomizationOutput?: BillboardCustomizationOutputResolvers<ContextType>;
+  BillingPeriodsOutput?: BillingPeriodsOutputResolvers<ContextType>;
+  BillingTypesOutput?: BillingTypesOutputResolvers<ContextType>;
+  CancelNotificationOutput?: CancelNotificationOutputResolvers<ContextType>;
+  Category?: CategoryResolvers<ContextType>;
+  CategoryCustomization?: CategoryCustomizationResolvers<ContextType>;
+  CategoryKind?: CategoryKindResolvers<ContextType>;
+  CategoryPasswordCheck?: CategoryPasswordCheckResolvers<ContextType>;
+  CategorySlugExists?: CategorySlugExistsResolvers<ContextType>;
+  CategorySortingOutput?: CategorySortingOutputResolvers<ContextType>;
+  Channel?: ChannelResolvers<ContextType>;
+  ChannelCustomizationLightDarkOutput?: ChannelCustomizationLightDarkOutputResolvers<ContextType>;
+  ChannelCustomizationOutput?: ChannelCustomizationOutputResolvers<ContextType>;
+  ChannelKind?: ChannelKindResolvers<ContextType>;
+  ChannelPasswordCheck?: ChannelPasswordCheckResolvers<ContextType>;
+  Comment?: CommentResolvers<ContextType>;
+  CommentAuthor?: CommentAuthorResolvers<ContextType>;
+  CommentVote?: CommentVoteResolvers<ContextType>;
+  CommentVoteStats?: CommentVoteStatsResolvers<ContextType>;
+  CurrencyOutput?: CurrencyOutputResolvers<ContextType>;
+  CustomizationMediaOutput?: CustomizationMediaOutputResolvers<ContextType>;
+  DateTime?: GraphQLScalarType;
+  DefaultCreditCardPaymentMethod?: DefaultCreditCardPaymentMethodResolvers<ContextType>;
+  EmailResponseEnvelopeDTO?: EmailResponseEnvelopeDtoResolvers<ContextType>;
+  EmailSent?: EmailSentResolvers<ContextType>;
+  EmailTemplate?: EmailTemplateResolvers<ContextType>;
+  EmailTemplateLocales?: EmailTemplateLocalesResolvers<ContextType>;
+  Embed?: EmbedResolvers<ContextType>;
+  EncryptedEnvConfig?: EncryptedEnvConfigResolvers<ContextType>;
+  EngagedUser?: EngagedUserResolvers<ContextType>;
+  EnvConfig?: EnvConfigResolvers<ContextType>;
+  GeolockedChannel?: GeolockedChannelResolvers<ContextType>;
+  GroupDto?: GroupDtoResolvers<ContextType>;
+  HasAccessOutput?: HasAccessOutputResolvers<ContextType>;
+  InspireBillingPeriods?: InspireBillingPeriodsResolvers<ContextType>;
+  InspireBillingTypes?: InspireBillingTypesResolvers<ContextType>;
+  InspireCurrency?: InspireCurrencyResolvers<ContextType>;
+  InspireMetadata?: InspireMetadataResolvers<ContextType>;
+  InspirePaymentLinkItem?: InspirePaymentLinkItemResolvers<ContextType>;
+  InspireProduct?: InspireProductResolvers<ContextType>;
+  InspireProductFiltered?: InspireProductFilteredResolvers<ContextType>;
+  InspireProductPriceTier?: InspireProductPriceTierResolvers<ContextType>;
+  InspireProductPrices?: InspireProductPricesResolvers<ContextType>;
+  InspireRecurringUsageTypes?: InspireRecurringUsageTypesResolvers<ContextType>;
+  JSON?: GraphQLScalarType;
+  JSONObject?: GraphQLScalarType;
+  LiveEvent?: LiveEventResolvers<ContextType>;
+  LiveEventConfigOutput?: LiveEventConfigOutputResolvers<ContextType>;
+  LiveEventGoLiveOutput?: LiveEventGoLiveOutputResolvers<ContextType>;
+  LiveEventKind?: LiveEventKindResolvers<ContextType>;
+  LiveEventPasswordCheck?: LiveEventPasswordCheckResolvers<ContextType>;
+  LiveEventSlugExists?: LiveEventSlugExistsResolvers<ContextType>;
+  LiveEventStopLiveOutput?: LiveEventStopLiveOutputResolvers<ContextType>;
+  Me?: MeResolvers<ContextType>;
+  Media?: MediaResolvers<ContextType>;
+  MediaAudio?: MediaAudioResolvers<ContextType>;
+  MediaCustomizationOutput?: MediaCustomizationOutputResolvers<ContextType>;
+  MediaFromLiveResult?: MediaFromLiveResultResolvers<ContextType>;
+  MediaPhoto?: MediaPhotoResolvers<ContextType>;
+  MediaRouteContent?: MediaRouteContentResolvers<ContextType>;
+  MediaRouteUnion?: MediaRouteUnionResolvers<ContextType>;
+  MediaSubtitle?: MediaSubtitleResolvers<ContextType>;
+  MediaUnion?: MediaUnionResolvers<ContextType>;
+  MediaVideo?: MediaVideoResolvers<ContextType>;
+  Menu?: MenuResolvers<ContextType>;
+  MenuSortingOutput?: MenuSortingOutputResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
+  MyProducts?: MyProductsResolvers<ContextType>;
+  NotificationOutput?: NotificationOutputResolvers<ContextType>;
+  Order?: OrderResolvers<ContextType>;
+  Organization?: OrganizationResolvers<ContextType>;
+  OrganizationKind?: OrganizationKindResolvers<ContextType>;
+  OrganizationOneSignalOutput?: OrganizationOneSignalOutputResolvers<ContextType>;
+  OrganizationPasswordCheck?: OrganizationPasswordCheckResolvers<ContextType>;
+  OrganizationPublic?: OrganizationPublicResolvers<ContextType>;
+  OrganizationPublicCustomization?: OrganizationPublicCustomizationResolvers<ContextType>;
+  OrganizationPublicOutput?: OrganizationPublicOutputResolvers<ContextType>;
+  OrganizationPublicSettings?: OrganizationPublicSettingsResolvers<ContextType>;
+  OrganizationSettings?: OrganizationSettingsResolvers<ContextType>;
+  PaginatedAccountsOutput?: PaginatedAccountsOutputResolvers<ContextType>;
+  PaginatedBillboardsOutput?: PaginatedBillboardsOutputResolvers<ContextType>;
+  PaginatedCategoriesOutput?: PaginatedCategoriesOutputResolvers<ContextType>;
+  PaginatedCommentsOutput?: PaginatedCommentsOutputResolvers<ContextType>;
+  PaginatedLiveEventsOutput?: PaginatedLiveEventsOutputResolvers<ContextType>;
+  PaginatedMediaUnion?: PaginatedMediaUnionResolvers<ContextType>;
+  PaginatedMenusOutput?: PaginatedMenusOutputResolvers<ContextType>;
+  PaginatedNotificationOutput?: PaginatedNotificationOutputResolvers<ContextType>;
+  PaginatedPostsOutput?: PaginatedPostsOutputResolvers<ContextType>;
+  PaginatedReportsOutput?: PaginatedReportsOutputResolvers<ContextType>;
+  PaginatedRolesOutput?: PaginatedRolesOutputResolvers<ContextType>;
+  PaginatedSearchResultOutput?: PaginatedSearchResultOutputResolvers<ContextType>;
+  Parameters?: ParametersResolvers<ContextType>;
+  PasswordChanged?: PasswordChangedResolvers<ContextType>;
+  PasswordOnlyChanged?: PasswordOnlyChangedResolvers<ContextType>;
+  PermissionDto?: PermissionDtoResolvers<ContextType>;
+  PinnedChannelOutput?: PinnedChannelOutputResolvers<ContextType>;
+  PlaylistOutput?: PlaylistOutputResolvers<ContextType>;
+  PlaylistsOutput?: PlaylistsOutputResolvers<ContextType>;
+  Post?: PostResolvers<ContextType>;
+  PostKind?: PostKindResolvers<ContextType>;
+  PostPasswordCheck?: PostPasswordCheckResolvers<ContextType>;
+  PostReactions?: PostReactionsResolvers<ContextType>;
+  PostSlugExists?: PostSlugExistsResolvers<ContextType>;
+  PriceTierOutput?: PriceTierOutputResolvers<ContextType>;
+  PricingModelOutput?: PricingModelOutputResolvers<ContextType>;
+  ProductOutput?: ProductOutputResolvers<ContextType>;
+  ProductPriceOutput?: ProductPriceOutputResolvers<ContextType>;
+  ProductPricesOutput?: ProductPricesOutputResolvers<ContextType>;
+  Profile?: ProfileResolvers<ContextType>;
+  ProfileAvatar?: ProfileAvatarResolvers<ContextType>;
+  PublicChannelOutput?: PublicChannelOutputResolvers<ContextType>;
+  PublishRemoteConfig?: PublishRemoteConfigResolvers<ContextType>;
+  PushNotificationOutput?: PushNotificationOutputResolvers<ContextType>;
+  PushNotificationResult?: PushNotificationResultResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
+  ReactionsAggregate?: ReactionsAggregateResolvers<ContextType>;
+  RecurringMeteredUsagesOutput?: RecurringMeteredUsagesOutputResolvers<ContextType>;
+  RecurringUsageTypesOutput?: RecurringUsageTypesOutputResolvers<ContextType>;
+  RefreshSignIn?: RefreshSignInResolvers<ContextType>;
+  RefreshToken?: RefreshTokenResolvers<ContextType>;
+  Report?: ReportResolvers<ContextType>;
+  ReportSubjectUnion?: ReportSubjectUnionResolvers<ContextType>;
+  ReportedAccountOutput?: ReportedAccountOutputResolvers<ContextType>;
+  ResponseAccountsCount?: ResponseAccountsCountResolvers<ContextType>;
+  ResponseAvailabilityOutput?: ResponseAvailabilityOutputResolvers<ContextType>;
+  ResponseCustomFieldsOutput?: ResponseCustomFieldsOutputResolvers<ContextType>;
+  ResponseEmailSendedDTO?: ResponseEmailSendedDtoResolvers<ContextType>;
+  ResponseFieldOutput?: ResponseFieldOutputResolvers<ContextType>;
+  ResponseMediaUploadOutput?: ResponseMediaUploadOutputResolvers<ContextType>;
+  ResponseUploadCreation?: ResponseUploadCreationResolvers<ContextType>;
+  ResponseUploadOutput?: ResponseUploadOutputResolvers<ContextType>;
+  RolesDto?: RolesDtoResolvers<ContextType>;
+  RolesMembersOutput?: RolesMembersOutputResolvers<ContextType>;
+  SearchCategory?: SearchCategoryResolvers<ContextType>;
+  SearchCategoryHead?: SearchCategoryHeadResolvers<ContextType>;
+  SearchLiveEvent?: SearchLiveEventResolvers<ContextType>;
+  SearchPost?: SearchPostResolvers<ContextType>;
+  SearchResult?: SearchResultResolvers<ContextType>;
+  SearchTag?: SearchTagResolvers<ContextType>;
+  SearchUpdateChannel?: SearchUpdateChannelResolvers<ContextType>;
+  SingIn?: SingInResolvers<ContextType>;
+  SubjectDto?: SubjectDtoResolvers<ContextType>;
+  TagOutput?: TagOutputResolvers<ContextType>;
+  TagsOutput?: TagsOutputResolvers<ContextType>;
+  VerifyMail?: VerifyMailResolvers<ContextType>;
+  VoidScalar?: GraphQLScalarType;
+};
+
 
 
 export const CreateAccountDocument = gql`
@@ -6979,6 +9924,45 @@ export function useAddReportMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddReportMutationHookResult = ReturnType<typeof useAddReportMutation>;
 export type AddReportMutationResult = Apollo.MutationResult<AddReportMutation>;
 export type AddReportMutationOptions = Apollo.BaseMutationOptions<AddReportMutation, AddReportMutationVariables>;
+export const AddViewDocument = gql`
+    mutation AddView($postId: String!) {
+  addView(postId: $postId) {
+    countViewsTotal
+  }
+}
+    `;
+export type AddViewMutationFn = Apollo.MutationFunction<AddViewMutation, AddViewMutationVariables>;
+export type AddViewComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddViewMutation, AddViewMutationVariables>, 'mutation'>;
+
+    export const AddViewComponent = (props: AddViewComponentProps) => (
+      <ApolloReactComponents.Mutation<AddViewMutation, AddViewMutationVariables> mutation={AddViewDocument} {...props} />
+    );
+    
+
+/**
+ * __useAddViewMutation__
+ *
+ * To run a mutation, you first call `useAddViewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddViewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addViewMutation, { data, loading, error }] = useAddViewMutation({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useAddViewMutation(baseOptions?: Apollo.MutationHookOptions<AddViewMutation, AddViewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddViewMutation, AddViewMutationVariables>(AddViewDocument, options);
+      }
+export type AddViewMutationHookResult = ReturnType<typeof useAddViewMutation>;
+export type AddViewMutationResult = Apollo.MutationResult<AddViewMutation>;
+export type AddViewMutationOptions = Apollo.BaseMutationOptions<AddViewMutation, AddViewMutationVariables>;
 export const DeleteCommentDocument = gql`
     mutation deleteComment($id: String!) {
   deleteComment(id: $id) {
@@ -7706,13 +10690,9 @@ export const GetPublicCategoriesDocument = gql`
     pageNumberIsGood
     pageSize
     rows {
-      access
-      pinnedStatus {
-        pinned
-      }
+      id
       parentId
       slug
-      createdAt
       sort
       kind
       customization {
@@ -7732,9 +10712,6 @@ export const GetPublicCategoriesDocument = gql`
         description
         featuredAt
         sort
-        pinnedStatus {
-          pinned
-        }
         customization {
           desktop {
             imgPath
@@ -7888,11 +10865,7 @@ export const GetPublicCategoriesCardsDocument = gql`
     rows {
       id
       name
-      access
       description
-      pinnedStatus {
-        pinned
-      }
       slug
       kind
       customization {
@@ -7903,11 +10876,7 @@ export const GetPublicCategoriesCardsDocument = gql`
       children(filter: {sortBy: "sort.asc"}) {
         id
         name
-        access
         description
-        pinnedStatus {
-          pinned
-        }
         slug
         kind
         customization {
@@ -8005,6 +10974,15 @@ export const CategoryDocument = gql`
             thumbnailPath
             baseUrl
           }
+          ... on MediaAudio {
+            id
+            duration
+            mp3Path
+          }
+          ... on MediaPhoto {
+            id
+            imgPath
+          }
         }
         type
       }
@@ -8074,10 +11052,10 @@ export const CategoryKindDocument = gql`
     query CategoryKind($slug: String) {
   categoryKind(slug: $slug) {
     id
+    access
     kind
-    geoFence
+    entitlements
     name
-    isKindAuto
   }
 }
     `;
@@ -8115,50 +11093,6 @@ export function useCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type CategoryKindQueryHookResult = ReturnType<typeof useCategoryKindQuery>;
 export type CategoryKindLazyQueryHookResult = ReturnType<typeof useCategoryKindLazyQuery>;
 export type CategoryKindQueryResult = Apollo.QueryResult<CategoryKindQuery, CategoryKindQueryVariables>;
-export const CategoryEntitlementsDocument = gql`
-    query CategoryEntitlements($slug: String) {
-  category(slug: $slug) {
-    id
-    access
-    slug
-    entitlements
-  }
-}
-    `;
-export type CategoryEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>, 'query'>;
-
-    export const CategoryEntitlementsComponent = (props: CategoryEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables> query={CategoryEntitlementsDocument} {...props} />
-    );
-    
-
-/**
- * __useCategoryEntitlementsQuery__
- *
- * To run a query within a React component, call `useCategoryEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useCategoryEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCategoryEntitlementsQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useCategoryEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>(CategoryEntitlementsDocument, options);
-      }
-export function useCategoryEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>(CategoryEntitlementsDocument, options);
-        }
-export type CategoryEntitlementsQueryHookResult = ReturnType<typeof useCategoryEntitlementsQuery>;
-export type CategoryEntitlementsLazyQueryHookResult = ReturnType<typeof useCategoryEntitlementsLazyQuery>;
-export type CategoryEntitlementsQueryResult = Apollo.QueryResult<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>;
 export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
@@ -8629,8 +11563,9 @@ export const LiveEventKindDocument = gql`
     query LiveEventKind($slug: String) {
   liveEventKind(slug: $slug) {
     id
+    access
     kind
-    geoFence
+    entitlements
     slug
     title
   }
@@ -8670,49 +11605,6 @@ export function useLiveEventKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type LiveEventKindQueryHookResult = ReturnType<typeof useLiveEventKindQuery>;
 export type LiveEventKindLazyQueryHookResult = ReturnType<typeof useLiveEventKindLazyQuery>;
 export type LiveEventKindQueryResult = Apollo.QueryResult<LiveEventKindQuery, LiveEventKindQueryVariables>;
-export const LiveEventEntitlementsDocument = gql`
-    query LiveEventEntitlements($slug: String) {
-  liveEvent(slug: $slug) {
-    id
-    access
-    entitlements
-  }
-}
-    `;
-export type LiveEventEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>, 'query'>;
-
-    export const LiveEventEntitlementsComponent = (props: LiveEventEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables> query={LiveEventEntitlementsDocument} {...props} />
-    );
-    
-
-/**
- * __useLiveEventEntitlementsQuery__
- *
- * To run a query within a React component, call `useLiveEventEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useLiveEventEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLiveEventEntitlementsQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useLiveEventEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>(LiveEventEntitlementsDocument, options);
-      }
-export function useLiveEventEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>(LiveEventEntitlementsDocument, options);
-        }
-export type LiveEventEntitlementsQueryHookResult = ReturnType<typeof useLiveEventEntitlementsQuery>;
-export type LiveEventEntitlementsLazyQueryHookResult = ReturnType<typeof useLiveEventEntitlementsLazyQuery>;
-export type LiveEventEntitlementsQueryResult = Apollo.QueryResult<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>;
 export const GetLiveEventsDocument = gql`
     query GetLiveEvents($filter: LiveEventFilter) {
   liveEvents(filter: $filter) {
@@ -9187,6 +12079,7 @@ export const PostDocument = gql`
     allowComments
     countComments
     countReactions
+    countViewsTotal
     slug
     description
     categories {
@@ -9283,9 +12176,10 @@ export const PostKindDocument = gql`
     query PostKind($slug: String) {
   postKind(slug: $slug) {
     id
+    access
     kind
     title
-    geofence
+    entitlements
     slug
   }
 }
@@ -9324,49 +12218,6 @@ export function usePostKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
 export type PostKindQueryHookResult = ReturnType<typeof usePostKindQuery>;
 export type PostKindLazyQueryHookResult = ReturnType<typeof usePostKindLazyQuery>;
 export type PostKindQueryResult = Apollo.QueryResult<PostKindQuery, PostKindQueryVariables>;
-export const PostEntitlementsDocument = gql`
-    query PostEntitlements($slug: String) {
-  post(slug: $slug) {
-    id
-    access
-    entitlements
-  }
-}
-    `;
-export type PostEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>, 'query'>;
-
-    export const PostEntitlementsComponent = (props: PostEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<PostEntitlementsQuery, PostEntitlementsQueryVariables> query={PostEntitlementsDocument} {...props} />
-    );
-    
-
-/**
- * __usePostEntitlementsQuery__
- *
- * To run a query within a React component, call `usePostEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `usePostEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePostEntitlementsQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function usePostEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PostEntitlementsQuery, PostEntitlementsQueryVariables>(PostEntitlementsDocument, options);
-      }
-export function usePostEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PostEntitlementsQuery, PostEntitlementsQueryVariables>(PostEntitlementsDocument, options);
-        }
-export type PostEntitlementsQueryHookResult = ReturnType<typeof usePostEntitlementsQuery>;
-export type PostEntitlementsLazyQueryHookResult = ReturnType<typeof usePostEntitlementsLazyQuery>;
-export type PostEntitlementsQueryResult = Apollo.QueryResult<PostEntitlementsQuery, PostEntitlementsQueryVariables>;
 export const GetPostsDocument = gql`
     query GetPosts($filter: PostFilter) {
   posts(filters: $filter) {
@@ -9387,6 +12238,7 @@ export const GetPostsDocument = gql`
       geofence
       kind
       slug
+      countViewsTotal
       status
       pinnedStatus {
         pinned
@@ -9470,6 +12322,7 @@ export const GetPubicPostsDocument = gql`
     total
     rows {
       id
+      countViewsTotal
       myReactions {
         name
       }
@@ -9566,6 +12419,7 @@ export const GetPostsCardsDocument = gql`
       description
       kind
       slug
+      countViewsTotal
       pinnedStatus {
         pinned
       }
@@ -9638,6 +12492,7 @@ export const GetPublicPostsCardsDocument = gql`
       access
       title
       description
+      countViewsTotal
       kind
       slug
       pinnedStatus {
