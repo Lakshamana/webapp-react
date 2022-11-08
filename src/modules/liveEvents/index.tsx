@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client'
-import { Box, Flex } from '@chakra-ui/layout'
-import { Container, EmptyState, Skeleton } from 'components/atoms'
+import { Flex } from '@chakra-ui/layout'
+import { Container, EmptyState } from 'components/atoms'
 import {
   BillboardScroller,
   LivestreamScroller,
@@ -28,14 +28,11 @@ import {
   useCommonStore,
   useCustomizationStore
 } from 'services/stores'
-import { sizes } from 'styles'
 import { BillboardTarget } from 'types/common'
 import { convertToValidColor } from 'utils/helperFunctions'
 
 import { LiveCarouselTypes } from 'types/common'
 import { LiveCarouselFlags } from 'types/flags'
-
-import { DEFAULT_POLLING_INTERVAL } from 'config/constants'
 
 import { onDemandFilter, upcomingFilter } from './utils'
 
@@ -44,8 +41,6 @@ const LiveEvents = () => {
   const { setPageTitle } = useCommonStore()
   const { activeChannelConfig } = useCustomizationStore()
   const { generateImage } = useThumbor()
-  const [upcomingEventsData, setUpcomingEventsData] =
-    useState<PaginatedLiveEventsOutput>()
   const [onDemandData, setOnDemandData] = useState<PaginatedPostsOutput>()
   const [liveEvents, setLiveEvents] = useState<PaginatedLiveEventsOutput>()
   const [billboardItems, setBillboardItems] = useState([])
@@ -55,6 +50,7 @@ const LiveEvents = () => {
     useState<boolean>(false)
   const [isOnDemandActive, setIsOnDemandActive] = useState<boolean>(false)
   const [carousels, setCarousels] = useState<LiveCarouselFlags[]>()
+  const [isLoadingPage, setIsLoadingPage] = useState<boolean>(true)
 
   const { activeChannel } = useChannelsStore()
 
@@ -70,7 +66,7 @@ const LiveEvents = () => {
     {
       variables: {
         filter: {
-          status: [Status.Live],
+          status: [Status.Live, Status.Scheduled, Status.Ready],
         },
       },
       onCompleted: (result) => {
@@ -78,23 +74,6 @@ const LiveEvents = () => {
           ? result.publicLiveEvents
           : result.liveEvents
         setLiveEvents(liveEvents)
-      },
-      fetchPolicy: 'cache-and-network',
-      pollInterval: DEFAULT_POLLING_INTERVAL,
-    }
-  )
-
-  const [getUpcomingEvents, { loading: loadingUpcomingEvents }] = useLazyQuery(
-    isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
-    {
-      onCompleted: (result) => {
-        const liveEvents = isAnonymousAllowed
-          ? result.publicLiveEvents
-          : result.liveEvents
-        setUpcomingEventsData((previous) => ({
-          ...liveEvents,
-          rows: [...(previous?.rows || []), ...liveEvents.rows],
-        }))
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -123,18 +102,11 @@ const LiveEvents = () => {
           target: BillboardTarget.Live,
         },
       },
+      onCompleted: () => setIsLoadingPage(false),
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'cache-and-network',
     }
   )
-
-  const loadMoreUpcomingEvents = () => {
-    if (upcomingEventsData?.hasNextPage) {
-      getUpcomingEvents({
-        variables: { ...upcomingFilter(upcomingEventsData.page + 1) },
-      })
-    }
-  }
 
   const loadMoreOnDemand = () => {
     if (onDemandData?.hasNextPage) {
@@ -205,20 +177,15 @@ const LiveEvents = () => {
   }, [])
 
   useEffect(() => {
-    if (isLiveEventsActive) getLiveEvents()
-    if (isUpcomingLiveEventsActive)
-      getUpcomingEvents({ variables: upcomingFilter(1) })
+    if (isLiveEventsActive || isUpcomingLiveEventsActive) getLiveEvents()
     if (isOnDemandActive) getOnDemandPosts({ variables: onDemandFilter(1) })
     // eslint-disable-next-line
   }, [isLiveEventsActive, isUpcomingLiveEventsActive, isOnDemandActive])
 
   const isLoading =
-    loadingOnDemandPostsData || loadingLiveEvents || loadingUpcomingEvents
+    loadingOnDemandPostsData || loadingLiveEvents || isLoadingPage
 
-  const hasResults =
-    onDemandData?.rows?.length ||
-    liveEvents?.rows?.length ||
-    upcomingEventsData?.rows?.length
+  const hasResults = onDemandData?.rows?.length || liveEvents?.rows?.length
 
   const isEmpty = !isLoading && !hasResults
 
@@ -237,34 +204,44 @@ const LiveEvents = () => {
     return label?.VALUE || ''
   }
 
-  const renderLiveEventsScroller = (item: LiveCarouselFlags) =>
-    !!liveEvents?.rows?.length && (
+  const renderLiveEventsScroller = (item: LiveCarouselFlags) => {
+    const liveItems = liveEvents?.rows.filter(
+      (item) => item.status === Status.Live
+    )
+    return !!liveItems?.length ? (
       <LivestreamScroller
-        items={liveEvents.rows}
+        items={liveItems}
         key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
+        isLoading={loadingLiveEvents}
       />
-    )
+    ) : null
+  }
 
-  const renderUpcomingLiveEventsScroller = (item: LiveCarouselFlags) =>
-    !!upcomingEventsData?.rows.length && (
+  const renderUpcomingLiveEventsScroller = (item: LiveCarouselFlags) => {
+    const upcomingItems = liveEvents?.rows.filter(
+      (item) => item.status === Status.Scheduled || item.status === Status.Ready
+    )
+    return !!upcomingItems?.length ? (
       <LivestreamScroller
-        items={upcomingEventsData.rows}
+        items={upcomingItems}
         key={`${item.LABEL[0].VALUE}`}
         sectionTitle={getCarouselLabel(item)}
-        loadMoreItems={loadMoreUpcomingEvents}
+        isLoading={loadingLiveEvents}
       />
-    )
+    ) : null
+  }
 
   const renderOnDemandPosts = (item: LiveCarouselFlags) =>
-    !!onDemandData?.rows?.length && (
+    !!onDemandData?.rows?.length ? (
       <PostsScroller
         key={`${item.LABEL[0].VALUE}`}
         items={onDemandData.rows}
         sectionTitle={getCarouselLabel(item)}
         loadMoreItems={loadMoreOnDemand}
+        isLoading={loadingOnDemandPostsData}
       />
-    )
+    ) : null
 
   const renderCarouselsOrderedByRemoteConfig = (item: LiveCarouselFlags) => {
     switch (item.TAB) {
@@ -289,11 +266,6 @@ const LiveEvents = () => {
           carousels.map((item: LiveCarouselFlags) =>
             renderCarouselsOrderedByRemoteConfig(item)
           )}
-        {isLoading && (
-          <Box p={sizes.paddingSm} width="100%">
-            <Skeleton my={4} kind="cards" />
-          </Box>
-        )}
         {isEmpty && <EmptyState />}
       </Flex>
     </Container>

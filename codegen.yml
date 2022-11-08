@@ -1,13 +1,16 @@
 overwrite: true
 schema: "https://${REACT_APP_API_ENDPOINT}/graphql"
-documents: "./src/services/graphql/**/*.ts"
+documents: 
+  - "./src/services/graphql/queries/**/*.ts"
+  - "./src/services/graphql/mutation/**/*.ts"
 generates:
   src/generated/graphql.tsx:
     plugins:
       - "typescript"
       - "typescript-operations"
+      - "typescript-resolvers"
       - "typescript-react-apollo"
     config:
-      withHooks: true
       withComponent: true
+      withMutationFn: true
 

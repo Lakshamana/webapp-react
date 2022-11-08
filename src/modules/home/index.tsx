@@ -19,10 +19,7 @@ import {
   LivestreamScroller,
   PostsScroller
 } from 'components'
-import {
-  DEFAULT_POLLING_INTERVAL,
-  MAXIMUM_SCROLLER_REQUESTS
-} from 'config/constants'
+import { MAXIMUM_SCROLLER_REQUESTS } from 'config/constants'
 import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {
@@ -114,21 +111,14 @@ const HomePage = () => {
     }))
   }
 
-  const [
-    getLiveEvents,
-    { loading: loadingLiveEvents, stopPolling, startPolling },
-  ] = useLazyQuery(
+  const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
         const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
-
-        if (!liveEventsData?.rows.length && liveEvents.rows.length) {
-          startPolling && startPolling(DEFAULT_POLLING_INTERVAL)
-        }
-        setLiveEventsData((previous) => appendNewData(previous, liveEvents))
+        setLiveEventsData(liveEvents)
       },
       fetchPolicy: 'cache-and-network',
     }
@@ -253,10 +243,6 @@ const HomePage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
-
-    return () => {
-      stopPolling && stopPolling()
-    }
     // eslint-disable-next-line
   }, [])
 

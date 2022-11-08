@@ -4,7 +4,11 @@ import { organizationData } from 'config/organization'
 import OneSignal from 'react-onesignal'
 
 export async function runOneSignal() {
-  if (configEnvs.onesignalAppId && configEnvs.onesignalSafariWebId) {
+  if (
+    configEnvs.onesignalAppId &&
+    configEnvs.onesignalSafariWebId &&
+    process.env.NODE_ENV === 'production'
+  ) {
     await OneSignal.init({
       appId: configEnvs.onesignalAppId,
       safari_web_id: configEnvs.onesignalSafariWebId,
