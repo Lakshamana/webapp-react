@@ -4,7 +4,7 @@ import { Container, EmptyState, Skeleton } from 'components/atoms'
 import {
   BillboardScroller,
   LivestreamScroller,
-  VideosScroller
+  PostsScroller
 } from 'components/molecules'
 import {
   Kinds,
@@ -12,6 +12,7 @@ import {
   PaginatedPostsOutput,
   Status
 } from 'generated/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -21,7 +22,6 @@ import {
   QUERY_PUBLIC_LIVE_EVENTS,
   QUERY_PUBLIC_POSTS_CARDS
 } from 'services/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
   useAuthStore,
   useChannelsStore,
@@ -61,7 +61,9 @@ const LiveEvents = () => {
   const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
@@ -256,7 +258,7 @@ const LiveEvents = () => {
 
   const renderOnDemandPosts = (item: LiveCarouselFlags) =>
     !!onDemandData?.rows?.length && (
-      <VideosScroller
+      <PostsScroller
         key={`${item.LABEL[0].VALUE}`}
         items={onDemandData.rows}
         sectionTitle={getCarouselLabel(item)}

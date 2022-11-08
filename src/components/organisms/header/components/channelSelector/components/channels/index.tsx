@@ -2,8 +2,8 @@ import { Badge, Flex, Spinner } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Avatar, Container, Text } from 'components'
 import { Channel } from 'generated/graphql'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useTranslation } from 'react-i18next'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks/useThumbor'
 import { colors } from 'styles'
 import {
   isEntityBlocked,

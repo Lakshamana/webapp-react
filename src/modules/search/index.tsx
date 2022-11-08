@@ -36,7 +36,7 @@ const SearchPage = () => {
       setPosts(
         result?.search?.rows
           .filter((item) => item.__typename === 'SearchPost')
-          .filter((post) => post.type === PostType.Video || post.type === PostType.OnDemand)
+          .filter((post) => post.type === PostType.Video || post.type === PostType.OnDemand || post.type === PostType.Photo || post.type === PostType.Text)
       )
       setCategories(
         result?.search?.rows.filter(
@@ -84,7 +84,7 @@ const SearchPage = () => {
       <Box width={'100%'} textAlign={'right'}>
         <Text
           paddingX={{ base: sizes.paddingSm, md: sizes.paddingMd }}
-          fontSize={{sm: '14px', md: '18px'}}
+          fontSize={{sm: '0.9rem', md: '1.1rem'}}
           color={colors.generalText[colorMode]}
         >
           {t('page.search.results_for', {
@@ -108,7 +108,7 @@ const SearchPage = () => {
         <>
           <Spacer pt={6} />
           <PostsGrid
-            sectionTitle={t('page.search.videos_section')}
+            sectionTitle={t('page.search.posts_section')}
             items={posts}
           />
         </>

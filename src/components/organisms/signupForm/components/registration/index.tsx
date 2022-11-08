@@ -101,27 +101,39 @@ const RegistrationForm = ({
         {t('signup.registration.subtitle')}
       </Text>
       <Flex gridGap={7} marginY={5} justifyContent={'center'}>
-        <SocialSigninButton
-          onClick={() => handleSocialSignUp('google')}
-          kind={'google'}
-        />
-        <SocialSigninButton
-          onClick={() => handleSocialSignUp('facebook')}
-          kind={'facebook'}
-        />
+        {
+          organizationConfig?.GOOGLE_LOGIN && (
+            <SocialSigninButton
+              onClick={() => handleSocialSignUp('google')}
+              kind={'google'}
+            />
+          )
+        }
+        {
+          organizationConfig?.FACEBOOK_LOGIN && (
+            <SocialSigninButton
+              onClick={() => handleSocialSignUp('facebook')}
+              kind={'facebook'}
+            />
+          )
+        }
         {/* <SocialSigninButton
           onClick={() => handleSocialSignUp('twitter')}
           kind={'twitter'}
         ></SocialSigninButton> */}
       </Flex>
-      <Text
-        fontSize={16}
-        marginBottom={3}
-        textAlign={'center'}
-        color={colors.secondaryText[colorMode]}
-      >
-        {t('common.or')}
-      </Text>
+      {
+        (organizationConfig?.FACEBOOK_LOGIN || organizationConfig?.GOOGLE_LOGIN) && (
+          <Text
+            fontSize={16}
+            marginBottom={3}
+            textAlign={'center'}
+            color={colors.secondaryText[colorMode]}
+          >
+            {t('common.or')}
+          </Text>
+        )
+      }
       <>
         {!!error && (
           <AlertComponent

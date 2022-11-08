@@ -30,6 +30,7 @@ import { Cookie } from 'components/atoms'
 import { configEnvs } from 'config/envs'
 import { initializeFacebookPixel } from 'config/facebookPixel'
 import { initializeGTM } from 'config/gtm'
+import { saveData } from 'services/storage'
 
 const breakpoints = createBreakpoints(themeBreakpoints)
 
@@ -61,6 +62,10 @@ const TemplateProvider = ({ children }: any) => {
   useEffect(() => {
     configEnvs.googleTag && initializeGTM()
     configEnvs.facebookTag && initializeFacebookPixel()
+
+    // Verify if browser has webp support
+    const hasWebpSupport =  document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    saveData('webpsupport', hasWebpSupport ? 1 : 0)
   }, [])
 
   return (

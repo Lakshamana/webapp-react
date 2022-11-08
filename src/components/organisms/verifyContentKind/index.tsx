@@ -6,6 +6,8 @@ import {
   PrivateContent,
   Skeleton
 } from 'components'
+import { Kinds } from 'generated/graphql'
+import { NotAuthorized, PaywallPlatform } from 'modules'
 
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +21,7 @@ import {
 } from 'services/graphql'
 import { useAuthStore, useChannelsStore } from 'services/stores'
 import {
+  entityRequireLogin,
   isEntityBlocked,
   isEntityGeolocked,
   isEntityOnPaywall,
@@ -35,6 +38,9 @@ const VerifyContentKind = ({
   const [isPrivate, setIsPrivate] = useState<boolean>(false)
   const [isOnPaywall, setIsOnPaywall] = useState<boolean>(false)
   const [isGeolocked, setIsGeolocked] = useState<boolean>(false)
+  const [isOnPaywallAnonymous, setIsOnPaywallAnonymous] =
+    useState<boolean>(false)
+  const [isExclusive, setIsExclusive] = useState<boolean>(false)
   const [errorOnRequestAccess, setErrorOnRequestAccess] = useState('')
   const [password, setPassword] = useState('')
   const [contentKind, setContentKind] = useState<ElegibleContent>()
@@ -65,7 +71,7 @@ const VerifyContentKind = ({
         slug: contentSlug,
       },
       onCompleted: (result) => {
-        const content = result[`${contentType}`]
+        const content = result[`${contentType}Kind`]
         setContentKind(content)
       },
       fetchPolicy: 'cache-and-network',
@@ -97,14 +103,37 @@ const VerifyContentKind = ({
 
   useEffect(() => {
     if (contentKind) {
+      if (isEntityGeolocked(contentKind)) {
+        setIsGeolocked(true)
+        return
+      }
+
+      if (
+        (entityRequireLogin(contentKind) && !isAnonymousAccess) ||
+        contentKind.kind === Kinds.Public
+      ) {
+        accessGranted()
+        return
+      }
+
+      if (entityRequireLogin(contentKind) && isAnonymousAccess) {
+        setIsExclusive(true)
+        return
+      }
+
+      if (contentKind.kind === Kinds.Paywall && isAnonymousAccess) {
+        setIsOnPaywallAnonymous(true)
+        return
+      }
+
       if (isEntityBlocked(contentKind)) {
         setIsPrivate(isEntityPrivate(contentKind))
         setIsOnPaywall(isEntityOnPaywall(contentKind))
-        setIsGeolocked(isEntityGeolocked(contentKind))
-        return
+      } else {
+        accessGranted()
       }
-      accessGranted()
     }
+
     //eslint-disable-next-line
   }, [contentKind])
 
@@ -122,6 +151,8 @@ const VerifyContentKind = ({
       </Center>
     )
 
+  if (isExclusive) return <NotAuthorized />
+
   if (isPrivate)
     return (
       <PrivateContent
@@ -133,7 +164,15 @@ const VerifyContentKind = ({
       />
     )
 
-  if (isOnPaywall && isAnonymousAccess) return <div>Simplified CHECKOUT</div>
+  if (isOnPaywallAnonymous)
+    return (
+      <PaywallPlatform
+        type={contentType}
+        contentTitle={
+          contentKind && (contentKind['name'] || contentKind['title'])
+        }
+      />
+    )
 
   if (isOnPaywall)
     return (

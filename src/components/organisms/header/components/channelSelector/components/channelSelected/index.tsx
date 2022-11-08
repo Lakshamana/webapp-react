@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { Avatar, Container } from 'components'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useChannelsStore } from 'services/stores'
 import { breakpoints, colors } from 'styles'
 import { IconContainer } from './styles'
@@ -24,6 +24,8 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
     )
   }
 
+  const channelImage = generateChannelImage()
+
   return (
     <Container alignItems="center">
       {activeChannel && (
@@ -33,7 +35,8 @@ const ChannelSelected = ({ open, colorMode }: PropsChannelSelected) => {
             height={isDesktop ? '45px' : '38px'}
             width={isDesktop ? '45px' : '38px'}
             borderRadius={'8px'}
-            src={generateChannelImage()}
+            {...(channelImage ? { background: 'transparent' } : {})}
+            src={channelImage}
           />
         </Container>
       )}

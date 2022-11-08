@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import '@silvermine/videojs-chromecast/dist/silvermine-videojs-chromecast.css'
 import axios from 'axios'
 import { Modal as ContinueModal } from 'components'
@@ -23,6 +24,7 @@ import videoJsVttThumbnails from 'videojs-vtt-thumbnails'
 import 'videojs-vtt-thumbnails/dist/videojs-vtt-thumbnails.css'
 
 import { SHOW_NEXT_VIDEO_IN, VIDEO_MUTED, VIDEO_VOLUME } from 'config/constants'
+import { MUTATION_ADD_VIEW } from 'services/graphql'
 import { getDefaultConfigs } from './settings'
 import { VideoPlayerProps } from './types'
 
@@ -51,14 +53,17 @@ const VideoPlayerComponent = ({
     position: 0,
     ended: false,
   })
+  const [continueAction, setContinueAction] = useState(false)
   const { account, isAnonymousAccess, user } = useAuthStore()
   const { activeChannelConfig } = useCustomizationStore()
   const setEventUpdate = useVideoPlayerStore((state) => state.setEventUpdate)
   const setRemainingTime = useVideoPlayerStore(
     (state) => state.setRemainingTime
   )
+  const client = useApolloClient()
   const { organization } = useOrganizationStore()
   const { activeChannel } = useChannelsStore()
+  const [isViewed, setIsViewed] = useState<boolean>(false)
 
   // TODO: Change to env-config
   const ANALYTICS_API = process.env.REACT_APP_ANALYTICS_API
@@ -92,8 +97,21 @@ const VideoPlayerComponent = ({
     }
   }
 
+  const addCountView = async () => {
+    if (isViewed) return
+    const { data } = await client.mutate({
+      mutation: MUTATION_ADD_VIEW,
+      variables: {
+        postId: videoId,
+      },
+    })
+
+    if (data.post) setIsViewed(true)
+  }
+
   const handlePlayerReady = (player: any) => {
     playerRef.current = player
+    let lastCurrent = 0
 
     player?.on('dispose', () => {
       player?.registerPlugin('qualityLevel', videoJsContribQualityLevels)
@@ -105,26 +123,28 @@ const VideoPlayerComponent = ({
     player?.on('ready', async () => {
       setEventUpdate(PlayerEventName.EVENT_READY)
       if (setVolumeValue) player.volume(setVolumeValue)
-      if (!isAnonymousAccess && !isLiveStream && activeChannel?.id) {
-        try {
-          const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
-          const lastPosition = await axios.get(
-            `${ANALYTICS_API}/watching${URL_PARAMS}`
-          )
-          const position = lastPosition?.data?.position
-          if (position && position !== 0) {
-            return setWatchingPosition({
-              showModal: true,
-              position,
-              ended: false,
-            })
+      if (!isLiveStream) {
+        if (!isAnonymousAccess && activeChannel?.id) {
+          try {
+            const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel.id}&videoId=${videoId}`
+            const lastPosition = await axios.get(
+              `${ANALYTICS_API}/watching${URL_PARAMS}`
+            )
+            const position = lastPosition?.data?.position
+            if (position && position !== 0) {
+              return setWatchingPosition({
+                showModal: true,
+                position,
+                ended: false,
+              })
+            }
+            setWatchingPosition({ ...watchingPosition, showModal: false })
+          } catch (error) {
+            setWatchingPosition({ ...watchingPosition, showModal: false })
           }
-          setWatchingPosition({ ...watchingPosition, showModal: false })
-        } catch (error) {
-          setWatchingPosition({ ...watchingPosition, showModal: false })
+        } else {
+          player?.play()
         }
-      } else {
-        // player?.play()
       }
 
       player?.chromecast()
@@ -162,6 +182,7 @@ const VideoPlayerComponent = ({
       const qualityLevel = event.qualityLevel
       qualityLevel.enabled = qualityLevel.bitrate >= 1579131
     })
+
     player?.on('ended', () => {
       async function continueWatchingEnded() {
         const URL_PARAMS = `?userId=${user?.id}&channelId=${activeChannel?.id}&videoId=${videoId}`
@@ -173,6 +194,7 @@ const VideoPlayerComponent = ({
       }
       setEventUpdate(PlayerEventName.EVENT_ENDED)
     })
+
     player?.on('volumechange', () => {
       const newVolumeValue = player.volume()
       saveData(VIDEO_VOLUME, newVolumeValue)
@@ -180,7 +202,6 @@ const VideoPlayerComponent = ({
       saveData(VIDEO_MUTED, defineIsMuted)
     })
 
-    let lastCurrent = 0
     player?.on('timeupdate', () => {
       const remainingTime = Math.round(player.remainingTime())
       const isRemainingTime =
@@ -202,9 +223,16 @@ const VideoPlayerComponent = ({
       sendContinueWatchingData(player.currentTime())
       setEventUpdate(PlayerEventName.EVENT_SEEKED)
     })
+
     player?.on('error', () => setEventUpdate(PlayerEventName.EVENT_ERROR))
-    player?.on('play', () => setEventUpdate(PlayerEventName.EVENT_PLAY))
+
+    player?.on('play', () => {
+      addCountView()
+      setEventUpdate(PlayerEventName.EVENT_PLAY)
+    })
+
     player?.on('pause', () => setEventUpdate(PlayerEventName.EVENT_PAUSE))
+
     player?.on('progress', () => {
       const playerDuration = player?.duration()
       const playerCurrentTime = player?.currentTime()
@@ -227,18 +255,25 @@ const VideoPlayerComponent = ({
   }
 
   useEffect(() => {
-    if (!watchingPosition.showModal) {
-      // playerRef.current?.play()
+    if (!watchingPosition.showModal && !isLiveStream) {
+      playerRef.current?.play()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchingPosition])
+
+  useEffect(() => {
+    if (playerRef && continueAction) {
+      playerRef.current?.currentTime(watchingPosition.position)
+      closeModal()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerRef, continueAction])
 
   const closeModal = () =>
     setWatchingPosition({ ...watchingPosition, showModal: false })
 
-  const continueAction = () => {
-    playerRef.current?.currentTime(watchingPosition.position)
-    closeModal()
-  }
+  const updateContinueAction = () => setContinueAction(true)
+
   const continueCancel = () => {
     playerRef.current?.currentTime(0)
     sendContinueWatchingData(0)
@@ -250,7 +285,7 @@ const VideoPlayerComponent = ({
   return (
     <>
       <ContinueModal
-        onConfirm={continueAction}
+        onConfirm={updateContinueAction}
         onClose={continueCancel}
         isOpen={watchingPosition.showModal}
         isCentered

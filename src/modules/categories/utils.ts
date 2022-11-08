@@ -8,7 +8,7 @@ export const featuredCategoriesFilter = (page: number) => {
     filter: {
       featured: true,
       sortBy,
-      pageSize: 2,
+      pageSize: 5,
       page,
     },
   }
@@ -31,7 +31,7 @@ export const categoriesWithChildrenFilter = (page: number) => {
     filter: {
       sortBy,
       isParent: true,
-      pageSize: 3,
+      pageSize: 5,
       page,
     },
   }

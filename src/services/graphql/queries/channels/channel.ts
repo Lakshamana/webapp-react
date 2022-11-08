@@ -89,31 +89,24 @@ export const QUERY_PUBLIC_CHANNEL = gql`
   }
 `
 export const QUERY_VERIFY_CHANNEL_KIND = gql`
-  query GetChannelKind($slug: String) {
-    channel(slug: $slug) {
-      ... on AvailableChannel {
-        access
-        id
-        kind
-        name
-        __typename
-      }
-      ... on GeolockedChannel {
-        id
-        name
-        access
-        kind
-        __typename
-      }
+  query ChannelKind($slug: String) {
+    channelKind(slug: $slug) {
+      id
+      kind
+      slug
+      geofence
+      name
+
     }
   }
 `
 
 export const QUERY_CHANNEL_ENTITLEMENTS = gql`
-  query GetChannelEntitlements($id: ID, $slug: String) {
+  query ChannelEntitlements($id: ID, $slug: String) {
     channel(id: $id, slug: $slug) {
       ... on AvailableChannel {
-        slug
+        id
+        access
         entitlements
       }
     }

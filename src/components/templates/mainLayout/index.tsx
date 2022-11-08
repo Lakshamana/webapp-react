@@ -27,6 +27,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
     errorOnPrivateRequestAccess,
     isLoadingPasswordCheck,
     contentType,
+    clearAllStatus,
     requestContentAccess,
   } = useAccessVerifications()
 
@@ -50,7 +51,7 @@ const MainLayout = ({ children, emptyHeader, ...props }: Props) => {
             <PaywallPlatform type={contentType} />
           )}
           {isOnPaywall && !isAnonymousAccess && (
-            <CheckoutFlow products={entitlements} />
+            <CheckoutFlow products={entitlements} accessGranted={clearAllStatus} />
           )}
           {exclusiveContent && <NotAuthorized />}
           {isPrivate && (

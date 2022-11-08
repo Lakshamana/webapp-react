@@ -2,7 +2,8 @@ import { Box } from '@chakra-ui/layout'
 import { useMediaQuery } from '@chakra-ui/media-query'
 import { Container, Logo, UserInfo } from 'components'
 import { LanguageSelector } from 'components/atoms'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
+import { useHistory } from 'react-router-dom'
 import { useCustomizationStore, useThemeStore } from 'services/stores'
 import { breakpoints } from 'styles'
 import { BoxHeader, HeaderItems } from './style'
@@ -10,6 +11,7 @@ import { BoxHeader, HeaderItems } from './style'
 const EmptyHeader = () => {
   const { organizationConfig } = useCustomizationStore()
   const { generateImage } = useThumbor()
+  const history = useHistory()
 
   const { colorMode, toggleColorMode } = useThemeStore()
 
@@ -35,10 +37,12 @@ const EmptyHeader = () => {
           marginRight={[3, 4]}
           py={20}
           src={generateOrgLogo()}
+          clickable
           ignoreFallback
+          onClick={() => history.push('/')}
         />
         <Box marginLeft={'auto'} mr={3}>
-          <LanguageSelector/>
+          <LanguageSelector />
         </Box>
         <Container>
           <UserInfo display={'menu'} {...{ colorMode, toggleColorMode }} />

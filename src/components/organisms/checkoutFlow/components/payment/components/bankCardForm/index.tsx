@@ -93,9 +93,6 @@ const BankCardForm = ({
         'cvv',
         `font-size: 16px; background: transparent; color: ${colors.inputText[colorMode]}; font-size: 1.08rem;`
       )
-      // testing
-      Spreedly.setValue('number', '6550393682603873')
-      Spreedly.setValue('cvv', '123')
     })
 
     Spreedly.on('errors', (errors: any) => {

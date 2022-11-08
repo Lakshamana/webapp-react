@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { Divider, Box } from '@chakra-ui/layout'
-import { useTranslation } from 'react-i18next'
-import { QUERY_CATEGORIES, QUERY_POSTS_CARDS } from 'services/graphql'
-import { Category, Post } from 'generated/graphql'
-import { useAuthStore, useCommonStore } from 'services/stores'
+import { useLazyQuery } from '@apollo/client'
+import { Box, Divider } from '@chakra-ui/layout'
 import {
+  CategoriesGrid,
   Container,
   EmptyState,
-  Skeleton,
   PostsGrid,
-  CategoriesGrid,
+  Skeleton
 } from 'components'
+import { Category, Post } from 'generated/graphql'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+import { QUERY_CATEGORIES, QUERY_POSTS_CARDS } from 'services/graphql'
+import { useAuthStore, useCommonStore } from 'services/stores'
 import { sizes } from 'styles'
 
 const MyListPage = () => {
@@ -19,36 +20,43 @@ const MyListPage = () => {
   const { setPageTitle } = useCommonStore()
   const [categories, setCategories] = useState<Category[]>()
   const [posts, setPosts] = useState<Post[]>()
-  const { account } = useAuthStore()
+  const { account, isAnonymousAccess } = useAuthStore()
+  const [isLoadingMyList, setIsLoadingMyList] = useState<boolean>(true)
+  const history = useHistory()
 
-  const { loading: loadingPinnedCategories } = useQuery(QUERY_CATEGORIES, {
-    variables: {
-      filter: {
-        pinned: true,
-        account: account?.id,
-        sortBy: 'sort.desc',
+  const [getPinnedCategories, { loading: loadingPinnedCategories }] =
+    useLazyQuery(QUERY_CATEGORIES, {
+      variables: {
+        filter: {
+          pinned: true,
+          account: account?.id,
+          sortBy: 'sort.desc',
+        },
       },
-    },
-    onCompleted: (result) => {
-      setCategories(result?.categories?.rows)
-    },
-    fetchPolicy: 'cache-and-network',
-  })
+      onCompleted: (result) => {
+        setCategories(result?.categories?.rows)
+      },
+      fetchPolicy: 'cache-and-network',
+    })
 
-  // TODO: Implement infinite loading on Cards Grid
-  const { loading: loadingPinnedPosts } = useQuery(QUERY_POSTS_CARDS, {
-    variables: {
-      filter: {
-        pinned: true,
-        account: account?.id,
+  const [getPinnedPosts, { loading: loadingPinnedPosts }] = useLazyQuery(
+    QUERY_POSTS_CARDS,
+    {
+      variables: {
+        filter: {
+          pinned: true,
+          account: account?.id,
+        },
       },
-    },
-    onCompleted: (result) => {
-      setPosts(result?.posts?.rows)
-    },
-    fetchPolicy: 'cache-and-network',
-  })
-  const isLoading = loadingPinnedCategories || loadingPinnedPosts
+      onCompleted: (result) => {
+        setPosts(result?.posts?.rows)
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  )
+
+  const isLoading =
+    loadingPinnedCategories || loadingPinnedPosts || isLoadingMyList
 
   const hasResults = categories?.length || posts?.length
 
@@ -56,8 +64,17 @@ const MyListPage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.my_list'))
+
+    if (isAnonymousAccess) history.push('/create-your-account')
+
+    if (account) {
+    getPinnedCategories()
+    getPinnedPosts()
+    setIsLoadingMyList(false)
+    }
+
     //eslint-disable-next-line
-  }, [])
+  }, [account])
 
   const unpinPost = (id: string) => {
     const pinnedPosts = posts?.filter((item) => item.id !== id)
@@ -74,15 +91,15 @@ const MyListPage = () => {
       sectionTitle={t('page.my_list.pinned_categories')}
       items={categories}
       sendUnpinEvent={(id) => unpinCategory(id)}
-    ></CategoriesGrid>
+    />
   )
 
   const renderPostsGrid = () => (
     <PostsGrid
-      sectionTitle={t('page.my_list.pinned_videos')}
+      sectionTitle={t('page.my_list.pinned_posts')}
       items={posts}
       sendUnpinEvent={(id) => unpinPost(id)}
-    ></PostsGrid>
+    />
   )
 
   if (isLoading)
@@ -95,7 +112,7 @@ const MyListPage = () => {
   if (isEmpty) return <EmptyState />
 
   return (
-    <Container flexDirection={'column'} width={'100vw'} my={15}>
+    <Container flexDirection={'column'} width={'100vw'} my={30}>
       {!!categories?.length && renderCategoriesGrid()}
       {!!categories?.length && <Divider py={3} my={3} color="transparent" />}
       {!!posts?.length && renderPostsGrid()}

@@ -2,17 +2,17 @@ import i18n from 'config/i18n'
 import * as Yup from 'yup'
 
 export const initialValues = {
-  full_name: 'bianca s silva',
-  email: 'biasivabsi11@gmail.com',
-  cpf: '404.683.700-48',
-  phone_number: '213123123123',
+  full_name: '',
+  email: '',
+  cpf: '',
+  phone_number: '',
   country: '',
-  address1: 'rUA mAASDASDASDASDSAD',
-  address2: 'ADSASDADASDASD',
-  number: '213123123123',
-  zip: '68734420',
-  district: 'CAIÇARA',
-  city: 'CASTANHAL',
+  address1: '',
+  address2: '',
+  number: '',
+  zip: '',
+  district: '',
+  city: '',
   state: '',
 }
 

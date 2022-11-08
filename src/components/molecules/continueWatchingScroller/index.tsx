@@ -2,10 +2,10 @@ import { CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
 import { useEffect, useState } from 'react'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
-import { VideoPostCardProps } from 'types/posts'
+import { GeneralPostCardProps } from 'types/posts'
 import { ContentScroller } from './styles'
 
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import {
   isEntityBlocked,
   isEntityExclusive,
@@ -35,7 +35,7 @@ const ContinueWatchingScroller = ({
       const thumbnail = getImageUrl(item)
       const url = `/c/${activeChannel?.slug}/post/${item.slug}`
       return {
-        id: item.id,
+        id: item._id,
         title: item.title,
         url,
         description: item?.description,
@@ -65,7 +65,7 @@ const ContinueWatchingScroller = ({
           reachEnd={loadMoreItems}
           {...{ isLoading }}
         >
-          {scrollerItems?.map((item: VideoPostCardProps) => (
+          {scrollerItems?.map((item: GeneralPostCardProps) => (
             <SwiperSlide key={`slide-${item.id}-featured`}>
               <VideoPostCard {...item} />
             </SwiperSlide>

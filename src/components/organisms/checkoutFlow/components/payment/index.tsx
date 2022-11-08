@@ -167,7 +167,7 @@ const Payment = ({
 
       <CardSelectPlan gridGap={3}>
         <Flex w="100%">
-          <Text color={colors.generalText[colorMode]} fontSize="1.2rem">
+          <Text color={colors.generalText[colorMode]} fontSize={["1.1rem", "1.2rem"]}>
             {t('page.plan.selectOption.choosePaymentMethod')}
           </Text>
         </Flex>
@@ -186,6 +186,7 @@ const Payment = ({
               <Flex w="100%" flexDir="column" alignItems="flex-start">
                 <Text
                   textTransform={'uppercase'}
+                  textAlign='left'
                   fontWeight="bold"
                   fontSize="1rem"
                 >
@@ -193,7 +194,7 @@ const Payment = ({
                 </Text>
                 <Text
                   fontSize={'0.95rem'}
-                  textAlign="start"
+                  textAlign="left"
                   color={colors.secondaryText[colorMode]}
                 >
                   {t('page.plan.selectOption.bankCardDesc')}

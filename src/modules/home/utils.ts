@@ -16,7 +16,7 @@ export const postsFilter = (page: number) => {
   return {
     filter: {
       featured: true,
-      typeIn: [PostType.Video, PostType.OnDemand],
+      typeIn: [PostType.Video, PostType.OnDemand, PostType.Photo, PostType.Text],
       status: Status.Published,
       pageSize: MAX_CARDS_SCROLLER_RESULTS,
       page,

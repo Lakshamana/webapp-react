@@ -6,7 +6,7 @@ export const MUTATION_CONFIRM_ORDER = gql`
       id
       status
       subscription
-      invoice
+      invoices
     }
   }
 `
@@ -17,7 +17,7 @@ export const MUTATION_ONE_TIME_PAYMENT = gql`
       id
       status
       subscription
-      invoice
+      invoices
     }
   }
 `

@@ -29,7 +29,13 @@ const FeedPage = () => {
   const { setPageTitle } = useCommonStore()
   const lastPositionCard = useFeedStore((state) => state.lastPositionCard)
   const setLastPositionCard = useFeedStore((state) => state.setLastPositionCard)
-  const { feedPosts, setFeedPosts, resetFeed } = useFeedStore()
+  const {
+    feedPosts,
+    setFeedPosts,
+    resetFeed,
+    lastActiveChannel,
+    setLastActiveChannel,
+  } = useFeedStore()
 
   const [filterBy, setFilterBy] = useState<SortDirection>()
   const [isPositioned, setIsPositioned] = useState<boolean>(false)
@@ -37,8 +43,13 @@ const FeedPage = () => {
   const { isAnonymousAccess } = useAuthStore()
   const { activeChannel } = useChannelsStore()
 
+  const [initialLoading, setInitialLoading] = useState<boolean>(true)
+
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
+
   const getSortByFilter = () =>
     filterBy === 'ASC' ? 'publishedAt.asc' : 'publishedAt.desc'
 
@@ -53,6 +64,7 @@ const FeedPage = () => {
           rows: [...(previousRows || []), ...posts.rows],
         })
       },
+      fetchPolicy: 'cache-and-network',
     }
   )
 
@@ -72,22 +84,39 @@ const FeedPage = () => {
     setLastPositionCard(positionY)
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setPageTitle(t('header.tabs.feed')), [])
+  useEffect(() => {
+    setPageTitle(t('header.tabs.feed'))
+
+    return () => {
+      setLastActiveChannel(activeChannel?.slug || '')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!!feedPosts?.rows.length && !isPositioned) {
       setIsPositioned(true)
       window.scrollTo(0, lastPositionCard)
     }
+
+    if (
+      !feedPosts?.rows.length &&
+      activeChannel &&
+      lastActiveChannel !== activeChannel?.slug
+    )
+      getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedPosts])
 
   useEffect(() => {
-    if (!feedPosts?.rows.length)
+    if (activeChannel) setInitialLoading(false)
+    if (!feedPosts?.rows.length && activeChannel)
       getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
+
+    if (lastActiveChannel !== activeChannel?.slug) resetFeed()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [activeChannel])
 
   useEffect(() => {
     if (filterBy) getFeedPosts({ ...postsFilter(1, getSortByFilter()) })
@@ -109,9 +138,11 @@ const FeedPage = () => {
 
   const hasResults = feedPosts?.rows?.length
 
-  const isEmpty = !loadingPosts && !hasResults
+  const isLoading = loadingPosts || initialLoading
 
-  if (loadingPosts && !feedPosts?.rows.length)
+  const isEmpty = !isLoading && !hasResults
+
+  if (isLoading && !feedPosts?.rows.length)
     return (
       <Center width="100%" height="100%" flexDirection="column">
         {loadingItems(4)}
@@ -138,7 +169,7 @@ const FeedPage = () => {
           dataLength={feedPosts?.rows.length}
           next={loadMoreFeedPosts}
           hasMore={feedPosts.hasNextPage}
-          scrollableTarget='scroll-master'
+          scrollableTarget="scroll-master"
           loader={
             <Box pt={5} textAlign={'center'}>
               <Spinner color={colors.brand.primary[colorMode]} />
@@ -171,4 +202,3 @@ const FeedPage = () => {
 }
 
 export { FeedPage }
-

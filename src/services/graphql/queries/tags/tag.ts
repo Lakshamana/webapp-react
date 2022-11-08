@@ -45,6 +45,10 @@ export const QUERY_TAG = gql`
               thumbnailPath
               baseUrl
             }
+            ... on MediaAudio {
+              id
+              duration
+            }
             ... on MediaPhoto {
               id
               imgPath
@@ -74,7 +78,9 @@ export const QUERY_PAGINATE_TAG = (type: HomeCarouselsTypes[]) => {
         title
         description
         slug
-        ${hasPost ? `
+        ${
+          hasPost
+            ? `
           relatedPosts(filters: $postFilters) {
             total
             hasNextPage
@@ -99,14 +105,26 @@ export const QUERY_PAGINATE_TAG = (type: HomeCarouselsTypes[]) => {
                   thumbnailPath
                   baseUrl
                 }
+                ... on MediaAudio {
+                  id
+                  duration
+                }
+                ... on MediaPhoto {
+                  id
+                  imgPath
+                }
               }
               id
               description
               kind
             }
           }
-        ` : ''}
-        ${hasCategory ? `
+        `
+            : ''
+        }
+        ${
+          hasCategory
+            ? `
           relatedCategories(filters: $categoryFilters) {
             total
             hasNextPage
@@ -129,7 +147,9 @@ export const QUERY_PAGINATE_TAG = (type: HomeCarouselsTypes[]) => {
               }
             }
           }
-        ` : ''}
+        `
+            : ''
+        }
       }
     }
   `

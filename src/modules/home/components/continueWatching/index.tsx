@@ -33,8 +33,8 @@ const ContinueWatchingScrollerComponent = ({ item, getCarouselLabel }: Props) =>
       if (account?.is_admin) params['isAdmin'] = account?.is_admin
       const URL = `https://${process.env.REACT_APP_API_ENDPOINT}/posts/continue-watching`
       const { data } = await axios.post(URL, params, { headers })
-      if (data?.statusCode === 200) {
-        const { rows, ...allRest } = data.body.data
+      if (data?.rows?.length) {
+        const { rows, ...allRest } = data
         setListData((previous) => ({
           ...listData,
           ...allRest,

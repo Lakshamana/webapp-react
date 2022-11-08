@@ -20,7 +20,7 @@ import {
 
 import { Container, EmptyState, Skeleton } from 'components'
 import { BillboardScroller, CategoriesScroller } from 'components/molecules'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { colors, sizes } from 'styles'
 import {
   categoriesWithChildrenFilter,
@@ -44,18 +44,22 @@ const CategoriesPage = () => {
   const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const { generateImage } = useThumbor()
 
-  const [getFeaturedCategories, { loading: loadingFeatured }] = useLazyQuery(
+  const [getFeaturedCategories] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_CATEGORIES : QUERY_CATEGORIES,
     {
       onCompleted: (result) => {
         const categories = isAnonymousAllowed
           ? result.publicCategories
           : result.categories
+
         if (categories.rows) formatBillboardItems(categories.rows)
+
         setFeaturedCategories((previous) => ({
           ...categories,
           rows: [...(previous?.rows || []), ...categories.rows],
@@ -94,6 +98,10 @@ const CategoriesPage = () => {
         const categories = isAnonymousAllowed
           ? result.publicCategories
           : result.categories
+
+        if (categoriesWithChildren && !categoriesWithChildren?.hasNextPage)
+          return
+
         setCategoriesWithChildren((previous) => ({
           ...categories,
           rows: [...(previous?.rows || []), ...categories.rows],
@@ -162,17 +170,20 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     setPageTitle(t('header.tabs.categories'))
-    getCategoriesWithoutChildren({
-      variables: categoriesWithoutChildrenFilter(1),
-    })
-    getCategoriesWithChildren({
-      variables: categoriesWithChildrenFilter(1),
-    })
-    getFeaturedCategories({
-      variables: featuredCategoriesFilter(1),
-    })
+
+    if (activeChannel) {
+      getCategoriesWithoutChildren({
+        variables: categoriesWithoutChildrenFilter(1),
+      })
+      getCategoriesWithChildren({
+        variables: categoriesWithChildrenFilter(1),
+      })
+      getFeaturedCategories({
+        variables: featuredCategoriesFilter(1),
+      })
+    }
     //eslint-disable-next-line
-  }, [])
+  }, [activeChannel])
 
   const isLoading =
     loadingCategoriesWithoutChildren || loadingCategoriesWithChildren
@@ -183,34 +194,36 @@ const CategoriesPage = () => {
 
   const isEmpty = !isLoading && !hasResults
 
-  const renderCategoriesWithoutChildren = () => (
-    <CategoriesScroller
-      items={categoriesWithoutChildren?.rows}
-      sectionTitle={t('page.categories.more_categories')}
-      loadMoreItems={loadMoreCategoriesWithoutChildren}
-    />
-  )
-
   return (
     <Container flexDirection={'column'} width={'100%'}>
       {!!categoriesBillboardItems?.length && (
         <BillboardScroller
           items={categoriesBillboardItems}
           customButtons={false}
-          reachEnd={loadMoreFeaturedCategories}
+          reachEnd={() =>
+            featuredCategories?.hasNextPage && loadMoreFeaturedCategories()
+          }
         />
       )}
 
       <Flex pb={10} gridGap={5} flexDirection={'column'}>
-        {!!categoriesWithoutChildren?.rows?.length &&
-          renderCategoriesWithoutChildren()}
+        {!!categoriesWithoutChildren?.rows?.length && (
+          <CategoriesScroller
+            items={categoriesWithoutChildren?.rows}
+            sectionTitle={t('page.categories.more_categories')}
+            loadMoreItems={loadMoreCategoriesWithoutChildren}
+          />
+        )}
         {!!categoriesWithChildren?.rows?.length && (
           <InfiniteScroll
             style={{ overflowX: 'hidden' }}
             dataLength={categoriesWithChildren.rows.length}
-            next={loadMoreCategoriesWithChildren}
+            next={() =>
+              categoriesWithChildren.hasNextPage &&
+              loadMoreCategoriesWithChildren()
+            }
             hasMore={categoriesWithChildren.hasNextPage}
-            scrollableTarget='scroll-master'
+            scrollableTarget="scroll-master"
             loader={
               <Box pt={5} textAlign={'center'}>
                 <Spinner color={colors.brand.primary[colorMode]} />
@@ -242,4 +255,3 @@ const CategoriesPage = () => {
 }
 
 export { CategoriesPage }
-

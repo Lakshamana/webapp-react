@@ -3,12 +3,9 @@ import { Redirect, Switch } from 'react-router-dom'
 import {
   AccountPage,
   ActivateAccount,
-  CardInfo,
   CategoriesPage,
   CategoryPage,
   ChannelsPage,
-  CheckoutCustomField,
-  CheckoutLogin,
   FeedPage,
   HomePage,
   LiveEvent,
@@ -17,11 +14,11 @@ import {
   MyListPage,
   NotAuthorized,
   NotFound,
-  Password,
   PostPage,
   RecoverPasswordPage,
   SearchPage,
   SignupPage,
+  SimplifiedCheckout,
   SubscriptionManagement,
   TagPage
 } from 'modules'
@@ -29,7 +26,6 @@ import { ClientRoute } from '../../components'
 
 import { EmptyLayout, LoginLayout, MainLayout } from 'components'
 import { useAuth } from 'contexts/auth'
-
 
 const ClientRoutes = () => {
   const { signed } = useAuth()
@@ -58,26 +54,8 @@ const ClientRoutes = () => {
       />
       <ClientRoute
         isAccesible={signed}
-        path="/checkout/login"
-        component={CheckoutLogin}
-        template={EmptyLayout}
-      />
-      <ClientRoute
-        isAccesible={signed}
-        path="/checkout/more-info"
-        component={CheckoutCustomField}
-        template={EmptyLayout}
-      />
-      <ClientRoute
-        isAccesible={signed}
-        path="/checkout/card-info"
-        component={CardInfo}
-        template={EmptyLayout}
-      />
-      <ClientRoute
-        isAccesible={signed}
-        path="/checkout/password"
-        component={Password}
+        path="/simplified-checkout"
+        component={SimplifiedCheckout}
         template={EmptyLayout}
       />
       <ClientRoute
@@ -181,4 +159,3 @@ const ClientRoutes = () => {
 }
 
 export { ClientRoutes }
-

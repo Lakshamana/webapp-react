@@ -12,6 +12,7 @@ import { breakpoints, colors } from 'styles'
 
 type Props = {
   type: 'organization' | 'channel' | 'post' | 'category' | 'liveEvent'
+  contentTitle?: string
 }
 
 const PaywallPlatform = (props: Props) => {
@@ -30,6 +31,10 @@ const PaywallPlatform = (props: Props) => {
         })
       case 'channel':
         return t('common.channel_welcome', { channel: activeChannel?.name })
+      case 'post':
+      case 'category':
+      case 'liveEvent':
+        return t('common.channel_welcome', { channel: activeChannel?.name })
     }
   }
 
@@ -41,6 +46,10 @@ const PaywallPlatform = (props: Props) => {
         })
       case 'channel':
         return t('common.exclusive_channel', { channel: activeChannel?.name })
+      case 'post':
+      case 'category':
+      case 'liveEvent':
+        return t('common.exclusive_content', { content: props.contentTitle })
     }
   }
 

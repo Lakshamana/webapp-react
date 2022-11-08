@@ -1,13 +1,14 @@
 import { gql } from '@apollo/client'
 
 export const QUERY_POST = gql`
-  query GetPost($slug: String) {
+  query Post($slug: String) {
     post(slug: $slug) {
       id
       access
       allowComments
       countComments
       countReactions
+      countViewsTotal
       slug
       description
       categories {
@@ -39,6 +40,7 @@ export const QUERY_POST = gql`
           subtitles {
             id
             locale
+            baseUrl
             vttPath
             label
           }
@@ -67,13 +69,15 @@ export const QUERY_POST = gql`
 `
 
 export const QUERY_VERIFY_POST_KIND = gql`
-  query GetPostKind($slug: String) {
-    post(slug: $slug) {
+  query PostKind($slug: String) {
+    postKind(slug: $slug) {
       id
-      title
       access
       kind
+      title
       entitlements
+      slug
     }
   }
 `
+

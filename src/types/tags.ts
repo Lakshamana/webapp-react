@@ -19,6 +19,7 @@ export type TagScrollerItem = {
   isExclusive: boolean
   thumbnail?: string
   isPinned?: boolean
+  type?: string
   url?: string
   __typename?: string
 }

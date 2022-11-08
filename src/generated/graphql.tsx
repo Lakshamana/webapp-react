@@ -1,5 +1,6 @@
-import * as Apollo from '@apollo/client';
 import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+import * as React from 'react';
 import * as ApolloReactComponents from '@apollo/client/react/components';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -26,6 +27,7 @@ export type Scalars = {
 export enum AccessKinds {
   Available = 'AVAILABLE',
   Geolocked = 'GEOLOCKED',
+  Public = 'PUBLIC',
   Redacted = 'REDACTED'
 }
 
@@ -132,29 +134,6 @@ export type ActivateAccount = {
   id: Scalars['ID'];
 };
 
-export type ActiveRedemptionsCustomer = {
-  __typename?: 'ActiveRedemptionsCustomer';
-  createDate: Scalars['DateTime'];
-  description: Scalars['String'];
-  email: Scalars['String'];
-  id: Scalars['String'];
-  name: Scalars['String'];
-  paymentMethod: Scalars['String'];
-};
-
-export type ActiveRedemptionsSubscription = {
-  __typename?: 'ActiveRedemptionsSubscription';
-  billing: Scalars['String'];
-  cancelledDate: Scalars['DateTime'];
-  createdDate: Scalars['DateTime'];
-  currentPeriod: Scalars['DateTime'];
-  customer: Scalars['String'];
-  dateStatus: Scalars['DateTime'];
-  id: Scalars['String'];
-  product: Array<Product>;
-  status: Scalars['String'];
-};
-
 export type AddComment = {
   content: Scalars['String'];
   description: Scalars['String'];
@@ -177,6 +156,16 @@ export type AddOrder = {
 
 export type AddOrderCustomFields = {
   fullName: Scalars['String'];
+};
+
+export type AddOverrideOrder = {
+  account?: Maybe<Scalars['String']>;
+  accountEmail?: Maybe<Scalars['String']>;
+  accountId?: Maybe<Scalars['String']>;
+  amount: Scalars['Float'];
+  product: Scalars['String'];
+  productPrice: Scalars['String'];
+  status: Scalars['String'];
 };
 
 export type AddPendingOrder = {
@@ -219,6 +208,7 @@ export type AvailableChannel = {
   geofence?: Maybe<Scalars['JSON']>;
   geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
   menu?: Maybe<Menu>;
@@ -317,6 +307,11 @@ export type CancelNotificationOutput = {
   success: Scalars['Boolean'];
 };
 
+export type CancelSubscription = {
+  pauseDuration?: Maybe<Scalars['String']>;
+  subscriptionId: Scalars['String'];
+};
+
 export type Category = {
   __typename?: 'Category';
   access?: Maybe<AccessKinds>;
@@ -332,6 +327,7 @@ export type Category = {
   id: Scalars['ID'];
   isChild?: Maybe<Scalars['Boolean']>;
   isDeleted?: Maybe<Scalars['Boolean']>;
+  isKindAuto: Scalars['Boolean'];
   isParent?: Maybe<Scalars['Boolean']>;
   kind: Kinds;
   name: Scalars['String'];
@@ -395,10 +391,28 @@ export type CategoryInput = {
   name: Scalars['String'];
   parentId?: Maybe<Scalars['ID']>;
   password?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   slug?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
   tags?: Maybe<Array<Scalars['String']>>;
+};
+
+export type CategoryKind = {
+  __typename?: 'CategoryKind';
+  channel: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  entitlements?: Maybe<Array<Scalars['JSONObject']>>;
+  geoFence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind: Kinds;
+  name: Scalars['String'];
+  organization: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
 };
 
 export type CategoryPasswordCheck = {
@@ -457,6 +471,24 @@ export type ChannelFindAllFilter = {
   status__exact?: Maybe<Scalars['String']>;
 };
 
+export type ChannelKind = {
+  __typename?: 'ChannelKind';
+  banner?: Maybe<Scalars['JSON']>;
+  customization?: Maybe<ChannelCustomizationOutput>;
+  description: Scalars['String'];
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
+  geofence?: Maybe<Scalars['JSON']>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind?: Maybe<Kinds>;
+  logo?: Maybe<Scalars['JSON']>;
+  name: Scalars['String'];
+  organization: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
+  thumbnail?: Maybe<Scalars['JSON']>;
+};
+
 export type ChannelPasswordCheck = {
   __typename?: 'ChannelPasswordCheck';
   correct: Scalars['Boolean'];
@@ -472,11 +504,6 @@ export type ChildrenCategoryFilter = {
   isParent?: Maybe<Scalars['Boolean']>;
   sortBy?: Maybe<Scalars['String']>;
 };
-
-export enum CodeTypeEnum {
-  Random = 'RANDOM',
-  Sequential = 'SEQUENTIAL'
-}
 
 export type Comment = {
   __typename?: 'Comment';
@@ -542,7 +569,7 @@ export type ConfirmOrder = {
   /** the country id from country code from inspire api */
   country?: Maybe<Scalars['String']>;
   /** Customer CPF */
-  cpf: Scalars['String'];
+  cpf?: Maybe<Scalars['String']>;
   currencyId?: Maybe<Scalars['String']>;
   customerGrossAmount?: Maybe<Scalars['Float']>;
   description?: Maybe<Scalars['String']>;
@@ -560,75 +587,6 @@ export type ConfirmOrder = {
   /** the product price id of inspire product */
   productPrice: Scalars['String'];
   statementDescriptor?: Maybe<Scalars['String']>;
-};
-
-export type CouponCode = {
-  __typename?: 'CouponCode';
-  code?: Maybe<Scalars['String']>;
-  createdDate?: Maybe<Scalars['DateTime']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  firstTimeTransaction?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  isActive?: Maybe<Scalars['Boolean']>;
-  metadata?: Maybe<Array<InspireMetadata>>;
-  minimumAmount?: Maybe<Scalars['Float']>;
-  redemptions?: Maybe<Scalars['Float']>;
-};
-
-export type CouponCodeOutput = {
-  __typename?: 'CouponCodeOutput';
-  code?: Maybe<Scalars['String']>;
-  createdDate?: Maybe<Scalars['DateTime']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  firstTimeTransaction?: Maybe<Scalars['Boolean']>;
-  id: Scalars['String'];
-  isActive?: Maybe<Scalars['Boolean']>;
-  metadata: Array<InspireMetadata>;
-  minimumAmount?: Maybe<Scalars['Float']>;
-  redemptions?: Maybe<Scalars['Float']>;
-};
-
-export type CouponCurrency = {
-  __typename?: 'CouponCurrency';
-  isoCode?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-};
-
-export enum CouponDurationEnum {
-  Forever = 'FOREVER',
-  MultipleMonths = 'MULTIPLE_MONTHS',
-  Once = 'ONCE'
-}
-
-export type CouponOutput = {
-  __typename?: 'CouponOutput';
-  additionalTrialDays: Scalars['Float'];
-  codes?: Maybe<Array<CouponCodeOutput>>;
-  couponDuration?: Maybe<CouponDurationEnum>;
-  couponType?: Maybe<CouponTypes>;
-  createdDate: Scalars['DateTime'];
-  currency?: Maybe<CouponCurrency>;
-  discountAmount: Scalars['Float'];
-  discountPercentage: Scalars['Float'];
-  durationMonths: Scalars['Float'];
-  expirationDate: Scalars['DateTime'];
-  id: Scalars['String'];
-  isUnique: Scalars['Boolean'];
-  maxRedemptions: Scalars['Float'];
-  maximumAmount: Scalars['Float'];
-  metadata: Array<InspireMetadata>;
-  name: Scalars['String'];
-  redemptions: Scalars['Float'];
-  subscriptionCouponRedeems: Array<GetSubscriptionCouponRedeems>;
-  trialDays: Scalars['Float'];
-  valid: Scalars['Boolean'];
-};
-
-export type CouponTypes = {
-  __typename?: 'CouponTypes';
-  hasAdditionalTrialDays?: Maybe<Scalars['Boolean']>;
-  name?: Maybe<Scalars['String']>;
 };
 
 export type CreateAccountGdprLgpdInput = {
@@ -717,45 +675,13 @@ export type CreateChannelInput = {
   thumbnail?: Maybe<Scalars['ID']>;
 };
 
-export type CreateCouponCodeInput = {
-  code: Scalars['String'];
-  codeQuantity?: Maybe<Scalars['Float']>;
-  codeTypes?: Maybe<CodeTypeEnum>;
-  currencyId?: Maybe<Scalars['String']>;
-  customerId?: Maybe<Scalars['String']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  firstTimeTransaction?: Maybe<Scalars['Boolean']>;
-  maxRedemptions?: Maybe<Scalars['Float']>;
-  minimumAmount?: Maybe<Scalars['Float']>;
-};
-
-export type CreateCouponInput = {
-  additionalTrialDays?: Maybe<Scalars['Float']>;
-  codes?: Maybe<Scalars['DateTime']>;
-  couponDurations?: Maybe<InspireCouponDurationEnum>;
-  couponTypes?: Maybe<InspireCouponTypeEnum>;
-  currencyId?: Maybe<Scalars['String']>;
-  discountAmount?: Maybe<Scalars['Float']>;
-  discountPercentage?: Maybe<Scalars['Float']>;
-  durationMonths?: Maybe<Scalars['Float']>;
-  expirationDate?: Maybe<Scalars['DateTime']>;
-  isUnique?: Maybe<Scalars['Boolean']>;
-  maxRedemptions?: Maybe<Scalars['Float']>;
-  maximumAmount?: Maybe<Scalars['Float']>;
-  metadata?: Maybe<Array<InspireMetadataInput>>;
-  name: Scalars['String'];
-  productIds?: Maybe<Scalars['String']>;
-  trialDays?: Maybe<Scalars['Float']>;
-};
-
 export type CreateCustomFieldInput = {
   fields: Array<CustomFieldInput>;
 };
 
 export type CreateEmailTemplateDto = {
   name: Scalars['String'];
-  template?: Maybe<Scalars['String']>;
-  templates: Scalars['JSON'];
+  templates: Array<LocaleBody>;
   type: Scalars['String'];
 };
 
@@ -928,6 +854,8 @@ export type CreateSubjectInput = {
 
 export type CreateTagInput = {
   description?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   title: Scalars['String'];
 };
 
@@ -1062,6 +990,11 @@ export type CustomizationMediaOutput = {
   upload?: Maybe<Scalars['ID']>;
 };
 
+export type DefaultCreditCardPaymentMethod = {
+  __typename?: 'DefaultCreditCardPaymentMethod';
+  payment?: Maybe<Scalars['JSONObject']>;
+};
+
 export enum DelayedOptionEnum {
   LastActive = 'LAST_ACTIVE',
   Timezone = 'TIMEZONE'
@@ -1082,14 +1015,20 @@ export type EmailSent = {
 
 export type EmailTemplate = {
   __typename?: 'EmailTemplate';
-  _id: Scalars['ID'];
   channel?: Maybe<Scalars['ID']>;
   deleted_at?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
   name: Scalars['String'];
   organization: Scalars['ID'];
   template?: Maybe<Scalars['String']>;
-  templates?: Maybe<Scalars['JSON']>;
+  templates?: Maybe<Array<EmailTemplateLocales>>;
   type: Scalars['String'];
+};
+
+export type EmailTemplateLocales = {
+  __typename?: 'EmailTemplateLocales';
+  body: Scalars['String'];
+  locale: LocaleTypes;
 };
 
 export type Embed = {
@@ -1208,20 +1147,6 @@ export type FilterPlaylistsInput = {
   sortBy?: Maybe<Scalars['String']>;
 };
 
-export type FindAllCouponCodeParams = {
-  couponId: Scalars['String'];
-  page?: Maybe<Scalars['Float']>;
-  pagesize?: Maybe<Scalars['Float']>;
-};
-
-export type FindAllCouponsQueryParams = {
-  currencyId?: Maybe<Scalars['String']>;
-  keywords?: Maybe<Scalars['String']>;
-  page?: Maybe<Scalars['String']>;
-  pagesize?: Maybe<Scalars['Float']>;
-  productPriceIds?: Maybe<Array<Scalars['String']>>;
-};
-
 export type FindAllGroupsRequestDto = {
   name__contains?: Maybe<Scalars['String']>;
   name__exact?: Maybe<Scalars['String']>;
@@ -1326,6 +1251,7 @@ export type GeolockedChannel = {
   geofence?: Maybe<Scalars['JSON']>;
   geofenceEntitlements?: Maybe<Scalars['JSON']>;
   id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
   kind?: Maybe<Kinds>;
   logo?: Maybe<Scalars['JSON']>;
   menu?: Maybe<Menu>;
@@ -1335,12 +1261,6 @@ export type GeolockedChannel = {
   slug?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   thumbnail?: Maybe<Scalars['JSON']>;
-};
-
-export type GetSubscriptionCouponRedeems = {
-  __typename?: 'GetSubscriptionCouponRedeems';
-  activeRedemptionsCustomers: ActiveRedemptionsCustomer;
-  activeRedemptionsSubscriptions: ActiveRedemptionsSubscription;
 };
 
 export type GroupDto = {
@@ -1389,19 +1309,6 @@ export type InspireBillingTypes = {
   id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
-
-export enum InspireCouponDurationEnum {
-  Forever = 'FOREVER',
-  MultipleMonths = 'MULTIPLE_MONTHS',
-  Once = 'ONCE'
-}
-
-export enum InspireCouponTypeEnum {
-  Amount = 'AMOUNT',
-  Percentage = 'PERCENTAGE',
-  PriceOverride = 'PRICE_OVERRIDE',
-  TrialOnly = 'TRIAL_ONLY'
-}
 
 export type InspireCurrency = {
   __typename?: 'InspireCurrency';
@@ -1550,6 +1457,7 @@ export type InviteTeamMemberInput = {
 };
 
 export enum Kinds {
+  Auto = 'AUTO',
   Exclusive = 'EXCLUSIVE',
   Geolocked = 'GEOLOCKED',
   Paywall = 'PAYWALL',
@@ -1586,6 +1494,7 @@ export type LiveEvent = {
   hlsPlaybackUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isDeleted?: Maybe<Scalars['Boolean']>;
+  isKindAuto: Scalars['Boolean'];
   kind: Kinds;
   media?: Maybe<MediaVideo>;
   organization: Scalars['ID'];
@@ -1671,6 +1580,20 @@ export type LiveEventInput = {
   type: LiveEventType;
 };
 
+export type LiveEventKind = {
+  __typename?: 'LiveEventKind';
+  channel: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  geoFence?: Maybe<Scalars['JSONObject']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind: Kinds;
+  organization: Scalars['ID'];
+  slug?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
 export type LiveEventPasswordCheck = {
   __typename?: 'LiveEventPasswordCheck';
   correct: Scalars['Boolean'];
@@ -1696,6 +1619,292 @@ export enum LiveEventType {
   RtmpPull = 'RTMP_PULL',
   RtmpPush = 'RTMP_PUSH',
   RtpPush = 'RTP_PUSH'
+}
+
+export type LocaleBody = {
+  body: Scalars['String'];
+  locale: LocaleTypes;
+};
+
+export enum LocaleTypes {
+  Af = 'AF',
+  AfZa = 'AF_ZA',
+  AmEt = 'AM_ET',
+  Ar = 'AR',
+  ArnCl = 'ARN_CL',
+  ArAe = 'AR_AE',
+  ArBh = 'AR_BH',
+  ArDz = 'AR_DZ',
+  ArEg = 'AR_EG',
+  ArIq = 'AR_IQ',
+  ArJo = 'AR_JO',
+  ArKw = 'AR_KW',
+  ArLb = 'AR_LB',
+  ArLy = 'AR_LY',
+  ArMa = 'AR_MA',
+  ArOm = 'AR_OM',
+  ArQa = 'AR_QA',
+  ArSa = 'AR_SA',
+  ArSy = 'AR_SY',
+  ArTn = 'AR_TN',
+  ArYe = 'AR_YE',
+  AsIn = 'AS_IN',
+  Az = 'AZ',
+  AzCyrlAz = 'AZ_CYRL_AZ',
+  AzLatnAz = 'AZ_LATN_AZ',
+  BaRu = 'BA_RU',
+  Be = 'BE',
+  BeBy = 'BE_BY',
+  Bg = 'BG',
+  BgBg = 'BG_BG',
+  BnBd = 'BN_BD',
+  BnIn = 'BN_IN',
+  BoCn = 'BO_CN',
+  BrFr = 'BR_FR',
+  BsCyrlBa = 'BS_CYRL_BA',
+  BsLatnBa = 'BS_LATN_BA',
+  Ca = 'CA',
+  CaEs = 'CA_ES',
+  CoFr = 'CO_FR',
+  Cs = 'CS',
+  CsCz = 'CS_CZ',
+  CyGb = 'CY_GB',
+  Da = 'DA',
+  DaDk = 'DA_DK',
+  De = 'DE',
+  DeAt = 'DE_AT',
+  DeCh = 'DE_CH',
+  DeDe = 'DE_DE',
+  DeLi = 'DE_LI',
+  DeLu = 'DE_LU',
+  DsbDe = 'DSB_DE',
+  Dv = 'DV',
+  DvMv = 'DV_MV',
+  El = 'EL',
+  ElGr = 'EL_GR',
+  En = 'EN',
+  En_029 = 'EN_029',
+  EnAu = 'EN_AU',
+  EnBz = 'EN_BZ',
+  EnCa = 'EN_CA',
+  EnGb = 'EN_GB',
+  EnIe = 'EN_IE',
+  EnIn = 'EN_IN',
+  EnJm = 'EN_JM',
+  EnMy = 'EN_MY',
+  EnNz = 'EN_NZ',
+  EnPh = 'EN_PH',
+  EnSg = 'EN_SG',
+  EnTt = 'EN_TT',
+  EnUs = 'EN_US',
+  EnZa = 'EN_ZA',
+  EnZw = 'EN_ZW',
+  Es = 'ES',
+  EsAr = 'ES_AR',
+  EsBo = 'ES_BO',
+  EsCl = 'ES_CL',
+  EsCo = 'ES_CO',
+  EsCr = 'ES_CR',
+  EsDo = 'ES_DO',
+  EsEc = 'ES_EC',
+  EsEs = 'ES_ES',
+  EsGt = 'ES_GT',
+  EsHn = 'ES_HN',
+  EsMx = 'ES_MX',
+  EsNi = 'ES_NI',
+  EsPa = 'ES_PA',
+  EsPe = 'ES_PE',
+  EsPr = 'ES_PR',
+  EsPy = 'ES_PY',
+  EsSv = 'ES_SV',
+  EsUs = 'ES_US',
+  EsUy = 'ES_UY',
+  EsVe = 'ES_VE',
+  Et = 'ET',
+  EtEe = 'ET_EE',
+  Eu = 'EU',
+  EuEs = 'EU_ES',
+  Fa = 'FA',
+  FaIr = 'FA_IR',
+  Fi = 'FI',
+  FilPh = 'FIL_PH',
+  FiFi = 'FI_FI',
+  Fo = 'FO',
+  FoFo = 'FO_FO',
+  Fr = 'FR',
+  FrBe = 'FR_BE',
+  FrCa = 'FR_CA',
+  FrCh = 'FR_CH',
+  FrFr = 'FR_FR',
+  FrLu = 'FR_LU',
+  FrMc = 'FR_MC',
+  FyNl = 'FY_NL',
+  GaIe = 'GA_IE',
+  GdGb = 'GD_GB',
+  Gl = 'GL',
+  GlEs = 'GL_ES',
+  GswFr = 'GSW_FR',
+  Gu = 'GU',
+  GuIn = 'GU_IN',
+  HaLatnNg = 'HA_LATN_NG',
+  He = 'HE',
+  HeIl = 'HE_IL',
+  Hi = 'HI',
+  HiIn = 'HI_IN',
+  Hr = 'HR',
+  HrBa = 'HR_BA',
+  HrHr = 'HR_HR',
+  HsbDe = 'HSB_DE',
+  Hu = 'HU',
+  HuHu = 'HU_HU',
+  Hy = 'HY',
+  HyAm = 'HY_AM',
+  Id = 'ID',
+  IdId = 'ID_ID',
+  IgNg = 'IG_NG',
+  IiCn = 'II_CN',
+  Is = 'IS',
+  IsIs = 'IS_IS',
+  It = 'IT',
+  ItCh = 'IT_CH',
+  ItIt = 'IT_IT',
+  IuCansCa = 'IU_CANS_CA',
+  IuLatnCa = 'IU_LATN_CA',
+  Ja = 'JA',
+  JaJp = 'JA_JP',
+  Ka = 'KA',
+  KaGe = 'KA_GE',
+  Kk = 'KK',
+  KkKz = 'KK_KZ',
+  KlGl = 'KL_GL',
+  KmKh = 'KM_KH',
+  Kn = 'KN',
+  KnIn = 'KN_IN',
+  Ko = 'KO',
+  Kok = 'KOK',
+  KokIn = 'KOK_IN',
+  KoKr = 'KO_KR',
+  Ky = 'KY',
+  KyKg = 'KY_KG',
+  LbLu = 'LB_LU',
+  LoLa = 'LO_LA',
+  Lt = 'LT',
+  LtLt = 'LT_LT',
+  Lv = 'LV',
+  LvLv = 'LV_LV',
+  MiNz = 'MI_NZ',
+  Mk = 'MK',
+  MkMk = 'MK_MK',
+  MlIn = 'ML_IN',
+  Mn = 'MN',
+  MnMn = 'MN_MN',
+  MnMongCn = 'MN_MONG_CN',
+  MohCa = 'MOH_CA',
+  Mr = 'MR',
+  MrIn = 'MR_IN',
+  Ms = 'MS',
+  MsBn = 'MS_BN',
+  MsMy = 'MS_MY',
+  MtMt = 'MT_MT',
+  NbNo = 'NB_NO',
+  NeNp = 'NE_NP',
+  Nl = 'NL',
+  NlBe = 'NL_BE',
+  NlNl = 'NL_NL',
+  NnNo = 'NN_NO',
+  No = 'NO',
+  NsoZa = 'NSO_ZA',
+  OcFr = 'OC_FR',
+  OrIn = 'OR_IN',
+  Pa = 'PA',
+  PaIn = 'PA_IN',
+  Pl = 'PL',
+  PlPl = 'PL_PL',
+  PrsAf = 'PRS_AF',
+  PsAf = 'PS_AF',
+  Pt = 'PT',
+  PtBr = 'PT_BR',
+  PtPt = 'PT_PT',
+  QutGt = 'QUT_GT',
+  QuzBo = 'QUZ_BO',
+  QuzEc = 'QUZ_EC',
+  QuzPe = 'QUZ_PE',
+  RmCh = 'RM_CH',
+  Ro = 'RO',
+  RoRo = 'RO_RO',
+  Ru = 'RU',
+  RuRu = 'RU_RU',
+  RwRw = 'RW_RW',
+  Sa = 'SA',
+  SahRu = 'SAH_RU',
+  SaIn = 'SA_IN',
+  SeFi = 'SE_FI',
+  SeNo = 'SE_NO',
+  SeSe = 'SE_SE',
+  SiLk = 'SI_LK',
+  Sk = 'SK',
+  SkSk = 'SK_SK',
+  Sl = 'SL',
+  SlSi = 'SL_SI',
+  SmaNo = 'SMA_NO',
+  SmaSe = 'SMA_SE',
+  SmjNo = 'SMJ_NO',
+  SmjSe = 'SMJ_SE',
+  SmnFi = 'SMN_FI',
+  SmsFi = 'SMS_FI',
+  Sq = 'SQ',
+  SqAl = 'SQ_AL',
+  Sr = 'SR',
+  SrCyrlBa = 'SR_CYRL_BA',
+  SrCyrlCs = 'SR_CYRL_CS',
+  SrCyrlMe = 'SR_CYRL_ME',
+  SrCyrlRs = 'SR_CYRL_RS',
+  SrLatnBa = 'SR_LATN_BA',
+  SrLatnCs = 'SR_LATN_CS',
+  SrLatnMe = 'SR_LATN_ME',
+  SrLatnRs = 'SR_LATN_RS',
+  Sv = 'SV',
+  SvFi = 'SV_FI',
+  SvSe = 'SV_SE',
+  Sw = 'SW',
+  SwKe = 'SW_KE',
+  Syr = 'SYR',
+  SyrSy = 'SYR_SY',
+  Ta = 'TA',
+  TaIn = 'TA_IN',
+  Te = 'TE',
+  TeIn = 'TE_IN',
+  TgCyrlTj = 'TG_CYRL_TJ',
+  Th = 'TH',
+  ThTh = 'TH_TH',
+  TkTm = 'TK_TM',
+  TnZa = 'TN_ZA',
+  Tr = 'TR',
+  TrTr = 'TR_TR',
+  Tt = 'TT',
+  TtRu = 'TT_RU',
+  TzmLatnDz = 'TZM_LATN_DZ',
+  UgCn = 'UG_CN',
+  Uk = 'UK',
+  UkUa = 'UK_UA',
+  Ur = 'UR',
+  UrPk = 'UR_PK',
+  Uz = 'UZ',
+  UzCyrlUz = 'UZ_CYRL_UZ',
+  UzLatnUz = 'UZ_LATN_UZ',
+  Vi = 'VI',
+  ViVn = 'VI_VN',
+  WoSn = 'WO_SN',
+  XhZa = 'XH_ZA',
+  YoNg = 'YO_NG',
+  ZhChs = 'ZH_CHS',
+  ZhCht = 'ZH_CHT',
+  ZhCn = 'ZH_CN',
+  ZhHk = 'ZH_HK',
+  ZhMo = 'ZH_MO',
+  ZhSg = 'ZH_SG',
+  ZhTw = 'ZH_TW',
+  ZuZa = 'ZU_ZA'
 }
 
 export type Me = {
@@ -1914,7 +2123,6 @@ export type Mutation = {
   addReport: Report;
   addView: Post;
   addVote: AddedCommentVote;
-  archiveCouponCode: Scalars['VoidScalar'];
   atomicUpdateCategorySorting: CategorySortingOutput;
   atomicUpdateMenuSorting: MenuSortingOutput;
   avatarUpload: ResponseUploadCreation;
@@ -1922,6 +2130,7 @@ export type Mutation = {
   banAccountTemp: Account;
   bindChannelAndOrganization: Account;
   cancelNotification: CancelNotificationOutput;
+  cancelSubscription: Order;
   categoryPasswordCheck: CategoryPasswordCheck;
   channelPasswordCheck: ChannelPasswordCheck;
   confirmOrder: Order;
@@ -1934,8 +2143,6 @@ export type Mutation = {
   createCategory: Category;
   createChannel: AvailableChannel;
   createChannelRoles: Scalars['String'];
-  createCoupon: CouponOutput;
-  createCouponCode: CouponCode;
   createCustomField: ResponseCustomFieldsOutput;
   createEmailTemplate: EmailTemplate;
   createEmbed: Embed;
@@ -1968,7 +2175,6 @@ export type Mutation = {
   deleteBillboard: Billboard;
   deleteCategory: Category;
   deleteComment: Comment;
-  deleteCoupon: Scalars['VoidScalar'];
   deleteCustomField: ResponseCustomFieldsOutput;
   deleteEmbed: Embed;
   deleteEnvConfig: EnvConfig;
@@ -1988,6 +2194,7 @@ export type Mutation = {
   liveEventPasswordCheck: LiveEventPasswordCheck;
   oneTimePayment: Order;
   organizationPasswordCheck: OrganizationPasswordCheck;
+  overrideOrder: Order;
   pinCategory: AccountPinnedCategory;
   pinChannel: AccountPinnedChannel;
   pinPost: AccountPinnedPost;
@@ -2012,6 +2219,7 @@ export type Mutation = {
   removeTag: TagOutput;
   resendActivateAccount: AccountActivated;
   resetPassword: EmailSent;
+  restartSubscription: Order;
   searchUpdateChannel: SearchUpdateChannel;
   sendEmail: ResponseEmailSendedDto;
   signIn: SingIn;
@@ -2020,9 +2228,9 @@ export type Mutation = {
   socialSignIn: SingIn;
   startMediaUpload: ResponseMediaUploadOutput;
   stopLive: LiveEventStopLiveOutput;
-  unarchiveCouponCode: Scalars['VoidScalar'];
   unbanAccountPerm: Account;
   unbanAccountTemp: Account;
+  uncancelSubscription: Order;
   unpinCategory: AccountPinnedCategory;
   unpinChannel: AccountPinnedChannel;
   unpinPost: AccountPinnedPost;
@@ -2036,8 +2244,7 @@ export type Mutation = {
   updateCategory: Category;
   updateChannel: Channel;
   updateComment: Comment;
-  updateCoupon: Scalars['VoidScalar'];
-  updateCouponCode: Scalars['VoidScalar'];
+  updateCreditCardPaymentMethod: DefaultCreditCardPaymentMethod;
   updateCustomField: ResponseCustomFieldsOutput;
   updateEmailTemplate: EmailTemplate;
   updateEmbed: Embed;
@@ -2118,12 +2325,6 @@ export type MutationAddVoteArgs = {
 };
 
 
-export type MutationArchiveCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-};
-
-
 export type MutationAtomicUpdateCategorySortingArgs = {
   payload: UpdateCategoriesSorting;
 };
@@ -2159,6 +2360,11 @@ export type MutationBindChannelAndOrganizationArgs = {
 
 export type MutationCancelNotificationArgs = {
   payload: CancelNotificationInput;
+};
+
+
+export type MutationCancelSubscriptionArgs = {
+  payload: CancelSubscription;
 };
 
 
@@ -2216,17 +2422,6 @@ export type MutationCreateCategoryArgs = {
 
 export type MutationCreateChannelArgs = {
   payload: CreateChannelInput;
-};
-
-
-export type MutationCreateCouponArgs = {
-  input: CreateCouponInput;
-};
-
-
-export type MutationCreateCouponCodeArgs = {
-  couponId: Scalars['String'];
-  input: CreateCouponCodeInput;
 };
 
 
@@ -2390,11 +2585,6 @@ export type MutationDeleteCommentArgs = {
 };
 
 
-export type MutationDeleteCouponArgs = {
-  id: Scalars['String'];
-};
-
-
 export type MutationDeleteCustomFieldArgs = {
   id: Scalars['ID'];
 };
@@ -2490,6 +2680,11 @@ export type MutationOneTimePaymentArgs = {
 export type MutationOrganizationPasswordCheckArgs = {
   organizationId: Scalars['ID'];
   password: Scalars['String'];
+};
+
+
+export type MutationOverrideOrderArgs = {
+  payload: AddOverrideOrder;
 };
 
 
@@ -2604,6 +2799,11 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationRestartSubscriptionArgs = {
+  payload: CancelSubscription;
+};
+
+
 export type MutationSendEmailArgs = {
   payload: SendEmailDto;
 };
@@ -2639,12 +2839,6 @@ export type MutationStopLiveArgs = {
 };
 
 
-export type MutationUnarchiveCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-};
-
-
 export type MutationUnbanAccountPermArgs = {
   account: Scalars['String'];
 };
@@ -2652,6 +2846,11 @@ export type MutationUnbanAccountPermArgs = {
 
 export type MutationUnbanAccountTempArgs = {
   account: Scalars['String'];
+};
+
+
+export type MutationUncancelSubscriptionArgs = {
+  payload: UncancelSubscription;
 };
 
 
@@ -2725,16 +2924,9 @@ export type MutationUpdateCommentArgs = {
 };
 
 
-export type MutationUpdateCouponArgs = {
+export type MutationUpdateCreditCardPaymentMethodArgs = {
   id: Scalars['String'];
-  input: UpdateCouponInput;
-};
-
-
-export type MutationUpdateCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-  input: UpdateCouponCodeInput;
+  payload: UpdateCreditCardPaymentMethod;
 };
 
 
@@ -2923,6 +3115,11 @@ export type MutationVerifyMailArgs = {
   payload: VerifyEmailDto;
 };
 
+export type MyProducts = {
+  __typename?: 'MyProducts';
+  products: Array<InspireProduct>;
+};
+
 export type NotificationOutput = {
   __typename?: 'NotificationOutput';
   /** If notification is canceled */
@@ -3037,7 +3234,7 @@ export type Order = {
   createdAt?: Maybe<Scalars['DateTime']>;
   customFields?: Maybe<Scalars['JSONObject']>;
   id: Scalars['String'];
-  invoice?: Maybe<Scalars['String']>;
+  invoices?: Maybe<Array<Scalars['JSONObject']>>;
   payment?: Maybe<Scalars['String']>;
   product?: Maybe<Scalars['String']>;
   status?: Maybe<OrderStatus>;
@@ -3047,6 +3244,7 @@ export type Order = {
 
 export enum OrderStatus {
   Active = 'ACTIVE',
+  Canceled = 'CANCELED',
   Failed = 'FAILED',
   Pending = 'PENDING',
   Unpaid = 'UNPAID'
@@ -3086,6 +3284,21 @@ export type OrganizationFindAllFilter = {
   sort?: Maybe<OrganizationSortArs>;
   status?: Maybe<Scalars['String']>;
   web_url__exact?: Maybe<Scalars['String']>;
+};
+
+export type OrganizationKind = {
+  __typename?: 'OrganizationKind';
+  audioCdnBaseUrl?: Maybe<Scalars['String']>;
+  avatarCdnBaseUrl?: Maybe<Scalars['String']>;
+  customization?: Maybe<Scalars['JSON']>;
+  entitlements?: Maybe<Array<Scalars['JSON']>>;
+  geofenceEntitlements?: Maybe<Scalars['JSON']>;
+  id: Scalars['ID'];
+  imageCdnBaseUrl?: Maybe<Scalars['String']>;
+  kind?: Maybe<Kinds>;
+  name?: Maybe<Scalars['String']>;
+  portal_url?: Maybe<Scalars['String']>;
+  web_url?: Maybe<Array<Scalars['String']>>;
 };
 
 export type OrganizationOneSignalOutput = {
@@ -3480,6 +3693,7 @@ export type Post = {
   hiddenFromFeed: Scalars['Boolean'];
   id: Scalars['ID'];
   inFeed: Scalars['Boolean'];
+  isKindAuto: Scalars['Boolean'];
   kind: Scalars['String'];
   media?: Maybe<MediaUnion>;
   myReactions: Array<PostReactions>;
@@ -3520,6 +3734,21 @@ export type PostFilter = {
   sortBy?: Maybe<Scalars['String']>;
   status?: Maybe<PostStatus>;
   typeIn?: Maybe<Array<PostType>>;
+};
+
+export type PostKind = {
+  __typename?: 'PostKind';
+  channel: Scalars['ID'];
+  description: Scalars['String'];
+  entitlements?: Maybe<Array<Scalars['JSONObject']>>;
+  geofence?: Maybe<Scalars['JSONObject']>;
+  geofenceEntitlements?: Maybe<Scalars['JSONObject']>;
+  id: Scalars['ID'];
+  isKindAuto: Scalars['Boolean'];
+  kind: Scalars['String'];
+  slug?: Maybe<Scalars['String']>;
+  thumbnail?: Maybe<MediaPhoto>;
+  title: Scalars['String'];
 };
 
 export type PostPasswordCheck = {
@@ -3568,11 +3797,6 @@ export type PriceTierOutput = {
 export type PricingModelOutput = {
   __typename?: 'PricingModelOutput';
   id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type Product = {
-  __typename?: 'Product';
   name: Scalars['String'];
 };
 
@@ -3738,11 +3962,14 @@ export type Query = {
   accounts: PaginatedAccountsOutput;
   accountsCount: ResponseAccountsCount;
   accountsGdprLgpd: Array<AccountGdprLgpd>;
+  activeSubscriptons: Array<Order>;
   billboard: Billboard;
   billboards: PaginatedBillboardsOutput;
   categories: PaginatedCategoriesOutput;
   category: Category;
+  categoryKind: CategoryKind;
   channel: Channel;
+  channelKind: ChannelKind;
   channels: Array<Channel>;
   checkCategorySlug: CategorySlugExists;
   checkChannel: ResponseAvailabilityOutput;
@@ -3757,10 +3984,6 @@ export type Query = {
   countPermissions: Scalars['Int'];
   countRoles: Scalars['Float'];
   countSubjects: Scalars['Int'];
-  coupon: CouponOutput;
-  couponCode: CouponCode;
-  couponCodes: Array<CouponCode>;
-  coupons: Array<CouponOutput>;
   customField: ResponseCustomFieldsOutput;
   customFields: Array<ResponseCustomFieldsOutput>;
   emailTemplate: EmailTemplate;
@@ -3774,6 +3997,7 @@ export type Query = {
   groups: Array<GroupDto>;
   listNotifications: PaginatedNotificationOutput;
   liveEvent: LiveEvent;
+  liveEventKind: LiveEventKind;
   liveEvents: PaginatedLiveEventsOutput;
   me: Me;
   media: MediaUnion;
@@ -3781,9 +4005,11 @@ export type Query = {
   medias: PaginatedMediaUnion;
   menu: Menu;
   menus: PaginatedMenusOutput;
+  myProducts: MyProducts;
   order: Order;
   orders: Array<Order>;
   organization: Organization;
+  organizationKind: OrganizationKind;
   organizationPublicSettings: OrganizationPublic;
   organizations: Array<Organization>;
   permission: PermissionDto;
@@ -3791,6 +4017,7 @@ export type Query = {
   playlist: PlaylistOutput;
   playlists: PlaylistsOutput;
   post: Post;
+  postKind: PostKind;
   posts: PaginatedPostsOutput;
   product: InspireProduct;
   productPrice: ProductPriceOutput;
@@ -3860,6 +4087,11 @@ export type QueryAccountsArgs = {
 };
 
 
+export type QueryActiveSubscriptonsArgs = {
+  filter?: Maybe<FilterFindAllOrders>;
+};
+
+
 export type QueryBillboardArgs = {
   id: Scalars['ID'];
 };
@@ -3881,7 +4113,19 @@ export type QueryCategoryArgs = {
 };
 
 
+export type QueryCategoryKindArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryChannelArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryChannelKindArgs = {
   id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 };
@@ -3930,27 +4174,6 @@ export type QueryCommentsArgs = {
 
 export type QueryCountOrdersArgs = {
   filter?: Maybe<FilterFindAllOrders>;
-};
-
-
-export type QueryCouponArgs = {
-  id: Scalars['String'];
-};
-
-
-export type QueryCouponCodeArgs = {
-  couponCodeId: Scalars['String'];
-  couponId: Scalars['String'];
-};
-
-
-export type QueryCouponCodesArgs = {
-  params: FindAllCouponCodeParams;
-};
-
-
-export type QueryCouponsArgs = {
-  params?: Maybe<FindAllCouponsQueryParams>;
 };
 
 
@@ -4014,6 +4237,12 @@ export type QueryLiveEventArgs = {
 };
 
 
+export type QueryLiveEventKindArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryLiveEventsArgs = {
   filter?: Maybe<LiveEventFilter>;
 };
@@ -4054,6 +4283,11 @@ export type QueryOrganizationArgs = {
 };
 
 
+export type QueryOrganizationKindArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryOrganizationPublicSettingsArgs = {
   id: Scalars['ID'];
 };
@@ -4087,6 +4321,12 @@ export type QueryPlaylistsArgs = {
 
 
 export type QueryPostArgs = {
+  id?: Maybe<Scalars['ID']>;
+  slug?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryPostKindArgs = {
   id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 };
@@ -4606,6 +4846,10 @@ export type TagsOutput = {
   total: Scalars['Float'];
 };
 
+export type UncancelSubscription = {
+  subscriptionId: Scalars['String'];
+};
+
 export type UpdateAccountGdprLgpdInput = {
   accepted: Scalars['Boolean'];
 };
@@ -4684,6 +4928,8 @@ export type UpdateCategoryInput = {
   name?: Maybe<Scalars['String']>;
   parentId?: Maybe<Scalars['ID']>;
   password?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   slug?: Maybe<Scalars['String']>;
   sort?: Maybe<Scalars['Int']>;
   status?: Maybe<Status>;
@@ -4714,13 +4960,22 @@ export type UpdateComment = {
   description?: Maybe<Scalars['String']>;
 };
 
-export type UpdateCouponCodeInput = {
-  metadata?: Maybe<Array<InspireMetadataInput>>;
-};
-
-export type UpdateCouponInput = {
-  metadata?: Maybe<Array<InspireMetadataInput>>;
-  name: Scalars['String'];
+export type UpdateCreditCardPaymentMethod = {
+  billingAddress: BillingAddressInput;
+  /** the user card brand */
+  cardBrand?: Maybe<Scalars['String']>;
+  /** the user name */
+  cardHolderName?: Maybe<Scalars['String']>;
+  /** the country id from country code from inspire api */
+  country?: Maybe<Scalars['String']>;
+  /** Customer CPF */
+  cpf?: Maybe<Scalars['String']>;
+  /** the user card expiration date */
+  expirationDate?: Maybe<Scalars['String']>;
+  /** the last 4 values of user card */
+  lastDigits?: Maybe<Scalars['String']>;
+  /** the token used on payment gateway */
+  paymentGatewayToken?: Maybe<Scalars['String']>;
 };
 
 export type UpdateCustomFieldInput = {
@@ -4729,8 +4984,7 @@ export type UpdateCustomFieldInput = {
 
 export type UpdateEmailTemplateDto = {
   name: Scalars['String'];
-  template?: Maybe<Scalars['String']>;
-  templates: Scalars['JSON'];
+  templates: Array<LocaleBody>;
 };
 
 export type UpdateEmbed = {
@@ -5018,6 +5272,8 @@ export type UpdateSubjectInput = {
 
 export type UpdateTagInput = {
   description?: Maybe<Scalars['String']>;
+  /** Array of post ids */
+  posts?: Maybe<Array<Scalars['ID']>>;
   title?: Maybe<Scalars['String']>;
 };
 
@@ -5253,7 +5509,14 @@ export type ConfirmOrderMutationVariables = Exact<{
 }>;
 
 
-export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any> } };
+export type ConfirmOrderMutation = { __typename?: 'Mutation', confirmOrder: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any>, invoices?: Maybe<Array<any>> } };
+
+export type OneTimePaymentMutationVariables = Exact<{
+  payload: ConfirmOrder;
+}>;
+
+
+export type OneTimePaymentMutation = { __typename?: 'Mutation', oneTimePayment: { __typename?: 'Order', id: string, status?: Maybe<OrderStatus>, subscription?: Maybe<any>, invoices?: Maybe<Array<any>> } };
 
 export type OrganizationPasswordCheckMutationVariables = Exact<{
   organizationId: Scalars['ID'];
@@ -5357,7 +5620,7 @@ export type CustomFieldsQuery = { __typename?: 'Query', customFields: Array<{ __
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string> }, profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Me', account: { __typename?: 'Account', id: string, display_name?: Maybe<string>, email?: Maybe<string>, first_name?: Maybe<string>, last_name?: Maybe<string>, username?: Maybe<string>, is_admin?: Maybe<boolean>, is_super_user?: Maybe<boolean>, is_tenant_user?: Maybe<boolean> }, profile: { __typename?: 'Profile', id: string, address?: Maybe<string>, birthday?: Maybe<any>, custom_fields?: Maybe<any>, locale?: Maybe<string>, phone?: Maybe<string>, avatar?: Maybe<{ __typename?: 'ProfileAvatar', imgPath?: Maybe<string> }> } } };
 
 export type ProfileQueryVariables = Exact<{
   account: Scalars['ID'];
@@ -5401,20 +5664,27 @@ export type GetPublicCategoriesCardsQueryVariables = Exact<{
 
 export type GetPublicCategoriesCardsQuery = { __typename?: 'Query', publicCategories: { __typename?: 'PaginatedCategoriesOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageNumberIsGood: boolean, pageSize: number, rows: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, children: Array<{ __typename?: 'Category', id: string, name: string, access?: Maybe<AccessKinds>, description?: Maybe<string>, slug?: Maybe<string>, kind: Kinds, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> }> } };
 
-export type GetCategoryQueryVariables = Exact<{
+export type CategoryQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
   postFilter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetCategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
+export type CategoryQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, createdAt: any, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', desktop?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, mobile?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }>, thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }>, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, geofence?: Maybe<any>, kind: string, slug?: Maybe<string>, status: string, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> }, children: Array<{ __typename?: 'Category', sort: number, description?: Maybe<string>, featuredAt?: Maybe<any>, geoFence?: Maybe<any>, name: string, slug?: Maybe<string>, id: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedCategory', pinned: boolean }>, customization?: Maybe<{ __typename?: 'CategoryCustomization', thumbnail?: Maybe<{ __typename?: 'MediaCustomizationOutput', imgPath?: Maybe<string> }> }> }> } };
 
-export type GetCategoryKindQueryVariables = Exact<{
+export type CategoryKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetCategoryKindQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, kind: Kinds, name: string, entitlements: Array<any> } };
+export type CategoryKindQuery = { __typename?: 'Query', categoryKind: { __typename?: 'CategoryKind', id: string, kind: Kinds, geoFence?: Maybe<any>, name: string, isKindAuto: boolean } };
+
+export type CategoryEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CategoryEntitlementsQuery = { __typename?: 'Query', category: { __typename?: 'Category', id: string, access?: Maybe<AccessKinds>, slug?: Maybe<string>, entitlements: Array<any> } };
 
 export type ChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5430,20 +5700,20 @@ export type PublicChannelQueryVariables = Exact<{
 
 export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string } };
 
-export type GetChannelKindQueryVariables = Exact<{
+export type ChannelKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetChannelKindQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, access: AccessKinds, kind?: Maybe<Kinds> } };
+export type ChannelKindQuery = { __typename?: 'Query', channelKind: { __typename?: 'ChannelKind', id: string, kind?: Maybe<Kinds>, slug?: Maybe<string>, geofence?: Maybe<any>, name: string } };
 
-export type GetChannelEntitlementsQueryVariables = Exact<{
+export type ChannelEntitlementsQueryVariables = Exact<{
   id?: Maybe<Scalars['ID']>;
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetChannelEntitlementsQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', slug?: Maybe<string>, entitlements?: Maybe<Array<any>> } | { __typename?: 'GeolockedChannel' } };
+export type ChannelEntitlementsQuery = { __typename?: 'Query', channel: { __typename?: 'AvailableChannel', id: string, access: AccessKinds, entitlements?: Maybe<Array<any>> } | { __typename?: 'GeolockedChannel' } };
 
 export type ChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
@@ -5473,19 +5743,26 @@ export type EnvConfigQueryVariables = Exact<{
 
 export type EnvConfigQuery = { __typename?: 'Query', envConfig: { __typename?: 'EncryptedEnvConfig', result: string } };
 
-export type GetLiveEventQueryVariables = Exact<{
+export type LiveEventQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetLiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, id: string, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
+export type LiveEventQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, createdAt: any, description?: Maybe<string>, kind: Kinds, scheduledStartAt?: Maybe<any>, commentsEnabled?: Maybe<boolean>, hlsPlaybackUrl?: Maybe<string>, presenceEnabled?: Maybe<boolean>, reactionsEnabled?: Maybe<boolean>, slug?: Maybe<string>, status?: Maybe<Status>, streamName?: Maybe<string>, title: string, type: LiveEventType } };
 
-export type GetLiveEventKindQueryVariables = Exact<{
+export type LiveEventKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetLiveEventKindQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, title: string, access?: Maybe<AccessKinds>, kind: Kinds, entitlements: Array<any> } };
+export type LiveEventKindQuery = { __typename?: 'Query', liveEventKind: { __typename?: 'LiveEventKind', id: string, kind: Kinds, geoFence?: Maybe<any>, slug?: Maybe<string>, title: string } };
+
+export type LiveEventEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type LiveEventEntitlementsQuery = { __typename?: 'Query', liveEvent: { __typename?: 'LiveEvent', id: string, access?: Maybe<AccessKinds>, entitlements: Array<any> } };
 
 export type GetLiveEventsQueryVariables = Exact<{
   filter?: Maybe<LiveEventFilter>;
@@ -5522,19 +5799,19 @@ export type GetOrderResultQueryVariables = Exact<{
 
 export type GetOrderResultQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: string, account?: Maybe<string>, status?: Maybe<OrderStatus> } };
 
-export type GetOrganizationKindQueryVariables = Exact<{
+export type OrganizationKindQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetOrganizationKindQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, access: AccessKinds, kind?: Maybe<Kinds> } };
+export type OrganizationKindQuery = { __typename?: 'Query', organizationKind: { __typename?: 'OrganizationKind', id: string, kind?: Maybe<Kinds> } };
 
-export type GetOrganizationEntitlementsQueryVariables = Exact<{
+export type OrganizationEntitlementsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetOrganizationEntitlementsQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, entitlements: Array<any> } };
+export type OrganizationEntitlementsQuery = { __typename?: 'Query', organization: { __typename?: 'Organization', id: string, entitlements: Array<any>, access: AccessKinds } };
 
 export type GetPlaylistQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -5544,19 +5821,26 @@ export type GetPlaylistQueryVariables = Exact<{
 
 export type GetPlaylistQuery = { __typename?: 'Query', playlist: { __typename: 'PlaylistOutput', id: string, title: string, posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } } };
 
-export type GetPostQueryVariables = Exact<{
+export type PostQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, allowComments: boolean, countComments: number, countReactions: number, slug?: Maybe<string>, description: string, featured: boolean, geofence?: Maybe<any>, kind: string, title: string, type: string, categories?: Maybe<Array<{ __typename?: 'Category', id: string }>>, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, playlists?: Maybe<Array<{ __typename?: 'PlaylistOutput', id: string, slug: string, title: string }>>, engagedUsers: Array<{ __typename?: 'EngagedUser', username?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio', id: string, duration?: Maybe<number>, mp3Path?: Maybe<string> } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, baseUrl?: Maybe<string>, mp4Path?: Maybe<string>, duration?: Maybe<number>, aspectRatio?: Maybe<string>, createdAt: any, hlsPath?: Maybe<string>, subtitles?: Maybe<Array<{ __typename?: 'MediaSubtitle', id: string, locale?: Maybe<string>, baseUrl?: Maybe<string>, vttPath?: Maybe<string>, label?: Maybe<string> }>> }>, myReactions: Array<{ __typename?: 'PostReactions', name: string }>, reactions: Array<{ __typename?: 'PostReactions', name: string, count: number }> } };
 
-export type GetPostKindQueryVariables = Exact<{
+export type PostKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type GetPostKindQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, title: string, access: string, kind: string, entitlements: Array<any> } };
+export type PostKindQuery = { __typename?: 'Query', postKind: { __typename?: 'PostKind', id: string, kind: string, title: string, geofence?: Maybe<any>, slug?: Maybe<string> } };
+
+export type PostEntitlementsQueryVariables = Exact<{
+  slug?: Maybe<Scalars['String']>;
+}>;
+
+
+export type PostEntitlementsQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: string, access: string, entitlements: Array<any> } };
 
 export type GetPostsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
@@ -5577,14 +5861,21 @@ export type GetPostsCardsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPostsCardsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
 
 export type GetPublicPostsCardsQueryVariables = Exact<{
   filter?: Maybe<PostFilter>;
 }>;
 
 
-export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto' } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+export type GetPublicPostsCardsQuery = { __typename?: 'Query', publicPosts: { __typename?: 'PaginatedPostsOutput', hasNextPage: boolean, hasPreviousPage: boolean, isFirstPage: boolean, isLastPage: boolean, page: number, pageCount: number, total: number, rows: Array<{ __typename?: 'Post', id: string, access: string, title: string, description: string, kind: string, slug?: Maybe<string>, type: string, pinnedStatus?: Maybe<{ __typename?: 'AccountPinnedPost', pinned: boolean }>, thumbnail?: Maybe<{ __typename?: 'MediaPhoto', imgPath?: Maybe<string> }>, media?: Maybe<{ __typename?: 'MediaAudio' } | { __typename?: 'MediaPhoto', id: string, imgPath?: Maybe<string> } | { __typename?: 'MediaSubtitle' } | { __typename?: 'MediaVideo', id: string, duration?: Maybe<number>, thumbnailPath?: Maybe<string>, baseUrl?: Maybe<string> }> }> } };
+
+export type GetProductQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetProductQuery = { __typename?: 'Query', product: { __typename?: 'InspireProduct', description?: Maybe<string>, imageUrl: string, isActive?: Maybe<boolean>, name?: Maybe<string>, unitLabel?: Maybe<string>, metadata?: Maybe<Array<{ __typename?: 'InspireMetadata', key?: Maybe<string>, value?: Maybe<string> }>>, productPrices?: Maybe<Array<{ __typename?: 'InspireProductPrices', id?: Maybe<string>, internalDescription?: Maybe<string>, unitPrice?: Maybe<number>, billingTypes?: Maybe<{ __typename?: 'InspireBillingTypes', id?: Maybe<string>, name?: Maybe<string> }>, currency?: Maybe<{ __typename?: 'InspireCurrency', isoCode?: Maybe<string> }>, billingPeriods?: Maybe<{ __typename?: 'InspireBillingPeriods', id?: Maybe<string>, name?: Maybe<string> }>, recurringUsageTypes?: Maybe<{ __typename?: 'InspireRecurringUsageTypes', id?: Maybe<string>, name?: Maybe<string> }> }>> } };
 
 export type SearchQueryVariables = Exact<{
   filters?: Maybe<SearchFilter>;
@@ -6437,6 +6728,7 @@ export const ConfirmOrderDocument = gql`
     id
     status
     subscription
+    invoices
   }
 }
     `;
@@ -6472,6 +6764,48 @@ export function useConfirmOrderMutation(baseOptions?: Apollo.MutationHookOptions
 export type ConfirmOrderMutationHookResult = ReturnType<typeof useConfirmOrderMutation>;
 export type ConfirmOrderMutationResult = Apollo.MutationResult<ConfirmOrderMutation>;
 export type ConfirmOrderMutationOptions = Apollo.BaseMutationOptions<ConfirmOrderMutation, ConfirmOrderMutationVariables>;
+export const OneTimePaymentDocument = gql`
+    mutation OneTimePayment($payload: ConfirmOrder!) {
+  oneTimePayment(payload: $payload) {
+    id
+    status
+    subscription
+    invoices
+  }
+}
+    `;
+export type OneTimePaymentMutationFn = Apollo.MutationFunction<OneTimePaymentMutation, OneTimePaymentMutationVariables>;
+export type OneTimePaymentComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<OneTimePaymentMutation, OneTimePaymentMutationVariables>, 'mutation'>;
+
+    export const OneTimePaymentComponent = (props: OneTimePaymentComponentProps) => (
+      <ApolloReactComponents.Mutation<OneTimePaymentMutation, OneTimePaymentMutationVariables> mutation={OneTimePaymentDocument} {...props} />
+    );
+    
+
+/**
+ * __useOneTimePaymentMutation__
+ *
+ * To run a mutation, you first call `useOneTimePaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOneTimePaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [oneTimePaymentMutation, { data, loading, error }] = useOneTimePaymentMutation({
+ *   variables: {
+ *      payload: // value for 'payload'
+ *   },
+ * });
+ */
+export function useOneTimePaymentMutation(baseOptions?: Apollo.MutationHookOptions<OneTimePaymentMutation, OneTimePaymentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<OneTimePaymentMutation, OneTimePaymentMutationVariables>(OneTimePaymentDocument, options);
+      }
+export type OneTimePaymentMutationHookResult = ReturnType<typeof useOneTimePaymentMutation>;
+export type OneTimePaymentMutationResult = Apollo.MutationResult<OneTimePaymentMutation>;
+export type OneTimePaymentMutationOptions = Apollo.BaseMutationOptions<OneTimePaymentMutation, OneTimePaymentMutationVariables>;
 export const OrganizationPasswordCheckDocument = gql`
     mutation OrganizationPasswordCheck($organizationId: ID!, $password: String!) {
   organizationPasswordCheck(organizationId: $organizationId, password: $password) {
@@ -7087,6 +7421,9 @@ export const MeDocument = gql`
       first_name
       last_name
       username
+      is_admin
+      is_super_user
+      is_tenant_user
     }
     profile {
       id
@@ -7617,8 +7954,8 @@ export function useGetPublicCategoriesCardsLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetPublicCategoriesCardsQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsQuery>;
 export type GetPublicCategoriesCardsLazyQueryHookResult = ReturnType<typeof useGetPublicCategoriesCardsLazyQuery>;
 export type GetPublicCategoriesCardsQueryResult = Apollo.QueryResult<GetPublicCategoriesCardsQuery, GetPublicCategoriesCardsQueryVariables>;
-export const GetCategoryDocument = gql`
-    query GetCategory($slug: String, $postFilter: PostFilter) {
+export const CategoryDocument = gql`
+    query Category($slug: String, $postFilter: PostFilter) {
   category(slug: $slug) {
     id
     access
@@ -7698,86 +8035,130 @@ export const GetCategoryDocument = gql`
   }
 }
     `;
-export type GetCategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryQuery, GetCategoryQueryVariables>, 'query'>;
+export type CategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryQuery, CategoryQueryVariables>, 'query'>;
 
-    export const GetCategoryComponent = (props: GetCategoryComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryQuery, GetCategoryQueryVariables> query={GetCategoryDocument} {...props} />
+    export const CategoryComponent = (props: CategoryComponentProps) => (
+      <ApolloReactComponents.Query<CategoryQuery, CategoryQueryVariables> query={CategoryDocument} {...props} />
     );
     
 
 /**
- * __useGetCategoryQuery__
+ * __useCategoryQuery__
  *
- * To run a query within a React component, call `useGetCategoryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryQuery({
+ * const { data, loading, error } = useCategoryQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *      postFilter: // value for 'postFilter'
  *   },
  * });
  */
-export function useGetCategoryQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+export function useCategoryQuery(baseOptions?: Apollo.QueryHookOptions<CategoryQuery, CategoryQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+        return Apollo.useQuery<CategoryQuery, CategoryQueryVariables>(CategoryDocument, options);
       }
-export function useGetCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryQuery, GetCategoryQueryVariables>) {
+export function useCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryQuery, CategoryQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryQuery, GetCategoryQueryVariables>(GetCategoryDocument, options);
+          return Apollo.useLazyQuery<CategoryQuery, CategoryQueryVariables>(CategoryDocument, options);
         }
-export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
-export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
-export type GetCategoryQueryResult = Apollo.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
-export const GetCategoryKindDocument = gql`
-    query GetCategoryKind($slug: String) {
-  category(slug: $slug) {
+export type CategoryQueryHookResult = ReturnType<typeof useCategoryQuery>;
+export type CategoryLazyQueryHookResult = ReturnType<typeof useCategoryLazyQuery>;
+export type CategoryQueryResult = Apollo.QueryResult<CategoryQuery, CategoryQueryVariables>;
+export const CategoryKindDocument = gql`
+    query CategoryKind($slug: String) {
+  categoryKind(slug: $slug) {
     id
-    access
     kind
+    geoFence
     name
-    entitlements
+    isKindAuto
   }
 }
     `;
-export type GetCategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>, 'query'>;
+export type CategoryKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryKindQuery, CategoryKindQueryVariables>, 'query'>;
 
-    export const GetCategoryKindComponent = (props: GetCategoryKindComponentProps) => (
-      <ApolloReactComponents.Query<GetCategoryKindQuery, GetCategoryKindQueryVariables> query={GetCategoryKindDocument} {...props} />
+    export const CategoryKindComponent = (props: CategoryKindComponentProps) => (
+      <ApolloReactComponents.Query<CategoryKindQuery, CategoryKindQueryVariables> query={CategoryKindDocument} {...props} />
     );
     
 
 /**
- * __useGetCategoryKindQuery__
+ * __useCategoryKindQuery__
  *
- * To run a query within a React component, call `useGetCategoryKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCategoryKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoryKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCategoryKindQuery({
+ * const { data, loading, error } = useCategoryKindQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+export function useCategoryKindQuery(baseOptions?: Apollo.QueryHookOptions<CategoryKindQuery, CategoryKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+        return Apollo.useQuery<CategoryKindQuery, CategoryKindQueryVariables>(CategoryKindDocument, options);
       }
-export function useGetCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryKindQuery, GetCategoryKindQueryVariables>) {
+export function useCategoryKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryKindQuery, CategoryKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCategoryKindQuery, GetCategoryKindQueryVariables>(GetCategoryKindDocument, options);
+          return Apollo.useLazyQuery<CategoryKindQuery, CategoryKindQueryVariables>(CategoryKindDocument, options);
         }
-export type GetCategoryKindQueryHookResult = ReturnType<typeof useGetCategoryKindQuery>;
-export type GetCategoryKindLazyQueryHookResult = ReturnType<typeof useGetCategoryKindLazyQuery>;
-export type GetCategoryKindQueryResult = Apollo.QueryResult<GetCategoryKindQuery, GetCategoryKindQueryVariables>;
+export type CategoryKindQueryHookResult = ReturnType<typeof useCategoryKindQuery>;
+export type CategoryKindLazyQueryHookResult = ReturnType<typeof useCategoryKindLazyQuery>;
+export type CategoryKindQueryResult = Apollo.QueryResult<CategoryKindQuery, CategoryKindQueryVariables>;
+export const CategoryEntitlementsDocument = gql`
+    query CategoryEntitlements($slug: String) {
+  category(slug: $slug) {
+    id
+    access
+    slug
+    entitlements
+  }
+}
+    `;
+export type CategoryEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>, 'query'>;
+
+    export const CategoryEntitlementsComponent = (props: CategoryEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables> query={CategoryEntitlementsDocument} {...props} />
+    );
+    
+
+/**
+ * __useCategoryEntitlementsQuery__
+ *
+ * To run a query within a React component, call `useCategoryEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCategoryEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCategoryEntitlementsQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useCategoryEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>(CategoryEntitlementsDocument, options);
+      }
+export function useCategoryEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>(CategoryEntitlementsDocument, options);
+        }
+export type CategoryEntitlementsQueryHookResult = ReturnType<typeof useCategoryEntitlementsQuery>;
+export type CategoryEntitlementsLazyQueryHookResult = ReturnType<typeof useCategoryEntitlementsLazyQuery>;
+export type CategoryEntitlementsQueryResult = Apollo.QueryResult<CategoryEntitlementsQuery, CategoryEntitlementsQueryVariables>;
 export const ChannelDocument = gql`
     query Channel($slug: String) {
   channel(slug: $slug) {
@@ -7879,105 +8260,97 @@ export function usePublicChannelLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type PublicChannelQueryHookResult = ReturnType<typeof usePublicChannelQuery>;
 export type PublicChannelLazyQueryHookResult = ReturnType<typeof usePublicChannelLazyQuery>;
 export type PublicChannelQueryResult = Apollo.QueryResult<PublicChannelQuery, PublicChannelQueryVariables>;
-export const GetChannelKindDocument = gql`
-    query GetChannelKind($slug: String) {
-  channel(slug: $slug) {
-    ... on AvailableChannel {
-      access
-      id
-      kind
-      name
-      __typename
-    }
-    ... on GeolockedChannel {
-      id
-      name
-      access
-      kind
-      __typename
-    }
+export const ChannelKindDocument = gql`
+    query ChannelKind($slug: String) {
+  channelKind(slug: $slug) {
+    id
+    kind
+    slug
+    geofence
+    name
   }
 }
     `;
-export type GetChannelKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelKindQuery, GetChannelKindQueryVariables>, 'query'>;
+export type ChannelKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelKindQuery, ChannelKindQueryVariables>, 'query'>;
 
-    export const GetChannelKindComponent = (props: GetChannelKindComponentProps) => (
-      <ApolloReactComponents.Query<GetChannelKindQuery, GetChannelKindQueryVariables> query={GetChannelKindDocument} {...props} />
+    export const ChannelKindComponent = (props: ChannelKindComponentProps) => (
+      <ApolloReactComponents.Query<ChannelKindQuery, ChannelKindQueryVariables> query={ChannelKindDocument} {...props} />
     );
     
 
 /**
- * __useGetChannelKindQuery__
+ * __useChannelKindQuery__
  *
- * To run a query within a React component, call `useGetChannelKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useChannelKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelKindQuery({
+ * const { data, loading, error } = useChannelKindQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetChannelKindQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+export function useChannelKindQuery(baseOptions?: Apollo.QueryHookOptions<ChannelKindQuery, ChannelKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+        return Apollo.useQuery<ChannelKindQuery, ChannelKindQueryVariables>(ChannelKindDocument, options);
       }
-export function useGetChannelKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelKindQuery, GetChannelKindQueryVariables>) {
+export function useChannelKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelKindQuery, ChannelKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetChannelKindQuery, GetChannelKindQueryVariables>(GetChannelKindDocument, options);
+          return Apollo.useLazyQuery<ChannelKindQuery, ChannelKindQueryVariables>(ChannelKindDocument, options);
         }
-export type GetChannelKindQueryHookResult = ReturnType<typeof useGetChannelKindQuery>;
-export type GetChannelKindLazyQueryHookResult = ReturnType<typeof useGetChannelKindLazyQuery>;
-export type GetChannelKindQueryResult = Apollo.QueryResult<GetChannelKindQuery, GetChannelKindQueryVariables>;
-export const GetChannelEntitlementsDocument = gql`
-    query GetChannelEntitlements($id: ID, $slug: String) {
+export type ChannelKindQueryHookResult = ReturnType<typeof useChannelKindQuery>;
+export type ChannelKindLazyQueryHookResult = ReturnType<typeof useChannelKindLazyQuery>;
+export type ChannelKindQueryResult = Apollo.QueryResult<ChannelKindQuery, ChannelKindQueryVariables>;
+export const ChannelEntitlementsDocument = gql`
+    query ChannelEntitlements($id: ID, $slug: String) {
   channel(id: $id, slug: $slug) {
     ... on AvailableChannel {
-      slug
+      id
+      access
       entitlements
     }
   }
 }
     `;
-export type GetChannelEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>, 'query'>;
+export type ChannelEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>, 'query'>;
 
-    export const GetChannelEntitlementsComponent = (props: GetChannelEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables> query={GetChannelEntitlementsDocument} {...props} />
+    export const ChannelEntitlementsComponent = (props: ChannelEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables> query={ChannelEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetChannelEntitlementsQuery__
+ * __useChannelEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetChannelEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetChannelEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useChannelEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChannelEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetChannelEntitlementsQuery({
+ * const { data, loading, error } = useChannelEntitlementsQuery({
  *   variables: {
  *      id: // value for 'id'
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetChannelEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+export function useChannelEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+        return Apollo.useQuery<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>(ChannelEntitlementsDocument, options);
       }
-export function useGetChannelEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>) {
+export function useChannelEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>(GetChannelEntitlementsDocument, options);
+          return Apollo.useLazyQuery<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>(ChannelEntitlementsDocument, options);
         }
-export type GetChannelEntitlementsQueryHookResult = ReturnType<typeof useGetChannelEntitlementsQuery>;
-export type GetChannelEntitlementsLazyQueryHookResult = ReturnType<typeof useGetChannelEntitlementsLazyQuery>;
-export type GetChannelEntitlementsQueryResult = Apollo.QueryResult<GetChannelEntitlementsQuery, GetChannelEntitlementsQueryVariables>;
+export type ChannelEntitlementsQueryHookResult = ReturnType<typeof useChannelEntitlementsQuery>;
+export type ChannelEntitlementsLazyQueryHookResult = ReturnType<typeof useChannelEntitlementsLazyQuery>;
+export type ChannelEntitlementsQueryResult = Apollo.QueryResult<ChannelEntitlementsQuery, ChannelEntitlementsQueryVariables>;
 export const ChannelsDocument = gql`
     query Channels($filter: ChannelFindAllFilter!) {
   channels(filter: $filter) {
@@ -8197,13 +8570,13 @@ export function useEnvConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type EnvConfigQueryHookResult = ReturnType<typeof useEnvConfigQuery>;
 export type EnvConfigLazyQueryHookResult = ReturnType<typeof useEnvConfigLazyQuery>;
 export type EnvConfigQueryResult = Apollo.QueryResult<EnvConfigQuery, EnvConfigQueryVariables>;
-export const GetLiveEventDocument = gql`
-    query GetLiveEvent($slug: String) {
+export const LiveEventDocument = gql`
+    query LiveEvent($slug: String) {
   liveEvent(slug: $slug) {
+    id
     access
     createdAt
     description
-    id
     kind
     scheduledStartAt
     commentsEnabled
@@ -8218,85 +8591,128 @@ export const GetLiveEventDocument = gql`
   }
 }
     `;
-export type GetLiveEventComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLiveEventQuery, GetLiveEventQueryVariables>, 'query'>;
+export type LiveEventComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventQuery, LiveEventQueryVariables>, 'query'>;
 
-    export const GetLiveEventComponent = (props: GetLiveEventComponentProps) => (
-      <ApolloReactComponents.Query<GetLiveEventQuery, GetLiveEventQueryVariables> query={GetLiveEventDocument} {...props} />
+    export const LiveEventComponent = (props: LiveEventComponentProps) => (
+      <ApolloReactComponents.Query<LiveEventQuery, LiveEventQueryVariables> query={LiveEventDocument} {...props} />
     );
     
 
 /**
- * __useGetLiveEventQuery__
+ * __useLiveEventQuery__
  *
- * To run a query within a React component, call `useGetLiveEventQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLiveEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useLiveEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLiveEventQuery({
+ * const { data, loading, error } = useLiveEventQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetLiveEventQuery(baseOptions?: Apollo.QueryHookOptions<GetLiveEventQuery, GetLiveEventQueryVariables>) {
+export function useLiveEventQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventQuery, LiveEventQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetLiveEventQuery, GetLiveEventQueryVariables>(GetLiveEventDocument, options);
+        return Apollo.useQuery<LiveEventQuery, LiveEventQueryVariables>(LiveEventDocument, options);
       }
-export function useGetLiveEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiveEventQuery, GetLiveEventQueryVariables>) {
+export function useLiveEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventQuery, LiveEventQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetLiveEventQuery, GetLiveEventQueryVariables>(GetLiveEventDocument, options);
+          return Apollo.useLazyQuery<LiveEventQuery, LiveEventQueryVariables>(LiveEventDocument, options);
         }
-export type GetLiveEventQueryHookResult = ReturnType<typeof useGetLiveEventQuery>;
-export type GetLiveEventLazyQueryHookResult = ReturnType<typeof useGetLiveEventLazyQuery>;
-export type GetLiveEventQueryResult = Apollo.QueryResult<GetLiveEventQuery, GetLiveEventQueryVariables>;
-export const GetLiveEventKindDocument = gql`
-    query GetLiveEventKind($slug: String) {
+export type LiveEventQueryHookResult = ReturnType<typeof useLiveEventQuery>;
+export type LiveEventLazyQueryHookResult = ReturnType<typeof useLiveEventLazyQuery>;
+export type LiveEventQueryResult = Apollo.QueryResult<LiveEventQuery, LiveEventQueryVariables>;
+export const LiveEventKindDocument = gql`
+    query LiveEventKind($slug: String) {
+  liveEventKind(slug: $slug) {
+    id
+    kind
+    geoFence
+    slug
+    title
+  }
+}
+    `;
+export type LiveEventKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventKindQuery, LiveEventKindQueryVariables>, 'query'>;
+
+    export const LiveEventKindComponent = (props: LiveEventKindComponentProps) => (
+      <ApolloReactComponents.Query<LiveEventKindQuery, LiveEventKindQueryVariables> query={LiveEventKindDocument} {...props} />
+    );
+    
+
+/**
+ * __useLiveEventKindQuery__
+ *
+ * To run a query within a React component, call `useLiveEventKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLiveEventKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useLiveEventKindQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventKindQuery, LiveEventKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LiveEventKindQuery, LiveEventKindQueryVariables>(LiveEventKindDocument, options);
+      }
+export function useLiveEventKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventKindQuery, LiveEventKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LiveEventKindQuery, LiveEventKindQueryVariables>(LiveEventKindDocument, options);
+        }
+export type LiveEventKindQueryHookResult = ReturnType<typeof useLiveEventKindQuery>;
+export type LiveEventKindLazyQueryHookResult = ReturnType<typeof useLiveEventKindLazyQuery>;
+export type LiveEventKindQueryResult = Apollo.QueryResult<LiveEventKindQuery, LiveEventKindQueryVariables>;
+export const LiveEventEntitlementsDocument = gql`
+    query LiveEventEntitlements($slug: String) {
   liveEvent(slug: $slug) {
     id
-    title
     access
-    kind
     entitlements
   }
 }
     `;
-export type GetLiveEventKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>, 'query'>;
+export type LiveEventEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>, 'query'>;
 
-    export const GetLiveEventKindComponent = (props: GetLiveEventKindComponentProps) => (
-      <ApolloReactComponents.Query<GetLiveEventKindQuery, GetLiveEventKindQueryVariables> query={GetLiveEventKindDocument} {...props} />
+    export const LiveEventEntitlementsComponent = (props: LiveEventEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables> query={LiveEventEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetLiveEventKindQuery__
+ * __useLiveEventEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetLiveEventKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLiveEventKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useLiveEventEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiveEventEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLiveEventKindQuery({
+ * const { data, loading, error } = useLiveEventEntitlementsQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetLiveEventKindQuery(baseOptions?: Apollo.QueryHookOptions<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>) {
+export function useLiveEventEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>(GetLiveEventKindDocument, options);
+        return Apollo.useQuery<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>(LiveEventEntitlementsDocument, options);
       }
-export function useGetLiveEventKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>) {
+export function useLiveEventEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>(GetLiveEventKindDocument, options);
+          return Apollo.useLazyQuery<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>(LiveEventEntitlementsDocument, options);
         }
-export type GetLiveEventKindQueryHookResult = ReturnType<typeof useGetLiveEventKindQuery>;
-export type GetLiveEventKindLazyQueryHookResult = ReturnType<typeof useGetLiveEventKindLazyQuery>;
-export type GetLiveEventKindQueryResult = Apollo.QueryResult<GetLiveEventKindQuery, GetLiveEventKindQueryVariables>;
+export type LiveEventEntitlementsQueryHookResult = ReturnType<typeof useLiveEventEntitlementsQuery>;
+export type LiveEventEntitlementsLazyQueryHookResult = ReturnType<typeof useLiveEventEntitlementsLazyQuery>;
+export type LiveEventEntitlementsQueryResult = Apollo.QueryResult<LiveEventEntitlementsQuery, LiveEventEntitlementsQueryVariables>;
 export const GetLiveEventsDocument = gql`
     query GetLiveEvents($filter: LiveEventFilter) {
   liveEvents(filter: $filter) {
@@ -8602,91 +9018,91 @@ export function useGetOrderResultLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetOrderResultQueryHookResult = ReturnType<typeof useGetOrderResultQuery>;
 export type GetOrderResultLazyQueryHookResult = ReturnType<typeof useGetOrderResultLazyQuery>;
 export type GetOrderResultQueryResult = Apollo.QueryResult<GetOrderResultQuery, GetOrderResultQueryVariables>;
-export const GetOrganizationKindDocument = gql`
-    query GetOrganizationKind($id: ID!) {
-  organization(id: $id) {
+export const OrganizationKindDocument = gql`
+    query OrganizationKind($id: ID!) {
+  organizationKind(id: $id) {
     id
-    access
     kind
   }
 }
     `;
-export type GetOrganizationKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>, 'query'> & ({ variables: GetOrganizationKindQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type OrganizationKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationKindQuery, OrganizationKindQueryVariables>, 'query'> & ({ variables: OrganizationKindQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const GetOrganizationKindComponent = (props: GetOrganizationKindComponentProps) => (
-      <ApolloReactComponents.Query<GetOrganizationKindQuery, GetOrganizationKindQueryVariables> query={GetOrganizationKindDocument} {...props} />
+    export const OrganizationKindComponent = (props: OrganizationKindComponentProps) => (
+      <ApolloReactComponents.Query<OrganizationKindQuery, OrganizationKindQueryVariables> query={OrganizationKindDocument} {...props} />
     );
     
 
 /**
- * __useGetOrganizationKindQuery__
+ * __useOrganizationKindQuery__
  *
- * To run a query within a React component, call `useGetOrganizationKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOrganizationKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useOrganizationKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetOrganizationKindQuery({
+ * const { data, loading, error } = useOrganizationKindQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetOrganizationKindQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
+export function useOrganizationKindQuery(baseOptions: Apollo.QueryHookOptions<OrganizationKindQuery, OrganizationKindQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
+        return Apollo.useQuery<OrganizationKindQuery, OrganizationKindQueryVariables>(OrganizationKindDocument, options);
       }
-export function useGetOrganizationKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>) {
+export function useOrganizationKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationKindQuery, OrganizationKindQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>(GetOrganizationKindDocument, options);
+          return Apollo.useLazyQuery<OrganizationKindQuery, OrganizationKindQueryVariables>(OrganizationKindDocument, options);
         }
-export type GetOrganizationKindQueryHookResult = ReturnType<typeof useGetOrganizationKindQuery>;
-export type GetOrganizationKindLazyQueryHookResult = ReturnType<typeof useGetOrganizationKindLazyQuery>;
-export type GetOrganizationKindQueryResult = Apollo.QueryResult<GetOrganizationKindQuery, GetOrganizationKindQueryVariables>;
-export const GetOrganizationEntitlementsDocument = gql`
-    query GetOrganizationEntitlements($id: ID!) {
+export type OrganizationKindQueryHookResult = ReturnType<typeof useOrganizationKindQuery>;
+export type OrganizationKindLazyQueryHookResult = ReturnType<typeof useOrganizationKindLazyQuery>;
+export type OrganizationKindQueryResult = Apollo.QueryResult<OrganizationKindQuery, OrganizationKindQueryVariables>;
+export const OrganizationEntitlementsDocument = gql`
+    query OrganizationEntitlements($id: ID!) {
   organization(id: $id) {
     id
     entitlements
+    access
   }
 }
     `;
-export type GetOrganizationEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>, 'query'> & ({ variables: GetOrganizationEntitlementsQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type OrganizationEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>, 'query'> & ({ variables: OrganizationEntitlementsQueryVariables; skip?: boolean; } | { skip: boolean; });
 
-    export const GetOrganizationEntitlementsComponent = (props: GetOrganizationEntitlementsComponentProps) => (
-      <ApolloReactComponents.Query<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables> query={GetOrganizationEntitlementsDocument} {...props} />
+    export const OrganizationEntitlementsComponent = (props: OrganizationEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables> query={OrganizationEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetOrganizationEntitlementsQuery__
+ * __useOrganizationEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetOrganizationEntitlementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOrganizationEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useOrganizationEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetOrganizationEntitlementsQuery({
+ * const { data, loading, error } = useOrganizationEntitlementsQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetOrganizationEntitlementsQuery(baseOptions: Apollo.QueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+export function useOrganizationEntitlementsQuery(baseOptions: Apollo.QueryHookOptions<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+        return Apollo.useQuery<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>(OrganizationEntitlementsDocument, options);
       }
-export function useGetOrganizationEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>) {
+export function useOrganizationEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>(GetOrganizationEntitlementsDocument, options);
+          return Apollo.useLazyQuery<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>(OrganizationEntitlementsDocument, options);
         }
-export type GetOrganizationEntitlementsQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsQuery>;
-export type GetOrganizationEntitlementsLazyQueryHookResult = ReturnType<typeof useGetOrganizationEntitlementsLazyQuery>;
-export type GetOrganizationEntitlementsQueryResult = Apollo.QueryResult<GetOrganizationEntitlementsQuery, GetOrganizationEntitlementsQueryVariables>;
+export type OrganizationEntitlementsQueryHookResult = ReturnType<typeof useOrganizationEntitlementsQuery>;
+export type OrganizationEntitlementsLazyQueryHookResult = ReturnType<typeof useOrganizationEntitlementsLazyQuery>;
+export type OrganizationEntitlementsQueryResult = Apollo.QueryResult<OrganizationEntitlementsQuery, OrganizationEntitlementsQueryVariables>;
 export const GetPlaylistDocument = gql`
     query GetPlaylist($id: ID!, $postsFilters: PostFilter!) {
   playlist(id: $id) {
@@ -8763,8 +9179,8 @@ export function useGetPlaylistLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetPlaylistQueryHookResult = ReturnType<typeof useGetPlaylistQuery>;
 export type GetPlaylistLazyQueryHookResult = ReturnType<typeof useGetPlaylistLazyQuery>;
 export type GetPlaylistQueryResult = Apollo.QueryResult<GetPlaylistQuery, GetPlaylistQueryVariables>;
-export const GetPostDocument = gql`
-    query GetPost($slug: String) {
+export const PostDocument = gql`
+    query Post($slug: String) {
   post(slug: $slug) {
     id
     access
@@ -8802,6 +9218,7 @@ export const GetPostDocument = gql`
         subtitles {
           id
           locale
+          baseUrl
           vttPath
           label
         }
@@ -8828,85 +9245,128 @@ export const GetPostDocument = gql`
   }
 }
     `;
-export type GetPostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostQuery, GetPostQueryVariables>, 'query'>;
+export type PostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostQuery, PostQueryVariables>, 'query'>;
 
-    export const GetPostComponent = (props: GetPostComponentProps) => (
-      <ApolloReactComponents.Query<GetPostQuery, GetPostQueryVariables> query={GetPostDocument} {...props} />
+    export const PostComponent = (props: PostComponentProps) => (
+      <ApolloReactComponents.Query<PostQuery, PostQueryVariables> query={PostDocument} {...props} />
     );
     
 
 /**
- * __useGetPostQuery__
+ * __usePostQuery__
  *
- * To run a query within a React component, call `useGetPostQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPostQuery({
+ * const { data, loading, error } = usePostQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetPostQuery(baseOptions?: Apollo.QueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+export function usePostQuery(baseOptions?: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
       }
-export function useGetPostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostQuery, GetPostQueryVariables>) {
+export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPostQuery, GetPostQueryVariables>(GetPostDocument, options);
+          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
         }
-export type GetPostQueryHookResult = ReturnType<typeof useGetPostQuery>;
-export type GetPostLazyQueryHookResult = ReturnType<typeof useGetPostLazyQuery>;
-export type GetPostQueryResult = Apollo.QueryResult<GetPostQuery, GetPostQueryVariables>;
-export const GetPostKindDocument = gql`
-    query GetPostKind($slug: String) {
+export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
+export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
+export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
+export const PostKindDocument = gql`
+    query PostKind($slug: String) {
+  postKind(slug: $slug) {
+    id
+    kind
+    title
+    geofence
+    slug
+  }
+}
+    `;
+export type PostKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostKindQuery, PostKindQueryVariables>, 'query'>;
+
+    export const PostKindComponent = (props: PostKindComponentProps) => (
+      <ApolloReactComponents.Query<PostKindQuery, PostKindQueryVariables> query={PostKindDocument} {...props} />
+    );
+    
+
+/**
+ * __usePostKindQuery__
+ *
+ * To run a query within a React component, call `usePostKindQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostKindQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function usePostKindQuery(baseOptions?: Apollo.QueryHookOptions<PostKindQuery, PostKindQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostKindQuery, PostKindQueryVariables>(PostKindDocument, options);
+      }
+export function usePostKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostKindQuery, PostKindQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostKindQuery, PostKindQueryVariables>(PostKindDocument, options);
+        }
+export type PostKindQueryHookResult = ReturnType<typeof usePostKindQuery>;
+export type PostKindLazyQueryHookResult = ReturnType<typeof usePostKindLazyQuery>;
+export type PostKindQueryResult = Apollo.QueryResult<PostKindQuery, PostKindQueryVariables>;
+export const PostEntitlementsDocument = gql`
+    query PostEntitlements($slug: String) {
   post(slug: $slug) {
     id
-    title
     access
-    kind
     entitlements
   }
 }
     `;
-export type GetPostKindComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPostKindQuery, GetPostKindQueryVariables>, 'query'>;
+export type PostEntitlementsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>, 'query'>;
 
-    export const GetPostKindComponent = (props: GetPostKindComponentProps) => (
-      <ApolloReactComponents.Query<GetPostKindQuery, GetPostKindQueryVariables> query={GetPostKindDocument} {...props} />
+    export const PostEntitlementsComponent = (props: PostEntitlementsComponentProps) => (
+      <ApolloReactComponents.Query<PostEntitlementsQuery, PostEntitlementsQueryVariables> query={PostEntitlementsDocument} {...props} />
     );
     
 
 /**
- * __useGetPostKindQuery__
+ * __usePostEntitlementsQuery__
  *
- * To run a query within a React component, call `useGetPostKindQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPostKindQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostEntitlementsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostEntitlementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPostKindQuery({
+ * const { data, loading, error } = usePostEntitlementsQuery({
  *   variables: {
  *      slug: // value for 'slug'
  *   },
  * });
  */
-export function useGetPostKindQuery(baseOptions?: Apollo.QueryHookOptions<GetPostKindQuery, GetPostKindQueryVariables>) {
+export function usePostEntitlementsQuery(baseOptions?: Apollo.QueryHookOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPostKindQuery, GetPostKindQueryVariables>(GetPostKindDocument, options);
+        return Apollo.useQuery<PostEntitlementsQuery, PostEntitlementsQueryVariables>(PostEntitlementsDocument, options);
       }
-export function useGetPostKindLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostKindQuery, GetPostKindQueryVariables>) {
+export function usePostEntitlementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostEntitlementsQuery, PostEntitlementsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPostKindQuery, GetPostKindQueryVariables>(GetPostKindDocument, options);
+          return Apollo.useLazyQuery<PostEntitlementsQuery, PostEntitlementsQueryVariables>(PostEntitlementsDocument, options);
         }
-export type GetPostKindQueryHookResult = ReturnType<typeof useGetPostKindQuery>;
-export type GetPostKindLazyQueryHookResult = ReturnType<typeof useGetPostKindLazyQuery>;
-export type GetPostKindQueryResult = Apollo.QueryResult<GetPostKindQuery, GetPostKindQueryVariables>;
+export type PostEntitlementsQueryHookResult = ReturnType<typeof usePostEntitlementsQuery>;
+export type PostEntitlementsLazyQueryHookResult = ReturnType<typeof usePostEntitlementsLazyQuery>;
+export type PostEntitlementsQueryResult = Apollo.QueryResult<PostEntitlementsQuery, PostEntitlementsQueryVariables>;
 export const GetPostsDocument = gql`
     query GetPosts($filter: PostFilter) {
   posts(filters: $filter) {
@@ -9119,6 +9579,10 @@ export const GetPostsCardsDocument = gql`
           thumbnailPath
           baseUrl
         }
+        ... on MediaPhoto {
+          id
+          imgPath
+        }
       }
       type
     }
@@ -9189,6 +9653,10 @@ export const GetPublicPostsCardsDocument = gql`
           thumbnailPath
           baseUrl
         }
+        ... on MediaPhoto {
+          id
+          imgPath
+        }
       }
       type
     }
@@ -9229,6 +9697,75 @@ export function useGetPublicPostsCardsLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetPublicPostsCardsQueryHookResult = ReturnType<typeof useGetPublicPostsCardsQuery>;
 export type GetPublicPostsCardsLazyQueryHookResult = ReturnType<typeof useGetPublicPostsCardsLazyQuery>;
 export type GetPublicPostsCardsQueryResult = Apollo.QueryResult<GetPublicPostsCardsQuery, GetPublicPostsCardsQueryVariables>;
+export const GetProductDocument = gql`
+    query GetProduct($id: String!) {
+  product(id: $id) {
+    description
+    imageUrl
+    isActive
+    metadata {
+      key
+      value
+    }
+    name
+    productPrices {
+      id
+      billingTypes {
+        id
+        name
+      }
+      currency {
+        isoCode
+      }
+      billingPeriods {
+        id
+        name
+      }
+      recurringUsageTypes {
+        id
+        name
+      }
+      internalDescription
+      unitPrice
+    }
+    unitLabel
+  }
+}
+    `;
+export type GetProductComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetProductQuery, GetProductQueryVariables>, 'query'> & ({ variables: GetProductQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetProductComponent = (props: GetProductComponentProps) => (
+      <ApolloReactComponents.Query<GetProductQuery, GetProductQueryVariables> query={GetProductDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetProductQuery__
+ *
+ * To run a query within a React component, call `useGetProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProductQuery(baseOptions: Apollo.QueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+      }
+export function useGetProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+        }
+export type GetProductQueryHookResult = ReturnType<typeof useGetProductQuery>;
+export type GetProductLazyQueryHookResult = ReturnType<typeof useGetProductLazyQuery>;
+export type GetProductQueryResult = Apollo.QueryResult<GetProductQuery, GetProductQueryVariables>;
 export const SearchDocument = gql`
     query Search($filters: SearchFilter) {
   search(filters: $filters) {

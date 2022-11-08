@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'services/hooks'
+import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
 import { getData, saveData } from 'services/storage'
 import {
   useChannelsStore,
@@ -16,7 +16,7 @@ import { VIDEO_AUTOPLAY } from 'config/constants'
 import { Post } from 'generated/graphql'
 import { colors } from 'styles'
 import { theme } from 'styles/theme'
-import { VideoPostCardProps } from 'types/posts'
+import { GeneralPostCardProps } from 'types/posts'
 import { isEntityBlocked } from 'utils/accessVerifications'
 import { VideoPlaylistProps } from './types'
 
@@ -37,7 +37,7 @@ const VideoPlaylist = ({
   const setAutoplay = useVideoPlayerStore((state) => state.setAutoplay)
   const setIsLastVideo = useVideoPlayerStore((state) => state.setIsLastVideo)
   const autoplay = useVideoPlayerStore((state) => state.hasAutoplay)
-  const [playlist, setPlaylist] = useState<VideoPostCardProps[]>()
+  const [playlist, setPlaylist] = useState<GeneralPostCardProps[]>()
 
   const getImageUrl = (post: Post) => {
     const imageOptions: ThumborParams = {

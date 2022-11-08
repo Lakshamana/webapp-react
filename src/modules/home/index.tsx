@@ -17,12 +17,13 @@ import {
   Container,
   EmptyState,
   LivestreamScroller,
-  VideosScroller
+  PostsScroller
 } from 'components'
 import {
   DEFAULT_POLLING_INTERVAL,
   MAXIMUM_SCROLLER_REQUESTS
 } from 'config/constants'
+import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {
   QUERY_BILLBOARDS,
@@ -33,7 +34,6 @@ import {
   QUERY_PUBLIC_LIVE_EVENTS,
   QUERY_PUBLIC_POSTS_CARDS
 } from 'services/graphql'
-import { ThumborInstanceTypes, useThumbor } from 'services/hooks'
 import {
   useAuthStore,
   useChannelsStore,
@@ -66,7 +66,9 @@ const HomePage = () => {
   const { isAnonymousAccess } = useAuthStore()
 
   const isAnonymousAllowed =
-    isAnonymousAccess && activeChannel?.kind === Kinds.Public
+    isAnonymousAccess &&
+    (activeChannel?.kind === Kinds.Public ||
+      activeChannel?.kind === Kinds.Private)
 
   const [featuredPostsData, setFeaturedPostsData] =
     useState<PaginatedPostsOutput>()
@@ -76,6 +78,9 @@ const HomePage = () => {
     useState<PaginatedCategoriesOutput>()
   const [categoriesWithChildrenData, setCategoriesWithChildrenData] =
     useState<PaginatedCategoriesOutput>()
+  const [homeCarouselsFiltered, setHomeCarouselsFiltered] = useState<
+    CarouselFlags[]
+  >([])
 
   const [billboardItems, setBillboardItems] = useState([])
   const [isHomeDisplayingCategories, setIsHomeDisplayingCategories] =
@@ -84,11 +89,9 @@ const HomePage = () => {
   const [isFeaturedCategoriesActive, setIsFeaturedCategoriesActive] =
     useState<boolean>()
   const [isLiveEventsActive, setIsLiveEventsActive] = useState<boolean>()
-  // const [tagsIds, setTagsIds] = useState<string[]>([])
-  // const [loadingTags, setLoadingTags] = useState(false)
-  // const [tagsData, setTagsData] = useState({})
   const [fetchControl, setFetchControl] = useState({})
   const [isLoadingHome, setIsLoadingHome] = useState<boolean>(true)
+  const [hasTagsResults, setHasTagsResults] = useState<boolean>(false)
 
   const [getBillboard, { data: billboardData }] = useLazyQuery(
     QUERY_BILLBOARDS,
@@ -111,17 +114,23 @@ const HomePage = () => {
     }))
   }
 
-  const [getLiveEvents, { loading: loadingLiveEvents }] = useLazyQuery(
+  const [
+    getLiveEvents,
+    { loading: loadingLiveEvents, stopPolling, startPolling },
+  ] = useLazyQuery(
     isAnonymousAllowed ? QUERY_PUBLIC_LIVE_EVENTS : QUERY_LIVE_EVENTS,
     {
       onCompleted: (result) => {
         const liveEvents = isAnonymousAllowed
           ? result.publicLiveEvents
           : result.liveEvents
+
+        if (!liveEventsData?.rows.length && liveEvents.rows.length) {
+          startPolling && startPolling(DEFAULT_POLLING_INTERVAL)
+        }
         setLiveEventsData((previous) => appendNewData(previous, liveEvents))
       },
       fetchPolicy: 'cache-and-network',
-      pollInterval: DEFAULT_POLLING_INTERVAL,
     }
   )
 
@@ -218,7 +227,7 @@ const HomePage = () => {
             categoriesWithChildrenData.page + 1,
             true,
             undefined,
-            3
+            5
           ),
         },
       })
@@ -237,12 +246,17 @@ const HomePage = () => {
     liveEventsData?.rows?.length ||
     featuredPostsData?.rows?.length ||
     featuredCategoriesData?.rows?.length ||
+    hasTagsResults ||
     (isHomeDisplayingCategories && categoriesWithChildrenData?.rows?.length)
 
   const isEmpty = !isLoading && !hasResults
 
   useEffect(() => {
     setPageTitle(t('header.tabs.home'))
+
+    return () => {
+      stopPolling && stopPolling()
+    }
     // eslint-disable-next-line
   }, [])
 
@@ -262,6 +276,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (activeChannel) getBillboard()
+    setHomeCarouselsFiltered([])
     return () => {
       deactivateAllItems()
       clearAllItems()
@@ -286,12 +301,18 @@ const HomePage = () => {
 
     if (activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES)
       getCategories({
-        variables: { ...categoriesFilter(1, true, undefined, 3) },
+        variables: { ...categoriesFilter(1, true, undefined, 5) },
       })
 
     setIsHomeDisplayingCategories(
       activeChannelConfig?.HOME_ITEMS.DISPLAY_ALL_CATEGORIES || false
     )
+
+    const filteredCarousel = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
+      (a, b) => a.ORDER - b.ORDER
+    ).filter((item) => item.IS_ACTIVE)
+
+    filteredCarousel?.length && setHomeCarouselsFiltered(filteredCarousel)
 
     //eslint-disable-next-line
   }, [activeChannelConfig])
@@ -364,7 +385,7 @@ const HomePage = () => {
   const renderFeaturedPostsScroller = (item: CarouselFlags) => {
     const scrollerName = `${item.LABEL[0].VALUE}`
     return (
-      <VideosScroller
+      <PostsScroller
         key={scrollerName}
         items={featuredPostsData?.rows}
         sectionTitle={getCarouselLabel(item)}
@@ -397,10 +418,6 @@ const HomePage = () => {
     return label?.VALUE || ''
   }
 
-  const homeCarouselsFiltered = activeChannelConfig?.HOME_ITEMS.CAROUSELS.sort(
-    (a, b) => a.ORDER - b.ORDER
-  ).filter((item) => item.IS_ACTIVE)
-
   const renderCarouselsOrderedByRemoteConfig = (item: CarouselFlags) => {
     if (!item?.TAGS?.length) {
       switch (item.CONTENT_TYPE[0]) {
@@ -421,7 +438,12 @@ const HomePage = () => {
       //TODO: this item should be previous filtered by API
       const isActive = item?.TAGS && item.IS_ACTIVE
       return (
-        isActive && <TagsScrollerComponent {...{ item, getCarouselLabel }} />
+        isActive && (
+          <TagsScrollerComponent
+            hasResults={() => setHasTagsResults(true)}
+            {...{ item, getCarouselLabel }}
+          />
+        )
       )
     }
   }
@@ -445,7 +467,7 @@ const HomePage = () => {
             dataLength={categoriesWithChildrenData.rows.length}
             next={loadMoreCategories}
             hasMore={categoriesWithChildrenData.hasNextPage}
-            scrollableTarget='scroll-master'
+            scrollableTarget="scroll-master"
             loader={
               <Box pt={5} textAlign={'center'}>
                 <Spinner color={colors.brand.primary[colorMode]} />
@@ -455,7 +477,7 @@ const HomePage = () => {
             <Flex gridGap={5} flexDirection={'column'}>
               {categoriesWithChildrenData?.rows?.map((category: Category) => (
                 <CategoriesScroller
-                  key={category.id}
+                  key={`category-${category.id}`}
                   items={category.children}
                   sectionTitle={category?.name}
                   sectionUrl={`/c/${activeChannel?.slug}/category/${category.slug}`}
@@ -475,4 +497,3 @@ const HomePage = () => {
 }
 
 export { HomePage }
-

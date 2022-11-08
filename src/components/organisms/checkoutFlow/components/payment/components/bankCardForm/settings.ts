@@ -2,21 +2,21 @@ import i18n from 'config/i18n'
 import * as Yup from 'yup'
 
 export const initialValues = {
-  full_name: 'bianca s silva',
-  month: '02',
-  year: '2024',
-  email: 'biasivabsi11@gmail.com',
-  cpf: '00015262197',
+  full_name: '',
+  month: '',
+  year: '',
+  email: '',
+  cpf: '',
   country: '',
-  address1: 'rUA mAASDASDASDASDSAD',
-  address2: 'ADSASDADASDASD',
-  number: '20',
-  zip: '68734420',
-  district: 'CAIÇARA',
-  city: 'CASTANHAL',
+  address1: '',
+  address2: '',
+  number: '',
+  zip: '',
+  district: '',
+  city: '',
   state: '',
-  terms: true,
-  phone_number: '213123123123',
+  terms: false,
+  phone_number: '',
 }
 
 export const bexValidationSchema = Yup.object().shape({

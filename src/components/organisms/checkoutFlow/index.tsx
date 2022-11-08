@@ -14,9 +14,14 @@ import { getMaxmindLocation } from 'utils/location'
 import { Payment, SelectPrice, SelectProduct } from './components'
 import { CheckoutFlowProps, PaymentType, Steps } from './types'
 
-const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
+const CheckoutFlow = ({
+  products,
+  accessGranted,
+  product,
+  simplified,
+}: CheckoutFlowProps) => {
   const { colorMode } = useThemeStore()
-  const [currentStep, setCurrentStep] = useState<Steps>(Steps.SELECT_PRODUCT)
+  const [currentStep, setCurrentStep] = useState<Steps>()
   const [selectedProduct, setSelectedProduct] = useState<Product>()
   const [selectedPrice, setSelectedPrice] = useState<ProductPrice>()
   const [billingType, setBillingType] = useState<BillingType>()
@@ -107,7 +112,9 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
 
   useEffect(() => {
     verifyUserLocation()
+    if (product) setSelectedProduct(product)
     setPageTitle('Checkout')
+    //eslint-disable-next-line
   }, [])
 
   useEffect(() => {
@@ -125,7 +132,6 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
           stopPolling && stopPolling()
           break
         case 'FAILED':
-        case 'UNPAID':
           setIsLoadingOrder(false)
           setCurrentStep(Steps.FAILED)
           stopPolling && stopPolling()
@@ -193,16 +199,18 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
     }
   }
 
+  const hasHeader = selectedProduct && !orderData?.order?.status && !simplified
+
   return (
     <Flex
-      mt={10}
-      p="1em"
+      mt={simplified ? 4 : 10}
+      p={simplified ? '' : '1em'}
       gridGap={4}
       flexDirection="column"
-      w="800px"
+      w={'800px'}
       alignItems="center"
     >
-      {selectedProduct && !orderData?.order?.status && (
+      {hasHeader && (
         <Flex
           w="100%"
           minH="300px"
@@ -235,7 +243,6 @@ const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
           </Flex>
         </Flex>
       )}
-
       {renderStep()}
     </Flex>
   )

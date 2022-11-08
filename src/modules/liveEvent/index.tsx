@@ -9,7 +9,8 @@ import {
   useAuthStore,
   useChannelsStore,
   useCommonStore,
-  useThemeStore
+  useThemeStore,
+  useVideoPlayerStore
 } from 'services/stores'
 
 import { firebaseDB } from 'config/firebase'
@@ -49,6 +50,7 @@ const LiveEvent = () => {
   const [isPresenceEnabled, setIsPresenceEnabled] = useState<boolean>(false)
   const [userCount, setUserCount] = useState<number>(1)
   const [liveStatus, setLiveStatus] = useState<Maybe<Status>>(null)
+  const { eventEnded } = useVideoPlayerStore()
 
   const { slug } = useParams<{ slug: string }>()
   const [livestream, setLivestream] = useState<LiveEventType>()
@@ -214,7 +216,7 @@ const LiveEvent = () => {
                 </Badge>
               )}
             </Flex>
-            {liveStatus === Status.Live && hlsPlaybackUrl && (
+            {(liveStatus === Status.Live || !eventEnded) && hlsPlaybackUrl && liveStatus !== Status.Ready && (
               <VideoPlayer
                 isLiveStream={true}
                 src={hlsPlaybackUrl}
@@ -231,7 +233,7 @@ const LiveEvent = () => {
                 fallbackMessage={t('page.post.live.will_start_soon')}
               />
             )}
-            {liveStatus === Status.Finished && renderEndedLiveText()}
+            {liveStatus === Status.Finished && eventEnded && renderEndedLiveText()}
           </CustomBox>
           {isChatVisible && (
             <Box
@@ -266,3 +268,4 @@ const LiveEvent = () => {
 }
 
 export { LiveEvent }
+
