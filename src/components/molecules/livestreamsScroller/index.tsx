@@ -1,7 +1,11 @@
 import { CardsScroller, LivestreamPostCard, SkeletonScroller } from 'components'
 import { compareAsc, parseISO } from 'date-fns'
-import { ThumborInstanceTypes, ThumborParams, useThumbor } from 'hooks/useThumbor'
-import { useEffect, useState } from 'react'
+import {
+  ThumborInstanceTypes,
+  ThumborParams,
+  useThumbor
+} from 'hooks/useThumbor'
+import { memo, useEffect, useState } from 'react'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
 import {
@@ -17,7 +21,7 @@ import {
   LivestreamsScrollerProps
 } from 'types/livestreams'
 
-const LivestreamScroller = ({
+const LivestreamScrollerComponent = ({
   items,
   sectionTitle,
   sectionUrl,
@@ -44,6 +48,7 @@ const LivestreamScroller = ({
 
   useEffect(() => {
     if (isLoading || !items?.length) return
+
     const arrForSort = [...items!]
     arrForSort.sort((a, b) => {
       const liveA = isLive(a)
@@ -51,8 +56,8 @@ const LivestreamScroller = ({
       return !liveA && liveB
         ? 1
         : liveA && !liveB
-          ? -1
-          : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
+        ? -1
+        : compareAsc(parseISO(a.scheduledStartAt), parseISO(b.scheduledStartAt))
     })
 
     const mappedArr = arrForSort?.map((item: LiveEvent) => {
@@ -75,11 +80,7 @@ const LivestreamScroller = ({
 
   return (
     <ContentScroller>
-      {
-        isLoading &&
-        !scrollerItems?.length &&
-        <SkeletonScroller />
-      }
+      {isLoading && !scrollerItems?.length && <SkeletonScroller />}
       {!!scrollerItems?.length && (
         <CardsScroller
           title={sectionTitle}
@@ -97,4 +98,4 @@ const LivestreamScroller = ({
   )
 }
 
-export { LivestreamScroller }
+export const LivestreamScroller = memo(LivestreamScrollerComponent)
