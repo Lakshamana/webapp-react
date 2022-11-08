@@ -9,15 +9,15 @@ import {
   Skeleton
 } from 'components'
 import { Category, LiveEvent, Post, PostType } from 'generated/graphql'
-import { useEffect, useMemo, useState } from 'react'
+import { useQueryParams } from 'hooks/useQueryParams'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
 import { QUERY_SEARCH } from 'services/graphql/queries/search'
 import { useThemeStore } from 'services/stores'
 import { colors, sizes } from 'styles'
 
 const SearchPage = () => {
-  const { search } = useLocation()
+  const query = useQueryParams()
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
   const [stringToSearch, setStringToSearch] = useState('')
@@ -29,14 +29,20 @@ const SearchPage = () => {
     variables: {
       filters: {
         query: stringToSearch,
-        pageSize: 1000
+        pageSize: 1000,
       },
     },
     onCompleted: (result) => {
       setPosts(
         result?.search?.rows
           .filter((item) => item.__typename === 'SearchPost')
-          .filter((post) => post.type === PostType.Video || post.type === PostType.OnDemand || post.type === PostType.Photo || post.type === PostType.Text)
+          .filter(
+            (post) =>
+              post.type === PostType.Video ||
+              post.type === PostType.OnDemand ||
+              post.type === PostType.Photo ||
+              post.type === PostType.Text
+          )
       )
       setCategories(
         result?.search?.rows.filter(
@@ -49,14 +55,8 @@ const SearchPage = () => {
         )
       )
     },
-    fetchPolicy: 'cache-and-network' 
+    fetchPolicy: 'cache-and-network',
   })
-
-  const useQuery = () =>
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useMemo(() => new URLSearchParams(search), [search])
-
-  const query = useQuery()
 
   useEffect(() => {
     const searchFor = query.get('s')
@@ -84,7 +84,7 @@ const SearchPage = () => {
       <Box width={'100%'} textAlign={'right'}>
         <Text
           paddingX={{ base: sizes.paddingSm, md: sizes.paddingMd }}
-          fontSize={{sm: '0.9rem', md: '1.1rem'}}
+          fontSize={{ sm: '0.9rem', md: '1.1rem' }}
           color={colors.generalText[colorMode]}
         >
           {t('page.search.results_for', {

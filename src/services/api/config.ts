@@ -1,12 +1,15 @@
 import {
   ApolloClient,
-  createHttpLink,
   from,
   fromPromise,
-  InMemoryCache
+  HttpLink,
+  InMemoryCache,
+  split
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { getMainDefinition } from '@apollo/client/utilities'
 import * as Sentry from '@sentry/browser'
 import {
   ANONYMOUS_AUTH,
@@ -21,19 +24,49 @@ import {
 } from 'services/firebase'
 import { MUTATION_REFRESH_TOKEN } from 'services/graphql'
 import { clearData, getData, saveData } from 'services/storage'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { requestGraphql } from './request'
 
-const { REACT_APP_API_ENDPOINT, REACT_APP_ORGANIZATION_URL, NODE_ENV } =
-  process.env
+const {
+  REACT_APP_API_ENDPOINT,
+  REACT_APP_ORGANIZATION_URL,
+  NODE_ENV,
+  REACT_APP_WSS_ENDPOINT,
+} = process.env
 
 const ORGANIZATION_URL =
   NODE_ENV === 'development'
     ? REACT_APP_ORGANIZATION_URL
     : `https://${window.location.host}`
 
-const httpLink = createHttpLink({
+const httpLink = new HttpLink({
   uri: `https://${REACT_APP_API_ENDPOINT}/graphql`,
 })
+
+export const websocket = new SubscriptionClient(
+  `wss://${REACT_APP_WSS_ENDPOINT}/graphql`,
+  {
+    reconnect: true,
+    lazy: true,
+    connectionParams: {
+      channel: getData(CHANNEL_INFO)?.id,
+    },
+  }
+)
+
+const wsLink = new WebSocketLink(websocket)
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  httpLink
+)
 
 let isRefreshing = false
 let pendingRequests: any[] = []
@@ -84,14 +117,19 @@ const errorLink = onError(
 
     if (!graphQLErrors) return
 
+    if (operation.operationName === 'SubscribeToLiveEvent') {
+      console.log('SubscriptionError', graphQLErrors)
+      return
+    }
+
     for (let err of graphQLErrors) {
-      if (!err.extensions.code) {
+      if (!err.extensions?.code) {
         console.log('This error is not mapped: ', JSON.stringify(graphQLErrors))
         invalidData()
         return
       }
 
-      if (err.extensions.code === '500') {
+      if (err.extensions?.code === '500') {
         Sentry.configureScope((scope) =>
           scope.setTransactionName(operation.operationName).setLevel('error')
         )
@@ -100,7 +138,7 @@ const errorLink = onError(
 
       //TODO: backend needs to change errors messages related to WRONG CREDENTIALS on Login
       if (
-        err.extensions.code === '404' &&
+        err.extensions?.code === '404' &&
         operation.operationName !== 'VerifyMail' &&
         err.message !== 'exception:ACCOUNT_NOT_FOUND'
       ) {
@@ -108,14 +146,14 @@ const errorLink = onError(
         return
       }
 
-      if (err.extensions.code === 'FORBIDDEN') {
+      if (err.extensions?.code === 'FORBIDDEN') {
         console.log(
           'User dont have permission to execute this action -> ',
           operation
         )
       }
 
-      if (err.extensions.code === 'UNAUTHENTICATED') {
+      if (err.extensions?.code === 'UNAUTHENTICATED') {
         if (
           err.message === 'exception:PASSWORD_MISMATCH' ||
           err.message === 'exception:TOO_MANY_ATTEMPTS_TRY_LATER' ||
@@ -189,16 +227,13 @@ const authLink = setContext((_, { headers }) => {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
       organization: ORGANIZATION_URL,
-      // TO-DO: REACT_APP_HOME_CHANNEL_ID is a temporary env as we will not have a home channel,
-      // instead we will have a home page with the content of all channels,
-      // so the user can select a specific channel or not. We don't have an API for that yet.
       channel: channel?.id || '',
     },
   }
 })
 
 const Client = new ApolloClient({
-  link: from([errorLink, authLink.concat(httpLink)]),
+  link: from([errorLink, authLink.concat(splitLink)]),
   cache: new InMemoryCache({
     typePolicies: {
       Category: {

@@ -2,7 +2,7 @@ import { useLazyQuery } from '@apollo/client'
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { organizationData } from 'config/organization'
 import { InspireProduct } from 'generated/graphql'
-import { useQuery } from 'hooks/useQuery'
+import { useQueryParams } from 'hooks/useQueryParams'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { QUERY_PRODUCT } from 'services/graphql'
@@ -12,7 +12,7 @@ import { CheckoutLogin, CheckoutPayment, CheckoutSignup } from './components'
 import { Steps } from './types'
 
 const SimplifiedCheckout = () => {
-  const query = useQuery()
+  const query = useQueryParams()
   const { t, i18n } = useTranslation()
   const { colorMode } = useThemeStore()
 
