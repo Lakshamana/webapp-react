@@ -18,9 +18,8 @@ import { useDisclosure } from '@chakra-ui/react'
 import { AccessVerificationsTypes } from './types'
 
 import { LoadingScreen } from 'components'
-import { Organization } from 'generated/graphql'
+import { Channel, Organization } from 'generated/graphql'
 import { useTranslation } from 'react-i18next'
-import { ChannelStorageData } from 'types/channel'
 import {
   entityRequireLogin,
   isEntityGeolocked,
@@ -118,7 +117,7 @@ export const AccessVerificationsProvider = ({ children }) => {
       },
     })
 
-  const isChannelRoute = channelRoutes(activeChannel?.slug).includes(
+  const isChannelRoute = channelRoutes(activeChannel?.slug || '').includes(
     history.location.pathname
   )
   const isOrgRoute = organizationRoutes.includes(history.location.pathname)
@@ -150,7 +149,7 @@ export const AccessVerificationsProvider = ({ children }) => {
     if (!isChannelRoute && !isOrgRoute) setIsLoadingAccessVerifications(false)
   }, [isChannelRoute, isOrgRoute])
 
-  const setEntityStatus = async (entity: ChannelStorageData | Organization) => {
+  const setEntityStatus = async (entity: Channel | Organization) => {
     await setIsPrivate(isEntityPrivate(entity))
     await setIsOnPaywall(isEntityOnPaywall(entity))
     await setIsGeolocked(isEntityGeolocked(entity))

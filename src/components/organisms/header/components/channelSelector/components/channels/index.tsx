@@ -4,7 +4,6 @@ import { Avatar, Container, Text } from 'components'
 import { Channel } from 'generated/graphql'
 import { ThumborInstanceTypes, useThumbor } from 'hooks/useThumbor'
 import { useTranslation } from 'react-i18next'
-import { useCustomizationStore } from 'services/stores'
 import { colors } from 'styles'
 import {
   isEntityBlocked,
@@ -23,15 +22,18 @@ const Channels = ({
   isLoading,
 }: PropsChannels) => {
   const { generateImage } = useThumbor()
-  const { customizationData } = useCustomizationStore()
   const { t } = useTranslation()
 
-  const generateChannelImage = (icon: any) => {
-    const theme = colorMode?.toUpperCase()
-    if (!icon) return ''
-    return generateImage(ThumborInstanceTypes.IMAGE, icon[theme], {
-      size: { height: 80 },
-    })
+  const generateChannelIcon = (channel: Channel) => {
+    if (!channel?.customization?.icon) return ''
+
+    return generateImage(
+      ThumborInstanceTypes.IMAGE,
+      `${channel?.customization?.icon[colorMode]?.imgPath}`,
+      {
+        size: { height: 80 },
+      }
+    )
   }
 
   const getBadgeLabel = (channel) => {
@@ -51,10 +53,7 @@ const Channels = ({
         )}
         {channels &&
           channels.map((channel: Channel) => {
-            const channelConfig = customizationData.CHANNELS[channel.id]
-            const channelThumbnail = generateChannelImage(
-              channelConfig?.IMAGES?.CHANNEL_ICON
-            )
+            const channelThumbnail = generateChannelIcon(channel)
 
             return (
               <ChannelItem

@@ -5705,14 +5705,14 @@ export type ChannelQueryVariables = Exact<{
 }>;
 
 
-export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, slug?: Maybe<string>, kind?: Maybe<Kinds> } };
+export type ChannelQuery = { __typename?: 'Query', channel: { __typename: 'AvailableChannel', access: AccessKinds, id: string, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, slug?: Maybe<string>, kind?: Maybe<Kinds>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> }> } };
 
 export type PublicChannelQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
 }>;
 
 
-export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string } };
+export type PublicChannelQuery = { __typename?: 'Query', getPublicChannel: { __typename?: 'PublicChannelOutput', id: string, name: string, kind: Kinds, slug: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> }> } };
 
 export type ChannelKindQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
@@ -5734,14 +5734,14 @@ export type ChannelsQueryVariables = Exact<{
 }>;
 
 
-export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, access: AccessKinds, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
+export type ChannelsQuery = { __typename?: 'Query', channels: Array<{ __typename: 'AvailableChannel', id: string, access: AccessKinds, kind?: Maybe<Kinds>, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, thumbnail?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, thumbnail?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> }> };
 
 export type PublicChannelsQueryVariables = Exact<{
   filter: ChannelFindAllFilter;
 }>;
 
 
-export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, access: AccessKinds, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds> }> };
+export type PublicChannelsQuery = { __typename?: 'Query', publicChannels: Array<{ __typename: 'AvailableChannel', id: string, kind?: Maybe<Kinds>, access: AccessKinds, description: string, geofence?: Maybe<any>, slug?: Maybe<string>, name: string, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, thumbnail?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> } | { __typename: 'GeolockedChannel', id: string, name: string, kind?: Maybe<Kinds>, customization?: Maybe<{ __typename?: 'ChannelCustomizationOutput', icon?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, logo?: Maybe<{ __typename?: 'ChannelCustomizationLightDarkOutput', dark?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }>, light?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }>, thumbnail?: Maybe<{ __typename?: 'CustomizationMediaOutput', imgPath?: Maybe<string> }> }> }> };
 
 export type CommentsQueryVariables = Exact<{
   filter?: Maybe<CommentFilter>;
@@ -11105,6 +11105,24 @@ export const ChannelDocument = gql`
       slug
       name
       __typename
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+      }
     }
     ... on GeolockedChannel {
       id
@@ -11112,6 +11130,24 @@ export const ChannelDocument = gql`
       slug
       kind
       __typename
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+      }
     }
   }
 }
@@ -11156,6 +11192,24 @@ export const PublicChannelDocument = gql`
     id
     name
     kind
+    customization {
+      icon {
+        dark {
+          imgPath
+        }
+        light {
+          imgPath
+        }
+      }
+      logo {
+        dark {
+          imgPath
+        }
+        light {
+          imgPath
+        }
+      }
+    }
     slug
   }
 }
@@ -11293,6 +11347,27 @@ export const ChannelsDocument = gql`
       access
       kind
       description
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        thumbnail {
+          imgPath
+        }
+      }
       geofence
       slug
       name
@@ -11303,6 +11378,27 @@ export const ChannelsDocument = gql`
       name
       kind
       __typename
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        thumbnail {
+          imgPath
+        }
+      }
     }
   }
 }
@@ -11349,6 +11445,27 @@ export const PublicChannelsDocument = gql`
       kind
       access
       description
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        thumbnail {
+          imgPath
+        }
+      }
       geofence
       slug
       name
@@ -11359,6 +11476,27 @@ export const PublicChannelsDocument = gql`
       name
       kind
       __typename
+      customization {
+        icon {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        logo {
+          dark {
+            imgPath
+          }
+          light {
+            imgPath
+          }
+        }
+        thumbnail {
+          imgPath
+        }
+      }
     }
   }
 }

@@ -62,13 +62,7 @@ const ChannelSelector = ({ closeSideMenu }: PropsChannelSelector) => {
   }
 
   const handleSelect = (channel: Channel) => {
-    setActiveChannel({
-      id: channel.id,
-      name: channel.name,
-      slug: channel.slug || '',
-      kind: channel.kind || '',
-      access: channel.access || '',
-    })
+    setActiveChannel(channel)
     setOpen(false)
     history.replace(`/c/${channel.slug}`)
   }

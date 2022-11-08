@@ -103,13 +103,7 @@ export const AuthProvider = ({ children }) => {
     const channel = data?.channel || data?.getPublicChannel
 
     if (channel) {
-      await setActiveChannel({
-        id: channel.id,
-        name: channel.name,
-        slug: channel.slug || '',
-        kind: channel.kind || '',
-        access: channel.access || '',
-      })
+      await setActiveChannel(channel)
     }
   }
 

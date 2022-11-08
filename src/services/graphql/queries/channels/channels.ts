@@ -8,6 +8,27 @@ export const QUERY_CHANNELS = gql`
         access
         kind
         description
+        customization {
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          logo {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          thumbnail {
+            imgPath
+          }
+        }
         geofence
         slug
         name
@@ -18,6 +39,27 @@ export const QUERY_CHANNELS = gql`
         name
         kind
         __typename
+        customization {
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          logo {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          thumbnail {
+            imgPath
+          }
+        }
       }
     }
   }
@@ -31,6 +73,27 @@ export const QUERY_PUBLIC_CHANNELS = gql`
         kind
         access
         description
+        customization {
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          logo {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          thumbnail {
+            imgPath
+          }
+        }
         geofence
         slug
         name
@@ -41,8 +104,28 @@ export const QUERY_PUBLIC_CHANNELS = gql`
         name
         kind
         __typename
+        customization {
+          icon {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          logo {
+            dark {
+              imgPath
+            }
+            light {
+              imgPath
+            }
+          }
+          thumbnail {
+            imgPath
+          }
+        }
       }
     }
   }
 `
-
