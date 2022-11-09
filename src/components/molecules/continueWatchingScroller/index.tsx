@@ -1,4 +1,5 @@
 import { CardsScroller, SkeletonScroller, VideoPostCard } from 'components'
+import { PostType } from 'generated/graphql'
 import { useEffect, useState } from 'react'
 import { useChannelsStore } from 'services/stores'
 import { SwiperSlide } from 'swiper/react'
@@ -47,10 +48,12 @@ const ContinueWatchingScroller = ({
         description: item?.description,
         thumbnail,
         mediaLength: item.media?.duration,
+        countViews: item?.countViewsTotal || 0,
         isExclusive: isEntityExclusive(item),
         isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
-        progress: item.progress
+        progress: item.progress,
+        type: PostType.Video
       }
     })
     setScrollerItems(mappedArr)
