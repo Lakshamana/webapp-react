@@ -45,8 +45,8 @@ const getTenantData = async (req, res) => {
     }
     try {
       const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      console.log(JSON.stringify(anotherResponse?.data?.body))
-      console.log('URL', `${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
+      console.log('ANOTHER: ', JSON.stringify(anotherResponse))
+      console.log('URL: ', `${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
       const ANOTHER_DATA = anotherResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
@@ -66,7 +66,7 @@ const getTenantData = async (req, res) => {
   } else {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
-      console.log(JSON.stringify(orgResponse?.data?.body))
+      console.log('ORG RESP: ', JSON.stringify(orgResponse?.data?.body?.data))
       const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
     } catch (error) { }
