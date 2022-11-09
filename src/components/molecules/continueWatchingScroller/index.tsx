@@ -27,7 +27,10 @@ const ContinueWatchingScroller = ({
     const imageOptions: ThumborParams = { size: { height: 400 } }
     if (isEntityBlocked(item)) imageOptions.blur = 20
     const path = item.thumbnail[0] || ''
-    return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
+    if (path) {
+      return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
+    }
+    return `${item.mediaBaseUrl[0]}/${item.mediaThumbnailPath[0]}`
   }
 
   useEffect(() => {
