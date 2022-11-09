@@ -45,7 +45,7 @@ const getTenantData = async (req, res) => {
     }
     try {
       const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      const ANOTHER_DATA = anotherResponse?.data
+      const ANOTHER_DATA = anotherResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
       return true
@@ -64,7 +64,7 @@ const getTenantData = async (req, res) => {
   } else {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
-      const ORG_VALUES = orgResponse?.data
+      const ORG_VALUES = orgResponse?.data?.body?.data
       defineValues = { ...defineValues, ...ORG_VALUES }
     } catch (error) { }
   }
