@@ -47,10 +47,12 @@ const ContinueWatchingScroller = ({
         description: item?.description,
         thumbnail,
         mediaLength: item.media?.duration,
+        countViews: item?.countViewsTotal || 0,
         isExclusive: isEntityExclusive(item),
         isGeolocked: isEntityGeolocked(item),
         isPinned: item.pinnedStatus?.pinned,
-        progress: item.progress
+        progress: item.progress,
+        type: 'VIDEO'
       }
     })
     setScrollerItems(mappedArr)
