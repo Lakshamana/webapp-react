@@ -30,7 +30,7 @@ const ContinueWatchingScroller = ({
     if (path) {
       return generateImage(ThumborInstanceTypes.IMAGE, path, imageOptions)
     }
-    return `${item.media[0]?.baseUrl}/${item.media[0]?.thumbnailPath}`
+    return `${item.mediaBaseUrl[0]}/${item.mediaThumbnailPath[0]}`
   }
 
   useEffect(() => {
