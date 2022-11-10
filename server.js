@@ -45,16 +45,15 @@ const getTenantData = async (req, res) => {
     }
     try {
       const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      console.log('ANOTHER: ', anotherResponse?.data)
-      console.log('URL: ', `${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      const ANOTHER_DATA = anotherResponse?.data
+      let ANOTHER_DATA = anotherResponse?.data
+      if (ANOTHER_DATA?.body?.data) {
+        ANOTHER_DATA = anotherResponse?.data?.body?.data
+      }
+      console.log('ANOTHER DATA:', ANOTHER_DATA)
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
       return true
-    } catch (error) {
-      console.log(error)
-      return false
-    }
+    } catch (error) { return false }
   }
 
   let definedRequest
@@ -65,13 +64,15 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
-    console.log('ByPassed', pathname)
     definedRequest = true
   } else {
     try {
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
-      console.log('ORG RESP: ', JSON.stringify(orgResponse?.data?.body?.data))
-      const ORG_VALUES = orgResponse?.data?.body?.data
+      let ORG_VALUES = orgResponse?.data
+      if (ORG_VALUES?.body?.data) {
+        ORG_VALUES = orgResponse?.data?.body?.data
+      }
+      console.log('ORG VALUES:', ORG_VALUES)
       defineValues = { ...defineValues, ...ORG_VALUES }
     } catch (error) { }
   }
