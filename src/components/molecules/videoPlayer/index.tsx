@@ -98,7 +98,7 @@ const VideoPlayerComponent = ({
   }
 
   const addCountView = async () => {
-    if (isViewed) return
+    if (isViewed || isLiveStream) return
     const { data } = await client.mutate({
       mutation: MUTATION_ADD_VIEW,
       variables: {
