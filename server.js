@@ -45,13 +45,16 @@ const getTenantData = async (req, res) => {
     }
     try {
       const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      console.log('ANOTHER: ', JSON.stringify(anotherResponse))
+      console.log('ANOTHER: ', anotherResponse?.data)
       console.log('URL: ', `${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
-      const ANOTHER_DATA = anotherResponse?.data?.body?.data
+      const ANOTHER_DATA = anotherResponse?.data
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
       return true
-    } catch (error) { return false }
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   let definedRequest
@@ -62,6 +65,7 @@ const getTenantData = async (req, res) => {
   const channelPath = '/c/'
 
   if (byPass.includes(pathname)) {
+    console.log('ByPassed', pathname)
     definedRequest = true
   } else {
     try {
