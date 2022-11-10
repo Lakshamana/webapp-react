@@ -49,7 +49,6 @@ const getTenantData = async (req, res) => {
       if (ANOTHER_DATA?.body?.data) {
         ANOTHER_DATA = anotherResponse?.data?.body?.data
       }
-      console.log('ANOTHER DATA:', ANOTHER_DATA)
       defineValues = { ...defineValues, ...ANOTHER_DATA }
       defineValues['description'] = stripHTML(defineValues.description)
       return true
@@ -72,7 +71,6 @@ const getTenantData = async (req, res) => {
       if (ORG_VALUES?.body?.data) {
         ORG_VALUES = orgResponse?.data?.body?.data
       }
-      console.log('ORG VALUES:', ORG_VALUES)
       defineValues = { ...defineValues, ...ORG_VALUES }
     } catch (error) { }
   }
