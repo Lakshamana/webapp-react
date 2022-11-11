@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Flex, Text } from "@chakra-ui/react";
-import { Container } from "components";
-import { useState } from "react";
+import { Container, Skeleton } from "components";
 import { useTranslation } from "react-i18next";
 import { ACTIVE_SUBSCRIPTION } from 'services/graphql';
 import { useThemeStore } from "services/stores";
