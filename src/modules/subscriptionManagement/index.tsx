@@ -33,7 +33,6 @@ export const SubscriptionManagement = () => {
         justifyContent='flex-start'
         flexWrap='wrap'
       >
-        {/* <pre>{JSON.stringify(data?.activeSubscriptons, null, 2)}</pre> */}
         {
             loading
             ? (<Skeleton kind='cards' numberOfCards={3}/>)
