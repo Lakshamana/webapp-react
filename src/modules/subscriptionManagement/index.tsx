@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import { Flex, Text } from "@chakra-ui/react";
 import { Container } from "components";
 import { useState } from "react";
