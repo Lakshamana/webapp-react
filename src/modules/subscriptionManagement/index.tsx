@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Flex, Text } from "@chakra-ui/react";
-import { Container } from "components";
+import { Container, Skeleton } from "components";
 import { useTranslation } from "react-i18next";
 import { ACTIVE_SUBSCRIPTION } from 'services/graphql';
 import { useThemeStore } from "services/stores";
@@ -35,7 +35,9 @@ export const SubscriptionManagement = () => {
       >
         {/* <pre>{JSON.stringify(data?.activeSubscriptons, null, 2)}</pre> */}
         {
-            data?.activeSubscriptons?.map((item) => (
+            loading
+            ? (<Skeleton kind='cards' numberOfCards={3}/>)
+            : data?.activeSubscriptons?.map((item) => (
             <SubscriptionCard
               checked={item.status === 'ACTIVE'}
               label={item.subscription.subscriptionItems[0].name}
