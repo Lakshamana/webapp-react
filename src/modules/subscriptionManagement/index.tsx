@@ -3,6 +3,7 @@ import { Flex, Text } from "@chakra-ui/react";
 import { Container } from "components";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ACTIVE_SUBSCRIPTION } from 'services/graphql';
 import { useThemeStore } from "services/stores";
 import { colors, sizes } from "styles";
 import { Navbar, SubscriptionCard } from "./components";
