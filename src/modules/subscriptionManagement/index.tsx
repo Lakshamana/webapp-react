@@ -41,7 +41,7 @@ export const SubscriptionManagement = () => {
             <SubscriptionCard
               checked={item.status === 'ACTIVE'}
               label={item.subscription.subscriptionItems[0].name}
-              subtitle=''
+              subtitle={item.subscription.subscriptionItems[0].productPrices.internalDescription}
               description={item.subscription.subscriptionItems[0].description}
               price={`${item.invoices[0].currencySymbol} ${item.amount}`}
             />
