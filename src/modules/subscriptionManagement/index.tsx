@@ -10,7 +10,7 @@ import { Navbar, SubscriptionCard } from "./components";
 export const SubscriptionManagement = () => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const [active, setactive] = useState(true)
+  const { data, loading } = useQuery(ACTIVE_SUBSCRIPTION)
   return (
     <Container
       width={1}
