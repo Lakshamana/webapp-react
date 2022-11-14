@@ -1,7 +1,8 @@
+import { useQuery } from '@apollo/client';
 import { Flex, Text } from "@chakra-ui/react";
-import { Container } from "components";
-import { useState } from "react";
+import { Container, Skeleton } from "components";
 import { useTranslation } from "react-i18next";
+import { ACTIVE_SUBSCRIPTION } from 'services/graphql';
 import { useThemeStore } from "services/stores";
 import { colors, sizes } from "styles";
 import { Navbar, SubscriptionCard } from "./components";
@@ -9,7 +10,7 @@ import { Navbar, SubscriptionCard } from "./components";
 export const SubscriptionManagement = () => {
   const { t } = useTranslation()
   const { colorMode } = useThemeStore()
-  const [active, setactive] = useState(true)
+  const { data, loading } = useQuery(ACTIVE_SUBSCRIPTION)
   return (
     <Container
       width={1}
@@ -32,9 +33,19 @@ export const SubscriptionManagement = () => {
         justifyContent='flex-start'
         flexWrap='wrap'
       >
-        <SubscriptionCard checked={active} onChange={(e) => setactive(e.target.checked)}/>
-        <SubscriptionCard checked={active} onChange={(e) => setactive(e.target.checked)}/>
-        <SubscriptionCard checked={active} onChange={(e) => setactive(e.target.checked)}/>
+        {
+            loading
+            ? (<Skeleton kind='cards' numberOfCards={3}/>)
+            : data?.activeSubscriptons?.map((item) => (
+            <SubscriptionCard
+              checked={item.status === 'ACTIVE'}
+              label={item.subscription.subscriptionItems[0].name}
+              subtitle={item.subscription.subscriptionItems[0].productPrices.internalDescription}
+              description={item.subscription.subscriptionItems[0].description}
+              price={`${item.invoices[0].currencySymbol} ${item.amount}`}
+            />
+          ))
+        }
       </Flex>
     </Container>
   )

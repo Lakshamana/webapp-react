@@ -11,5 +11,6 @@ export * from './order'
 export * from './organization'
 export * from './posts'
 export * from './products'
+export * from './subscription'
 export * from './tags'
 
