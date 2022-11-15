@@ -1,20 +1,35 @@
-import { useSubscription } from '@apollo/client'
+import { useApolloClient } from '@apollo/client'
 import { Status } from 'generated/graphql'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SUBSCRIBE_TO_LIVE_EVENT } from 'services/graphql'
 
 export const useLiveSubscription = (id: string) => {
   const [subscriptionLiveStatus, setSubscriptionLiveStatus] =
     useState<Maybe<Status>>(null)
 
-  const { error } = useSubscription(SUBSCRIBE_TO_LIVE_EVENT, {
-    variables: { id },
-    onSubscriptionData: (result) => {
-      setSubscriptionLiveStatus(
-        result.subscriptionData.data.subscribeToLiveEvent.status
-      )
-    },
-  })
+  const client = useApolloClient()
+
+  const { REACT_APP_WSS_ENDPOINT } = process.env
+
+  const subscribeToLive = () =>
+    client
+      .subscribe({
+        query: SUBSCRIBE_TO_LIVE_EVENT,
+        variables: { id },
+      })
+      .subscribe({
+        next(data) {
+          setSubscriptionLiveStatus(data.data.subscribeToLiveEvent.status)
+        },
+      })
+
+  useEffect(() => {
+    if (REACT_APP_WSS_ENDPOINT) {
+      let unsub = subscribeToLive()
+      return () => unsub.unsubscribe()
+    }
+    //eslint-disable-next-line
+  }, [])
 
   return { subscriptionLiveStatus }
 }

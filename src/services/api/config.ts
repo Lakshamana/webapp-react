@@ -48,6 +48,7 @@ export const websocket = new SubscriptionClient(
   {
     reconnect: true,
     lazy: true,
+    reconnectionAttempts: 3,
     connectionParams: {
       channel: getData(CHANNEL_INFO)?.id,
     },
