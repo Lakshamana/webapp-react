@@ -20,13 +20,7 @@ import {
   QUERY_VERIFY_POST_KIND
 } from 'services/graphql'
 import { useAuthStore, useChannelsStore } from 'services/stores'
-import {
-  entityRequireLogin,
-  isEntityBlocked,
-  isEntityGeolocked,
-  isEntityOnPaywall,
-  isEntityPrivate
-} from 'utils/accessVerifications'
+import { entityRequireLogin, isEntityBlocked, isEntityGeolocked, isEntityOnPaywall, isEntityPrivate } from 'utils/accessVerifications'
 import { ElegibleContent, Props } from './types'
 
 const VerifyContentKind = ({
@@ -177,7 +171,6 @@ const VerifyContentKind = ({
   if (isOnPaywall)
     return (
       <CheckoutFlow
-        {...{ accessGranted }}
         products={contentKind?.entitlements || []}
       />
     )
