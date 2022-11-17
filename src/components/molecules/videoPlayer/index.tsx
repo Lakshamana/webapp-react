@@ -45,7 +45,7 @@ const VideoPlayerComponent = ({
   post_type,
   video_duration,
   tracks,
-  autoplay = false,
+  autoplay,
 }: VideoPlayerProps): ReactElement => {
   const playerRef: any = useRef(null)
   const { t } = useTranslation()
