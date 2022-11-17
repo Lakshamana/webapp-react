@@ -21,7 +21,7 @@ const CheckoutFlow = ({
   simplified,
 }: CheckoutFlowProps) => {
   const { colorMode } = useThemeStore()
-  const [currentStep, setCurrentStep] = useState<Steps>()
+  const [currentStep, setCurrentStep] = useState<Steps>(Steps.SELECT_PRODUCT)
   const [selectedProduct, setSelectedProduct] = useState<Product>()
   const [selectedPrice, setSelectedPrice] = useState<ProductPrice>()
   const [billingType, setBillingType] = useState<BillingType>()

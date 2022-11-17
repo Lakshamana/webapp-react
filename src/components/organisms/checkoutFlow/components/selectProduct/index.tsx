@@ -41,7 +41,7 @@ const SelectProduct = ({
             <Box
               h="184px"
               w="100%"
-              backgroundImage={`url(${product.imageUrl})`}
+              backgroundImage={`url('${product.imageUrl}')`}
               backgroundSize="100%"
               backgroundPosition="center"
               backgroundRepeat="no-repeat"
