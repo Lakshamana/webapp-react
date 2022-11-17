@@ -45,6 +45,7 @@ const VideoPlayerComponent = ({
   post_type,
   video_duration,
   tracks,
+  autoplay,
 }: VideoPlayerProps): ReactElement => {
   const playerRef: any = useRef(null)
   const { t } = useTranslation()
@@ -81,7 +82,8 @@ const VideoPlayerComponent = ({
     post_type,
     organization?.id,
     activeChannel?.id,
-    organization?.web_url?.[0]
+    organization?.web_url?.[0],
+    autoplay
   )
 
   const sendContinueWatchingData = (currentTime: number) => {

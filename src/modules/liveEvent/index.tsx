@@ -218,6 +218,7 @@ const LiveEvent = () => {
             </Flex>
             {(liveStatus === Status.Live || !eventEnded) && hlsPlaybackUrl && liveStatus !== Status.Ready && (
               <VideoPlayer
+                autoplay
                 isLiveStream={true}
                 src={hlsPlaybackUrl}
                 title={livestream?.title}
