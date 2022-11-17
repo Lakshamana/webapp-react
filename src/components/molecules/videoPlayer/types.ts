@@ -18,6 +18,7 @@ export interface VideoPlayerProps {
   post_type?: PostType | string;
   video_duration?: number;
   tracks?: TracksProps[]
+  autoplay?: boolean,
 }
 
 export interface TracksProps {
