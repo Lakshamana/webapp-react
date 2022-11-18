@@ -1,313 +1,203 @@
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Flex,
-  Text
-} from '@chakra-ui/react'
-
-import { formatCurrency } from '../../utils'
-
-import { Button } from 'components'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
 import { useTranslation } from 'react-i18next'
 import { colors } from 'styles'
-import { BankCardForm, BoletoForm, PixForm } from './components'
-import { CardSelectPlan } from './styles'
+import tinyColor from 'tinycolor2'
 
-import { ReactComponent as Boleto } from 'assets/icons/payment/boleto.svg'
-import { ReactComponent as CreditCards } from 'assets/icons/payment/credit-card.svg'
-import { ReactComponent as Pix } from 'assets/icons/payment/pix.svg'
+import { Button } from 'components/atoms'
+import { useEffect, useState } from 'react'
+import {
+  BankCardForm,
+  BankSlipBarCode,
+  BillingInformationBexs,
+  OrderDetails,
+  PixQRCode
+} from './components'
+import { paymentTypes } from './utils'
 
-import { PaymentProps } from '../../types'
+import { useCheckoutStore } from 'services/stores/checkout'
+import { ColorMode } from 'types/common'
+import { PaymentMethods } from '../../types'
+import { BillingInformationStripe } from './components/billingInformationStripe'
+
+type Props = {
+  colorMode: ColorMode
+  sendConfirmOrderPayload: (payload) => void
+  isLoadingOrder: boolean
+}
 
 const Payment = ({
-  selectedPrice,
   colorMode,
-  qrCode,
-  boletoUrl,
-  setCurrentStep,
   sendConfirmOrderPayload,
-  paymentType,
   isLoadingOrder,
-}: PaymentProps) => {
+}: Props) => {
   const { t } = useTranslation()
+  const [activePaymentType, setActivePaymentType] = useState<PaymentMethods>()
+  const {
+    selectedPrice,
+    paymentType,
+    personalInfo,
+    billingInformationBexs,
+    ccInformation,
+    qrCode,
+    barCode,
+  } = useCheckoutStore()
+
+  const handleConfirmOrderPayload = () => {
+    switch (activePaymentType) {
+      case PaymentMethods.PIX:
+      case PaymentMethods.BOLETO:
+        return sendConfirmOrderPayload({
+          variables: {
+            payload: {
+              paymentMethodType: activePaymentType,
+              productPrice: selectedPrice?.id,
+              product: selectedPrice?.productsId,
+              cardHolderName: personalInfo?.fullName,
+              cpf: billingInformationBexs?.cpf,
+              phone: personalInfo?.phoneNumber,
+              billingAddress: {
+                address1: billingInformationBexs?.address1,
+                address2: billingInformationBexs?.address2,
+                city: billingInformationBexs?.city,
+                stateId: billingInformationBexs?.stateId,
+                countryId: billingInformationBexs?.countryId,
+                zipCode: billingInformationBexs?.zip,
+                neighborhood: billingInformationBexs?.district,
+                streetNumber: billingInformationBexs?.streetNumber,
+              },
+            },
+          },
+        })
+      case PaymentMethods.CREDIT_CARD:
+        return sendConfirmOrderPayload(ccInformation)
+    }
+  }
+
+  const renderPaymentMethodForm = () => {
+    switch (activePaymentType) {
+      case PaymentMethods.CREDIT_CARD:
+        return <BankCardForm {...{ sendConfirmOrderPayload }} />
+    }
+  }
+
+  useEffect(() => {
+    if (paymentType === 'Stripe')
+      setActivePaymentType(PaymentMethods.CREDIT_CARD)
+    //eslint-disable-next-line
+  }, [])
+
+  if (qrCode && activePaymentType === PaymentMethods.PIX) {
+    return <PixQRCode />
+  }
+
+  if (barCode && activePaymentType === PaymentMethods.BOLETO) {
+    return <BankSlipBarCode />
+  }
 
   return (
-    <>
-      {/* <CardSelectPlan gridGap={4}>
-        <Flex w="100%" flexDir="column">
-          <Text
-            color={colors.generalText[colorMode]}
-            fontWeight="400"
-            fontSize="1.3rem"
-          >
-            Have a promo code?
-          </Text>
-          <Text color={colors.secondaryText[colorMode]} fontSize={'1rem'}>
-            Apply promo code to get discount
-          </Text>
-        </Flex>
-        <Flex gridGap="12px" w="100%">
-          <Input placeholder="Promocode" />
-          <Button width={'30%'} label="apply" />
-        </Flex>
-      </CardSelectPlan> */}
-      <CardSelectPlan gridGap={4}>
-        <Flex w="100%" justifyContent={'space-between'} alignItems="center">
-          <Text color={colors.generalText[colorMode]} fontSize={'1.2rem'}>
-            {selectedPrice?.billingTypes.name}
-          </Text>
+    <Flex
+      width="100%"
+      px={{ sm: 2, md: 6, lg: 8 }}
+      gridGap={4}
+      mt={8}
+      maxW={'1400px'}
+      direction={{ ssm: 'column', sm: 'column', md: 'column', lg: 'row' }}
+      alignItems={{
+        ssm: 'center',
+        sm: 'center',
+        md: 'center',
+        lg: 'flex-start',
+      }}
+    >
+      <Flex
+        direction="column"
+        width={{ ssm: '100%', sm: '100%', md: '100%', lg: '50%' }}
+        maxW={'700px'}
+        paddingX={6}
+      >
+        {/* ADDITIONAL INFORMATION */}
+        {paymentType === 'Bexs' && (
+          <BillingInformationBexs {...{ colorMode }} />
+        )}
+        {paymentType === 'Stripe' && (
+          <BillingInformationStripe {...{ colorMode }} />
+        )}
 
-          <Text
-            color={colors.generalText[colorMode]}
-            fontSize={'1.2rem'}
-            fontWeight="bolder"
-          >
-            {formatCurrency(
-              selectedPrice?.unitPrice || '',
-              selectedPrice?.currency.isoCode
-            )}
-            {selectedPrice?.billingPeriods &&
-              ` / ${selectedPrice?.billingPeriods.name}`}
-          </Text>
+        {/* PAYMENT METHOD */}
+        <Text mb={4} color={colors.generalText[colorMode]} fontSize="1.3rem">
+          Payment Method
+        </Text>
+        <Flex gridGap={4} pb={4} justifyContent="center">
+          {paymentTypes(paymentType).map((item) => (
+            <Box
+              onClick={() => setActivePaymentType(item.type)}
+              width={'100%'}
+              maxW="180px"
+              cursor="pointer"
+              py={8}
+              background={
+                activePaymentType === item.type
+                  ? colors.brand.primary[colorMode]
+                  : colors.cardBg[colorMode]
+              }
+              borderRadius={6}
+              display="flex"
+              flexDir={'column'}
+              alignItems="center"
+              justifyContent={'center'}
+              color={
+                activePaymentType === item.type
+                  ? colors.generalText[
+                      tinyColor(colors.brand.primary[colorMode]).isLight()
+                        ? 'light'
+                        : 'dark'
+                    ]
+                  : colors.secondaryText[colorMode]
+              }
+            >
+              <Icon icon={item.icon} fontSize={'2rem'} />
+              <Text fontSize={'1.1rem'} mt={2}>
+                {item.label}
+              </Text>
+            </Box>
+          ))}
         </Flex>
-        <Flex w="100%" justifyContent={'end'}>
-          <Button
-            width={'auto'}
-            size="sm"
-            variant={'link'}
-            label={t('page.checkout.actions.choose_other_price')}
-            onClick={() => setCurrentStep(1)}
+        <Flex>{selectedPrice ? renderPaymentMethodForm() : null}</Flex>
+      </Flex>
+
+      {/* ORDER DETAILS */}
+      <Flex
+        width={{ ssm: '100%', sm: '100%', md: '100%', lg: '50%' }}
+        maxW={'700px'}
+        paddingX={6}
+        direction="column"
+      >
+        <OrderDetails {...{ colorMode }} />
+        <Button
+          isLoading={isLoadingOrder}
+          onClick={handleConfirmOrderPayload}
+          my={2}
+          width="100%"
+          label={t('page.checkout.card_info.place_you_order')}
+        />
+        <Flex alignItems={'center'} gridGap={2} my={2} justifyContent="center">
+          <Icon
+            color={colors.secondaryText[colorMode]}
+            width={'1rem'}
+            icon={'mdi:shield-outline'}
           />
-        </Flex>
-        {/* <Divider color={colors.inputBg[colorMode]} /> */}
-        {/* <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text color={colors.generalText[colorMode]} fontSize="1.05rem">
-            Coupon discount:
-          </Text>
-          <Text color={colors.secondaryText[colorMode]} fontSize="1.05rem">
-            -$5,99
-          </Text>
-        </Flex>
-        <Divider color={colors.inputBg[colorMode]} /> */}
-        {/* <Flex w="100%" justifyContent="space-between" alignItems="center">
-          <Text color={colors.generalText[colorMode]} fontSize="1.05rem">
-            Total:
-          </Text>
-          <Text color={colors.generalText[colorMode]} fontSize="1.5rem">
-            $12,99
-          </Text>
-        </Flex> */}
-      </CardSelectPlan>
-
-      {/* parte que eu n sei pra q serve */}
-      {/* <CardSelectPlan gridGap="24px">
-            <Flex w="100%" justifyContent="space-between" alignItems="center">
-              <Text
-                color={colors.generalText[colorMode]}
-                fontWeight="700"
-                fontSize="16px"
-              >
-                Split payment cards and payment methods?
-              </Text>
-              <Switch defaultChecked />
-            </Flex>
-            <Flex w="100%" justifyContent="space-between" alignItems="center">
-              <Text
-                color={colors.generalText[colorMode]}
-                fontWeight="400"
-                fontSize="14px"
-              >
-                Discount:
-              </Text>
-              <Text
-                color="#ED0039"
-                fontWeight="400"
-                fontSize="16px"
-                textDecoration="line-through"
-              >
-                $10.00
-              </Text>
-            </Flex>
-            <Flex w="100%" justifyContent="space-between" alignItems="center">
-              <Text
-                color={colors.generalText[colorMode]}
-                fontWeight="400"
-                fontSize="14px"
-              >
-                Paymanents:
-              </Text>
-              <Text
-                color={colors.secondaryText[colorMode]}
-                fontWeight="400"
-                fontSize="16px"
-              >
-                $10.00
-              </Text>
-            </Flex>
-            <Flex w="100%" justifyContent="space-between" alignItems="center">
-              <Text
-                color={colors.generalText[colorMode]}
-                fontWeight="400"
-                fontSize="14px"
-              >
-                Balance:
-              </Text>
-              <Text
-                color={colors.generalText[colorMode]}
-                fontWeight="400"
-                fontSize="28px"
-              >
-                $40.00
-              </Text>
-            </Flex>
-          </CardSelectPlan> */}
-
-      <CardSelectPlan gridGap={3}>
-        <Flex w="100%">
-          <Text color={colors.generalText[colorMode]} fontSize={["1.1rem", "1.2rem"]}>
-            {t('page.plan.selectOption.choosePaymentMethod')}
-          </Text>
-        </Flex>
-
-        {/* TODO: Adicionar credit card do signup depois de concluido  */}
-        <Accordion
-          allowToggle
-          w="100%"
-          bg={colors.bodyBg[colorMode]}
-          borderRadius="8px"
-          mt={2}
-          color={colors.generalText[colorMode]}
-        >
-          <AccordionItem>
-            <AccordionButton py={5} _focus={{ boxShadow: 'none' }}>
-              <Flex w="100%" flexDir="column" alignItems="flex-start">
-                <Text
-                  textTransform={'uppercase'}
-                  textAlign='left'
-                  fontWeight="bold"
-                  fontSize="1rem"
-                >
-                  {t('page.plan.selectOption.bankCard')}
-                </Text>
-                <Text
-                  fontSize={'0.95rem'}
-                  textAlign="left"
-                  color={colors.secondaryText[colorMode]}
-                >
-                  {t('page.plan.selectOption.bankCardDesc')}
-                </Text>
-              </Flex>
-              <CreditCards height="26px" />
-              <AccordionIcon ml={1} />
-            </AccordionButton>
-            <AccordionPanel pb={4} w="100%">
-              {selectedPrice && (
-                <BankCardForm
-                  product={selectedPrice.productsId}
-                  productPrice={selectedPrice.id}
-                  {...{ sendConfirmOrderPayload, isLoadingOrder, paymentType }}
-                />
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-
-        {paymentType === 'Bexs' && (
-          <Accordion
-            allowToggle
-            w="100%"
-            bg={colors.bodyBg[colorMode]}
-            borderRadius="8px"
-            color={colors.generalText[colorMode]}
+          <Text
+            color={colors.secondaryText[colorMode]}
+            fontWeight="thin"
+            fontSize={'1rem'}
+            textAlign="center"
           >
-            <AccordionItem>
-              <AccordionButton py={4} _focus={{ boxShadow: 'none' }}>
-                <Flex w="100%" flexDir="column" alignItems="flex-start">
-                  <Text
-                    textTransform={'uppercase'}
-                    fontWeight="bold"
-                    fontSize="1rem"
-                  >
-                    {t('page.plan.selectOption.pix')}
-                  </Text>
-                  <Text
-                    fontSize={'0.95rem'}
-                    textAlign="start"
-                    color={colors.secondaryText[colorMode]}
-                  >
-                    {t('page.plan.selectOption.pixDesc')}
-                  </Text>
-                </Flex>
-                <Pix height="26px" />
-                <AccordionIcon ml={1} />
-              </AccordionButton>
-              <AccordionPanel pb={4} w="100%">
-                {selectedPrice && (
-                  <PixForm
-                    product={selectedPrice?.productsId}
-                    productPrice={selectedPrice?.id}
-                    {...{ sendConfirmOrderPayload, qrCode, isLoadingOrder }}
-                  />
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        )}
-
-        {paymentType === 'Bexs' && (
-          <Accordion
-            allowToggle
-            w="100%"
-            bg={colors.bodyBg[colorMode]}
-            borderRadius="8px"
-            color={colors.generalText[colorMode]}
-          >
-            <AccordionItem>
-              <AccordionButton py={4} _focus={{ boxShadow: 'none' }}>
-                <Flex w="100%" flexDir="column" alignItems="flex-start">
-                  <Text
-                    textTransform={'uppercase'}
-                    fontWeight="bold"
-                    fontSize="1rem"
-                  >
-                     {t('page.checkout.bank_slip.title')}
-                  </Text>
-                  <Text
-                    fontSize={'0.95rem'}
-                    textAlign="start"
-                    color={colors.secondaryText[colorMode]}
-                  >
-                     {t('page.checkout.bank_slip.description')}
-                  </Text>
-                </Flex>
-                <Boleto color="white" height="26px" />
-                <AccordionIcon ml="29px" mr="10px" />
-              </AccordionButton>
-              <AccordionPanel pb={4} w="100%">
-                <Text
-                  color={colors.white}
-                  fontWeight="500"
-                  fontSize="14px"
-                  w="100%"
-                  textAlign="center"
-                >
-                  {selectedPrice && (
-                    <BoletoForm
-                      product={selectedPrice?.productsId}
-                      productPrice={selectedPrice?.id}
-                      {...{ sendConfirmOrderPayload, boletoUrl, isLoadingOrder }}
-                    />
-                  )}
-                </Text>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        )}
-      </CardSelectPlan>
-    </>
+            Secure transaction
+          </Text>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }
 
