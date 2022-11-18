@@ -3,16 +3,22 @@ import { Product, ProductPrice } from 'types/products'
 
 export enum Steps {
   SELECT_PRODUCT,
-  SELECT_PRICE,
+  PERSONAL_INFORMATION,
+  CHOOSE_PAYMENT_TYPE,
   PAYMENT,
   SUCCESS,
   UNPAID,
   FAILED,
 }
 
+export interface PersonalInfo {
+  fullName: string
+  email: string
+  phoneNumber?: string
+}
+
 export interface CheckoutFlowProps {
   products?: Product[]
-  product?: Product
   simplified?: boolean
   accessGranted?: () => void
   cancel?: () => void
@@ -20,7 +26,7 @@ export interface CheckoutFlowProps {
 
 export interface SelectProductProps extends CustomColors {
   products?: Product[]
-  setSelectedProduct: (product: Product) => void
+  handleSelectPrice: (price: ProductPrice) => void
 }
 
 export interface SelectPriceProps extends CustomColors {
@@ -30,6 +36,7 @@ export interface SelectPriceProps extends CustomColors {
 
 export interface PaymentProps extends CustomColors {
   selectedPrice?: ProductPrice
+  selectedProduct?: Product
   qrCode?: string
   boletoUrl?: string
   setCurrentStep: (step: number) => void
@@ -45,8 +52,32 @@ export enum OrderType {
   UNPAID = 'UNPAID',
 }
 
+export enum PaymentMethods {
+  CREDIT_CARD = 'CREDITE_CARD',
+  BOLETO = 'BOLETO',
+  PIX = 'PIX',
+}
+
 interface CustomColors {
   colorMode: ColorMode
 }
 
 export type PaymentType = 'Stripe' | 'Bexs'
+
+export type BillingInformationBexs = {
+  address1: string
+  address2: string
+  streetNumber: string
+  zip: string
+  district: string
+  countryId: string
+  city: string
+  stateId: string
+  neighborhood: string
+  cpf: string
+}
+
+export type BillingInformationStripe = {
+  address1: string
+  countryId: string
+}
