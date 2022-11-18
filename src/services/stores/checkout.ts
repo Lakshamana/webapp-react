@@ -37,7 +37,7 @@ export const useCheckoutStore = create<CheckoutState>((set) => ({
   personalInfo: null,
   qrCode: '',
   barCode: '',
-  currentStep: Steps.FAILED,
+  currentStep: Steps.SELECT_PRODUCT,
   newAccountId: '',
   paymentType: 'Bexs',
   billingInformationBexs: null,
