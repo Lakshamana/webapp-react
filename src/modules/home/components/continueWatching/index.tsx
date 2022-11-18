@@ -23,6 +23,7 @@ const ContinueWatchingScrollerComponent = ({ item, getCarouselLabel }: Props) =>
     setIsCWatchingLoading(true)
     try {
       const myIp = await axios.get(GET_IP_API)
+      if (!myIp?.data?.ip) return
       const headers = { 'x-forwarded-for': myIp.data.ip }
       const params = {
         channelId: activeChannel?.id,
