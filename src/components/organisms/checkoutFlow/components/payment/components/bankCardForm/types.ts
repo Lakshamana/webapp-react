@@ -1,22 +1,10 @@
 import { FlexProps } from '@chakra-ui/react'
-import { PaymentType } from 'components/organisms/checkoutFlow/types'
 
 export interface IBankCardForm {
   year: string
   month: string
-  full_name: string
-  email: string
-  cpf: string
-  country: string
-  address1: string
-  address2: string
-  number: string
-  zip: string
-  district: string
-  city: string
-  state: string
+  card_holder_name: string
   terms: boolean
-  phone_number: string
 }
 
 export interface PmDataType {
@@ -44,7 +32,7 @@ export interface PmDataType {
   country?: any
   phone_number?: any
   company?: any
-  full_name: string
+  card_holder_name: string
   eligible_for_card_updater: boolean
   shipping_address1?: any
   shipping_address2?: any
@@ -77,11 +65,7 @@ export interface SpreedlyError {
 }
 
 export interface Props {
-  productPrice: string
-  product: string
   sendConfirmOrderPayload: (payload) => void
-  isLoadingOrder: boolean
-  paymentType: PaymentType
 }
 
 export enum OrderType {
