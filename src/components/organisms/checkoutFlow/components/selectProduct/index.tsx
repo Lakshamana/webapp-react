@@ -1,81 +1,100 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { AspectRatio, Box, Flex, Image, Text } from '@chakra-ui/react'
+import { Icon } from '@iconify/react'
 import { Button } from 'components'
 import { useTranslation } from 'react-i18next'
-import { colors } from 'styles'
+import { useCheckoutStore } from 'services/stores/checkout'
+import { colors, sizes } from 'styles'
 import { SelectProductProps } from '../../types'
+import { PriceOption } from './components'
 
 const SelectProduct = ({
   products,
   colorMode,
-  setSelectedProduct,
+  handleSelectPrice,
 }: SelectProductProps) => {
   const { t } = useTranslation()
+  const { selectedPrice } = useCheckoutStore()
 
   return (
-    <Flex flexDirection="column" mt="44px" mx={'2rem'}>
-      <Text
-        fontSize="1.5rem"
-        fontWeight="500"
-        color={colors.generalText[colorMode]}
-      >
-        {t('page.plan.selectPlan.title')}
-      </Text>
-      <Flex
-        gridGap="24px"
-        mt="16px"
-        flexDirection={{ base: 'column', md: 'row' }}
-        wrap={'wrap'}
-        placeContent={'center'}
-      >
-        {products?.map((product, key) => (
+    <Flex
+      w={'100%'}
+      direction="column"
+      gridGap={2}
+      px={{ sm: sizes.paddingSm, md: sizes.paddingMd, lg: sizes.paddingLg }}
+    >
+      <Flex direction="row" gridGap={10} justifyContent="center" mt={6}>
+        {products?.map((product) => (
           <Box
-            key={`product-${key}`}
-            maxW="sm"
-            borderWidth="1px"
-            borderRadius="8px"
-            overflow="hidden"
-            w="340px"
-            background={colors.cardBg[colorMode]}
-            boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+            width={'100%'}
+            key={`product-${product.id}`}
+            maxW="450px"
+            backgroundColor={colors.cardBg[colorMode]}
+            borderRadius={8}
+            paddingBottom={6}
           >
-            <Box
-              h="184px"
-              w="100%"
-              backgroundImage={`url('${product.imageUrl}')`}
-              backgroundSize="100%"
-              backgroundPosition="center"
-              backgroundRepeat="no-repeat"
-            />
-            <Box p="20px">
+            <Box pos="relative" backgroundColor={colors.headerBg[colorMode]}>
+              <AspectRatio ratio={16 / 8}>
+                <Image
+                  borderTopRadius={'6px'}
+                  objectPosition="center"
+                  objectFit={'cover'}
+                  boxSize={'auto'}
+                  src={product.imageUrl}
+                  fallback={
+                    <Box>
+                      <Icon
+                        icon="mdi:image-outline"
+                        fontSize={'5rem'}
+                        color={colors.secondaryText[colorMode]}
+                      />
+                    </Box>
+                  }
+                  lazy={true}
+                  htmlWidth="auto"
+                />
+              </AspectRatio>
+            </Box>
+            <Box padding={5}>
               <Text
                 color={colors.generalText[colorMode]}
-                fontWeight="600"
+                fontWeight="bolder"
                 fontSize="1.3rem"
               >
                 {product.name}
               </Text>
               <Text
                 color={colors.secondaryText[colorMode]}
-                fontSize={'1rem'}
+                fontSize={'1.1rem'}
                 w="100%"
-                mt="6px"
+                mt={1}
               >
                 {product.description}
               </Text>
-              <Box mt={5}>
-                <Button
-                  w="100%"
-                  fontWeight={'bold'}
-                  size="md"
-                  onClick={() => setSelectedProduct(product)}
-                >
-                  {t('page.plan.selectPlan.select')}
-                </Button>
-              </Box>
             </Box>
+            <Flex gridGap={2} direction="column" paddingX={5}>
+              {product?.productPrices?.map((productPrice) => (
+                <PriceOption
+                  key={productPrice.id}
+                  {...{
+                    productPrice,
+                    colorMode,
+                  }}
+                />
+              ))}
+            </Flex>
           </Box>
         ))}
       </Flex>
+      <Box mt={10} display="flex" justifyContent="center">
+        <Button
+          onClick={() => selectedPrice && handleSelectPrice(selectedPrice)}
+          disabled={!selectedPrice}
+          variant={selectedPrice ? 'solid' : 'outline'}
+          width={'450px'}
+        >
+          {t('page.plan.selectPlan.select')}
+        </Button>
+      </Box>
     </Flex>
   )
 }

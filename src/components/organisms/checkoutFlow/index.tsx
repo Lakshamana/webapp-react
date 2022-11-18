@@ -1,6 +1,5 @@
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { Flex, Text, useToast } from '@chakra-ui/react'
-import { AlertCard } from 'components/atoms'
+import { Flex, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import {
   MUTATION_CONFIRM_ORDER,
@@ -8,30 +7,50 @@ import {
   QUERY_GET_ORDER_RESULT
 } from 'services/graphql'
 import { useCommonStore, useThemeStore } from 'services/stores'
-import { colors } from 'styles'
-import { BillingType, Product, ProductPrice } from 'types/products'
+import { useCheckoutStore } from 'services/stores/checkout'
+import { BillingType, ProductPrice } from 'types/products'
 import { getMaxmindLocation } from 'utils/location'
-import { Payment, SelectPrice, SelectProduct } from './components'
-import { CheckoutFlowProps, PaymentType, Steps } from './types'
+import {
+  Payment,
+  PaymentFailed,
+  PaymentSuccess,
+  PersonalInformation,
+  SelectProduct,
+  Tabs
+} from './components'
+import { CheckoutFlowProps, Steps } from './types'
 
-const CheckoutFlow = ({
-  products,
-  accessGranted,
-  product,
-  simplified,
-}: CheckoutFlowProps) => {
+const CheckoutFlow = ({ products, accessGranted }: CheckoutFlowProps) => {
   const { colorMode } = useThemeStore()
-  const [currentStep, setCurrentStep] = useState<Steps>(Steps.SELECT_PRODUCT)
-  const [selectedProduct, setSelectedProduct] = useState<Product>()
-  const [selectedPrice, setSelectedPrice] = useState<ProductPrice>()
+  const {
+    currentStep,
+    setCurrentStep,
+    selectedProduct,
+    setSelectedPrice,
+    selectedPrice,
+    setSelectedProduct,
+    setQrCode,
+    setBarCode,
+    paymentType,
+    setPaymentType,
+  } = useCheckoutStore()
   const [billingType, setBillingType] = useState<BillingType>()
   const [orderId, setOrderId] = useState<string>()
   const [isLoadingOrder, setIsLoadingOrder] = useState<boolean>(false)
-  const [qrCode, setQRCode] = useState<string>()
-  const [boletoUrl, setBoletoURL] = useState<string>()
-  const [paymentType, setPaymentType] = useState<PaymentType>('Bexs')
+
   const { setPageTitle } = useCommonStore()
+
   const toast = useToast()
+
+  const handleSelectPrice = (productPrice: ProductPrice) => {
+    setSelectedPrice(productPrice)
+    const product = products?.find(
+      (item) => item.id === productPrice.productsId
+    )
+    if (product) setSelectedProduct(product)
+    setBillingType(productPrice.billingTypes?.name)
+    setCurrentStep(Steps.PERSONAL_INFORMATION)
+  }
 
   const verifyUserLocation = async () => {
     try {
@@ -69,8 +88,8 @@ const CheckoutFlow = ({
             : result.oneTimePayment
         const qrCode = orderResult?.subscription?.pixQrCodeText
         const boletoUrl = orderResult?.subscription?.boletoUrl
-        if (qrCode) setQRCode(qrCode)
-        if (boletoUrl) setBoletoURL(boletoUrl)
+        if (qrCode) setQrCode(qrCode)
+        if (boletoUrl) setBarCode(boletoUrl)
         setOrderId(orderResult?.id)
       },
       onError: (error) => {
@@ -86,19 +105,12 @@ const CheckoutFlow = ({
     }
   )
 
-  const handleSelectPrice = (price: ProductPrice) => {
-    setSelectedPrice(price)
-    setBillingType(price.billingTypes?.name)
-    setCurrentStep(Steps.PAYMENT)
-  }
-
   const handleConfirmOrder = (payload) => {
     if (selectedPrice?.billingTypes.name === 'One time') {
       const oneTimePaymentExtraValues = {
         description: selectedProduct?.description,
         statementDescriptor: selectedProduct?.statementDescriptor,
         currencyId: selectedPrice.currencyId,
-        //TODO - VER COM O LEANDRO SE É ISSO MESMO
         customerGrossAmount: selectedPrice.unitPrice,
       }
       payload.variables.payload = {
@@ -112,14 +124,12 @@ const CheckoutFlow = ({
 
   useEffect(() => {
     verifyUserLocation()
-    if (product) setSelectedProduct(product)
     setPageTitle('Checkout')
     //eslint-disable-next-line
   }, [])
 
   useEffect(() => {
     if (orderId) getPendingOrder()
-
     //eslint-disable-next-line
   }, [orderId])
 
@@ -140,109 +150,43 @@ const CheckoutFlow = ({
     //eslint-disable-next-line
   }, [orderData])
 
-  useEffect(() => {
-    if (selectedProduct) setCurrentStep(Steps.SELECT_PRICE)
-  }, [selectedProduct])
-
   const renderStep = () => {
     switch (currentStep) {
       case Steps.SELECT_PRODUCT:
         return (
           <SelectProduct
-            {...{ products, setSelectedProduct, colorMode, isLoadingOrder }}
+            {...{ products, handleSelectPrice, colorMode, isLoadingOrder }}
           />
         )
-      case Steps.SELECT_PRICE:
-        return (
-          <SelectPrice
-            productPrices={selectedProduct?.productPrices}
-            {...{ handleSelectPrice, colorMode }}
-          />
-        )
+      case Steps.PERSONAL_INFORMATION:
+        return <PersonalInformation />
       case Steps.PAYMENT:
         return (
           <Payment
             {...{
-              selectedPrice,
               colorMode,
-              setCurrentStep,
-              qrCode,
               isLoadingOrder,
               paymentType,
-              boletoUrl,
             }}
             sendConfirmOrderPayload={handleConfirmOrder}
-          />
-        )
-      case Steps.SUCCESS:
-        return (
-          <AlertCard
-            type="success"
-            description="Your payment has been successfully processed!"
-            title="Payment Success"
-            actionLabel={'Enjoy your content'}
-            actionVariant="link"
-            callToAction={accessGranted}
-          />
-        )
-      case Steps.FAILED:
-        return (
-          <AlertCard
-            type="error"
-            description="Seu pagamento não pôde ser processado, por favor tente novamente."
-            title="Payment Error"
-            actionLabel={'Tentar novamente'}
-            actionVariant="link"
-            callToAction={() => setCurrentStep(Steps.PAYMENT)}
           />
         )
     }
   }
 
-  const hasHeader = selectedProduct && !orderData?.order?.status && !simplified
+  if (currentStep === Steps.SUCCESS) return <PaymentSuccess />
+
+  if (currentStep === Steps.FAILED) return <PaymentFailed />
 
   return (
     <Flex
-      mt={simplified ? 4 : 10}
-      p={simplified ? '' : '1em'}
+      my={8}
       gridGap={4}
       flexDirection="column"
-      w={'800px'}
       alignItems="center"
+      width={'100%'}
     >
-      {hasHeader && (
-        <Flex
-          w="100%"
-          minH="300px"
-          height="fit-content"
-          borderRadius="8px"
-          background={colors.cardBg[colorMode]}
-          boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
-          flexDirection="column"
-        >
-          <Flex
-            flex="1"
-            backgroundImage={`url(${selectedProduct?.imageUrl})`}
-            backgroundSize="100%"
-            backgroundPosition="center"
-            backgroundRepeat="no-repeat"
-            borderRadius="8px 8px 0 0"
-          />
-          <Flex w="100%" h="100%" p="20px 25px" alignItems="center">
-            <Flex flex="1" flexDirection="column">
-              <Text color={colors.generalText[colorMode]} fontSize={'1.4rem'}>
-                {selectedProduct?.name}
-              </Text>
-              <Text
-                color={colors.secondaryText[colorMode]}
-                fontSize={'1.05rem'}
-              >
-                {selectedProduct?.description}
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-      )}
+      <Tabs {...{ colorMode }} />
       {renderStep()}
     </Flex>
   )

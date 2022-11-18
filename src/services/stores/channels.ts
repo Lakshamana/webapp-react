@@ -25,7 +25,7 @@ export const useChannelsStore = create<ChannelsState>((set) => ({
   setActiveChannel: async (activeChannel: Channel) => {
     setChannel(activeChannel.id, activeChannel.name)
     const storedChannelStatus = getData(APP_SINGLE_CHANNEL)
-    saveData(CHANNEL_INFO, {
+    await saveData(CHANNEL_INFO, {
       id: activeChannel.id,
       name: activeChannel.name,
       slug: activeChannel.slug,
