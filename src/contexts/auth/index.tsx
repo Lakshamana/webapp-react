@@ -114,8 +114,8 @@ export const AuthProvider = ({ children }) => {
           query: QUERY_ME,
         })
         if (data?.me) {
-          saveData(APP_USER, data.me.account.id)
           const userData = data.me.profile
+          saveData(APP_USER, userData.id)
           updateUser(userData)
           if (data.me.profile?.locale) {
             switch (data.me.profile?.locale) {
