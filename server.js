@@ -168,7 +168,7 @@ const getTenantData = async (req, res) => {
       validateParams(defineValues.image, '300x169', 20)
     )
     .replaceAll('__SEO_DOMAIN__', defineValues.domain)
-  myCache.set(tenant, htmlWithSeo, 60)
+  myCache.set(tenant, htmlWithSeo, 60 * 10)
   return res.send(htmlWithSeo)
 }
 
