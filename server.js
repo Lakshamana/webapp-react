@@ -99,9 +99,11 @@ const getData = async (req, res) => {
       if (!allRest.image?.baseUrl || !allRest.image?.imgPath) {
         ORG_VALUES = { ...ORG_VALUES, image: organization.image }
       }
+      defineValues = { ...defineValues, ...ORG_VALUES }
+      defineValues['description'] = stripHTML(defineValues?.description)
+    } else {
+      defineValues = { ...defineValues, ...ORG_VALUES }
     }
-    defineValues = { ...defineValues, ...ORG_VALUES }
-    defineValues['description'] = stripHTML(defineValues?.description)
   } catch (error) { }
 
   let htmlWithSeo = html
