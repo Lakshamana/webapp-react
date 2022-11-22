@@ -8,14 +8,9 @@ const app = new express()
 const compression = require('compression')
 const myCache = new NodeCache()
 
-/**
- * get allTenants -> generate custom_index.html
- * if(notFound) generate on fly (current)
- * app.get(/, cache) -> get custom_index
- */
-
 const PORT = process.env.PORT || 3004
 const API_ENDPOINT = 'https://' + process.env.REACT_APP_API_ENDPOINT
+const byPass = ['/favicon.ico', '/manifest.json', '/undefined', '/OneSignalSDKWorker.js']
 
 const defaultValues = {
   favicon: {
@@ -35,9 +30,8 @@ const defaultValues = {
 
 const stripHTML = (text) => (text ? text.replace(/(<([^>]+)>)/gi, '') : '')
 
-const getTenantData = async (req, res) => {
+const getData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
-
   let html = fs.readFileSync(path.join(__dirname, 'build', 'index.html'))
   let defineValues = { ...defaultValues }
   const tenant = req.hostname.includes('localhost')
@@ -45,6 +39,13 @@ const getTenantData = async (req, res) => {
     : `${req.protocol}://${req.hostname}`
   defineValues['domain'] = tenant
   defineValues['url'] = tenant
+
+  const headers = {
+    organization: tenant,
+    'content-type': 'application/json'
+  }
+
+  const getTenantData = () => axios.get(`${API_ENDPOINT}/organizations/metadata`, { headers })
 
   const getDataByPath = async (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
@@ -54,60 +55,55 @@ const getTenantData = async (req, res) => {
         .slice(0, postSlug.indexOf('/') + 1)
         .replace(/\//gm, '')
     }
-    try {
-      const anotherResponse = await axios.get(
-        `${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`
-      )
-      let ANOTHER_DATA = anotherResponse?.data
-      if (ANOTHER_DATA?.body?.data) {
-        ANOTHER_DATA = anotherResponse?.data?.body?.data
-      }
-      defineValues = { ...defineValues, ...ANOTHER_DATA }
-      defineValues['description'] = stripHTML(defineValues.description)
-      return true
-    } catch (error) {
-      return false
+    return axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`, { headers })
+  }
+
+  try {
+    let result = myCache.get(tenant)
+    if (result !== undefined) return res.send(result)
+
+    const postPath = '/post/'
+    const categoryPath = '/category/'
+    const livePath = '/live/'
+    const channelPath = '/c/'
+    const promises = []
+    let definedRoute = false
+    if (pathname.includes(postPath) && !definedRoute) {
+      definedRoute = true
+      promises.push(getDataByPath(postPath, 'posts'))
     }
-  }
-
-  let definedRequest
-  const byPass = ['/favicon.ico', '/manifest.json', '/undefined']
-  const postPath = '/post/'
-  const categoryPath = '/category/'
-  const livePath = '/live/'
-  const channelPath = '/c/'
-
-  if (byPass.includes(pathname)) {
-    definedRequest = true
-  } else {
-    try {
-      const result = myCache.get(tenant)
-      if (result !== undefined) return res.send(result)
-      const orgResponse = await axios.post(
-        `${API_ENDPOINT}/organizations/metadata`,
-        { origin: tenant }
-      )
-      // myCache.set
-      let ORG_VALUES = orgResponse?.data
-      if (ORG_VALUES?.body?.data) {
-        ORG_VALUES = orgResponse?.data?.body?.data
+    if (pathname.includes(categoryPath) && !definedRoute) {
+      definedRoute = true
+      promises.push(getDataByPath(categoryPath, 'categories'))
+    }
+    if (pathname.includes(livePath) && !definedRoute) {
+      definedRoute = true
+      promises.push(getDataByPath(livePath, 'live-events'))
+    }
+    if (pathname.includes(channelPath) && !definedRoute) {
+      definedRoute = true
+      promises.push(getDataByPath(channelPath, 'channels'))
+    }
+    if (!definedRoute) {
+      promises.push(getTenantData())
+    }
+    const PROMISE_DATA = await Promise.all(promises)
+    let ORG_VALUES = PROMISE_DATA[0].data
+    // TODO: Waiting backend normalize response
+    if (ORG_VALUES?.body?.data) {
+      ORG_VALUES = PROMISE_DATA[0].data?.body?.data
+    }
+    if (definedRoute) {
+      const { organization, ...allRest } = ORG_VALUES
+      ORG_VALUES = { ...allRest, favicon: organization.favicon }
+      // If "post" (or another) dont have image, we replace to use organization url
+      if (!allRest.image?.baseUrl || !allRest.image?.imgPath) {
+        ORG_VALUES = { ...ORG_VALUES, image: organization.image }
       }
-      defineValues = { ...defineValues, ...ORG_VALUES }
-    } catch (error) {}
-  }
-
-  if (pathname.includes(postPath) && !definedRequest) {
-    definedRequest = await getDataByPath(postPath, 'posts')
-  }
-  if (pathname.includes(categoryPath) && !definedRequest) {
-    definedRequest = await getDataByPath(categoryPath, 'categories')
-  }
-  if (pathname.includes(livePath) && !definedRequest) {
-    definedRequest = await getDataByPath(livePath, 'live-events')
-  }
-  if (pathname.includes(channelPath) && !definedRequest) {
-    definedRequest = await getDataByPath(channelPath, 'channels')
-  }
+    }
+    defineValues = { ...defineValues, ...ORG_VALUES }
+    defineValues['description'] = stripHTML(defineValues?.description)
+  } catch (error) { }
 
   let validateParams = (imageData, size, quality = 75) => {
     if (!imageData?.baseUrl || !imageData?.imgPath) return '/favicon.ico'
@@ -174,10 +170,7 @@ const getTenantData = async (req, res) => {
 
 app.enable('trust proxy')
 app.use(compression())
-app.get(
-  ['/manifest.json', '/OneSignalSDKWorker.js'],
-  express.static(path.join(__dirname, 'build'))
-)
+app.get(byPass, express.static(path.join(__dirname, 'build')))
 app.use('/static', express.static(path.join(__dirname, 'build/static')))
-app.get('*', getTenantData)
+app.get('*', getData)
 app.listen(PORT, () => console.log('listen on port: ' + PORT))
