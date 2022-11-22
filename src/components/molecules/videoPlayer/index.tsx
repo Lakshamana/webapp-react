@@ -82,8 +82,7 @@ const VideoPlayerComponent = ({
     post_type,
     organization?.id,
     activeChannel?.id,
-    organization?.web_url?.[0],
-    autoplay
+    organization?.web_url?.[0]
   )
 
   const sendContinueWatchingData = (currentTime: number) => {
@@ -257,6 +256,14 @@ const VideoPlayerComponent = ({
   }
 
   useEffect(() => {
+    if(autoplay && src) {
+      setTimeout(()=> {
+        playerRef.current?.play()
+      }, 1000)
+    }
+  }, [autoplay, src])
+
+  useEffect(() => {
     if (!watchingPosition.showModal && !isLiveStream) {
       playerRef.current?.play()
     }
@@ -308,7 +315,6 @@ const VideoPlayerComponent = ({
           ...options,
           tracks,
         }}
-        islivestream
         skin={activeChannelConfig?.PLAYER?.SKIN}
         onReady={handlePlayerReady}
       />
