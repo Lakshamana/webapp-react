@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { firebaseApp } from 'config/firebase'
 import {
   child,
@@ -7,16 +6,16 @@ import {
   remove,
   set
 } from "firebase/database"
+import { useEffect } from "react"
 import { useAuthStore } from "services/stores"
 import { isMobile } from "utils/browser"
 
-export const FirebaseSession = ( { children, idLivestream }) => {
+export const FirebaseSession = ({ children, idLivestream }) => {
   const { account } = useAuthStore()
   const db = getDatabase(firebaseApp)
   const dbRef = ref(db, 'livestream/presence')
 
   const goOnline = () => {
-    console.info('-->',`${idLivestream}/${account?.id}/sessions/${account?.id}`);
     set(child(dbRef, `${idLivestream}/${account?.id}/sessions/${account?.id}`), account)
   }
 
@@ -35,18 +34,18 @@ export const FirebaseSession = ( { children, idLivestream }) => {
   }
 
   useEffect(() => {
-    if(idLivestream) {
+    if (idLivestream) {
       goOnline()
     }
 
-    if(isMobile()) {
+    if (isMobile()) {
       mobileDeviceBehavior()
     }
 
     return () => {
       goOffline()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idLivestream])
 
   return (
