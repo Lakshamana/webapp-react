@@ -50,6 +50,9 @@ const getTenantData = async (req, res) => {
         ANOTHER_DATA = anotherResponse?.data?.body?.data
       }
       defineValues = { ...defineValues, ...ANOTHER_DATA }
+      console.log('--- GET DATA PATH ---')
+      console.log('Slug:', postSlug)
+      console.log('Values:', JSON.stringify(defineValues))
       defineValues['description'] = stripHTML(defineValues.description)
       return true
     } catch (error) { return false }
@@ -72,6 +75,9 @@ const getTenantData = async (req, res) => {
         ORG_VALUES = orgResponse?.data?.body?.data
       }
       defineValues = { ...defineValues, ...ORG_VALUES }
+      console.log('--- METADATA ---')
+      console.log('Tenant:', tenant)
+      console.log('Values:', JSON.stringify(defineValues))
     } catch (error) { }
   }
 
