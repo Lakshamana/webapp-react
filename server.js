@@ -1,9 +1,9 @@
 require('dotenv').config()
-const express = require("express")
-const NodeCache = require("node-cache")
+const express = require('express')
+const NodeCache = require('node-cache')
 const axios = require('axios')
-const path = require("path")
-const fs = require("fs")
+const path = require('path')
+const fs = require('fs')
 const app = new express()
 const compression = require('compression')
 const myCache = new NodeCache()
@@ -20,24 +20,25 @@ const API_ENDPOINT = 'https://' + process.env.REACT_APP_API_ENDPOINT
 const defaultValues = {
   favicon: {
     baseUrl: '',
-    imgPath: ''
+    imgPath: '',
   },
   title: 'Fanhero Video Platform',
-  description: 'An end-to-end video platform powered by the Fanhero Video Technology Cloud',
+  description:
+    'An end-to-end video platform powered by the Fanhero Video Technology Cloud',
   url: 'https://fanhero.tv/',
   image: {
     baseUrl: 'https://fanhero.com',
-    imgPath: 'wp-content/uploads/img-home-2.jpg.webp'
+    imgPath: 'wp-content/uploads/img-home-2.jpg.webp',
   },
-  domain: 'fanhero.tv'
+  domain: 'fanhero.tv',
 }
 
-const stripHTML = (text) => text ? text.replace(/(<([^>]+)>)/gi, '') : ''
+const stripHTML = (text) => (text ? text.replace(/(<([^>]+)>)/gi, '') : '')
 
 const getTenantData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
 
-  let html = fs.readFileSync(path.join(__dirname, "build", "index.html"))
+  let html = fs.readFileSync(path.join(__dirname, 'build', 'index.html'))
   let defineValues = { ...defaultValues }
   const tenant = req.hostname.includes('localhost')
     ? 'https://marvel-dev.fanhero.tv'
@@ -49,21 +50,24 @@ const getTenantData = async (req, res) => {
     const startPosition = pathname.indexOf(path) + path.length
     let postSlug = pathname.slice(startPosition, pathname.length)
     if (postSlug.indexOf('/') >= 0) {
-      postSlug = postSlug.slice(0, postSlug.indexOf('/') + 1).replace(/\//gm, '')
+      postSlug = postSlug
+        .slice(0, postSlug.indexOf('/') + 1)
+        .replace(/\//gm, '')
     }
     try {
-      const anotherResponse = await axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`)
+      const anotherResponse = await axios.get(
+        `${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`
+      )
       let ANOTHER_DATA = anotherResponse?.data
       if (ANOTHER_DATA?.body?.data) {
         ANOTHER_DATA = anotherResponse?.data?.body?.data
       }
       defineValues = { ...defineValues, ...ANOTHER_DATA }
-      console.log('--- GET DATA PATH ---')
-      console.log('Slug:', postSlug)
-      console.log('Values:', JSON.stringify(defineValues))
       defineValues['description'] = stripHTML(defineValues.description)
       return true
-    } catch (error) { return false }
+    } catch (error) {
+      return false
+    }
   }
 
   let definedRequest
@@ -77,18 +81,19 @@ const getTenantData = async (req, res) => {
     definedRequest = true
   } else {
     try {
-
-      const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
+      const result = myCache.get(tenant)
+      if (result !== undefined) return res.send(result)
+      const orgResponse = await axios.post(
+        `${API_ENDPOINT}/organizations/metadata`,
+        { origin: tenant }
+      )
       // myCache.set
       let ORG_VALUES = orgResponse?.data
       if (ORG_VALUES?.body?.data) {
         ORG_VALUES = orgResponse?.data?.body?.data
       }
       defineValues = { ...defineValues, ...ORG_VALUES }
-      console.log('--- METADATA ---')
-      console.log('Tenant:', tenant)
-      console.log('Values:', JSON.stringify(defineValues))
-    } catch (error) { }
+    } catch (error) {}
   }
 
   if (pathname.includes(postPath) && !definedRequest) {
@@ -111,28 +116,68 @@ const getTenantData = async (req, res) => {
 
   let htmlWithSeo = html
     .toString()
-    .replace("__SEO_FAVICON32x32_ICON__", validateParams(defineValues.favicon, '32x32'))
-    .replace("__SEO_FAVICON57x57_ICON__", validateParams(defineValues.favicon, '57x57'))
-    .replace("__SEO_FAVICON76x76_ICON__", validateParams(defineValues.favicon, '76x76'))
-    .replace("__SEO_FAVICON96x96_ICON__", validateParams(defineValues.favicon, '96x96'))
-    .replace("__SEO_FAVICON128x128_ICON__", validateParams(defineValues.favicon, '128x128'))
-    .replace("__SEO_FAVICON192x192_ICON__", validateParams(defineValues.favicon, '192x192'))
-    .replace("__SEO_FAVICON228x228_ICON__", validateParams(defineValues.favicon, '228x228'))
-    .replace("__SEO_FAVICON196x196_ICON__", validateParams(defineValues.favicon, '196x196'))
-    .replace("__SEO_FAVICON120x120_ICON__", validateParams(defineValues.favicon, '120x120'))
-    .replace("__SEO_FAVICON152x152_ICON__", validateParams(defineValues.favicon, '152x152'))
-    .replace("__SEO_FAVICON180x180_ICON__", validateParams(defineValues.favicon, '180x180'))
-    .replaceAll("__SEO_TITLE__", defineValues.title)
-    .replaceAll("__SEO_DESCRIPTION__", defineValues.description)
-    .replaceAll("__SEO_URL__", defineValues.url)
-    .replaceAll("__SEO_IMAGE__", validateParams(defineValues.image, '300x169', 20))
-    .replaceAll("__SEO_DOMAIN__", defineValues.domain)
+    .replace(
+      '__SEO_FAVICON32x32_ICON__',
+      validateParams(defineValues.favicon, '32x32')
+    )
+    .replace(
+      '__SEO_FAVICON57x57_ICON__',
+      validateParams(defineValues.favicon, '57x57')
+    )
+    .replace(
+      '__SEO_FAVICON76x76_ICON__',
+      validateParams(defineValues.favicon, '76x76')
+    )
+    .replace(
+      '__SEO_FAVICON96x96_ICON__',
+      validateParams(defineValues.favicon, '96x96')
+    )
+    .replace(
+      '__SEO_FAVICON128x128_ICON__',
+      validateParams(defineValues.favicon, '128x128')
+    )
+    .replace(
+      '__SEO_FAVICON192x192_ICON__',
+      validateParams(defineValues.favicon, '192x192')
+    )
+    .replace(
+      '__SEO_FAVICON228x228_ICON__',
+      validateParams(defineValues.favicon, '228x228')
+    )
+    .replace(
+      '__SEO_FAVICON196x196_ICON__',
+      validateParams(defineValues.favicon, '196x196')
+    )
+    .replace(
+      '__SEO_FAVICON120x120_ICON__',
+      validateParams(defineValues.favicon, '120x120')
+    )
+    .replace(
+      '__SEO_FAVICON152x152_ICON__',
+      validateParams(defineValues.favicon, '152x152')
+    )
+    .replace(
+      '__SEO_FAVICON180x180_ICON__',
+      validateParams(defineValues.favicon, '180x180')
+    )
+    .replaceAll('__SEO_TITLE__', defineValues.title)
+    .replaceAll('__SEO_DESCRIPTION__', defineValues.description)
+    .replaceAll('__SEO_URL__', defineValues.url)
+    .replaceAll(
+      '__SEO_IMAGE__',
+      validateParams(defineValues.image, '300x169', 20)
+    )
+    .replaceAll('__SEO_DOMAIN__', defineValues.domain)
+  myCache.set(tenant, htmlWithSeo, 60)
   return res.send(htmlWithSeo)
 }
 
 app.enable('trust proxy')
 app.use(compression())
-app.get(['/manifest.json', '/OneSignalSDKWorker.js'], express.static(path.join(__dirname, 'build')))
-app.use("/static", express.static(path.join(__dirname, "build/static")))
-app.get("*", getTenantData)
-app.listen(PORT, () => console.log("listen on port: " + PORT))
+app.get(
+  ['/manifest.json', '/OneSignalSDKWorker.js'],
+  express.static(path.join(__dirname, 'build'))
+)
+app.use('/static', express.static(path.join(__dirname, 'build/static')))
+app.get('*', getTenantData)
+app.listen(PORT, () => console.log('listen on port: ' + PORT))

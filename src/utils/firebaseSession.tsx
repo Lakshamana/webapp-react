@@ -16,6 +16,7 @@ export const FirebaseSession = ( { children, idLivestream }) => {
   const dbRef = ref(db, 'livestream/presence')
 
   const goOnline = () => {
+    console.info('-->',`${idLivestream}/${account?.id}/sessions/${account?.id}`);
     set(child(dbRef, `${idLivestream}/${account?.id}/sessions/${account?.id}`), account)
   }
 
