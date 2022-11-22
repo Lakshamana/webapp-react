@@ -30,6 +30,11 @@ const defaultValues = {
 
 const stripHTML = (text) => (text ? text.replace(/(<([^>]+)>)/gi, '') : '')
 
+const validateParams = (imageData, size, quality = 75) => {
+  if (!imageData?.baseUrl || !imageData?.imgPath) return '/favicon.ico'
+  return `${imageData?.baseUrl}/${size}/filters:quality(${quality})/${imageData?.imgPath}`
+}
+
 const getData = async (req, res) => {
   let pathname = req.pathname || req.originalUrl
   let html = fs.readFileSync(path.join(__dirname, 'build', 'index.html'))
@@ -47,7 +52,7 @@ const getData = async (req, res) => {
 
   const getTenantData = () => axios.get(`${API_ENDPOINT}/organizations/metadata`, { headers })
 
-  const getDataByPath = async (path, endpointName) => {
+  const getDataByPath = (path, endpointName) => {
     const startPosition = pathname.indexOf(path) + path.length
     let postSlug = pathname.slice(startPosition, pathname.length)
     if (postSlug.indexOf('/') >= 0) {
@@ -58,42 +63,36 @@ const getData = async (req, res) => {
     return axios.get(`${API_ENDPOINT}/${endpointName}/metadata?slug=${postSlug}`, { headers })
   }
 
-  try {
-    let result = myCache.get(tenant)
-    if (result !== undefined) return res.send(result)
-
+  const verifyRoute = () => {
     const postPath = '/post/'
     const categoryPath = '/category/'
     const livePath = '/live/'
     const channelPath = '/c/'
-    const promises = []
-    let definedRoute = false
-    if (pathname.includes(postPath) && !definedRoute) {
-      definedRoute = true
-      promises.push(getDataByPath(postPath, 'posts'))
+    if (pathname.includes(postPath)) {
+      return getDataByPath(postPath, 'posts')
     }
-    if (pathname.includes(categoryPath) && !definedRoute) {
-      definedRoute = true
-      promises.push(getDataByPath(categoryPath, 'categories'))
+    if (pathname.includes(categoryPath)) {
+      return getDataByPath(categoryPath, 'categories')
     }
-    if (pathname.includes(livePath) && !definedRoute) {
-      definedRoute = true
-      promises.push(getDataByPath(livePath, 'live-events'))
+    if (pathname.includes(livePath)) {
+      return getDataByPath(livePath, 'live-events')
     }
-    if (pathname.includes(channelPath) && !definedRoute) {
-      definedRoute = true
-      promises.push(getDataByPath(channelPath, 'channels'))
+    if (pathname.includes(channelPath)) {
+      return getDataByPath(channelPath, 'channels')
     }
-    if (!definedRoute) {
-      promises.push(getTenantData())
-    }
-    const PROMISE_DATA = await Promise.all(promises)
-    let ORG_VALUES = PROMISE_DATA[0].data
+    return getTenantData(headers)
+  }
+
+  try {
+    let result = myCache.get(tenant + pathname)
+    if (result !== undefined) return res.send(result)
+    const PROMISE_DATA = await verifyRoute()
+    let ORG_VALUES = PROMISE_DATA.data
     // TODO: Waiting backend normalize response
     if (ORG_VALUES?.body?.data) {
-      ORG_VALUES = PROMISE_DATA[0].data?.body?.data
+      ORG_VALUES = PROMISE_DATA.data?.body?.data
     }
-    if (definedRoute) {
+    if (ORG_VALUES?.organization) {
       const { organization, ...allRest } = ORG_VALUES
       ORG_VALUES = { ...allRest, favicon: organization.favicon }
       // If "post" (or another) dont have image, we replace to use organization url
@@ -104,11 +103,6 @@ const getData = async (req, res) => {
     defineValues = { ...defineValues, ...ORG_VALUES }
     defineValues['description'] = stripHTML(defineValues?.description)
   } catch (error) { }
-
-  let validateParams = (imageData, size, quality = 75) => {
-    if (!imageData?.baseUrl || !imageData?.imgPath) return '/favicon.ico'
-    return `${imageData?.baseUrl}/${size}/filters:quality(${quality})/${imageData?.imgPath}`
-  }
 
   let htmlWithSeo = html
     .toString()
@@ -164,7 +158,7 @@ const getData = async (req, res) => {
       validateParams(defineValues.image, '300x169', 20)
     )
     .replaceAll('__SEO_DOMAIN__', defineValues.domain)
-  myCache.set(tenant, htmlWithSeo, 60 * 10)
+  myCache.set(tenant + pathname, htmlWithSeo, 60 * 10)
   return res.send(htmlWithSeo)
 }
 
