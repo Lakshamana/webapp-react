@@ -1,10 +1,18 @@
 require('dotenv').config()
 const express = require("express")
+const NodeCache = require("node-cache")
 const axios = require('axios')
 const path = require("path")
 const fs = require("fs")
 const app = new express()
 const compression = require('compression')
+const myCache = new NodeCache()
+
+/**
+ * get allTenants -> generate custom_index.html
+ * if(notFound) generate on fly (current)
+ * app.get(/, cache) -> get custom_index
+ */
 
 const PORT = process.env.PORT || 3004
 const API_ENDPOINT = 'https://' + process.env.REACT_APP_API_ENDPOINT
@@ -69,7 +77,9 @@ const getTenantData = async (req, res) => {
     definedRequest = true
   } else {
     try {
+
       const orgResponse = await axios.post(`${API_ENDPOINT}/organizations/metadata`, { origin: tenant })
+      // myCache.set
       let ORG_VALUES = orgResponse?.data
       if (ORG_VALUES?.body?.data) {
         ORG_VALUES = orgResponse?.data?.body?.data
