@@ -3,7 +3,7 @@ import { Logo } from "components/atoms"
 import { configEnvs } from 'config/envs'
 
 const FooterLogo = () => (
-  <Flex justifyContent={'end'}>
+<Flex justifyContent="flex-end">
     <a
       href={configEnvs?.footer?.link || 'https://fanhero.tv/'}
       target="_blank"
@@ -21,3 +21,4 @@ const FooterLogo = () => (
 )
 
 export { FooterLogo }
+
