@@ -1,22 +1,23 @@
+import { Flex } from '@chakra-ui/react'
 import { Logo } from "components/atoms"
 import { configEnvs } from 'config/envs'
 
 const FooterLogo = () => (
-  <a
-    href={configEnvs?.playerLogo?.link || 'https://fanhero.tv/'}
-    target="_blank"
-    rel="noreferrer"
-  >
-    <Logo
-      alignItems={'center'}
-      justifyContent={'right'}
-      marginLeft={['none', 'none', 'none', 'none', 'auto']}
-      ignoreFallback
-      src={configEnvs?.playerLogo?.image || 'footer-logo.svg'}
-      mb={[6, 6, 6, 6, 0]}
-      width={120}
-    />
-  </a>
+  <Flex justifyContent={'end'}>
+    <a
+      href={configEnvs?.footer?.link || 'https://fanhero.tv/'}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <Logo
+        ignoreFallback
+        mb={[6, 6, 6, 6, 0]}
+        width={120}
+        src={configEnvs?.footer?.image || 'footer-logo.svg'}
+        alt={configEnvs?.footer?.altText || 'FanHero'}
+      />
+    </a>
+  </Flex>
 )
 
 export { FooterLogo }
