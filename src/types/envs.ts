@@ -4,6 +4,12 @@ type PlayerLogo = {
   link: string
 }
 
+type Footer = {
+  image: string
+  altText: string
+  link: string
+}
+
 export type EnvProps = {
   apiEndpoint?: string
   createdAt?: string
@@ -28,6 +34,7 @@ export type EnvProps = {
   googleTag?: string
   facebookTag?: string
   playerLogo?: PlayerLogo
+  footer?: Footer
   analyticsAPI?: string
   analyticsRTAPI?: string
 }
