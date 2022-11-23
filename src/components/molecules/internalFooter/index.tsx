@@ -1,6 +1,7 @@
-import { Link, Logo, Text } from 'components/atoms'
+import { Link, Text } from 'components/atoms'
 import { useTranslation } from 'react-i18next'
 import { useCustomizationStore } from 'services/stores'
+import { FooterLogo } from '../footerLogo'
 import { BoxFooter, FooterItems, TextFooter } from './style'
 
 const InternalFooter = () => {
@@ -29,19 +30,7 @@ const InternalFooter = () => {
             isExternal
           />
         </TextFooter>
-        <a href='https://fanhero.tv/' target="_blank" rel="noreferrer">
-          <Logo
-            alignItems={'center'}
-            justifyContent={'right'}
-            marginLeft={['none', 'none', 'none', 'none', 'auto']}
-            mb={[6, 6, 6, 6, 0]}
-            width={120}
-            src={
-              'https://d1k5o3ezm3npyz.cloudfront.net/61ba2606c1805142c289377f/public/footer-logo.svg'
-            }
-            ignoreFallback
-          />
-        </a>
+        <FooterLogo />
       </FooterItems>
     </BoxFooter>
   )
